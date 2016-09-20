@@ -47,6 +47,5 @@ sysinfo.txt
 /Assets/Resources/Sprites/
 
 # Logs
-UpgradeLog*.XML
-UpgradeLog*.htm
+UpgradeLog.htm
 *.log
