@@ -20,6 +20,7 @@ public class ScreenLoader : MonoBehaviour
         else
             Faded();
 
+
         if(DarkestDungeonManager.LoadingInfo.NextScene == "EstateManagement")
         {
             title.text = LocalizationManager.GetString("str_town_title");

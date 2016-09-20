@@ -93,7 +93,13 @@ public class DarkestDungeonManager : MonoBehaviour
             return Instanse.database;
         }
     }
-
+    public static ScreenFader ScreenFader
+    {
+        get
+        {
+            return Instanse.screenFader;
+        }
+    }
     public static RaidManager RaidManager
     {
         get

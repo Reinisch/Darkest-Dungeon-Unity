@@ -1140,6 +1140,13 @@ public class Character
         }
     }
 
+    public bool ReadyForAfflictionCheck
+    {
+        get
+        {
+            return !(IsVirtued || IsAfflicted) && IsOverstressed;
+        }
+    }
     public float FoodConsumption
     {
         get

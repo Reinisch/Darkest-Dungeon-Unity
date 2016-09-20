@@ -24,4 +24,27 @@ public class DarkestSoundManager : MonoBehaviour
         if (Instanse.gameObject != gameObject)
             return;
     }
+
+    public static void StartDungeonSoundtrack(string dungeonName)
+    {
+        DungeonInstanse = RuntimeManager.CreateInstance("event:/ambience/dungeon/" + dungeonName);
+        if (DungeonInstanse != null)
+            DungeonInstanse.start();
+    }
+    public static void StopDungeonSoundtrack()
+    {
+        if (DungeonInstanse != null)
+        {
+            DungeonInstanse.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            DungeonInstanse.release();
+        }
+    }
+    public static void StopCampingSoundtrack()
+    {
+        if (CampingInstanse != null)
+        {
+            CampingInstanse.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            CampingInstanse.release();
+        }
+    }
 }
