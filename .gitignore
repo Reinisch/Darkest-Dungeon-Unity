@@ -31,7 +31,6 @@ sysinfo.txt
 
 # Game Assets
 /Assets/Audio/
-/Assets/Plugins/
 /Assets/Spine/
 /Assets/Sprites/
 /Assets/StreamingAssets/
@@ -41,6 +40,7 @@ sysinfo.txt
 /Assets/Prefabs/
 /Assets/Resources/Screen/
 /Assets/Resources/Sprites/
+/Assets/Plugins/FMOD/
 
 # Logs
 UpgradeLog.htm

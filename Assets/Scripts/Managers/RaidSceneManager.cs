@@ -2539,14 +2539,16 @@ public class RaidSceneManager : MonoBehaviour
 
                             if (deathDamage != null)
                             {
-                                var deathDamageTarget = BattleGround.monsterFormation.party.Units.Find(unit => unit.Character.Class == deathDamage.TargetBaseClass);
+                                var deathDamageTarget = BattleGround.monsterFormation.party.Units.Find(unit =>
+                                unit.Character.Class == deathDamage.TargetBaseClass);
 
                                 if (deathDamageTarget != null)
                                 {
                                     deathDamageTarget.Character.Health.DecreaseValue(deathDamage.TargetDamage);
                                     if (Mathf.RoundToInt(deathDamageTarget.Character.Health.CurrentValue) != 0)
                                     {
-                                        RaidEvents.ShowPopupMessage(deathDamageTarget, PopupMessageType.Damage, deathDamage.TargetDamage.ToString());
+                                        RaidEvents.ShowPopupMessage(deathDamageTarget,
+                                            PopupMessageType.Damage, deathDamage.TargetDamage.ToString());
                                         yield return new WaitForSeconds(0.4f);
                                     }
                                 }
@@ -6061,7 +6063,8 @@ public class RaidSceneManager : MonoBehaviour
                     currentEvent = null;
                     yield break;
                 case InteractionResultType.ItemInteraction:
-                    curioInteraction = curio.ItemInteractions.Find(itemInteraction => itemInteraction.ItemId == RaidEvents.itemInteraction.SelectedItem.Id);
+                    curioInteraction = curio.ItemInteractions.Find(itemInteraction =>
+                    itemInteraction.ItemId == RaidEvents.itemInteraction.SelectedItem.Id);
                     if (curioInteraction == null)
                     {
                         QuestPanel.EnableRetreat();
@@ -6134,7 +6137,8 @@ public class RaidSceneManager : MonoBehaviour
             {
                 animation.skeletonAnimation.state.SetAnimation(0, "heroic", false);
                 animation.BindToTarget(areaView.Prop.RectTransform, (areaView.Prop as RaidCurio).SkeletonAnimation, "root");
-                animation.skeletonAnimation.MeshRenderer.sortingOrder = (areaView.Prop as RaidCurio).SkeletonAnimation.MeshRenderer.sortingOrder - 1;
+                animation.skeletonAnimation.MeshRenderer.sortingOrder = (areaView.Prop as RaidCurio).
+                    SkeletonAnimation.MeshRenderer.sortingOrder - 1;
             }
         }
         yield return new WaitForSeconds(2f);
