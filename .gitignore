@@ -46,4 +46,7 @@ sysinfo.txt
 /Assets/Resources/Screen/
 /Assets/Resources/Sprites/
 
+# Logs
+UpgradeLog*.XML
+UpgradeLog*.htm
 *.log
