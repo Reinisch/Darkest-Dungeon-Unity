@@ -1,0 +1,21 @@
+name: brigand_barrel_D
+type: brigand_barrel
+
+art:
+commonfx: .deathfx death_medium
+riposte_skill: .id "riposte1" .anim "attack_melee" .fx "detonate" .targchestfx "blood_splatter"
+.end
+
+info:
+display: .size 1
+enemy_type: .id "carpentry"
+stats: .hp 25 .def 0% .prot 0 .spd 0 .stun_resist 200% .poison_resist 200% .bleed_resist 200% .debuff_resist 200% .move_resist 300%
+riposte_skill: .id "riposte1" .level 0 .type "melee" .atk 120% .dmg 6 8 .crit 12% .launch 1234 .target 1234 .is_crit_valid True
+personality: .prefskill -1
+initiative: .number_of_turns_per_round 0
+monster_brain: .id default
+battle_modifier: .disable_stall_penalty False .can_surprise False .can_be_surprised False .always_surprise False .always_be_surprised False .can_be_missed False
+spawn: .effects brigand_barrel_spawn_riposte
+skill_reaction: .was_killed_other_monsters_effects "Clear Enemy Rank Target"
+life_link: .base_class "brigand_sapper"
+.end

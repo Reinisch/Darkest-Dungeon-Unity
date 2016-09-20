@@ -1,0 +1,26 @@
+name: fungal_artillery_A
+type: fungal_artillery
+
+art:
+commonfx: .deathfx death_medium
+skill: .id "artillery_tag" .anim "attack_melee" .fx "tag" .targchestfx "tag_target" .area_pos_offset 0 25 .target_area_pos_offset 0 25
+skill: .id "artillery_blight" .anim "attack_melee" .fx "blight" .targfx "blight_target" .area_pos_offset 0 25 .target_area_pos_offset 0 25
+skill: .id "escape_cloud" .anim "defend" .fx "escape_cloud" .area_pos_offset 0 25 .target_area_pos_offset 0 25
+defending_area_pos_offset: .offset 0 25
+.end
+
+info:
+display: .size 1
+enemy_type: .id "man"
+enemy_type: .id "eldritch"
+stats: .hp 14 .def 5% .prot 0.15 .spd 2 .stun_resist 25% .poison_resist 60% .bleed_resist 20% .debuff_resist 15% .move_resist 25%
+skill: .id "artillery_tag" .type "ranged" .atk 92.5% .dmg 1 1 .crit 6%  .effect "Mark Target" "Fungal Mark Debuff 1" .launch 43 .target 12
+skill: .id "artillery_blight" .type "ranged" .atk 97.5% .dmg 1 1 .crit 6%  .effect "Blight 1" "Fungal Disease" .launch 43 .target ~34
+skill: .id "escape_cloud" .type "melee" .atk 97.5% .dmg 1 1 .crit 6%  .effect "Weak Blight 1" .launch 21 .target ~12 .move 2 0
+personality: .prefskill -1
+loot: .code "A" .count 1
+initiative: .number_of_turns_per_round 1
+monster_brain: .id fungal_artillery_A
+death_class: .monster_class_id corpse_A .is_valid_on_crit False .type "corpse" 
+battle_modifier: .disable_stall_penalty False .can_surprise True .can_be_surprised True .always_surprise False .always_be_surprised False
+.end

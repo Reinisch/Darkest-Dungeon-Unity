@@ -1,0 +1,22 @@
+name: gargoyle_C
+type: gargoyle
+
+art:
+commonfx: .deathfx death_medium
+skill: .id "claw_flurry" .anim "attack_melee" .fx "claw_flurry" .targchestfx "blood_splatter"
+skill: .id "tail_whip" .anim "attack_tail" .fx "tail_whip" .targchestfx "blood_splatter"
+.end
+
+info:
+display: .size 1
+enemy_type: .id "unholy"
+enemy_type: .id "beast"
+stats: .hp 14 .def 30% .prot 0.5 .spd 10 .stun_resist 55% .poison_resist 65% .bleed_resist 145% .debuff_resist 60% .move_resist 55%
+skill: .id "claw_flurry" .type "melee" .atk 102.5% .dmg 3 5 .crit 12%  .effect "Gargoyle Flurry Shuffle 5" .launch 321 .target ~12
+skill: .id "tail_whip" .type "ranged" .atk 102.5% .dmg 1 3 .crit 12%  .effect "Stun 5" "Gargoyle Lash Push 1C" .launch 4321 .target 1234
+personality: .prefskill -1
+loot: .code "G" .count 1
+initiative: .number_of_turns_per_round 1
+monster_brain: .id gargoyle_C
+battle_modifier: .disable_stall_penalty False .can_surprise True .can_be_surprised True .always_surprise False .always_be_surprised False
+.end

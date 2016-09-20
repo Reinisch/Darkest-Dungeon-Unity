@@ -1,0 +1,22 @@
+name: spider_webber_C
+type: spider_webber
+
+art:
+commonfx: .deathfx death_medium
+skill: .id "spider_web" .anim "attack_web" .fx "web" .targfx "web_target" .area_pos_offset 0 20 .target_area_pos_offset 0 20
+skill: .id "spider_bite" .anim "attack_melee" .fx "bite" .targchestfx "bite_target" .area_pos_offset 0 20 .target_area_pos_offset 0 20
+defending_area_pos_offset: .offset 0 20
+.end
+
+info:
+display: .size 1
+enemy_type: .id "beast"
+stats: .hp 14 .def 37.5% .prot 0 .spd 7 .stun_resist 70% .poison_resist 65% .bleed_resist 65% .debuff_resist 55% .move_resist 55%
+skill: .id "spider_web" .type "ranged" .atk 102.5% .dmg 2 2 .crit 12%  .effect "Stun 5" "Mark Target" "Webber Web Debuff 5" .launch 1234 .target 1234
+skill: .id "spider_bite" .type "melee" .atk 92.5% .dmg 3 5 .crit 7%  .effect "Weak Blight 5" "Damage Marked Target" .launch 1234 .target 1234
+personality: .prefskill 1
+loot: .code "A" .count 1
+initiative: .number_of_turns_per_round 1
+monster_brain: .id spider_webber
+battle_modifier: .disable_stall_penalty False .can_surprise True .can_be_surprised True .always_surprise False .always_be_surprised False
+.end

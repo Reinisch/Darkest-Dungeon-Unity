@@ -1,0 +1,319 @@
+{
+    "on_start_town_visit_priority" :  1,
+	"number_of_quests_finished": 2,
+	"highest_dungeon_level": 0,
+
+	"bar" :
+	{
+		"side_effects" : 
+		{
+			"chance"    :  0.40,
+			"results"   :
+			[
+			   {
+					"type"      :  "activity_lock",
+					"chance"    :  1,
+					"data"      :  
+					[
+
+					]  
+				},					
+				{
+					"type"      :  "go_missing",
+					"chance"    :  1,
+					"data"      :  
+					[
+						{ "chance" :  3, "duration" :  1 },
+						{ "chance" :  1, "duration" :  2 }
+					]  
+				},
+				{
+					"type"      :  "add_quirk",
+					"chance"    :  1,
+					"data"      :  
+					[
+						{ "chance" :  1, "quirk_library_name" :  "alcoholism" }
+					]  
+				},
+				{
+					"type"      :  "add_quirk",
+					"chance"    :  1,
+					"data"      :  
+					[
+						{ "chance" :  1, "quirk_library_name" :  "resolution" }
+					]  
+				},						
+				{
+					"type"      :  "apply_buff",
+					"chance"    :  1,
+					"data"      :  
+					[
+						{ "chance" :  1, "buff_library_ids" :  ["townHungoverAccDebuff"] },
+						{ "chance" :  1, "buff_library_ids" :  ["townHungoverDEFDebuff"] }
+					]  
+				},						
+				{
+					"type"      :  "change_currency",
+					"chance"    :  1,
+					"data"      :  
+					[
+						{ "chance" :  1, "type" : "gold", "amount" : -500 }
+					]  
+				},
+				{
+					"type"      :  "remove_trinket",
+					"chance"    :  1,
+					"data"      :  
+					[
+
+					]  
+				}
+			]
+		},
+
+		"quirk_library_names" :
+		[
+			"resolution", "gambler", "love_interest", "enlightened", "god_fearing", "flagellant"
+		],
+
+		"caretaker_friendly" : true,
+		
+		"cost_upgrades" :
+		[
+			{ "cost_currency" : { "type" : "gold", "amount" : 1000 } },
+			{ "cost_currency" : { "type" : "gold", "amount" : 850 }, "upgrade_requirement_code" : "b" },
+			{ "cost_currency" : { "type" : "gold", "amount" : 700 }, "upgrade_requirement_code" : "e" }			
+		],
+
+		"slot_upgrades" :
+		[
+			{ "number_of_slots" : 1 },
+			{ "number_of_slots" : 2, "upgrade_requirement_code" : "c" },
+			{ "number_of_slots"	: 3, "upgrade_requirement_code" : "f" }
+		],
+
+		"stress_upgrades" :
+		[  
+			{ "heal_low" : 45, "heal_high" : 45 },
+			{ "heal_low" : 56, "heal_high" : 56, "upgrade_requirement_code" : "a"  },
+			{ "heal_low" : 70, "heal_high" : 70, "upgrade_requirement_code" : "d"  }
+		],
+		
+		"affliction_cure_upgrades" :
+		[
+			{ "chance" : 1.00  },
+			{ "chance" : 0.10, "upgrade_requirement_code" : "g" }
+		]
+	},
+	
+	"gambling" :
+	{
+		"side_effects" : 
+		{
+			"chance"    :  0.35,
+			"results"   :
+			[
+			   {
+					"type"      :  "activity_lock",
+					"chance"    :  1,
+					"data"      :  
+					[
+
+					]  
+				},					
+				{
+					"type"      :  "go_missing",
+					"chance"    :  1,
+					"data"      :  
+					[
+						{ "chance" :  3, "duration" :  1 },
+						{ "chance" :  1, "duration" :  2 }
+					]  
+				},
+				{
+					"type"      :  "add_quirk",
+					"chance"    :  1,
+					"data"      :  
+					[
+						{ "chance" :  1, "quirk_library_name" :  "gambler" }
+					]  
+				},
+				{
+					"type"      :  "add_quirk",
+					"chance"    :  1,
+					"data"      :  
+					[
+						{ "chance" :  1, "quirk_library_name" :  "known_cheat" }
+					]  
+				},
+				{
+					"type"      :  "add_quirk",
+					"chance"    :  1,
+					"data"      :  
+					[
+						{ "chance" :  1, "quirk_library_name" :  "bad_gambler" }
+					]  
+				},				
+				{
+					"type"      :  "change_currency",
+					"chance"    :  1,
+					"data"      :  
+					[
+						{ "chance" :  1, "type" : "gold", "amount" : 500 },
+						{ "chance" :  1, "type" : "gold", "amount" : -500 }
+					]  
+				},
+				{
+					"type"      :  "add_trinket",
+					"chance"    :  1,
+					"data"      :  
+					[
+
+					]  
+				},
+				{
+					"type"      :  "remove_trinket",
+					"chance"    :  1,
+					"data"      :  
+					[
+
+					]  
+				}
+			]
+		},
+
+		"quirk_library_names" :
+		[
+			"known_cheat", "alcoholism", "love_interest", "enlightened", "god_fearing", "flagellant"
+		],
+					
+		"caretaker_friendly" : true,
+			
+		"cost_upgrades" :
+		[
+			{ "cost_currency" : { "type" : "gold", "amount" : 1250 } },
+			{ "cost_currency" : { "type" : "gold", "amount" : 1050 }, "upgrade_requirement_code" : "b" },
+			{ "cost_currency" : { "type" : "gold", "amount" : 900 }, "upgrade_requirement_code" : "e" }			
+		],
+
+		"slot_upgrades" :
+		[
+			{ "number_of_slots" : 1 },
+			{ "number_of_slots" : 2, "upgrade_requirement_code" : "c" },
+			{ "number_of_slots"	: 3, "upgrade_requirement_code" : "f" }
+		],
+
+		"stress_upgrades" :
+		[  
+			{ "heal_low" : 55, "heal_high" : 55 },
+			{ "heal_low" : 69, "heal_high" : 69, "upgrade_requirement_code" : "a" },
+			{ "heal_low" : 86, "heal_high" : 86, "upgrade_requirement_code" : "d" }
+		],
+		
+		"affliction_cure_upgrades" :
+		[
+			{ "chance" : 1.00  },
+			{ "chance" : 0.10, "upgrade_requirement_code" : "g" }
+		]
+	},			
+	"brothel" :
+	{
+		"side_effects" : 
+		{
+			"chance"    :  0.30,
+			"results"   :
+			[
+			   {
+					"type"      :  "activity_lock",
+					"chance"    :  1,
+					"data"      :  
+					[
+
+					]  
+				},					
+				{
+					"type"      :  "go_missing",
+					"chance"    :  1,
+					"data"      :  
+					[
+						{ "chance" :  3, "duration" :  1 },
+						{ "chance" :  1, "duration" :  2 }
+					]  
+				},
+				{
+					"type"      :  "add_quirk",
+					"chance"    :  1,
+					"data"      :  
+					[
+						{ "chance" :  1, "quirk_library_name" :  "love_interest" }
+					]  
+				},
+				{
+					"type"      :  "add_quirk",
+					"chance"    :  1,
+					"data"      :  
+					[
+						{ "chance" :  1, "quirk_library_name" :  "syphilis" }
+					]  
+				},
+				{
+					"type"      :  "add_quirk",
+					"chance"    :  1,
+					"data"      :  
+					[
+						{ "chance" :  1, "quirk_library_name" :  "deviant_tastes" }
+					]  
+				},
+				{
+					"type"      :  "apply_buff",
+					"chance"    :  1,
+					"data"      :  
+					[
+						{ "chance" :  1, "buff_library_ids" :  ["townBrothelSPDBuff"] }							]  
+				},
+				{
+					"type"      :  "apply_buff",
+					"chance"    :  1,
+					"data"      :  
+					[
+						{ "chance" :  1, "buff_library_ids" :  ["townBrothelSPDDebuff"] }
+					]  
+				},
+			]
+		},
+
+		"quirk_library_names" :
+		[
+			"deviant_tastes", "alcoholism", "gambler", "enlightened", "god_fearing", "flagellant"
+		],
+					
+		"caretaker_friendly" : true,
+			
+		"cost_upgrades" :
+		[
+			{ "cost_currency" : { "type" : "gold", "amount" : 1500 } },
+			{ "cost_currency" : { "type" : "gold", "amount" : 1300 },  "upgrade_requirement_code" : "b" },
+			{ "cost_currency" : { "type" : "gold", "amount" : 1100 },  "upgrade_requirement_code" : "e" }			
+		],
+
+		"slot_upgrades" :
+		[
+			{ "number_of_slots" : 1 },
+			{ "number_of_slots" : 2, "upgrade_requirement_code" : "c" },
+			{ "number_of_slots"	: 3, "upgrade_requirement_code" : "f" }
+		],
+
+		"stress_upgrades" :
+		[  
+			{ "heal_low" : 65, "heal_high" : 65 },
+			{ "heal_low" : 81, "heal_high" : 81, "upgrade_requirement_code" : "a" },
+			{ "heal_low" : 100, "heal_high" : 100, "upgrade_requirement_code" : "d" }
+		],
+		
+		"affliction_cure_upgrades" :
+		[
+			{ "chance" : 1.00  },
+			{ "chance" : 0.10, "upgrade_requirement_code" : "g" }
+		]
+	}
+}

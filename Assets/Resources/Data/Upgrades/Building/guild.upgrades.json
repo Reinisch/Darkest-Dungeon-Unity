@@ -1,0 +1,136 @@
+{
+   "trees":
+   [
+      {
+         "id" : "guild.skill_levels",
+         "is_instanced" : false,
+         "tags" : ["building","guild"],
+         "requirements" : 
+         [
+            {
+               "code" : "a",
+               "currency_cost" :
+               [
+                  { "type" : "gold", "amount" : 0},
+                  { "type" : "portrait", "amount" : 6},
+                  { "type" : "crest", "amount" : 11}
+               ],
+               "prerequisite_requirements" :
+               [
+            ]
+         },
+         {
+            "code" : "b",
+            "currency_cost" :
+            [
+               { "type" : "gold", "amount" : 0},
+               { "type" : "portrait", "amount" : 15},
+               { "type" : "crest", "amount" : 30}
+            ],
+            "prerequisite_requirements" :
+            [
+               { "tree_id" : "guild.skill_levels", "requirement_code" : "a" }
+            ]
+         },
+         {
+            "code" : "c",
+            "currency_cost" :
+            [
+               { "type" : "gold", "amount" : 0},
+               { "type" : "portrait", "amount" : 24},
+               { "type" : "crest", "amount" : 48}
+            ],
+            "prerequisite_requirements" :
+            [
+               { "tree_id" : "guild.skill_levels", "requirement_code" : "b" }
+            ]
+         },
+         {
+            "code" : "d",
+            "currency_cost" :
+            [
+               { "type" : "gold", "amount" : 0},
+               { "type" : "portrait", "amount" : 33},
+               { "type" : "crest", "amount" : 67}
+            ],
+            "prerequisite_requirements" :
+            [
+               { "tree_id" : "guild.skill_levels", "requirement_code" : "c" }
+            ]
+         }
+      ]
+   },
+      {
+         "id" : "guild.cost",
+         "is_instanced" : false,
+         "tags" : ["building","guild"],
+         "requirements" : 
+         [
+            {
+               "code" : "a",
+               "currency_cost" :
+               [
+                  { "type" : "gold", "amount" : 0},
+                  { "type" : "portrait", "amount" : 2},
+                  { "type" : "crest", "amount" : 5}
+               ],
+               "prerequisite_requirements" :
+               [
+            ]
+         },
+         {
+            "code" : "b",
+            "currency_cost" :
+            [
+               { "type" : "gold", "amount" : 0},
+               { "type" : "portrait", "amount" : 5},
+               { "type" : "crest", "amount" : 11}
+            ],
+            "prerequisite_requirements" :
+            [
+               { "tree_id" : "guild.cost", "requirement_code" : "a" }
+            ]
+         },
+         {
+            "code" : "c",
+            "currency_cost" :
+            [
+               { "type" : "gold", "amount" : 0},
+               { "type" : "portrait", "amount" : 8},
+               { "type" : "crest", "amount" : 17}
+            ],
+            "prerequisite_requirements" :
+            [
+               { "tree_id" : "guild.cost", "requirement_code" : "b" }
+            ]
+         },
+         {
+            "code" : "d",
+            "currency_cost" :
+            [
+               { "type" : "gold", "amount" : 0},
+               { "type" : "portrait", "amount" : 11},
+               { "type" : "crest", "amount" : 23}
+            ],
+            "prerequisite_requirements" :
+            [
+               { "tree_id" : "guild.cost", "requirement_code" : "c" }
+            ]
+         },
+         {
+            "code" : "e",
+            "currency_cost" :
+            [
+               { "type" : "gold", "amount" : 0},
+               { "type" : "portrait", "amount" : 14},
+               { "type" : "crest", "amount" : 29}
+            ],
+            "prerequisite_requirements" :
+            [
+               { "tree_id" : "guild.cost", "requirement_code" : "d" }
+            ]
+         }
+      ]
+   }
+]
+}

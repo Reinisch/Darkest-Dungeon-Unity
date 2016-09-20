@@ -1,0 +1,21 @@
+name: corpse_B
+type: corpse
+
+art:
+commonfx: .deathfx death_corpse_medium
+defending_area_pos_offset: .offset 0 50
+display_modifier: .disable_halos true .disabled_popup_text_types resist
+health_bar: .type "corpse"
+.end
+
+info:
+display: .size 1
+enemy_type: .id "corpse"
+stats: .hp 10 .def -11.25% .prot 0 .spd 0 .stun_resist 220% .poison_resist 0% .bleed_resist 0% .debuff_resist 220% .move_resist 220%
+personality: .prefskill -1
+loot: .code "NONE" .count 0
+initiative: .number_of_turns_per_round 0
+monster_brain: .id default_B
+battle_modifier: .disable_stall_penalty False .can_surprise True .can_be_surprised True .always_surprise False .always_be_surprised False .can_be_random_target False .is_valid_friendly_target False .can_relieve_stress_from_killing_blow False .can_be_summon_rank True .does_count_as_monster_size_for_monster_brain False .does_count_towards_stall_penalty False .can_relieve_stress_from_crit False  .can_be_missed False
+life_time: .alive_round_limit 3 .does_check_for_loot false
+.end

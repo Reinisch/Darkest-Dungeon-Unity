@@ -1,0 +1,21 @@
+name: cauldron_empty_A
+type: cauldron_empty
+
+art:
+commonfx: .deathfx death_large
+skill: .id "attack1" .anim "attack_melee" .targchestfx "blood_splatter"
+.end
+
+info:
+display: .size 2
+enemy_type: .id "cauldron"
+stats: .hp 100 .def 0% .prot 1 .spd 0 .stun_resist 200% .poison_resist 200% .bleed_resist 200% .debuff_resist 200% .move_resist 200%
+personality: .prefskill -1
+loot: .code "NONE" .count 0
+initiative: .number_of_turns_per_round 0
+monster_brain: .id cauldron_empty
+tag: .id "boss"
+battle_modifier: .disable_stall_penalty True .can_surprise False .can_be_surprised False .always_surprise False .always_be_surprised False .can_be_missed False
+captor_empty: .performing_monster_captor_base_class hag .captor_full_monster_class cauldron_full_A
+life_link: .base_class "hag"
+.end

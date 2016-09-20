@@ -1,0 +1,69 @@
+name: leper
+
+art:
+commonfx: .deathfx death_medium
+combat_skill: .id "chop" .icon "one" .anim "attack_chop" .fx "chop" .targchestfx "blood_splatter"		
+combat_skill: .id "hew" .icon "two" .anim "attack_hew" .fx "hew" .targchestfx "blood_splatter"
+combat_skill: .id "focus" .icon "three" .anim "attack_intimidate" .fx "purge" .targfx "purge_target"
+combat_skill: .id "revenge" .icon "four" .anim "attack_buff" .fx "revenge" 
+combat_skill: .id "solemnity" .icon "five" .anim "attack_buff" .fx "solemnity" 
+combat_skill: .id "withstand" .icon "six" .anim "defend" .fx "withstand"
+combat_skill: .id "intimidate" .icon "seven" .anim "attack_intimidate" .fx "intimidate" .targchestfx "blood_splatter"
+.end
+
+info:
+resistances: .stun 60% .poison 40% .bleed 10% .disease 20% .move 60% .debuff 40% .death_blow 67% .trap 10%
+weapon: .name "leper_weapon_0" .atk 0% .dmg 8 16 .crit 2.5% .spd 2
+weapon: .name "leper_weapon_1" .atk 0% .dmg 9 18 .crit 3% .spd 2 .upgradeRequirementCode 0
+weapon: .name "leper_weapon_2" .atk 0% .dmg 10 21 .crit 3.5% .spd 3 .upgradeRequirementCode 1
+weapon: .name "leper_weapon_3" .atk 0% .dmg 12 23 .crit 4% .spd 3 .upgradeRequirementCode 2
+weapon: .name "leper_weapon_4" .atk 0% .dmg 13 26 .crit 4.5% .spd 4 .upgradeRequirementCode 3
+armour: .name "leper_armour_0" .def 0% .prot 0 .hp 35 .spd 0
+armour: .name "leper_armour_1" .def 5% .prot 0 .hp 42 .spd 0 .upgradeRequirementCode 0
+armour: .name "leper_armour_2" .def 10% .prot 0 .hp 49 .spd 0 .upgradeRequirementCode 1
+armour: .name "leper_armour_3" .def 15% .prot 0 .hp 56 .spd 0 .upgradeRequirementCode 2
+armour: .name "leper_armour_4" .def 20% .prot 0 .hp 63 .spd 0 .upgradeRequirementCode 3
+combat_skill: .id "chop" .level 0 .type "melee" .atk 75% .dmg 0% .crit 2% .launch 12 .target 12 .is_crit_valid True  .generation_guaranteed true
+combat_skill: .id "chop" .level 1 .type "melee" .atk 80% .dmg 0% .crit 2% .launch 12 .target 12 .is_crit_valid True 
+combat_skill: .id "chop" .level 2 .type "melee" .atk 85% .dmg 0% .crit 3% .launch 12 .target 12 .is_crit_valid True 
+combat_skill: .id "chop" .level 3 .type "melee" .atk 90% .dmg 0% .crit 4% .launch 12 .target 12 .is_crit_valid True 
+combat_skill: .id "chop" .level 4 .type "melee" .atk 95% .dmg 0% .crit 4% .launch 12 .target 12 .is_crit_valid True 
+combat_skill: .id "hew" .level 0 .type "melee" .atk 75% .dmg -40% .crit 2% .launch 12 .target ~12 .is_crit_valid True 
+combat_skill: .id "hew" .level 1 .type "melee" .atk 80% .dmg -40% .crit 2% .launch 12 .target ~12 .is_crit_valid True 
+combat_skill: .id "hew" .level 2 .type "melee" .atk 85% .dmg -40% .crit 3% .launch 12 .target ~12 .is_crit_valid True 
+combat_skill: .id "hew" .level 3 .type "melee" .atk 90% .dmg -40% .crit 4% .launch 12 .target ~12 .is_crit_valid True 
+combat_skill: .id "hew" .level 4 .type "melee" .atk 95% .dmg -40% .crit 4% .launch 12 .target ~12 .is_crit_valid True 
+combat_skill: .id "focus" .level 0 .type "melee" .atk 85% .dmg -90% .crit 0% .launch 12 .target 1 .is_crit_valid True  .effect "Push 3A" "clear_corpses"
+combat_skill: .id "focus" .level 1 .type "melee" .atk 90% .dmg -90% .crit 0% .launch 12 .target 1 .is_crit_valid True  .effect "Push 3B" "clear_corpses"
+combat_skill: .id "focus" .level 2 .type "melee" .atk 95% .dmg -90% .crit 1% .launch 12 .target 1 .is_crit_valid True  .effect "Push 3C" "clear_corpses"
+combat_skill: .id "focus" .level 3 .type "melee" .atk 100% .dmg -90% .crit 2% .launch 12 .target 1 .is_crit_valid True  .effect "Push 3D" "clear_corpses"
+combat_skill: .id "focus" .level 4 .type "melee" .atk 105% .dmg -90% .crit 2% .launch 12 .target 1 .is_crit_valid True  .effect "Push 3E" "clear_corpses"
+combat_skill: .id "revenge" .level 0 .type "melee" .atk 0% .dmg 0% .crit 0% .launch 12 .target  .is_crit_valid True  .effect "Leper Strength 1" "Leper Vulnerability"
+combat_skill: .id "revenge" .level 1 .type "melee" .atk 0% .dmg 0% .crit 0% .launch 12 .target  .is_crit_valid True  .effect "Leper Strength 2" "Leper Vulnerability"
+combat_skill: .id "revenge" .level 2 .type "melee" .atk 0% .dmg 0% .crit 0% .launch 12 .target  .is_crit_valid True  .effect "Leper Strength 3" "Leper Vulnerability"
+combat_skill: .id "revenge" .level 3 .type "melee" .atk 0% .dmg 0% .crit 0% .launch 12 .target  .is_crit_valid True  .effect "Leper Strength 4" "Leper Vulnerability"
+combat_skill: .id "revenge" .level 4 .type "melee" .atk 0% .dmg 0% .crit 0% .launch 12 .target  .is_crit_valid True  .effect "Leper Strength 5" "Leper Vulnerability"
+combat_move_skill: .id "move" .level 0 .type "move" .move 0 1 .launch 4321
+combat_skill: .id "withstand" .level 0 .type "melee" .atk 0% .dmg 0% .crit 0% .launch 12 .target  .is_crit_valid True  .effect "LeperHealSelfStress 1" "Leper Protect 1"
+combat_skill: .id "withstand" .level 1 .type "melee" .atk 0% .dmg 0% .crit 0% .launch 12 .target  .is_crit_valid True  .effect "LeperHealSelfStress 2" "Leper Protect 2"
+combat_skill: .id "withstand" .level 2 .type "melee" .atk 0% .dmg 0% .crit 0% .launch 12 .target  .is_crit_valid True  .effect "LeperHealSelfStress 3" "Leper Protect 3"
+combat_skill: .id "withstand" .level 3 .type "melee" .atk 0% .dmg 0% .crit 0% .launch 12 .target  .is_crit_valid True  .effect "LeperHealSelfStress 4" "Leper Protect 4"
+combat_skill: .id "withstand" .level 4 .type "melee" .atk 0% .dmg 0% .crit 0% .launch 12 .target  .is_crit_valid True  .effect "LeperHealSelfStress 5" "Leper Protect 5"
+combat_skill: .id "solemnity" .level 0 .type "melee" .atk 0% .dmg 0% .crit 0% .launch 12 .target  .is_crit_valid True  .effect "LeperHealSelf 1" "Leper Resist Buff 1"
+combat_skill: .id "solemnity" .level 1 .type "melee" .atk 0% .dmg 0% .crit 0% .launch 12 .target  .is_crit_valid True  .effect "LeperHealSelf 2" "Leper Resist Buff 1"
+combat_skill: .id "solemnity" .level 2 .type "melee" .atk 0% .dmg 0% .crit 0% .launch 12 .target  .is_crit_valid True  .effect "LeperHealSelf 3" "Leper Resist Buff 1"
+combat_skill: .id "solemnity" .level 3 .type "melee" .atk 0% .dmg 0% .crit 0% .launch 12 .target  .is_crit_valid True  .effect "LeperHealSelf 4" "Leper Resist Buff 1"
+combat_skill: .id "solemnity" .level 4 .type "melee" .atk 0% .dmg 0% .crit 0% .launch 12 .target  .is_crit_valid True  .effect "LeperHealSelf 5" "Leper Resist Buff 1"
+combat_skill: .id "intimidate" .level 0 .type "melee" .atk 95% .dmg -75% .crit 0% .launch 12 .target ~12 .is_crit_valid True  .effect "Leper Intimidate 1"
+combat_skill: .id "intimidate" .level 1 .type "melee" .atk 100% .dmg -75% .crit 0% .launch 12 .target ~12 .is_crit_valid True  .effect "Leper Intimidate 2"
+combat_skill: .id "intimidate" .level 2 .type "melee" .atk 105% .dmg -75% .crit 1% .launch 12 .target ~12 .is_crit_valid True  .effect "Leper Intimidate 3"
+combat_skill: .id "intimidate" .level 3 .type "melee" .atk 110% .dmg -75% .crit 2% .launch 12 .target ~12 .is_crit_valid True  .effect "Leper Intimidate 4"
+combat_skill: .id "intimidate" .level 4 .type "melee" .atk 115% .dmg -75% .crit 2% .launch 12 .target ~12 .is_crit_valid True  .effect "Leper Intimidate 5"
+tag: .id "heavy"
+tag: .id "religious"
+deaths_door: .buffs deathsdoorACCDebuff deathsdoorDMGLowDebuff deathsdoorDMGHighDebuff deathsdoorSPDDebuff deathsdoorSRDebuff .recovery_buffs mortalityACCDebuff mortalityDMGLowDebuff mortalityDMGHighDebuff mortalitySPDDebuff mortalitySRDebuff .recovery_heart_attack_buffs heartattackACCDebuff heartattackDMGLowDebuff heartattackDMGHighDebuff heartattackSPDDebuff heartattackSRDebuff
+controlled: .target_rank 1
+id_index: .index 9
+generation: .number_of_positive_quirks_min 1 .number_of_positive_quirks_max 2 .number_of_negative_quirks_min 1 .number_of_negative_quirks_max 2 .number_of_class_specific_camping_skills 2 .number_of_shared_camping_skills 1 .number_of_random_combat_skills 4
+skill_selection: .can_select_combat_skills true .number_of_selected_combat_skills_max 4
+.end

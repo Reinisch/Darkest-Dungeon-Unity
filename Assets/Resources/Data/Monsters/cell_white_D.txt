@@ -1,0 +1,24 @@
+name: cell_white_D
+type: cell_white
+
+art:
+commonfx: .deathfx death_medium
+skill: .id "cell_reconstruct" .anim "attack_heal" .fx "heal" .targfx "heal_target"
+skill: .id "cell_teleport" .anim "attack_teleport" .fx "teleport"
+skill: .id "cell_shuffle" .anim "attack_ranged" .fx "shuffle"
+.end
+
+info:
+display: .size 1
+enemy_type: .id "eldritch"
+enemy_type: .id "beast"
+stats: .hp 25 .def 38.75% .prot 0 .spd 8 .stun_resist 72.5% .poison_resist 67.5% .bleed_resist 87.5% .debuff_resist 67.5% .move_resist 73%
+skill: .id "cell_reconstruct" .type "melee" .atk 0% .dmg 0 0 .crit 0%  .effect "Cell Bolster" .launch 4321 .target @1234 .heal 8 18 .is_crit_valid False
+skill: .id "cell_teleport" .type "teleport" .atk 123.75% .dmg 0 0 .crit 0%  .launch 4321 .target 1234 .can_miss False .is_crit_valid False
+skill: .id "cell_shuffle" .type "ranged" .atk 113.75% .dmg 1 3 .crit 0%  .effect "Cell Shuffle" "Cell Weaken" .launch 4321 .target 1234 .is_crit_valid False
+personality: .prefskill -1
+loot: .code "NONE" .count 0
+initiative: .number_of_turns_per_round 1
+monster_brain: .id cell_white
+battle_modifier: .disable_stall_penalty False .can_surprise False .can_be_surprised False .always_surprise False .always_be_surprised False
+.end

@@ -1,0 +1,69 @@
+name: occultist
+
+art:
+commonfx: .deathfx death_medium
+combat_skill: .id "bloodlet" .icon "one" .anim "attack_melee" .fx "bloodlet" .targchestfx "blood_splatter"
+combat_skill: .id "abyssal_artillery" .icon "two" .anim "attack_skull" .fx "abyssal_artillery" .targfx "abyssal_artillery_target"
+combat_skill: .id "weakening_curse" .icon "three" .anim "attack_ranged" .fx "weakening_curse" .targchestfx "weakening_curse_target"
+combat_skill: .id "wyrd_reconstruction" .icon "four" .anim "attack_heal" .fx "wyrd_reconstruction" .targfx "wyrd_reconstruction_target"
+combat_skill: .id "disruptive_curse" .icon "five" .anim "attack_ranged" .fx "weakening_curse" .targchestfx "disruptive_curse_target"
+combat_skill: .id "hands_from_abyss" .icon "six" .anim "attack_skull" .fx "abyssal_artillery" .targfx "hands_from_abyss_target"
+combat_skill: .id "daemons_pull" .icon "seven" .anim "attack_ranged" .fx "weakening_curse" .targchestfx "daemons_pull_target"
+.end
+
+info:
+resistances: .stun 20% .poison 30% .bleed 40% .disease 40% .move 20% .debuff 40% .death_blow 67% .trap 10%
+weapon: .name "occultist_weapon_0" .atk 0% .dmg 4 7 .crit 7.5% .spd 6
+weapon: .name "occultist_weapon_1" .atk 0% .dmg 5 8 .crit 8% .spd 6 .upgradeRequirementCode 0
+weapon: .name "occultist_weapon_2" .atk 0% .dmg 6 10 .crit 8.5% .spd 7 .upgradeRequirementCode 1
+weapon: .name "occultist_weapon_3" .atk 0% .dmg 6 11 .crit 9% .spd 7 .upgradeRequirementCode 2
+weapon: .name "occultist_weapon_4" .atk 0% .dmg 7 13 .crit 9.5% .spd 8 .upgradeRequirementCode 3
+armour: .name "occultist_armour_0" .def 10% .prot 0 .hp 19 .spd 0
+armour: .name "occultist_armour_1" .def 15% .prot 0 .hp 23 .spd 0 .upgradeRequirementCode 0
+armour: .name "occultist_armour_2" .def 20% .prot 0 .hp 27 .spd 0 .upgradeRequirementCode 1
+armour: .name "occultist_armour_3" .def 25% .prot 0 .hp 31 .spd 0 .upgradeRequirementCode 2
+armour: .name "occultist_armour_4" .def 30% .prot 0 .hp 35 .spd 0 .upgradeRequirementCode 3
+combat_skill: .id "bloodlet" .level 0 .type "melee" .atk 80% .dmg 0% .crit 10% .launch 123 .target 123 .is_crit_valid True  .effect "Eldritch Killer 1"
+combat_skill: .id "bloodlet" .level 1 .type "melee" .atk 85% .dmg 0% .crit 11% .launch 123 .target 123 .is_crit_valid True  .effect "Eldritch Killer 2"
+combat_skill: .id "bloodlet" .level 2 .type "melee" .atk 90% .dmg 0% .crit 11% .launch 123 .target 123 .is_crit_valid True  .effect "Eldritch Killer 3"
+combat_skill: .id "bloodlet" .level 3 .type "melee" .atk 95% .dmg 0% .crit 12% .launch 123 .target 123 .is_crit_valid True  .effect "Eldritch Killer 4"
+combat_skill: .id "bloodlet" .level 4 .type "melee" .atk 100% .dmg 0% .crit 12% .launch 123 .target 123 .is_crit_valid True  .effect "Eldritch Killer 5"
+combat_skill: .id "abyssal_artillery" .level 0 .type "ranged" .atk 85% .dmg -25% .crit 5% .launch 34 .target ~34 .is_crit_valid True  .effect "Eldritch Killer 1"
+combat_skill: .id "abyssal_artillery" .level 1 .type "ranged" .atk 90% .dmg -25% .crit 6% .launch 34 .target ~34 .is_crit_valid True  .effect "Eldritch Killer 2"
+combat_skill: .id "abyssal_artillery" .level 2 .type "ranged" .atk 95% .dmg -25% .crit 6% .launch 34 .target ~34 .is_crit_valid True  .effect "Eldritch Killer 3"
+combat_skill: .id "abyssal_artillery" .level 3 .type "ranged" .atk 100% .dmg -25% .crit 6% .launch 34 .target ~34 .is_crit_valid True  .effect "Eldritch Killer 4"
+combat_skill: .id "abyssal_artillery" .level 4 .type "ranged" .atk 105% .dmg -25% .crit 7% .launch 34 .target ~34 .is_crit_valid True  .effect "Eldritch Killer 5"
+combat_skill: .id "weakening_curse" .level 0 .type "ranged" .atk 95% .dmg -75% .crit 5% .launch 1234 .target 1234 .is_crit_valid True  .effect "Occ Weakening Curse 1"
+combat_skill: .id "weakening_curse" .level 1 .type "ranged" .atk 100% .dmg -75% .crit 6% .launch 1234 .target 1234 .is_crit_valid True  .effect "Occ Weakening Curse 2"
+combat_skill: .id "weakening_curse" .level 2 .type "ranged" .atk 105% .dmg -75% .crit 6% .launch 1234 .target 1234 .is_crit_valid True  .effect "Occ Weakening Curse 3"
+combat_skill: .id "weakening_curse" .level 3 .type "ranged" .atk 110% .dmg -75% .crit 6% .launch 1234 .target 1234 .is_crit_valid True  .effect "Occ Weakening Curse 4"
+combat_skill: .id "weakening_curse" .level 4 .type "ranged" .atk 115% .dmg -75% .crit 7% .launch 1234 .target 1234 .is_crit_valid True  .effect "Occ Weakening Curse 5"
+combat_skill: .id "wyrd_reconstruction" .level 0 .heal 0 12 .launch 34 .target @1234  .effect "Wyrd Bleed 1" .generation_guaranteed true
+combat_skill: .id "wyrd_reconstruction" .level 1 .heal 0 14 .launch 34 .target @1234  .effect "Wyrd Bleed 2"
+combat_skill: .id "wyrd_reconstruction" .level 2 .heal 0 16 .launch 34 .target @1234  .effect "Wyrd Bleed 3"
+combat_skill: .id "wyrd_reconstruction" .level 3 .heal 0 18 .launch 34 .target @1234  .effect "Wyrd Bleed 4"
+combat_skill: .id "wyrd_reconstruction" .level 4 .heal 0 20 .launch 34 .target @1234  .effect "Wyrd Bleed 5"
+combat_move_skill: .id "move" .level 0 .type "move" .move 2 2 .launch 4321
+combat_skill: .id "disruptive_curse" .level 0 .type "ranged" .atk 95% .dmg -90% .crit 5% .launch 1234 .target 1234 .is_crit_valid True  .effect "Occ Vulnerability Curse 1" "Mark Target"
+combat_skill: .id "disruptive_curse" .level 1 .type "ranged" .atk 100% .dmg -90% .crit 6% .launch 1234 .target 1234 .is_crit_valid True  .effect "Occ Vulnerability Curse 2" "Mark Target"
+combat_skill: .id "disruptive_curse" .level 2 .type "ranged" .atk 105% .dmg -90% .crit 6% .launch 1234 .target 1234 .is_crit_valid True  .effect "Occ Vulnerability Curse 3" "Mark Target"
+combat_skill: .id "disruptive_curse" .level 3 .type "ranged" .atk 110% .dmg -90% .crit 6% .launch 1234 .target 1234 .is_crit_valid True  .effect "Occ Vulnerability Curse 4" "Mark Target"
+combat_skill: .id "disruptive_curse" .level 4 .type "ranged" .atk 115% .dmg -90% .crit 7% .launch 1234 .target 1234 .is_crit_valid True  .effect "Occ Vulnerability Curse 5" "Mark Target"
+combat_skill: .id "hands_from_abyss" .level 0 .type "ranged" .atk 90% .dmg -50% .crit 10% .launch 12 .target 123 .is_crit_valid True  .effect "Stun 1" "Darkness 1"
+combat_skill: .id "hands_from_abyss" .level 1 .type "ranged" .atk 95% .dmg -50% .crit 11% .launch 12 .target 123 .is_crit_valid True  .effect "Stun 2" "Darkness 1"
+combat_skill: .id "hands_from_abyss" .level 2 .type "ranged" .atk 100% .dmg -50% .crit 11% .launch 12 .target 123 .is_crit_valid True  .effect "Stun 3" "Darkness 1"
+combat_skill: .id "hands_from_abyss" .level 3 .type "ranged" .atk 105% .dmg -50% .crit 12% .launch 12 .target 123 .is_crit_valid True  .effect "Stun 4" "Darkness 1"
+combat_skill: .id "hands_from_abyss" .level 4 .type "ranged" .atk 110% .dmg -50% .crit 12% .launch 12 .target 123 .is_crit_valid True  .effect "Stun 5" "Darkness 1"
+combat_skill: .id "daemons_pull" .level 0 .type "ranged" .atk 90% .dmg -50% .crit 5% .launch 234 .target 34 .is_crit_valid True  .effect "Pull 2A" "clear_corpses"
+combat_skill: .id "daemons_pull" .level 1 .type "ranged" .atk 95% .dmg -50% .crit 6% .launch 234 .target 34 .is_crit_valid True  .effect "Pull 2B" "clear_corpses"
+combat_skill: .id "daemons_pull" .level 2 .type "ranged" .atk 100% .dmg -50% .crit 6% .launch 234 .target 34 .is_crit_valid True  .effect "Pull 2C" "clear_corpses"
+combat_skill: .id "daemons_pull" .level 3 .type "ranged" .atk 105% .dmg -50% .crit 6% .launch 234 .target 34 .is_crit_valid True  .effect "Pull 2D" "clear_corpses"
+combat_skill: .id "daemons_pull" .level 4 .type "ranged" .atk 110% .dmg -50% .crit 7% .launch 234 .target 34 .is_crit_valid True  .effect "Pull 2E" "clear_corpses"
+tag: .id "light"
+tag: .id "non-religious"
+deaths_door: .buffs deathsdoorACCDebuff deathsdoorDMGLowDebuff deathsdoorDMGHighDebuff deathsdoorSPDDebuff deathsdoorSRDebuff .recovery_buffs mortalityACCDebuff mortalityDMGLowDebuff mortalityDMGHighDebuff mortalitySPDDebuff mortalitySRDebuff .recovery_heart_attack_buffs heartattackACCDebuff heartattackDMGLowDebuff heartattackDMGHighDebuff heartattackSPDDebuff heartattackSRDebuff
+controlled: .target_rank 4
+id_index: .index 7
+generation: .number_of_positive_quirks_min 1 .number_of_positive_quirks_max 2 .number_of_negative_quirks_min 1 .number_of_negative_quirks_max 2 .number_of_class_specific_camping_skills 2 .number_of_shared_camping_skills 1 .number_of_random_combat_skills 4
+skill_selection: .can_select_combat_skills true .number_of_selected_combat_skills_max 4
+.end

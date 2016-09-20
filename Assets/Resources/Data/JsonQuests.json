@@ -1,0 +1,4298 @@
+{
+    "stress_damage": 20,
+	
+    "goals": [
+        {
+            "id": "tutorial_final_room",
+            "type": "tutorial_room",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": false,
+            "data": {
+                "room_id": "room2_1"
+            }
+        },
+        {
+            "id": "kill_necromancer_A",
+            "type": "kill_monster",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": true,
+            "data": {
+                "monster_class_ids": [
+                    "necromancer_A"
+                ],
+                "amount": 1
+            }
+        },
+        {
+            "id": "kill_necromancer_B",
+            "type": "kill_monster",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": true,
+            "data": {
+                "monster_class_ids": [
+                    "necromancer_B"
+                ],
+                "amount": 1
+            }
+        },
+        {
+            "id": "kill_necromancer_C",
+            "type": "kill_monster",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": true,
+            "data": {
+                "monster_class_ids": [
+                    "necromancer_C"
+                ],
+                "amount": 1
+            }
+        },
+        {
+            "id": "kill_hag_A",
+            "type": "kill_monster",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": true,
+            "data": {
+                "monster_class_ids": [
+                    "hag_A"
+                ],
+                "amount": 1
+            }
+        },
+        {
+            "id": "kill_hag_B",
+            "type": "kill_monster",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": true,
+            "data": {
+                "monster_class_ids": [
+                    "hag_B"
+                ],
+                "amount": 1
+            }
+        },
+        {
+            "id": "kill_hag_C",
+            "type": "kill_monster",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": true,
+            "data": {
+                "monster_class_ids": [
+                    "hag_C"
+                ],
+                "amount": 1
+            }
+        },
+        {
+            "id": "kill_swine_prince_A",
+            "type": "kill_monster",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": true,
+            "data": {
+                "monster_class_ids": [
+                    "swine_prince_A"
+                ],
+                "amount": 1
+            }
+        },
+        {
+            "id": "kill_swine_prince_B",
+            "type": "kill_monster",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": true,
+            "data": {
+                "monster_class_ids": [
+                    "swine_prince_B"
+                ],
+                "amount": 1
+            }
+        },
+        {
+            "id": "kill_swine_prince_C",
+            "type": "kill_monster",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": true,
+            "data": {
+                "monster_class_ids": [
+                    "swine_prince_C"
+                ],
+                "amount": 1
+            }
+        },
+        {
+            "id": "kill_prophet_A",
+            "type": "kill_monster",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": true,
+            "data": {
+                "monster_class_ids": [
+                    "prophet_A"
+                ],
+                "amount": 1
+            }
+        },
+        {
+            "id": "kill_prophet_B",
+            "type": "kill_monster",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": true,
+            "data": {
+                "monster_class_ids": [
+                    "prophet_B"
+                ],
+                "amount": 1
+            }
+        },
+        {
+            "id": "kill_prophet_C",
+            "type": "kill_monster",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": true,
+            "data": {
+                "monster_class_ids": [
+                    "prophet_C"
+                ],
+                "amount": 1
+            }
+        },
+        {
+            "id": "kill_formless_flesh_A",
+            "type": "kill_monster",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": true,
+            "data": {
+                "monster_class_ids": [
+                    "formless_guard_A",
+                    "formless_melee_A",
+                    "formless_ranged_A",
+                    "formless_weak_A"
+                ],
+                "amount": 4
+            }
+        },
+        {
+            "id": "kill_formless_flesh_B",
+            "type": "kill_monster",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": true,
+            "data": {
+                "monster_class_ids": [
+                    "formless_guard_B",
+                    "formless_melee_B",
+                    "formless_ranged_B",
+                    "formless_weak_B"
+                ],
+                "amount": 4
+            }
+        },
+        {
+            "id": "kill_formless_flesh_C",
+            "type": "kill_monster",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": true,
+            "data": {
+                "monster_class_ids": [
+                    "formless_guard_C",
+                    "formless_melee_C",
+                    "formless_ranged_C",
+                    "formless_weak_C"
+                ],
+                "amount": 4
+            }
+        },
+        {
+            "id": "kill_brigand_cannon_A",
+            "type": "kill_monster",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": true,
+            "data": {
+                "monster_class_ids": [
+                    "brigand_cannon_A"
+                ],
+                "amount": 1
+            }
+        },
+        {
+            "id": "kill_brigand_cannon_B",
+            "type": "kill_monster",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": true,
+            "data": {
+                "monster_class_ids": [
+                    "brigand_cannon_B"
+                ],
+                "amount": 1
+            }
+        },
+        {
+            "id": "kill_brigand_cannon_C",
+            "type": "kill_monster",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": true,
+            "data": {
+                "monster_class_ids": [
+                    "brigand_cannon_C"
+                ],
+                "amount": 1
+            }
+        },
+        {
+            "id": "kill_siren_A",
+            "type": "kill_monster",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": true,
+            "data": {
+                "monster_class_ids": [
+                    "siren_A"
+                ],
+                "amount": 1
+            }
+        },
+        {
+            "id": "kill_siren_B",
+            "type": "kill_monster",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": true,
+            "data": {
+                "monster_class_ids": [
+                    "siren_B"
+                ],
+                "amount": 1
+            }
+        },
+        {
+            "id": "kill_siren_C",
+            "type": "kill_monster",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": true,
+            "data": {
+                "monster_class_ids": [
+                    "siren_C"
+                ],
+                "amount": 1
+            }
+        },
+        {
+            "id": "kill_drowned_crew_A",
+            "type": "kill_monster",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": true,
+            "data": {
+                "monster_class_ids": [
+                    "drowned_captain_A"
+                ],
+                "amount": 1
+            }
+        },
+        {
+            "id": "kill_drowned_crew_B",
+            "type": "kill_monster",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": true,
+            "data": {
+                "monster_class_ids": [
+                    "drowned_captain_B"
+                ],
+                "amount": 1
+            }
+        },
+        {
+            "id": "kill_drowned_crew_C",
+            "type": "kill_monster",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": true,
+            "data": {
+                "monster_class_ids": [
+                    "drowned_captain_C"
+                ],
+                "amount": 1
+            }
+        },
+        {
+            "id": "kill_shuffler_D",
+            "type": "kill_monster",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": true,
+            "data": {
+                "monster_class_ids": [
+                    "shuffler_D"
+                ],
+                "amount": 1
+            }
+        },
+        {
+            "id": "kill_ancestor_heart_D",
+            "type": "kill_monster",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": true,
+            "data": {
+                "monster_class_ids": [
+                    "ancestor_heart_D"
+                ],
+                "amount": 1
+            }
+        },
+        {
+            "id": "kill_brigand_sapper_D",
+            "type": "kill_monster",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": true,
+            "data": {
+                "monster_class_ids": [
+                    "brigand_sapper_D"
+                ],
+                "amount": 1
+            }
+        },
+        {
+            "id": "explore_all_rooms",
+            "type": "explore_room",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": false,
+            "data": {
+                "amount": 0,
+                "percentage": 0.9
+            }
+        },
+        {
+            "id": "battle_all_rooms",
+            "type": "battle_room",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": false,
+            "data": {
+                "amount": 0,
+                "percentage": 1
+            }
+        },
+        {
+            "id": "gather_holy_relic",
+            "type": "gather",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": false,
+            "data": {
+                "curio_name": "reliquary",
+                "item": {
+                    "type": "quest_item",
+                    "id": "holy_relic",
+                    "amount": 3
+                }
+            }
+        },
+        {
+            "id": "gather_medicines",
+            "type": "gather",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": false,
+            "data": {
+                "curio_name": "chirurgeons_satchel",
+                "item": {
+                    "type": "quest_item",
+                    "id": "medicines",
+                    "amount": 3
+                }
+            }
+        },
+        {
+            "id": "gather_grain",
+            "type": "gather",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": false,
+            "data": {
+                "curio_name": "foodstuff_crate",
+                "item": {
+                    "type": "quest_item",
+                    "id": "grain_sack",
+                    "amount": 3
+                }
+            }
+        },
+        {
+            "id": "gather_shipments",
+            "type": "gather",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": false,
+            "data": {
+                "curio_name": "shipment_crates",
+                "item": {
+                    "type": "quest_item",
+                    "id": "ancestors_crate",
+                    "amount": 3
+                }
+            }
+        },
+        {
+            "id": "activate_iron_maiden",
+            "type": "activate",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": false,
+            "data": {
+                "curio_name": "iron_maiden",
+                "amount": 1
+            }
+        },
+        {
+            "id": "activate_teleporter",
+            "type": "activate",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": false,
+            "data": {
+                "curio_name": "teleporter",
+                "amount": 1
+            }
+        },
+        {
+            "id": "inventory_activate_corrupted_altar",
+            "type": "activate",
+            "ignore_fog_of_war": false,
+            "show_as_quest": false,
+            "starting_items": [
+                {
+                    "type": "quest_item",
+                    "id": "holy_water",
+                    "amount": 3
+                }
+            ],
+            "data": {
+                "curio_name": "corrupted_altar",
+                "amount": 3
+            }
+        },
+        {
+            "id": "inventory_activate_infected_corpse",
+            "type": "activate",
+            "ignore_fog_of_war": false,
+            "show_as_quest": false,
+            "starting_items": [
+                {
+                    "type": "quest_item",
+                    "id": "antivenom",
+                    "amount": 3
+                }
+            ],
+            "data": {
+                "curio_name": "infected_corpse",
+                "amount": 3
+            }
+        },
+        {
+            "id": "inventory_activate_animalistic_shrine",
+            "type": "activate",
+            "ignore_fog_of_war": false,
+            "show_as_quest": false,
+            "starting_items": [
+                {
+                    "type": "quest_item",
+                    "id": "pickaxe",
+                    "amount": 3
+                }
+            ],
+            "data": {
+                "curio_name": "animalistic_shrine",
+                "amount": 3
+            }
+        },
+        {
+            "id": "inventory_activate_wards",
+            "type": "activate",
+            "ignore_fog_of_war": false,
+            "show_as_quest": false,
+            "starting_items": [
+                {
+                    "type": "quest_item",
+                    "id": "eldritch_lantern",
+                    "amount": 3
+                }
+            ],
+            "data": {
+                "curio_name": "protective_ward",
+                "amount": 3
+            }
+        },
+        {
+            "id": "inventory_activate_beacons",
+            "type": "activate",
+            "ignore_fog_of_war": false,
+            "show_as_quest": true,
+            "starting_items": [
+                {
+                    "type": "quest_item",
+                    "id": "beacon_light",
+                    "amount": 3
+                }
+            ],
+            "data": {
+                "curio_name": "beacon",
+                "amount": 3
+            }
+        },
+        {
+            "id": "town_progression_explore",
+            "type": "explore_room",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": false,
+            "data": {
+                "amount": 3,
+                "percentage": 0
+            }
+        },
+        {
+            "id": "town_progression_battle",
+            "type": "battle",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": false,
+            "data": {
+                "amount": 2,
+                "percentage": 0
+            }
+        },
+        {
+            "id": "town_progression_trait",
+            "type": "trait_applied",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": false,
+            "data": {
+                "is_affliction": true,
+                "is_virtue": false,
+                "amount": 1
+            }
+        },
+        {
+            "id": "town_progression_deaths_door",
+            "type": "deaths_door",
+            "starting_items": [],
+            "ignore_fog_of_war": false,
+            "show_as_quest": false,
+            "data": {
+                "amount": 1
+            }
+        }
+    ],
+    "town_progression_goal_ids": [
+        "town_progression_explore",
+        "town_progression_battle",
+        "town_progression_trait",
+        "town_progression_deaths_door"
+    ],
+    "types": [
+        {
+            "id": "kill_boss",
+            "goal_lists": [
+                {
+                    "dungeon": "all",
+                    "goals": [
+                        []
+                    ]
+                },
+                {
+                    "dungeon": "cove",
+                    "goals": [
+                        []
+                    ]
+                },
+                {
+                    "dungeon": "crypts",
+                    "goals": [
+                        []
+                    ]
+                },
+                {
+                    "dungeon": "warrens",
+                    "goals": [
+                        []
+                    ]
+                },
+                {
+                    "dungeon": "weald",
+                    "goals": [
+                        []
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "explore",
+            "goal_lists": [
+                {
+                    "dungeon": "all",
+                    "goals": [
+                        [
+                            "explore_all_rooms"
+                        ]
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "cleanse",
+            "goal_lists": [
+                {
+                    "dungeon": "all",
+                    "goals": [
+                        [
+                            "battle_all_rooms"
+                        ]
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "gather",
+            "goal_lists": [
+                {
+                    "dungeon": "all",
+                    "goals": [
+                        []
+                    ]
+                },
+                {
+                    "dungeon": "cove",
+                    "goals": [
+                        [
+                            "gather_shipments"
+                        ]
+                    ]
+                },
+                {
+                    "dungeon": "crypts",
+                    "goals": [
+                        [
+                            "gather_holy_relic"
+                        ]
+                    ]
+                },
+                {
+                    "dungeon": "warrens",
+                    "goals": [
+                        [
+                            "gather_grain"
+                        ]
+                    ]
+                },
+                {
+                    "dungeon": "weald",
+                    "goals": [
+                        [
+                            "gather_medicines"
+                        ]
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "activate",
+            "goal_lists": [
+                {
+                    "dungeon": "all",
+                    "goals": [
+                        [
+                            "activate_iron_maiden"
+                        ]
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "inventory_activate",
+            "goal_lists": [
+                {
+                    "dungeon": "all",
+                    "goals": [
+                        []
+                    ]
+                },
+                {
+                    "dungeon": "cove",
+                    "goals": [
+                        [
+                            "inventory_activate_wards"
+                        ]
+                    ]
+                },
+                {
+                    "dungeon": "crypts",
+                    "goals": [
+                        [
+                            "inventory_activate_corrupted_altar"
+                        ]
+                    ]
+                },
+                {
+                    "dungeon": "warrens",
+                    "goals": [
+                        [
+                            "inventory_activate_animalistic_shrine"
+                        ]
+                    ]
+                },
+                {
+                    "dungeon": "weald",
+                    "goals": [
+                        [
+                            "inventory_activate_infected_corpse"
+                        ]
+                    ]
+                }
+            ]
+        }
+    ],
+    "plot_quests": [
+        {
+            "id": "plot_tutorial_crypts",
+            "dungeon_level": 0,
+            "quest": {
+                "is_plot_quest": true,
+                "type": "explore",
+                "dungeon": "crypts",
+                "difficulty": 1,
+                "length": 1,
+                "map_name": "tutorial_crypts",
+                "goal_ids": [
+                    "explore_all_rooms"
+                ],
+                "completion_reward": {
+                    "resolve_xp": 2,
+                    "items_definition": {
+                        "system_config_type": "quest_rewards",
+                        "items": {
+                            "0": {
+                                "id": "",
+                                "type": "gold",
+                                "amount": 3000
+                            },
+                            "1": {
+                                "id": "crest",
+                                "type": "heirloom",
+                                "amount": 4
+                            }
+                        }
+                    }
+                }
+            },
+            "additional_trinket_completion_rewards": [
+                {
+                    "rarity": "very_common",
+                    "amount": 1
+                }
+            ],
+            "is_progression": true,
+            "has_statue_contents": true,
+            "completion_dungeon_xp": true,
+            "can_retreat": true,
+            "retreat_always_from_raid": false,
+            "retreat_party_kill_count": 0,
+            "is_surprise_enabled": true,
+            "is_scouting_enabled": true,
+            "is_roster_stress_cleared_on_completion": false,
+            "roster_buff_on_failure_minimum_party_resolve_level": 0,
+            "upgrade_tags_to_remove_on_ignore": [],
+            "upgrade_tags_to_remove_on_failure": [],
+            "roster_buffs_to_apply_on_failure": [],
+            "suggested_trinkets": [],
+            "additional_provisions": {
+                "system_config_type": "quest_provision",
+                "items": {}
+            }
+        },
+        {
+            "id": "plot_kill_necromancer_1",
+            "dungeon_level": 2,
+            "quest": {
+                "is_plot_quest": true,
+                "type": "kill_boss",
+                "dungeon": "crypts",
+                "difficulty": 1,
+                "length": 2,
+                "goal_ids": [
+                    "kill_necromancer_A"
+                ],
+                "completion_reward": {
+                    "resolve_xp": 4,
+                    "items_definition": {
+                        "system_config_type": "quest_rewards",
+                        "items": {
+                            "0": {
+                                "id": "",
+                                "type": "gold",
+                                "amount": 4500
+                            },
+                            "1": {
+                                "id": "bust",
+                                "type": "heirloom",
+                                "amount": 3
+                            },
+                            "2": {
+                                "id": "crest",
+                                "type": "heirloom",
+                                "amount": 4
+                            }
+                        }
+                    }
+                }
+            },
+            "additional_trinket_completion_rewards": [
+                {
+                    "rarity": "very_rare",
+                    "amount": 1
+                }
+            ],
+            "is_progression": true,
+            "has_statue_contents": true,
+            "completion_dungeon_xp": false,
+            "can_retreat": true,
+            "retreat_always_from_raid": false,
+            "retreat_party_kill_count": 0,
+            "is_surprise_enabled": true,
+            "is_scouting_enabled": true,
+            "is_roster_stress_cleared_on_completion": false,
+            "upgrade_tags_to_remove_on_ignore": [],
+            "upgrade_tags_to_remove_on_failure": [],
+            "roster_buffs_to_apply_on_failure": [],
+            "roster_buff_on_failure_minimum_party_resolve_level": 0,
+            "suggested_trinkets": [],
+            "additional_provisions": {
+                "system_config_type": "quest_provision",
+                "items": {}
+            }
+        },
+        {
+            "id": "plot_kill_prophet_1",
+            "dungeon_level": 3,
+            "quest": {
+                "is_plot_quest": true,
+                "type": "kill_boss",
+                "dungeon": "crypts",
+                "difficulty": 1,
+                "length": 2,
+                "goal_ids": [
+                    "kill_prophet_A"
+                ],
+                "completion_reward": {
+                    "resolve_xp": 4,
+                    "items_definition": {
+                        "system_config_type": "quest_rewards",
+                        "items": {
+                            "0": {
+                                "id": "",
+                                "type": "gold",
+                                "amount": 4500
+                            },
+                            "1": {
+                                "id": "bust",
+                                "type": "heirloom",
+                                "amount": 3
+                            },
+                            "2": {
+                                "id": "crest",
+                                "type": "heirloom",
+                                "amount": 4
+                            }
+                        }
+                    }
+                }
+            },
+            "additional_trinket_completion_rewards": [
+                {
+                    "rarity": "very_rare",
+                    "amount": 1
+                }
+            ],
+            "is_progression": true,
+            "has_statue_contents": true,
+            "completion_dungeon_xp": false,
+            "can_retreat": true,
+            "retreat_always_from_raid": false,
+            "retreat_party_kill_count": 0,
+            "is_surprise_enabled": true,
+            "is_scouting_enabled": true,
+            "is_roster_stress_cleared_on_completion": false,
+            "upgrade_tags_to_remove_on_ignore": [],
+            "upgrade_tags_to_remove_on_failure": [],
+            "roster_buffs_to_apply_on_failure": [],
+            "roster_buff_on_failure_minimum_party_resolve_level": 0,
+            "suggested_trinkets": [],
+            "additional_provisions": {
+                "system_config_type": "quest_provision",
+                "items": {}
+            }
+        },
+        {
+            "id": "plot_kill_necromancer_2",
+            "dungeon_level": 4,
+            "quest": {
+                "is_plot_quest": true,
+                "type": "kill_boss",
+                "dungeon": "crypts",
+                "difficulty": 3,
+                "length": 2,
+                "goal_ids": [
+                    "kill_necromancer_B"
+                ],
+                "completion_reward": {
+                    "resolve_xp": 8,
+                    "items_definition": {
+                        "system_config_type": "quest_rewards",
+                        "items": {
+                            "0": {
+                                "id": "",
+                                "type": "gold",
+                                "amount": 6750
+                            },
+                            "1": {
+                                "id": "bust",
+                                "type": "heirloom",
+                                "amount": 4
+                            },
+                            "2": {
+                                "id": "crest",
+                                "type": "heirloom",
+                                "amount": 5
+                            }
+                        }
+                    }
+                }
+            },
+            "additional_trinket_completion_rewards": [
+                {
+                    "rarity": "very_rare",
+                    "amount": 1
+                }
+            ],
+            "is_progression": true,
+            "has_statue_contents": true,
+            "completion_dungeon_xp": false,
+            "can_retreat": true,
+            "retreat_always_from_raid": false,
+            "retreat_party_kill_count": 0,
+            "is_surprise_enabled": true,
+            "is_scouting_enabled": true,
+            "is_roster_stress_cleared_on_completion": false,
+            "upgrade_tags_to_remove_on_ignore": [],
+            "upgrade_tags_to_remove_on_failure": [],
+            "roster_buffs_to_apply_on_failure": [],
+            "roster_buff_on_failure_minimum_party_resolve_level": 0,
+            "suggested_trinkets": [],
+            "additional_provisions": {
+                "system_config_type": "quest_provision",
+                "items": {}
+            }
+        },
+        {
+            "id": "plot_kill_prophet_2",
+            "dungeon_level": 5,
+            "quest": {
+                "is_plot_quest": true,
+                "type": "kill_boss",
+                "dungeon": "crypts",
+                "difficulty": 3,
+                "length": 2,
+                "goal_ids": [
+                    "kill_prophet_B"
+                ],
+                "completion_reward": {
+                    "resolve_xp": 8,
+                    "items_definition": {
+                        "system_config_type": "quest_rewards",
+                        "items": {
+                            "0": {
+                                "id": "",
+                                "type": "gold",
+                                "amount": 6750
+                            },
+                            "1": {
+                                "id": "bust",
+                                "type": "heirloom",
+                                "amount": 4
+                            },
+                            "2": {
+                                "id": "crest",
+                                "type": "heirloom",
+                                "amount": 5
+                            }
+                        }
+                    }
+                }
+            },
+            "additional_trinket_completion_rewards": [
+                {
+                    "rarity": "very_rare",
+                    "amount": 1
+                }
+            ],
+            "is_progression": true,
+            "has_statue_contents": true,
+            "completion_dungeon_xp": false,
+            "can_retreat": true,
+            "retreat_always_from_raid": false,
+            "retreat_party_kill_count": 0,
+            "is_surprise_enabled": true,
+            "is_scouting_enabled": true,
+            "is_roster_stress_cleared_on_completion": false,
+            "roster_buff_on_failure_minimum_party_resolve_level": 0,
+            "upgrade_tags_to_remove_on_ignore": [],
+            "upgrade_tags_to_remove_on_failure": [],
+            "roster_buffs_to_apply_on_failure": [],
+            "suggested_trinkets": [],
+            "additional_provisions": {
+                "system_config_type": "quest_provision",
+                "items": {}
+            }
+        },
+        {
+            "id": "plot_kill_necromancer_3",
+            "dungeon_level": 6,
+            "quest": {
+                "is_plot_quest": true,
+                "type": "kill_boss",
+                "dungeon": "crypts",
+                "difficulty": 5,
+                "length": 2,
+                "goal_ids": [
+                    "kill_necromancer_C"
+                ],
+                "completion_reward": {
+                    "resolve_xp": 16,
+                    "items_definition": {
+                        "system_config_type": "quest_rewards",
+                        "items": {
+                            "0": {
+                                "id": "",
+                                "type": "gold",
+                                "amount": 9000
+                            },
+                            "1": {
+                                "id": "boss_necromancer",
+                                "type": "trinket",
+                                "amount": 1
+                            }
+                        }
+                    }
+                }
+            },
+            "additional_trinket_completion_rewards": [
+                {
+                    "rarity": "very_rare",
+                    "amount": 1
+                }
+            ],
+            "is_progression": true,
+            "has_statue_contents": true,
+            "completion_dungeon_xp": false,
+            "can_retreat": true,
+            "retreat_always_from_raid": false,
+            "retreat_party_kill_count": 0,
+            "is_surprise_enabled": true,
+            "is_scouting_enabled": true,
+            "is_roster_stress_cleared_on_completion": false,
+            "roster_buff_on_failure_minimum_party_resolve_level": 0,
+            "upgrade_tags_to_remove_on_ignore": [],
+            "upgrade_tags_to_remove_on_failure": [],
+            "roster_buffs_to_apply_on_failure": [],
+            "suggested_trinkets": [],
+            "additional_provisions": {
+                "system_config_type": "quest_provision",
+                "items": {}
+            }
+        },
+        {
+            "id": "plot_kill_prophet_3",
+            "dungeon_level": 7,
+            "quest": {
+                "is_plot_quest": true,
+                "type": "kill_boss",
+                "dungeon": "crypts",
+                "difficulty": 5,
+                "length": 2,
+                "goal_ids": [
+                    "kill_prophet_C"
+                ],
+                "completion_reward": {
+                    "resolve_xp": 16,
+                    "items_definition": {
+                        "system_config_type": "quest_rewards",
+                        "items": {
+                            "0": {
+                                "id": "",
+                                "type": "gold",
+                                "amount": 9000
+                            },
+                            "1": {
+                                "id": "boss_prophet",
+                                "type": "trinket",
+                                "amount": 1
+                            }
+                        }
+                    }
+                }
+            },
+            "additional_trinket_completion_rewards": [
+                {
+                    "rarity": "very_rare",
+                    "amount": 1
+                }
+            ],
+            "is_progression": true,
+            "has_statue_contents": true,
+            "completion_dungeon_xp": false,
+            "can_retreat": true,
+            "retreat_always_from_raid": false,
+            "retreat_party_kill_count": 0,
+            "is_surprise_enabled": true,
+            "is_scouting_enabled": true,
+            "is_roster_stress_cleared_on_completion": false,
+            "roster_buff_on_failure_minimum_party_resolve_level": 0,
+            "upgrade_tags_to_remove_on_ignore": [],
+            "upgrade_tags_to_remove_on_failure": [],
+            "roster_buffs_to_apply_on_failure": [],
+            "suggested_trinkets": [],
+            "additional_provisions": {
+                "system_config_type": "quest_provision",
+                "items": {}
+            }
+        },
+        {
+            "id": "plot_kill_hag_1",
+            "dungeon_level": 2,
+            "quest": {
+                "is_plot_quest": true,
+                "type": "kill_boss",
+                "dungeon": "weald",
+                "difficulty": 1,
+                "length": 2,
+                "goal_ids": [
+                    "kill_hag_A"
+                ],
+                "completion_reward": {
+                    "resolve_xp": 4,
+                    "items_definition": {
+                        "system_config_type": "quest_rewards",
+                        "items": {
+                            "0": {
+                                "id": "",
+                                "type": "gold",
+                                "amount": 4500
+                            },
+                            "1": {
+                                "id": "deed",
+                                "type": "heirloom",
+                                "amount": 6
+                            },
+                            "2": {
+                                "id": "crest",
+                                "type": "heirloom",
+                                "amount": 4
+                            }
+                        }
+                    }
+                }
+            },
+            "additional_trinket_completion_rewards": [
+                {
+                    "rarity": "very_rare",
+                    "amount": 1
+                }
+            ],
+            "is_progression": true,
+            "has_statue_contents": true,
+            "completion_dungeon_xp": false,
+            "can_retreat": true,
+            "retreat_always_from_raid": false,
+            "retreat_party_kill_count": 0,
+            "is_surprise_enabled": true,
+            "is_scouting_enabled": true,
+            "is_roster_stress_cleared_on_completion": false,
+            "roster_buff_on_failure_minimum_party_resolve_level": 0,
+            "upgrade_tags_to_remove_on_ignore": [],
+            "upgrade_tags_to_remove_on_failure": [],
+            "roster_buffs_to_apply_on_failure": [],
+            "suggested_trinkets": [],
+            "additional_provisions": {
+                "system_config_type": "quest_provision",
+                "items": {}
+            }
+        },
+        {
+            "id": "plot_kill_brigand_cannon_1",
+            "dungeon_level": 3,
+            "quest": {
+                "is_plot_quest": true,
+                "type": "kill_boss",
+                "dungeon": "weald",
+                "difficulty": 1,
+                "length": 2,
+                "goal_ids": [
+                    "kill_brigand_cannon_A"
+                ],
+                "completion_reward": {
+                    "resolve_xp": 4,
+                    "items_definition": {
+                        "system_config_type": "quest_rewards",
+                        "items": {
+                            "0": {
+                                "id": "",
+                                "type": "gold",
+                                "amount": 4500
+                            },
+                            "1": {
+                                "id": "deed",
+                                "type": "heirloom",
+                                "amount": 6
+                            },
+                            "2": {
+                                "id": "crest",
+                                "type": "heirloom",
+                                "amount": 4
+                            }
+                        }
+                    }
+                }
+            },
+            "additional_trinket_completion_rewards": [
+                {
+                    "rarity": "very_rare",
+                    "amount": 1
+                }
+            ],
+            "is_progression": true,
+            "has_statue_contents": true,
+            "completion_dungeon_xp": false,
+            "can_retreat": true,
+            "retreat_always_from_raid": false,
+            "retreat_party_kill_count": 0,
+            "is_surprise_enabled": true,
+            "is_scouting_enabled": true,
+            "is_roster_stress_cleared_on_completion": false,
+            "roster_buff_on_failure_minimum_party_resolve_level": 0,
+            "upgrade_tags_to_remove_on_ignore": [],
+            "upgrade_tags_to_remove_on_failure": [],
+            "roster_buffs_to_apply_on_failure": [],
+            "suggested_trinkets": [],
+            "additional_provisions": {
+                "system_config_type": "quest_provision",
+                "items": {}
+            }
+        },
+        {
+            "id": "plot_kill_hag_2",
+            "dungeon_level": 4,
+            "quest": {
+                "is_plot_quest": true,
+                "type": "kill_boss",
+                "dungeon": "weald",
+                "difficulty": 3,
+                "length": 2,
+                "goal_ids": [
+                    "kill_hag_B"
+                ],
+                "completion_reward": {
+                    "resolve_xp": 8,
+                    "items_definition": {
+                        "system_config_type": "quest_rewards",
+                        "items": {
+                            "0": {
+                                "id": "",
+                                "type": "gold",
+                                "amount": 6750
+                            },
+                            "1": {
+                                "id": "deed",
+                                "type": "heirloom",
+                                "amount": 8
+                            },
+                            "2": {
+                                "id": "crest",
+                                "type": "heirloom",
+                                "amount": 5
+                            }
+                        }
+                    }
+                }
+            },
+            "additional_trinket_completion_rewards": [
+                {
+                    "rarity": "very_rare",
+                    "amount": 1
+                }
+            ],
+            "is_progression": true,
+            "has_statue_contents": true,
+            "completion_dungeon_xp": false,
+            "can_retreat": true,
+            "retreat_always_from_raid": false,
+            "retreat_party_kill_count": 0,
+            "is_surprise_enabled": true,
+            "is_scouting_enabled": true,
+            "is_roster_stress_cleared_on_completion": false,
+            "roster_buff_on_failure_minimum_party_resolve_level": 0,
+            "upgrade_tags_to_remove_on_ignore": [],
+            "upgrade_tags_to_remove_on_failure": [],
+            "roster_buffs_to_apply_on_failure": [],
+            "suggested_trinkets": [],
+            "additional_provisions": {
+                "system_config_type": "quest_provision",
+                "items": {}
+            }
+        },
+        {
+            "id": "plot_kill_brigand_cannon_2",
+            "dungeon_level": 5,
+            "quest": {
+                "is_plot_quest": true,
+                "type": "kill_boss",
+                "dungeon": "weald",
+                "difficulty": 3,
+                "length": 2,
+                "goal_ids": [
+                    "kill_brigand_cannon_B"
+                ],
+                "completion_reward": {
+                    "resolve_xp": 8,
+                    "items_definition": {
+                        "system_config_type": "quest_rewards",
+                        "items": {
+                            "0": {
+                                "id": "",
+                                "type": "gold",
+                                "amount": 6750
+                            },
+                            "1": {
+                                "id": "deed",
+                                "type": "heirloom",
+                                "amount": 8
+                            },
+                            "2": {
+                                "id": "crest",
+                                "type": "heirloom",
+                                "amount": 5
+                            }
+                        }
+                    }
+                }
+            },
+            "additional_trinket_completion_rewards": [
+                {
+                    "rarity": "very_rare",
+                    "amount": 1
+                }
+            ],
+            "is_progression": true,
+            "has_statue_contents": true,
+            "completion_dungeon_xp": false,
+            "can_retreat": true,
+            "retreat_always_from_raid": false,
+            "retreat_party_kill_count": 0,
+            "is_surprise_enabled": true,
+            "is_scouting_enabled": true,
+            "is_roster_stress_cleared_on_completion": false,
+            "roster_buff_on_failure_minimum_party_resolve_level": 0,
+            "upgrade_tags_to_remove_on_ignore": [],
+            "upgrade_tags_to_remove_on_failure": [],
+            "roster_buffs_to_apply_on_failure": [],
+            "suggested_trinkets": [],
+            "additional_provisions": {
+                "system_config_type": "quest_provision",
+                "items": {}
+            }
+        },
+        {
+            "id": "plot_kill_hag_3",
+            "dungeon_level": 6,
+            "quest": {
+                "is_plot_quest": true,
+                "type": "kill_boss",
+                "dungeon": "weald",
+                "difficulty": 5,
+                "length": 2,
+                "goal_ids": [
+                    "kill_hag_C"
+                ],
+                "completion_reward": {
+                    "resolve_xp": 16,
+                    "items_definition": {
+                        "system_config_type": "quest_rewards",
+                        "items": {
+                            "0": {
+                                "id": "",
+                                "type": "gold",
+                                "amount": 9000
+                            },
+                            "1": {
+                                "id": "boss_hag",
+                                "type": "trinket",
+                                "amount": 1
+                            }
+                        }
+                    }
+                }
+            },
+            "additional_trinket_completion_rewards": [
+                {
+                    "rarity": "very_rare",
+                    "amount": 1
+                }
+            ],
+            "is_progression": true,
+            "has_statue_contents": true,
+            "completion_dungeon_xp": false,
+            "can_retreat": true,
+            "retreat_always_from_raid": false,
+            "retreat_party_kill_count": 0,
+            "is_surprise_enabled": true,
+            "is_scouting_enabled": true,
+            "is_roster_stress_cleared_on_completion": false,
+            "roster_buff_on_failure_minimum_party_resolve_level": 0,
+            "upgrade_tags_to_remove_on_ignore": [],
+            "upgrade_tags_to_remove_on_failure": [],
+            "roster_buffs_to_apply_on_failure": [],
+            "suggested_trinkets": [],
+            "additional_provisions": {
+                "system_config_type": "quest_provision",
+                "items": {}
+            }
+        },
+        {
+            "id": "plot_kill_brigand_cannon_3",
+            "dungeon_level": 7,
+            "quest": {
+                "is_plot_quest": true,
+                "type": "kill_boss",
+                "dungeon": "weald",
+                "difficulty": 5,
+                "length": 2,
+                "goal_ids": [
+                    "kill_brigand_cannon_C"
+                ],
+                "completion_reward": {
+                    "resolve_xp": 16,
+                    "items_definition": {
+                        "system_config_type": "quest_rewards",
+                        "items": {
+                            "0": {
+                                "id": "",
+                                "type": "gold",
+                                "amount": 9000
+                            },
+                            "1": {
+                                "id": "boss_cannon",
+                                "type": "trinket",
+                                "amount": 1
+                            }
+                        }
+                    }
+                }
+            },
+            "additional_trinket_completion_rewards": [
+                {
+                    "rarity": "very_rare",
+                    "amount": 1
+                }
+            ],
+            "is_progression": true,
+            "has_statue_contents": true,
+            "completion_dungeon_xp": false,
+            "can_retreat": true,
+            "retreat_always_from_raid": false,
+            "retreat_party_kill_count": 0,
+            "is_surprise_enabled": true,
+            "is_scouting_enabled": true,
+            "is_roster_stress_cleared_on_completion": false,
+            "roster_buff_on_failure_minimum_party_resolve_level": 0,
+            "upgrade_tags_to_remove_on_ignore": [],
+            "upgrade_tags_to_remove_on_failure": [],
+            "roster_buffs_to_apply_on_failure": [],
+            "suggested_trinkets": [],
+            "additional_provisions": {
+                "system_config_type": "quest_provision",
+                "items": {}
+            }
+        },
+        {
+            "id": "plot_kill_swine_prince_1",
+            "dungeon_level": 2,
+            "quest": {
+                "is_plot_quest": true,
+                "type": "kill_boss",
+                "dungeon": "warrens",
+                "difficulty": 1,
+                "length": 2,
+                "goal_ids": [
+                    "kill_swine_prince_A"
+                ],
+                "completion_reward": {
+                    "resolve_xp": 4,
+                    "items_definition": {
+                        "system_config_type": "quest_rewards",
+                        "items": {
+                            "0": {
+                                "id": "",
+                                "type": "gold",
+                                "amount": 4500
+                            },
+                            "1": {
+                                "id": "portrait",
+                                "type": "heirloom",
+                                "amount": 3
+                            },
+                            "2": {
+                                "id": "crest",
+                                "type": "heirloom",
+                                "amount": 4
+                            }
+                        }
+                    }
+                }
+            },
+            "additional_trinket_completion_rewards": [
+                {
+                    "rarity": "very_rare",
+                    "amount": 1
+                }
+            ],
+            "is_progression": true,
+            "has_statue_contents": true,
+            "completion_dungeon_xp": false,
+            "can_retreat": true,
+            "retreat_always_from_raid": false,
+            "retreat_party_kill_count": 0,
+            "is_surprise_enabled": true,
+            "is_scouting_enabled": true,
+            "is_roster_stress_cleared_on_completion": false,
+            "roster_buff_on_failure_minimum_party_resolve_level": 0,
+            "upgrade_tags_to_remove_on_ignore": [],
+            "upgrade_tags_to_remove_on_failure": [],
+            "roster_buffs_to_apply_on_failure": [],
+            "suggested_trinkets": [],
+            "additional_provisions": {
+                "system_config_type": "quest_provision",
+                "items": {}
+            }
+        },
+        {
+            "id": "plot_kill_formless_flesh_1",
+            "dungeon_level": 3,
+            "quest": {
+                "is_plot_quest": true,
+                "type": "kill_boss",
+                "dungeon": "warrens",
+                "difficulty": 1,
+                "length": 2,
+                "goal_ids": [
+                    "kill_formless_flesh_A"
+                ],
+                "completion_reward": {
+                    "resolve_xp": 4,
+                    "items_definition": {
+                        "system_config_type": "quest_rewards",
+                        "items": {
+                            "0": {
+                                "id": "",
+                                "type": "gold",
+                                "amount": 4500
+                            },
+                            "1": {
+                                "id": "portrait",
+                                "type": "heirloom",
+                                "amount": 3
+                            },
+                            "2": {
+                                "id": "crest",
+                                "type": "heirloom",
+                                "amount": 4
+                            }
+                        }
+                    }
+                }
+            },
+            "additional_trinket_completion_rewards": [
+                {
+                    "rarity": "very_rare",
+                    "amount": 1
+                }
+            ],
+            "is_progression": true,
+            "has_statue_contents": true,
+            "completion_dungeon_xp": false,
+            "can_retreat": true,
+            "retreat_always_from_raid": false,
+            "retreat_party_kill_count": 0,
+            "is_surprise_enabled": true,
+            "is_scouting_enabled": true,
+            "is_roster_stress_cleared_on_completion": false,
+            "roster_buff_on_failure_minimum_party_resolve_level": 0,
+            "upgrade_tags_to_remove_on_ignore": [],
+            "upgrade_tags_to_remove_on_failure": [],
+            "roster_buffs_to_apply_on_failure": [],
+            "suggested_trinkets": [],
+            "additional_provisions": {
+                "system_config_type": "quest_provision",
+                "items": {}
+            }
+        },
+        {
+            "id": "plot_kill_swine_prince_2",
+            "dungeon_level": 4,
+            "quest": {
+                "is_plot_quest": true,
+                "type": "kill_boss",
+                "dungeon": "warrens",
+                "difficulty": 3,
+                "length": 2,
+                "goal_ids": [
+                    "kill_swine_prince_B"
+                ],
+                "completion_reward": {
+                    "resolve_xp": 8,
+                    "items_definition": {
+                        "system_config_type": "quest_rewards",
+                        "items": {
+                            "0": {
+                                "id": "",
+                                "type": "gold",
+                                "amount": 6750
+                            },
+                            "1": {
+                                "id": "portrait",
+                                "type": "heirloom",
+                                "amount": 4
+                            },
+                            "2": {
+                                "id": "crest",
+                                "type": "heirloom",
+                                "amount": 5
+                            }
+                        }
+                    }
+                }
+            },
+            "additional_trinket_completion_rewards": [
+                {
+                    "rarity": "very_rare",
+                    "amount": 1
+                }
+            ],
+            "is_progression": true,
+            "has_statue_contents": true,
+            "completion_dungeon_xp": false,
+            "can_retreat": true,
+            "retreat_always_from_raid": false,
+            "retreat_party_kill_count": 0,
+            "is_surprise_enabled": true,
+            "is_scouting_enabled": true,
+            "is_roster_stress_cleared_on_completion": false,
+            "roster_buff_on_failure_minimum_party_resolve_level": 0,
+            "upgrade_tags_to_remove_on_ignore": [],
+            "upgrade_tags_to_remove_on_failure": [],
+            "roster_buffs_to_apply_on_failure": [],
+            "suggested_trinkets": [],
+            "additional_provisions": {
+                "system_config_type": "quest_provision",
+                "items": {}
+            }
+        },
+        {
+            "id": "plot_kill_formless_flesh_2",
+            "dungeon_level": 5,
+            "quest": {
+                "is_plot_quest": true,
+                "type": "kill_boss",
+                "dungeon": "warrens",
+                "difficulty": 3,
+                "length": 2,
+                "goal_ids": [
+                    "kill_formless_flesh_B"
+                ],
+                "completion_reward": {
+                    "resolve_xp": 8,
+                    "items_definition": {
+                        "system_config_type": "quest_rewards",
+                        "items": {
+                            "0": {
+                                "id": "",
+                                "type": "gold",
+                                "amount": 6750
+                            },
+                            "1": {
+                                "id": "portrait",
+                                "type": "heirloom",
+                                "amount": 4
+                            },
+                            "2": {
+                                "id": "crest",
+                                "type": "heirloom",
+                                "amount": 5
+                            }
+                        }
+                    }
+                }
+            },
+            "additional_trinket_completion_rewards": [
+                {
+                    "rarity": "very_rare",
+                    "amount": 1
+                }
+            ],
+            "is_progression": true,
+            "has_statue_contents": true,
+            "completion_dungeon_xp": false,
+            "can_retreat": true,
+            "retreat_always_from_raid": false,
+            "retreat_party_kill_count": 0,
+            "is_surprise_enabled": true,
+            "is_scouting_enabled": true,
+            "is_roster_stress_cleared_on_completion": false,
+            "roster_buff_on_failure_minimum_party_resolve_level": 0,
+            "upgrade_tags_to_remove_on_ignore": [],
+            "upgrade_tags_to_remove_on_failure": [],
+            "roster_buffs_to_apply_on_failure": [],
+            "suggested_trinkets": [],
+            "additional_provisions": {
+                "system_config_type": "quest_provision",
+                "items": {}
+            }
+        },
+        {
+            "id": "plot_kill_swine_prince_3",
+            "dungeon_level": 6,
+            "quest": {
+                "is_plot_quest": true,
+                "type": "kill_boss",
+                "dungeon": "warrens",
+                "difficulty": 5,
+                "length": 2,
+                "goal_ids": [
+                    "kill_swine_prince_C"
+                ],
+                "completion_reward": {
+                    "resolve_xp": 16,
+                    "items_definition": {
+                        "system_config_type": "quest_rewards",
+                        "items": {
+                            "0": {
+                                "id": "",
+                                "type": "gold",
+                                "amount": 9000
+                            },
+                            "1": {
+                                "id": "boss_wilbur",
+                                "type": "trinket",
+                                "amount": 1
+                            }
+                        }
+                    }
+                }
+            },
+            "additional_trinket_completion_rewards": [
+                {
+                    "rarity": "very_rare",
+                    "amount": 1
+                }
+            ],
+            "is_progression": true,
+            "has_statue_contents": true,
+            "completion_dungeon_xp": false,
+            "can_retreat": true,
+            "retreat_always_from_raid": false,
+            "retreat_party_kill_count": 0,
+            "is_surprise_enabled": true,
+            "is_scouting_enabled": true,
+            "is_roster_stress_cleared_on_completion": false,
+            "roster_buff_on_failure_minimum_party_resolve_level": 0,
+            "upgrade_tags_to_remove_on_ignore": [],
+            "upgrade_tags_to_remove_on_failure": [],
+            "roster_buffs_to_apply_on_failure": [],
+            "suggested_trinkets": [],
+            "additional_provisions": {
+                "system_config_type": "quest_provision",
+                "items": {}
+            }
+        },
+        {
+            "id": "plot_kill_formless_flesh_3",
+            "dungeon_level": 7,
+            "quest": {
+                "is_plot_quest": true,
+                "type": "kill_boss",
+                "dungeon": "warrens",
+                "difficulty": 5,
+                "length": 2,
+                "goal_ids": [
+                    "kill_formless_flesh_C"
+                ],
+                "completion_reward": {
+                    "resolve_xp": 16,
+                    "items_definition": {
+                        "system_config_type": "quest_rewards",
+                        "items": {
+                            "0": {
+                                "id": "",
+                                "type": "gold",
+                                "amount": 9000
+                            },
+                            "1": {
+                                "id": "boss_flesh",
+                                "type": "trinket",
+                                "amount": 1
+                            }
+                        }
+                    }
+                }
+            },
+            "additional_trinket_completion_rewards": [
+                {
+                    "rarity": "very_rare",
+                    "amount": 1
+                }
+            ],
+            "is_progression": true,
+            "has_statue_contents": true,
+            "completion_dungeon_xp": false,
+            "can_retreat": true,
+            "retreat_always_from_raid": false,
+            "retreat_party_kill_count": 0,
+            "is_surprise_enabled": true,
+            "is_scouting_enabled": true,
+            "is_roster_stress_cleared_on_completion": false,
+            "roster_buff_on_failure_minimum_party_resolve_level": 0,
+            "upgrade_tags_to_remove_on_ignore": [],
+            "upgrade_tags_to_remove_on_failure": [],
+            "roster_buffs_to_apply_on_failure": [],
+            "suggested_trinkets": [],
+            "additional_provisions": {
+                "system_config_type": "quest_provision",
+                "items": {}
+            }
+        },
+        {
+            "id": "plot_kill_siren_1",
+            "dungeon_level": 2,
+            "quest": {
+                "is_plot_quest": true,
+                "type": "kill_boss",
+                "dungeon": "cove",
+                "difficulty": 1,
+                "length": 2,
+                "goal_ids": [
+                    "kill_siren_A"
+                ],
+                "completion_reward": {
+                    "resolve_xp": 4,
+                    "items_definition": {
+                        "system_config_type": "quest_rewards",
+                        "items": {
+                            "0": {
+                                "id": "",
+                                "type": "gold",
+                                "amount": 4500
+                            },
+                            "1": {
+                                "id": "crest",
+                                "type": "heirloom",
+                                "amount": 4
+                            }
+                        }
+                    }
+                }
+            },
+            "additional_trinket_completion_rewards": [
+                {
+                    "rarity": "very_rare",
+                    "amount": 1
+                }
+            ],
+            "is_progression": true,
+            "has_statue_contents": true,
+            "completion_dungeon_xp": false,
+            "can_retreat": true,
+            "retreat_always_from_raid": false,
+            "retreat_party_kill_count": 0,
+            "is_surprise_enabled": true,
+            "is_scouting_enabled": true,
+            "is_roster_stress_cleared_on_completion": false,
+            "roster_buff_on_failure_minimum_party_resolve_level": 0,
+            "upgrade_tags_to_remove_on_ignore": [],
+            "upgrade_tags_to_remove_on_failure": [],
+            "roster_buffs_to_apply_on_failure": [],
+            "suggested_trinkets": [],
+            "additional_provisions": {
+                "system_config_type": "quest_provision",
+                "items": {}
+            }
+        },
+        {
+            "id": "plot_kill_drowned_crew_1",
+            "dungeon_level": 3,
+            "quest": {
+                "is_plot_quest": true,
+                "type": "kill_boss",
+                "dungeon": "cove",
+                "difficulty": 1,
+                "length": 2,
+                "goal_ids": [
+                    "kill_drowned_crew_A"
+                ],
+                "completion_reward": {
+                    "resolve_xp": 4,
+                    "items_definition": {
+                        "system_config_type": "quest_rewards",
+                        "items": {
+                            "0": {
+                                "id": "",
+                                "type": "gold",
+                                "amount": 4500
+                            },
+                            "1": {
+                                "id": "crest",
+                                "type": "heirloom",
+                                "amount": 4
+                            }
+                        }
+                    }
+                }
+            },
+            "additional_trinket_completion_rewards": [
+                {
+                    "rarity": "very_rare",
+                    "amount": 1
+                }
+            ],
+            "is_progression": true,
+            "has_statue_contents": true,
+            "completion_dungeon_xp": false,
+            "can_retreat": true,
+            "retreat_always_from_raid": false,
+            "retreat_party_kill_count": 0,
+            "is_surprise_enabled": true,
+            "is_scouting_enabled": true,
+            "is_roster_stress_cleared_on_completion": false,
+            "roster_buff_on_failure_minimum_party_resolve_level": 0,
+            "upgrade_tags_to_remove_on_ignore": [],
+            "upgrade_tags_to_remove_on_failure": [],
+            "roster_buffs_to_apply_on_failure": [],
+            "suggested_trinkets": [],
+            "additional_provisions": {
+                "system_config_type": "quest_provision",
+                "items": {}
+            }
+        },
+        {
+            "id": "plot_kill_siren_2",
+            "dungeon_level": 4,
+            "quest": {
+                "is_plot_quest": true,
+                "type": "kill_boss",
+                "dungeon": "cove",
+                "difficulty": 3,
+                "length": 2,
+                "goal_ids": [
+                    "kill_siren_B"
+                ],
+                "completion_reward": {
+                    "resolve_xp": 8,
+                    "items_definition": {
+                        "system_config_type": "quest_rewards",
+                        "items": {
+                            "0": {
+                                "id": "",
+                                "type": "gold",
+                                "amount": 6750
+                            },
+                            "1": {
+                                "id": "crest",
+                                "type": "heirloom",
+                                "amount": 6
+                            }
+                        }
+                    }
+                }
+            },
+            "additional_trinket_completion_rewards": [
+                {
+                    "rarity": "very_rare",
+                    "amount": 1
+                }
+            ],
+            "is_progression": true,
+            "has_statue_contents": true,
+            "completion_dungeon_xp": false,
+            "can_retreat": true,
+            "retreat_always_from_raid": false,
+            "retreat_party_kill_count": 0,
+            "is_surprise_enabled": true,
+            "is_scouting_enabled": true,
+            "is_roster_stress_cleared_on_completion": false,
+            "roster_buff_on_failure_minimum_party_resolve_level": 0,
+            "upgrade_tags_to_remove_on_ignore": [],
+            "upgrade_tags_to_remove_on_failure": [],
+            "roster_buffs_to_apply_on_failure": [],
+            "suggested_trinkets": [],
+            "additional_provisions": {
+                "system_config_type": "quest_provision",
+                "items": {}
+            }
+        },
+        {
+            "id": "plot_kill_drowned_crew_2",
+            "dungeon_level": 5,
+            "quest": {
+                "is_plot_quest": true,
+                "type": "kill_boss",
+                "dungeon": "cove",
+                "difficulty": 3,
+                "length": 2,
+                "goal_ids": [
+                    "kill_drowned_crew_B"
+                ],
+                "completion_reward": {
+                    "resolve_xp": 8,
+                    "items_definition": {
+                        "system_config_type": "quest_rewards",
+                        "items": {
+                            "0": {
+                                "id": "",
+                                "type": "gold",
+                                "amount": 6750
+                            },
+                            "1": {
+                                "id": "crest",
+                                "type": "heirloom",
+                                "amount": 6
+                            }
+                        }
+                    }
+                }
+            },
+            "additional_trinket_completion_rewards": [
+                {
+                    "rarity": "very_rare",
+                    "amount": 1
+                }
+            ],
+            "is_progression": true,
+            "has_statue_contents": true,
+            "completion_dungeon_xp": false,
+            "can_retreat": true,
+            "retreat_always_from_raid": false,
+            "retreat_party_kill_count": 0,
+            "is_surprise_enabled": true,
+            "is_scouting_enabled": true,
+            "is_roster_stress_cleared_on_completion": false,
+            "roster_buff_on_failure_minimum_party_resolve_level": 0,
+            "upgrade_tags_to_remove_on_ignore": [],
+            "upgrade_tags_to_remove_on_failure": [],
+            "roster_buffs_to_apply_on_failure": [],
+            "suggested_trinkets": [],
+            "additional_provisions": {
+                "system_config_type": "quest_provision",
+                "items": {}
+            }
+        },
+        {
+            "id": "plot_kill_siren_3",
+            "dungeon_level": 6,
+            "quest": {
+                "is_plot_quest": true,
+                "type": "kill_boss",
+                "dungeon": "cove",
+                "difficulty": 5,
+                "length": 2,
+                "goal_ids": [
+                    "kill_siren_C"
+                ],
+                "completion_reward": {
+                    "resolve_xp": 16,
+                    "items_definition": {
+                        "system_config_type": "quest_rewards",
+                        "items": {
+                            "0": {
+                                "id": "",
+                                "type": "gold",
+                                "amount": 9000
+                            },
+                            "1": {
+                                "id": "boss_siren",
+                                "type": "trinket",
+                                "amount": 1
+                            }
+                        }
+                    }
+                }
+            },
+            "additional_trinket_completion_rewards": [
+                {
+                    "rarity": "very_rare",
+                    "amount": 1
+                }
+            ],
+            "is_progression": true,
+            "has_statue_contents": true,
+            "completion_dungeon_xp": false,
+            "can_retreat": true,
+            "retreat_always_from_raid": false,
+            "retreat_party_kill_count": 0,
+            "is_surprise_enabled": true,
+            "is_scouting_enabled": true,
+            "is_roster_stress_cleared_on_completion": false,
+            "roster_buff_on_failure_minimum_party_resolve_level": 0,
+            "upgrade_tags_to_remove_on_ignore": [],
+            "upgrade_tags_to_remove_on_failure": [],
+            "roster_buffs_to_apply_on_failure": [],
+            "suggested_trinkets": [],
+            "additional_provisions": {
+                "system_config_type": "quest_provision",
+                "items": {}
+            }
+        },
+        {
+            "id": "plot_kill_drowned_crew_3",
+            "dungeon_level": 7,
+            "quest": {
+                "is_plot_quest": true,
+                "type": "kill_boss",
+                "dungeon": "cove",
+                "difficulty": 5,
+                "length": 2,
+                "goal_ids": [
+                    "kill_drowned_crew_C"
+                ],
+                "completion_reward": {
+                    "resolve_xp": 16,
+                    "items_definition": {
+                        "system_config_type": "quest_rewards",
+                        "items": {
+                            "0": {
+                                "id": "",
+                                "type": "gold",
+                                "amount": 9000
+                            },
+                            "1": {
+                                "id": "boss_crew",
+                                "type": "trinket",
+                                "amount": 1
+                            }
+                        }
+                    }
+                }
+            },
+            "additional_trinket_completion_rewards": [
+                {
+                    "rarity": "very_rare",
+                    "amount": 1
+                }
+            ],
+            "is_progression": true,
+            "has_statue_contents": true,
+            "completion_dungeon_xp": false,
+            "can_retreat": true,
+            "retreat_always_from_raid": false,
+            "retreat_party_kill_count": 0,
+            "is_surprise_enabled": true,
+            "is_scouting_enabled": true,
+            "is_roster_stress_cleared_on_completion": false,
+            "roster_buff_on_failure_minimum_party_resolve_level": 0,
+            "upgrade_tags_to_remove_on_ignore": [],
+            "upgrade_tags_to_remove_on_failure": [],
+            "roster_buffs_to_apply_on_failure": [],
+            "suggested_trinkets": [],
+            "additional_provisions": {
+                "system_config_type": "quest_provision",
+                "items": {}
+            }
+        },
+        {
+            "id": "plot_town_invasion_0",
+            "plot_quest_dependency": "",
+            "dungeon_level": 0,
+            "quest": {
+                "is_plot_quest": true,
+                "type": "kill_boss",
+                "dungeon": "town",
+                "difficulty": 6,
+                "length": 1,
+                "map_name": "town_invasion_0",
+                "goal_ids": [
+                    "kill_brigand_sapper_D"
+                ],
+                "completion_reward": {
+                    "resolve_xp": 0,
+                    "items_definition": {
+                        "system_config_type": "quest_rewards",
+                        "items": {
+                            "0": {
+                                "id": "boss_tassle",
+                                "type": "trinket",
+                                "amount": 1
+                            }
+                        }
+                    }
+                }
+            },
+            "additional_trinket_completion_rewards": [],
+            "is_progression": false,
+            "has_statue_contents": false,
+            "completion_dungeon_xp": false,
+            "can_retreat": true,
+            "retreat_always_from_raid": false,
+            "retreat_party_kill_count": 1,
+            "is_surprise_enabled": false,
+            "is_scouting_enabled": false,
+            "is_roster_stress_cleared_on_completion": false,
+            "roster_buff_on_failure_minimum_party_resolve_level": 5,
+            "upgrade_tags_to_remove_on_ignore": [
+                {
+                    "upgrade_tag": "building",
+                    "amount": 3
+                }
+            ],
+            "upgrade_tags_to_remove_on_failure": [],
+            "roster_buffs_to_apply_on_failure": [],
+            "suggested_trinkets": [],
+            "additional_provisions": {
+                "system_config_type": "quest_provision",
+                "items": {}
+            }
+        },
+        {
+            "id": "plot_darkest_dungeon_1",
+            "dungeon_level": 0,
+            "quest": {
+                "is_plot_quest": true,
+                "type": "kill_boss",
+                "dungeon": "darkestdungeon",
+                "difficulty": 6,
+                "length": 2,
+                "map_name": "DD_map1",
+                "goal_ids": [
+                    "kill_shuffler_D"
+                ],
+                "completion_reward": {
+                    "resolve_xp": 16,
+                    "items_definition": {
+                        "system_config_type": "quest_rewards",
+                        "items": {
+                            "0": {
+                                "id": "",
+                                "type": "gold",
+                                "amount": 15000
+                            },
+                            "1": {
+                                "id": "crest",
+                                "type": "heirloom",
+                                "amount": 18
+                            },
+                            "2": {
+                                "id": "dd_trinket",
+                                "type": "trinket_unlock",
+                                "amount": 3
+                            }
+                        }
+                    }
+                }
+            },
+            "additional_trinket_completion_rewards": [
+                {
+                    "rarity": "very_rare",
+                    "amount": 1
+                }
+            ],
+            "is_progression": true,
+            "has_statue_contents": true,
+            "completion_dungeon_xp": false,
+            "can_retreat": true,
+            "retreat_always_from_raid": false,
+            "retreat_party_kill_count": 1,
+            "is_surprise_enabled": false,
+            "is_scouting_enabled": false,
+            "is_roster_stress_cleared_on_completion": true,
+            "roster_buff_on_failure_minimum_party_resolve_level": 5,
+            "upgrade_tags_to_remove_on_ignore": [],
+            "upgrade_tags_to_remove_on_failure": [],
+            "roster_buffs_to_apply_on_failure": [
+                "darkest_dungeon_failure_roster_resolve_xp"
+            ],
+            "suggested_trinkets": [],
+            "additional_provisions": {
+                "system_config_type": "quest_provision",
+                "items": {}
+            }
+        },
+        {
+            "id": "plot_darkest_dungeon_2",
+            "plot_quest_dependency": "plot_darkest_dungeon_1",
+            "dungeon_level": 0,
+            "quest": {
+                "is_plot_quest": true,
+                "type": "inventory_activate",
+                "dungeon": "darkestdungeon",
+                "difficulty": 6,
+                "length": 3,
+                "map_name": "DD_map2",
+                "goal_ids": [
+                    "inventory_activate_beacons"
+                ],
+                "completion_reward": {
+                    "resolve_xp": 16,
+                    "items_definition": {
+                        "system_config_type": "quest_rewards",
+                        "items": {
+                            "0": {
+                                "id": "",
+                                "type": "gold",
+                                "amount": 15000
+                            },
+                            "1": {
+                                "id": "crest",
+                                "type": "heirloom",
+                                "amount": 18
+                            }
+                        }
+                    }
+                }
+            },
+            "additional_trinket_completion_rewards": [
+                {
+                    "rarity": "very_rare",
+                    "amount": 1
+                }
+            ],
+            "is_progression": true,
+            "has_statue_contents": true,
+            "completion_dungeon_xp": false,
+            "can_retreat": true,
+            "retreat_always_from_raid": false,
+            "retreat_party_kill_count": 1,
+            "is_surprise_enabled": false,
+            "is_scouting_enabled": false,
+            "is_roster_stress_cleared_on_completion": true,
+            "roster_buff_on_failure_minimum_party_resolve_level": 5,
+            "upgrade_tags_to_remove_on_ignore": [],
+            "upgrade_tags_to_remove_on_failure": [],
+            "roster_buffs_to_apply_on_failure": [
+                "darkest_dungeon_failure_roster_resolve_xp"
+            ],
+            "suggested_trinkets": [
+                {
+                    "trinket_id": "dd_trinket",
+                    "amount": 3
+                }
+            ],
+            "additional_provisions": {
+                "system_config_type": "quest_provision",
+                "items": {}
+            }
+        },
+        {
+            "id": "plot_darkest_dungeon_3",
+            "plot_quest_dependency": "plot_darkest_dungeon_2",
+            "dungeon_level": 0,
+            "quest": {
+                "is_plot_quest": true,
+                "type": "activate",
+                "dungeon": "darkestdungeon",
+                "difficulty": 6,
+                "length": 4,
+                "map_name": "DD_map3",
+                "goal_ids": [
+                    "activate_teleporter"
+                ],
+                "completion_reward": {
+                    "resolve_xp": 16,
+                    "items_definition": {
+                        "system_config_type": "quest_rewards",
+                        "items": {
+                            "0": {
+                                "id": "",
+                                "type": "gold",
+                                "amount": 15000
+                            },
+                            "1": {
+                                "id": "crest",
+                                "type": "heirloom",
+                                "amount": 18
+                            }
+                        }
+                    }
+                }
+            },
+            "additional_trinket_completion_rewards": [
+                {
+                    "rarity": "very_rare",
+                    "amount": 1
+                }
+            ],
+            "is_progression": true,
+            "has_statue_contents": true,
+            "completion_dungeon_xp": false,
+            "can_retreat": true,
+            "retreat_always_from_raid": false,
+            "retreat_party_kill_count": 1,
+            "is_surprise_enabled": false,
+            "is_scouting_enabled": false,
+            "is_roster_stress_cleared_on_completion": true,
+            "roster_buff_on_failure_minimum_party_resolve_level": 5,
+            "upgrade_tags_to_remove_on_ignore": [],
+            "upgrade_tags_to_remove_on_failure": [],
+            "roster_buffs_to_apply_on_failure": [
+                "darkest_dungeon_failure_roster_resolve_xp"
+            ],
+            "suggested_trinkets": [],
+            "additional_provisions": {
+                "system_config_type": "quest_provision",
+                "items": {}
+            }
+        },
+        {
+            "id": "plot_darkest_dungeon_4",
+            "plot_quest_dependency": "plot_darkest_dungeon_3",
+            "dungeon_level": 0,
+            "quest": {
+                "is_plot_quest": true,
+                "type": "kill_boss",
+                "dungeon": "darkestdungeon",
+                "difficulty": 6,
+                "length": 1,
+                "map_name": "DD_map4",
+                "goal_ids": [
+                    "kill_ancestor_heart_D"
+                ],
+                "completion_reward": {
+                    "resolve_xp": 16,
+                    "items_definition": {
+                        "system_config_type": "quest_rewards",
+                        "items": {
+                            "0": {
+                                "id": "",
+                                "type": "gold",
+                                "amount": 15000
+                            },
+                            "1": {
+                                "id": "crest",
+                                "type": "heirloom",
+                                "amount": 18
+                            }
+                        }
+                    }
+                }
+            },
+            "additional_trinket_completion_rewards": [
+                {
+                    "rarity": "very_rare",
+                    "amount": 1
+                }
+            ],
+            "is_progression": true,
+            "has_statue_contents": true,
+            "completion_dungeon_xp": false,
+            "can_retreat": false,
+            "retreat_always_from_raid": false,
+            "retreat_party_kill_count": 1,
+            "is_surprise_enabled": false,
+            "is_scouting_enabled": false,
+            "is_roster_stress_cleared_on_completion": true,
+            "roster_buff_on_failure_minimum_party_resolve_level": 5,
+            "upgrade_tags_to_remove_on_ignore": [],
+            "upgrade_tags_to_remove_on_failure": [],
+            "roster_buffs_to_apply_on_failure": [
+                "darkest_dungeon_failure_roster_resolve_xp"
+            ],
+            "suggested_trinkets": [],
+            "additional_provisions": {
+                "system_config_type": "quest_provision",
+                "items": {}
+            }
+        }
+    ],
+    "generation": {
+        "number": {
+            "number_of_quests_per_town_visit_table": [
+                2,
+                5,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12
+            ]
+        },
+        "dungeon": {
+            "max_number_of_generated_quests_per_dungeon": 4,
+            "generated_dungeons": [
+                {
+                    "id": "crypts",
+                    "required_number_of_quests_finished": 2
+                },
+                {
+                    "id": "weald",
+                    "required_number_of_quests_finished": 3
+                },
+                {
+                    "id": "warrens",
+                    "required_number_of_quests_finished": 4
+                },
+                {
+                    "id": "cove",
+                    "required_number_of_quests_finished": 4
+                }
+            ]
+        },
+        "difficulty": {
+            "generated_resolve_level_difficulties": [
+                {
+                    "resolve_levels": [
+                        0,
+                        1,
+                        2
+                    ],
+                    "difficulty": 1
+                },
+                {
+                    "resolve_levels": [
+                        2,
+                        3,
+                        4
+                    ],
+                    "difficulty": 3
+                },
+                {
+                    "resolve_levels": [
+                        4,
+                        5,
+                        6
+                    ],
+                    "difficulty": 5
+                }
+            ]
+        },
+        "type": {
+            "available_quests_table": [
+                {
+                    "dungeon": "crypts",
+                    "generated_quest_table": [
+                        [
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 1
+                            }
+                        ],
+                        [
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 2
+                            }
+                        ],
+                        [
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "inventory_activate",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "gather",
+                                "chance": 1,
+                                "length": 2
+                            }
+                        ],
+                        [
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "inventory_activate",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "gather",
+                                "chance": 1,
+                                "length": 2
+                            }
+                        ],
+                        [
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "inventory_activate",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "gather",
+                                "chance": 1,
+                                "length": 2
+                            }
+                        ],
+                        [
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "inventory_activate",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "gather",
+                                "chance": 1,
+                                "length": 2
+                            }
+                        ],
+                        [
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "inventory_activate",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "gather",
+                                "chance": 1,
+                                "length": 2
+                            }
+                        ],
+                        [
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "inventory_activate",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "gather",
+                                "chance": 1,
+                                "length": 2
+                            }
+                        ]
+                    ]
+                },
+                {
+                    "dungeon": "weald",
+                    "generated_quest_table": [
+                        [
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 1
+                            }
+                        ],
+                        [
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 2
+                            }
+                        ],
+                        [
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "inventory_activate",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "gather",
+                                "chance": 1,
+                                "length": 2
+                            }
+                        ],
+                        [
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "inventory_activate",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "gather",
+                                "chance": 1,
+                                "length": 2
+                            }
+                        ],
+                        [
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "inventory_activate",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "gather",
+                                "chance": 1,
+                                "length": 2
+                            }
+                        ],
+                        [
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "inventory_activate",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "gather",
+                                "chance": 1,
+                                "length": 2
+                            }
+                        ],
+                        [
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "inventory_activate",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "gather",
+                                "chance": 1,
+                                "length": 2
+                            }
+                        ],
+                        [
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "inventory_activate",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "gather",
+                                "chance": 1,
+                                "length": 2
+                            }
+                        ]
+                    ]
+                },
+                {
+                    "dungeon": "warrens",
+                    "generated_quest_table": [
+                        [
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 1
+                            }
+                        ],
+                        [
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 2
+                            }
+                        ],
+                        [
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "inventory_activate",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "gather",
+                                "chance": 1,
+                                "length": 2
+                            }
+                        ],
+                        [
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "inventory_activate",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "gather",
+                                "chance": 1,
+                                "length": 2
+                            }
+                        ],
+                        [
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "inventory_activate",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "gather",
+                                "chance": 1,
+                                "length": 2
+                            }
+                        ],
+                        [
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "inventory_activate",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "gather",
+                                "chance": 1,
+                                "length": 2
+                            }
+                        ],
+                        [
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "inventory_activate",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "gather",
+                                "chance": 1,
+                                "length": 2
+                            }
+                        ],
+                        [
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "inventory_activate",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "gather",
+                                "chance": 1,
+                                "length": 2
+                            }
+                        ]
+                    ]
+                },
+                {
+                    "dungeon": "cove",
+                    "generated_quest_table": [
+                        [
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 1
+                            }
+                        ],
+                        [
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 2
+                            }
+                        ],
+                        [
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "inventory_activate",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "gather",
+                                "chance": 1,
+                                "length": 2
+                            }
+                        ],
+                        [
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "inventory_activate",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "gather",
+                                "chance": 1,
+                                "length": 2
+                            }
+                        ],
+                        [
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "inventory_activate",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "gather",
+                                "chance": 1,
+                                "length": 2
+                            }
+                        ],
+                        [
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "inventory_activate",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "gather",
+                                "chance": 1,
+                                "length": 2
+                            }
+                        ],
+                        [
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "inventory_activate",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "gather",
+                                "chance": 1,
+                                "length": 2
+                            }
+                        ],
+                        [
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 1
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "explore",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "cleanse",
+                                "chance": 1,
+                                "length": 3
+                            },
+                            {
+                                "type": "inventory_activate",
+                                "chance": 1,
+                                "length": 2
+                            },
+                            {
+                                "type": "gather",
+                                "chance": 1,
+                                "length": 2
+                            }
+                        ]
+                    ]
+                }
+            ]
+        },
+        "rewards": {
+            "heirloom_type_map": [
+                {
+                    "dungeon": "crypts",
+                    "types": [
+                        "bust",
+                        "crest"
+                    ]
+                },
+                {
+                    "dungeon": "warrens",
+                    "types": [
+                        "portrait",
+                        "crest"
+                    ]
+                },
+                {
+                    "dungeon": "weald",
+                    "types": [
+                        "deed",
+                        "crest"
+                    ]
+                },
+                {
+                    "dungeon": "cove",
+                    "types": [
+                        "portrait",
+                        "deed",
+                    ]
+                }
+            ],
+            "comment": "This table determines how much Resolve XP is awarded for a successful quest. ROWS are DIFFICULTY, COLs are QUEST LENGTH",
+            "heirloom_amount_table": [
+                {
+                    "type": "bust",
+                    "amounts": [
+                        [],
+                        [
+                            0,
+                            2,
+                            2,
+                            4
+                        ],
+                        [],
+                        [
+                            0,
+                            2,
+                            3,
+                            6
+                        ],
+                        [],
+                        [
+                            0,
+                            3,
+                            5,
+                            9
+                        ]
+                    ]
+                },
+                {
+                    "type": "portrait",
+                    "amounts": [
+                        [],
+                        [
+                            0,
+                            2,
+                            2,
+                            4
+                        ],
+                        [],
+                        [
+                            0,
+                            2,
+                            3,
+                            6
+                        ],
+                        [],
+                        [
+                            0,
+                            3,
+                            5,
+                            9
+                        ]
+                    ]
+                },
+                {
+                    "type": "deed",
+                    "amounts": [
+                        [],
+                        [
+                            0,
+                            3,
+                            5,
+                            9
+                        ],
+                        [],
+                        [
+                            0,
+                            4,
+                            6,
+                            12
+                        ],
+                        [],
+                        [
+                            0,
+                            6,
+                            9,
+                            18
+                        ]
+                    ]
+                },
+                {
+                    "type": "crest",
+                    "amounts": [
+                        [],
+                        [
+                            0,
+                            3,
+                            5,
+                            9
+                        ],
+                        [],
+                        [
+                            0,
+                            4,
+                            6,
+                            12
+                        ],
+                        [],
+                        [
+                            0,
+                            6,
+                            9,
+                            18
+                        ]
+                    ]
+                }
+            ],
+            "item_table": [
+                [],
+                [
+                    [],
+                    [
+                        {
+                            "type": "gold",
+                            "id": "",
+                            "amount": 3000
+                        }
+                    ],
+                    [
+                        {
+                            "type": "gold",
+                            "id": "",
+                            "amount": 4500
+                        }
+                    ],
+                    [
+                        {
+                            "type": "gold",
+                            "id": "",
+                            "amount": 7500
+                        }
+                    ]
+                ],
+                [],
+                [
+                    [],
+                    [
+                        {
+                            "type": "gold",
+                            "id": "",
+                            "amount": 4500
+                        }
+                    ],
+                    [
+                        {
+                            "type": "gold",
+                            "id": "",
+                            "amount": 6750
+                        }
+                    ],
+                    [
+                        {
+                            "type": "gold",
+                            "id": "",
+                            "amount": 11250
+                        }
+                    ]
+                ],
+                [],
+                [
+                    [],
+                    [
+                        {
+                            "type": "gold",
+                            "id": "",
+                            "amount": 6000
+                        }
+                    ],
+                    [
+                        {
+                            "type": "gold",
+                            "id": "",
+                            "amount": 9000
+                        }
+                    ],
+                    [
+                        {
+                            "type": "gold",
+                            "id": "",
+                            "amount": 15000
+                        }
+                    ]
+                ],
+                [
+                    [],
+                    [
+                        {
+                            "type": "gold",
+                            "id": "",
+                            "amount": 9000
+                        }
+                    ],
+                    [
+                        {
+                            "type": "gold",
+                            "id": "",
+                            "amount": 13500
+                        }
+                    ],
+                    [
+                        {
+                            "type": "gold",
+                            "id": "",
+                            "amount": 22500
+                        }
+                    ]
+                ]
+            ],
+            "resolve_xp_table": [
+                [
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                [
+                    0,
+                    2,
+                    3,
+                    4
+                ],
+                [
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                [
+                    0,
+                    4,
+                    6,
+                    8
+                ],
+                [
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                [
+                    0,
+                    8,
+                    12,
+                    16
+                ],
+                [
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            ],
+            "trinket_chance_table": [
+                {
+                    "comment": "ROWS are DIFFICULTY, COLs are QUEST LENGTH",
+                    "rarity": "very_common",
+                    "chances": [
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ]
+                    ]
+                },
+                {
+                    "rarity": "common",
+                    "chances": [
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ]
+                    ]
+                },
+                {
+                    "rarity": "uncommon",
+                    "chances": [
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            0,
+                            1,
+                            0
+                        ],
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ]
+                    ]
+                },
+                {
+                    "rarity": "rare",
+                    "chances": [
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            0,
+                            1,
+                            0
+                        ],
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            1,
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ]
+                    ]
+                },
+                {
+                    "rarity": "very_rare",
+                    "chances": [
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            0,
+                            1,
+                            0
+                        ],
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ]
+                    ]
+                },
+                {
+                    "rarity": "ancestral",
+                    "chances": [
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            0,
+                            0,
+                            1
+                        ],
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ]
+                    ]
+                }
+            ]
+        }
+    },
+    "restriction": 
+	{
+        "difficulty": 
+		{
+            "resolve_level_threshold_table": 
+			[
+                2,
+                2,
+                3,
+                4,
+                5,
+                99,
+                99
+            ]
+        }
+    }
+}

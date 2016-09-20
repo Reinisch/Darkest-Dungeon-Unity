@@ -1,0 +1,22 @@
+name: spider_spitter_B
+type: spider_spitter
+
+art:
+commonfx: .deathfx death_medium
+skill: .id "spider_spit" .anim "attack_melee" .fx "spit" .targchestfx "spit_target" .area_pos_offset 0 20 .target_area_pos_offset 0 20
+skill: .id "spider_bite" .anim "attack_melee" .fx "bite" .targchestfx "spit_target" .area_pos_offset 0 20 .target_area_pos_offset 0 20
+defending_area_pos_offset: .offset 0 20
+.end
+
+info:
+display: .size 1
+enemy_type: .id "beast"
+stats: .hp 10 .def 23.75% .prot 0 .spd 5 .stun_resist 45% .poison_resist 40% .bleed_resist 40% .debuff_resist 30% .move_resist 30%
+skill: .id "spider_spit" .type "ranged" .atk 88.75% .dmg 3 7 .crit 16%  .effect "Damage Marked Target" "Weak Blight 3" "Spitter Spit Debuff 3" .launch 34 .target 1234
+skill: .id "spider_bite" .type "melee" .atk 78.75% .dmg 2 3 .crit 6%  .effect "Weak Blight 3" "Damage Marked Target" .launch 12 .target 1234
+personality: .prefskill 1
+loot: .code "A" .count 1
+initiative: .number_of_turns_per_round 1
+monster_brain: .id kill_marked_target_generic
+battle_modifier: .disable_stall_penalty False .can_surprise True .can_be_surprised True .always_surprise False .always_be_surprised False
+.end

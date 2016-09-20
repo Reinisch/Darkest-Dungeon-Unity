@@ -1,0 +1,195 @@
+{
+   "trees":
+   [
+      {
+         "id" : "blacksmith.weapon",
+         "is_instanced" : false,
+         "tags" : ["building","blacksmith"],
+         "requirements" : 
+         [
+            {
+               "code" : "a",
+               "currency_cost" :
+               [
+                  { "type" : "gold", "amount" : 0},
+                  { "type" : "deed", "amount" : 10},
+                  { "type" : "crest", "amount" : 6}
+               ],
+               "prerequisite_requirements" :
+               [
+            ]
+         },
+         {
+            "code" : "b",
+            "currency_cost" :
+            [
+               { "type" : "gold", "amount" : 0},
+               { "type" : "deed", "amount" : 26},
+               { "type" : "crest", "amount" : 17}
+            ],
+            "prerequisite_requirements" :
+            [
+               { "tree_id" : "blacksmith.weapon", "requirement_code" : "a" }
+            ]
+         },
+         {
+            "code" : "c",
+            "currency_cost" :
+            [
+               { "type" : "gold", "amount" : 0},
+               { "type" : "deed", "amount" : 42},
+               { "type" : "crest", "amount" : 28}
+            ],
+            "prerequisite_requirements" :
+            [
+               { "tree_id" : "blacksmith.weapon", "requirement_code" : "b" }
+            ]
+         },
+         {
+            "code" : "d",
+            "currency_cost" :
+            [
+               { "type" : "gold", "amount" : 0},
+               { "type" : "deed", "amount" : 58},
+               { "type" : "crest", "amount" : 39}
+            ],
+            "prerequisite_requirements" :
+            [
+               { "tree_id" : "blacksmith.weapon", "requirement_code" : "c" }
+            ]
+         }
+      ]
+   },
+      {
+         "id" : "blacksmith.armour",
+         "is_instanced" : false,
+         "tags" : ["building","blacksmith"],
+         "requirements" : 
+         [
+            {
+               "code" : "a",
+               "currency_cost" :
+               [
+                  { "type" : "gold", "amount" : 0},
+                  { "type" : "deed", "amount" : 10},
+                  { "type" : "crest", "amount" : 6}
+               ],
+               "prerequisite_requirements" :
+               [
+            ]
+         },
+         {
+            "code" : "b",
+            "currency_cost" :
+            [
+               { "type" : "gold", "amount" : 0},
+               { "type" : "deed", "amount" : 26},
+               { "type" : "crest", "amount" : 17}
+            ],
+            "prerequisite_requirements" :
+            [
+               { "tree_id" : "blacksmith.armour", "requirement_code" : "a" }
+            ]
+         },
+         {
+            "code" : "c",
+            "currency_cost" :
+            [
+               { "type" : "gold", "amount" : 0},
+               { "type" : "deed", "amount" : 42},
+               { "type" : "crest", "amount" : 28}
+            ],
+            "prerequisite_requirements" :
+            [
+               { "tree_id" : "blacksmith.armour", "requirement_code" : "b" }
+            ]
+         },
+         {
+            "code" : "d",
+            "currency_cost" :
+            [
+               { "type" : "gold", "amount" : 0},
+               { "type" : "deed", "amount" : 58},
+               { "type" : "crest", "amount" : 39}
+            ],
+            "prerequisite_requirements" :
+            [
+               { "tree_id" : "blacksmith.armour", "requirement_code" : "c" }
+            ]
+         }
+      ]
+   },
+      {
+         "id" : "blacksmith.cost",
+         "is_instanced" : false,
+         "tags" : ["building","blacksmith"],
+         "requirements" : 
+         [
+            {
+               "code" : "a",
+               "currency_cost" :
+               [
+                  { "type" : "gold", "amount" : 0},
+                  { "type" : "deed", "amount" : 5},
+                  { "type" : "crest", "amount" : 3}
+               ],
+               "prerequisite_requirements" :
+               [
+            ]
+         },
+         {
+            "code" : "b",
+            "currency_cost" :
+            [
+               { "type" : "gold", "amount" : 0},
+               { "type" : "deed", "amount" : 12},
+               { "type" : "crest", "amount" : 8}
+            ],
+            "prerequisite_requirements" :
+            [
+               { "tree_id" : "blacksmith.cost", "requirement_code" : "a" }
+            ]
+         },
+         {
+            "code" : "c",
+            "currency_cost" :
+            [
+               { "type" : "gold", "amount" : 0},
+               { "type" : "deed", "amount" : 18},
+               { "type" : "crest", "amount" : 12}
+            ],
+            "prerequisite_requirements" :
+            [
+               { "tree_id" : "blacksmith.cost", "requirement_code" : "b" }
+            ]
+         },
+         {
+            "code" : "d",
+            "currency_cost" :
+            [
+               { "type" : "gold", "amount" : 0},
+               { "type" : "deed", "amount" : 24},
+               { "type" : "crest", "amount" : 16}
+            ],
+            "prerequisite_requirements" :
+            [
+               { "tree_id" : "blacksmith.cost", "requirement_code" : "c" }
+            ]
+         },
+         {
+            "code" : "e",
+            "currency_cost" :
+            [
+               { "type" : "gold", "amount" : 0},
+               { "type" : "deed", "amount" : 31},
+               { "type" : "crest", "amount" : 21}
+            ],
+            "prerequisite_requirements" :
+            [
+               { "tree_id" : "blacksmith.cost", "requirement_code" : "d" }
+            ]
+         }
+      ]
+   }
+]
+}

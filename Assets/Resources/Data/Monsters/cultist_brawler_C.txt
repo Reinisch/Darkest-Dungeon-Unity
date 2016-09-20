@@ -1,0 +1,22 @@
+name: cultist_brawler_C
+type: cultist_brawler
+
+art:
+commonfx: .deathfx death_medium
+skill: .id "brawler_claw" .anim "attack_melee" .fx "brawler_claw" .targchestfx "blood_splatter"
+skill: .id "brawler_claw_weak" .anim "attack_melee" .fx "brawler_claw" .targchestfx "blood_splatter"
+.end
+
+info:
+display: .size 1
+enemy_type: .id "man"
+stats: .hp 31 .def 22.5% .prot 0 .spd 7 .stun_resist 70% .poison_resist 65% .bleed_resist 65% .debuff_resist 60% .move_resist 70%
+skill: .id "brawler_claw" .type "melee" .atk 92.5% .dmg 4 8 .crit 17%  .effect "Minor Bleed 5" "SmallDmg Marked Target" "Brawler Rend Debuff 5" .launch 21 .target 12 .move 0 1
+skill: .id "brawler_claw_weak" .type "melee" .atk 62.5% .dmg 4 8 .crit 0%  .launch 43 .target 12 .move 0 1 .is_crit_valid False
+personality: .prefskill -1
+loot: .code "A" .count 1
+initiative: .number_of_turns_per_round 1
+monster_brain: .id cultist_brawler_C
+death_class: .monster_class_id corpse_C .is_valid_on_crit False .type "corpse" 
+battle_modifier: .disable_stall_penalty False .can_surprise True .can_be_surprised True .always_surprise False .always_be_surprised False
+.end

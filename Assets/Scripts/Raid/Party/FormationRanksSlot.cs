@@ -1,0 +1,91 @@
+﻿using UnityEngine;
+using UnityEngine.UI;
+using System.Collections;
+using System.Collections.Generic;
+
+public class FormationRanksSlot : MonoBehaviour
+{
+    public FormationUnit Unit { get; set; }
+    public FormationRanks Ranks { get; set; }
+
+    public RectTransform RectTransform { get; set; }
+    public LayoutElement LayoutElement { get; set; }
+
+    public bool HasUnit
+    {
+        get
+        {
+            return Unit != null;
+        }
+    }
+
+    void Awake()
+    {
+        RectTransform = GetComponent<RectTransform>();
+        LayoutElement = GetComponent<LayoutElement>();
+        Ranks = GetComponentInParent<FormationRanks>();
+    }
+
+    public void PutInSlot(FormationUnit unit)
+    {
+        Unit = unit;
+        Unit.RankSlot = this;
+        if (Unit.Character.RenderRankOverride == 0)
+            Unit.SetSortingOrder(PartyFormationManager.ShowoffOrder - unit.Rank);
+        else
+            Unit.SetSortingOrder(PartyFormationManager.ShowoffOrder - unit.Character.RenderRankOverride);
+
+        LayoutElement.preferredWidth = FormationRanks.SlotSize * unit.Size;
+        if (Ranks.facingRight)
+            RectTransform.SetSiblingIndex(4 - unit.Rank);
+        else
+            RectTransform.SetSiblingIndex(unit.Rank - 1);
+        gameObject.SetActive(true);
+    }
+    public void UpdateSlot()
+    {
+        if(HasUnit)
+        {
+            if (Unit.Character.RenderRankOverride == 0)
+                Unit.SetSortingOrder(PartyFormationManager.ShowoffOrder - Unit.Rank);
+            else
+                Unit.SetSortingOrder(PartyFormationManager.ShowoffOrder - Unit.Character.RenderRankOverride);
+
+            LayoutElement.preferredWidth = FormationRanks.SlotSize * Unit.Size;
+            if (Ranks.facingRight)
+                RectTransform.SetSiblingIndex(4 - Unit.Rank);
+            else
+                RectTransform.SetSiblingIndex(Unit.Rank - 1);
+        }
+    }
+    public void Relocate(int targetRank, bool changeUnitSorting = true)
+    {
+        Unit.Rank = targetRank;
+        if(Unit.Character.RenderRankOverride == 0)
+        {
+            if (changeUnitSorting)
+                Unit.SetSortingOrder(PartyFormationManager.ShowoffOrder - targetRank);
+        }
+        else
+        {
+            if (changeUnitSorting)
+                Unit.SetSortingOrder(PartyFormationManager.ShowoffOrder - Unit.Character.RenderRankOverride);
+        }
+        if (Ranks.facingRight)
+            RectTransform.SetSiblingIndex(4 - Unit.Rank);
+        else
+            RectTransform.SetSiblingIndex(Unit.Rank - 1);
+        
+    }
+    public void ClearSlot()
+    {
+        Unit = null;
+        gameObject.SetActive(false);
+    }
+
+    public void Teleport()
+    {
+        if(Unit != null)
+            Unit.InstantRelocation();   
+    }
+}

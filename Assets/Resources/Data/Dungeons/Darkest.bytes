@@ -1,0 +1,69 @@
+id: 4
+is_released: false
+hall_variants: 1
+room_variants: temple
+
+mash:
+id: 6
+named: .name dd_quest_1_mash_01 .chance 1 .types cultist_orgiastic_D cultist_orgiastic_D
+named: .name dd_quest_1_mash_02 .chance 1 .types cultist_shrouded_D
+named: .name dd_quest_1_mash_03 .chance 1 .types cultist_warlord_D cultist_warlord_D cultist_orgiastic_D
+named: .name dd_quest_1_mash_04 .chance 1 .types cultist_warlord_D cultist_warlord_D cultist_harpy_D cultist_harpy_D
+named: .name dd_quest_1_mash_05 .chance 1 .types cultist_warlord_D cultist_shrouded_D cultist_harpy_D cultist_orgiastic_D
+named: .name dd_quest_1_mash_06 .chance 1 .types cultist_shrouded_D cultist_shrouded_D cultist_shrouded_D
+named: .name dd_quest_1_mash_07 .chance 1 .types cultist_shrouded_D cultist_warlord_D cultist_harpy_D cultist_harpy_D
+named: .name dd_quest_1_mash_08 .chance 1 .types cultist_orgiastic_D cultist_warlord_D cultist_shrouded_D cultist_orgiastic_D
+named: .name dd_quest_1_mash_09 .chance 1 .types cultist_warlord_D cultist_shrouded_D cultist_orgiastic_D cultist_harpy_D
+named: .name dd_quest_1_mash_10 .chance 1 .types totem_attack_D cultist_shrouded_D cultist_harpy_D cultist_orgiastic_D
+named: .name dd_quest_1_mash_11 .chance 1 .types cultist_shrouded_D cultist_harpy_D cultist_harpy_D
+named: .name dd_quest_2_miniboss_1 .chance 1 .types templar_melee_mb_D errant_flesh_bat_D errant_flesh_bat_D
+named: .name dd_quest_2_miniboss_2 .chance 1 .types errant_flesh_dog_D errant_flesh_dog_D templar_ranged_mb_D
+named: .name dd_quest_2_miniboss_3 .chance 1 .types templar_melee_mb_D templar_ranged_mb_D
+named: .name dd_quest_2_mash_01 .chance 1 .types cultist_shrouded_D cultist_shrouded_D cultist_orgiastic_D
+named: .name dd_quest_2_mash_02 .chance 1 .types cultist_shrouded_D cultist_shrouded_D cultist_orgiastic_D cultist_orgiastic_D
+named: .name dd_quest_2_mash_03 .chance 1 .types totem_attack_D cultist_shrouded_D cultist_shrouded_D cultist_orgiastic_D
+named: .name dd_quest_2_mash_04 .chance 1 .types cultist_shrouded_D cultist_shrouded_D totem_guard_D
+named: .name dd_quest_2_mash_05 .chance 1 .types totem_attack_D cultist_shrouded_D cultist_orgiastic_D
+named: .name dd_quest_2_mash_06 .chance 1 .types totem_attack_D cultist_shrouded_D totem_guard_D
+named: .name dd_quest_2_mash_07 .chance 1 .types totem_attack_D totem_attack_D totem_guard_D
+named: .name dd_quest_2_mash_08 .chance 1 .types totem_attack_D totem_attack_D cultist_shrouded_D cultist_orgiastic_D
+named: .name dd_quest_2_mash_09 .chance 1 .types cultist_shrouded_D cultist_shrouded_D cultist_shrouded_D totem_guard_D
+named: .name dd_quest_2_mash_10 .chance 1 .types totem_attack_D cultist_shrouded_D cultist_orgiastic_D totem_guard_D
+named: .name dd_quest_3_teleport .chance 1 .types cyst_D cell_white_D
+named: .name dd_quest_3_mash_templar_melee .chance 1 .types templar_melee_D
+named: .name dd_quest_3_mash_templar_ranged .chance 1 .types templar_ranged_D
+named: .name dd_quest_3_mash_01 .chance 1 .types errant_flesh_dog_D errant_flesh_dog_D
+named: .name dd_quest_3_mash_02 .chance 1 .types errant_flesh_dog_D errant_flesh_dog_D errant_flesh_dog_D
+named: .name dd_quest_3_mash_03 .chance 1 .types errant_flesh_dog_D errant_flesh_bat_D errant_flesh_bat_D
+named: .name dd_quest_3_mash_04 .chance 1 .types errant_flesh_dog_D errant_flesh_dog_D errant_flesh_bat_D
+named: .name dd_quest_3_mash_05 .chance 1 .types errant_flesh_dog_D errant_flesh_dog_D errant_flesh_bat_D errant_flesh_bat_D
+named: .name dd_quest_3_mash_06 .chance 1 .types cell_battle_D errant_flesh_bat_D errant_flesh_bat_D
+named: .name dd_quest_3_mash_07 .chance 1 .types cell_battle_D errant_flesh_dog_D errant_flesh_dog_D
+named: .name dd_quest_3_mash_08 .chance 1 .types cell_battle_D errant_flesh_dog_D errant_flesh_bat_D errant_flesh_bat_D
+named: .name dd_quest_3_mash_09 .chance 1 .types cell_battle_D errant_flesh_dog_D errant_flesh_dog_D errant_flesh_bat_D
+named: .name dd_quest_3_mash_10 .chance 1 .types cell_battle_D cell_battle_D errant_flesh_bat_D errant_flesh_bat_D
+boss: .chance 1 .types shuffler_D cultist_shrouded_D
+boss: .chance 1 .types ancestor_small_D
+hall: .chance 1 .types shambler_C
+room: .chance 1 .types shambler_C
+stall: .chance 2 .types cultist_shrouded_D cultist_shrouded_D  
+stall: .chance 1 .types cultist_shrouded_D cultist_shrouded_D cultist_shrouded_D
+.end
+
+props:
+hall_curios: .chance 1 .types stack_of_books
+hall_curios: .chance 1 .types discarded_pack
+hall_curios: .chance 1 .types sconce
+hall_curios: .chance 1 .types sack
+hall_curios: .chance 1 .types crate
+room_curios: .chance 1 .types stack_of_books
+room_curios: .chance 1 .types discarded_pack
+room_curios: .chance 1 .types sconce
+room_curios: .chance 1 .types crate
+room_curios: .chance 1 .types sack
+room_treasures: .chance 1 .types unlocked_strongbox
+room_treasures: .chance 1 .types locked_strongbox
+room_treasures: .chance 1 .types heirloom_chest
+traps: .chance 1 .types spikes
+obstacles: .chance 1 .types rubble
+.end

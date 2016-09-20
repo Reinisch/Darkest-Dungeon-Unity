@@ -1,0 +1,20 @@
+name: carrion_eater_B
+type: carrion_eater
+
+art:
+commonfx: .deathfx death_medium
+skill: .id "munch" .anim "attack_bite" .targchestfx "blood_splatter"
+.end
+
+info:
+display: .size 1
+enemy_type: .id "beast"
+stats: .hp 13 .def 8.75% .prot 0 .spd 5 .stun_resist 70% .poison_resist 120% .bleed_resist 80% .debuff_resist 60% .move_resist 70%
+skill: .id "munch" .type "melee" .atk 78.75% .dmg 3 5 .crit 16%  .effect "Weak Blight 3" "Damage Marked Target" "Carrion Munch Disease 3" .launch 1234 .target 1234
+personality: .prefskill -1
+loot: .code "A" .count 1
+initiative: .number_of_turns_per_round 1
+monster_brain: .id carrion_eater_B
+death_class: .monster_class_id corpse_B .is_valid_on_crit False .type "corpse" 
+battle_modifier: .disable_stall_penalty False .can_surprise True .can_be_surprised True .always_surprise False .always_be_surprised False
+.end

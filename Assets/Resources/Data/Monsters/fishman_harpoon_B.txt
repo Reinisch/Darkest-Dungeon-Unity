@@ -1,0 +1,22 @@
+name: fishman_harpoon_B
+type: fishman_harpoon
+
+art:
+commonfx: .deathfx death_medium
+skill: .id "fish_cutlass" .anim "attack_cutlass" .fx "cutlass" .targchestfx "blood_splatter"
+skill: .id "fish_harpoon" .anim "attack_harpoon" .fx "harpoon" .targchestfx "blood_splatter"
+.end
+
+info:
+display: .size 1
+enemy_type: .id "eldritch"
+stats: .hp 20 .def 13.75% .prot 0 .spd 7 .stun_resist 30% .poison_resist 30% .bleed_resist 70% .debuff_resist 30% .move_resist 30%
+skill: .id "fish_cutlass" .type "melee" .atk 83.75% .dmg 6 12 .crit 6%  .launch 21 .target 12
+skill: .id "fish_harpoon" .type "melee" .atk 83.75% .dmg 4 9 .crit 11%  .effect "Grouper Pull 1B" .launch 43 .target 34
+personality: .prefskill -1
+loot: .code "A" .count 1
+initiative: .number_of_turns_per_round 1
+monster_brain: .id fishman_harpoon_B
+death_class: .monster_class_id corpse_B .is_valid_on_crit False .type "corpse" 
+battle_modifier: .disable_stall_penalty False .can_surprise True .can_be_surprised True .always_surprise False .always_be_surprised False
+.end

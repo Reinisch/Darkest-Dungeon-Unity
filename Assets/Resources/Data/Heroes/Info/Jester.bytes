@@ -1,0 +1,69 @@
+name: jester
+
+art:
+commonfx: .deathfx death_medium
+combat_skill: .id "dirk_stab" .icon "one" .anim "attack_dirk" .fx "dirk_stab" .targchestfx "blood_splatter"
+combat_skill: .id "harvest" .icon "two" .anim "attack_sickle" .fx "harvest" .targchestfx "blood_splatter" .area_pos_offset 0 25		 			
+combat_skill: .id "heroic_end" .icon "three" .anim "attack_bow" .fx "finale" .targchestfx "finale_target"
+combat_skill: .id "solo" .icon "four" .anim "attack_powerslide" .fx "solo" .targchestfx "solo_target" .area_pos_offset 75 25 .target_area_pos_offset -150 25	
+combat_skill: .id "slice_off" .icon "five" .anim "attack_sickle" .fx "slice_off" .targchestfx "blood_splatter" .area_pos_offset 0 25
+combat_skill: .id "battle_ballad" .icon "six" .anim "attack_lute" .fx "battle_ballad" .targchestfx "battle_ballad_target"
+combat_skill: .id "inspiring_tune" .icon "seven" .fx "inspiring_tune" .anim "attack_lute"
+.end
+
+info:
+resistances: .stun 20% .poison 40% .bleed 30% .disease 20% .move 20% .debuff 20% .death_blow 67% .trap 30%
+weapon: .name "jester_weapon_0" .atk 0% .dmg 4 7 .crit 7.5% .spd 7
+weapon: .name "jester_weapon_1" .atk 0% .dmg 5 8 .crit 8% .spd 7 .upgradeRequirementCode 0
+weapon: .name "jester_weapon_2" .atk 0% .dmg 6 10 .crit 8.5% .spd 8 .upgradeRequirementCode 1
+weapon: .name "jester_weapon_3" .atk 0% .dmg 6 11 .crit 9% .spd 8 .upgradeRequirementCode 2
+weapon: .name "jester_weapon_4" .atk 0% .dmg 7 13 .crit 9.5% .spd 9 .upgradeRequirementCode 3
+armour: .name "jester_armour_0" .def 15% .prot 0 .hp 19 .spd 0
+armour: .name "jester_armour_1" .def 20% .prot 0 .hp 23 .spd 0 .upgradeRequirementCode 0
+armour: .name "jester_armour_2" .def 25% .prot 0 .hp 27 .spd 0 .upgradeRequirementCode 1
+armour: .name "jester_armour_3" .def 30% .prot 0 .hp 31 .spd 0 .upgradeRequirementCode 2
+armour: .name "jester_armour_4" .def 35% .prot 0 .hp 35 .spd 0 .upgradeRequirementCode 3
+combat_skill: .id "dirk_stab" .level 0 .type "melee" .atk 85% .dmg 0% .crit 2% .move 0 1 .launch 4321 .target 123 .is_crit_valid True 
+combat_skill: .id "dirk_stab" .level 1 .type "melee" .atk 90% .dmg 0% .crit 3% .move 0 1 .launch 4321 .target 123 .is_crit_valid True 
+combat_skill: .id "dirk_stab" .level 2 .type "melee" .atk 95% .dmg 0% .crit 4% .move 0 1 .launch 4321 .target 123 .is_crit_valid True 
+combat_skill: .id "dirk_stab" .level 3 .type "melee" .atk 100% .dmg 0% .crit 4% .move 0 1 .launch 4321 .target 123 .is_crit_valid True 
+combat_skill: .id "dirk_stab" .level 4 .type "melee" .atk 105% .dmg 0% .crit 4% .move 0 1 .launch 4321 .target 123 .is_crit_valid True 
+combat_skill: .id "harvest" .level 0 .type "melee" .atk 90% .dmg -50% .crit 0% .launch 32 .target ~23 .is_crit_valid True  .effect "Bleed 1" .generation_guaranteed true
+combat_skill: .id "harvest" .level 1 .type "melee" .atk 95% .dmg -50% .crit 0% .launch 32 .target ~23 .is_crit_valid True  .effect "Bleed 2"
+combat_skill: .id "harvest" .level 2 .type "melee" .atk 100% .dmg -50% .crit 1% .launch 32 .target ~23 .is_crit_valid True  .effect "Bleed 3"
+combat_skill: .id "harvest" .level 3 .type "melee" .atk 105% .dmg -50% .crit 2% .launch 32 .target ~23 .is_crit_valid True  .effect "Bleed 4"
+combat_skill: .id "harvest" .level 4 .type "melee" .atk 110% .dmg -50% .crit 2% .launch 32 .target ~23 .is_crit_valid True  .effect "Bleed 5"
+combat_skill: .id "heroic_end" .level 0 .type "melee" .atk 90% .dmg 150% .crit 8% .move 3 0 .launch 1 .target 123 .is_crit_valid True  .effect "Mortal Weakness"
+combat_skill: .id "heroic_end" .level 1 .type "melee" .atk 95% .dmg 150% .crit 8% .move 3 0 .launch 1 .target 123 .is_crit_valid True  .effect "Mortal Weakness"
+combat_skill: .id "heroic_end" .level 2 .type "melee" .atk 100% .dmg 150% .crit 8% .move 3 0 .launch 1 .target 123 .is_crit_valid True  .effect "Mortal Weakness"
+combat_skill: .id "heroic_end" .level 3 .type "melee" .atk 105% .dmg 150% .crit 8% .move 3 0 .launch 1 .target 123 .is_crit_valid True  .effect "Mortal Weakness"
+combat_skill: .id "heroic_end" .level 4 .type "melee" .atk 110% .dmg 150% .crit 9% .move 3 0 .launch 1 .target 123 .is_crit_valid True  .effect "Mortal Weakness"
+combat_skill: .id "solo" .level 0 .type "ranged" .atk 90% .dmg -100% .crit 0% .move 0 3 .launch 4321 .target ~1234 .is_crit_valid False  .effect "Distract Enemies 1" "Jester Self Speed 1"
+combat_skill: .id "solo" .level 1 .type "ranged" .atk 95% .dmg -100% .crit 0% .move 0 3 .launch 4321 .target ~1234 .is_crit_valid False  .effect "Distract Enemies 2" "Jester Self Speed 2"
+combat_skill: .id "solo" .level 2 .type "ranged" .atk 100% .dmg -100% .crit 0% .move 0 3 .launch 4321 .target ~1234 .is_crit_valid False  .effect "Distract Enemies 3" "Jester Self Speed 3"
+combat_skill: .id "solo" .level 3 .type "ranged" .atk 105% .dmg -100% .crit 0% .move 0 3 .launch 4321 .target ~1234 .is_crit_valid False  .effect "Distract Enemies 4" "Jester Self Speed 4"
+combat_skill: .id "solo" .level 4 .type "ranged" .atk 110% .dmg -100% .crit 0% .move 0 3 .launch 4321 .target ~1234 .is_crit_valid False  .effect "Distract Enemies 5" "Jester Self Speed 5"
+combat_move_skill: .id "move" .level 0 .type "move" .move 3 3 .launch 4321
+combat_skill: .id "slice_off" .level 0 .type "melee" .atk 95% .dmg -33% .crit 8% .launch 32 .target 23 .is_crit_valid True  .effect "Strong Bleed 1"
+combat_skill: .id "slice_off" .level 1 .type "melee" .atk 100% .dmg -33% .crit 8% .launch 32 .target 23 .is_crit_valid True  .effect "Strong Bleed 2"
+combat_skill: .id "slice_off" .level 2 .type "melee" .atk 105% .dmg -33% .crit 8% .launch 32 .target 23 .is_crit_valid True  .effect "Strong Bleed 3"
+combat_skill: .id "slice_off" .level 3 .type "melee" .atk 110% .dmg -33% .crit 9% .launch 32 .target 23 .is_crit_valid True  .effect "Strong Bleed 4"
+combat_skill: .id "slice_off" .level 4 .type "melee" .atk 115% .dmg -33% .crit 10% .launch 32 .target 23 .is_crit_valid True  .effect "Strong Bleed 5"
+combat_skill: .id "battle_ballad" .level 0 .type "ranged" .atk 0% .dmg 0% .crit 0% .launch 34 .target @~1234 .is_crit_valid True  .effect "Embolden Team 1"
+combat_skill: .id "battle_ballad" .level 1 .type "ranged" .atk 0% .dmg 0% .crit 0% .launch 34 .target @~1234 .is_crit_valid True  .effect "Embolden Team 2"
+combat_skill: .id "battle_ballad" .level 2 .type "ranged" .atk 0% .dmg 0% .crit 0% .launch 34 .target @~1234 .is_crit_valid True  .effect "Embolden Team 3"
+combat_skill: .id "battle_ballad" .level 3 .type "ranged" .atk 0% .dmg 0% .crit 0% .launch 34 .target @~1234 .is_crit_valid True  .effect "Embolden Team 4"
+combat_skill: .id "battle_ballad" .level 4 .type "ranged" .atk 0% .dmg 0% .crit 0% .launch 34 .target @~1234 .is_crit_valid True  .effect "Embolden Team 5"
+combat_skill: .id "inspiring_tune" .level 0 .type "ranged" .atk 0% .dmg 0% .crit 0% .launch 43 .target @1234 .is_crit_valid True  .effect "InspiringTune 1" "Jester Tune Buff 1"
+combat_skill: .id "inspiring_tune" .level 1 .type "ranged" .atk 0% .dmg 0% .crit 0% .launch 43 .target @1234 .is_crit_valid True  .effect "InspiringTune 2" "Jester Tune Buff 2"
+combat_skill: .id "inspiring_tune" .level 2 .type "ranged" .atk 0% .dmg 0% .crit 0% .launch 43 .target @1234 .is_crit_valid True  .effect "InspiringTune 3" "Jester Tune Buff 3"
+combat_skill: .id "inspiring_tune" .level 3 .type "ranged" .atk 0% .dmg 0% .crit 0% .launch 43 .target @1234 .is_crit_valid True  .effect "InspiringTune 4" "Jester Tune Buff 4"
+combat_skill: .id "inspiring_tune" .level 4 .type "ranged" .atk 0% .dmg 0% .crit 0% .launch 43 .target @1234 .is_crit_valid True  .effect "InspiringTune 5" "Jester Tune Buff 5"
+tag: .id "light"
+tag: .id "non-religious"
+deaths_door: .buffs deathsdoorACCDebuff deathsdoorDMGLowDebuff deathsdoorDMGHighDebuff deathsdoorSPDDebuff deathsdoorSRDebuff .recovery_buffs mortalityACCDebuff mortalityDMGLowDebuff mortalityDMGHighDebuff mortalitySPDDebuff mortalitySRDebuff .recovery_heart_attack_buffs heartattackACCDebuff heartattackDMGLowDebuff heartattackDMGHighDebuff heartattackSPDDebuff heartattackSRDebuff
+controlled: .target_rank 3
+id_index: .index 8
+generation: .number_of_positive_quirks_min 1 .number_of_positive_quirks_max 2 .number_of_negative_quirks_min 1 .number_of_negative_quirks_max 2 .number_of_class_specific_camping_skills 2 .number_of_shared_camping_skills 1 .number_of_random_combat_skills 4
+skill_selection: .can_select_combat_skills true .number_of_selected_combat_skills_max 4
+.end

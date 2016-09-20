@@ -1,0 +1,27 @@
+name: brigand_sapper_D
+type: brigand_sapper
+
+art:
+commonfx: .deathfx death_large
+skill: .id "sapper_throw" .anim "attack_ranged" .fx "throw"
+skill: .id "sapper_detonate" .anim "defend" .targchestfx "detonate_target"
+skill: .id "sapper_summon" .anim "attack_shout" .fx "summon"
+skill: .id "sapper_guard" .anim "attack_guard" .fx "guard" .targchestfx "guard_target"
+skill: .id "sapper_stress" .anim "attack_shout" .fx "stress" .targchestfx "stress_target"
+rendering: .sort_position_z_rank_override 0
+.end
+
+info:
+display: .size 1
+enemy_type: .id "man"
+stats: .hp 200 .def 25% .prot 0 .spd 4 .stun_resist 100% .poison_resist 75% .bleed_resist 75% .debuff_resist 60% .move_resist 300%
+skill: .id "sapper_throw" .type "ranged" .atk 112.5% .dmg 0 0 .crit 0%  .launch 4321 .target 1234 .effect "Rank Target Enemy 1" .is_crit_valid False
+skill: .id "sapper_detonate" .type "ranged" .atk 222.5% .dmg 23 45 .crit 10%  .launch 4321 .target 1234 .effect "Clear Enemy Rank Target With Result" .extra_targets_count 1 .extra_targets_chance 1
+skill: .id "sapper_summon" .type "melee" .atk 112.5% .dmg 2 5 .crit 10%  .launch 321 .target 1234 .effect "Stun 5" "Sapper Summon Barrel" "Sapper Summon Brigand Guaranteed" "Sapper Summon Brigand Low Chance"
+skill: .id "sapper_guard" .type "melee" .atk 0% .dmg 0 0 .crit 0%  .launch 123 .target @1234 .effect "Sapper Guard" "Sapper Summon Brigand High Chance" .self_target_valid False .is_crit_valid False
+skill: .id "sapper_stress" .type "ranged" .atk 112.5% .dmg 0 0 .crit 0%  .launch 123 .target 1234 .effect "Sapper Stress" .extra_targets_count 1 .extra_targets_chance 1
+personality: .prefskill -1
+loot: .code "T" .count 2
+initiative: .number_of_turns_per_round 2
+monster_brain: .id brigand_sapper_D
+.end

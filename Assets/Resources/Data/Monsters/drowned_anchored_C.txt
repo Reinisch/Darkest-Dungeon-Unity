@@ -1,0 +1,22 @@
+name: drowned_anchored_C
+type: drowned_anchored
+
+art:
+commonfx: .deathfx death_medium
+defending_area_pos_offset: .offset 0 30
+captor_full: .has_prisoner_overlay true
+.end
+
+info:
+display: .size 1
+enemy_type: .id "unholy"
+stats: .hp 29 .def 22.5% .prot 0 .spd 2 .stun_resist 70% .poison_resist 65% .bleed_resist 105% .debuff_resist 65% .move_resist 245%
+personality: .prefskill -1
+loot: .code "NONE" .count 0
+initiative: .number_of_turns_per_round 0
+monster_brain: .id default_C
+tag: .id "boss"
+battle_modifier: .disable_stall_penalty True .can_surprise False .can_be_surprised False .always_surprise False .always_be_surprised False
+captor_full: .switch_class_on_death false .captor_empty_monster_class drowned_anchor_C .release_on_death true .release_on_prisoner_at_deaths_door false .release_on_prisoner_affliction true .release_effects "unimmobilize" .per_turn_damage_percent 0 .per_turn_stress_damage 6
+life_link: .base_class "drowned_captain"
+.end

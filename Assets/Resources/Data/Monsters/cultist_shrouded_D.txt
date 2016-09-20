@@ -1,0 +1,23 @@
+name: cultist_shrouded_D
+type: cultist_shrouded
+
+art:
+commonfx: .deathfx death_medium
+skill: .id "shrouded_melee" .anim "attack_tentacles" .fx "melee" .targchestfx "blood_splatter"
+skill: .id "shrouded_ranged" .anim "attack_barb" .fx "ranged" .targchestfx "blood_splatter" .area_pos_offset 100 0
+.end
+
+info:
+display: .size 1
+enemy_type: .id "eldritch"
+enemy_type: .id "beast"
+stats: .hp 38 .def 23.75% .prot 0 .spd 7 .stun_resist 72.5% .poison_resist 57.5% .bleed_resist 107.5% .debuff_resist 67.5% .move_resist 73%
+skill: .id "shrouded_melee" .type "melee" .atk 113.75% .dmg 4 7 .crit 7%  .effect "Shrouded AOE Stress" "Shrouded Bleed Debuff" .launch 4321 .target ~12
+skill: .id "shrouded_ranged" .type "ranged" .atk 113.75% .dmg 7 14 .crit 17%  .effect "Shrouded Stress" "Damage Marked Target Lesser" "Shrouded Pierce Bleed" .launch 4321 .target 1234
+personality: .prefskill -1
+loot: .code "NONE" .count 0
+initiative: .number_of_turns_per_round 1
+monster_brain: .id cultist_shrouded
+death_class: .monster_class_id corpse_A .is_valid_on_crit False .type "corpse" 
+battle_modifier: .disable_stall_penalty False .can_surprise False .can_be_surprised False .always_surprise False .always_be_surprised False
+.end

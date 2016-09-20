@@ -1,0 +1,1354 @@
+{
+    "settings": [
+        {
+            "id": "off",
+            "event_chance_per_town_visits": [
+                0.0
+            ]
+        },
+        {
+            "id": "normal",
+            "event_chance_per_town_visits": [
+                0.33,
+                0.67,
+                0.75,
+                1.0
+            ]
+        },
+        {
+            "id": "plentiful",
+            "event_chance_per_town_visits": [
+                0.67,
+                0.67,
+                0.80,
+                1.0
+            ]
+        }
+    ],
+    "events": [
+        {
+            "id": "embark_party_buff_crypts_buff",
+            "base_chance": 0.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 0,
+            "requirements": {
+                "minimum_week": 6,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "good",
+            "sprite": "",
+            "sprite_attachment": "",
+            "data": [
+                {
+                    "type": "embark_party_buff",
+                    "string_data": "town_event_crypts_resolve_xp",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "embark_party_buff",
+                    "string_data": "town_event_crypts_damage_low",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "embark_party_buff",
+                    "string_data": "town_event_crypts_damage_high",
+                    "number_data": 0.0
+                }
+            ]
+        },
+        {
+            "id": "embark_party_buff_weald_buff",
+            "base_chance": 0.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 0,
+            "requirements": {
+                "minimum_week": 6,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "good",
+            "sprite": "",
+            "sprite_attachment": "",
+            "data": [
+                {
+                    "type": "embark_party_buff",
+                    "string_data": "town_event_weald_resolve_xp",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "embark_party_buff",
+                    "string_data": "town_event_weald_damage_low",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "embark_party_buff",
+                    "string_data": "town_event_weald_damage_high",
+                    "number_data": 0.0
+                }
+            ]
+        },
+        {
+            "id": "embark_party_buff_warrens_buff",
+            "base_chance": 0.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 0,
+            "requirements": {
+                "minimum_week": 6,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "good",
+            "sprite": "",
+            "sprite_attachment": "",
+            "data": [
+                {
+                    "type": "embark_party_buff",
+                    "string_data": "town_event_warrens_resolve_xp",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "embark_party_buff",
+                    "string_data": "town_event_warrens_damage_low",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "embark_party_buff",
+                    "string_data": "town_event_warrens_damage_high",
+                    "number_data": 0.0
+                }
+            ]
+        },
+        {
+            "id": "embark_party_buff_cove_buff",
+            "base_chance": 0.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 0,
+            "requirements": {
+                "minimum_week": 6,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "good",
+            "sprite": "",
+            "sprite_attachment": "",
+            "data": [
+                {
+                    "type": "embark_party_buff",
+                    "string_data": "town_event_cove_resolve_xp",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "embark_party_buff",
+                    "string_data": "town_event_cove_damage_low",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "embark_party_buff",
+                    "string_data": "town_event_cove_damage_high",
+                    "number_data": 0.0
+                }
+            ]
+        },
+        {
+            "id": "idle_resolve_level_plague_doctor",
+            "base_chance": 2.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 6,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "neutral",
+            "sprite": "town_event_the_plague",
+            "sprite_attachment": "statue",
+            "data": [
+                {
+                    "type": "idle_resolve_level",
+                    "string_data": "plague_doctor",
+                    "number_data": 1.0
+                }
+            ]
+        },
+        {
+            "id": "idle_resolve_level_jester",
+            "base_chance": 2.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 6,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "neutral",
+            "sprite": "town_event_busking",
+            "sprite_attachment": "statue",
+            "data": [
+                {
+                    "type": "idle_resolve_level",
+                    "string_data": "jester",
+                    "number_data": 1.0
+                }
+            ]
+        },
+        {
+            "id": "idle_resolve_level_highwayman",
+            "base_chance": 2.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 6,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "neutral",
+            "sprite": "town_event_laying_low",
+            "sprite_attachment": "statue",
+            "data": [
+                {
+                    "type": "idle_resolve_level",
+                    "string_data": "highwayman",
+                    "number_data": 1.0
+                }
+            ]
+        },
+        {
+            "id": "idle_resolve_level_grave_robber",
+            "base_chance": 2.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 6,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "neutral",
+            "sprite": "town_event_eat_the_rich",
+            "sprite_attachment": "statue",
+            "data": [
+                {
+                    "type": "idle_resolve_level",
+                    "string_data": "grave_robber",
+                    "number_data": 1.0
+                }
+            ]
+        },
+        {
+            "id": "idle_resolve_level_man_at_arms",
+            "base_chance": 2.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 6,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "neutral",
+            "sprite": "town_event_militia_training",
+            "sprite_attachment": "statue",
+            "data": [
+                {
+                    "type": "idle_resolve_level",
+                    "string_data": "man_at_arms",
+                    "number_data": 1.0
+                }
+            ]
+        },
+        {
+            "id": "idle_resolve_level_arbalest",
+            "base_chance": 2.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 6,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "neutral",
+            "sprite": "town_event_archery_tourney",
+            "sprite_attachment": "statue",
+            "data": [
+                {
+                    "type": "idle_resolve_level",
+                    "string_data": "arbalest",
+                    "number_data": 1.0
+                },
+                {
+                    "type": "idle_resolve_level",
+                    "string_data": "musketeer",
+                    "number_data": 1.0
+                }
+            ]
+        },
+        {
+            "id": "idle_resolve_level_houndmaster",
+            "base_chance": 2.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 6,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "neutral",
+            "sprite": "town_event_rats_among_us",
+            "sprite_attachment": "statue",
+            "data": [
+                {
+                    "type": "idle_resolve_level",
+                    "string_data": "houndmaster",
+                    "number_data": 1.0
+                }
+            ]
+        },
+        {
+            "id": "idle_resolve_level_abomination",
+            "base_chance": 2.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 6,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "neutral",
+            "sprite": "town_event_gibbous_moon",
+            "sprite_attachment": "statue",
+            "data": [
+                {
+                    "type": "idle_resolve_level",
+                    "string_data": "abomination",
+                    "number_data": 1.0
+                }
+            ]
+        },
+        {
+            "id": "bonus_recruit_crusader",
+            "base_chance": 2.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 6,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "neutral",
+            "sprite": "",
+            "sprite_attachment": "",
+            "data": [
+                {
+                    "type": "bonus_recruit",
+                    "string_data": "crusader",
+                    "number_data": 2.0
+                }
+            ]
+        },
+        {
+            "id": "bonus_recruit_bounty_hunter",
+            "base_chance": 2.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 6,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "neutral",
+            "sprite": "",
+            "sprite_attachment": "",
+            "data": [
+                {
+                    "type": "bonus_recruit",
+                    "string_data": "bounty_hunter",
+                    "number_data": 2.0
+                }
+            ]
+        },
+        {
+            "id": "bonus_recruit_vestal",
+            "base_chance": 3.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 6,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "neutral",
+            "sprite": "",
+            "sprite_attachment": "",
+            "data": [
+                {
+                    "type": "bonus_recruit",
+                    "string_data": "vestal",
+                    "number_data": 2.0
+                }
+            ]
+        },
+        {
+            "id": "bonus_recruit_hellion",
+            "base_chance": 2.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 6,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "neutral",
+            "sprite": "",
+            "sprite_attachment": "",
+            "data": [
+                {
+                    "type": "bonus_recruit",
+                    "string_data": "hellion",
+                    "number_data": 2.0
+                }
+            ]
+        },
+        {
+            "id": "bonus_recruit_occultist",
+            "base_chance": 3.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 6,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "neutral",
+            "sprite": "",
+            "sprite_attachment": "",
+            "data": [
+                {
+                    "type": "bonus_recruit",
+                    "string_data": "occultist",
+                    "number_data": 2.0
+                }
+            ]
+        },
+        {
+            "id": "bonus_recruit_leper",
+            "base_chance": 2.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 6,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "neutral",
+            "sprite": "",
+            "sprite_attachment": "",
+            "data": [
+                {
+                    "type": "bonus_recruit",
+                    "string_data": "leper",
+                    "number_data": 2.0
+                }
+            ]
+        },
+        {
+            "id": "bonus_recruit_antiquarian",
+            "base_chance": 2.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 6,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "neutral",
+            "sprite": "",
+            "sprite_attachment": "",
+            "data": [
+                {
+                    "type": "bonus_recruit",
+                    "string_data": "antiquarian",
+                    "number_data": 2.0
+                }
+            ]
+        },
+        {
+            "id": "in_activity_buff_stress_heal_buff",
+            "base_chance": 5.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 6,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "good",
+            "sprite": "town_event_ray_of_sunlight",
+            "sprite_attachment": "statue",
+            "data": [
+                {
+                    "type": "in_activity_buff",
+                    "string_data": "town_event_in_activity_meditation_stress_heal",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "in_activity_buff",
+                    "string_data": "town_event_in_activity_prayer_stress_heal",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "in_activity_buff",
+                    "string_data": "town_event_in_activity_flagellation_stress_heal",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "in_activity_buff",
+                    "string_data": "town_event_in_activity_bar_stress_heal",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "in_activity_buff",
+                    "string_data": "town_event_in_activity_gambling_stress_heal",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "in_activity_buff",
+                    "string_data": "town_event_in_activity_brothel_stress_heal",
+                    "number_data": 0.0
+                }
+            ]
+        },
+        {
+            "id": "in_activity_buff_stress_heal_debuff",
+            "base_chance": 3.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 12,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "bad",
+            "sprite": "",
+            "sprite_attachment": "",
+            "data": [
+                {
+                    "type": "in_activity_buff",
+                    "string_data": "town_event_in_activity_meditation_stress_damage",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "in_activity_buff",
+                    "string_data": "town_event_in_activity_prayer_stress_damage",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "in_activity_buff",
+                    "string_data": "town_event_in_activity_flagellation_stress_damage",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "in_activity_buff",
+                    "string_data": "town_event_in_activity_bar_stress_damage",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "in_activity_buff",
+                    "string_data": "town_event_in_activity_gambling_stress_damage",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "in_activity_buff",
+                    "string_data": "town_event_in_activity_brothel_stress_damage",
+                    "number_data": 0.0
+                }
+            ]
+        },
+        {
+            "id": "lock_bar_discount_tavern",
+            "base_chance": 3.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 12,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "neutral",
+            "sprite": "town_event_empty_kegs",
+            "sprite_attachment": "tavern",
+            "data": [
+                {
+                    "type": "activity_lock",
+                    "string_data": "bar",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "activity_cost_change",
+                    "string_data": "gambling",
+                    "number_data": -0.50
+                },
+                {
+                    "type": "activity_cost_change",
+                    "string_data": "brothel",
+                    "number_data": -0.50
+                }
+            ]
+        },
+        {
+            "id": "lock_gambling_discount_tavern",
+            "base_chance": 3.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 12,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "neutral",
+            "sprite": "town_event_robbery",
+            "sprite_attachment": "tavern",
+            "data": [
+                {
+                    "type": "activity_lock",
+                    "string_data": "gambling",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "activity_cost_change",
+                    "string_data": "bar",
+                    "number_data": -0.50
+                },
+                {
+                    "type": "activity_cost_change",
+                    "string_data": "brothel",
+                    "number_data": -0.50
+                }
+            ]
+        },
+        {
+            "id": "lock_brothel_discount_tavern",
+            "base_chance": 3.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 12,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "neutral",
+            "sprite": "town_event_laundry_day",
+            "sprite_attachment": "tavern",
+            "data": [
+                {
+                    "type": "activity_lock",
+                    "string_data": "brothel",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "activity_cost_change",
+                    "string_data": "gambling",
+                    "number_data": -0.50
+                },
+                {
+                    "type": "activity_cost_change",
+                    "string_data": "bar",
+                    "number_data": -0.50
+                }
+            ]
+        },
+        {
+            "id": "lock_meditation_discount_abbey",
+            "base_chance": 3.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 12,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "neutral",
+            "sprite": "town_event_noisy_repairs",
+            "sprite_attachment": "graveyard",
+            "data": [
+                {
+                    "type": "activity_lock",
+                    "string_data": "meditation",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "activity_cost_change",
+                    "string_data": "prayer",
+                    "number_data": -0.50
+                },
+                {
+                    "type": "activity_cost_change",
+                    "string_data": "flagellation",
+                    "number_data": -0.50
+                }
+            ]
+        },
+        {
+            "id": "lock_prayer_discount_abbey",
+            "base_chance": 3.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 12,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "neutral",
+            "sprite": "town_event_absent_abbot",
+            "sprite_attachment": "graveyard",
+            "data": [
+                {
+                    "type": "activity_lock",
+                    "string_data": "prayer",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "activity_cost_change",
+                    "string_data": "meditation",
+                    "number_data": -0.50
+                },
+                {
+                    "type": "activity_cost_change",
+                    "string_data": "flagellation",
+                    "number_data": -0.50
+                }
+            ]
+        },
+        {
+            "id": "lock_flagellation_discount_abbey",
+            "base_chance": 3.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 12,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "neutral",
+            "sprite": "town_event_cell_cleaning",
+            "sprite_attachment": "graveyard",
+            "data": [
+                {
+                    "type": "activity_lock",
+                    "string_data": "flagellation",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "activity_cost_change",
+                    "string_data": "prayer",
+                    "number_data": -0.50
+                },
+                {
+                    "type": "activity_cost_change",
+                    "string_data": "meditation",
+                    "number_data": -0.50
+                }
+            ]
+        },
+        {
+            "id": "provision_supply_discount",
+            "base_chance": 2.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 0,
+            "requirements": {
+                "minimum_week": 6,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "neutral",
+            "sprite": "town_event_new_shipment",
+            "sprite_attachment": "stage_coach",
+            "data": [
+                {
+                    "type": "provision_item_type_cost_change",
+                    "string_data": "supply",
+                    "number_data": -0.5
+                },
+                {
+                    "type": "provision_item_type_cost_change",
+                    "string_data": "provision",
+                    "number_data": -0.5
+                }
+            ]
+        },
+        {
+            "id": "provision_supply_free",
+            "base_chance": 2.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 0,
+            "requirements": {
+                "minimum_week": 6,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "good",
+            "sprite": "town_event_bumper_crop",
+            "sprite_attachment": "statue",
+            "data": [
+                {
+                    "type": "provision_item_type_cost_change",
+                    "string_data": "supply",
+                    "number_data": -1.0
+                },
+                {
+                    "type": "provision_item_type_cost_change",
+                    "string_data": "provision",
+                    "number_data": -1.0
+                }
+            ]
+        },
+        {
+            "id": "provision_reduced_amounts",
+            "base_chance": 2.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 12,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "bad",
+            "sprite": "",
+            "sprite_attachment": "",
+            "data": [
+                {
+                    "type": "provision_item_type_amount_change",
+                    "string_data": "supply",
+                    "number_data": -0.5
+                },
+                {
+                    "type": "provision_item_type_amount_change",
+                    "string_data": "provision",
+                    "number_data": -0.5
+                }
+            ]
+        },
+        {
+            "id": "nomad_wagon_trinket_discount",
+            "base_chance": 3.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 6,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "neutral",
+            "sprite": "town_event_nomad_new_year",
+            "sprite_attachment": "nomad_wagon",
+            "data": [
+                {
+                    "type": "upgrade_tag_discount",
+                    "string_data": "trinket",
+                    "number_data": 0.5
+                }
+            ]
+        },
+        {
+            "id": "free_abbey",
+            "base_chance": 2.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 6,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "good",
+            "sprite": "town_event_all_saints_day",
+            "sprite_attachment": "graveyard",
+            "data": [
+                {
+                    "type": "free_activity",
+                    "string_data": "meditation",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "free_activity",
+                    "string_data": "prayer",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "free_activity",
+                    "string_data": "flagellation",
+                    "number_data": 0.0
+                }
+            ]
+        },
+        {
+            "id": "free_tavern",
+            "base_chance": 2.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 6,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "good",
+            "sprite": "town_event_mardi_gras",
+            "sprite_attachment": "tavern",
+            "data": [
+                {
+                    "type": "free_activity",
+                    "string_data": "bar",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "free_activity",
+                    "string_data": "gambling",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "free_activity",
+                    "string_data": "brothel",
+                    "number_data": 0.0
+                }
+            ]
+        },
+        {
+            "id": "free_sanitarium",
+            "base_chance": 2.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 6,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "good",
+            "sprite": "town_event_caregivers_convention",
+            "sprite_attachment": "sanitarium",
+            "data": [
+                {
+                    "type": "free_activity",
+                    "string_data": "treatment",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "free_activity",
+                    "string_data": "disease_treatment",
+                    "number_data": 0.0
+                }
+            ]
+        },
+        {
+            "id": "free_all_activities",
+            "base_chance": 5.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 6,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [
+                "town_event"
+            ],
+            "tone": "good",
+            "sprite": "town_event_town_fair",
+            "sprite_attachment": "statue",
+            "data": [
+                {
+                    "type": "free_activity",
+                    "string_data": "meditation",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "free_activity",
+                    "string_data": "prayer",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "free_activity",
+                    "string_data": "flagellation",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "free_activity",
+                    "string_data": "bar",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "free_activity",
+                    "string_data": "gambling",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "free_activity",
+                    "string_data": "brothel",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "free_activity",
+                    "string_data": "treatment",
+                    "number_data": 0.0
+                },
+                {
+                    "type": "free_activity",
+                    "string_data": "disease_treatment",
+                    "number_data": 0.0
+                }
+            ]
+        },
+        {
+            "id": "dead_recruit",
+            "base_chance": 3.0,
+            "per_not_rolled_additional_chance": 1.0,
+            "cooldown": 3,
+            "requirements": {
+                "minimum_week": 15,
+                "dead_heroes": 3,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "good",
+            "sprite": "town_event_day_of_the_dead",
+            "sprite_attachment": "graveyard",
+            "data": [
+                {
+                    "type": "dead_recruit",
+                    "string_data": "",
+                    "number_data": 3.0
+                }
+            ]
+        },
+        {
+            "id": "remove_quest_hero_level_restriction",
+            "base_chance": 6.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 2,
+            "requirements": {
+                "minimum_week": 15,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "good",
+            "sprite": "",
+            "sprite_attachment": "",
+            "data": [
+                {
+                    "type": "remove_quest_hero_level_restriction",
+                    "string_data": "",
+                    "number_data": 0.0
+                }
+            ]
+        },
+        {
+            "id": "upgrade_tag_free_armour",
+            "base_chance": 4.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 6,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": [
+                    {
+                        "tree_id": "blacksmith.armour",
+                        "requirement_code": "a"
+                    }
+                ]
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "good",
+            "sprite": "town_event_tinkers_day",
+            "sprite_attachment": "blacksmith",
+            "data": [
+                {
+                    "type": "upgrade_tag_free",
+                    "string_data": "armour",
+                    "number_data": 1
+                }
+            ]
+        },
+        {
+            "id": "upgrade_tag_free_weapon",
+            "base_chance": 4.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 6,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": [
+                    {
+                        "tree_id": "blacksmith.weapon",
+                        "requirement_code": "a"
+                    }
+                ]
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "good",
+            "sprite": "town_event_tinkers_day",
+            "sprite_attachment": "blacksmith",
+            "data": [
+                {
+                    "type": "upgrade_tag_free",
+                    "string_data": "weapon",
+                    "number_data": 1
+                }
+            ]
+        },
+        {
+            "id": "upgrade_tag_free_building_upgrade",
+            "base_chance": 5.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 6,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "good",
+            "sprite": "town_event_labour_force",
+            "sprite_attachment": "statue",
+            "data": [
+                {
+                    "type": "upgrade_tag_free",
+                    "string_data": "building",
+                    "number_data": 1
+                }
+            ]
+        },
+        {
+            "id": "idle_stress_heal_buff",
+            "base_chance": 8.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 6,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "good",
+            "sprite": "",
+            "sprite_attachment": "",
+            "data": [
+                {
+                    "type": "idle_buff",
+                    "string_data": "town_event_idle_stress_heal",
+                    "number_data": 0.0
+                }
+            ]
+        },
+        {
+            "id": "free_disease",
+            "base_chance": 8.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 12,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "good",
+            "sprite": "town_event_medical_breakthrough",
+            "sprite_attachment": "sanitarium",
+            "data": [
+                {
+                    "type": "free_activity",
+                    "string_data": "disease_treatment",
+                    "number_data": 0.0
+                }
+            ]
+        },
+        {
+            "id": "embark_party_buff_affliction_chance",
+            "base_chance": 6.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 12,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "bad",
+            "sprite": "",
+            "sprite_attachment": "",
+            "data": [
+                {
+                    "type": "embark_party_buff",
+                    "string_data": "town_event_affliction_chance",
+                    "number_data": 0.0
+                }
+            ]
+        },
+        {
+            "id": "embark_party_buff_virtue_chance",
+            "base_chance": 6.0,
+            "per_not_rolled_additional_chance": 0.0,
+            "cooldown": 1,
+            "requirements": {
+                "minimum_week": 6,
+                "dead_heroes": 0,
+                "hero_level_counts": [],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "good",
+            "sprite": "",
+            "sprite_attachment": "",
+            "data": [
+                {
+                    "type": "embark_party_buff",
+                    "string_data": "town_event_virtue_chance",
+                    "number_data": 0.0
+                }
+            ]
+        },
+        {
+            "id": "plot_quest_town_invasion_0",
+            "base_chance": 12.0,
+            "per_not_rolled_additional_chance": 3.0,
+            "cooldown": 4,
+            "requirements": {
+                "minimum_week": 20,
+                "dead_heroes": 0,
+                "hero_level_counts": [
+                    {
+                        "level": 5,
+                        "count": 4
+                    }
+                ],
+                "upgrades_purchased": []
+            },
+            "town_ambience_paramater_ids": [],
+            "tone": "bad",
+            "sprite": "",
+            "sprite_attachment": "",
+            "data": [
+                {
+                    "type": "plot_quest",
+                    "string_data": "plot_town_invasion_0",
+                    "number_data": 0.0
+                }
+            ]
+        }
+    ],
+    "quest_type_event_guarantees": [
+        {
+            "dungeon_type": "cove",
+            "quest_type": "gather",
+            "event_id": "provision_supply_discount"
+        },
+        {
+            "dungeon_type": "crypts",
+            "quest_type": "gather",
+            "event_id": "free_abbey"
+        },
+        {
+            "dungeon_type": "warrens",
+            "quest_type": "gather",
+            "event_id": "provision_supply_free"
+        },
+        {
+            "dungeon_type": "weald",
+            "quest_type": "gather",
+            "event_id": "free_sanitarium"
+        },
+        {
+            "dungeon_type": "cove",
+            "quest_type": "inventory_activate",
+            "event_id": "embark_party_buff_cove_buff"
+        },
+        {
+            "dungeon_type": "crypts",
+            "quest_type": "inventory_activate",
+            "event_id": "embark_party_buff_crypts_buff"
+        },
+        {
+            "dungeon_type": "warrens",
+            "quest_type": "inventory_activate",
+            "event_id": "embark_party_buff_warrens_buff"
+        },
+        {
+            "dungeon_type": "weald",
+            "quest_type": "inventory_activate",
+            "event_id": "embark_party_buff_weald_buff"
+        }
+    ]
+}

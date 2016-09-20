@@ -1,0 +1,69 @@
+name: grave_robber
+
+art:
+commonfx: .deathfx death_medium
+combat_skill: .id "pick" .icon "one" .anim "attack_pick" .fx "pick" .targchestfx "blood_splatter"
+combat_skill: .id "lunge" .icon "two" .anim "attack_melee" .fx "lunge" .targchestfx "blood_splatter"
+combat_skill: .id "flashing_daggers" .icon "three" .anim "attack_dagger" .targchestfx "flashing_daggers_target"
+combat_skill: .id "shadow_fade" .icon "four" .anim "attack_fade" .fx "shadow_fade" .targchestfx "blood_splatter"
+combat_skill: .id "thrown_dagger" .icon "five" .anim "attack_dagger" .targchestfx "thrown_dagger_target"
+combat_skill: .id "poison_dart" .icon "six" .anim "attack_throw" .fx "poison_dart" .targchestfx "poison_dart_target"
+combat_skill: .id "toxin_trickery" .icon "seven" .anim "attack_potion" .fx "toxin_trickery"
+.end
+
+info:
+resistances: .stun 20% .poison 50% .bleed 30% .disease 30% .move 20% .debuff 30% .death_blow 67% .trap 50%
+weapon: .name "grave_robber_weapon_0" .atk 0% .dmg 4 9 .crit 5% .spd 8
+weapon: .name "grave_robber_weapon_1" .atk 0% .dmg 5 11 .crit 5.5% .spd 8 .upgradeRequirementCode 0
+weapon: .name "grave_robber_weapon_2" .atk 0% .dmg 6 13 .crit 6% .spd 9 .upgradeRequirementCode 1
+weapon: .name "grave_robber_weapon_3" .atk 0% .dmg 6 14 .crit 6.5% .spd 9 .upgradeRequirementCode 2
+weapon: .name "grave_robber_weapon_4" .atk 0% .dmg 7 16 .crit 7% .spd 10 .upgradeRequirementCode 3
+armour: .name "grave_robber_armour_0" .def 10% .prot 0 .hp 20 .spd 0
+armour: .name "grave_robber_armour_1" .def 15% .prot 0 .hp 24 .spd 0 .upgradeRequirementCode 0
+armour: .name "grave_robber_armour_2" .def 20% .prot 0 .hp 28 .spd 0 .upgradeRequirementCode 1
+armour: .name "grave_robber_armour_3" .def 25% .prot 0 .hp 32 .spd 0 .upgradeRequirementCode 2
+armour: .name "grave_robber_armour_4" .def 30% .prot 0 .hp 36 .spd 0 .upgradeRequirementCode 3
+combat_skill: .id "pick" .level 0 .type "melee" .atk 95% .dmg 0% .crit 5% .launch 321 .target 123 .is_crit_valid True 
+combat_skill: .id "pick" .level 1 .type "melee" .atk 100% .dmg 0% .crit 6% .launch 321 .target 123 .is_crit_valid True 
+combat_skill: .id "pick" .level 2 .type "melee" .atk 105% .dmg 0% .crit 6% .launch 321 .target 123 .is_crit_valid True 
+combat_skill: .id "pick" .level 3 .type "melee" .atk 110% .dmg 0% .crit 6% .launch 321 .target 123 .is_crit_valid True 
+combat_skill: .id "pick" .level 4 .type "melee" .atk 115% .dmg 0% .crit 7% .launch 321 .target 123 .is_crit_valid True 
+combat_skill: .id "lunge" .level 0 .type "melee" .atk 95% .dmg 40% .crit 10% .move 0 2 .launch 43 .target 123 .is_crit_valid True 
+combat_skill: .id "lunge" .level 1 .type "melee" .atk 100% .dmg 40% .crit 11% .move 0 2 .launch 43 .target 123 .is_crit_valid True 
+combat_skill: .id "lunge" .level 2 .type "melee" .atk 105% .dmg 40% .crit 11% .move 0 2 .launch 43 .target 123 .is_crit_valid True 
+combat_skill: .id "lunge" .level 3 .type "melee" .atk 110% .dmg 40% .crit 12% .move 0 2 .launch 43 .target 123 .is_crit_valid True 
+combat_skill: .id "lunge" .level 4 .type "melee" .atk 115% .dmg 40% .crit 12% .move 0 2 .launch 43 .target 123 .is_crit_valid True 
+combat_skill: .id "flashing_daggers" .level 0 .type "ranged" .atk 90% .dmg -33% .crit 5% .launch 432 .target ~23 .is_crit_valid True  .effect "GR Bleed Debuff 1"
+combat_skill: .id "flashing_daggers" .level 1 .type "ranged" .atk 95% .dmg -33% .crit 6% .launch 432 .target ~23 .is_crit_valid True  .effect "GR Bleed Debuff 2"
+combat_skill: .id "flashing_daggers" .level 2 .type "ranged" .atk 100% .dmg -33% .crit 6% .launch 432 .target ~23 .is_crit_valid True  .effect "GR Bleed Debuff 3"
+combat_skill: .id "flashing_daggers" .level 3 .type "ranged" .atk 105% .dmg -33% .crit 6% .launch 432 .target ~23 .is_crit_valid True  .effect "GR Bleed Debuff 4"
+combat_skill: .id "flashing_daggers" .level 4 .type "ranged" .atk 110% .dmg -33% .crit 7% .launch 432 .target ~23 .is_crit_valid True  .effect "GR Bleed Debuff 5"
+combat_skill: .id "shadow_fade" .level 0 .type "melee" .atk 95% .dmg -100% .crit 0% .move 1 0 .launch 21 .target 12 .is_crit_valid False  .effect "Stun 1" "Dodge 1"
+combat_skill: .id "shadow_fade" .level 1 .type "melee" .atk 100% .dmg -100% .crit 0% .move 1 0 .launch 21 .target 12 .is_crit_valid False  .effect "Stun 2" "Dodge 2"
+combat_skill: .id "shadow_fade" .level 2 .type "melee" .atk 105% .dmg -100% .crit 0% .move 1 0 .launch 21 .target 12 .is_crit_valid False  .effect "Stun 3" "Dodge 3"
+combat_skill: .id "shadow_fade" .level 3 .type "melee" .atk 110% .dmg -100% .crit 0% .move 1 0 .launch 21 .target 12 .is_crit_valid False  .effect "Stun 4" "Dodge 4"
+combat_skill: .id "shadow_fade" .level 4 .type "melee" .atk 115% .dmg -100% .crit 0% .move 1 0 .launch 21 .target 12 .is_crit_valid False  .effect "Stun 5" "Dodge 5"
+combat_move_skill: .id "move" .level 0 .type "move" .move 2 2 .launch 4321
+combat_skill: .id "thrown_dagger" .level 0 .type "ranged" .atk 90% .dmg 0% .crit 10% .launch 432 .target 234 .is_crit_valid True  .effect "GR Acc Buff 1" "GR Dagger Dmg Marked"
+combat_skill: .id "thrown_dagger" .level 1 .type "ranged" .atk 95% .dmg 0% .crit 11% .launch 432 .target 234 .is_crit_valid True  .effect "GR Acc Buff 2" "GR Dagger Dmg Marked"
+combat_skill: .id "thrown_dagger" .level 2 .type "ranged" .atk 100% .dmg 0% .crit 11% .launch 432 .target 234 .is_crit_valid True  .effect "GR Acc Buff 3" "GR Dagger Dmg Marked"
+combat_skill: .id "thrown_dagger" .level 3 .type "ranged" .atk 105% .dmg 0% .crit 12% .launch 432 .target 234 .is_crit_valid True  .effect "GR Acc Buff 4" "GR Dagger Dmg Marked"
+combat_skill: .id "thrown_dagger" .level 4 .type "ranged" .atk 110% .dmg 0% .crit 12% .launch 432 .target 234 .is_crit_valid True  .effect "GR Acc Buff 5" "GR Dagger Dmg Marked"
+combat_skill: .id "poison_dart" .level 0 .type "ranged" .atk 95% .dmg -90% .crit 5% .launch 43 .target 1234 .is_crit_valid True  .effect "GR Blight 1" "GR Blight Debuff 1" .generation_guaranteed true
+combat_skill: .id "poison_dart" .level 1 .type "ranged" .atk 100% .dmg -90% .crit 6% .launch 43 .target 1234 .is_crit_valid True  .effect "GR Blight 2" "GR Blight Debuff 2"
+combat_skill: .id "poison_dart" .level 2 .type "ranged" .atk 105% .dmg -90% .crit 6% .launch 43 .target 1234 .is_crit_valid True  .effect "GR Blight 3" "GR Blight Debuff 3"
+combat_skill: .id "poison_dart" .level 3 .type "ranged" .atk 110% .dmg -90% .crit 6% .launch 43 .target 1234 .is_crit_valid True  .effect "GR Blight 4" "GR Blight Debuff 4"
+combat_skill: .id "poison_dart" .level 4 .type "ranged" .atk 115% .dmg -90% .crit 7% .launch 43 .target 1234 .is_crit_valid True  .effect "GR Blight 5" "GR Blight Debuff 5"
+combat_skill: .id "toxin_trickery" .level 0 .type "melee" .atk 0% .dmg 0% .crit 0% .launch 4321 .target  .is_crit_valid True  .effect "Shadow Blood 1" "GR Self Speed 1"
+combat_skill: .id "toxin_trickery" .level 1 .type "melee" .atk 0% .dmg 0% .crit 0% .launch 4321 .target  .is_crit_valid True  .effect "Shadow Blood 2" "GR Self Speed 2"
+combat_skill: .id "toxin_trickery" .level 2 .type "melee" .atk 0% .dmg 0% .crit 0% .launch 4321 .target  .is_crit_valid True  .effect "Shadow Blood 3" "GR Self Speed 3"
+combat_skill: .id "toxin_trickery" .level 3 .type "melee" .atk 0% .dmg 0% .crit 0% .launch 4321 .target  .is_crit_valid True  .effect "Shadow Blood 4" "GR Self Speed 4"
+combat_skill: .id "toxin_trickery" .level 4 .type "melee" .atk 0% .dmg 0% .crit 0% .launch 4321 .target  .is_crit_valid True  .effect "Shadow Blood 5" "GR Self Speed 5"
+tag: .id "light"
+tag: .id "non-religious"
+deaths_door: .buffs deathsdoorACCDebuff deathsdoorDMGLowDebuff deathsdoorDMGHighDebuff deathsdoorSPDDebuff deathsdoorSRDebuff .recovery_buffs mortalityACCDebuff mortalityDMGLowDebuff mortalityDMGHighDebuff mortalitySPDDebuff mortalitySRDebuff .recovery_heart_attack_buffs heartattackACCDebuff heartattackDMGLowDebuff heartattackDMGHighDebuff heartattackSPDDebuff heartattackSRDebuff
+controlled: .target_rank 3
+id_index: .index 6
+generation: .number_of_positive_quirks_min 1 .number_of_positive_quirks_max 2 .number_of_negative_quirks_min 1 .number_of_negative_quirks_max 2 .number_of_class_specific_camping_skills 2 .number_of_shared_camping_skills 1 .number_of_random_combat_skills 4
+skill_selection: .can_select_combat_skills true .number_of_selected_combat_skills_max 4
+.end

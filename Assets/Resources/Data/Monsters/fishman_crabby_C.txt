@@ -1,0 +1,22 @@
+name: fishman_crabby_C
+type: fishman_crabby
+
+art:
+commonfx: .deathfx death_large
+skill: .id "the_pinch" .anim "attack_pinch" .fx "pinch" .targchestfx "blood_splatter"
+skill: .id "pincer_smack" .anim "attack_smack" .fx "pincer_smack" .targheadfx "pincer_smack_target" .area_pos_offset 0 -25
+.end
+
+info:
+display: .size 2
+enemy_type: .id "eldritch"
+stats: .hp 86 .def 22.5% .prot 0.5 .spd 2 .stun_resist 95% .poison_resist 55% .bleed_resist 105% .debuff_resist 65% .move_resist 95%
+skill: .id "the_pinch" .type "melee" .atk 102.5% .dmg 1 3 .crit 12%  .effect "Crabby Bleed 3" "Crabby Pinch Debuff 5" .launch 321 .target 123
+skill: .id "pincer_smack" .type "melee" .atk 102.5% .dmg 7 13 .crit 12%  .effect "Stun 5" "Push 3E" .launch 21 .target 12
+personality: .prefskill -1
+loot: .code "A" .count 2
+initiative: .number_of_turns_per_round 1
+monster_brain: .id fishman_crabby_C
+death_class: .monster_class_id corpse_large_C .is_valid_on_crit False .type "corpse" 
+battle_modifier: .disable_stall_penalty True .can_surprise True .can_be_surprised True .always_surprise False .always_be_surprised False
+.end

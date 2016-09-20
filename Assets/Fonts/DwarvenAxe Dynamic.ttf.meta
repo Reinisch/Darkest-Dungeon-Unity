@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: 2d8b36a1cce4ad241ba35463873e2da8
+timeCreated: 1462462312
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 24
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - DwarvenAxeBBW00-Regular
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

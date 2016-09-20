@@ -1,0 +1,35 @@
+{
+    "quest_completion_xp_table":
+    [
+        0,
+        2,
+        3,
+        4
+    ],
+
+	"level_threshold_table":
+    [
+        0,
+		2,
+		6,
+		10,
+		16,
+		22,
+		32,
+		42
+    ],
+
+    "resolve_level_thresholds" : 
+    [
+        0,
+        2,
+        8,
+        14,
+        30,
+        62,
+        94
+    ],
+
+	"gold_icon_thresholds": [ 250, 500, 750, 1000 ],
+	"provision_icon_thresholds": [ 0, 5, 11, 14 ]
+}

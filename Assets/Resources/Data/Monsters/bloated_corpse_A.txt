@@ -1,0 +1,22 @@
+name: bloated_corpse_A
+type: bloated_corpse
+
+art:
+commonfx: .deathfx death_medium
+skill: .id "bloated_swipe" .anim "attack_melee" .fx "swipe" .targchestfx "blood_splatter"
+skill: .id "explode" .anim "attack_explode" .targchestfx "blood_splatter" .area_pos_offset -100 0 .target_area_pos_offset 100 0
+.end
+
+info:
+display: .size 1
+enemy_type: .id "eldritch"
+enemy_type: .id "unholy"
+stats: .hp 14 .def 0% .prot 0 .spd 0 .stun_resist 50% .poison_resist 10% .bleed_resist 20% .debuff_resist 10% .move_resist 25%
+skill: .id "bloated_swipe" .type "melee" .atk 62.5% .dmg 5 9 .crit 2%  .effect "Stress 1" .launch 1234 .target 12
+skill: .id "explode" .type "melee" .atk 72.5% .dmg 5 13 .crit 2%  .effect "kill_self" "Thrall Revenge Stress 1" .launch 4321 .target ~4321
+personality: .prefskill -1
+loot: .code "A" .count 1
+initiative: .number_of_turns_per_round 1
+monster_brain: .id bloated_corpse_A
+battle_modifier: .disable_stall_penalty False .can_surprise True .can_be_surprised True .always_surprise False .always_be_surprised False
+.end

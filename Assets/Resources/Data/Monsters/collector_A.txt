@@ -1,0 +1,26 @@
+name: collector_A
+type: collector
+
+art:
+commonfx: .deathfx death_large
+skill: .id "show_collection" .anim "attack_reveal" .area_pos_offset 0 -50
+skill: .id "collect_call" .anim "attack_summon" .fx "collect_call" .area_pos_offset 0 -35
+skill: .id "life_steal" .anim "attack_skull" .fx "life_steal" .targchestfx "life_steal_target" .area_pos_offset 0 -35 .target_area_pos_offset 0 0
+defending_area_pos_offset: .offset 0 -35
+.end
+
+info:
+display: .size 1
+enemy_type: .id "man"
+enemy_type: .id "eldritch"
+stats: .hp 70 .def 0% .prot 0 .spd 5 .stun_resist 50% .poison_resist 20% .bleed_resist 20% .debuff_resist 20% .move_resist 25%
+skill: .id "show_collection" .type "melee" .atk 92.5% .dmg 1 1 .crit 0%  .effect "Collector Show Stress" .launch 4321 .target ~12 .is_crit_valid False
+skill: .id "collect_call" .type "ranged" .atk 0% .dmg 0 0 .crit 0%  .effect "Summon Heads A1" "Summon Heads A2" "Summon Heads A3" .launch 4321 .target  .is_crit_valid False
+skill: .id "life_steal" .type "ranged" .atk 82.5% .dmg 3 7 .crit 16%  .effect "Bleed 1" "Collector HealSelf 1" "Lifesteal Mark" .launch 4321 .target 34
+personality: .prefskill -1
+loot: .code "COLLECTOR" .count 1
+initiative: .number_of_turns_per_round 1
+monster_brain: .id collector
+death_class: .monster_class_id corpse_A .is_valid_on_crit False .type "corpse" 
+battle_modifier: .disable_stall_penalty True .can_surprise True .can_be_surprised True .always_surprise False .always_be_surprised False
+.end

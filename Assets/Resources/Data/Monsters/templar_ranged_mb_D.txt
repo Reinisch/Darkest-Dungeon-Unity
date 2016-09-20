@@ -1,0 +1,27 @@
+name: templar_ranged_mb_D
+type: templar_ranged_mb
+
+art:
+commonfx: .deathfx death_large
+skill: .id "templar_pinch" .anim "attack_claw" .fx "pinch" .targchestfx "blood_splatter"
+skill: .id "templar_snipe" .anim "attack_tail" .fx "snipe" .targchestfx "snipe_target" .area_pos_offset 0 -50
+skill: .id "templar_aoe" .anim "attack_charge" .fx "volley" .targchestfx "volley_target" .area_pos_offset -50 -50 .target_area_pos_offset 100 0
+skill: .id "darkest_eye" .anim "attack_eye" .fx "gaze" .targheadfx "gaze_target"
+.end
+
+info:
+display: .size 2
+enemy_type: .id "eldritch"
+enemy_type: .id "beast"
+stats: .hp 105 .def 28.75% .prot 0 .spd 6 .stun_resist 97.5% .poison_resist 97.5% .bleed_resist 67.5% .debuff_resist 67.5% .move_resist 98%
+skill: .id "templar_pinch" .type "melee" .atk 103.75% .dmg 8 17 .crit 7%  .launch 4321 .target ~12
+skill: .id "templar_snipe" .type "ranged" .atk 113.75% .dmg 12 17 .crit 17%  .effect "Templar Snipe Blight" "Templar Weaken" .launch 43 .target 234
+skill: .id "templar_aoe" .type "ranged" .atk 113.75% .dmg 5 8 .crit 7%  .effect "Templar AOE Blight" .launch 43 .target ~1234
+skill: .id "darkest_eye" .type "ranged" .atk 123.75% .dmg 16 26 .crit 0%  .effect "Darkest Eye" .launch 4321 .target 1234 .is_crit_valid False
+personality: .prefskill -1
+loot: .code "NONE" .count 0
+initiative: .number_of_turns_per_round 2
+monster_brain: .id templar_ranged_mb
+death_class: .monster_class_id corpse_large_A .is_valid_on_crit False .type "corpse" 
+battle_modifier: .disable_stall_penalty True .can_surprise False .can_be_surprised False .always_surprise False .always_be_surprised False
+.end

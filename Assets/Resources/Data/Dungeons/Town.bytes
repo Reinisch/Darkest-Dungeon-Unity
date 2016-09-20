@@ -1,0 +1,57 @@
+id: 5
+is_released: true
+hall_variants: 5
+room_variants: altar square start
+
+mash:
+id: 6
+named: .name town_incursion_01 .chance 1 .types rabid_dog_C rabid_dog_C brigand_raider_D brigand_hunter_D
+named: .name town_incursion_02 .chance 1 .types rabid_dog_C rabid_dog_C brigand_raider_D brigand_hunter_D
+named: .name town_incursion_03 .chance 1 .types rabid_dog_C brigand_raider_D madman_C brigand_hunter_D
+named: .name town_incursion_04 .chance 1 .types rabid_dog_C brigand_raider_D madman_C brigand_hunter_D
+named: .name town_incursion_05 .chance 1 .types brigand_blood_C brigand_hunter_D madman_C
+named: .name town_incursion_06 .chance 1 .types brigand_blood_C brigand_hunter_D madman_C
+named: .name town_incursion_07 .chance 1 .types brigand_blood_C brigand_raider_D brigand_hunter_D
+named: .name town_incursion_08 .chance 1 .types brigand_blood_C brigand_raider_D brigand_hunter_D
+named: .name town_incursion_weak_01 .chance 1 .types brigand_cutthroat_A brigand_cutthroat_B brigand_fusilier_A brigand_fusilier_B
+named: .name town_incursion_weak_02 .chance 1 .types brigand_cutthroat_A brigand_cutthroat_B brigand_fusilier_A brigand_fusilier_B
+named: .name town_incursion_weak_05 .chance 1 .types rabid_dog_A brigand_fusilier_B brigand_cutthroat_B madman_A
+named: .name town_incursion_weak_06 .chance 1 .types rabid_dog_A brigand_fusilier_B brigand_cutthroat_B madman_A
+named: .name town_incursion_weak_07 .chance 1 .types brigand_cutthroat_B brigand_blood_A brigand_fusilier_B
+named: .name town_incursion_weak_08 .chance 1 .types brigand_cutthroat_B brigand_blood_A brigand_fusilier_B
+boss: .chance 1 .types brigand_sapper_D brigand_barrel_D
+stall: .chance 1 .types brigand_raider_D brigand_hunter_D  
+stall: .chance 1 .types brigand_raider_D brigand_raider_D  
+stall: .chance 1 .types brigand_raider_D rabid_dog_C  
+stall: .chance 1 .types brigand_blood_C  
+hall: .chance 1 .types brigand_raider_D brigand_hunter_D
+room: .chance 1 .types brigand_raider_D brigand_hunter_D
+.end
+
+props:
+hall_curios: .chance 10 .types discarded_pack 
+hall_curios: .chance 8 .types sconce
+hall_curios: .chance 10 .types crate 
+hall_curios: .chance 10 .types sack 
+hall_curios: .chance 8 .types stack_of_books 
+hall_curios: .chance 3 .types altar_of_light
+hall_curios: .chance 5 .types decorative_urn
+hall_curios: .chance 5 .types locked_display_cabinet
+hall_curios: .chance 8 .types bookshelf
+hall_curios: .chance 3 .types alchemy_table
+hall_curios: .chance 3 .types confession_booth
+hall_curios: .chance 5 .types iron_maiden
+hall_curios: .chance 1 .types shamblers_altar
+room_curios: .chance 2 .types suit_of_armor
+room_curios: .chance 2 .types holy_fountain
+room_curios: .chance 3 .types sarcophagus
+room_curios: .chance 3 .types locked_sarcophagus
+room_curios: .chance 1 .types eldritch_altar
+room_treasures: .chance 2 .types unlocked_strongbox 
+room_treasures: .chance 3 .types locked_strongbox 
+room_treasures: .chance 3 .types heirloom_chest 
+traps: .chance 1 .types spikes
+obstacles: .chance 1 .types town_rubble
+secret_room_treasures: .chance 1 .types secret_stash
+.end
+

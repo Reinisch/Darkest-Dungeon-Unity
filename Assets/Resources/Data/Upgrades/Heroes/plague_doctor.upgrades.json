@@ -1,0 +1,620 @@
+{
+   "trees":
+   [
+      {
+         "id" : "plague_doctor.weapon",
+         "is_instanced" : true,
+         "tags" : ["weapon", "first_level_not_upgrade"],
+         "requirements" : 
+         [
+            {
+               "code" : "0",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 750 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "blacksmith.weapon", "requirement_code" : "a" }
+               ],
+               "prerequisite_resolve_level" : 1
+            },
+            {
+               "code" : "1",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 2000 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.weapon", "requirement_code" : "0" },
+                  { "tree_id" : "blacksmith.weapon", "requirement_code" : "b" }
+               ],
+               "prerequisite_resolve_level" : 2
+            },
+            {
+               "code" : "2",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 4000 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.weapon", "requirement_code" : "1" },
+                  { "tree_id" : "blacksmith.weapon", "requirement_code" : "c" }
+               ],
+               "prerequisite_resolve_level" : 3
+            },
+            {
+               "code" : "3",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 8000 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.weapon", "requirement_code" : "2" },
+                  { "tree_id" : "blacksmith.weapon", "requirement_code" : "d" }
+               ],
+               "prerequisite_resolve_level" : 5
+            }
+         ]
+      },
+      {
+         "id" : "plague_doctor.armour",
+         "is_instanced" : true,
+         "tags" : ["armour", "first_level_not_upgrade"],
+         "requirements" : 
+         [
+            {
+               "code" : "0",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 750 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "blacksmith.armour", "requirement_code" : "a" }
+               ],
+               "prerequisite_resolve_level" : 1
+            },
+            {
+               "code" : "1",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 2000 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.armour", "requirement_code" : "0" },
+                  { "tree_id" : "blacksmith.armour", "requirement_code" : "b" }
+               ],
+               "prerequisite_resolve_level" : 2
+            },
+            {
+               "code" : "2",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 4000 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.armour", "requirement_code" : "1" },
+                  { "tree_id" : "blacksmith.armour", "requirement_code" : "c" }
+               ],
+               "prerequisite_resolve_level" : 3
+            },
+            {
+               "code" : "3",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 8000 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.armour", "requirement_code" : "2" },
+                  { "tree_id" : "blacksmith.armour", "requirement_code" : "d" }
+               ],
+               "prerequisite_resolve_level" : 5
+            }
+         ]
+      },
+      {
+         "id" : "plague_doctor.noxious_blast",
+         "is_instanced" : true,
+         "tags" : ["combat_skill"],
+         "requirements" : 
+         [
+            {
+               "code" : "0",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 1000 }
+               ],
+               "prerequisite_requirements" :
+               [
+               ],
+               "prerequisite_resolve_level" : 0
+            },
+            {
+               "code" : "1",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 250 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.noxious_blast", "requirement_code" : "0" },
+                  { "tree_id" : "guild.skill_levels", "requirement_code" : "a" }
+               ],
+               "prerequisite_resolve_level" : 1
+            },
+            {
+               "code" : "2",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 750 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.noxious_blast", "requirement_code" : "1" },
+                  { "tree_id" : "guild.skill_levels", "requirement_code" : "b" }
+               ],
+               "prerequisite_resolve_level" : 2
+            },
+            {
+               "code" : "3",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 1500 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.noxious_blast", "requirement_code" : "2" },
+                  { "tree_id" : "guild.skill_levels", "requirement_code" : "c" }
+               ],
+               "prerequisite_resolve_level" : 3
+            },
+            {
+               "code" : "4",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 3000 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.noxious_blast", "requirement_code" : "3" },
+                  { "tree_id" : "guild.skill_levels", "requirement_code" : "d" }
+               ],
+               "prerequisite_resolve_level" : 5
+            }
+         ]
+      },
+      {
+         "id" : "plague_doctor.plague_grenade",
+         "is_instanced" : true,
+         "tags" : ["combat_skill"],
+         "requirements" : 
+         [
+            {
+               "code" : "0",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 1000 }
+               ],
+               "prerequisite_requirements" :
+               [
+               ],
+               "prerequisite_resolve_level" : 0
+            },
+            {
+               "code" : "1",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 250 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.plague_grenade", "requirement_code" : "0" },
+                  { "tree_id" : "guild.skill_levels", "requirement_code" : "a" }
+               ],
+               "prerequisite_resolve_level" : 1
+            },
+            {
+               "code" : "2",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 750 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.plague_grenade", "requirement_code" : "1" },
+                  { "tree_id" : "guild.skill_levels", "requirement_code" : "b" }
+               ],
+               "prerequisite_resolve_level" : 2
+            },
+            {
+               "code" : "3",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 1500 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.plague_grenade", "requirement_code" : "2" },
+                  { "tree_id" : "guild.skill_levels", "requirement_code" : "c" }
+               ],
+               "prerequisite_resolve_level" : 3
+            },
+            {
+               "code" : "4",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 3000 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.plague_grenade", "requirement_code" : "3" },
+                  { "tree_id" : "guild.skill_levels", "requirement_code" : "d" }
+               ],
+               "prerequisite_resolve_level" : 5
+            }
+         ]
+      },
+      {
+         "id" : "plague_doctor.blinding_gas",
+         "is_instanced" : true,
+         "tags" : ["combat_skill"],
+         "requirements" : 
+         [
+            {
+               "code" : "0",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 1000 }
+               ],
+               "prerequisite_requirements" :
+               [
+               ],
+               "prerequisite_resolve_level" : 0
+            },
+            {
+               "code" : "1",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 250 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.blinding_gas", "requirement_code" : "0" },
+                  { "tree_id" : "guild.skill_levels", "requirement_code" : "a" }
+               ],
+               "prerequisite_resolve_level" : 1
+            },
+            {
+               "code" : "2",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 750 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.blinding_gas", "requirement_code" : "1" },
+                  { "tree_id" : "guild.skill_levels", "requirement_code" : "b" }
+               ],
+               "prerequisite_resolve_level" : 2
+            },
+            {
+               "code" : "3",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 1500 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.blinding_gas", "requirement_code" : "2" },
+                  { "tree_id" : "guild.skill_levels", "requirement_code" : "c" }
+               ],
+               "prerequisite_resolve_level" : 3
+            },
+            {
+               "code" : "4",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 3000 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.blinding_gas", "requirement_code" : "3" },
+                  { "tree_id" : "guild.skill_levels", "requirement_code" : "d" }
+               ],
+               "prerequisite_resolve_level" : 5
+            }
+         ]
+      },
+      {
+         "id" : "plague_doctor.incision",
+         "is_instanced" : true,
+         "tags" : ["combat_skill"],
+         "requirements" : 
+         [
+            {
+               "code" : "0",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 1000 }
+               ],
+               "prerequisite_requirements" :
+               [
+               ],
+               "prerequisite_resolve_level" : 0
+            },
+            {
+               "code" : "1",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 250 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.incision", "requirement_code" : "0" },
+                  { "tree_id" : "guild.skill_levels", "requirement_code" : "a" }
+               ],
+               "prerequisite_resolve_level" : 1
+            },
+            {
+               "code" : "2",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 750 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.incision", "requirement_code" : "1" },
+                  { "tree_id" : "guild.skill_levels", "requirement_code" : "b" }
+               ],
+               "prerequisite_resolve_level" : 2
+            },
+            {
+               "code" : "3",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 1500 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.incision", "requirement_code" : "2" },
+                  { "tree_id" : "guild.skill_levels", "requirement_code" : "c" }
+               ],
+               "prerequisite_resolve_level" : 3
+            },
+            {
+               "code" : "4",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 3000 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.incision", "requirement_code" : "3" },
+                  { "tree_id" : "guild.skill_levels", "requirement_code" : "d" }
+               ],
+               "prerequisite_resolve_level" : 5
+            }
+         ]
+      },
+      {
+         "id" : "plague_doctor.battlefield_medicine",
+         "is_instanced" : true,
+         "tags" : ["combat_skill"],
+         "requirements" : 
+         [
+            {
+               "code" : "0",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 1000 }
+               ],
+               "prerequisite_requirements" :
+               [
+               ],
+               "prerequisite_resolve_level" : 0
+            },
+            {
+               "code" : "1",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 250 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.battlefield_medicine", "requirement_code" : "0" },
+                  { "tree_id" : "guild.skill_levels", "requirement_code" : "a" }
+               ],
+               "prerequisite_resolve_level" : 1
+            },
+            {
+               "code" : "2",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 750 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.battlefield_medicine", "requirement_code" : "1" },
+                  { "tree_id" : "guild.skill_levels", "requirement_code" : "b" }
+               ],
+               "prerequisite_resolve_level" : 2
+            },
+            {
+               "code" : "3",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 1500 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.battlefield_medicine", "requirement_code" : "2" },
+                  { "tree_id" : "guild.skill_levels", "requirement_code" : "c" }
+               ],
+               "prerequisite_resolve_level" : 3
+            },
+            {
+               "code" : "4",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 3000 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.battlefield_medicine", "requirement_code" : "3" },
+                  { "tree_id" : "guild.skill_levels", "requirement_code" : "d" }
+               ],
+               "prerequisite_resolve_level" : 5
+            }
+         ]
+      },
+      {
+         "id" : "plague_doctor.emboldening_vapours",
+         "is_instanced" : true,
+         "tags" : ["combat_skill"],
+         "requirements" : 
+         [
+            {
+               "code" : "0",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 1000 }
+               ],
+               "prerequisite_requirements" :
+               [
+               ],
+               "prerequisite_resolve_level" : 0
+            },
+            {
+               "code" : "1",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 250 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.emboldening_vapours", "requirement_code" : "0" },
+                  { "tree_id" : "guild.skill_levels", "requirement_code" : "a" }
+               ],
+               "prerequisite_resolve_level" : 1
+            },
+            {
+               "code" : "2",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 750 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.emboldening_vapours", "requirement_code" : "1" },
+                  { "tree_id" : "guild.skill_levels", "requirement_code" : "b" }
+               ],
+               "prerequisite_resolve_level" : 2
+            },
+            {
+               "code" : "3",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 1500 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.emboldening_vapours", "requirement_code" : "2" },
+                  { "tree_id" : "guild.skill_levels", "requirement_code" : "c" }
+               ],
+               "prerequisite_resolve_level" : 3
+            },
+            {
+               "code" : "4",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 3000 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.emboldening_vapours", "requirement_code" : "3" },
+                  { "tree_id" : "guild.skill_levels", "requirement_code" : "d" }
+               ],
+               "prerequisite_resolve_level" : 5
+            }
+         ]
+      },
+      {
+         "id" : "plague_doctor.disorienting_blast",
+         "is_instanced" : true,
+         "tags" : ["combat_skill"],
+         "requirements" : 
+         [
+            {
+               "code" : "0",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 1000 }
+               ],
+               "prerequisite_requirements" :
+               [
+               ],
+               "prerequisite_resolve_level" : 0
+            },
+            {
+               "code" : "1",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 250 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.disorienting_blast", "requirement_code" : "0" },
+                  { "tree_id" : "guild.skill_levels", "requirement_code" : "a" }
+               ],
+               "prerequisite_resolve_level" : 1
+            },
+            {
+               "code" : "2",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 750 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.disorienting_blast", "requirement_code" : "1" },
+                  { "tree_id" : "guild.skill_levels", "requirement_code" : "b" }
+               ],
+               "prerequisite_resolve_level" : 2
+            },
+            {
+               "code" : "3",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 1500 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.disorienting_blast", "requirement_code" : "2" },
+                  { "tree_id" : "guild.skill_levels", "requirement_code" : "c" }
+               ],
+               "prerequisite_resolve_level" : 3
+            },
+            {
+               "code" : "4",
+               "currency_cost" : 
+               [
+                  { "type" : "gold", "amount" : 3000 }
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "plague_doctor.disorienting_blast", "requirement_code" : "3" },
+                  { "tree_id" : "guild.skill_levels", "requirement_code" : "d" }
+               ],
+               "prerequisite_resolve_level" : 5
+            }
+         ]
+      }
+]
+}

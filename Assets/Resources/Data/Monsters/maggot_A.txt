@@ -1,0 +1,20 @@
+name: maggot_A
+type: maggot
+
+art:
+commonfx: .deathfx death_small
+skill: .id "grave_nibble" .anim "attack_bite" .targchestfx "blood_splatter" .area_pos_offset 0 25 .target_area_pos_offset 0 25
+defending_area_pos_offset: .offset 0 35
+.end
+
+info:
+display: .size 1
+enemy_type: .id "beast"
+stats: .hp 6 .def 0% .prot 0 .spd 3 .stun_resist 100% .poison_resist 40% .bleed_resist 40% .debuff_resist 60% .move_resist 0%
+skill: .id "grave_nibble" .type "melee" .atk 62.5% .dmg 2 4 .crit 12%  .effect "MaggotStress" "MaggotStun 1" "Maggot Disease" .launch 4321 .target 1234
+personality: .prefskill -1
+loot: .code "NONE" .count 1
+initiative: .number_of_turns_per_round 1
+monster_brain: .id maggot_A
+battle_modifier: .disable_stall_penalty False .can_surprise True .can_be_surprised True .always_surprise False .always_be_surprised False
+.end

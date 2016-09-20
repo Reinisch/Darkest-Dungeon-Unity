@@ -1,0 +1,72 @@
+{
+   "trees":
+   [
+      {
+         "id" : "camping_trainer.cost",
+         "is_instanced" : false,
+         "tags" : ["building","camping_trainer"],
+         "requirements" : 
+         [
+            {
+               "code" : "a",
+               "currency_cost" :
+               [
+                  { "type" : "gold", "amount" : 0},
+                  { "type" : "crest", "amount" : 27}
+               ],
+               "prerequisite_requirements" :
+               [
+            ]
+         },
+         {
+            "code" : "b",
+            "currency_cost" :
+            [
+               { "type" : "gold", "amount" : 0},
+               { "type" : "crest", "amount" : 62}
+            ],
+            "prerequisite_requirements" :
+            [
+               { "tree_id" : "camping_trainer.cost", "requirement_code" : "a" }
+            ]
+         },
+         {
+            "code" : "c",
+            "currency_cost" :
+            [
+               { "type" : "gold", "amount" : 0},
+               { "type" : "crest", "amount" : 96}
+            ],
+            "prerequisite_requirements" :
+            [
+               { "tree_id" : "camping_trainer.cost", "requirement_code" : "b" }
+            ]
+         },
+         {
+            "code" : "d",
+            "currency_cost" :
+            [
+               { "type" : "gold", "amount" : 0},
+               { "type" : "crest", "amount" : 130}
+            ],
+            "prerequisite_requirements" :
+            [
+               { "tree_id" : "camping_trainer.cost", "requirement_code" : "c" }
+            ]
+         },
+         {
+            "code" : "e",
+            "currency_cost" :
+            [
+               { "type" : "gold", "amount" : 0},
+               { "type" : "crest", "amount" : 165}
+            ],
+            "prerequisite_requirements" :
+            [
+               { "tree_id" : "camping_trainer.cost", "requirement_code" : "d" }
+            ]
+         }
+      ]
+   }
+]
+}

@@ -1,0 +1,24 @@
+name: cultist_witch_B
+type: cultist_witch
+
+art:
+commonfx: .deathfx death_medium
+skill: .id "cultist_pull" .anim "attack_ranged" .fx "pull" .targchestfx "pull_target"
+skill: .id "cultist_push" .anim "attack_ranged" .fx "push" .targchestfx "push_target"
+skill: .id "cultist_incantation" .anim "attack_ranged" .fx "incantation"
+.end
+
+info:
+display: .size 1
+enemy_type: .id "man"
+stats: .hp 19 .def 21.25% .prot 0 .spd 8 .stun_resist 45% .poison_resist 40% .bleed_resist 40% .debuff_resist 60% .move_resist 30%
+skill: .id "cultist_pull" .type "ranged" .atk 88.75% .dmg 1 2 .crit 11%  .effect "Pull 2C" "Witch Eldritch Stress 3" .launch 234 .target 34
+skill: .id "cultist_push" .type "ranged" .atk 88.75% .dmg 1 2 .crit 11%  .effect "Push 2C" "Witch Eldritch Stress 3" .launch 1234 .target 12
+skill: .id "cultist_incantation" .type "ranged" .atk 92.5% .dmg 1 2 .crit 0%  .effect "Witch Incantation Stress 3" "Darkness 2" "Witch Incantation Mark" .launch 4321 .target 1234 .is_crit_valid False
+personality: .prefskill -1
+loot: .code "A" .count 1
+initiative: .number_of_turns_per_round 1
+monster_brain: .id cultist_witch_B
+death_class: .monster_class_id corpse_B .is_valid_on_crit False .type "corpse" 
+battle_modifier: .disable_stall_penalty False .can_surprise True .can_be_surprised True .always_surprise False .always_be_surprised False
+.end

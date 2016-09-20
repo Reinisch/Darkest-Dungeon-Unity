@@ -1,0 +1,40 @@
+{
+    "props" : 
+    [
+	    {
+            "name" : "thorny_thicket",
+			"fail_effects" : [ "Stress 2" ],
+			"health" : -0.05,
+			"torchlight" : -20.0,
+			"ancestor_talk" : false
+	    },
+ 	    {
+			"name" : "rubble",
+			"fail_effects" : [ "Stress 2" ],
+			"health" : -0.05,
+			"torchlight" : -20.0,
+			"ancestor_talk" : false
+	    },
+        {
+            "name" : "shipwreck",
+			"fail_effects" : [ "Stress 2" ],
+			"health" : -0.05,
+			"torchlight" : -20.0,
+			"ancestor_talk" : false
+        },
+		{
+			"name": "ancestor",
+			"fail_effects": [],
+			"health": 0.0,
+			"torchlight": 0.0,
+			"ancestor_talk" : true
+		},
+		{
+			"name" : "town_rubble",
+			"fail_effects" : [ "Stress 2" ],
+			"health" : -0.05,
+			"torchlight" : -20.0,
+			"ancestor_talk" : false
+		}        
+    ]
+}

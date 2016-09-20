@@ -1,0 +1,664 @@
+{
+   "traits":
+   [
+      {
+         "id" : "fearful",
+         "overstress_type": "affliction",
+         "curio_tag" : "Worship",
+         "curio_tag_chance" : 0.5,
+         "keep_loot" : false,
+         "buff_ids" : 
+         [
+            "STUNRESIST-15",
+            "BLIGHTRESIST-15",
+            "BLEEDRESIST-15",
+            "DISEASERESIST-15",
+            "DEBUFFRESIST-15",
+            "MOVERESIST-15",
+            "TRAPRESIST-15",
+            "MAXHP-10",
+            "DMGL-25",
+            "DMGH-25",
+            "DEF10",
+            "SPD2"
+         ],
+         "combat_start_turn_act_outs":
+         [
+            { "id": "nothing", "data": { "number_value": 0.0, "string_value": "" }, "chance": 6},
+            { "id": "bark_stress", "data": { "number_value": 0.0, "string_value": "BarkStress" }, "chance": 1},
+            { "id": "change_pos", "data": { "number_value": 0.0, "string_value": "" }, "chance": 1},
+            { "id": "ignore_command", "data": { "number_value": 0.0, "string_value": "" }, "chance": 1},
+            { "id": "random_command", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "retreat_from_combat", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "attack_friendly", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "attack_self", "data": { "number_value": 0.1,"string_value": "" }, "chance": 0},
+            { "id": "mark_self", "data": { "number_value": 0.0, "string_value": "Mark Self" }, "chance": 0},
+            { "id": "stress_heal_self", "data": { "number_value": 0.0, "string_value": "HealStressVirtued" }, "chance": 0},
+            { "id": "stress_heal_party", "data": { "number_value": 0.0, "string_value": "HealStressVirtuedParty" }, "chance": 0},
+            { "id": "buff_random_party_member", "data": { "number_value": 0.0, "string_value": "FocusedAllyBuff" }, "chance": 0},
+            { "id": "buff_party", "data": { "number_value": 0.0, "string_value": "PowerfulPartyBuff" }, "chance": 0},
+            { "id": "heal_self", "data": { "number_value": 0.1,"string_value": "" }, "chance": 0}
+         ],
+         "reaction_act_outs":
+         [
+            { "id": "block_move", "data":{ "effect": "" }, "chance": 0.33},
+            { "id": "block_heal", "data":{ "effect": "" }, "chance": 0},
+            { "id": "block_buff", "data":{ "effect": "" }, "chance": 0},
+            { "id": "block_item", "data":{ "effect": "" }, "chance": 0},
+            { "id": "block_combat_retreat", "data":{ "effect": "" }, "chance": 0},
+            { "id": "comment_self_hit", "data":{ "effect": "BarkStress" }, "chance": 0.2},
+            { "id": "comment_self_missed", "data":{ "effect": "BarkStress" }, "chance": 0.2},
+            { "id": "comment_ally_hit", "data":{ "effect": "BarkStress" }, "chance": 0.2},
+            { "id": "comment_ally_missed", "data":{ "effect": "BarkStress" }, "chance": 0.2},
+            { "id": "comment_ally_attack_hit", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_ally_attack_missed", "data":{ "effect": "BarkStress" }, "chance": 0.2},
+            { "id": "comment_move", "data":{ "effect": "BarkStress" }, "chance": 0.15},
+            { "id": "comment_curio_interaction", "data":{ "effect": "BarkStress" }, "chance": 0.33},
+            { "id": "comment_trap_triggered", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "block_effect", "data":{ "effect": "BarkStressHeal" }, "chance": 0}
+         ]
+      },
+      {
+         "id" : "paranoid",
+         "overstress_type": "affliction",
+         "curio_tag" : "none",
+         "curio_tag_chance" : 0.5,
+         "keep_loot" : false,
+         "buff_ids" : 
+         [
+            "STUNRESIST-15",
+            "BLIGHTRESIST-15",
+            "BLEEDRESIST-15",
+            "DISEASERESIST-15",
+            "DEBUFFRESIST-15",
+            "MOVERESIST-15",
+            "TRAPRESIST-15",
+            "MAXHP-10",
+            "DMGL-25",
+            "DMGH-25",
+            "DEF10",
+            "SPD2"
+         ],
+         "combat_start_turn_act_outs":
+         [
+            { "id": "nothing", "data": { "number_value": 0.0, "string_value": "" }, "chance": 6},
+            { "id": "bark_stress", "data": { "number_value": 0.0, "string_value": "BarkStress" }, "chance": 1},
+            { "id": "change_pos", "data": { "number_value": 0.0, "string_value": "" }, "chance": 1},
+            { "id": "ignore_command", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "random_command", "data": { "number_value": 0.0, "string_value": "" }, "chance": 1},
+            { "id": "retreat_from_combat", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "attack_friendly", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "attack_self", "data": { "number_value": 0.1,"string_value": "" }, "chance": 0},
+            { "id": "mark_self", "data": { "number_value": 0.0, "string_value": "Mark Self" }, "chance": 0},
+            { "id": "stress_heal_self", "data": { "number_value": 0.0, "string_value": "HealStressVirtued" }, "chance": 0},
+            { "id": "stress_heal_party", "data": { "number_value": 0.0, "string_value": "HealStressVirtuedParty" }, "chance": 0},
+            { "id": "buff_random_party_member", "data": { "number_value": 0.0, "string_value": "FocusedAllyBuff" }, "chance": 0},
+            { "id": "buff_party", "data": { "number_value": 0.0, "string_value": "PowerfulPartyBuff" }, "chance": 0},
+            { "id": "heal_self", "data": { "number_value": 0.1,"string_value": "" }, "chance": 0}
+         ],
+         "reaction_act_outs":
+         [
+            { "id": "block_move", "data":{ "effect": "" }, "chance": 0.33},
+            { "id": "block_heal", "data":{ "effect": "" }, "chance": 0.33},
+            { "id": "block_buff", "data":{ "effect": "" }, "chance": 0.33},
+            { "id": "block_item", "data":{ "effect": "" }, "chance": 0.33},
+            { "id": "block_combat_retreat", "data":{ "effect": "" }, "chance": 0.33},
+            { "id": "comment_self_hit", "data":{ "effect": "BarkStress" }, "chance": 0.2},
+            { "id": "comment_self_missed", "data":{ "effect": "BarkStress" }, "chance": 0.2},
+            { "id": "comment_ally_hit", "data":{ "effect": "BarkStress" }, "chance": 0.2},
+            { "id": "comment_ally_missed", "data":{ "effect": "BarkStress" }, "chance": 0.2},
+            { "id": "comment_ally_attack_hit", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_ally_attack_missed", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_move", "data":{ "effect": "BarkStress" }, "chance": 0.15},
+            { "id": "comment_curio_interaction", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_trap_triggered", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "block_effect", "data":{ "effect": "BarkStressHeal" }, "chance": 0}
+         ]
+      },
+      {
+         "id" : "selfish",
+         "overstress_type": "affliction",
+         "curio_tag" : "Treasure",
+         "curio_tag_chance" : 0.5,
+         "keep_loot" : true,
+         "buff_ids" : 
+         [
+            "STUNRESIST-15",
+            "BLIGHTRESIST-15",
+            "BLEEDRESIST-15",
+            "DISEASERESIST-15",
+            "DEBUFFRESIST-15",
+            "MOVERESIST-15",
+            "TRAPRESIST-15",
+            "MAXHP-10",
+            "ACC-5",
+            "DMGL-10",
+            "DMGH-10",
+            "DEF5"
+         ],
+         "combat_start_turn_act_outs":
+         [
+            { "id": "nothing", "data": { "number_value": 0.0, "string_value": "" }, "chance": 8},
+            { "id": "bark_stress", "data": { "number_value": 0.0, "string_value": "BarkStress" }, "chance": 1},
+            { "id": "change_pos", "data": { "number_value": 0.0, "string_value": "" }, "chance": 1},
+            { "id": "ignore_command", "data": { "number_value": 0.0, "string_value": "" }, "chance": 1},
+            { "id": "random_command", "data": { "number_value": 0.0, "string_value": "" }, "chance": 1},
+            { "id": "retreat_from_combat", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "attack_friendly", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "attack_self", "data": { "number_value": 0.1,"string_value": "" }, "chance": 0},
+            { "id": "mark_self", "data": { "number_value": 0.0, "string_value": "Mark Self" }, "chance": 0},
+            { "id": "stress_heal_self", "data": { "number_value": 0.0, "string_value": "HealStressVirtued" }, "chance": 0},
+            { "id": "stress_heal_party", "data": { "number_value": 0.0, "string_value": "HealStressVirtuedParty" }, "chance": 0},
+            { "id": "buff_random_party_member", "data": { "number_value": 0.0, "string_value": "FocusedAllyBuff" }, "chance": 0},
+            { "id": "buff_party", "data": { "number_value": 0.0, "string_value": "PowerfulPartyBuff" }, "chance": 0},
+            { "id": "heal_self", "data": { "number_value": 0.1,"string_value": "" }, "chance": 0}
+         ],
+         "reaction_act_outs":
+         [
+            { "id": "block_move", "data":{ "effect": "" }, "chance": 0},
+            { "id": "block_heal", "data":{ "effect": "" }, "chance": 0},
+            { "id": "block_buff", "data":{ "effect": "" }, "chance": 0},
+            { "id": "block_item", "data":{ "effect": "" }, "chance": 0},
+            { "id": "block_combat_retreat", "data":{ "effect": "" }, "chance": 0},
+            { "id": "comment_self_hit", "data":{ "effect": "BarkStress" }, "chance": 0.2},
+            { "id": "comment_self_missed", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_ally_hit", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_ally_missed", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_ally_attack_hit", "data":{ "effect": "BarkStress" }, "chance": 0.2},
+            { "id": "comment_ally_attack_missed", "data":{ "effect": "BarkStress" }, "chance": 0.2},
+            { "id": "comment_move", "data":{ "effect": "BarkStress" }, "chance": 0.15},
+            { "id": "comment_curio_interaction", "data":{ "effect": "BarkStress" }, "chance": 0.33},
+            { "id": "comment_trap_triggered", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "block_effect", "data":{ "effect": "BarkStressHeal" }, "chance": 0}
+         ]
+      },
+      {
+         "id" : "masochistic",
+         "overstress_type": "affliction",
+         "curio_tag" : "Torture",
+         "curio_tag_chance" : 0.5,
+         "keep_loot" : false,
+         "buff_ids" : 
+         [
+            "STUNRESIST-15",
+            "BLIGHTRESIST-15",
+            "BLEEDRESIST-15",
+            "DISEASERESIST-15",
+            "DEBUFFRESIST-15",
+            "MOVERESIST-15",
+            "TRAPRESIST-15",
+            "MAXHP-10",
+            "DEF-15"
+         ],
+         "combat_start_turn_act_outs":
+         [
+            { "id": "nothing", "data": { "number_value": 0.0, "string_value": "" }, "chance": 6},
+            { "id": "bark_stress", "data": { "number_value": 0.0, "string_value": "BarkStress" }, "chance": 1},
+            { "id": "change_pos", "data": { "number_value": 0.0, "string_value": "" }, "chance": 1},
+            { "id": "ignore_command", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "random_command", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "retreat_from_combat", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "attack_friendly", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "attack_self", "data": { "number_value": 0.1,"string_value": "" }, "chance": 1},
+            { "id": "mark_self", "data": { "number_value": 0.0, "string_value": "Mark Self" }, "chance": 1},
+            { "id": "stress_heal_self", "data": { "number_value": 0.0, "string_value": "HealStressVirtued" }, "chance": 0},
+            { "id": "stress_heal_party", "data": { "number_value": 0.0, "string_value": "HealStressVirtuedParty" }, "chance": 0},
+            { "id": "buff_random_party_member", "data": { "number_value": 0.0, "string_value": "FocusedAllyBuff" }, "chance": 0},
+            { "id": "buff_party", "data": { "number_value": 0.0, "string_value": "PowerfulPartyBuff" }, "chance": 0},
+            { "id": "heal_self", "data": { "number_value": 0.1,"string_value": "" }, "chance": 0}
+         ],
+         "reaction_act_outs":
+         [
+            { "id": "block_move", "data":{ "effect": "" }, "chance": 0.33},
+            { "id": "block_heal", "data":{ "effect": "" }, "chance": 0.33},
+            { "id": "block_buff", "data":{ "effect": "" }, "chance": 0.33},
+            { "id": "block_item", "data":{ "effect": "" }, "chance": 0.33},
+            { "id": "block_combat_retreat", "data":{ "effect": "" }, "chance": 0.33},
+            { "id": "comment_self_hit", "data":{ "effect": "BarkStress" }, "chance": 0.2},
+            { "id": "comment_self_missed", "data":{ "effect": "BarkStress" }, "chance": 0.2},
+            { "id": "comment_ally_hit", "data":{ "effect": "BarkStress" }, "chance": 0.2},
+            { "id": "comment_ally_missed", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_ally_attack_hit", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_ally_attack_missed", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_move", "data":{ "effect": "BarkStress" }, "chance": 0.15},
+            { "id": "comment_curio_interaction", "data":{ "effect": "BarkStress" }, "chance": 0.33},
+            { "id": "comment_trap_triggered", "data":{ "effect": "BarkStress" }, "chance": 0.375},
+            { "id": "block_effect", "data":{ "effect": "BarkStressHeal" }, "chance": 0}
+         ]
+      },
+      {
+         "id" : "abusive",
+         "overstress_type": "affliction",
+         "curio_tag" : "none",
+         "curio_tag_chance" : 0.5,
+         "keep_loot" : false,
+         "buff_ids" : 
+         [
+            "STUNRESIST-15",
+            "BLIGHTRESIST-15",
+            "BLEEDRESIST-15",
+            "DISEASERESIST-15",
+            "DEBUFFRESIST-15",
+            "MOVERESIST-15",
+            "TRAPRESIST-15",
+            "MAXHP-10",
+            "ACC-5",
+            "DMGL20",
+            "DMGH20",
+            "DEF-15"
+         ],
+         "combat_start_turn_act_outs":
+         [
+            { "id": "nothing", "data": { "number_value": 0.0, "string_value": "" }, "chance": 4},
+            { "id": "bark_stress", "data": { "number_value": 0.0, "string_value": "BarkStress" }, "chance": 1},
+            { "id": "change_pos", "data": { "number_value": 0.0, "string_value": "" }, "chance": 1},
+            { "id": "ignore_command", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "random_command", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "retreat_from_combat", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "attack_friendly", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "attack_self", "data": { "number_value": 0.1,"string_value": "" }, "chance": 0},
+            { "id": "mark_self", "data": { "number_value": 0.0, "string_value": "Mark Self" }, "chance": 0},
+            { "id": "stress_heal_self", "data": { "number_value": 0.0, "string_value": "HealStressVirtued" }, "chance": 0},
+            { "id": "stress_heal_party", "data": { "number_value": 0.0, "string_value": "HealStressVirtuedParty" }, "chance": 0},
+            { "id": "buff_random_party_member", "data": { "number_value": 0.0, "string_value": "FocusedAllyBuff" }, "chance": 0},
+            { "id": "buff_party", "data": { "number_value": 0.0, "string_value": "PowerfulPartyBuff" }, "chance": 0},
+            { "id": "heal_self", "data": { "number_value": 0.1,"string_value": "" }, "chance": 0}
+         ],
+         "reaction_act_outs":
+         [
+            { "id": "block_move", "data":{ "effect": "" }, "chance": 0.33},
+            { "id": "block_heal", "data":{ "effect": "" }, "chance": 0},
+            { "id": "block_buff", "data":{ "effect": "" }, "chance": 0},
+            { "id": "block_item", "data":{ "effect": "" }, "chance": 0},
+            { "id": "block_combat_retreat", "data":{ "effect": "" }, "chance": 0},
+            { "id": "comment_self_hit", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_self_missed", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_ally_hit", "data":{ "effect": "BarkStress" }, "chance": 0.2},
+            { "id": "comment_ally_missed", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_ally_attack_hit", "data":{ "effect": "BarkStress" }, "chance": 0.2},
+            { "id": "comment_ally_attack_missed", "data":{ "effect": "BarkStress" }, "chance": 0.2},
+            { "id": "comment_move", "data":{ "effect": "BarkStress" }, "chance": 0.15},
+            { "id": "comment_curio_interaction", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_trap_triggered", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "block_effect", "data":{ "effect": "BarkStressHeal" }, "chance": 0}
+         ]
+      },
+      {
+         "id" : "depressed",
+         "overstress_type": "affliction",
+         "curio_tag" : "none",
+         "curio_tag_chance" : 0.5,
+         "keep_loot" : false,
+         "buff_ids" : 
+         [
+            "STUNRESIST-15",
+            "BLIGHTRESIST-15",
+            "BLEEDRESIST-15",
+            "DISEASERESIST-15",
+            "DEBUFFRESIST-15",
+            "MOVERESIST-15",
+            "TRAPRESIST-15",
+            "MAXHP-10",
+            "ACC-5",
+            "DEF-5",
+            "SPD-3"
+         ],
+         "combat_start_turn_act_outs":
+         [
+            { "id": "nothing", "data": { "number_value": 0.0, "string_value": "" }, "chance": 8},
+            { "id": "bark_stress", "data": { "number_value": 0.0, "string_value": "BarkStress" }, "chance": 1},
+            { "id": "change_pos", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "ignore_command", "data": { "number_value": 0.0, "string_value": "" }, "chance": 1},
+            { "id": "random_command", "data": { "number_value": 0.0, "string_value": "" }, "chance": 1},
+            { "id": "retreat_from_combat", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "attack_friendly", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "attack_self", "data": { "number_value": 0.1,"string_value": "" }, "chance": 1},
+            { "id": "mark_self", "data": { "number_value": 0.0, "string_value": "Mark Self" }, "chance": 1},
+            { "id": "stress_heal_self", "data": { "number_value": 0.0, "string_value": "HealStressVirtued" }, "chance": 0},
+            { "id": "stress_heal_party", "data": { "number_value": 0.0, "string_value": "HealStressVirtuedParty" }, "chance": 0},
+            { "id": "buff_random_party_member", "data": { "number_value": 0.0, "string_value": "FocusedAllyBuff" }, "chance": 0},
+            { "id": "buff_party", "data": { "number_value": 0.0, "string_value": "PowerfulPartyBuff" }, "chance": 0},
+            { "id": "heal_self", "data": { "number_value": 0.1,"string_value": "" }, "chance": 0}
+         ],
+         "reaction_act_outs":
+         [
+            { "id": "block_move", "data":{ "effect": "" }, "chance": 0},
+            { "id": "block_heal", "data":{ "effect": "" }, "chance": 0.33},
+            { "id": "block_buff", "data":{ "effect": "" }, "chance": 0.33},
+            { "id": "block_item", "data":{ "effect": "" }, "chance": 0.33},
+            { "id": "block_combat_retreat", "data":{ "effect": "" }, "chance": 0.33},
+            { "id": "comment_self_hit", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_self_missed", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_ally_hit", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_ally_missed", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_ally_attack_hit", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_ally_attack_missed", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_move", "data":{ "effect": "BarkStress" }, "chance": 0.15},
+            { "id": "comment_curio_interaction", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_trap_triggered", "data":{ "effect": "BarkStress" }, "chance": 0.375},
+            { "id": "block_effect", "data":{ "effect": "BarkStressHeal" }, "chance": 0}
+         ]
+      },
+      {
+         "id" : "irrational",
+         "overstress_type": "affliction",
+         "curio_tag" : "All",
+         "curio_tag_chance" : 0.075,
+         "keep_loot" : false,
+         "buff_ids" : 
+         [
+            "STUNRESIST-15",
+            "BLIGHTRESIST-15",
+            "BLEEDRESIST-15",
+            "DISEASERESIST-15",
+            "DEBUFFRESIST-15",
+            "MOVERESIST-15",
+            "TRAPRESIST-15",
+            "MAXHP-10",
+            "ACC-5",
+            "DMGL-10",
+            "DMGH-10",
+            "DEF-5",
+            "SPD2"
+         ],
+         "combat_start_turn_act_outs":
+         [
+            { "id": "nothing", "data": { "number_value": 0.0, "string_value": "" }, "chance": 10},
+            { "id": "bark_stress", "data": { "number_value": 0.0, "string_value": "BarkStress" }, "chance": 1},
+            { "id": "change_pos", "data": { "number_value": 0.0, "string_value": "" }, "chance": 1},
+            { "id": "ignore_command", "data": { "number_value": 0.0, "string_value": "" }, "chance": 1},
+            { "id": "random_command", "data": { "number_value": 0.0, "string_value": "" }, "chance": 1},
+            { "id": "retreat_from_combat", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "attack_friendly", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "attack_self", "data": { "number_value": 0.1,"string_value": "" }, "chance": 1},
+            { "id": "mark_self", "data": { "number_value": 0.0, "string_value": "Mark Self" }, "chance": 1},
+            { "id": "stress_heal_self", "data": { "number_value": 0.0, "string_value": "HealStressVirtued" }, "chance": 0},
+            { "id": "stress_heal_party", "data": { "number_value": 0.0, "string_value": "HealStressVirtuedParty" }, "chance": 0},
+            { "id": "buff_random_party_member", "data": { "number_value": 0.0, "string_value": "FocusedAllyBuff" }, "chance": 0},
+            { "id": "buff_party", "data": { "number_value": 0.0, "string_value": "PowerfulPartyBuff" }, "chance": 0},
+            { "id": "heal_self", "data": { "number_value": 0.1,"string_value": "" }, "chance": 0}
+         ],
+         "reaction_act_outs":
+         [
+            { "id": "block_move", "data":{ "effect": "" }, "chance": 0.33},
+            { "id": "block_heal", "data":{ "effect": "" }, "chance": 0.33},
+            { "id": "block_buff", "data":{ "effect": "" }, "chance": 0.33},
+            { "id": "block_item", "data":{ "effect": "" }, "chance": 0.33},
+            { "id": "block_combat_retreat", "data":{ "effect": "" }, "chance": 0.33},
+            { "id": "comment_self_hit", "data":{ "effect": "BarkStress" }, "chance": 0.2},
+            { "id": "comment_self_missed", "data":{ "effect": "BarkStress" }, "chance": 0.2},
+            { "id": "comment_ally_hit", "data":{ "effect": "BarkStress" }, "chance": 0.2},
+            { "id": "comment_ally_missed", "data":{ "effect": "BarkStress" }, "chance": 0.2},
+            { "id": "comment_ally_attack_hit", "data":{ "effect": "BarkStress" }, "chance": 0.2},
+            { "id": "comment_ally_attack_missed", "data":{ "effect": "BarkStress" }, "chance": 0.2},
+            { "id": "comment_move", "data":{ "effect": "BarkStress" }, "chance": 0.15},
+            { "id": "comment_curio_interaction", "data":{ "effect": "BarkStress" }, "chance": 0.33},
+            { "id": "comment_trap_triggered", "data":{ "effect": "BarkStress" }, "chance": 0.375},
+            { "id": "block_effect", "data":{ "effect": "BarkStressHeal" }, "chance": 0}
+         ]
+      },
+      {
+         "id" : "stalwart",
+         "overstress_type": "virtue",
+         "curio_tag" : "none",
+         "curio_tag_chance" : 0.5,
+         "keep_loot" : false,
+         "buff_ids" : 
+         [
+            "STUNRESIST20",
+            "BLIGHTRESIST20",
+            "BLEEDRESIST20",
+            "DISEASERESIST20",
+            "DEBUFFRESIST20",
+            "MOVERESIST20",
+            "virtueStalwartBuff1"
+         ],
+         "combat_start_turn_act_outs":
+         [
+            { "id": "nothing", "data": { "number_value": 0.0, "string_value": "" }, "chance": 3},
+            { "id": "bark_stress", "data": { "number_value": 0.0, "string_value": "BarkStress" }, "chance": 0},
+            { "id": "change_pos", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "ignore_command", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "random_command", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "retreat_from_combat", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "attack_friendly", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "attack_self", "data": { "number_value": 0.1,"string_value": "" }, "chance": 0},
+            { "id": "mark_self", "data": { "number_value": 0.0, "string_value": "Mark Self" }, "chance": 0},
+            { "id": "stress_heal_self", "data": { "number_value": 0.0, "string_value": "HealStressVirtued" }, "chance": 1},
+            { "id": "stress_heal_party", "data": { "number_value": 0.0, "string_value": "HealStressVirtuedParty" }, "chance": 0},
+            { "id": "buff_random_party_member", "data": { "number_value": 0.0, "string_value": "FocusedAllyBuff" }, "chance": 0},
+            { "id": "buff_party", "data": { "number_value": 0.0, "string_value": "PowerfulPartyBuff" }, "chance": 0},
+            { "id": "heal_self", "data": { "number_value": 0.1,"string_value": "" }, "chance": 0}
+         ],
+         "reaction_act_outs":
+         [
+            { "id": "block_move", "data":{ "effect": "" }, "chance": 0},
+            { "id": "block_heal", "data":{ "effect": "" }, "chance": 0},
+            { "id": "block_buff", "data":{ "effect": "" }, "chance": 0},
+            { "id": "block_item", "data":{ "effect": "" }, "chance": 0},
+            { "id": "block_combat_retreat", "data":{ "effect": "" }, "chance": 0},
+            { "id": "comment_self_hit", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_self_missed", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_ally_hit", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_ally_missed", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_ally_attack_hit", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_ally_attack_missed", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_move", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_curio_interaction", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_trap_triggered", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "block_effect", "data":{ "effect": "BarkStressHeal" }, "chance": 1}
+         ]
+      },
+      {
+         "id" : "courageous",
+         "overstress_type": "virtue",
+         "curio_tag" : "none",
+         "curio_tag_chance" : 0.5,
+         "keep_loot" : false,
+         "buff_ids" : 
+         [
+            "STUNRESIST20",
+            "BLIGHTRESIST20",
+            "BLEEDRESIST20",
+            "DISEASERESIST20",
+            "DEBUFFRESIST20",
+            "MOVERESIST20",
+            "virtueCourageousBuff1"
+         ],
+         "combat_start_turn_act_outs":
+         [
+            { "id": "nothing", "data": { "number_value": 0.0, "string_value": "" }, "chance": 3},
+            { "id": "bark_stress", "data": { "number_value": 0.0, "string_value": "BarkStress" }, "chance": 0},
+            { "id": "change_pos", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "ignore_command", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "random_command", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "retreat_from_combat", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "attack_friendly", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "attack_self", "data": { "number_value": 0.1,"string_value": "" }, "chance": 0},
+            { "id": "mark_self", "data": { "number_value": 0.0, "string_value": "Mark Self" }, "chance": 0},
+            { "id": "stress_heal_self", "data": { "number_value": 0.0, "string_value": "HealStressVirtued" }, "chance": 0},
+            { "id": "stress_heal_party", "data": { "number_value": 0.0, "string_value": "HealStressVirtuedParty" }, "chance": 1},
+            { "id": "buff_random_party_member", "data": { "number_value": 0.0, "string_value": "FocusedAllyBuff" }, "chance": 0},
+            { "id": "buff_party", "data": { "number_value": 0.0, "string_value": "PowerfulPartyBuff" }, "chance": 0},
+            { "id": "heal_self", "data": { "number_value": 0.1,"string_value": "" }, "chance": 0}
+         ],
+         "reaction_act_outs":
+         [
+            { "id": "block_move", "data":{ "effect": "" }, "chance": 0},
+            { "id": "block_heal", "data":{ "effect": "" }, "chance": 0},
+            { "id": "block_buff", "data":{ "effect": "" }, "chance": 0},
+            { "id": "block_item", "data":{ "effect": "" }, "chance": 0},
+            { "id": "block_combat_retreat", "data":{ "effect": "" }, "chance": 0},
+            { "id": "comment_self_hit", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_self_missed", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_ally_hit", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_ally_missed", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_ally_attack_hit", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_ally_attack_missed", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_move", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_curio_interaction", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_trap_triggered", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "block_effect", "data":{ "effect": "BarkStressHeal" }, "chance": 1}
+         ]
+      },
+      {
+         "id" : "focused",
+         "overstress_type": "virtue",
+         "curio_tag" : "none",
+         "curio_tag_chance" : 0.5,
+         "keep_loot" : false,
+         "buff_ids" : 
+         [
+            "STUNRESIST20",
+            "BLIGHTRESIST20",
+            "BLEEDRESIST20",
+            "DISEASERESIST20",
+            "DEBUFFRESIST20",
+            "MOVERESIST20",
+            "virtueFocusedBuff1",
+            "virtueFocusedBuff2"
+         ],
+         "combat_start_turn_act_outs":
+         [
+            { "id": "nothing", "data": { "number_value": 0.0, "string_value": "" }, "chance": 3},
+            { "id": "bark_stress", "data": { "number_value": 0.0, "string_value": "BarkStress" }, "chance": 0},
+            { "id": "change_pos", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "ignore_command", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "random_command", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "retreat_from_combat", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "attack_friendly", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "attack_self", "data": { "number_value": 0.1,"string_value": "" }, "chance": 0},
+            { "id": "mark_self", "data": { "number_value": 0.0, "string_value": "Mark Self" }, "chance": 0},
+            { "id": "stress_heal_self", "data": { "number_value": 0.0, "string_value": "HealStressVirtued" }, "chance": 0},
+            { "id": "stress_heal_party", "data": { "number_value": 0.0, "string_value": "HealStressVirtuedParty" }, "chance": 0},
+            { "id": "buff_random_party_member", "data": { "number_value": 0.0, "string_value": "FocusedAllyBuff" }, "chance": 1},
+            { "id": "buff_party", "data": { "number_value": 0.0, "string_value": "PowerfulPartyBuff" }, "chance": 0},
+            { "id": "heal_self", "data": { "number_value": 0.1,"string_value": "" }, "chance": 0}
+         ],
+         "reaction_act_outs":
+         [
+            { "id": "block_move", "data":{ "effect": "" }, "chance": 0},
+            { "id": "block_heal", "data":{ "effect": "" }, "chance": 0},
+            { "id": "block_buff", "data":{ "effect": "" }, "chance": 0},
+            { "id": "block_item", "data":{ "effect": "" }, "chance": 0},
+            { "id": "block_combat_retreat", "data":{ "effect": "" }, "chance": 0},
+            { "id": "comment_self_hit", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_self_missed", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_ally_hit", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_ally_missed", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_ally_attack_hit", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_ally_attack_missed", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_move", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_curio_interaction", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_trap_triggered", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "block_effect", "data":{ "effect": "BarkStressHeal" }, "chance": 1}
+         ]
+      },
+      {
+         "id" : "powerful",
+         "overstress_type": "virtue",
+         "curio_tag" : "none",
+         "curio_tag_chance" : 0.5,
+         "keep_loot" : false,
+         "buff_ids" : 
+         [
+            "STUNRESIST20",
+            "BLIGHTRESIST20",
+            "BLEEDRESIST20",
+            "DISEASERESIST20",
+            "DEBUFFRESIST20",
+            "MOVERESIST20",
+            "virtuePowerfulBuff1",
+            "virtuePowerfulBuff2"
+         ],
+         "combat_start_turn_act_outs":
+         [
+            { "id": "nothing", "data": { "number_value": 0.0, "string_value": "" }, "chance": 3},
+            { "id": "bark_stress", "data": { "number_value": 0.0, "string_value": "BarkStress" }, "chance": 0},
+            { "id": "change_pos", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "ignore_command", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "random_command", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "retreat_from_combat", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "attack_friendly", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "attack_self", "data": { "number_value": 0.1,"string_value": "" }, "chance": 0},
+            { "id": "mark_self", "data": { "number_value": 0.0, "string_value": "Mark Self" }, "chance": 0},
+            { "id": "stress_heal_self", "data": { "number_value": 0.0, "string_value": "HealStressVirtued" }, "chance": 0},
+            { "id": "stress_heal_party", "data": { "number_value": 0.0, "string_value": "HealStressVirtuedParty" }, "chance": 0},
+            { "id": "buff_random_party_member", "data": { "number_value": 0.0, "string_value": "FocusedAllyBuff" }, "chance": 0},
+            { "id": "buff_party", "data": { "number_value": 0.0, "string_value": "PowerfulPartyBuff" }, "chance": 1},
+            { "id": "heal_self", "data": { "number_value": 0.1,"string_value": "" }, "chance": 0}
+         ],
+         "reaction_act_outs":
+         [
+            { "id": "block_move", "data":{ "effect": "" }, "chance": 0},
+            { "id": "block_heal", "data":{ "effect": "" }, "chance": 0},
+            { "id": "block_buff", "data":{ "effect": "" }, "chance": 0},
+            { "id": "block_item", "data":{ "effect": "" }, "chance": 0},
+            { "id": "block_combat_retreat", "data":{ "effect": "" }, "chance": 0},
+            { "id": "comment_self_hit", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_self_missed", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_ally_hit", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_ally_missed", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_ally_attack_hit", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_ally_attack_missed", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_move", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_curio_interaction", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_trap_triggered", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "block_effect", "data":{ "effect": "BarkStressHeal" }, "chance": 1}
+         ]
+      },
+      {
+         "id" : "vigorous",
+         "overstress_type": "virtue",
+         "curio_tag" : "none",
+         "curio_tag_chance" : 0.5,
+         "keep_loot" : false,
+         "buff_ids" : 
+         [
+            "STUNRESIST20",
+            "BLIGHTRESIST20",
+            "BLEEDRESIST20",
+            "DISEASERESIST20",
+            "DEBUFFRESIST20",
+            "MOVERESIST20",
+            "virtueVigorousBuff1",
+            "virtueVigorousBuff2"
+         ],
+         "combat_start_turn_act_outs":
+         [
+            { "id": "nothing", "data": { "number_value": 0.0, "string_value": "" }, "chance": 3},
+            { "id": "bark_stress", "data": { "number_value": 0.0, "string_value": "BarkStress" }, "chance": 0},
+            { "id": "change_pos", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "ignore_command", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "random_command", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "retreat_from_combat", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "attack_friendly", "data": { "number_value": 0.0, "string_value": "" }, "chance": 0},
+            { "id": "attack_self", "data": { "number_value": 0.1,"string_value": "" }, "chance": 0},
+            { "id": "mark_self", "data": { "number_value": 0.0, "string_value": "Mark Self" }, "chance": 0},
+            { "id": "stress_heal_self", "data": { "number_value": 0.0, "string_value": "HealStressVirtued" }, "chance": 0},
+            { "id": "stress_heal_party", "data": { "number_value": 0.0, "string_value": "HealStressVirtuedParty" }, "chance": 0},
+            { "id": "buff_random_party_member", "data": { "number_value": 0.0, "string_value": "FocusedAllyBuff" }, "chance": 0},
+            { "id": "buff_party", "data": { "number_value": 0.0, "string_value": "PowerfulPartyBuff" }, "chance": 0},
+            { "id": "heal_self", "data": { "number_value": 0.1,"string_value": "" }, "chance": 1}
+         ],
+         "reaction_act_outs":
+         [
+            { "id": "block_move", "data":{ "effect": "" }, "chance": 0},
+            { "id": "block_heal", "data":{ "effect": "" }, "chance": 0},
+            { "id": "block_buff", "data":{ "effect": "" }, "chance": 0},
+            { "id": "block_item", "data":{ "effect": "" }, "chance": 0},
+            { "id": "block_combat_retreat", "data":{ "effect": "" }, "chance": 0},
+            { "id": "comment_self_hit", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_self_missed", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_ally_hit", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_ally_missed", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_ally_attack_hit", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_ally_attack_missed", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_move", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_curio_interaction", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "comment_trap_triggered", "data":{ "effect": "BarkStress" }, "chance": 0},
+            { "id": "block_effect", "data":{ "effect": "BarkStressHeal" }, "chance": 1}
+         ]
+      }
+   ]
+}

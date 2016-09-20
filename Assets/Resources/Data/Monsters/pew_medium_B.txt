@@ -1,0 +1,19 @@
+name: pew_medium_B
+type: pew_medium
+
+art:
+commonfx: .deathfx death_medium
+.end
+
+info:
+display: .size 1
+enemy_type: .id "carpentry"
+stats: .hp 60 .def 10% .prot 0 .spd 1 .stun_resist 220% .poison_resist 220% .bleed_resist 220% .debuff_resist 220% .move_resist 320%
+personality: .prefskill -1
+loot: .code "PEW" .count 1
+initiative: .number_of_turns_per_round 0
+monster_brain: .id default_B
+tag: .id "boss"
+battle_modifier: .disable_stall_penalty True .can_surprise False .can_be_surprised False .always_surprise False .always_be_surprised False .can_be_missed False
+life_link: .base_class prophet .does_spawn_loot false
+.end

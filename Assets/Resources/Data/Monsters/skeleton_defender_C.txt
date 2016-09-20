@@ -1,0 +1,24 @@
+name: skeleton_defender_C
+type: skeleton_defender
+
+art:
+commonfx: .deathfx death_medium
+skill: .id "axe_strike" .anim "attack_axe" .fx "axe_strike" .targchestfx "blood_splatter"
+skill: .id "shield_bash" .anim "attack_shield" .fx "shield_bash" .targchestfx "blood_splatter"
+skill: .id "axe_strike_weak" .anim "attack_axe" .fx "axe_strike" .targchestfx "blood_splatter"
+.end
+
+info:
+display: .size 1
+enemy_type: .id "unholy"
+stats: .hp 31 .def 22.5% .prot 0.45 .spd 2 .stun_resist 70% .poison_resist 55% .bleed_resist 245% .debuff_resist 60% .move_resist 95%
+skill: .id "axe_strike" .type "melee" .atk 92.5% .dmg 5 11 .crit 12%  .effect "Defender Axeblade Debuff 5" .launch 21 .target 12
+skill: .id "shield_bash" .type "melee" .atk 102.5% .dmg 4 8 .crit 12%  .effect "Stun 5" "Push 1E" .launch 21 .target 12
+skill: .id "axe_strike_weak" .type "melee" .atk 62.5% .dmg 4 8 .crit 0%  .launch 34 .target 12 .move 0 1 .is_crit_valid False
+personality: .prefskill -1
+loot: .code "A" .count 1
+initiative: .number_of_turns_per_round 1
+monster_brain: .id skeleton_defender_C
+death_class: .monster_class_id corpse_C .is_valid_on_crit False .type "corpse" 
+battle_modifier: .disable_stall_penalty False .can_surprise True .can_be_surprised True .always_surprise False .always_be_surprised False
+.end

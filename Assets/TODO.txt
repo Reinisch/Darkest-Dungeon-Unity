@@ -1,0 +1,17 @@
+teleport
+hallway curio scout
+shumbler curio summon
+town events
+predefined maps
+tutorial
+narration and sounds
+better camera movement and color luts
+some ui animations
+
+barks done:
+"str_prisoner_damage_cauldron_full"
+"str_control_return_siren"
+"str_control_before_turn_siren"
+"str_prisoner_damage_drowned_anchored"
+on retreat
+TODO all

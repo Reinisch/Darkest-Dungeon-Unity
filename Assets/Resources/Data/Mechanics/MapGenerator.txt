@@ -1,0 +1,1067 @@
+
+map:
+.size short
+.quest_type explore
+.dungeon_type crypts
+.base_room_number 9
+.base_corridor_number 10
+.gridsize 4 3
+.spacing 4
+.goal_room_number 9
+.connectivity 0.9
+.min_final_distance 3
+.hallway_battle 2 4
+.hallway_trap 2 3
+.hallway_obstacle 0 2
+.hallway_curio 9 9
+.hallway_hunger 1 3
+.total_room_battles 1 3
+.room_battle 0 0
+.room_guarded_curio 0 1
+.room_curio 0 0
+.room_guarded_treasure 1 1
+.room_treasure 0 0
+.nudge 
+
+map:
+.size short
+.quest_type explore
+.dungeon_type weald
+.base_room_number 9
+.base_corridor_number 10
+.gridsize 4 4
+.spacing 4
+.goal_room_number 9
+.connectivity 0.85
+.min_final_distance 3
+.hallway_battle 2 4
+.hallway_trap 1 2
+.hallway_obstacle 1 3
+.hallway_curio 9 9
+.hallway_hunger 1 3
+.total_room_battles 1 3
+.room_battle 0 0
+.room_guarded_curio 0 1
+.room_curio 0 0
+.room_guarded_treasure 1 1
+.room_treasure 0 0
+.nudge 
+
+map:
+.size short
+.quest_type explore
+.dungeon_type warrens
+.base_room_number 9
+.base_corridor_number 10
+.gridsize 4 3
+.spacing 4
+.goal_room_number 9
+.connectivity 0.95
+.min_final_distance 3
+.hallway_battle 2 4
+.hallway_trap 3 4
+.hallway_obstacle 0 2
+.hallway_curio 9 9
+.hallway_hunger 1 3
+.total_room_battles 1 3
+.room_battle 0 0
+.room_guarded_curio 0 1
+.room_curio 0 0
+.room_guarded_treasure 1 1
+.room_treasure 0 0
+.nudge 
+
+map:
+.size short
+.quest_type explore
+.dungeon_type cove
+.base_room_number 9
+.base_corridor_number 10
+.gridsize 4 4
+.spacing 4
+.goal_room_number 9
+.connectivity 0.9
+.min_final_distance 3
+.hallway_battle 2 4
+.hallway_trap 2 3
+.hallway_obstacle 0 2
+.hallway_curio 9 9
+.hallway_hunger 1 3
+.total_room_battles 1 3
+.room_battle 0 0
+.room_guarded_curio 0 1
+.room_curio 0 0
+.room_guarded_treasure 1 1
+.room_treasure 0 0
+.nudge 
+
+
+map:
+.size medium
+.quest_type explore
+.dungeon_type crypts
+.base_room_number 14
+.base_corridor_number 15
+.gridsize 5 4
+.spacing 4
+.goal_room_number 14
+.connectivity 0.9
+.min_final_distance 7
+.hallway_battle 3 4
+.hallway_trap 3 5
+.hallway_obstacle 0 3
+.hallway_curio 14 14
+.hallway_hunger 2 5
+.total_room_battles 3 4
+.room_battle 0 0
+.room_guarded_curio 1 2
+.room_curio 0 0
+.room_guarded_treasure 1 2
+.room_treasure 0 0
+.nudge 
+
+map:
+.size medium
+.quest_type explore
+.dungeon_type weald
+.base_room_number 14
+.base_corridor_number 15
+.gridsize 5 5
+.spacing 4
+.goal_room_number 14
+.connectivity 0.85
+.min_final_distance 7
+.hallway_battle 3 4
+.hallway_trap 2 4
+.hallway_obstacle 1 4
+.hallway_curio 14 14
+.hallway_hunger 2 5
+.total_room_battles 3 4
+.room_battle 0 0
+.room_guarded_curio 1 2
+.room_curio 0 0
+.room_guarded_treasure 1 2
+.room_treasure 0 0
+.nudge 
+
+map:
+.size medium
+.quest_type explore
+.dungeon_type warrens
+.base_room_number 14
+.base_corridor_number 15
+.gridsize 6 3
+.spacing 4
+.goal_room_number 14
+.connectivity 0.95
+.min_final_distance 7
+.hallway_battle 3 4
+.hallway_trap 4 6
+.hallway_obstacle 0 2
+.hallway_curio 14 14
+.hallway_hunger 2 5
+.total_room_battles 3 4
+.room_battle 0 0
+.room_guarded_curio 1 2
+.room_curio 0 0
+.room_guarded_treasure 1 2
+.room_treasure 0 0
+.nudge 
+
+map:
+.size medium
+.quest_type explore
+.dungeon_type cove
+.base_room_number 14
+.base_corridor_number 15
+.gridsize 5 5
+.spacing 4
+.goal_room_number 14
+.connectivity 0.9
+.min_final_distance 7
+.hallway_battle 3 4
+.hallway_trap 3 5
+.hallway_obstacle 0 3
+.hallway_curio 14 14
+.hallway_hunger 2 5
+.total_room_battles 3 4
+.room_battle 0 0
+.room_guarded_curio 1 2
+.room_curio 0 0
+.room_guarded_treasure 1 2
+.room_treasure 0 0
+.nudge 
+
+
+map:
+.size long
+.quest_type explore
+.dungeon_type crypts
+.base_room_number 19
+.base_corridor_number 20
+.gridsize 5 5
+.spacing 4
+.goal_room_number 19
+.connectivity 0.9
+.min_final_distance 10
+.hallway_battle 7 7
+.hallway_trap 4 6
+.hallway_obstacle 0 4
+.hallway_curio 19 19
+.hallway_hunger 2 6
+.total_room_battles 7 7
+.room_battle 0 0
+.room_guarded_curio 2 3
+.room_curio 0 0
+.room_guarded_treasure 2 3
+.room_treasure 0 0
+.nudge 
+
+map:
+.size long
+.quest_type explore
+.dungeon_type weald
+.base_room_number 19
+.base_corridor_number 20
+.gridsize 6 5
+.spacing 4
+.goal_room_number 19
+.connectivity 0.85
+.min_final_distance 10
+.hallway_battle 7 7
+.hallway_trap 3 5
+.hallway_obstacle 1 5
+.hallway_curio 19 19
+.hallway_hunger 2 6
+.total_room_battles 7 7
+.room_battle 0 0
+.room_guarded_curio 2 3
+.room_curio 0 0
+.room_guarded_treasure 2 3
+.room_treasure 0 0
+.nudge 
+
+map:
+.size long
+.quest_type explore
+.dungeon_type warrens
+.base_room_number 19
+.base_corridor_number 20
+.gridsize 5 4
+.spacing 4
+.goal_room_number 19
+.connectivity 0.95
+.min_final_distance 10
+.hallway_battle 7 7
+.hallway_trap 5 7
+.hallway_obstacle 0 3
+.hallway_curio 19 19
+.hallway_hunger 2 6
+.total_room_battles 7 7
+.room_battle 0 0
+.room_guarded_curio 2 3
+.room_curio 0 0
+.room_guarded_treasure 2 3
+.room_treasure 0 0
+.nudge 
+
+map:
+.size long
+.quest_type explore
+.dungeon_type cove
+.base_room_number 19
+.base_corridor_number 20
+.gridsize 6 5
+.spacing 4
+.goal_room_number 19
+.connectivity 0.9
+.min_final_distance 10
+.hallway_battle 7 7
+.hallway_trap 4 6
+.hallway_obstacle 0 4
+.hallway_curio 19 19
+.hallway_hunger 2 6
+.total_room_battles 7 7
+.room_battle 0 0
+.room_guarded_curio 2 3
+.room_curio 0 0
+.room_guarded_treasure 2 3
+.room_treasure 0 0
+.nudge 
+
+
+map:
+.size medium
+.quest_type kill_boss
+.dungeon_type crypts
+.base_room_number 11
+.base_corridor_number 11
+.gridsize 5 4
+.spacing 4
+.goal_room_number 11
+.connectivity 0.9
+.min_final_distance 3
+.hallway_battle 4 5
+.hallway_trap 3 5
+.hallway_obstacle 0 3
+.hallway_curio 14 14
+.hallway_hunger 2 5
+.total_room_battles 4 5
+.room_battle 0 0
+.room_guarded_curio 1 3
+.room_curio 0 0
+.room_guarded_treasure 1 3
+.room_treasure 0 0
+.nudge 
+
+map:
+.size medium
+.quest_type kill_boss
+.dungeon_type weald
+.base_room_number 11
+.base_corridor_number 11
+.gridsize 6 3
+.spacing 4
+.goal_room_number 11
+.connectivity 0.85
+.min_final_distance 3
+.hallway_battle 4 5
+.hallway_trap 2 4
+.hallway_obstacle 1 4
+.hallway_curio 14 14
+.hallway_hunger 2 5
+.total_room_battles 4 5
+.room_battle 0 0
+.room_guarded_curio 1 3
+.room_curio 0 0
+.room_guarded_treasure 1 3
+.room_treasure 0 0
+.nudge 
+
+map:
+.size medium
+.quest_type kill_boss
+.dungeon_type warrens
+.base_room_number 11
+.base_corridor_number 11
+.gridsize 4 3
+.spacing 4
+.goal_room_number 11
+.connectivity 0.95
+.min_final_distance 3
+.hallway_battle 4 5
+.hallway_trap 4 6
+.hallway_obstacle 0 2
+.hallway_curio 14 14
+.hallway_hunger 2 5
+.total_room_battles 4 5
+.room_battle 0 0
+.room_guarded_curio 1 3
+.room_curio 0 0
+.room_guarded_treasure 1 3
+.room_treasure 0 0
+.nudge 
+
+map:
+.size medium
+.quest_type kill_boss
+.dungeon_type cove
+.base_room_number 11
+.base_corridor_number 11
+.gridsize 6 3
+.spacing 4
+.goal_room_number 11
+.connectivity 0.9
+.min_final_distance 3
+.hallway_battle 4 5
+.hallway_trap 3 5
+.hallway_obstacle 0 3
+.hallway_curio 14 14
+.hallway_hunger 2 5
+.total_room_battles 4 5
+.room_battle 0 0
+.room_guarded_curio 1 3
+.room_curio 0 0
+.room_guarded_treasure 1 3
+.room_treasure 0 0
+.nudge 
+
+
+map:
+.size long
+.quest_type kill_boss
+.dungeon_type crypts
+.base_room_number 14
+.base_corridor_number 11
+.gridsize 6 3
+.spacing 4
+.goal_room_number 14
+.connectivity 0.9
+.min_final_distance 7
+.hallway_battle 8 8
+.hallway_trap 4 6
+.hallway_obstacle 0 4
+.hallway_curio 19 19
+.hallway_hunger 2 6
+.total_room_battles 8 8
+.room_battle 0 0
+.room_guarded_curio 3 4
+.room_curio 0 0
+.room_guarded_treasure 3 4
+.room_treasure 0 0
+.nudge 
+
+map:
+.size long
+.quest_type kill_boss
+.dungeon_type weald
+.base_room_number 14
+.base_corridor_number 11
+.gridsize 6 4
+.spacing 4
+.goal_room_number 14
+.connectivity 0.85
+.min_final_distance 7
+.hallway_battle 8 8
+.hallway_trap 3 5
+.hallway_obstacle 1 5
+.hallway_curio 19 19
+.hallway_hunger 2 6
+.total_room_battles 8 8
+.room_battle 0 0
+.room_guarded_curio 3 4
+.room_curio 0 0
+.room_guarded_treasure 3 4
+.room_treasure 0 0
+.nudge 
+
+map:
+.size long
+.quest_type kill_boss
+.dungeon_type warrens
+.base_room_number 14
+.base_corridor_number 11
+.gridsize 4 4
+.spacing 4
+.goal_room_number 14
+.connectivity 0.95
+.min_final_distance 7
+.hallway_battle 8 8
+.hallway_trap 5 7
+.hallway_obstacle 0 3
+.hallway_curio 19 19
+.hallway_hunger 2 6
+.total_room_battles 8 8
+.room_battle 0 0
+.room_guarded_curio 3 4
+.room_curio 0 0
+.room_guarded_treasure 3 4
+.room_treasure 0 0
+.nudge 
+
+map:
+.size long
+.quest_type kill_boss
+.dungeon_type cove
+.base_room_number 14
+.base_corridor_number 11
+.gridsize 6 4
+.spacing 4
+.goal_room_number 14
+.connectivity 0.9
+.min_final_distance 7
+.hallway_battle 8 8
+.hallway_trap 4 6
+.hallway_obstacle 0 4
+.hallway_curio 19 19
+.hallway_hunger 2 6
+.total_room_battles 8 8
+.room_battle 0 0
+.room_guarded_curio 3 4
+.room_curio 0 0
+.room_guarded_treasure 3 4
+.room_treasure 0 0
+.nudge 
+
+
+map:
+.size short
+.quest_type cleanse
+.dungeon_type crypts
+.base_room_number 7
+.base_corridor_number 8
+.gridsize 4 3
+.spacing 4
+.goal_room_number 7
+.connectivity 0.9
+.min_final_distance 3
+.hallway_battle 2 4
+.hallway_trap 2 3
+.hallway_obstacle 0 2
+.hallway_curio 9 9
+.hallway_hunger 1 3
+.total_room_battles 2 4
+.room_battle 0 0
+.room_guarded_curio 1 1
+.room_curio 0 0
+.room_guarded_treasure 1 1
+.room_treasure 0 0
+.nudge 
+
+map:
+.size short
+.quest_type cleanse
+.dungeon_type weald
+.base_room_number 7
+.base_corridor_number 8
+.gridsize 5 3
+.spacing 4
+.goal_room_number 7
+.connectivity 0.85
+.min_final_distance 3
+.hallway_battle 2 4
+.hallway_trap 1 2
+.hallway_obstacle 1 3
+.hallway_curio 9 9
+.hallway_hunger 1 3
+.total_room_battles 2 4
+.room_battle 0 0
+.room_guarded_curio 1 1
+.room_curio 0 0
+.room_guarded_treasure 1 1
+.room_treasure 0 0
+.nudge 
+
+map:
+.size short
+.quest_type cleanse
+.dungeon_type warrens
+.base_room_number 7
+.base_corridor_number 8
+.gridsize 3 3
+.spacing 4
+.goal_room_number 7
+.connectivity 0.95
+.min_final_distance 3
+.hallway_battle 2 4
+.hallway_trap 3 4
+.hallway_obstacle 0 2
+.hallway_curio 9 9
+.hallway_hunger 1 3
+.total_room_battles 2 4
+.room_battle 0 0
+.room_guarded_curio 1 1
+.room_curio 0 0
+.room_guarded_treasure 1 1
+.room_treasure 0 0
+.nudge 
+
+map:
+.size short
+.quest_type cleanse
+.dungeon_type cove
+.base_room_number 7
+.base_corridor_number 8
+.gridsize 5 3
+.spacing 4
+.goal_room_number 7
+.connectivity 0.9
+.min_final_distance 3
+.hallway_battle 2 4
+.hallway_trap 2 3
+.hallway_obstacle 0 2
+.hallway_curio 9 9
+.hallway_hunger 1 3
+.total_room_battles 2 4
+.room_battle 0 0
+.room_guarded_curio 1 1
+.room_curio 0 0
+.room_guarded_treasure 1 1
+.room_treasure 0 0
+.nudge 
+
+
+map:
+.size medium
+.quest_type cleanse
+.dungeon_type crypts
+.base_room_number 11
+.base_corridor_number 11
+.gridsize 5 3
+.spacing 4
+.goal_room_number 11
+.connectivity 0.9
+.min_final_distance 3
+.hallway_battle 4 5
+.hallway_trap 3 5
+.hallway_obstacle 0 3
+.hallway_curio 14 14
+.hallway_hunger 2 5
+.total_room_battles 4 5
+.room_battle 0 0
+.room_guarded_curio 1 3
+.room_curio 0 0
+.room_guarded_treasure 1 3
+.room_treasure 0 0
+.nudge 
+
+map:
+.size medium
+.quest_type cleanse
+.dungeon_type weald
+.base_room_number 11
+.base_corridor_number 11
+.gridsize 6 3
+.spacing 4
+.goal_room_number 11
+.connectivity 0.85
+.min_final_distance 3
+.hallway_battle 4 5
+.hallway_trap 2 4
+.hallway_obstacle 1 4
+.hallway_curio 14 14
+.hallway_hunger 2 5
+.total_room_battles 4 5
+.room_battle 0 0
+.room_guarded_curio 1 3
+.room_curio 0 0
+.room_guarded_treasure 1 3
+.room_treasure 0 0
+.nudge 
+
+map:
+.size medium
+.quest_type cleanse
+.dungeon_type warrens
+.base_room_number 11
+.base_corridor_number 11
+.gridsize 4 4
+.spacing 4
+.goal_room_number 11
+.connectivity 0.95
+.min_final_distance 3
+.hallway_battle 4 5
+.hallway_trap 4 6
+.hallway_obstacle 0 2
+.hallway_curio 14 14
+.hallway_hunger 2 5
+.total_room_battles 4 5
+.room_battle 0 0
+.room_guarded_curio 1 3
+.room_curio 0 0
+.room_guarded_treasure 1 3
+.room_treasure 0 0
+.nudge 
+
+map:
+.size medium
+.quest_type cleanse
+.dungeon_type cove
+.base_room_number 11
+.base_corridor_number 11
+.gridsize 6 3
+.spacing 4
+.goal_room_number 11
+.connectivity 0.9
+.min_final_distance 3
+.hallway_battle 4 5
+.hallway_trap 3 5
+.hallway_obstacle 0 3
+.hallway_curio 14 14
+.hallway_hunger 2 5
+.total_room_battles 4 5
+.room_battle 0 0
+.room_guarded_curio 1 3
+.room_curio 0 0
+.room_guarded_treasure 1 3
+.room_treasure 0 0
+.nudge 
+
+
+map:
+.size long
+.quest_type cleanse
+.dungeon_type crypts
+.base_room_number 14
+.base_corridor_number 15
+.gridsize 5 4
+.spacing 4
+.goal_room_number 14
+.connectivity 0.9
+.min_final_distance 7
+.hallway_battle 8 8
+.hallway_trap 4 6
+.hallway_obstacle 0 4
+.hallway_curio 19 19
+.hallway_hunger 2 6
+.total_room_battles 8 8
+.room_battle 0 0
+.room_guarded_curio 2 4
+.room_curio 0 0
+.room_guarded_treasure 2 4
+.room_treasure 0 0
+.nudge 
+
+map:
+.size long
+.quest_type cleanse
+.dungeon_type weald
+.base_room_number 14
+.base_corridor_number 15
+.gridsize 5 5
+.spacing 4
+.goal_room_number 14
+.connectivity 0.85
+.min_final_distance 7
+.hallway_battle 8 8
+.hallway_trap 3 5
+.hallway_obstacle 1 5
+.hallway_curio 19 19
+.hallway_hunger 2 6
+.total_room_battles 8 8
+.room_battle 0 0
+.room_guarded_curio 2 4
+.room_curio 0 0
+.room_guarded_treasure 2 4
+.room_treasure 0 0
+.nudge 
+
+map:
+.size long
+.quest_type cleanse
+.dungeon_type warrens
+.base_room_number 14
+.base_corridor_number 15
+.gridsize 4 4
+.spacing 4
+.goal_room_number 14
+.connectivity 0.95
+.min_final_distance 7
+.hallway_battle 8 8
+.hallway_trap 5 7
+.hallway_obstacle 0 3
+.hallway_curio 19 19
+.hallway_hunger 2 6
+.total_room_battles 8 8
+.room_battle 0 0
+.room_guarded_curio 2 4
+.room_curio 0 0
+.room_guarded_treasure 2 4
+.room_treasure 0 0
+.nudge 
+
+map:
+.size long
+.quest_type cleanse
+.dungeon_type cove
+.base_room_number 14
+.base_corridor_number 15
+.gridsize 5 5
+.spacing 4
+.goal_room_number 14
+.connectivity 0.9
+.min_final_distance 7
+.hallway_battle 8 8
+.hallway_trap 4 6
+.hallway_obstacle 0 4
+.hallway_curio 19 19
+.hallway_hunger 2 6
+.total_room_battles 8 8
+.room_battle 0 0
+.room_guarded_curio 2 4
+.room_curio 0 0
+.room_guarded_treasure 2 4
+.room_treasure 0 0
+.nudge 
+
+
+map:
+.size medium
+.quest_type gather
+.dungeon_type crypts
+.base_room_number 13
+.base_corridor_number 11
+.gridsize 5 4
+.spacing 4
+.goal_room_number 13
+.connectivity 0.9
+.min_final_distance 4
+.hallway_battle 4 5
+.hallway_trap 3 5
+.hallway_obstacle 0 3
+.hallway_curio 14 14
+.hallway_hunger 2 5
+.total_room_battles 4 5
+.room_battle 0 0
+.room_guarded_curio 1 2
+.room_curio 0 0
+.room_guarded_treasure 1 2
+.room_treasure 0 0
+.nudge 
+
+map:
+.size medium
+.quest_type gather
+.dungeon_type weald
+.base_room_number 13
+.base_corridor_number 11
+.gridsize 6 4
+.spacing 4
+.goal_room_number 13
+.connectivity 0.85
+.min_final_distance 4
+.hallway_battle 4 5
+.hallway_trap 2 4
+.hallway_obstacle 1 4
+.hallway_curio 14 14
+.hallway_hunger 2 5
+.total_room_battles 4 5
+.room_battle 0 0
+.room_guarded_curio 1 2
+.room_curio 0 0
+.room_guarded_treasure 1 2
+.room_treasure 0 0
+.nudge 
+
+map:
+.size medium
+.quest_type gather
+.dungeon_type warrens
+.base_room_number 13
+.base_corridor_number 11
+.gridsize 5 3
+.spacing 4
+.goal_room_number 13
+.connectivity 0.95
+.min_final_distance 4
+.hallway_battle 4 5
+.hallway_trap 4 6
+.hallway_obstacle 0 2
+.hallway_curio 14 14
+.hallway_hunger 2 5
+.total_room_battles 4 5
+.room_battle 0 0
+.room_guarded_curio 1 2
+.room_curio 0 0
+.room_guarded_treasure 1 2
+.room_treasure 0 0
+.nudge 
+
+map:
+.size medium
+.quest_type gather
+.dungeon_type cove
+.base_room_number 13
+.base_corridor_number 11
+.gridsize 6 4
+.spacing 4
+.goal_room_number 13
+.connectivity 0.9
+.min_final_distance 4
+.hallway_battle 4 5
+.hallway_trap 3 5
+.hallway_obstacle 0 3
+.hallway_curio 14 14
+.hallway_hunger 2 5
+.total_room_battles 4 5
+.room_battle 0 0
+.room_guarded_curio 1 2
+.room_curio 0 0
+.room_guarded_treasure 1 2
+.room_treasure 0 0
+.nudge 
+
+
+map:
+.size medium
+.quest_type activate
+.dungeon_type crypts
+.base_room_number 13
+.base_corridor_number 11
+.gridsize 5 4
+.spacing 4
+.goal_room_number 13
+.connectivity 0.9
+.min_final_distance 4
+.hallway_battle 4 5
+.hallway_trap 3 5
+.hallway_obstacle 0 3
+.hallway_curio 14 14
+.hallway_hunger 2 5
+.total_room_battles 4 5
+.room_battle 0 0
+.room_guarded_curio 1 2
+.room_curio 0 0
+.room_guarded_treasure 1 2
+.room_treasure 0 0
+.nudge 
+
+map:
+.size medium
+.quest_type activate
+.dungeon_type weald
+.base_room_number 13
+.base_corridor_number 11
+.gridsize 6 4
+.spacing 4
+.goal_room_number 13
+.connectivity 0.85
+.min_final_distance 4
+.hallway_battle 4 5
+.hallway_trap 2 4
+.hallway_obstacle 1 4
+.hallway_curio 14 14
+.hallway_hunger 2 5
+.total_room_battles 4 5
+.room_battle 0 0
+.room_guarded_curio 1 2
+.room_curio 0 0
+.room_guarded_treasure 1 2
+.room_treasure 0 0
+.nudge 
+
+map:
+.size medium
+.quest_type activate
+.dungeon_type warrens
+.base_room_number 13
+.base_corridor_number 11
+.gridsize 5 3
+.spacing 4
+.goal_room_number 13
+.connectivity 0.95
+.min_final_distance 4
+.hallway_battle 4 5
+.hallway_trap 4 6
+.hallway_obstacle 0 2
+.hallway_curio 14 14
+.hallway_hunger 2 5
+.total_room_battles 4 5
+.room_battle 0 0
+.room_guarded_curio 1 2
+.room_curio 0 0
+.room_guarded_treasure 1 2
+.room_treasure 0 0
+.nudge 
+
+map:
+.size medium
+.quest_type activate
+.dungeon_type cove
+.base_room_number 13
+.base_corridor_number 11
+.gridsize 6 4
+.spacing 4
+.goal_room_number 13
+.connectivity 0.9
+.min_final_distance 4
+.hallway_battle 4 5
+.hallway_trap 3 5
+.hallway_obstacle 0 3
+.hallway_curio 14 14
+.hallway_hunger 2 5
+.total_room_battles 4 5
+.room_battle 0 0
+.room_guarded_curio 1 2
+.room_curio 0 0
+.room_guarded_treasure 1 2
+.room_treasure 0 0
+.nudge 
+
+
+map:
+.size medium
+.quest_type inventory_activate
+.dungeon_type crypts
+.base_room_number 13
+.base_corridor_number 11
+.gridsize 5 4
+.spacing 4
+.goal_room_number 13
+.connectivity 0.9
+.min_final_distance 4
+.hallway_battle 4 5
+.hallway_trap 3 5
+.hallway_obstacle 0 3
+.hallway_curio 14 14
+.hallway_hunger 2 5
+.total_room_battles 4 5
+.room_battle 0 0
+.room_guarded_curio 1 2
+.room_curio 0 0
+.room_guarded_treasure 1 2
+.room_treasure 0 0
+.nudge 
+
+map:
+.size medium
+.quest_type inventory_activate
+.dungeon_type weald
+.base_room_number 13
+.base_corridor_number 11
+.gridsize 6 4
+.spacing 4
+.goal_room_number 13
+.connectivity 0.85
+.min_final_distance 4
+.hallway_battle 4 5
+.hallway_trap 2 4
+.hallway_obstacle 1 4
+.hallway_curio 14 14
+.hallway_hunger 2 5
+.total_room_battles 4 5
+.room_battle 0 0
+.room_guarded_curio 1 2
+.room_curio 0 0
+.room_guarded_treasure 1 2
+.room_treasure 0 0
+.nudge 
+
+map:
+.size medium
+.quest_type inventory_activate
+.dungeon_type warrens
+.base_room_number 13
+.base_corridor_number 11
+.gridsize 5 3
+.spacing 4
+.goal_room_number 13
+.connectivity 0.95
+.min_final_distance 4
+.hallway_battle 4 5
+.hallway_trap 4 6
+.hallway_obstacle 0 2
+.hallway_curio 14 14
+.hallway_hunger 2 5
+.total_room_battles 4 5
+.room_battle 0 0
+.room_guarded_curio 1 2
+.room_curio 0 0
+.room_guarded_treasure 1 2
+.room_treasure 0 0
+.nudge 
+
+map:
+.size medium
+.quest_type inventory_activate
+.dungeon_type cove
+.base_room_number 13
+.base_corridor_number 11
+.gridsize 6 4
+.spacing 4
+.goal_room_number 13
+.connectivity 0.9
+.min_final_distance 4
+.hallway_battle 4 5
+.hallway_trap 3 5
+.hallway_obstacle 0 3
+.hallway_curio 14 14
+.hallway_hunger 2 5
+.total_room_battles 4 5
+.room_battle 0 0
+.room_guarded_curio 1 2
+.room_curio 0 0
+.room_guarded_treasure 1 2
+.room_treasure 0 0
+.nudge 
+

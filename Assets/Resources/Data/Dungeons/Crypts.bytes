@@ -1,0 +1,217 @@
+id: 1
+is_released: true
+hall_variants: 7
+room_variants: altar barrels drain empty entrance library torture
+
+mash:
+id: 1
+hall: .chance 2 .types skeleton_common_A skeleton_common_A  
+hall: .chance 2 .types skeleton_common_A skeleton_common_A skeleton_arbalist_A 
+hall: .chance 1 .types skeleton_common_A skeleton_common_A skeleton_arbalist_A skeleton_arbalist_A
+hall: .chance 1 .types skeleton_defender_A skeleton_common_A skeleton_arbalist_A 
+hall: .chance 1 .types skeleton_common_A skeleton_common_A skeleton_courtier_A 
+hall: .chance 1 .types skeleton_common_A skeleton_militia_A skeleton_courtier_A skeleton_courtier_A
+hall: .chance 1 .types skeleton_common_A skeleton_militia_A skeleton_courtier_A skeleton_arbalist_A
+hall: .chance 1 .types cultist_brawler_A cultist_brawler_A cultist_witch_A 
+hall: .chance 1 .types cultist_brawler_A skeleton_militia_A cultist_witch_A 
+hall: .chance 1 .types cultist_brawler_A cultist_brawler_A skeleton_courtier_A 
+hall: .chance 1 .types cultist_brawler_A cultist_brawler_A skeleton_courtier_A 
+hall: .chance 1 .types maggot_A maggot_A maggot_A 
+hall: .chance 1 .types maggot_A maggot_A maggot_A maggot_A
+hall: .chance 1 .types spider_webber_A spider_webber_A  
+hall: .chance 1 .types spider_webber_A spider_webber_A spider_spitter_A 
+hall: .chance 2 .types maggot_A maggot_A spider_spitter_A 
+hall: .chance 1 .types brigand_blood_A brigand_cutthroat_A brigand_fusilier_A 
+hall: .chance 1 .types brigand_cutthroat_A brigand_cutthroat_A brigand_fusilier_A 
+hall: .chance 1 .types brigand_cutthroat_A brigand_cutthroat_A brigand_fusilier_A brigand_fusilier_A
+hall: .chance 1 .types cultist_brawler_A cultist_brawler_A madman_A cultist_witch_A
+hall: .chance 1 .types skeleton_militia_A madman_A skeleton_courtier_A skeleton_arbalist_A
+room: .chance 2 .types skeleton_common_A skeleton_militia_A skeleton_arbalist_A skeleton_arbalist_A
+room: .chance 2 .types skeleton_common_A skeleton_common_A skeleton_courtier_A skeleton_courtier_A
+room: .chance 2 .types skeleton_common_A skeleton_militia_A skeleton_arbalist_A skeleton_courtier_A
+room: .chance 2 .types skeleton_defender_A skeleton_militia_A skeleton_arbalist_A skeleton_arbalist_A
+room: .chance 2 .types skeleton_defender_A skeleton_militia_A skeleton_courtier_A skeleton_courtier_A
+room: .chance 2 .types skeleton_defender_A skeleton_militia_A skeleton_arbalist_A skeleton_courtier_A
+room: .chance 2 .types skeleton_common_A cultist_brawler_A skeleton_courtier_A cultist_witch_A
+room: .chance 2 .types cultist_brawler_A skeleton_militia_A cultist_witch_A skeleton_arbalist_A
+room: .chance 2 .types cultist_brawler_A skeleton_militia_A cultist_witch_A skeleton_courtier_A
+room: .chance 2 .types skeleton_defender_A cultist_brawler_A cultist_witch_A skeleton_arbalist_A
+room: .chance 2 .types skeleton_defender_A cultist_brawler_A cultist_witch_A skeleton_courtier_A
+room: .chance 2 .types spider_webber_A spider_webber_A spider_spitter_A spider_spitter_A
+room: .chance 1 .types skeleton_defender_A skeleton_militia_A madman_A skeleton_courtier_A
+room: .chance 2 .types brigand_blood_A brigand_cutthroat_A brigand_fusilier_A 
+boss: .chance 1 .types necromancer_A   
+boss: .chance 1 .types pew_small_A pew_medium_A pew_large_A prophet_A
+stall: .chance 2 .types cultist_brawler_A cultist_witch_A  
+stall: .chance 1 .types skeleton_militia_A skeleton_militia_A  
+stall: .chance 1 .types skeleton_militia_A skeleton_arbalist_A  
+stall: .chance 1 .types gargoyle_A gargoyle_A  
+stall: .chance 1 .types skeleton_militia_A skeleton_common_A  
+named: .name summon_mash_shambler .chance 1 .types shambler_A
+named: .name tutorial_mash_01 .chance 1 .types skeleton_common_A skeleton_common_A
+named: .name tutorial_mash_02 .chance 1 .types skeleton_militia_A skeleton_common_A cultist_witch_A
+named: .name tutorial_mash_03 .chance 1 .types cultist_brawler_A skeleton_militia_A cultist_witch_A
+named: .name tutorial_mash_04 .chance 1 .types skeleton_militia_A skeleton_militia_A skeleton_arbalist_A
+named: .name tutorial_mash_05 .chance 1 .types skeleton_defender_A skeleton_militia_A skeleton_courtier_A skeleton_arbalist_A
+.end
+
+mash:
+id: 3
+hall: .chance 2 .types skeleton_common_B skeleton_common_B  
+hall: .chance 2 .types skeleton_common_B skeleton_militia_B skeleton_arbalist_B 
+hall: .chance 1 .types skeleton_common_B skeleton_common_B skeleton_arbalist_B skeleton_arbalist_B
+hall: .chance 1 .types skeleton_defender_B skeleton_common_B skeleton_arbalist_B 
+hall: .chance 1 .types skeleton_common_B skeleton_common_B skeleton_courtier_B 
+hall: .chance 1 .types skeleton_common_B skeleton_militia_B skeleton_courtier_B skeleton_courtier_B
+hall: .chance 1 .types skeleton_common_B skeleton_common_B skeleton_courtier_B skeleton_arbalist_B
+hall: .chance 1 .types skeleton_common_B skeleton_common_B skeleton_spear_B 
+hall: .chance 1 .types skeleton_militia_B skeleton_spear_B skeleton_arbalist_B 
+hall: .chance 1 .types skeleton_militia_B skeleton_spear_B skeleton_courtier_B 
+hall: .chance 1 .types skeleton_common_B skeleton_common_B gargoyle_B 
+hall: .chance 2 .types gargoyle_B gargoyle_B  
+hall: .chance 1 .types cultist_brawler_B cultist_brawler_B cultist_witch_B 
+hall: .chance 1 .types cultist_brawler_B skeleton_common_B cultist_witch_B 
+hall: .chance 1 .types cultist_brawler_B cultist_brawler_B skeleton_courtier_B 
+hall: .chance 1 .types cultist_brawler_B cultist_brawler_B skeleton_courtier_B 
+hall: .chance 1 .types maggot_B maggot_B maggot_B 
+hall: .chance 1 .types maggot_B maggot_B maggot_B maggot_B
+hall: .chance 1 .types spider_webber_B spider_webber_B  
+hall: .chance 1 .types spider_webber_B spider_webber_B spider_spitter_B 
+hall: .chance 2 .types maggot_B maggot_B spider_spitter_B 
+hall: .chance 2 .types maggot_B maggot_B ghoul_B 
+hall: .chance 2 .types gargoyle_B ghoul_B gargoyle_B 
+hall: .chance 2 .types cultist_brawler_B ghoul_B  
+hall: .chance 2 .types ghoul_B cultist_witch_B  
+hall: .chance 1 .types brigand_blood_B brigand_cutthroat_B brigand_fusilier_B 
+hall: .chance 1 .types brigand_cutthroat_B brigand_cutthroat_B brigand_fusilier_B 
+hall: .chance 1 .types brigand_cutthroat_B brigand_cutthroat_B brigand_fusilier_B brigand_fusilier_B
+hall: .chance 1 .types cultist_brawler_B cultist_brawler_B madman_B cultist_witch_B
+hall: .chance 1 .types skeleton_militia_B madman_B skeleton_courtier_B skeleton_arbalist_B
+hall: .chance 1 .types cultist_brawler_B cultist_brawler_B madman_B cultist_witch_B
+hall: .chance 1 .types skeleton_militia_B madman_B skeleton_courtier_B skeleton_arbalist_B
+room: .chance 1 .types skeleton_common_B skeleton_common_B skeleton_arbalist_B skeleton_arbalist_B
+room: .chance 1 .types skeleton_common_B skeleton_common_B skeleton_courtier_B skeleton_courtier_B
+room: .chance 1 .types skeleton_common_B skeleton_common_B skeleton_arbalist_B skeleton_courtier_B
+room: .chance 1 .types skeleton_defender_B skeleton_militia_B skeleton_arbalist_B skeleton_arbalist_B
+room: .chance 1 .types skeleton_defender_B skeleton_militia_B skeleton_courtier_B skeleton_courtier_B
+room: .chance 1 .types skeleton_defender_B skeleton_militia_B skeleton_arbalist_B skeleton_courtier_B
+room: .chance 1 .types skeleton_defender_B skeleton_defender_B skeleton_arbalist_B skeleton_arbalist_B
+room: .chance 1 .types skeleton_defender_B skeleton_defender_B skeleton_arbalist_B skeleton_courtier_B
+room: .chance 1 .types skeleton_common_B skeleton_defender_B skeleton_spear_B skeleton_arbalist_B
+room: .chance 1 .types skeleton_common_B skeleton_defender_B skeleton_spear_B skeleton_courtier_B
+room: .chance 1 .types skeleton_captain_B skeleton_arbalist_B skeleton_courtier_B 
+room: .chance 1 .types skeleton_captain_B skeleton_arbalist_B skeleton_arbalist_B 
+room: .chance 1 .types skeleton_captain_B skeleton_courtier_B skeleton_courtier_B 
+room: .chance 1 .types skeleton_captain_B skeleton_spear_B skeleton_arbalist_B 
+room: .chance 1 .types skeleton_captain_B skeleton_spear_B skeleton_courtier_B 
+room: .chance 1 .types skeleton_captain_B skeleton_militia_B skeleton_courtier_B 
+room: .chance 1 .types skeleton_common_B cultist_brawler_B skeleton_courtier_B cultist_witch_B
+room: .chance 1 .types cultist_brawler_B skeleton_militia_B cultist_witch_B skeleton_arbalist_B
+room: .chance 1 .types cultist_brawler_B skeleton_common_B cultist_witch_B skeleton_courtier_B
+room: .chance 1 .types skeleton_defender_B cultist_brawler_B cultist_witch_B skeleton_arbalist_B
+room: .chance 1 .types skeleton_defender_B cultist_brawler_B cultist_witch_B skeleton_courtier_B
+room: .chance 1 .types cultist_brawler_B cultist_brawler_B gargoyle_B cultist_witch_B
+room: .chance 1 .types cultist_brawler_B gargoyle_B gargoyle_B cultist_witch_B
+room: .chance 1 .types spider_webber_B spider_webber_B spider_spitter_B spider_spitter_B
+room: .chance 1 .types skeleton_defender_B skeleton_militia_B madman_B skeleton_courtier_B
+room: .chance 2 .types brigand_blood_B brigand_cutthroat_B brigand_fusilier_B 
+boss: .chance 1 .types necromancer_B   
+boss: .chance 1 .types pew_small_B pew_medium_B pew_large_B prophet_B
+stall: .chance 2 .types cultist_brawler_B cultist_witch_B  
+stall: .chance 1 .types skeleton_militia_B skeleton_militia_B  
+stall: .chance 1 .types skeleton_militia_B skeleton_arbalist_B  
+stall: .chance 1 .types ghoul_B   
+stall: .chance 1 .types gargoyle_B gargoyle_B  
+stall: .chance 1 .types skeleton_common_B skeleton_militia_B  
+named: .name summon_mash_shambler .chance 1 .types shambler_B
+.end
+
+mash:
+id: 5
+hall: .chance 1 .types skeleton_common_C skeleton_common_C  
+hall: .chance 2 .types skeleton_common_C skeleton_militia_C skeleton_arbalist_C 
+hall: .chance 1 .types skeleton_common_C skeleton_militia_C skeleton_arbalist_C skeleton_arbalist_C
+hall: .chance 1 .types skeleton_defender_C skeleton_common_C skeleton_arbalist_C 
+hall: .chance 1 .types skeleton_common_C skeleton_common_C skeleton_courtier_C 
+hall: .chance 1 .types skeleton_common_C skeleton_militia_C skeleton_courtier_C skeleton_courtier_C
+hall: .chance 1 .types skeleton_common_C skeleton_common_C skeleton_courtier_C skeleton_arbalist_C
+hall: .chance 1 .types skeleton_common_C skeleton_common_C skeleton_spear_C 
+hall: .chance 1 .types skeleton_common_C skeleton_spear_C skeleton_arbalist_C 
+hall: .chance 1 .types skeleton_common_C skeleton_spear_C skeleton_courtier_C 
+hall: .chance 1 .types skeleton_common_C skeleton_common_C gargoyle_C 
+hall: .chance 2 .types gargoyle_C gargoyle_C  
+hall: .chance 1 .types cultist_brawler_C cultist_brawler_C cultist_witch_C 
+hall: .chance 1 .types cultist_brawler_C skeleton_militia_C cultist_witch_C 
+hall: .chance 1 .types cultist_brawler_C cultist_brawler_C skeleton_courtier_C 
+hall: .chance 1 .types cultist_brawler_C cultist_brawler_C skeleton_courtier_C 
+hall: .chance 2 .types maggot_C maggot_C maggot_C 
+hall: .chance 2 .types maggot_C maggot_C maggot_C maggot_C
+hall: .chance 1 .types spider_webber_C spider_webber_C  
+hall: .chance 1 .types spider_webber_C spider_webber_C spider_spitter_C 
+hall: .chance 1 .types maggot_C maggot_C spider_spitter_C 
+hall: .chance 2 .types maggot_C maggot_C ghoul_C 
+hall: .chance 2 .types gargoyle_C ghoul_C gargoyle_C 
+hall: .chance 2 .types cultist_brawler_C ghoul_C  
+hall: .chance 2 .types ghoul_C cultist_witch_C  
+hall: .chance 1 .types brigand_blood_C brigand_cutthroat_C brigand_fusilier_C 
+hall: .chance 1 .types brigand_cutthroat_C brigand_cutthroat_C brigand_fusilier_C 
+hall: .chance 1 .types brigand_cutthroat_C brigand_cutthroat_C brigand_fusilier_C brigand_fusilier_C
+hall: .chance 1 .types cultist_brawler_C cultist_brawler_C madman_C cultist_witch_C
+hall: .chance 1 .types skeleton_militia_C madman_C skeleton_courtier_C skeleton_arbalist_C
+room: .chance 1 .types skeleton_defender_C skeleton_militia_C skeleton_arbalist_C skeleton_arbalist_C
+room: .chance 2 .types skeleton_defender_C skeleton_militia_C skeleton_courtier_C skeleton_courtier_C
+room: .chance 1 .types skeleton_defender_C skeleton_militia_C skeleton_arbalist_C skeleton_courtier_C
+room: .chance 1 .types skeleton_defender_C skeleton_defender_C skeleton_arbalist_C skeleton_arbalist_C
+room: .chance 1 .types skeleton_defender_C skeleton_defender_C skeleton_arbalist_C skeleton_courtier_C
+room: .chance 1 .types skeleton_militia_C skeleton_defender_C skeleton_spear_C skeleton_arbalist_C
+room: .chance 1 .types skeleton_militia_C skeleton_defender_C skeleton_spear_C skeleton_courtier_C
+room: .chance 1 .types skeleton_captain_C skeleton_arbalist_C skeleton_courtier_C 
+room: .chance 1 .types skeleton_captain_C skeleton_arbalist_C skeleton_arbalist_C 
+room: .chance 1 .types skeleton_captain_C skeleton_courtier_C skeleton_courtier_C 
+room: .chance 1 .types skeleton_captain_C skeleton_spear_C  
+room: .chance 1 .types skeleton_militia_C cultist_brawler_C skeleton_courtier_C cultist_witch_C
+room: .chance 1 .types cultist_brawler_C skeleton_militia_C cultist_witch_C skeleton_arbalist_C
+room: .chance 1 .types cultist_brawler_C skeleton_militia_C cultist_witch_C skeleton_courtier_C
+room: .chance 1 .types skeleton_defender_C cultist_brawler_C cultist_witch_C skeleton_arbalist_C
+room: .chance 1 .types skeleton_defender_C cultist_brawler_C cultist_witch_C skeleton_courtier_C
+room: .chance 1 .types cultist_brawler_C cultist_brawler_C gargoyle_C cultist_witch_C
+room: .chance 1 .types cultist_brawler_C gargoyle_C gargoyle_C cultist_witch_C
+room: .chance 1 .types spider_webber_C spider_webber_C spider_spitter_C spider_spitter_C
+room: .chance 1 .types skeleton_defender_C skeleton_militia_C madman_C skeleton_courtier_C
+room: .chance 2 .types brigand_blood_C brigand_cutthroat_C brigand_fusilier_C 
+boss: .chance 1 .types necromancer_C   
+boss: .chance 1 .types pew_small_C pew_medium_C pew_large_C prophet_C
+stall: .chance 2 .types cultist_brawler_C cultist_witch_C  
+stall: .chance 1 .types skeleton_militia_C skeleton_militia_C  
+stall: .chance 1 .types skeleton_militia_C skeleton_arbalist_C  
+stall: .chance 1 .types ghoul_C   
+stall: .chance 1 .types gargoyle_C gargoyle_C  
+named: .name summon_mash_shambler .chance 1 .types shambler_C
+.end
+
+props:
+hall_curios: .chance 10 .types discarded_pack 
+hall_curios: .chance 8 .types sconce
+hall_curios: .chance 10 .types crate 
+hall_curios: .chance 10 .types sack 
+hall_curios: .chance 8 .types stack_of_books 
+hall_curios: .chance 3 .types altar_of_light
+hall_curios: .chance 5 .types decorative_urn
+hall_curios: .chance 5 .types locked_display_cabinet
+hall_curios: .chance 8 .types bookshelf
+hall_curios: .chance 3 .types alchemy_table
+hall_curios: .chance 3 .types confession_booth
+hall_curios: .chance 5 .types iron_maiden
+hall_curios: .chance 1 .types shamblers_altar
+room_curios: .chance 2 .types suit_of_armor
+room_curios: .chance 2 .types holy_fountain
+room_curios: .chance 3 .types sarcophagus
+room_curios: .chance 3 .types locked_sarcophagus
+room_curios: .chance 1 .types eldritch_altar
+room_treasures: .chance 2 .types unlocked_strongbox 
+room_treasures: .chance 3 .types locked_strongbox 
+room_treasures: .chance 3 .types heirloom_chest 
+traps: .chance 1 .types spikes
+obstacles: .chance 1 .types rubble
+secret_room_treasures: .chance 1 .types secret_stash
+.end

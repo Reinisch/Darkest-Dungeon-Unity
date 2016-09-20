@@ -1,0 +1,32 @@
+name: ancestor_small_D
+type: ancestor_small
+
+art:
+commonfx: .deathfx death_medium
+skill: .id "summon_perfect" .anim "attack_summon" .fx "summon"
+skill: .id "summon_mixed" .anim "attack_summon" .fx "summon"
+skill: .id "summon_flawed" .anim "attack_summon" .fx "summon"
+skill: .id "ancestor_aoe_heal" .anim "attack_heal" .fx "heal" .targfx "heal_target" .area_pos_offset 0 -25 .target_area_pos_offset 0 -25
+skill: .id "kill_self" .anim "attack_transform" .reset_source_stance false .reset_target_stance false .area_pos_offset 0 -50 .can_display_selection false
+battle_stage: .id mirror_image
+audio_modifier: .intensity 2
+.end
+
+info:
+display: .size 1
+enemy_type: .id "eldritch"
+enemy_type: .id "man"
+stats: .hp 5 .def 23.75% .prot 1 .spd 12 .stun_resist 122.5% .poison_resist 247.5% .bleed_resist 247.5% .debuff_resist 72.5% .move_resist 73%
+skill: .id "summon_perfect" .type "ranged" .atk 0% .dmg 0 0 .crit 0% .effect "Ancestor Summon Perfect" .launch 1234 .target .is_crit_valid False .is_knowledgeable False
+skill: .id "summon_mixed" .type "ranged" .atk 0% .dmg 0 0 .crit 0% .effect "Ancestor Summon Mixed" .launch 1234 .target .is_crit_valid False .is_knowledgeable False
+skill: .id "summon_flawed" .type "ranged" .atk 0% .dmg 0 0 .crit 0% .effect "Ancestor Summon Flawed" .launch 1234 .target .is_crit_valid False .is_knowledgeable False
+skill: .id "ancestor_aoe_heal" .type "ranged" .atk 0% .dmg 0 0 .crit 0% .launch 432 .target ~@1234 .heal 7 11 .self_target_valid False .is_crit_valid False .is_knowledgeable False
+personality: .prefskill -1
+loot: .code "NONE" .count 0
+initiative: .number_of_turns_per_round 1
+monster_brain: .id ancestor_small_D
+battle_modifier: .disable_stall_penalty True .can_surprise False .can_be_surprised False .always_surprise False .always_be_surprised False .can_be_damaged_directly false
+skill: .id "kill_self" .type "ranged" .atk 0% .dmg 0 0 .crit 0%  .effect kill_performer_group_other kill_self_queued  .launch 1234 .target  .is_crit_valid False .is_knowledgeable False
+death_class: .can_die_from_damage False .monster_class_id ancestor_big_D .is_valid_on_bleed_dot True .is_valid_on_blight_dot True .is_valid_on_crit True .change_class_effects "Ancestor Summon Nebula"
+battle_backdrop: .background_name heartroom
+.end

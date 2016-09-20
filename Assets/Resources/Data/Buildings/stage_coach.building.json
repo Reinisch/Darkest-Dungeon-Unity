@@ -1,0 +1,33 @@
+{
+    "on_start_town_visit_priority" :  0,
+	"number_of_quests_finished": 0,
+	"highest_dungeon_level": 0,
+	
+	"number_of_recruits_upgrades":
+	[
+		{ "number_of_slots": 2 },
+		{ "number_of_slots": 3, "upgrade_tree_id": "stage_coach.numrecruits", "upgrade_requirement_code": "a" },
+		{ "number_of_slots": 4, "upgrade_tree_id": "stage_coach.numrecruits", "upgrade_requirement_code": "b" },
+		{ "number_of_slots": 5, "upgrade_tree_id": "stage_coach.numrecruits", "upgrade_requirement_code": "c" },
+		{ "number_of_slots": 6, "upgrade_tree_id": "stage_coach.numrecruits", "upgrade_requirement_code": "d" },
+		{ "number_of_slots": 7, "upgrade_tree_id": "stage_coach.numrecruits", "upgrade_requirement_code": "e" }
+	],
+	"roster_size_upgrades" : 
+	[
+		{ "number_of_slots" : 9 },
+		{ "number_of_slots" : 12,     "upgrade_tree_id" :  "stage_coach.rostersize", "upgrade_requirement_code" : "a"  },
+		{ "number_of_slots" : 15,     "upgrade_tree_id" :  "stage_coach.rostersize", "upgrade_requirement_code" : "b"  },
+		{ "number_of_slots" : 18,     "upgrade_tree_id" :  "stage_coach.rostersize", "upgrade_requirement_code" : "c"  },
+		{ "number_of_slots" : 21,     "upgrade_tree_id" :  "stage_coach.rostersize", "upgrade_requirement_code" : "d"  },
+		{ "number_of_slots" : 25,     "upgrade_tree_id" :  "stage_coach.rostersize", "upgrade_requirement_code" : "e"  }
+	],
+	"upgraded_recruits_upgrades" :
+	[
+		{ "level" : 1, "chance" : 0.1875,   "number_of_extra_positive_quirks" : 1, "number_of_extra_negative_quirks" : 1, "number_of_extra_combat_skills" : 0, "number_of_extra_camping_skills": 1, "guaranteed_previous_raid_dead_hero_levels" : [3],
+		  "upgrade_tree_id" :  "stage_coach.upgraded_recruits", "upgrade_requirement_code" : "a"  },
+		{ "level" : 2, "chance" : 0.125,    "number_of_extra_positive_quirks" : 2, "number_of_extra_negative_quirks" : 2, "number_of_extra_combat_skills" : 1, "number_of_extra_camping_skills": 1, "guaranteed_previous_raid_dead_hero_levels" : [4],
+		  "upgrade_tree_id" :  "stage_coach.upgraded_recruits", "upgrade_requirement_code" : "b"  },
+		{ "level" : 3, "chance" : 0.0625,   "number_of_extra_positive_quirks" : 3, "number_of_extra_negative_quirks" : 3, "number_of_extra_combat_skills" : 2, "number_of_extra_camping_skills": 2, "guaranteed_previous_raid_dead_hero_levels" : [5,6],
+		  "upgrade_tree_id" :  "stage_coach.upgraded_recruits", "upgrade_requirement_code" : "c"  }
+	]
+}

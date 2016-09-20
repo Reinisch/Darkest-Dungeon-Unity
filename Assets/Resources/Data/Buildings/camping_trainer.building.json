@@ -1,0 +1,14 @@
+{
+    "on_start_town_visit_priority" :  1,
+	"number_of_quests_finished": 0,
+	"highest_dungeon_level": 2,
+	
+	"camping_skill_cost_discount_upgrades" : 
+	[
+		{ "discount_percent" :  0.10, "upgrade_tree_id" :  "camping_trainer.cost", "upgrade_requirement_code" : "a" },
+		{ "discount_percent" :  0.10, "upgrade_tree_id" :  "camping_trainer.cost", "upgrade_requirement_code" : "b" },
+		{ "discount_percent" :  0.10, "upgrade_tree_id" :  "camping_trainer.cost", "upgrade_requirement_code" : "c" },
+		{ "discount_percent" :  0.10, "upgrade_tree_id" :  "camping_trainer.cost", "upgrade_requirement_code" : "d" },
+		{ "discount_percent" :  0.10, "upgrade_tree_id" :  "camping_trainer.cost", "upgrade_requirement_code" : "e" }
+	]
+}

@@ -1,0 +1,22 @@
+name: octotank_C
+type: octotank
+
+art:
+commonfx: .deathfx death_large
+skill: .id "octo_cestus" .anim "attack_cestus" .fx "cestus" .targchestfx "blood_splatter"
+skill: .id "octo_guard" .anim "attack_shield" .fx "guard" .targheadfx "guard_target"
+.end
+
+info:
+display: .size 1
+enemy_type: .id "eldritch"
+stats: .hp 51 .def 22.5% .prot 0.5 .spd 2 .stun_resist 70% .poison_resist 55% .bleed_resist 105% .debuff_resist 55% .move_resist 95%
+skill: .id "octo_cestus" .type "melee" .atk 97.5% .dmg 5 11 .crit 12%  .effect "Bleed 3" .launch 321 .target 12
+skill: .id "octo_guard" .type "melee" .atk 0% .dmg 0 0 .crit 0%  .effect "Octo Guard 1" "OctoDefend 1" .launch 4321 .target @4321 .self_target_valid False .is_crit_valid False
+personality: .prefskill -1
+loot: .code "A" .count 1
+initiative: .number_of_turns_per_round 1
+monster_brain: .id octotank_C
+death_class: .monster_class_id corpse_C .is_valid_on_crit False .type "corpse" 
+battle_modifier: .disable_stall_penalty True .can_surprise True .can_be_surprised True .always_surprise False .always_be_surprised False
+.end

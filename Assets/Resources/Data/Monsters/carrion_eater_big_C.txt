@@ -1,0 +1,22 @@
+name: carrion_eater_big_C
+type: carrion_eater_big
+
+art:
+commonfx: .deathfx death_large
+skill: .id "weaken_prey" .anim "attack_melee" .targchestfx "blood_splatter"
+skill: .id "tentacle_devour" .anim "attack_melee" .targchestfx "blood_splatter"
+.end
+
+info:
+display: .size 2
+enemy_type: .id "beast"
+stats: .hp 68 .def 22.5% .prot 0 .spd 3 .stun_resist 95% .poison_resist 145% .bleed_resist 105% .debuff_resist 85% .move_resist 120%
+skill: .id "weaken_prey" .type "melee" .atk 92.5% .dmg 4 8 .crit 12%  .effect "Weakening Curse 5" "Mark Target" "Carrion Weaken Damage Debuff 5" .launch 1234 .target 12
+skill: .id "tentacle_devour" .type "melee" .atk 102.5% .dmg 7 13 .crit 17%  .effect "Damage Marked Target" "Carrion Devour Debuff 5" .launch 1234 .target 12
+personality: .prefskill -1
+loot: .code "A" .count 1
+initiative: .number_of_turns_per_round 1
+monster_brain: .id carrion_eater_big_C
+death_class: .monster_class_id corpse_large_C .is_valid_on_crit False .type "corpse" 
+battle_modifier: .disable_stall_penalty True .can_surprise True .can_be_surprised True .always_surprise False .always_be_surprised False
+.end

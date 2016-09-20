@@ -1,0 +1,28 @@
+id: 100
+is_released: true
+hall_variants: 1
+room_variants: heartroom secretroom starfield
+
+mash:
+id: 1
+hall: .chance 1 .types shambler_A
+hall: .chance 3 .types collector_A
+.end
+
+mash:
+id: 3
+hall: .chance 8 .types shambler_B
+hall: .chance 4 .types collector_B
+.end
+
+mash:
+id: 5
+hall: .chance 12 .types shambler_C
+hall: .chance 5 .types collector_C
+.end
+
+mash:
+id: 6
+hall: .chance 12 .types shambler_C
+hall: .chance 5 .types collector_C
+.end

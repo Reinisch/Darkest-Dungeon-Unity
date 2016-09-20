@@ -1,0 +1,26 @@
+name: fishman_shaman_B
+type: fishman_shaman
+
+art:
+commonfx: .deathfx death_medium
+skill: .id "fish_stresscast" .anim "attack_ranged" .fx "stress"
+skill: .id "call_of_the_deep" .anim "attack_ranged" .fx "call_of_the_deep" .targfx "call_of_the_deep_target"
+skill: .id "shaman_heal" .anim "attack_ranged" .fx "heal" .targfx "heal_target"
+skill: .id "shaman_stab" .anim "attack_knife" .fx "stab" .targchestfx "blood_splatter"
+.end
+
+info:
+display: .size 1
+enemy_type: .id "eldritch"
+stats: .hp 17 .def 16.25% .prot 0 .spd 11 .stun_resist 30% .poison_resist 30% .bleed_resist 70% .debuff_resist 40% .move_resist 30%
+skill: .id "fish_stresscast" .type "ranged" .atk 88.75% .dmg 1 2 .crit 0%  .effect "Stress 2" .launch 432 .target 1234 .extra_targets_count 1 .extra_targets_chance 0.3 .move 1 0 .is_crit_valid False
+skill: .id "call_of_the_deep" .type "ranged" .atk 88.75% .dmg 1 2 .crit 0%  .effect "Call of the Deep 3" .launch 432 .target @4321 .self_target_valid False .is_crit_valid False
+skill: .id "shaman_stab" .type "melee" .atk 68.75% .dmg 3 5 .crit 6%  .launch 1 .target 12
+skill: .id "shaman_heal" .type "melee" .atk 0% .dmg 0 0 .crit 0%  .launch 432 .target @1234 .heal 8 14 .self_target_valid False .is_crit_valid False
+personality: .prefskill -1
+loot: .code "A" .count 1
+initiative: .number_of_turns_per_round 1
+monster_brain: .id fishy_shaman_B
+death_class: .monster_class_id corpse_B .is_valid_on_crit False .type "corpse" 
+battle_modifier: .disable_stall_penalty False .can_surprise True .can_be_surprised True .always_surprise False .always_be_surprised False
+.end

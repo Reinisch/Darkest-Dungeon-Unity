@@ -1,0 +1,69 @@
+name: arbalest
+
+art:
+commonfx: .deathfx death_medium
+combat_skill: .id "sniper_shot" .icon "one" .anim "attack_ranged" .fx "sniper_shot" .targchestfx "sniper_shot_target" .area_pos_offset 100 0
+combat_skill: .id "suppressing_fire" .icon "two" .anim "attack_artillery" .fx "suppressing_fire" .targfx "suppressing_fire_target" .area_pos_offset 100 0 .target_area_pos_offset -100 20
+combat_skill: .id "sniper_mark" .icon "three" .anim "attack_point" .fx "sniper_mark" .targchestfx "sniper_mark_target"
+combat_skill: .id "bola" .icon "four" .anim "attack_ranged" .fx "sniper_shot" .targchestfx "bola_target"
+combat_skill: .id "blindfire" .icon "five" .anim "attack_ranged" .fx "sniper_shot" .targchestfx "sniper_shot_target" .area_pos_offset 100 0
+combat_skill: .id "battlefield_bandage" .icon "six" .anim "attack_bandage" .fx "battlefield_bandage" .targfx "battlefield_bandage_target"
+combat_skill: .id "flare" .icon "seven" .anim "attack_artillery" .fx "flare" .area_pos_offset -100 -50 .target_area_pos_offset -50 -50
+.end
+
+info:
+resistances: .stun 40% .poison 30% .bleed 30% .disease 30% .move 40% .debuff 30% .death_blow 67% .trap 10%
+weapon: .name "arbalest_weapon_0" .atk 0% .dmg 4 9 .crit 7.5% .spd 3
+weapon: .name "arbalest_weapon_1" .atk 0% .dmg 5 11 .crit 8% .spd 3 .upgradeRequirementCode 0
+weapon: .name "arbalest_weapon_2" .atk 0% .dmg 6 13 .crit 8.5% .spd 4 .upgradeRequirementCode 1
+weapon: .name "arbalest_weapon_3" .atk 0% .dmg 6 14 .crit 9% .spd 4 .upgradeRequirementCode 2
+weapon: .name "arbalest_weapon_4" .atk 0% .dmg 7 16 .crit 9.5% .spd 5 .upgradeRequirementCode 3
+armour: .name "arbalest_armour_0" .def 0% .prot 0 .hp 27 .spd 0
+armour: .name "arbalest_armour_1" .def 5% .prot 0 .hp 34 .spd 0 .upgradeRequirementCode 0
+armour: .name "arbalest_armour_2" .def 10% .prot 0 .hp 41 .spd 0 .upgradeRequirementCode 1
+armour: .name "arbalest_armour_3" .def 15% .prot 0 .hp 48 .spd 0 .upgradeRequirementCode 2
+armour: .name "arbalest_armour_4" .def 20% .prot 0 .hp 55 .spd 0 .upgradeRequirementCode 3
+combat_skill: .id "sniper_shot" .level 0 .type "ranged" .atk 95% .dmg 0% .crit 5% .launch 43 .target 234 .is_crit_valid True  .effect "Sniper Damage 1" .generation_guaranteed true
+combat_skill: .id "sniper_shot" .level 1 .type "ranged" .atk 100% .dmg 0% .crit 6% .launch 43 .target 234 .is_crit_valid True  .effect "Sniper Damage 2"
+combat_skill: .id "sniper_shot" .level 2 .type "ranged" .atk 105% .dmg 0% .crit 6% .launch 43 .target 234 .is_crit_valid True  .effect "Sniper Damage 3"
+combat_skill: .id "sniper_shot" .level 3 .type "ranged" .atk 110% .dmg 0% .crit 6% .launch 43 .target 234 .is_crit_valid True  .effect "Sniper Damage 4"
+combat_skill: .id "sniper_shot" .level 4 .type "ranged" .atk 115% .dmg 0% .crit 7% .launch 43 .target 234 .is_crit_valid True  .effect "Sniper Damage 5"
+combat_skill: .id "suppressing_fire" .level 0 .type "ranged" .atk 85% .dmg -80% .crit -5% .launch 43 .target ~234 .is_crit_valid True  .effect "Suppression 1"
+combat_skill: .id "suppressing_fire" .level 1 .type "ranged" .atk 90% .dmg -80% .crit -5% .launch 43 .target ~234 .is_crit_valid True  .effect "Suppression 2"
+combat_skill: .id "suppressing_fire" .level 2 .type "ranged" .atk 95% .dmg -80% .crit -4% .launch 43 .target ~234 .is_crit_valid True  .effect "Suppression 3"
+combat_skill: .id "suppressing_fire" .level 3 .type "ranged" .atk 100% .dmg -80% .crit -4% .launch 43 .target ~234 .is_crit_valid True  .effect "Suppression 4"
+combat_skill: .id "suppressing_fire" .level 4 .type "ranged" .atk 105% .dmg -80% .crit -3% .launch 43 .target ~234 .is_crit_valid True  .effect "Suppression 5"
+combat_skill: .id "sniper_mark" .level 0 .type "ranged" .atk 100% .dmg -100% .crit 0% .launch 43 .target 234 .is_crit_valid False  .effect "Arb Mark Target" "Arb Mark Debuff 1"
+combat_skill: .id "sniper_mark" .level 1 .type "ranged" .atk 105% .dmg -100% .crit 0% .launch 43 .target 234 .is_crit_valid False  .effect "Arb Mark Target" "Arb Mark Debuff 2"
+combat_skill: .id "sniper_mark" .level 2 .type "ranged" .atk 110% .dmg -100% .crit 0% .launch 43 .target 234 .is_crit_valid False  .effect "Arb Mark Target" "Arb Mark Debuff 3"
+combat_skill: .id "sniper_mark" .level 3 .type "ranged" .atk 115% .dmg -100% .crit 0% .launch 43 .target 234 .is_crit_valid False  .effect "Arb Mark Target" "Arb Mark Debuff 4"
+combat_skill: .id "sniper_mark" .level 4 .type "ranged" .atk 120% .dmg -100% .crit 0% .launch 43 .target 234 .is_crit_valid False  .effect "Arb Mark Target" "Arb Mark Debuff 5"
+combat_skill: .id "bola" .level 0 .type "ranged" .atk 95% .dmg -50% .crit 5% .launch 43 .target ~12 .is_crit_valid True  .effect "Bolo Push 1A"
+combat_skill: .id "bola" .level 1 .type "ranged" .atk 100% .dmg -50% .crit 6% .launch 43 .target ~12 .is_crit_valid True  .effect "Bolo Push 1B"
+combat_skill: .id "bola" .level 2 .type "ranged" .atk 105% .dmg -50% .crit 6% .launch 43 .target ~12 .is_crit_valid True  .effect "Bolo Push 1C"
+combat_skill: .id "bola" .level 3 .type "ranged" .atk 110% .dmg -50% .crit 6% .launch 43 .target ~12 .is_crit_valid True  .effect "Bolo Push 1D"
+combat_skill: .id "bola" .level 4 .type "ranged" .atk 115% .dmg -50% .crit 7% .launch 43 .target ~12 .is_crit_valid True  .effect "Bolo Push 1D"
+combat_move_skill: .id "move" .level 0 .type "move" .move 2 0 .launch 4321
+combat_skill: .id "blindfire" .level 0 .type "ranged" .atk 80% .dmg -10% .crit 0% .launch 4321 .target ?1234 .is_crit_valid True  .effect "Arb Self Speed 1"
+combat_skill: .id "blindfire" .level 1 .type "ranged" .atk 85% .dmg -10% .crit 0% .launch 4321 .target ?1234 .is_crit_valid True  .effect "Arb Self Speed 2"
+combat_skill: .id "blindfire" .level 2 .type "ranged" .atk 90% .dmg -10% .crit 1% .launch 4321 .target ?1234 .is_crit_valid True  .effect "Arb Self Speed 3"
+combat_skill: .id "blindfire" .level 3 .type "ranged" .atk 95% .dmg -10% .crit 2% .launch 4321 .target ?1234 .is_crit_valid True  .effect "Arb Self Speed 4"
+combat_skill: .id "blindfire" .level 4 .type "ranged" .atk 100% .dmg -10% .crit 2% .launch 4321 .target ?1234 .is_crit_valid True  .effect "Arb Self Speed 5"
+combat_skill: .id "battlefield_bandage" .level 0 .heal 2 3 .launch 43 .target @123  .effect "Arb Stacking Heal 1"
+combat_skill: .id "battlefield_bandage" .level 1 .heal 3 3 .launch 43 .target @123  .effect "Arb Stacking Heal 2"
+combat_skill: .id "battlefield_bandage" .level 2 .heal 3 4 .launch 43 .target @123  .effect "Arb Stacking Heal 3"
+combat_skill: .id "battlefield_bandage" .level 3 .heal 4 4 .launch 43 .target @123  .effect "Arb Stacking Heal 4"
+combat_skill: .id "battlefield_bandage" .level 4 .heal 4 5 .launch 43 .target @123  .effect "Arb Stacking Heal 5"
+combat_skill: .id "flare" .level 0 .type "ranged" .atk 0% .dmg 0% .crit 0% .launch 4321 .target ~@1234 .is_crit_valid True  .effect "FlareClear 1" "FlareLight 1" "FlareBuff 1"
+combat_skill: .id "flare" .level 1 .type "ranged" .atk 0% .dmg 0% .crit 0% .launch 4321 .target ~@1234 .is_crit_valid True  .effect "FlareClear 1" "FlareLight 2" "FlareBuff 2"
+combat_skill: .id "flare" .level 2 .type "ranged" .atk 0% .dmg 0% .crit 0% .launch 4321 .target ~@1234 .is_crit_valid True  .effect "FlareClear 1" "FlareLight 3" "FlareBuff 3"
+combat_skill: .id "flare" .level 3 .type "ranged" .atk 0% .dmg 0% .crit 0% .launch 4321 .target ~@1234 .is_crit_valid True  .effect "FlareClear 1" "FlareLight 4" "FlareBuff 4"
+combat_skill: .id "flare" .level 4 .type "ranged" .atk 0% .dmg 0% .crit 0% .launch 4321 .target ~@1234 .is_crit_valid True  .effect "FlareClear 1" "FlareLight 5" "FlareBuff 5"
+tag: .id "heavy"
+tag: .id "non-religious"
+deaths_door: .buffs deathsdoorACCDebuff deathsdoorDMGLowDebuff deathsdoorDMGHighDebuff deathsdoorSPDDebuff deathsdoorSRDebuff .recovery_buffs mortalityACCDebuff mortalityDMGLowDebuff mortalityDMGHighDebuff mortalitySPDDebuff mortalitySRDebuff .recovery_heart_attack_buffs heartattackACCDebuff heartattackDMGLowDebuff heartattackDMGHighDebuff heartattackSPDDebuff heartattackSRDebuff
+controlled: .target_rank 4
+id_index: .index 10
+generation: .number_of_positive_quirks_min 1 .number_of_positive_quirks_max 2 .number_of_negative_quirks_min 1 .number_of_negative_quirks_max 2 .number_of_class_specific_camping_skills 2 .number_of_shared_camping_skills 1 .number_of_random_combat_skills 4
+skill_selection: .can_select_combat_skills true .number_of_selected_combat_skills_max 4
+.end

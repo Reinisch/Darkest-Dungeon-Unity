@@ -1,0 +1,2897 @@
+{
+   "quirks":
+   [
+      {
+         "id" : "tough",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "fragile"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "MAXHP10"
+         ]
+      },
+      {
+         "id" : "fragile",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "tough"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "MAXHP-10"
+         ]
+      },
+      {
+         "id" : "hard_skinned",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "soft"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "PROT10"
+         ]
+      },
+      {
+         "id" : "soft",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "hard_skinned"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "MAXHP-5"
+         ]
+      },
+      {
+         "id" : "quick_reflexes",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "slow_reflexes"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "SPD2"
+         ]
+      },
+      {
+         "id" : "slow_reflexes",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "quick_reflexes"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "SPD-1"
+         ]
+      },
+      {
+         "id" : "quickdraw",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "slowdraw"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "SPDFIRSTROUND4"
+         ]
+      },
+      {
+         "id" : "slowdraw",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "quickdraw"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "SPDFIRSTROUND-4"
+         ]
+      },
+      {
+         "id" : "natural_swing",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "the_yips"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "ACC5"
+         ]
+      },
+      {
+         "id" : "the_yips",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "natural_swing"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "ACC-5"
+         ]
+      },
+      {
+         "id" : "natural_eye",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "lazy_eye"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "ACCRANGED5"
+         ]
+      },
+      {
+         "id" : "lazy_eye",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "natural_eye"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "ACCRANGED-5"
+         ]
+      },
+      {
+         "id" : "evasive",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "clumsy"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "DEF5"
+         ]
+      },
+      {
+         "id" : "clumsy",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "evasive"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "DEF-5"
+         ]
+      },
+      {
+         "id" : "slugger",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "torn_rotator_cuff"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "DMGLMELEE10",
+            "DMGHMELEE10"
+         ]
+      },
+      {
+         "id" : "torn_rotator_cuff",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "slugger"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "DMGLMELEE-05",
+            "DMGHMELEE-05"
+         ]
+      },
+      {
+         "id" : "unerring",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "scattering"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "DMGLRANGED10",
+            "DMGHRANGED10"
+         ]
+      },
+      {
+         "id" : "scattering",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "unerring"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "DMGLRANGED-05",
+            "DMGHRANGED-05"
+         ]
+      },
+      {
+         "id" : "accurate",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "inaccurate"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "CRIT1"
+         ]
+      },
+      {
+         "id" : "inaccurate",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "accurate"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "CRIT-1"
+         ]
+      },
+      {
+         "id" : "precision_striker",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "weak_grip"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "CRITMELEE3"
+         ]
+      },
+      {
+         "id" : "weak_grip",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "precision_striker"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "CRITMELEE-3"
+         ]
+      },
+      {
+         "id" : "eagle_eye",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "flawed_release"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "CRITRANGED3"
+         ]
+      },
+      {
+         "id" : "flawed_release",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "eagle_eye"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "CRITRANGED-3"
+         ]
+      },
+      {
+         "id" : "nervous",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "steady"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "STRESSDMG10"
+         ]
+      },
+      {
+         "id" : "steady",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "nervous"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "STRESSDMG-10"
+         ]
+      },
+      {
+         "id" : "resilient",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "ruminator"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "STRESSRECOVERY10"
+         ]
+      },
+      {
+         "id" : "ruminator",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "resilient"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "STRESSRECOVERY-10"
+         ]
+      },
+      {
+         "id" : "thin_blooded",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "thick_blooded"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "BLIGHTRESIST-10"
+         ]
+      },
+      {
+         "id" : "thick_blooded",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "thin_blooded"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "BLIGHTRESIST10"
+         ]
+      },
+      {
+         "id" : "sickly",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "robust"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "DISEASERESIST-10"
+         ]
+      },
+      {
+         "id" : "robust",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "sickly"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "DISEASERESIST15"
+         ]
+      },
+      {
+         "id" : "anemic",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "clotter"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "BLEEDRESIST-10"
+         ]
+      },
+      {
+         "id" : "clotter",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "anemic"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "BLEEDRESIST15"
+         ]
+      },
+      {
+         "id" : "fated",
+         "show_explicit_description" : false,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+         ]
+      },
+      {
+         "id" : "hard_noggin",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "shocker"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "STUNRESIST15"
+         ]
+      },
+      {
+         "id" : "shocker",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "hard_noggin"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "STUNRESIST-10"
+         ]
+      },
+      {
+         "id" : "mercurial",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "irrepressible"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "RESOLVECHECK-5"
+         ]
+      },
+      {
+         "id" : "irrepressible",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "mercurial"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "RESOLVECHECK5"
+         ]
+      },
+      {
+         "id" : "unyielding",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "suicidal"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "DEATHBLOWRESIST10"
+         ]
+      },
+      {
+         "id" : "suicidal",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "unyielding"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "DEATHBLOWRESIST-10"
+         ]
+      },
+      {
+         "id" : "early_riser",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "sensitive_to_light"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_lightabove_SPD_B1"
+         ]
+      },
+      {
+         "id" : "night_owl",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "night_blindness"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_lightbelow_SPD_B1"
+         ]
+      },
+      {
+         "id" : "nocturnal",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "diurnal"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_lightabove_SPD_D1"
+         ]
+      },
+      {
+         "id" : "diurnal",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "nocturnal"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_lightbelow_SPD_D1"
+         ]
+      },
+      {
+         "id" : "night_blindness",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "night_owl"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_lightbelow_DMGL_D1",
+            "QUIRK_lightbelow_DMGH_D1"
+         ]
+      },
+      {
+         "id" : "sensitive_to_light",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "early_riser"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_lightabove_DMGL_D1",
+            "QUIRK_lightabove_DMGH_D1"
+         ]
+      },
+      {
+         "id" : "warrior_of_light",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "lurker"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_lightabove_DMGL_B1",
+            "QUIRK_lightabove_DMGH_B1"
+         ]
+      },
+      {
+         "id" : "lurker",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "warrior_of_light"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_lightbelow_DMGL_B1",
+            "QUIRK_lightbelow_DMGH_B1"
+         ]
+      },
+      {
+         "id" : "second_wind",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "tuckered_out"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_hpbelow_DMGL_B",
+            "QUIRK_hpbelow_DMGH_B"
+         ]
+      },
+      {
+         "id" : "tuckered_out",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "second_wind"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_hpbelow_DMGL_D",
+            "QUIRK_hpbelow_DMGH_D"
+         ]
+      },
+      {
+         "id" : "last_gasp",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "winded"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_hpbelow_SPD_B"
+         ]
+      },
+      {
+         "id" : "winded",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "last_gasp"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_hpbelow_SPD_D"
+         ]
+      },
+      {
+         "id" : "on_guard",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "off_guard"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_firstroundonly_SPD_B",
+            "QUIRK_firstroundonly_DEF_B"
+         ]
+      },
+      {
+         "id" : "off_guard",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "on_guard"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_firstroundonly_SPD_D",
+            "QUIRK_firstroundonly_DEF_D"
+         ]
+      },
+      {
+         "id" : "clutch_hitter",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "dud_hitter"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_hpbelow_CRIT_B"
+         ]
+      },
+      {
+         "id" : "dud_hitter",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "clutch_hitter"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_hpbelow_CRIT_D"
+         ]
+      },
+      {
+         "id" : "stress_faster",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "stress_eater"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_stress_above_EATING_B"
+         ]
+      },
+      {
+         "id" : "stress_eater",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "stress_faster"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_stress_above_EATING_D"
+         ]
+      },
+      {
+         "id" : "photomania",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_lightabove_STRESSDMG_B"
+         ]
+      },
+      {
+         "id" : "lygophobia",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_lightbelow_STRESSDMG_D"
+         ]
+      },
+      {
+         "id" : "phengophobia",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_lightabove_STRESSDMG_D"
+         ]
+      },
+      {
+         "id" : "zoophobia",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_monsterType_beast_STRESSDMG_D2"
+         ]
+      },
+      {
+         "id" : "thanatophobia",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_hpbelow_STRESSDMG_D"
+         ]
+      },
+      {
+         "id" : "satanophobia",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_monsterType_unholy_STRESSDMG_D2"
+         ]
+      },
+      {
+         "id" : "automatonophobia",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_monsterType_man_STRESSDMG_D2"
+         ]
+      },
+      {
+         "id" : "back_tracker",
+         "show_explicit_description" : false,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_walking_backwards_STRESSDMG_B"
+         ]
+      },
+      {
+         "id" : "claustrophobia",
+         "show_explicit_description" : false,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_in_corridor_STRESSDMG_D"
+         ]
+      },
+      {
+         "id" : "bad_humours",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : true,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "MAXHP-20"
+         ]
+      },
+      {
+         "id" : "creeping_cough",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : true,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "DMGL-20",
+            "DMGH-20"
+         ]
+      },
+      {
+         "id" : "hemophilia",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : true,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "BLEEDRESIST-50"
+         ]
+      },
+      {
+         "id" : "the_runs",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : true,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "DEF-20",
+            "MAXHP-10"
+         ]
+      },
+      {
+         "id" : "wasting_sickness",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : true,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "DISEASERESIST-50"
+         ]
+      },
+      {
+         "id" : "tetanus",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : true,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "ACC-5",
+            "CRIT-5"
+         ]
+      },
+      {
+         "id" : "rabies",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : true,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "ACC-10",
+            "DMGL15",
+            "DMGH15"
+         ]
+      },
+      {
+         "id" : "syphilis",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : true,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "ACC-5",
+            "DMGL-10",
+            "DMGH-10",
+            "MAXHP-10"
+         ]
+      },
+      {
+         "id" : "stomach_cramp",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : true,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "fast_healer"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_in_camp_HPRECOVERY_D"
+         ]
+      },
+      {
+         "id" : "bulimic",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : true,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "stout"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_in_camp_HPRECOVERY_D"
+         ]
+      },
+      {
+         "id" : "lethargy",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : true,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "SPD-4"
+         ]
+      },
+      {
+         "id" : "spotted_fever",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : true,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "BLIGHTRESIST-50"
+         ]
+      },
+      {
+         "id" : "vertigo",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : true,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "MOVERESIST-50"
+         ]
+      },
+      {
+         "id" : "vampiric_spirits",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : true,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "DEBUFFRESIST-50"
+         ]
+      },
+      {
+         "id" : "ennui",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : true,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_RESOLVECHECK_D"
+         ]
+      },
+      {
+         "id" : "the_ague",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : true,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "DMGL-10",
+            "DMGH-10",
+            "SPD-3",
+            "MAXHP-10"
+         ]
+      },
+      {
+         "id" : "hysterical_blindness",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : true,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_stress_above_ACC_D"
+         ]
+      },
+      {
+         "id" : "scurvy",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : true,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "BLEEDRESIST-40",
+            "MOVERESIST-40"
+         ]
+      },
+      {
+         "id" : "the_worries",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : true,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "STRESSDMG30"
+         ]
+      },
+      {
+         "id" : "the_fits",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : true,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "SPD3",
+            "ACC-5",
+            "CRIT-5"
+         ]
+      },
+      {
+         "id" : "tapeworm",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : true,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "Food",
+         "curio_tag_chance" : 0.6,
+         "keep_loot" : true,
+         "buffs" : 
+         [
+            "TRINKET_EATSASTWO"
+         ]
+      },
+      {
+         "id" : "the_red_plague",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : true,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "BLEEDRESIST-75",
+            "MAXHP-10",
+            "CRIT-5"
+         ]
+      },
+      {
+         "id" : "the_black_plague",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : true,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "BLIGHTRESIST-75",
+            "DISEASERESIST-75",
+            "MAXHP-10",
+            "SPD-5"
+         ]
+      },
+      {
+         "id" : "dark_temptation",
+         "show_explicit_description" : false,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "Unholy",
+         "curio_tag_chance" : 0.4,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+         ]
+      },
+      {
+         "id" : "guilty_conscience",
+         "show_explicit_description" : false,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "Worship",
+         "curio_tag_chance" : 0.35,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+         ]
+      },
+      {
+         "id" : "kleptomaniac",
+         "show_explicit_description" : false,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "Treasure",
+         "curio_tag_chance" : 0.35,
+         "keep_loot" : true,
+         "buffs" : 
+         [
+         ]
+      },
+      {
+         "id" : "bloodthirsty",
+         "show_explicit_description" : false,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "Torture",
+         "curio_tag_chance" : 0.35,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+         ]
+      },
+      {
+         "id" : "hieromania",
+         "show_explicit_description" : false,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "Worship",
+         "curio_tag_chance" : 0.35,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+         ]
+      },
+      {
+         "id" : "curious",
+         "show_explicit_description" : false,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "All",
+         "curio_tag_chance" : 0.2,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+         ]
+      },
+      {
+         "id" : "ablutomania",
+         "show_explicit_description" : false,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "Fountain",
+         "curio_tag_chance" : 0.4,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+         ]
+      },
+      {
+         "id" : "dacnomania",
+         "show_explicit_description" : false,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "Torture",
+         "curio_tag_chance" : 0.4,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+         ]
+      },
+      {
+         "id" : "egomania",
+         "show_explicit_description" : false,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "Reflective",
+         "curio_tag_chance" : 0.4,
+         "keep_loot" : true,
+         "buffs" : 
+         [
+         ]
+      },
+      {
+         "id" : "hylomania",
+         "show_explicit_description" : false,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "Treasure",
+         "curio_tag_chance" : 0.4,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+         ]
+      },
+      {
+         "id" : "sitiomania",
+         "show_explicit_description" : false,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "Food",
+         "curio_tag_chance" : 0.4,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+         ]
+      },
+      {
+         "id" : "plutomania",
+         "show_explicit_description" : false,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "Treasure",
+         "curio_tag_chance" : 0.4,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+         ]
+      },
+      {
+         "id" : "necromania",
+         "show_explicit_description" : false,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "Body",
+         "curio_tag_chance" : 0.4,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+         ]
+      },
+      {
+         "id" : "dipsomania",
+         "show_explicit_description" : false,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "Drink",
+         "curio_tag_chance" : 0.4,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+         ]
+      },
+      {
+         "id" : "paranormania",
+         "show_explicit_description" : false,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "Haunted",
+         "curio_tag_chance" : 0.4,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+         ]
+      },
+      {
+         "id" : "demonomania",
+         "show_explicit_description" : false,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "Unholy",
+         "curio_tag_chance" : 0.4,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+         ]
+      },
+      {
+         "id" : "hagiomania",
+         "show_explicit_description" : false,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "Worship",
+         "curio_tag_chance" : 0.4,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+         ]
+      },
+      {
+         "id" : "compulsive",
+         "show_explicit_description" : false,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "All",
+         "curio_tag_chance" : 0.2,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+         ]
+      },
+      {
+         "id" : "alcoholism",
+         "show_explicit_description" : false,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "resolution",
+"gambler", "love_interest", "enlightened", "god_fearing", "flagellant"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+         ]
+      },
+      {
+         "id" : "gambler",
+         "show_explicit_description" : false,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+"alcoholism", "love_interest", "enlightened", "god_fearing", "flagellant"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+         ]
+      },
+      {
+         "id" : "love_interest",
+         "show_explicit_description" : false,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+"alcoholism", "gambler", "enlightened", "god_fearing", "flagellant"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+         ]
+      },
+      {
+         "id" : "enlightened",
+         "show_explicit_description" : false,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+"alcoholism", "gambler", "love_interest", "god_fearing", "flagellant", "unquiet_mind"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+         ]
+      },
+      {
+         "id" : "god_fearing",
+         "show_explicit_description" : false,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "witness",
+            "faithless",
+"alcoholism", "gambler", "love_interest", "enlightened", "flagellant"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+         ]
+      },
+      {
+         "id" : "flagellant",
+         "show_explicit_description" : false,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "faithless",
+"alcoholism", "gambler", "love_interest", "enlightened", "god_fearing"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+         ]
+      },
+      {
+         "id" : "resolution",
+         "show_explicit_description" : false,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "alcoholism"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+         ]
+      },
+      {
+         "id" : "known_cheat",
+         "show_explicit_description" : false,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+         ]
+      },
+      {
+         "id" : "deviant_tastes",
+         "show_explicit_description" : false,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+         ]
+      },
+      {
+         "id" : "unquiet_mind",
+         "show_explicit_description" : false,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "enlightened"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+         ]
+      },
+      {
+         "id" : "witness",
+         "show_explicit_description" : false,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "god_fearing"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+         ]
+      },
+      {
+         "id" : "faithless",
+         "show_explicit_description" : false,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "flagellant",
+            "god_fearing"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+         ]
+      },
+      {
+         "id" : "bad_gambler",
+         "show_explicit_description" : false,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+         ]
+      },
+      {
+         "id" : "improved_balance",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "MOVERESIST15"
+         ]
+      },
+      {
+         "id" : "meditator",
+         "show_explicit_description" : false,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_in_activity_meditation_STRESSRECOVERY_B"
+         ]
+      },
+      {
+         "id" : "calm",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_firstroundonly_DMGL_D2",
+            "QUIRK_firstroundonly_DMGH_D2"
+         ]
+      },
+      {
+         "id" : "weapons_haggler",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_weapon_UPGRADEDISCOUNT_B"
+         ]
+      },
+      {
+         "id" : "armor_haggler",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_armour_UPGRADEDISCOUNT_B"
+         ]
+      },
+      {
+         "id" : "nymphomania",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_in_activity_brothel_STRESSRECOVERY_B"
+         ]
+      },
+      {
+         "id" : "fast_healer",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "stomach_cramp"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_in_camp_HPRECOVERY_B"
+         ]
+      },
+      {
+         "id" : "stout",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "physical",
+         "incompatible_quirks" : 
+         [
+            "bulimic"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_in_camp_HPRECOVERY_B1"
+         ]
+      },
+      {
+         "id" : "gift_of_the_healer",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_in_camp_HPRECOVERY_B2"
+         ]
+      },
+      {
+         "id" : "fear_of_eldritch",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "hatred_of_eldritch",
+            "slayer_of_eldritch"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_monsterType_eldritch_STRESSDMG_D1",
+            "QUIRK_monsterType_eldritch_ACC_D"
+         ]
+      },
+      {
+         "id" : "fear_of_unholy",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "hatred_of_unholy",
+            "slayer_of_unholy"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_monsterType_unholy_STRESSDMG_D1",
+            "QUIRK_monsterType_unholy_ACC_D"
+         ]
+      },
+      {
+         "id" : "fear_of_man",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "hatred_of_man",
+            "slayer_of_man"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_monsterType_man_STRESSDMG_D1",
+            "QUIRK_monsterType_man_ACC_D"
+         ]
+      },
+      {
+         "id" : "fear_of_beast",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "hatred_of_beast",
+            "slayer_of_beast"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_monsterType_beast_STRESSDMG_D1",
+            "QUIRK_monsterType_beast_ACC_D"
+         ]
+      },
+      {
+         "id" : "hatred_of_eldritch",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "fear_of_eldritch"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_monsterType_eldritch_DMGL_B",
+            "QUIRK_monsterType_eldritch_DMGH_B",
+            "QUIRK_monsterType_eldritch_STRESSDMG_B"
+         ]
+      },
+      {
+         "id" : "hatred_of_unholy",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "fear_of_unholy"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_monsterType_unholy_DMGL_B",
+            "QUIRK_monsterType_unholy_DMGH_B",
+            "QUIRK_monsterType_unholy_STRESSDMG_B"
+         ]
+      },
+      {
+         "id" : "hatred_of_man",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "fear_of_man"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_monsterType_man_DMGL_B",
+            "QUIRK_monsterType_man_DMGH_B",
+            "QUIRK_monsterType_man_STRESSDMG_B"
+         ]
+      },
+      {
+         "id" : "hatred_of_beast",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "fear_of_beast"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_monsterType_beast_DMGL_B",
+            "QUIRK_monsterType_beast_DMGH_B",
+            "QUIRK_monsterType_beast_STRESSDMG_B"
+         ]
+      },
+      {
+         "id" : "slayer_of_eldritch",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "fear_of_eldritch"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_monsterType_eldritch_ACC_B",
+            "QUIRK_monsterType_eldritch_CRIT_B"
+         ]
+      },
+      {
+         "id" : "slayer_of_unholy",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "fear_of_unholy"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_monsterType_unholy_ACC_B",
+            "QUIRK_monsterType_unholy_CRIT_B"
+         ]
+      },
+      {
+         "id" : "slayer_of_man",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "fear_of_man"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_monsterType_man_ACC_B",
+            "QUIRK_monsterType_man_CRIT_B"
+         ]
+      },
+      {
+         "id" : "slayer_of_beast",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "fear_of_beast"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_monsterType_beast_ACC_B",
+            "QUIRK_monsterType_beast_CRIT_B"
+         ]
+      },
+      {
+         "id" : "ruins_explorer",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_in_dungeon_crypts_SCOUTING_B2"
+         ]
+      },
+      {
+         "id" : "warren_explorer",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_in_dungeon_warrens_SCOUTING_B2"
+         ]
+      },
+      {
+         "id" : "weald_explorer",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_in_dungeon_weald_SCOUTING_B2"
+         ]
+      },
+      {
+         "id" : "cove_explorer",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_in_dungeon_cove_SCOUTING_B2"
+         ]
+      },
+      {
+         "id" : "ruins_adventurer",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "ruins_phobe"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_in_dungeon_crypts_STRESSDMG_B"
+         ]
+      },
+      {
+         "id" : "warren_adventurer",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "warren_phobe"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_in_dungeon_warrens_STRESSDMG_B"
+         ]
+      },
+      {
+         "id" : "weald_adventurer",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "weald_phobe"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_in_dungeon_weald_STRESSDMG_B"
+         ]
+      },
+      {
+         "id" : "cove_adventurer",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "cove_phobe"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_in_dungeon_cove_STRESSDMG_B"
+         ]
+      },
+      {
+         "id" : "ruins_scrounger",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_in_dungeon_crypts_SCOUTING_B"
+         ]
+      },
+      {
+         "id" : "warren_scrounger",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_in_dungeon_warrens_SCOUTING_B"
+         ]
+      },
+      {
+         "id" : "weald_scrounger",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_in_dungeon_weald_SCOUTING_B"
+         ]
+      },
+      {
+         "id" : "cove_scrounger",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_in_dungeon_cove_SCOUTING_B"
+         ]
+      },
+      {
+         "id" : "ruins_tactician",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_in_dungeon_crypts_DMGL_B",
+            "QUIRK_in_dungeon_crypts_DMGH_B"
+         ]
+      },
+      {
+         "id" : "warren_tactician",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_in_dungeon_warrens_DMGL_B",
+            "QUIRK_in_dungeon_warrens_DMGH_B"
+         ]
+      },
+      {
+         "id" : "weald_tactician",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_in_dungeon_weald_DMGL_B",
+            "QUIRK_in_dungeon_weald_DMGH_B"
+         ]
+      },
+      {
+         "id" : "cove_tactician",
+         "show_explicit_description" : true,
+         "is_positive" : true,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_in_dungeon_cove_DMGL_B",
+            "QUIRK_in_dungeon_cove_DMGH_B"
+         ]
+      },
+      {
+         "id" : "ruins_phobe",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "ruins_adventurer"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_in_dungeon_crypts_STRESSDMG_D"
+         ]
+      },
+      {
+         "id" : "warren_phobe",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "warren_adventurer"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_in_dungeon_warrens_STRESSDMG_D"
+         ]
+      },
+      {
+         "id" : "weald_phobe",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "weald_adventurer"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_in_dungeon_weald_STRESSDMG_D"
+         ]
+      },
+      {
+         "id" : "cove_phobe",
+         "show_explicit_description" : true,
+         "is_positive" : false,
+         "is_disease" : false,
+         "classification" : "mental",
+         "incompatible_quirks" : 
+         [
+            "cove_adventurer"
+         ],
+         "curio_tag" : "",
+         "curio_tag_chance" : 0.0,
+         "keep_loot" : false,
+         "buffs" : 
+         [
+            "QUIRK_in_dungeon_cove_STRESSDMG_D"
+         ]
+      }
+   ]
+}

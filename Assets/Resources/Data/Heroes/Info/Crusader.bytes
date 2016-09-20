@@ -1,0 +1,69 @@
+name: crusader
+
+art:
+commonfx: .deathfx death_medium
+combat_skill: .id "smite" .icon "one" .anim "attack_sword" .fx "smite" .targchestfx "blood_splatter"
+combat_skill: .id "zealous_accusation" .icon "two" .anim "attack_scroll" .fx "zealous_accusation" .targchestfx "blood_splatter"
+combat_skill: .id "stunning_blow" .icon "three" .anim "attack_stun" .fx "stunning_blow" .targheadfx "stunning_blow_target"
+combat_skill: .id "bulwark_of_faith" .icon "four" .anim "attack_scroll" .fx "bulwark_of_faith"
+combat_skill: .id "battle_heal" .icon "five" .anim "attack_heal" .fx "battle_heal" .targfx "battle_heal_target"
+combat_skill: .id "holy_lance" .icon "six" .anim "attack_charge" .fx "holy_lance" .targchestfx "blood_splatter"
+combat_skill: .id "inspiring_cry" .icon "seven" .anim "attack_banner" .fx "inspiring_cry"
+.end
+
+info:
+resistances: .stun 40% .poison 30% .bleed 30% .disease 30% .move 40% .debuff 30% .death_blow 67% .trap 10%
+weapon: .name "crusader_weapon_0" .atk 0% .dmg 6 12 .crit 5% .spd 1
+weapon: .name "crusader_weapon_1" .atk 0% .dmg 7 14 .crit 5.5% .spd 1 .upgradeRequirementCode 0
+weapon: .name "crusader_weapon_2" .atk 0% .dmg 8 16 .crit 6% .spd 2 .upgradeRequirementCode 1
+weapon: .name "crusader_weapon_3" .atk 0% .dmg 9 17 .crit 6.5% .spd 2 .upgradeRequirementCode 2
+weapon: .name "crusader_weapon_4" .atk 0% .dmg 10 19 .crit 7% .spd 3 .upgradeRequirementCode 3
+armour: .name "crusader_armour_0" .def 5% .prot 0 .hp 33 .spd 0
+armour: .name "crusader_armour_1" .def 10% .prot 0 .hp 40 .spd 0 .upgradeRequirementCode 0
+armour: .name "crusader_armour_2" .def 15% .prot 0 .hp 47 .spd 0 .upgradeRequirementCode 1
+armour: .name "crusader_armour_3" .def 20% .prot 0 .hp 54 .spd 0 .upgradeRequirementCode 2
+armour: .name "crusader_armour_4" .def 25% .prot 0 .hp 61 .spd 0 .upgradeRequirementCode 3
+combat_skill: .id "smite" .level 0 .type "melee" .atk 85% .dmg 0% .crit 0% .launch 21 .target 12 .is_crit_valid True  .effect "Unholy Killer 1" .generation_guaranteed true
+combat_skill: .id "smite" .level 1 .type "melee" .atk 90% .dmg 0% .crit 0% .launch 21 .target 12 .is_crit_valid True  .effect "Unholy Killer 2"
+combat_skill: .id "smite" .level 2 .type "melee" .atk 95% .dmg 0% .crit 1% .launch 21 .target 12 .is_crit_valid True  .effect "Unholy Killer 3"
+combat_skill: .id "smite" .level 3 .type "melee" .atk 100% .dmg 0% .crit 2% .launch 21 .target 12 .is_crit_valid True  .effect "Unholy Killer 4"
+combat_skill: .id "smite" .level 4 .type "melee" .atk 105% .dmg 0% .crit 2% .launch 21 .target 12 .is_crit_valid True  .effect "Unholy Killer 5"
+combat_skill: .id "zealous_accusation" .level 0 .type "ranged" .atk 85% .dmg -40% .crit 0% .launch 21 .target ~12 .is_crit_valid True 
+combat_skill: .id "zealous_accusation" .level 1 .type "ranged" .atk 90% .dmg -40% .crit 0% .launch 21 .target ~12 .is_crit_valid True 
+combat_skill: .id "zealous_accusation" .level 2 .type "ranged" .atk 95% .dmg -40% .crit 1% .launch 21 .target ~12 .is_crit_valid True 
+combat_skill: .id "zealous_accusation" .level 3 .type "ranged" .atk 100% .dmg -40% .crit 2% .launch 21 .target ~12 .is_crit_valid True 
+combat_skill: .id "zealous_accusation" .level 4 .type "ranged" .atk 105% .dmg -40% .crit 2% .launch 21 .target ~12 .is_crit_valid True 
+combat_skill: .id "stunning_blow" .level 0 .type "melee" .atk 90% .dmg -75% .crit 0% .launch 21 .target 12 .is_crit_valid True  .effect "Stun 1"
+combat_skill: .id "stunning_blow" .level 1 .type "melee" .atk 95% .dmg -75% .crit 0% .launch 21 .target 12 .is_crit_valid True  .effect "Stun 2"
+combat_skill: .id "stunning_blow" .level 2 .type "melee" .atk 100% .dmg -75% .crit 1% .launch 21 .target 12 .is_crit_valid True  .effect "Stun 3"
+combat_skill: .id "stunning_blow" .level 3 .type "melee" .atk 105% .dmg -75% .crit 2% .launch 21 .target 12 .is_crit_valid True  .effect "Stun 4"
+combat_skill: .id "stunning_blow" .level 4 .type "melee" .atk 110% .dmg -75% .crit 2% .launch 21 .target 12 .is_crit_valid True  .effect "Stun 5"
+combat_skill: .id "bulwark_of_faith" .level 0 .type "melee" .atk 0% .dmg 0% .crit 0% .launch 21 .target  .is_crit_valid True  .effect "Crusader Bulwark 1" "Light 1"
+combat_skill: .id "bulwark_of_faith" .level 1 .type "melee" .atk 0% .dmg 0% .crit 0% .launch 21 .target  .is_crit_valid True  .effect "Crusader Bulwark 2" "Light 1"
+combat_skill: .id "bulwark_of_faith" .level 2 .type "melee" .atk 0% .dmg 0% .crit 0% .launch 21 .target  .is_crit_valid True  .effect "Crusader Bulwark 3" "Light 1"
+combat_skill: .id "bulwark_of_faith" .level 3 .type "melee" .atk 0% .dmg 0% .crit 0% .launch 21 .target  .is_crit_valid True  .effect "Crusader Bulwark 4" "Light 1"
+combat_skill: .id "bulwark_of_faith" .level 4 .type "melee" .atk 0% .dmg 0% .crit 0% .launch 21 .target  .is_crit_valid True  .effect "Crusader Bulwark 5" "Light 1"
+combat_move_skill: .id "move" .level 0 .type "move" .move 1 1 .launch 4321
+combat_skill: .id "battle_heal" .level 0 .heal 2 2 .launch 12 .target @123 
+combat_skill: .id "battle_heal" .level 1 .heal 2 3 .launch 12 .target @123 
+combat_skill: .id "battle_heal" .level 2 .heal 3 4 .launch 12 .target @123 
+combat_skill: .id "battle_heal" .level 3 .heal 4 4 .launch 12 .target @123 
+combat_skill: .id "battle_heal" .level 4 .heal 5 6 .launch 12 .target @123 
+combat_skill: .id "holy_lance" .level 0 .type "melee" .atk 85% .dmg 0% .crit 5% .move 0 1 .launch 34 .target 34 .is_crit_valid True  .effect "Unholy Killer 1"
+combat_skill: .id "holy_lance" .level 1 .type "melee" .atk 90% .dmg 0% .crit 6% .move 0 1 .launch 34 .target 34 .is_crit_valid True  .effect "Unholy Killer 2"
+combat_skill: .id "holy_lance" .level 2 .type "melee" .atk 95% .dmg 0% .crit 6% .move 0 1 .launch 34 .target 34 .is_crit_valid True  .effect "Unholy Killer 3"
+combat_skill: .id "holy_lance" .level 3 .type "melee" .atk 100% .dmg 0% .crit 6% .move 0 1 .launch 34 .target 34 .is_crit_valid True  .effect "Unholy Killer 4"
+combat_skill: .id "holy_lance" .level 4 .type "melee" .atk 105% .dmg 0% .crit 7% .move 0 1 .launch 34 .target 34 .is_crit_valid True  .effect "Unholy Killer 5"
+combat_skill: .id "inspiring_cry" .level 0 .heal 1 1 .launch 1234 .target @1234  .effect "Crusader HealStress 1" "Crusader Light 1"
+combat_skill: .id "inspiring_cry" .level 1 .heal 1 1 .launch 1234 .target @1234  .effect "Crusader HealStress 2" "Crusader Light 2"
+combat_skill: .id "inspiring_cry" .level 2 .heal 1 2 .launch 1234 .target @1234  .effect "Crusader HealStress 3" "Crusader Light 3"
+combat_skill: .id "inspiring_cry" .level 3 .heal 1 2 .launch 1234 .target @1234  .effect "Crusader HealStress 4" "Crusader Light 4"
+combat_skill: .id "inspiring_cry" .level 4 .heal 2 2 .launch 1234 .target @1234  .effect "Crusader HealStress 5" "Crusader Light 5"
+tag: .id "heavy"
+tag: .id "religious"
+deaths_door: .buffs deathsdoorACCDebuff deathsdoorDMGLowDebuff deathsdoorDMGHighDebuff deathsdoorSPDDebuff deathsdoorSRDebuff .recovery_buffs mortalityACCDebuff mortalityDMGLowDebuff mortalityDMGHighDebuff mortalitySPDDebuff mortalitySRDebuff .recovery_heart_attack_buffs heartattackACCDebuff heartattackDMGLowDebuff heartattackDMGHighDebuff heartattackSPDDebuff heartattackSRDebuff
+controlled: .target_rank 1
+id_index: .index 0
+generation: .number_of_positive_quirks_min 1 .number_of_positive_quirks_max 2 .number_of_negative_quirks_min 1 .number_of_negative_quirks_max 2 .number_of_class_specific_camping_skills 2 .number_of_shared_camping_skills 1 .number_of_random_combat_skills 4
+skill_selection: .can_select_combat_skills true .number_of_selected_combat_skills_max 4
+.end

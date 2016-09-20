@@ -1,0 +1,23 @@
+name: ancestor_perfect_D
+type: ancestor_perfect
+
+art:
+commonfx: .deathfx death_medium
+skill: .id "perfect_bloodsteal" .anim "attack_melee" .fx "bloodsteal" .targfx "bloodsteal_target" .area_pos_offset 0 -25
+skill: .id "perfect_reveal" .anim "attack_maw" .fx "reveal" .targchestfx "reveal_target" .area_pos_offset 0 -10
+.end
+
+info:
+display: .size 1
+enemy_type: .id "eldritch"
+enemy_type: .id "man"
+stats: .hp 36 .def 17.75% .prot 0 .spd 9 .stun_resist 72.5% .poison_resist 57.5% .bleed_resist 67.5% .debuff_resist 57.5% .move_resist 73%
+skill: .id "perfect_bloodsteal" .type "ranged" .atk 113.75% .dmg 5 5 .crit 8%  .effect "Ancestor Perfect Bleed" "Ancestor Damage Marked" "Ancestor Small Stress" .launch 4321 .target 1234 .is_knowledgeable False
+skill: .id "perfect_reveal" .type "ranged" .atk 113.75% .dmg 2 2 .crit 7%  .effect "Ancestor Perfect Stress" .launch 4321 .target 1234 .is_knowledgeable False
+personality: .prefskill -1
+loot: .code "NONE" .count 0
+initiative: .number_of_turns_per_round 1
+monster_brain: .id ancestor_perfect_D
+battle_modifier: .disable_stall_penalty True .can_surprise False .can_be_surprised False .always_surprise False .always_be_surprised False
+life_link: .base_class "ancestor_small"
+.end

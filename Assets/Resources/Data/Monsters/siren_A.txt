@@ -1,0 +1,28 @@
+name: siren_A
+type: siren
+
+art:
+commonfx: .deathfx death_large_boss
+skill: .id "siren_song" .anim "attack_lure" .fx "song" .area_pos_offset 0 -40
+skill: .id "conch_horror" .anim "attack_conch" .fx "horror" .area_pos_offset 0 -20
+skill: .id "conch_summon" .anim "attack_conch" .fx "summon" .area_pos_offset 0 -20
+skill: .id "conch_celldisrupt" .anim "attack_conch" .fx "cell_disrupt" .targchestfx "blood_splatter" .area_pos_offset 0 -20
+defending_area_pos_offset: .offset 0 -40
+.end
+
+info:
+display: .size 2
+enemy_type: .id "eldritch"
+stats: .hp 119 .def 12.5% .prot 0 .spd 5 .stun_resist 50% .poison_resist 40% .bleed_resist 60% .debuff_resist 40% .move_resist 25%
+skill: .id "siren_song" .type "ranged" .atk 102.5% .dmg 0 0 .crit 0%  .effect "siren_control 1" .launch 4321 .target 1234 .is_crit_valid False
+skill: .id "conch_summon" .type "ranged" .atk 0% .dmg 0 0 .crit 0%  .effect "Summon Aquatic 1" .launch 1234 .target  .is_crit_valid False
+skill: .id "conch_horror" .type "ranged" .atk 82.5% .dmg 1 1 .crit 0%  .effect "Stress 1" .launch 1234 .target ~1234 .is_crit_valid False
+skill: .id "conch_celldisrupt" .type "ranged" .atk 82.5% .dmg 1 1 .crit 2%  .effect "Minor Bleed 1" .launch 1234 .target ~1234
+personality: .prefskill -1
+loot: .code "T" .count 2
+initiative: .number_of_turns_per_round 2
+monster_brain: .id siren
+tag: .id "boss"
+battle_modifier: .disable_stall_penalty True .can_surprise False .can_be_surprised False .always_surprise False .always_be_surprised False
+controller: .stress_per_controlled_turn 10 .uncontrol_effects siren_uncontrol
+.end

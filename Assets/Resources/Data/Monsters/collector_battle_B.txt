@@ -1,0 +1,19 @@
+name: collector_battle_B
+type: collector_battle
+
+art:
+commonfx: .deathfx death_small
+skill: .id "head_chomp" .anim "attack_melee" .fx "chomp" .targchestfx "blood_splatter"
+.end
+
+info:
+display: .size 1
+enemy_type: .id "eldritch"
+stats: .hp 23 .def 16.25% .prot 0 .spd 4 .stun_resist 45% .poison_resist 60% .bleed_resist 60% .debuff_resist 35% .move_resist 30%
+skill: .id "head_chomp" .type "melee" .atk 88.75% .dmg 6 12 .crit 16%  .effect "Bleed 2" .launch 4321 .target 1234
+personality: .prefskill -1
+loot: .code "NONE" .count 1
+initiative: .number_of_turns_per_round 1
+monster_brain: .id collector_battle
+battle_modifier: .disable_stall_penalty False .can_surprise True .can_be_surprised True .always_surprise False .always_be_surprised False
+.end

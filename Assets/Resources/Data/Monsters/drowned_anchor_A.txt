@@ -1,0 +1,24 @@
+name: drowned_anchor_A
+type: drowned_anchor
+
+art:
+commonfx: .deathfx death_medium
+skill: .id "anchor_grapple" .anim "attack_melee" .targchestfx "blood_splatter" .area_pos_offset 0 30
+defending_area_pos_offset: .offset 0 30
+.end
+
+info:
+display: .size 1
+enemy_type: .id "unholy"
+stats: .hp 14 .def 0% .prot 0 .spd 0 .stun_resist 25% .poison_resist 20% .bleed_resist 60% .debuff_resist 20% .move_resist 200%
+skill: .id "anchor_grapple" .type "melee" .atk 102.5% .dmg 0 0 .crit 0%  .effect "CaptureBosun" .launch 1 .target 1 .is_crit_valid False
+personality: .prefskill -1
+loot: .code "NONE" .count 0
+initiative: .number_of_turns_per_round 1
+monster_brain: .id drowned_anchor
+tag: .id "boss"
+battle_modifier: .disable_stall_penalty True .can_surprise False .can_be_surprised False .always_surprise False .always_be_surprised False
+captor_empty: .performing_monster_captor_base_class drowned_anchor .captor_full_monster_class drowned_anchored_A .capture_effects "immobilize"
+companion: .monster_class drowned_captain .buffs drowned_captain_buff_PROT drowned_captain_buff_stun_resist drowned_captain_buff_blight_resist drowned_captain_buff_bleed_resist .heal_per_turn_percent 0.00
+life_link: .base_class "drowned_captain"
+.end

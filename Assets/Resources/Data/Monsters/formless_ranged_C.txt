@@ -1,0 +1,23 @@
+name: formless_ranged_C
+type: formless_ranged
+
+art:
+commonfx: .deathfx death_large_boss
+skill: .id "formless_ranged_attack" .anim "attack_ranged" .fx "anus_snake" .targchestfx "blood_splatter" .area_pos_offset -25 0 .target_area_pos_offset -75 0
+shape_shifter: .fx_name "fx/formless_mutate/formless_mutate.sprite.skel"
+.end
+
+info:
+display: .size 1
+enemy_type: .id "eldritch"
+stats: .hp 51 .def 22.5% .prot 0.5 .spd 10 .stun_resist 70% .poison_resist 85% .bleed_resist 65% .debuff_resist 65% .move_resist 245%
+skill: .id "formless_ranged_attack" .type "melee" .atk 112.5% .dmg 9 19 .crit 12%  .effect "Blight 5" .launch 34 .target 34 .extra_targets_count 1 .extra_targets_chance 0.2
+personality: .prefskill -1
+loot: .code "A" .count 1
+initiative: .number_of_turns_per_round 1 .hide_indicator true
+monster_brain: .id default_C
+tag: .id "boss"
+battle_modifier: .disable_stall_penalty True .can_surprise False .can_be_surprised False .always_surprise False .always_be_surprised False
+shape_shifter: .monster_class_ids formless_guard_C formless_weak_C formless_ranged_C .monster_class_chances 1 1 2 .monster_class_valid_ranks 1234 1234 34 .round_frequency 1
+shared_health: .id formless
+.end

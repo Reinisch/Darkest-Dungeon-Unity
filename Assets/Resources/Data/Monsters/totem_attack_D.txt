@@ -1,0 +1,22 @@
+name: totem_attack_D
+type: totem_attack
+
+art:
+commonfx: .deathfx death_medium
+skill: .id "totem_maul" .anim "attack_melee" .fx "maul" .targchestfx "blood_splatter"
+skill: .id "totem_stun" .anim "attack_melee" .fx "stun" .targchestfx "blood_splatter"
+.end
+
+info:
+display: .size 1
+enemy_type: .id "eldritch"
+stats: .hp 42 .def 18.75% .prot 0 .spd 4 .stun_resist 72.5% .poison_resist 77.5% .bleed_resist 197.5% .debuff_resist 47.5% .move_resist 148%
+skill: .id "totem_maul" .type "melee" .atk 103.75% .dmg 8 15 .crit 10%  .effect "Totem Bleed" .launch 4321 .target 1234
+skill: .id "totem_stun" .type "melee" .atk 113.75% .dmg 4 9 .crit 7%  .effect "Totem Stun" .launch 4321 .target 12
+personality: .prefskill -1
+loot: .code "NONE" .count 0
+initiative: .number_of_turns_per_round 1
+monster_brain: .id totem_attack
+death_class: .monster_class_id corpse_A .is_valid_on_crit False .type "corpse" 
+battle_modifier: .disable_stall_penalty False .can_surprise False .can_be_surprised False .always_surprise False .always_be_surprised False
+.end

@@ -1,0 +1,715 @@
+{
+   "darkness_bonuses" :
+   [
+      {
+         "type" : "battle",
+         "bonuses" :
+         [
+            { "darkness" : 0, "chance" : 0.75, "codes" : [ "B", "B" ] },
+            { "darkness" : 1, "chance" : 0.75, "codes" : [ "B" ] },
+            { "darkness" : 26, "chance" : 0.5, "codes" : [ "B" ] },
+            { "darkness" : 51, "chance" : 0.25, "codes" : [ "B" ] },
+            { "darkness" : 76, "chance" : 0, "codes" : [ "B" ] }
+         ]
+      },
+      {
+         "type" : "chest",
+         "bonuses" :
+         [
+            { "darkness" : 0, "chance" : 0.95, "codes" : [ "A" ] },
+            { "darkness" : 1, "chance" : 0.75, "codes" : [ "A" ] },
+            { "darkness" : 26, "chance" : 0.5, "codes" : [ "A" ] },
+            { "darkness" : 51, "chance" : 0.25, "codes" : [ "A" ] },
+            { "darkness" : 76, "chance" : 0, "codes" : [ "A" ] }
+         ]
+      }
+   ],
+   "loot_tables" :
+   [
+      {
+         "id" : "A",
+         "difficulty" : 0,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "table", "chances" : 14, "data" : { "table" : "C" }},
+            { "type" : "table", "chances" : 8, "data" : { "table" : "G" }},
+            { "type" : "table", "chances" : 12, "data" : { "table" : "H" }},
+            { "type" : "table", "chances" : 0, "data" : { "table" : "J" }},
+            { "type" : "table", "chances" : 0, "data" : { "table" : "P" }},
+            { "type" : "table", "chances" : 7, "data" : { "table" : "S" }},
+            { "type" : "table", "chances" : 2, "data" : { "table" : "T" }},
+            { "type" : "journal_page", "chances" : 0.05, "data" : { "min_page_index" : 1 , "max_page_index" : 21 }}
+         ]
+      },
+      {
+         "id" : "B",
+         "difficulty" : 0,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "table", "chances" : 3, "data" : { "table" : "C" }},
+            { "type" : "table", "chances" : 1, "data" : { "table" : "G" }}
+         ]
+      },
+      {
+         "id" : "CH",
+         "difficulty" : 0,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "table", "chances" : 3, "data" : { "table" : "C" }},
+            { "type" : "table", "chances" : 2, "data" : { "table" : "H" }}
+         ]
+      },
+      {
+         "id" : "CS",
+         "difficulty" : 0,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "table", "chances" : 3, "data" : { "table" : "C" }},
+            { "type" : "table", "chances" : 2, "data" : { "table" : "S" }}
+         ]
+      },
+      {
+         "id" : "CT",
+         "difficulty" : 0,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "table", "chances" : 9, "data" : { "table" : "C" }},
+            { "type" : "table", "chances" : 1, "data" : { "table" : "T" }}
+         ]
+      },
+      {
+         "id" : "GH",
+         "difficulty" : 0,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "table", "chances" : 3, "data" : { "table" : "G" }},
+            { "type" : "table", "chances" : 2, "data" : { "table" : "H" }}
+         ]
+      },
+      {
+         "id" : "GT",
+         "difficulty" : 0,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "table", "chances" : 9, "data" : { "table" : "G" }},
+            { "type" : "table", "chances" : 1, "data" : { "table" : "T" }}
+         ]
+      },
+      {
+         "id" : "SC",
+         "difficulty" : 0,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "table", "chances" : 2, "data" : { "table" : "S" }},
+            { "type" : "table", "chances" : 1, "data" : { "table" : "C" }}
+         ]
+      },
+      {
+         "id" : "C",
+         "difficulty" : 1,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "item", "chances" : 4, "data" : { "type" : "gold", "id" : "", "amount" : 25 }},
+            { "type" : "item", "chances" : 4, "data" : { "type" : "gold", "id" : "", "amount" : 50 }},
+            { "type" : "item", "chances" : 6, "data" : { "type" : "gold", "id" : "", "amount" : 100 }},
+            { "type" : "item", "chances" : 3, "data" : { "type" : "gold", "id" : "", "amount" : 250 }},
+            { "type" : "item", "chances" : 2, "data" : { "type" : "gold", "id" : "", "amount" : 500 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "gold", "id" : "", "amount" : 750 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "gold", "id" : "", "amount" : 1000 }}
+         ]
+      },
+      {
+         "id" : "C",
+         "difficulty" : 3,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "item", "chances" : 2, "data" : { "type" : "gold", "id" : "", "amount" : 25 }},
+            { "type" : "item", "chances" : 4, "data" : { "type" : "gold", "id" : "", "amount" : 50 }},
+            { "type" : "item", "chances" : 4, "data" : { "type" : "gold", "id" : "", "amount" : 100 }},
+            { "type" : "item", "chances" : 6, "data" : { "type" : "gold", "id" : "", "amount" : 250 }},
+            { "type" : "item", "chances" : 4, "data" : { "type" : "gold", "id" : "", "amount" : 500 }},
+            { "type" : "item", "chances" : 2, "data" : { "type" : "gold", "id" : "", "amount" : 750 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "gold", "id" : "", "amount" : 1000 }}
+         ]
+      },
+      {
+         "id" : "C",
+         "difficulty" : 5,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "gold", "id" : "", "amount" : 25 }},
+            { "type" : "item", "chances" : 4, "data" : { "type" : "gold", "id" : "", "amount" : 50 }},
+            { "type" : "item", "chances" : 4, "data" : { "type" : "gold", "id" : "", "amount" : 100 }},
+            { "type" : "item", "chances" : 4, "data" : { "type" : "gold", "id" : "", "amount" : 250 }},
+            { "type" : "item", "chances" : 4, "data" : { "type" : "gold", "id" : "", "amount" : 500 }},
+            { "type" : "item", "chances" : 4, "data" : { "type" : "gold", "id" : "", "amount" : 750 }},
+            { "type" : "item", "chances" : 2, "data" : { "type" : "gold", "id" : "", "amount" : 1000 }}
+         ]
+      },
+      {
+         "id" : "C",
+         "difficulty" : 6,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "gold", "id" : "", "amount" : 25 }},
+            { "type" : "item", "chances" : 4, "data" : { "type" : "gold", "id" : "", "amount" : 50 }},
+            { "type" : "item", "chances" : 4, "data" : { "type" : "gold", "id" : "", "amount" : 100 }},
+            { "type" : "item", "chances" : 4, "data" : { "type" : "gold", "id" : "", "amount" : 250 }},
+            { "type" : "item", "chances" : 4, "data" : { "type" : "gold", "id" : "", "amount" : 500 }},
+            { "type" : "item", "chances" : 4, "data" : { "type" : "gold", "id" : "", "amount" : 750 }},
+            { "type" : "item", "chances" : 2, "data" : { "type" : "gold", "id" : "", "amount" : 1000 }}
+         ]
+      },
+      {
+         "id" : "G",
+         "difficulty" : 1,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "gem", "id" : "ruby", "amount" : 1 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "gem", "id" : "sapphire", "amount" : 1 }},
+            { "type" : "item", "chances" : 4, "data" : { "type" : "gem", "id" : "emerald", "amount" : 1 }},
+            { "type" : "item", "chances" : 4, "data" : { "type" : "gem", "id" : "citrine", "amount" : 1 }},
+            { "type" : "item", "chances" : 10, "data" : { "type" : "gem", "id" : "onyx", "amount" : 1 }},
+            { "type" : "item", "chances" : 10, "data" : { "type" : "gem", "id" : "jade", "amount" : 1 }}
+         ]
+      },
+      {
+         "id" : "G",
+         "difficulty" : 3,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "gem", "id" : "ruby", "amount" : 1 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "gem", "id" : "sapphire", "amount" : 1 }},
+            { "type" : "item", "chances" : 5, "data" : { "type" : "gem", "id" : "emerald", "amount" : 1 }},
+            { "type" : "item", "chances" : 5, "data" : { "type" : "gem", "id" : "citrine", "amount" : 1 }},
+            { "type" : "item", "chances" : 3, "data" : { "type" : "gem", "id" : "onyx", "amount" : 1 }},
+            { "type" : "item", "chances" : 3, "data" : { "type" : "gem", "id" : "jade", "amount" : 1 }}
+         ]
+      },
+      {
+         "id" : "G",
+         "difficulty" : 5,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "item", "chances" : 3, "data" : { "type" : "gem", "id" : "ruby", "amount" : 1 }},
+            { "type" : "item", "chances" : 3, "data" : { "type" : "gem", "id" : "sapphire", "amount" : 1 }},
+            { "type" : "item", "chances" : 5, "data" : { "type" : "gem", "id" : "emerald", "amount" : 1 }},
+            { "type" : "item", "chances" : 5, "data" : { "type" : "gem", "id" : "citrine", "amount" : 1 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "gem", "id" : "onyx", "amount" : 1 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "gem", "id" : "jade", "amount" : 1 }}
+         ]
+      },
+      {
+         "id" : "G",
+         "difficulty" : 6,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "item", "chances" : 5, "data" : { "type" : "gem", "id" : "ruby", "amount" : 1 }},
+            { "type" : "item", "chances" : 5, "data" : { "type" : "gem", "id" : "sapphire", "amount" : 1 }},
+            { "type" : "item", "chances" : 5, "data" : { "type" : "gem", "id" : "emerald", "amount" : 1 }},
+            { "type" : "item", "chances" : 5, "data" : { "type" : "gem", "id" : "citrine", "amount" : 1 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "gem", "id" : "onyx", "amount" : 1 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "gem", "id" : "jade", "amount" : 1 }}
+         ]
+      },
+      {
+         "id" : "H",
+         "difficulty" : 1,
+         "dungeon" : "crypts",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "item", "chances" : 3, "data" : { "type" : "heirloom", "id" : "bust", "amount" : 2 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "heirloom", "id" : "portrait", "amount" : 1 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "heirloom", "id" : "deed", "amount" : 2 }},
+            { "type" : "item", "chances" : 3, "data" : { "type" : "heirloom", "id" : "crest", "amount" : 4 }}
+         ]
+      },
+      {
+         "id" : "H",
+         "difficulty" : 1,
+         "dungeon" : "weald",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "heirloom", "id" : "bust", "amount" : 2 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "heirloom", "id" : "portrait", "amount" : 1 }},
+            { "type" : "item", "chances" : 3, "data" : { "type" : "heirloom", "id" : "deed", "amount" : 2 }},
+            { "type" : "item", "chances" : 3, "data" : { "type" : "heirloom", "id" : "crest", "amount" : 4 }}
+         ]
+      },
+      {
+         "id" : "H",
+         "difficulty" : 1,
+         "dungeon" : "warrens",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "heirloom", "id" : "bust", "amount" : 2 }},
+            { "type" : "item", "chances" : 3, "data" : { "type" : "heirloom", "id" : "portrait", "amount" : 1 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "heirloom", "id" : "deed", "amount" : 2 }},
+            { "type" : "item", "chances" : 3, "data" : { "type" : "heirloom", "id" : "crest", "amount" : 4 }}
+         ]
+      },
+      {
+         "id" : "H",
+         "difficulty" : 1,
+         "dungeon" : "cove",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "heirloom", "id" : "bust", "amount" : 2 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "heirloom", "id" : "portrait", "amount" : 1 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "heirloom", "id" : "deed", "amount" : 2 }},
+            { "type" : "item", "chances" : 3, "data" : { "type" : "heirloom", "id" : "crest", "amount" : 4 }}
+         ]
+      },
+      {
+         "id" : "H",
+         "difficulty" : 3,
+         "dungeon" : "crypts",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "item", "chances" : 3, "data" : { "type" : "heirloom", "id" : "bust", "amount" : 3 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "heirloom", "id" : "portrait", "amount" : 2 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "heirloom", "id" : "deed", "amount" : 3 }},
+            { "type" : "item", "chances" : 3, "data" : { "type" : "heirloom", "id" : "crest", "amount" : 6 }}
+         ]
+      },
+      {
+         "id" : "H",
+         "difficulty" : 3,
+         "dungeon" : "weald",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "heirloom", "id" : "bust", "amount" : 3 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "heirloom", "id" : "portrait", "amount" : 2 }},
+            { "type" : "item", "chances" : 3, "data" : { "type" : "heirloom", "id" : "deed", "amount" : 3 }},
+            { "type" : "item", "chances" : 3, "data" : { "type" : "heirloom", "id" : "crest", "amount" : 6 }}
+         ]
+      },
+      {
+         "id" : "H",
+         "difficulty" : 3,
+         "dungeon" : "warrens",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "heirloom", "id" : "bust", "amount" : 3 }},
+            { "type" : "item", "chances" : 3, "data" : { "type" : "heirloom", "id" : "portrait", "amount" : 2 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "heirloom", "id" : "deed", "amount" : 3 }},
+            { "type" : "item", "chances" : 3, "data" : { "type" : "heirloom", "id" : "crest", "amount" : 6 }}
+         ]
+      },
+      {
+         "id" : "H",
+         "difficulty" : 3,
+         "dungeon" : "cove",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "heirloom", "id" : "bust", "amount" : 3 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "heirloom", "id" : "portrait", "amount" : 2 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "heirloom", "id" : "deed", "amount" : 3 }},
+            { "type" : "item", "chances" : 3, "data" : { "type" : "heirloom", "id" : "crest", "amount" : 6 }}
+         ]
+      },
+      {
+         "id" : "H",
+         "difficulty" : 5,
+         "dungeon" : "crypts",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "item", "chances" : 3, "data" : { "type" : "heirloom", "id" : "bust", "amount" : 4 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "heirloom", "id" : "portrait", "amount" : 2 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "heirloom", "id" : "deed", "amount" : 4 }},
+            { "type" : "item", "chances" : 3, "data" : { "type" : "heirloom", "id" : "crest", "amount" : 8 }}
+         ]
+      },
+      {
+         "id" : "H",
+         "difficulty" : 5,
+         "dungeon" : "weald",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "heirloom", "id" : "bust", "amount" : 4 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "heirloom", "id" : "portrait", "amount" : 2 }},
+            { "type" : "item", "chances" : 3, "data" : { "type" : "heirloom", "id" : "deed", "amount" : 4 }},
+            { "type" : "item", "chances" : 3, "data" : { "type" : "heirloom", "id" : "crest", "amount" : 8 }}
+         ]
+      },
+      {
+         "id" : "H",
+         "difficulty" : 5,
+         "dungeon" : "warrens",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "heirloom", "id" : "bust", "amount" : 4 }},
+            { "type" : "item", "chances" : 3, "data" : { "type" : "heirloom", "id" : "portrait", "amount" : 2 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "heirloom", "id" : "deed", "amount" : 4 }},
+            { "type" : "item", "chances" : 3, "data" : { "type" : "heirloom", "id" : "crest", "amount" : 8 }}
+         ]
+      },
+      {
+         "id" : "H",
+         "difficulty" : 5,
+         "dungeon" : "cove",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "heirloom", "id" : "bust", "amount" : 4 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "heirloom", "id" : "portrait", "amount" : 2 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "heirloom", "id" : "deed", "amount" : 4 }},
+            { "type" : "item", "chances" : 3, "data" : { "type" : "heirloom", "id" : "crest", "amount" : 8 }}
+         ]
+      },
+      {
+         "id" : "H",
+         "difficulty" : 6,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "heirloom", "id" : "bust", "amount" : 4 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "heirloom", "id" : "portrait", "amount" : 2 }},
+            { "type" : "item", "chances" : 2, "data" : { "type" : "heirloom", "id" : "deed", "amount" : 4 }},
+            { "type" : "item", "chances" : 2, "data" : { "type" : "heirloom", "id" : "crest", "amount" : 8 }}
+         ]
+      },
+      {
+         "id" : "NONE",
+         "difficulty" : 0,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 1, "data" : { }},
+            { "type" : "item", "chances" : 0, "data" : { "type" : "heirloom", "id" : "bust", "amount" : 1 }}
+         ]
+      },
+      {
+         "id" : "P",
+         "difficulty" : 0,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "item", "chances" : 3, "data" : { "type" : "provision", "id" : "", "amount" : 2 }},
+            { "type" : "item", "chances" : 3, "data" : { "type" : "provision", "id" : "", "amount" : 4 }},
+            { "type" : "item", "chances" : 2, "data" : { "type" : "provision", "id" : "", "amount" : 6 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "provision", "id" : "", "amount" : 8 }}
+         ]
+      },
+      {
+         "id" : "S",
+         "difficulty" : 0,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "item", "chances" : 0, "data" : { "type" : "supply", "id" : "firewood", "amount" : 1 }},
+            { "type" : "item", "chances" : 3, "data" : { "type" : "provision", "id" : "", "amount" : 2 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "supply", "id" : "shovel", "amount" : 1 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "supply", "id" : "antivenom", "amount" : 1 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "supply", "id" : "bandage", "amount" : 1 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "supply", "id" : "medicinal_herbs", "amount" : 1 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "supply", "id" : "skeleton_key", "amount" : 1 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "supply", "id" : "holy_water", "amount" : 1 }},
+            { "type" : "item", "chances" : 2, "data" : { "type" : "supply", "id" : "torch", "amount" : 1 }}
+         ]
+      },
+      {
+         "id" : "Tbase",
+         "difficulty" : 0,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 3, "data" : { }},
+            { "type" : "table", "chances" : 2, "data" : { "table" : "T" }}
+         ]
+      },
+      {
+         "id" : "T",
+         "difficulty" : 1,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "trinket", "chances" : 45, "data" : { "rarity" : "very_common" }},
+            { "type" : "trinket", "chances" : 40, "data" : { "rarity" : "common" }},
+            { "type" : "trinket", "chances" : 10, "data" : { "rarity" : "uncommon" }},
+            { "type" : "trinket", "chances" : 5, "data" : { "rarity" : "rare" }},
+            { "type" : "trinket", "chances" : 0, "data" : { "rarity" : "very_rare" }},
+            { "type" : "trinket", "chances" : 0, "data" : { "rarity" : "ancestral" }},
+            { "type" : "trinket", "chances" : 0, "data" : { "rarity" : "ancestral_shambler" }}
+         ]
+      },
+      {
+         "id" : "T",
+         "difficulty" : 3,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "trinket", "chances" : 20, "data" : { "rarity" : "very_common" }},
+            { "type" : "trinket", "chances" : 35, "data" : { "rarity" : "common" }},
+            { "type" : "trinket", "chances" : 35, "data" : { "rarity" : "uncommon" }},
+            { "type" : "trinket", "chances" : 8, "data" : { "rarity" : "rare" }},
+            { "type" : "trinket", "chances" : 2, "data" : { "rarity" : "very_rare" }},
+            { "type" : "trinket", "chances" : 0, "data" : { "rarity" : "ancestral" }},
+            { "type" : "trinket", "chances" : 0, "data" : { "rarity" : "ancestral_shambler" }}
+         ]
+      },
+      {
+         "id" : "T",
+         "difficulty" : 5,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "trinket", "chances" : 15, "data" : { "rarity" : "very_common" }},
+            { "type" : "trinket", "chances" : 30, "data" : { "rarity" : "common" }},
+            { "type" : "trinket", "chances" : 35, "data" : { "rarity" : "uncommon" }},
+            { "type" : "trinket", "chances" : 12, "data" : { "rarity" : "rare" }},
+            { "type" : "trinket", "chances" : 5, "data" : { "rarity" : "very_rare" }},
+            { "type" : "trinket", "chances" : 3, "data" : { "rarity" : "ancestral" }},
+            { "type" : "trinket", "chances" : 0, "data" : { "rarity" : "ancestral_shambler" }}
+         ]
+      },
+      {
+         "id" : "T",
+         "difficulty" : 6,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "trinket", "chances" : 15, "data" : { "rarity" : "very_common" }},
+            { "type" : "trinket", "chances" : 30, "data" : { "rarity" : "common" }},
+            { "type" : "trinket", "chances" : 35, "data" : { "rarity" : "uncommon" }},
+            { "type" : "trinket", "chances" : 12, "data" : { "rarity" : "rare" }},
+            { "type" : "trinket", "chances" : 5, "data" : { "rarity" : "very_rare" }},
+            { "type" : "trinket", "chances" : 3, "data" : { "rarity" : "ancestral" }},
+            { "type" : "trinket", "chances" : 0, "data" : { "rarity" : "ancestral_shambler" }}
+         ]
+      },
+      {
+         "id" : "T_COLLECTOR",
+         "difficulty" : 0,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "trinket", "chances" : 0, "data" : { "rarity" : "very_common" }},
+            { "type" : "trinket", "chances" : 0, "data" : { "rarity" : "common" }},
+            { "type" : "trinket", "chances" : 0, "data" : { "rarity" : "uncommon" }},
+            { "type" : "trinket", "chances" : 0, "data" : { "rarity" : "rare" }},
+            { "type" : "trinket", "chances" : 0, "data" : { "rarity" : "very_rare" }},
+            { "type" : "trinket", "chances" : 1, "data" : { "rarity" : "collector" }}
+         ]
+      },
+      {
+         "id" : "T_ANTIQ_CAMP",
+         "difficulty" : 0,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "trinket", "chances" : 10, "data" : { "rarity" : "very_common" }},
+            { "type" : "trinket", "chances" : 7, "data" : { "rarity" : "common" }},
+            { "type" : "trinket", "chances" : 5, "data" : { "rarity" : "uncommon" }},
+            { "type" : "trinket", "chances" : 2, "data" : { "rarity" : "rare" }},
+            { "type" : "trinket", "chances" : 1, "data" : { "rarity" : "very_rare" }},
+            { "type" : "trinket", "chances" : 0, "data" : { "rarity" : "ancestral" }},
+            { "type" : "trinket", "chances" : 0, "data" : { "rarity" : "ancestral_shambler" }}
+         ]
+      },
+      {
+         "id" : "T_MADMAN",
+         "difficulty" : 0,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "trinket", "chances" : 1, "data" : { "rarity" : "very_common" }},
+            { "type" : "trinket", "chances" : 1, "data" : { "rarity" : "common" }},
+            { "type" : "trinket", "chances" : 1, "data" : { "rarity" : "uncommon" }},
+            { "type" : "trinket", "chances" : 0, "data" : { "rarity" : "rare" }},
+            { "type" : "trinket", "chances" : 0, "data" : { "rarity" : "very_rare" }},
+            { "type" : "trinket", "chances" : 1, "data" : { "rarity" : "madman" }}
+         ]
+      },
+      {
+         "id" : "T_INCURSIONSACK",
+         "difficulty" : 0,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "trinket", "chances" : 1, "data" : { "rarity" : "very_rare" }},
+            { "type" : "trinket", "chances" : 1, "data" : { "rarity" : "ancestral" }}
+         ]
+      },
+      {
+         "id" : "TORCHONLY",
+         "difficulty" : 0,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "item", "chances" : 1, "data" : { "type" : "supply", "id" : "torch", "amount" : 1 }}
+         ]
+      },
+      {
+         "id" : "SHOVELONLY",
+         "difficulty" : 0,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "item", "chances" : 1, "data" : { "type" : "supply", "id" : "shovel", "amount" : 1 }}
+         ]
+      },
+      {
+         "id" : "KEYONLY",
+         "difficulty" : 0,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "item", "chances" : 1, "data" : { "type" : "supply", "id" : "skeleton_key", "amount" : 1 }}
+         ]
+      },
+      {
+         "id" : "HOLYONLY",
+         "difficulty" : 0,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "item", "chances" : 1, "data" : { "type" : "supply", "id" : "holy_water", "amount" : 1 }}
+         ]
+      },
+      {
+         "id" : "SHAMBLER",
+         "difficulty" : 0,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "trinket", "chances" : 1, "data" : { "rarity" : "ancestral_shambler" }}
+         ]
+      },
+      {
+         "id" : "PEW",
+         "difficulty" : 0,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "gem", "id" : "pewrelic", "amount" : 1 }}
+         ]
+      },
+      {
+         "id" : "COLLECTOR",
+         "difficulty" : 0,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "item", "chances" : 3, "data" : { "type" : "gem", "id" : "trapezohedron", "amount" : 1 }},
+            { "type" : "table", "chances" : 1, "data" : { "table" : "T_COLLECTOR" }}
+         ]
+      },
+      {
+         "id" : "MADMAN",
+         "difficulty" : 0,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "table", "chances" : 5, "data" : { "table" : "S" }},
+            { "type" : "table", "chances" : 1, "data" : { "table" : "T_MADMAN" }}
+         ]
+      },
+      {
+         "id" : "T_ANCESTOR",
+         "difficulty" : 0,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "trinket", "chances" : 1, "data" : { "rarity" : "ancestral" }}
+         ]
+      },
+      {
+         "id" : "ANTIQ",
+         "difficulty" : 0,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 0, "data" : { }},
+            { "type" : "item", "chances" : 5, "data" : { "type" : "gem", "id" : "antiqrelicsmall", "amount" : 1 }},
+            { "type" : "item", "chances" : 1, "data" : { "type" : "gem", "id" : "antiqrelic", "amount" : 1 }}
+         ]
+      },
+      {
+         "id" : "JOURNALONLY",
+         "difficulty" : 0,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "journal_page", "chances" : 1, "data" : { "min_page_index" : 1 , "max_page_index" : 21 }}
+         ]
+      },
+      {
+         "id" : "THANKS",
+         "difficulty" : 0,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "journal_page", "chances" : 1, "data" : { "specific_page_index" : 0 }}
+         ]
+      },
+      {
+         "id" : "test",
+         "difficulty" : 0,
+         "dungeon" : "",
+         "entries" :
+         [
+            { "type" : "nothing", "chances" : 1, "data" : { }}
+         ]
+      }
+   ]
+}

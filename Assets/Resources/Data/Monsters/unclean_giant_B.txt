@@ -1,0 +1,25 @@
+name: unclean_giant_B
+type: unclean_giant
+
+art:
+commonfx: .deathfx death_large
+skill: .id "club_smack" .anim "attack_melee" .fx "club_smack" .targchestfx "blood_splatter"
+skill: .id "confusion_spores" .anim "attack_ranged" .fx "confusion_spores" .targheadfx "confusion_spores_target" .area_pos_offset 0 -25
+skill: .id "poison_spores" .anim "attack_ranged" .fx "poison_spores" .targfx "poison_spores_target"
+.end
+
+info:
+display: .size 2
+enemy_type: .id "man"
+enemy_type: .id "beast"
+stats: .hp 102 .def 8.75% .prot 0 .spd 1 .stun_resist 70% .poison_resist 80% .bleed_resist 40% .debuff_resist 60% .move_resist 95%
+skill: .id "club_smack" .type "melee" .atk 83.75% .dmg 13 26 .crit 13%  .effect "Push 1C" .launch 4321 .target 12
+skill: .id "confusion_spores" .type "ranged" .atk 88.75% .dmg 2 2 .crit 11%  .effect "Shuffle Party 2" "Giant Spore Debuff 3" .launch 4321 .target ~1234
+skill: .id "poison_spores" .type "ranged" .atk 88.75% .dmg 2 2 .crit 6%  .effect "Blight 3" .launch 4321 .target 1234
+personality: .prefskill -1
+loot: .code "A" .count 2
+initiative: .number_of_turns_per_round 1
+monster_brain: .id giant_B
+death_class: .monster_class_id corpse_large_B .is_valid_on_crit False .type "corpse" 
+battle_modifier: .disable_stall_penalty True .can_surprise True .can_be_surprised True .always_surprise False .always_be_surprised False
+.end

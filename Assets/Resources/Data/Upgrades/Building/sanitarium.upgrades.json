@@ -1,0 +1,203 @@
+{
+   "trees":
+   [
+    {
+        "id": "sanitarium.cost",
+        "is_instanced": false,
+        "tags": [ "building", "sanitarium" ],
+        "requirements": [
+            {
+                "code": "a",
+                "currency_cost": [
+                    { "type": "gold", "amount": 0 },
+                    { "type": "bust", "amount": 3 },
+                    { "type": "crest", "amount": 2 }
+                ],
+                "prerequisite_requirements": [
+                ]
+            },
+            {
+                "code": "b",
+                "currency_cost": [
+                    { "type": "gold", "amount": 0 },
+                    { "type": "bust", "amount": 8 },
+                    { "type": "crest", "amount": 4 }
+                ],
+                "prerequisite_requirements": [
+                    { "tree_id": "sanitarium.cost", "requirement_code": "a" }
+                ]
+            },
+            {
+                "code": "c",
+                "currency_cost": [
+                    { "type": "gold", "amount": 0 },
+                    { "type": "bust", "amount": 12 },
+                    { "type": "crest", "amount": 6 }
+                ],
+                "prerequisite_requirements": [
+                    { "tree_id": "sanitarium.cost", "requirement_code": "b" }
+                ]
+            },
+            {
+                "code": "d",
+                "currency_cost": [
+                    { "type": "gold", "amount": 0 },
+                    { "type": "bust", "amount": 16 },
+                    { "type": "crest", "amount": 8 }
+                ],
+                "prerequisite_requirements": [
+                    { "tree_id": "sanitarium.cost", "requirement_code": "c" }
+                ]
+            },
+            {
+                "code": "e",
+                "currency_cost": [
+                    { "type": "gold", "amount": 0 },
+                    { "type": "bust", "amount": 21 },
+                    { "type": "crest", "amount": 10 }
+                ],
+                "prerequisite_requirements": [
+                    { "tree_id": "sanitarium.cost", "requirement_code": "d" }
+                ]
+            }
+        ]
+    },
+
+    {
+         "id" : "sanitarium.disease_quirk_cost",
+         "is_instanced" : false,
+         "tags" : ["building","sanitarium"],
+         "requirements" : 
+         [
+            {
+               "code" : "a",
+               "currency_cost" :
+               [
+                  { "type" : "gold", "amount" : 0},
+                  { "type" : "bust", "amount" : 3},
+                  { "type" : "crest", "amount" : 2}
+               ],
+               "prerequisite_requirements" :
+               [
+            ]
+         },
+         {
+            "code" : "b",
+            "currency_cost" :
+            [
+               { "type" : "gold", "amount" : 0},
+               { "type" : "bust", "amount" : 8},
+               { "type" : "crest", "amount" : 4}
+            ],
+            "prerequisite_requirements" :
+            [
+               { "tree_id" : "sanitarium.disease_quirk_cost", "requirement_code" : "a" }
+            ]
+         },
+         {
+            "code" : "c",
+            "currency_cost" :
+            [
+               { "type" : "gold", "amount" : 0},
+               { "type" : "bust", "amount" : 12},
+               { "type" : "crest", "amount" : 6}
+            ],
+            "prerequisite_requirements" :
+            [
+               { "tree_id" : "sanitarium.disease_quirk_cost", "requirement_code" : "b" }
+            ]
+         },
+         {
+            "code" : "d",
+            "currency_cost" :
+            [
+               { "type" : "gold", "amount" : 0},
+               { "type" : "bust", "amount" : 16},
+               { "type" : "crest", "amount" : 8}
+            ],
+            "prerequisite_requirements" :
+            [
+               { "tree_id" : "sanitarium.disease_quirk_cost", "requirement_code" : "c" }
+            ]
+         },
+         {
+            "code" : "e",
+            "currency_cost" :
+            [
+               { "type" : "gold", "amount" : 0},
+               { "type" : "bust", "amount" : 21},
+               { "type" : "crest", "amount" : 10}
+            ],
+            "prerequisite_requirements" :
+            [
+               { "tree_id" : "sanitarium.disease_quirk_cost", "requirement_code" : "d" }
+            ]
+         }
+      ]
+   },
+
+
+      {
+         "id" : "sanitarium.slots",
+         "is_instanced" : false,
+         "tags" : ["building","sanitarium"],
+         "requirements" : 
+         [
+            {
+               "code" : "a",
+               "currency_cost" :
+               [
+                  { "type" : "gold", "amount" : 0},
+                  { "type" : "bust", "amount" : 10},
+                  { "type" : "crest", "amount" : 5}
+               ],
+               "prerequisite_requirements" :
+               [
+
+            ]
+         },
+         {
+               "code" : "b",
+               "currency_cost" :
+               [
+                  { "type" : "gold", "amount" : 0},
+                  { "type" : "bust", "amount" : 20},
+                  { "type" : "crest", "amount" : 10}
+               ],
+               "prerequisite_requirements" :
+               [
+                  { "tree_id" : "sanitarium.slots", "requirement_code" : "a" }               
+            ]
+         },
+
+         {
+            "code" : "c",
+            "currency_cost" :
+            [
+               { "type" : "gold", "amount" : 0},
+               { "type" : "bust", "amount" : 30},
+               { "type" : "crest", "amount" : 15}
+            ],
+            "prerequisite_requirements" :
+            [
+               { "tree_id" : "sanitarium.slots", "requirement_code" : "b" }
+            ]
+         },
+
+         {
+            "code" : "d",
+            "currency_cost" :
+            [
+               { "type" : "gold", "amount" : 0},
+               { "type" : "bust", "amount" : 60},
+               { "type" : "crest", "amount" : 30}
+            ],
+            "prerequisite_requirements" :
+            [
+               { "tree_id" : "sanitarium.slots", "requirement_code" : "c" }
+            ]
+         }
+      ]
+   }
+]
+}

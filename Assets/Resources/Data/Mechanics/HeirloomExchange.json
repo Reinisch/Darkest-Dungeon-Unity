@@ -1,0 +1,28 @@
+{
+    "markets":
+    [
+        {
+            "id" : "default",
+            "exchange_rates":
+            [
+                { "exchange_from_type": "bust",         "exchange_from_amount": 3, "exchange_to_type": "portrait",      "exchange_to_amount": 1 },
+                { "exchange_from_type": "bust",         "exchange_from_amount": 3, "exchange_to_type": "deed",          "exchange_to_amount": 2 },
+                { "exchange_from_type": "bust",         "exchange_from_amount": 2, "exchange_to_type": "crest",         "exchange_to_amount": 3 },
+                
+                { "exchange_from_type": "portrait",     "exchange_from_amount": 2, "exchange_to_type": "bust",          "exchange_to_amount": 3 },
+                { "exchange_from_type": "portrait",     "exchange_from_amount": 2, "exchange_to_type": "deed",          "exchange_to_amount": 3 },
+                { "exchange_from_type": "portrait",     "exchange_from_amount": 1, "exchange_to_type": "crest",         "exchange_to_amount": 3 },
+
+                { "exchange_from_type": "deed",         "exchange_from_amount": 3, "exchange_to_type": "bust",          "exchange_to_amount": 2 },
+                { "exchange_from_type": "deed",         "exchange_from_amount": 3, "exchange_to_type": "portrait",      "exchange_to_amount": 1 },
+                { "exchange_from_type": "deed",         "exchange_from_amount": 2, "exchange_to_type": "crest",         "exchange_to_amount": 3 },
+                
+                { "exchange_from_type": "crest",        "exchange_from_amount": 3, "exchange_to_type": "bust",          "exchange_to_amount": 1 },
+                { "exchange_from_type": "crest",        "exchange_from_amount": 6, "exchange_to_type": "portrait",      "exchange_to_amount": 1 },
+                { "exchange_from_type": "crest",        "exchange_from_amount": 3, "exchange_to_type": "deed",          "exchange_to_amount": 1 }
+            ]
+            
+        }
+        
+    ]
+}

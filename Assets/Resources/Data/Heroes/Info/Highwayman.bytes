@@ -1,0 +1,71 @@
+name: highwayman
+
+art:
+commonfx: .deathfx death_medium
+combat_skill: .id "wicked_slice" .icon "one" .anim "attack_slice" .fx "wicked_slice" .targchestfx "blood_splatter"
+combat_skill: .id "pistol_shot" .icon "two" .anim "attack_pistol" .fx "pistol_shot" .targchestfx "pistol_shot_target"
+combat_skill: .id "point_blank_shot" .icon "three" .anim "attack_hipshot" .fx "point_blank_shot" .targchestfx "point_blank_shot_target"
+combat_skill: .id "grape_shot_blast" .icon "four" .anim "attack_pistol" .fx "grape_shot_blast" .targchestfx "grape_shot_blast_target" .area_pos_offset 75 0 .target_area_pos_offset -75 0
+combat_skill: .id "take_aim" .icon "five" .anim "attack_pistol" .fx "tracking_shot" .targchestfx "tracking_shot_target"
+combat_skill: .id "duelist_advance" .icon "six" .anim "attack_lunge" .fx "duelist_advance" .targchestfx "blood_splatter"
+combat_skill: .id "opened_vein" .icon "seven" .anim "attack_slice" .fx "opened_vein" .targchestfx "blood_splatter"
+riposte_skill: .id "riposte1" .anim "attack_slice" .fx "opened_vein" .targchestfx "blood_splatter"
+.end
+
+info:
+resistances: .stun 30% .poison 30% .bleed 30% .disease 30% .move 30% .debuff 30% .death_blow 67% .trap 40%
+weapon: .name "highwayman_weapon_0" .atk 0% .dmg 5 10 .crit 5% .spd 5
+weapon: .name "highwayman_weapon_1" .atk 0% .dmg 6 12 .crit 5.5% .spd 5 .upgradeRequirementCode 0
+weapon: .name "highwayman_weapon_2" .atk 0% .dmg 7 13 .crit 6% .spd 6 .upgradeRequirementCode 1
+weapon: .name "highwayman_weapon_3" .atk 0% .dmg 7 15 .crit 6.5% .spd 6 .upgradeRequirementCode 2
+weapon: .name "highwayman_weapon_4" .atk 0% .dmg 8 16 .crit 7% .spd 7 .upgradeRequirementCode 3
+armour: .name "highwayman_armour_0" .def 10% .prot 0 .hp 22 .spd 0
+armour: .name "highwayman_armour_1" .def 15% .prot 0 .hp 26 .spd 0 .upgradeRequirementCode 0
+armour: .name "highwayman_armour_2" .def 20% .prot 0 .hp 30 .spd 0 .upgradeRequirementCode 1
+armour: .name "highwayman_armour_3" .def 25% .prot 0 .hp 34 .spd 0 .upgradeRequirementCode 2
+armour: .name "highwayman_armour_4" .def 30% .prot 0 .hp 38 .spd 0 .upgradeRequirementCode 3
+combat_skill: .id "wicked_slice" .level 0 .type "melee" .atk 85% .dmg 15% .crit 5% .launch 321 .target 12 .is_crit_valid True 
+combat_skill: .id "wicked_slice" .level 1 .type "melee" .atk 90% .dmg 15% .crit 6% .launch 321 .target 12 .is_crit_valid True 
+combat_skill: .id "wicked_slice" .level 2 .type "melee" .atk 95% .dmg 15% .crit 6% .launch 321 .target 12 .is_crit_valid True 
+combat_skill: .id "wicked_slice" .level 3 .type "melee" .atk 100% .dmg 15% .crit 6% .launch 321 .target 12 .is_crit_valid True 
+combat_skill: .id "wicked_slice" .level 4 .type "melee" .atk 105% .dmg 15% .crit 7% .launch 321 .target 12 .is_crit_valid True 
+combat_skill: .id "pistol_shot" .level 0 .type "ranged" .atk 85% .dmg -25% .crit 10% .launch 432 .target 234 .is_crit_valid True  .effect "Highwayman Pistol Dmg Marked" .generation_guaranteed true
+combat_skill: .id "pistol_shot" .level 1 .type "ranged" .atk 90% .dmg -25% .crit 11% .launch 432 .target 234 .is_crit_valid True  .effect "Highwayman Pistol Dmg Marked"
+combat_skill: .id "pistol_shot" .level 2 .type "ranged" .atk 95% .dmg -25% .crit 11% .launch 432 .target 234 .is_crit_valid True  .effect "Highwayman Pistol Dmg Marked"
+combat_skill: .id "pistol_shot" .level 3 .type "ranged" .atk 100% .dmg -25% .crit 12% .launch 432 .target 234 .is_crit_valid True  .effect "Highwayman Pistol Dmg Marked"
+combat_skill: .id "pistol_shot" .level 4 .type "ranged" .atk 105% .dmg -25% .crit 12% .launch 432 .target 234 .is_crit_valid True  .effect "Highwayman Pistol Dmg Marked"
+combat_skill: .id "point_blank_shot" .level 0 .type "ranged" .atk 95% .dmg 50% .crit 0% .move 1 0 .launch 1 .target 1 .is_crit_valid True  .effect "Push 1A"
+combat_skill: .id "point_blank_shot" .level 1 .type "ranged" .atk 100% .dmg 50% .crit 0% .move 1 0 .launch 1 .target 1 .is_crit_valid True  .effect "Push 1B"
+combat_skill: .id "point_blank_shot" .level 2 .type "ranged" .atk 105% .dmg 50% .crit 1% .move 1 0 .launch 1 .target 1 .is_crit_valid True  .effect "Push 1C"
+combat_skill: .id "point_blank_shot" .level 3 .type "ranged" .atk 110% .dmg 50% .crit 2% .move 1 0 .launch 1 .target 1 .is_crit_valid True  .effect "Push 1D"
+combat_skill: .id "point_blank_shot" .level 4 .type "ranged" .atk 115% .dmg 50% .crit 2% .move 1 0 .launch 1 .target 1 .is_crit_valid True  .effect "Push 1E"
+combat_skill: .id "grape_shot_blast" .level 0 .type "ranged" .atk 80% .dmg -60% .crit -7% .launch 23 .target ~123 .is_crit_valid True 
+combat_skill: .id "grape_shot_blast" .level 1 .type "ranged" .atk 85% .dmg -60% .crit -6% .launch 23 .target ~123 .is_crit_valid True 
+combat_skill: .id "grape_shot_blast" .level 2 .type "ranged" .atk 90% .dmg -60% .crit -6% .launch 23 .target ~123 .is_crit_valid True 
+combat_skill: .id "grape_shot_blast" .level 3 .type "ranged" .atk 95% .dmg -60% .crit -6% .launch 23 .target ~123 .is_crit_valid True 
+combat_skill: .id "grape_shot_blast" .level 4 .type "ranged" .atk 100% .dmg -60% .crit -5% .launch 23 .target ~123 .is_crit_valid True 
+combat_move_skill: .id "move" .level 0 .type "move" .move 2 2 .launch 4321
+combat_skill: .id "take_aim" .level 0 .type "ranged" .atk 95% .dmg -80% .crit 0% .launch 4321 .target 234 .is_crit_valid True  .effect "Highwayman Buff 1"
+combat_skill: .id "take_aim" .level 1 .type "ranged" .atk 100% .dmg -80% .crit 0% .launch 4321 .target 234 .is_crit_valid True  .effect "Highwayman Buff 2"
+combat_skill: .id "take_aim" .level 2 .type "ranged" .atk 105% .dmg -80% .crit 0% .launch 4321 .target 234 .is_crit_valid True  .effect "Highwayman Buff 3"
+combat_skill: .id "take_aim" .level 3 .type "ranged" .atk 110% .dmg -80% .crit 0% .launch 4321 .target 234 .is_crit_valid True  .effect "Highwayman Buff 4"
+combat_skill: .id "take_aim" .level 4 .type "ranged" .atk 115% .dmg -80% .crit 1% .launch 4321 .target 234 .is_crit_valid True  .effect "Highwayman Buff 5"
+combat_skill: .id "duelist_advance" .level 0 .type "melee" .atk 85% .dmg -20% .crit 2% .move 0 1 .launch 432 .target 1234 .is_crit_valid True  .effect "Hwy Riposte 1"
+combat_skill: .id "duelist_advance" .level 1 .type "melee" .atk 90% .dmg -20% .crit 2% .move 0 1 .launch 432 .target 1234 .is_crit_valid True  .effect "Hwy Riposte 2"
+combat_skill: .id "duelist_advance" .level 2 .type "melee" .atk 95% .dmg -20% .crit 3% .move 0 1 .launch 432 .target 1234 .is_crit_valid True  .effect "Hwy Riposte 3"
+combat_skill: .id "duelist_advance" .level 3 .type "melee" .atk 100% .dmg -20% .crit 4% .move 0 1 .launch 432 .target 1234 .is_crit_valid True  .effect "Hwy Riposte 4"
+combat_skill: .id "duelist_advance" .level 4 .type "melee" .atk 105% .dmg -20% .crit 4% .move 0 1 .launch 432 .target 1234 .is_crit_valid True  .effect "Hwy Riposte 5"
+combat_skill: .id "opened_vein" .level 0 .type "melee" .atk 85% .dmg -15% .crit 0% .launch 321 .target 12 .is_crit_valid True  .effect "Bleed 1" "Bleed Debuff 1"
+combat_skill: .id "opened_vein" .level 1 .type "melee" .atk 90% .dmg -15% .crit 0% .launch 321 .target 12 .is_crit_valid True  .effect "Bleed 2" "Bleed Debuff 2"
+combat_skill: .id "opened_vein" .level 2 .type "melee" .atk 95% .dmg -15% .crit 1% .launch 321 .target 12 .is_crit_valid True  .effect "Bleed 3" "Bleed Debuff 3"
+combat_skill: .id "opened_vein" .level 3 .type "melee" .atk 100% .dmg -15% .crit 2% .launch 321 .target 12 .is_crit_valid True  .effect "Bleed 4" "Bleed Debuff 4"
+combat_skill: .id "opened_vein" .level 4 .type "melee" .atk 105% .dmg -15% .crit 2% .launch 321 .target 12 .is_crit_valid True  .effect "Bleed 5" "Bleed Debuff 5"
+riposte_skill: .id "riposte1" .level 0 .type "melee" .atk 85% .dmg 0% .crit 5% .launch 1234 .target 1234 .is_crit_valid True 
+tag: .id "light"
+tag: .id "non-religious"
+deaths_door: .buffs deathsdoorACCDebuff deathsdoorDMGLowDebuff deathsdoorDMGHighDebuff deathsdoorSPDDebuff deathsdoorSRDebuff .recovery_buffs mortalityACCDebuff mortalityDMGLowDebuff mortalityDMGHighDebuff mortalitySPDDebuff mortalitySRDebuff .recovery_heart_attack_buffs heartattackACCDebuff heartattackDMGLowDebuff heartattackDMGHighDebuff heartattackSPDDebuff heartattackSRDebuff
+controlled: .target_rank 1
+id_index: .index 1
+generation: .number_of_positive_quirks_min 1 .number_of_positive_quirks_max 2 .number_of_negative_quirks_min 1 .number_of_negative_quirks_max 2 .number_of_class_specific_camping_skills 2 .number_of_shared_camping_skills 1 .number_of_random_combat_skills 4
+skill_selection: .can_select_combat_skills true .number_of_selected_combat_skills_max 4
+.end

@@ -1,0 +1,93 @@
+{
+    "props" : 
+    [
+	    {
+            "name" : "poison_cloud",
+            "success_effects" : [ "Heal Stress TrapD" ],
+            "fail_effects" : [ "Blight 1", "Stress 2" ],
+			"health" : 0,
+			
+            "difficulty_variations" : 
+            [
+                 {
+                    "level" : 3,
+                    "success_effects" : [ "Heal Stress TrapD" ],
+                    "fail_effects" : [ "Blight 2", "Stress 2" ],
+					"health" : 0,
+                 },
+                 {
+                    "level" : 5,
+                    "success_effects" : [ "Heal Stress TrapD" ],
+                    "fail_effects" : [ "Blight 3", "Stress 2" ],
+					"health" : 0,
+                 }                 
+            ]
+	    },
+ 	    {
+            "name" : "spikes",
+			"success_effects" : [ "Heal Stress TrapD" ],
+			"fail_effects" : [ "Stress 2" ],
+			"health" : -0.25,
+			
+            "difficulty_variations" : 
+            [
+                 {
+                    "level" : 3,
+					"success_effects" : [ "Heal Stress TrapD" ],
+					"fail_effects" : [ "Stress 2" ],
+                    "health" : -0.28,
+                 },            
+                 {
+                    "level" : 5,
+					"success_effects" : [ "Heal Stress TrapD" ],
+					"fail_effects" : [ "Stress 2" ],
+                    "health" : -0.30,
+                 }
+            ]
+	    },
+        {
+            "name" : "blade_wheel",
+			"success_effects" : [ "Heal Stress TrapD" ],
+			"fail_effects" : [ "Bleed 1", "Stress 2" ],
+			"health" : -0.10,
+			
+            "difficulty_variations" : 
+            [
+                 {
+                    "level" : 3,
+                    "success_effects" : [ "Heal Stress TrapD" ],
+                    "fail_effects" : [ "Bleed 2", "Stress 2" ],
+                    "health" : -0.10,
+                 },            
+                 {
+                    "level" : 5,
+                    "success_effects" : [ "Heal Stress TrapD" ],
+                    "fail_effects" : [ "Bleed 3", "Stress 2" ],
+                    "health" : -0.10,
+                 }
+            ]
+        },
+        {
+            "name" : "lurker",
+			"success_effects" : [ "Heal Stress TrapD" ],
+			"fail_effects" : [ "Lurker Trap Debuff 1", "Stress 2" ],
+			"health" : -0.10,
+			
+            "difficulty_variations" : 
+            [
+                 {
+                    "level" : 3,
+                    "success_effects" : [ "Heal Stress TrapD" ],
+                    "fail_effects" : [ "Lurker Trap Debuff 1", "Stress 2" ],
+                    "health" : -0.10,
+                 },            
+                 {
+                    "level" : 5,
+                    "success_effects" : [ "Heal Stress TrapD" ],
+                    "fail_effects" : [ "Lurker Trap Debuff 1", "Stress 2" ],
+                    "health" : -0.10,
+                 }
+            ]
+        }
+    ]
+}

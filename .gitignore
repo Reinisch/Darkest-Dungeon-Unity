@@ -31,14 +31,19 @@ sysinfo.txt
 
 # Game Assets
 /Assets/Animations/
-/Audio/
-/Flares/
-/Gizmos/
-/Models/
-/Plugins/
-/Spine/
-/Sprites/
-/StreamingAssets/
-/Textures/
-/Video/
+/Assets/Audio/
+/Assets/Flares/
+/Assets/Gizmos/
+/Assets/Models/
+/Assets/Plugins/
+/Assets/Spine/
+/Assets/Sprites/
+/Assets/StreamingAssets/
+/Assets/Textures/
+/Assets/Video/
+/Assets/Colours/
+/Assets/Prefabs/
+/Assets/Resources/Screen/
+/Assets/Resources/Sprites/
 
+*.log

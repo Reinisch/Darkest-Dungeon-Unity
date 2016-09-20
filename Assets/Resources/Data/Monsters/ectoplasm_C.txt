@@ -1,0 +1,24 @@
+name: ectoplasm_C
+type: ectoplasm
+
+art:
+commonfx: .deathfx death_medium
+skill: .id "slime" .anim "attack_melee" .targchestfx "blood_splatter"
+skill: .id "summon_slime" .anim "attack_melee" .targchestfx "blood_splatter"
+skill: .id "summon_big_slime" .anim "attack_melee" .targchestfx "blood_splatter" .area_pos_offset -150 0 .target_area_pos_offset 150 0
+.end
+
+info:
+display: .size 1
+enemy_type: .id "eldritch"
+stats: .hp 16 .def 22.5% .prot 0 .spd 3 .stun_resist 95% .poison_resist 105% .bleed_resist 105% .debuff_resist 85% .move_resist 70%
+skill: .id "slime" .type "melee" .atk 102.5% .dmg 6 10 .crit 12%  .effect "Small Ecto Slime Debuff 5" .launch 4321 .target 1234
+skill: .id "summon_slime" .type "melee" .atk 102.5% .dmg 2 2 .crit 12%  .effect "Summon Ecto 3" .launch 4321 .target 1234
+skill: .id "summon_big_slime" .type "melee" .atk 102.5% .dmg 2 2 .crit 0%  .effect "Summon Big Ecto 3" "Stress 1" .launch 4321 .target ~1234 .is_crit_valid False
+personality: .prefskill -1
+loot: .code "NONE" .count 0
+initiative: .number_of_turns_per_round 1
+monster_brain: .id ectoplasm
+death_class: .monster_class_id corpse_C .is_valid_on_crit False .type "corpse" 
+battle_modifier: .disable_stall_penalty False .can_surprise True .can_be_surprised True .always_surprise False .always_be_surprised False
+.end

@@ -1,0 +1,22 @@
+name: skeleton_arbalist_A
+type: skeleton_arbalist
+
+art:
+commonfx: .deathfx death_medium
+skill: .id "crossbow_shot" .anim "attack_crossbow" .fx "crossbow_shot" .targchestfx "crossbow_shot_target"
+skill: .id "bayonet_jab" .anim "attack_bayonet" .fx "bayonet_jab" .targchestfx "blood_splatter"
+.end
+
+info:
+display: .size 1
+enemy_type: .id "unholy"
+stats: .hp 15 .def 5% .prot 0 .spd 5 .stun_resist 10% .poison_resist 10% .bleed_resist 200% .debuff_resist 15% .move_resist 25%
+skill: .id "crossbow_shot" .type "ranged" .atk 82.5% .dmg 3 7 .crit 12%  .effect "Arbalist Dmg Marked Target" .launch 43 .target 234
+skill: .id "bayonet_jab" .type "melee" .atk 72.5% .dmg 2 4 .crit 2%  .launch 21 .target 12 .move 1 0
+personality: .prefskill 1
+loot: .code "A" .count 1
+initiative: .number_of_turns_per_round 1
+monster_brain: .id skeleton_arbalist_A
+death_class: .monster_class_id corpse_A .is_valid_on_crit False .type "corpse" 
+battle_modifier: .disable_stall_penalty False .can_surprise True .can_be_surprised True .always_surprise False .always_be_surprised False
+.end

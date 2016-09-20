@@ -1,0 +1,27 @@
+name: cyst_D
+type: cyst
+
+art:
+commonfx: .deathfx death_large_boss
+skill: .id "beholder_gaze" .anim "attack_eye" .fx "gaze" .area_pos_offset -150 -50
+skill: .id "beholder_burn" .anim "attack_tongue" .fx "burn" .targchestfx "blood_splatter" .area_pos_offset -100 -25
+skill: .id "beholder_healself" .anim "attack_heal" .fx "heal" .area_pos_offset 0 -25
+skill: .id "beholder_summon" .anim "attack_summon" .fx "summon" .area_pos_offset 100 -50
+defending_area_pos_offset: .offset 0 -40
+.end
+
+info:
+display: .size 3
+enemy_type: .id "eldritch"
+enemy_type: .id "beast"
+stats: .hp 158 .def 23.75% .prot 0.25 .spd 3 .stun_resist 97.5% .poison_resist 87.5% .bleed_resist 67.5% .debuff_resist 67.5% .move_resist 73%
+skill: .id "beholder_gaze" .type "ranged" .atk 113.75% .dmg 8 13 .crit 0%  .effect "Beholder Stress" "Beholder Weaken" .launch 4321 .target 1234 .extra_targets_count 1 .extra_targets_chance 0.25 .is_crit_valid False
+skill: .id "beholder_burn" .type "melee" .atk 113.75% .dmg 8 17 .crit 3%  .effect "Beholder Blight" .launch 4321 .target 1234 .extra_targets_count 1 .extra_targets_chance 0.25
+skill: .id "beholder_healself" .type "melee" .atk 0% .dmg 0 0 .crit 0%  .effect "Beholder Selfbuff" .launch 4321 .target  .heal 10 20 .is_crit_valid False
+skill: .id "beholder_summon" .type "melee" .atk 0% .dmg 0 0 .crit 0%  .effect "Summon Whitecell" .launch 4321 .target @1234 .is_crit_valid False
+personality: .prefskill -1
+loot: .code "NONE" .count 0
+initiative: .number_of_turns_per_round 2
+monster_brain: .id cyst
+battle_modifier: .disable_stall_penalty True .can_surprise False .can_be_surprised False .always_surprise False .always_be_surprised False
+.end

@@ -1,0 +1,27 @@
+name: swine_piglet_C
+type: swine_piglet
+
+art:
+commonfx: .deathfx death_medium
+skill: .id "squeal" .anim "attack_ranged" .fx "squeal" .targchestfx "blood_splatter" .area_pos_offset -150 0 .target_area_pos_offset 150 0
+skill: .id "wilbur_mark_1" .anim "attack_command" .fx "mark_one" .targchestfx "mark_target"
+skill: .id "wilbur_mark_2" .anim "attack_command" .fx "mark_one" .targchestfx "mark_target"
+skill: .id "squeal_single" .anim "attack_ranged" .fx "squeal" .targchestfx "blood_splatter"
+defending_area_pos_offset: .offset 0 35
+.end
+
+info:
+display: .size 1
+enemy_type: .id "beast"
+stats: .hp 35 .def 37.5% .prot 0 .spd 22 .stun_resist 95% .poison_resist 45% .bleed_resist 45% .debuff_resist 45% .move_resist 45%
+skill: .id "squeal" .type "ranged" .atk 122.5% .dmg 2 2 .crit 1%  .effect "Squeal Stun 5" .launch 1 .target ~1234 .move 3 0
+skill: .id "wilbur_mark_1" .type "ranged" .atk 122.5% .dmg 2 2 .crit 0%  .effect "Piggie Mark" .launch 234 .target 1234 .is_crit_valid False
+skill: .id "wilbur_mark_2" .type "ranged" .atk 122.5% .dmg 2 2 .crit 0%  .effect "Piggie Mark" .launch 234 .target ~12 .is_crit_valid False
+skill: .id "squeal_single" .type "ranged" .atk 122.5% .dmg 2 2 .crit 7%  .effect "Squeal Stun 5" .launch 1234 .target 1234 .extra_targets_count 1 .extra_targets_chance 0.28
+personality: .prefskill -1
+loot: .code "T" .count 2
+initiative: .number_of_turns_per_round 2
+monster_brain: .id swine_piglet_C
+tag: .id "boss"
+battle_modifier: .disable_stall_penalty True .can_surprise False .can_be_surprised False .always_surprise False .always_be_surprised False
+.end

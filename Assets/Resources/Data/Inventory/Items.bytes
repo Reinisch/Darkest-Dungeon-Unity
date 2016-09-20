@@ -1,0 +1,62 @@
+inventory_item:	.type "provision"		.id ""						    .base_stack_limit 12	.purchase_gold_value 75			.sell_gold_value 5
+inventory_item:	.type "gold"			.id ""						    .base_stack_limit 1500	.purchase_gold_value 0			.sell_gold_value 0
+inventory_item:	.type "heirloom"		.id "portrait"					.base_stack_limit 3		.purchase_gold_value 0			.sell_gold_value 0
+inventory_item:	.type "heirloom"		.id "bust"						.base_stack_limit 6		.purchase_gold_value 0			.sell_gold_value 0
+inventory_item:	.type "heirloom"		.id "crest"						.base_stack_limit 12	.purchase_gold_value 0			.sell_gold_value 0
+inventory_item:	.type "heirloom"		.id "deed"						.base_stack_limit 6		.purchase_gold_value 0			.sell_gold_value 0
+inventory_item:	.type "heirloom"		.id "urn"						.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 0
+inventory_item:	.type "gem"				.id "ruby"						.base_stack_limit 4		.purchase_gold_value 0			.sell_gold_value 1000
+inventory_item:	.type "gem"				.id "emerald"					.base_stack_limit 4		.purchase_gold_value 0			.sell_gold_value 500
+inventory_item:	.type "gem"				.id "sapphire"					.base_stack_limit 4		.purchase_gold_value 0			.sell_gold_value 1000
+inventory_item:	.type "gem"				.id "citrine"					.base_stack_limit 4		.purchase_gold_value 0			.sell_gold_value 250
+inventory_item:	.type "gem"				.id "onyx"						.base_stack_limit 4		.purchase_gold_value 0			.sell_gold_value 500
+inventory_item:	.type "gem"				.id "pewrelic"					.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 1250
+inventory_item:	.type "gem"				.id "jade"						.base_stack_limit 4		.purchase_gold_value 0			.sell_gold_value 250
+inventory_item:	.type "gem"				.id "trapezohedron"				.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 2500
+inventory_item:	.type "gem"				.id "antiqrelicsmall"			.base_stack_limit 20	.purchase_gold_value 0			.sell_gold_value 275
+inventory_item:	.type "gem"				.id "antiqrelic"				.base_stack_limit 5		.purchase_gold_value 0			.sell_gold_value 1000
+
+inventory_item:	.type "journal_page" 	.id "0" 						.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 2000
+inventory_item:	.type "journal_page" 	.id "1" 						.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 2000
+inventory_item:	.type "journal_page" 	.id "2" 						.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 2000
+inventory_item:	.type "journal_page" 	.id "3" 						.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 2000
+inventory_item:	.type "journal_page" 	.id "4" 						.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 2000
+inventory_item:	.type "journal_page" 	.id "5" 						.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 2000
+inventory_item:	.type "journal_page" 	.id "6" 						.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 2000
+inventory_item:	.type "journal_page" 	.id "7" 						.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 2000
+inventory_item:	.type "journal_page" 	.id "8" 						.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 2000
+inventory_item:	.type "journal_page" 	.id "9" 						.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 2000
+inventory_item:	.type "journal_page" 	.id "10" 						.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 2000
+inventory_item:	.type "journal_page" 	.id "11" 						.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 2000
+inventory_item:	.type "journal_page" 	.id "12" 						.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 2000
+inventory_item:	.type "journal_page" 	.id "13" 						.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 2000
+inventory_item:	.type "journal_page" 	.id "14" 						.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 2000
+inventory_item:	.type "journal_page" 	.id "15" 						.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 2000
+inventory_item:	.type "journal_page" 	.id "16" 						.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 2000
+inventory_item:	.type "journal_page" 	.id "17" 						.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 2000
+inventory_item:	.type "journal_page" 	.id "18" 						.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 2000
+inventory_item:	.type "journal_page" 	.id "19" 						.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 2000
+inventory_item:	.type "journal_page" 	.id "20" 						.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 2000
+inventory_item:	.type "journal_page" 	.id "21" 						.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 2000
+
+inventory_item:	.type "supply"		.id "shovel"					.base_stack_limit 4		.purchase_gold_value 250		.sell_gold_value 25
+inventory_item:	.type "supply"		.id "firewood"					.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 0
+inventory_item:	.type "supply"		.id "bandage"					.base_stack_limit 6		.purchase_gold_value 150		.sell_gold_value 15
+inventory_item:	.type "supply"		.id "antivenom"					.base_stack_limit 6		.purchase_gold_value 150		.sell_gold_value 15
+inventory_item:	.type "supply"		.id "skeleton_key"				.base_stack_limit 6		.purchase_gold_value 200		.sell_gold_value 20
+inventory_item:	.type "supply"		.id "medicinal_herbs"			.base_stack_limit 6		.purchase_gold_value 200		.sell_gold_value 20
+inventory_item:	.type "supply"		.id "torch"						.base_stack_limit 8		.purchase_gold_value 75			.sell_gold_value 5
+inventory_item:	.type "supply"		.id "holy_water"				.base_stack_limit 6		.purchase_gold_value 150		.sell_gold_value 15
+inventory_item: .type "supply"		.id "dog_treats"				.base_stack_limit 2		.purchase_gold_value 0			.sell_gold_value 0
+inventory_item:	.type "quest_item"	.id "holy_relic"				.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 0
+inventory_item:	.type "quest_item"	.id "grain_sack"				.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 0
+inventory_item:	.type "quest_item"	.id "medicines"					.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 0
+inventory_item:	.type "quest_item"	.id "holy_water"				.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 0
+inventory_item:	.type "quest_item"	.id "ancestors_crate"			.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 0
+inventory_item:	.type "quest_item"	.id "pickaxe"					.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 0
+inventory_item:	.type "quest_item"	.id "antivenom"					.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 0
+inventory_item:	.type "quest_item"	.id "eldritch_lantern"			.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 0
+inventory_item:	.type "quest_item"	.id "beacon_light"				.base_stack_limit 1		.purchase_gold_value 0			.sell_gold_value 0
+
+
+

@@ -1,0 +1,27 @@
+name: ancestor_pod_D
+type: ancestor_pod
+
+art:
+commonfx: .deathfx death_large_boss
+skill: .id "pod_emit" .anim "attack_spores" .fx "emit" .area_pos_offset -100 -100 .target_area_pos_offset 100 0
+skill: .id "pod_die" .anim "attack_transform" .reset_source_stance false .reset_target_stance false .area_pos_offset 0 -100
+defending_area_pos_offset: .offset 0 -50
+battle_stage: .id intermission
+audio_modifier: .intensity 1
+.end
+
+info:
+display: .size 4
+enemy_type: .id "eldritch"
+stats: .hp 189 .def 23.75% .prot 0 .spd 2 .stun_resist 72.5% .poison_resist 87.5% .bleed_resist 67.5% .debuff_resist 67.5% .move_resist 73%
+skill: .id "pod_emit" .type "ranged" .atk 113.75% .dmg 0 0 .crit 0%  .effect "Pod AOE Blight" .launch 4321 .target ~1234 .is_crit_valid False .is_knowledgeable False
+skill: .id "pod_die" .type "ranged" .atk 0% .dmg 0 0 .crit 0%  .effect "kill_self_queued" .launch 4321 .target  .is_crit_valid False .is_knowledgeable False
+personality: .prefskill -1
+loot: .code "NONE" .count 0
+initiative: .number_of_turns_per_round 1
+monster_brain: .id ancestor_pod_D
+battle_modifier: .disable_stall_penalty True .can_surprise False .can_be_surprised False .always_surprise False .always_be_surprised False
+skill_reaction: .was_hit_performer_effects "Egg Heal Hero" "Egg Blight Hero"
+death_class: .monster_class_id ancestor_heart_D .is_valid_on_bleed_dot True .is_valid_on_blight_dot True .is_valid_on_crit True .carry_over_hp_min_percent 0.75
+battle_backdrop: .background_name heartroom
+.end

@@ -1,0 +1,23 @@
+name: formless_melee_B
+type: formless_melee
+
+art:
+commonfx: .deathfx death_large_boss
+skill: .id "formless_melee_attack" .anim "attack_melee" .targchestfx "blood_splatter"
+shape_shifter: .fx_name "fx/formless_mutate/formless_mutate.sprite.skel"
+.end
+
+info:
+display: .size 1
+enemy_type: .id "eldritch"
+stats: .hp 38 .def 8.75% .prot 0.6 .spd 6 .stun_resist 70% .poison_resist 40% .bleed_resist 60% .debuff_resist 40% .move_resist 220%
+skill: .id "formless_melee_attack" .type "melee" .atk 98.75% .dmg 8 15 .crit 6%  .effect "Bleed 3" .launch 12 .target 12 .extra_targets_count 1 .extra_targets_chance 0.1
+personality: .prefskill -1
+loot: .code "A" .count 1
+initiative: .number_of_turns_per_round 1 .hide_indicator true
+monster_brain: .id default_B
+tag: .id "boss"
+battle_modifier: .disable_stall_penalty True .can_surprise False .can_be_surprised False .always_surprise False .always_be_surprised False
+shape_shifter: .monster_class_ids formless_melee_B formless_weak_B formless_guard_B .monster_class_chances 2 1 1 .monster_class_valid_ranks 12 1234 1234 .round_frequency 1
+shared_health: .id formless
+.end

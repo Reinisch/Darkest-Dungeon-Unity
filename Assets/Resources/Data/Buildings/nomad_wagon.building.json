@@ -1,0 +1,23 @@
+{
+    "on_start_town_visit_priority" :  1,
+	"number_of_quests_finished": 0,
+    "highest_dungeon_level": 2,
+
+	"number_of_trinkets_upgrades" : 
+	[
+		{ "number_of_slots" : 2 },
+		{ "number_of_slots" : 4,     "upgrade_tree_id" :  "nomad_wagon.numitems", "upgrade_requirement_code" : "a"  },
+		{ "number_of_slots" : 6,     "upgrade_tree_id" :  "nomad_wagon.numitems", "upgrade_requirement_code" : "b"  },
+		{ "number_of_slots" : 8,     "upgrade_tree_id" :  "nomad_wagon.numitems", "upgrade_requirement_code" : "c"  },
+		{ "number_of_slots" : 12,    "upgrade_tree_id" :  "nomad_wagon.numitems", "upgrade_requirement_code" : "d"  }
+	],
+
+	"trinket_cost_discount_upgrades" : 
+	[
+		{ "discount_percent" :  0.10, "upgrade_tree_id" :  "nomad_wagon.cost", "upgrade_requirement_code" : "a" },
+		{ "discount_percent" :  0.10, "upgrade_tree_id" :  "nomad_wagon.cost", "upgrade_requirement_code" : "b" },
+		{ "discount_percent" :  0.10, "upgrade_tree_id" :  "nomad_wagon.cost", "upgrade_requirement_code" : "c" },
+		{ "discount_percent" :  0.10, "upgrade_tree_id" :  "nomad_wagon.cost", "upgrade_requirement_code" : "d" },
+		{ "discount_percent" :  0.10, "upgrade_tree_id" :  "nomad_wagon.cost", "upgrade_requirement_code" : "e" }
+	],
+}

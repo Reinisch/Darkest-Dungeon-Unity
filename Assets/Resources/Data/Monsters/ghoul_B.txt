@@ -1,0 +1,24 @@
+name: ghoul_B
+type: ghoul
+
+art:
+commonfx: .deathfx death_large
+skill: .id "rend" .anim "attack_claw" .fx "rend" .targchestfx "blood_splatter"
+skill: .id "howl" .anim "attack_howl" .fx "howl" .area_pos_offset -150 -35 .target_area_pos_offset 225 0
+skill: .id "skull_toss" .anim "attack_claw" .fx "skull_toss" .targchestfx "skull_toss_target"
+.end
+
+info:
+display: .size 2
+enemy_type: .id "unholy"
+stats: .hp 42 .def 13.75% .prot 0.4 .spd 6 .stun_resist 70% .poison_resist 40% .bleed_resist 40% .debuff_resist 40% .move_resist 82%
+skill: .id "rend" .type "melee" .atk 88.75% .dmg 5 11 .crit 16%  .effect "Bleed 3" "Ghoul Rend Debuff 3" .launch 21 .target 12
+skill: .id "skull_toss" .type "ranged" .atk 88.75% .dmg 5 11 .crit 11%  .effect "Stress 2" "Ghoul Skull Stun 3" .launch 4321 .target 34
+skill: .id "howl" .type "ranged" .atk 92.5% .dmg 0 0 .crit 0%  .effect "Ghoul Stress 1" "Darkness 2" "Worry" .launch 4321 .target ~1234 .is_crit_valid False
+personality: .prefskill -1
+loot: .code "A" .count 2
+initiative: .number_of_turns_per_round 1
+monster_brain: .id ghoul_B
+death_class: .monster_class_id corpse_large_B .is_valid_on_crit False .type "corpse" 
+battle_modifier: .disable_stall_penalty True .can_surprise True .can_be_surprised True .always_surprise False .always_be_surprised False
+.end

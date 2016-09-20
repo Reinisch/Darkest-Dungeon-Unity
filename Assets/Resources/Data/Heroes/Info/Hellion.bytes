@@ -1,0 +1,69 @@
+name: hellion
+
+art:
+commonfx: .deathfx death_medium
+combat_skill: .id "wicked_hack" .icon "one" .anim "attack_high" .fx "wicked_hack" .targchestfx "blood_splatter"
+combat_skill: .id "iron_swan" .icon "two" .anim "attack_leap" .fx "iron_swan" .targchestfx "blood_splatter"
+combat_skill: .id "barbaric_yawp" .icon "three" .anim "attack_ranged" .fx "barbaric_yawp" .targchestfx "blood_splatter"
+combat_skill: .id "if_it_bleeds" .icon "four" .anim "attack_high" .fx "if_it_bleeds" .targchestfx "blood_splatter"
+combat_skill: .id "breakthru" .icon "five" .anim "attack_charge" .fx "breakthru" .targchestfx "blood_splatter" .area_pos_offset 50 0 .target_area_pos_offset -50 0
+combat_skill: .id "adrenaline_rush" .icon "six" .anim "attack_buff" .fx "adrenaline_rush"
+combat_skill: .id "bleed_out" .icon "seven" .anim "attack_low" .fx "bleed_out" .targchestfx "blood_splatter"
+.end
+
+info:
+resistances: .stun 40% .poison 40% .bleed 40% .disease 30% .move 40% .debuff 30% .death_blow 67% .trap 20%
+weapon: .name "hellion_weapon_0" .atk 0% .dmg 6 12 .crit 2.5% .spd 4
+weapon: .name "hellion_weapon_1" .atk 0% .dmg 7 14 .crit 3% .spd 4 .upgradeRequirementCode 0
+weapon: .name "hellion_weapon_2" .atk 0% .dmg 8 16 .crit 3.5% .spd 5 .upgradeRequirementCode 1
+weapon: .name "hellion_weapon_3" .atk 0% .dmg 9 17 .crit 4% .spd 5 .upgradeRequirementCode 2
+weapon: .name "hellion_weapon_4" .atk 0% .dmg 10 19 .crit 4.5% .spd 6 .upgradeRequirementCode 3
+armour: .name "hellion_armour_0" .def 10% .prot 0 .hp 26 .spd 0
+armour: .name "hellion_armour_1" .def 15% .prot 0 .hp 31 .spd 0 .upgradeRequirementCode 0
+armour: .name "hellion_armour_2" .def 20% .prot 0 .hp 36 .spd 0 .upgradeRequirementCode 1
+armour: .name "hellion_armour_3" .def 25% .prot 0 .hp 41 .spd 0 .upgradeRequirementCode 2
+armour: .name "hellion_armour_4" .def 30% .prot 0 .hp 46 .spd 0 .upgradeRequirementCode 3
+combat_skill: .id "wicked_hack" .level 0 .type "melee" .atk 85% .dmg 0% .crit 5% .launch 21 .target 12 .is_crit_valid True  .generation_guaranteed true
+combat_skill: .id "wicked_hack" .level 1 .type "melee" .atk 90% .dmg 0% .crit 6% .launch 21 .target 12 .is_crit_valid True 
+combat_skill: .id "wicked_hack" .level 2 .type "melee" .atk 95% .dmg 0% .crit 6% .launch 21 .target 12 .is_crit_valid True 
+combat_skill: .id "wicked_hack" .level 3 .type "melee" .atk 100% .dmg 0% .crit 6% .launch 21 .target 12 .is_crit_valid True 
+combat_skill: .id "wicked_hack" .level 4 .type "melee" .atk 105% .dmg 0% .crit 7% .launch 21 .target 12 .is_crit_valid True 
+combat_skill: .id "iron_swan" .level 0 .type "melee" .atk 85% .dmg 0% .crit 5% .launch 1 .target 4 .is_crit_valid True 
+combat_skill: .id "iron_swan" .level 1 .type "melee" .atk 90% .dmg 0% .crit 6% .launch 1 .target 4 .is_crit_valid True 
+combat_skill: .id "iron_swan" .level 2 .type "melee" .atk 95% .dmg 0% .crit 6% .launch 1 .target 4 .is_crit_valid True 
+combat_skill: .id "iron_swan" .level 3 .type "melee" .atk 100% .dmg 0% .crit 6% .launch 1 .target 4 .is_crit_valid True 
+combat_skill: .id "iron_swan" .level 4 .type "melee" .atk 105% .dmg 0% .crit 7% .launch 1 .target 4 .is_crit_valid True 
+combat_skill: .id "barbaric_yawp" .level 0 .type "melee" .atk 95% .dmg -100% .crit 0% .launch 21 .target ~12 .is_crit_valid False  .effect "Strong Stun 1" "Hellion Exhaust"
+combat_skill: .id "barbaric_yawp" .level 1 .type "melee" .atk 100% .dmg -100% .crit 0% .launch 21 .target ~12 .is_crit_valid False  .effect "Strong Stun 2" "Hellion Exhaust"
+combat_skill: .id "barbaric_yawp" .level 2 .type "melee" .atk 105% .dmg -100% .crit 0% .launch 21 .target ~12 .is_crit_valid False  .effect "Strong Stun 3" "Hellion Exhaust"
+combat_skill: .id "barbaric_yawp" .level 3 .type "melee" .atk 110% .dmg -100% .crit 0% .launch 21 .target ~12 .is_crit_valid False  .effect "Strong Stun 4" "Hellion Exhaust"
+combat_skill: .id "barbaric_yawp" .level 4 .type "melee" .atk 115% .dmg -100% .crit 0% .launch 21 .target ~12 .is_crit_valid False  .effect "Strong Stun 5" "Hellion Exhaust"
+combat_skill: .id "if_it_bleeds" .level 0 .type "melee" .atk 85% .dmg -35% .crit 0% .launch 321 .target 23 .is_crit_valid True  .effect "Bleed 1"
+combat_skill: .id "if_it_bleeds" .level 1 .type "melee" .atk 90% .dmg -35% .crit 0% .launch 321 .target 23 .is_crit_valid True  .effect "Bleed 2"
+combat_skill: .id "if_it_bleeds" .level 2 .type "melee" .atk 95% .dmg -35% .crit 1% .launch 321 .target 23 .is_crit_valid True  .effect "Bleed 3"
+combat_skill: .id "if_it_bleeds" .level 3 .type "melee" .atk 100% .dmg -35% .crit 2% .launch 321 .target 23 .is_crit_valid True  .effect "Bleed 4"
+combat_skill: .id "if_it_bleeds" .level 4 .type "melee" .atk 105% .dmg -35% .crit 2% .launch 321 .target 23 .is_crit_valid True  .effect "Bleed 5"
+combat_move_skill: .id "move" .level 0 .type "move" .move 0 1 .launch 4321
+combat_skill: .id "breakthru" .level 0 .type "melee" .atk 85% .dmg -55% .crit 0% .move 0 1 .launch 4321 .target ~123 .is_crit_valid True  .effect "Hellion Exhaust"
+combat_skill: .id "breakthru" .level 1 .type "melee" .atk 90% .dmg -55% .crit 0% .move 0 1 .launch 4321 .target ~123 .is_crit_valid True  .effect "Hellion Exhaust"
+combat_skill: .id "breakthru" .level 2 .type "melee" .atk 95% .dmg -55% .crit 1% .move 0 1 .launch 4321 .target ~123 .is_crit_valid True  .effect "Hellion Exhaust"
+combat_skill: .id "breakthru" .level 3 .type "melee" .atk 100% .dmg -55% .crit 2% .move 0 1 .launch 4321 .target ~123 .is_crit_valid True  .effect "Hellion Exhaust"
+combat_skill: .id "breakthru" .level 4 .type "melee" .atk 105% .dmg -55% .crit 2% .move 0 1 .launch 4321 .target ~123 .is_crit_valid True  .effect "Hellion Exhaust"
+combat_skill: .id "adrenaline_rush" .level 0 .type "melee" .atk 0% .dmg 0% .crit 0% .launch 4321 .target  .is_crit_valid True  .effect "Adrenaline 1" "HellionHealSelf 1"
+combat_skill: .id "adrenaline_rush" .level 1 .type "melee" .atk 0% .dmg 0% .crit 0% .launch 4321 .target  .is_crit_valid True  .effect "Adrenaline 2" "HellionHealSelf 2"
+combat_skill: .id "adrenaline_rush" .level 2 .type "melee" .atk 0% .dmg 0% .crit 0% .launch 4321 .target  .is_crit_valid True  .effect "Adrenaline 3" "HellionHealSelf 3"
+combat_skill: .id "adrenaline_rush" .level 3 .type "melee" .atk 0% .dmg 0% .crit 0% .launch 4321 .target  .is_crit_valid True  .effect "Adrenaline 4" "HellionHealSelf 4"
+combat_skill: .id "adrenaline_rush" .level 4 .type "melee" .atk 0% .dmg 0% .crit 0% .launch 4321 .target  .is_crit_valid True  .effect "Adrenaline 5" "HellionHealSelf 5"
+combat_skill: .id "bleed_out" .level 0 .type "melee" .atk 85% .dmg 15% .crit 5% .launch 1 .target 1 .is_crit_valid True  .effect "Strong Bleed 1" "Hellion Exhaust"
+combat_skill: .id "bleed_out" .level 1 .type "melee" .atk 90% .dmg 15% .crit 6% .launch 1 .target 1 .is_crit_valid True  .effect "Strong Bleed 2" "Hellion Exhaust"
+combat_skill: .id "bleed_out" .level 2 .type "melee" .atk 95% .dmg 15% .crit 6% .launch 1 .target 1 .is_crit_valid True  .effect "Strong Bleed 3" "Hellion Exhaust"
+combat_skill: .id "bleed_out" .level 3 .type "melee" .atk 100% .dmg 15% .crit 6% .launch 1 .target 1 .is_crit_valid True  .effect "Strong Bleed 4" "Hellion Exhaust"
+combat_skill: .id "bleed_out" .level 4 .type "melee" .atk 105% .dmg 15% .crit 7% .launch 1 .target 1 .is_crit_valid True  .effect "Strong Bleed 5" "Hellion Exhaust"
+tag: .id "non-religious"
+tag: .id "heavy"
+deaths_door: .buffs deathsdoorACCDebuff deathsdoorDMGLowDebuff deathsdoorDMGHighDebuff deathsdoorSPDDebuff deathsdoorSRDebuff .recovery_buffs mortalityACCDebuff mortalityDMGLowDebuff mortalityDMGHighDebuff mortalitySPDDebuff mortalitySRDebuff .recovery_heart_attack_buffs heartattackACCDebuff heartattackDMGLowDebuff heartattackDMGHighDebuff heartattackSPDDebuff heartattackSRDebuff
+controlled: .target_rank 1
+id_index: .index 4
+generation: .number_of_positive_quirks_min 1 .number_of_positive_quirks_max 2 .number_of_negative_quirks_min 1 .number_of_negative_quirks_max 2 .number_of_class_specific_camping_skills 2 .number_of_shared_camping_skills 1 .number_of_random_combat_skills 4
+skill_selection: .can_select_combat_skills true .number_of_selected_combat_skills_max 4
+.end

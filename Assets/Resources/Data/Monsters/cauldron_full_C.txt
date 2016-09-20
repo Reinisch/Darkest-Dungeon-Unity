@@ -1,0 +1,21 @@
+name: cauldron_full_C
+type: cauldron_full
+
+art:
+commonfx: .deathfx death_large
+skill: .id "attack1" .anim "attack_melee" .targchestfx "blood_splatter"
+.end
+
+info:
+display: .size 2
+enemy_type: .id "cauldron"
+stats: .hp 29 .def 22.5% .prot 0 .spd 2 .stun_resist 245% .poison_resist 245% .bleed_resist 245% .debuff_resist 245% .move_resist 245%
+personality: .prefskill -1
+loot: .code "NONE" .count 0
+initiative: .number_of_turns_per_round 0
+monster_brain: .id cauldron_full
+tag: .id "boss"
+battle_modifier: .disable_stall_penalty True .can_surprise False .can_be_surprised False .always_surprise False .always_be_surprised False .can_be_missed False
+captor_full: .captor_empty_monster_class cauldron_empty_C .release_on_death true .release_on_prisoner_at_deaths_door true .per_turn_damage_percent 0.0875
+life_link: .base_class "hag"
+.end

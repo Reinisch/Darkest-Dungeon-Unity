@@ -1,0 +1,21 @@
+name: collector_shaman_C
+type: collector_shaman
+
+art:
+commonfx: .deathfx death_small
+skill: .id "head_heal" .anim "attack_heal" .fx "heal" .targfx "heal_target" .area_pos_offset 0 -25 .target_area_pos_offset 0 -40
+skill: .id "head_buff" .anim "attack_heal" .fx "buff" .area_pos_offset 0 -25 .target_area_pos_offset 0 -40
+.end
+
+info:
+display: .size 1
+enemy_type: .id "eldritch"
+stats: .hp 33 .def 30% .prot 0 .spd 7 .stun_resist 70% .poison_resist 85% .bleed_resist 85% .debuff_resist 60% .move_resist 55%
+skill: .id "head_heal" .type "melee" .atk 0% .dmg 0 0 .crit 0%  .launch 4321 .target @1234 .heal 10 18 .is_crit_valid False
+skill: .id "head_buff" .type "melee" .atk 0% .dmg 0 0 .crit 0%  .effect "Head Buff 1" .launch 4321 .target @1234 .is_crit_valid False
+personality: .prefskill -1
+loot: .code "NONE" .count 1
+initiative: .number_of_turns_per_round 1
+monster_brain: .id collector_shaman
+battle_modifier: .disable_stall_penalty False .can_surprise True .can_be_surprised True .always_surprise False .always_be_surprised False
+.end

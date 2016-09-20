@@ -1,0 +1,71 @@
+name: man_at_arms
+
+art:
+commonfx: .deathfx death_medium
+combat_skill: .id "crush" .icon "one" .anim "attack_mace" .fx "crush" .targchestfx "blood_splatter"
+combat_skill: .id "rampart" .icon "two" .anim "attack_shield" .fx "rampart" .targchestfx "blood_splatter"
+combat_skill: .id "bellow" .icon "three" .anim "attack_shout" .fx "bellow" .targchestfx "blood_splatter" .area_pos_offset 100 0 .target_area_pos_offset -125 0	 
+combat_skill: .id "defender" .icon "four" .anim "attack_ranged" .fx "defender"
+combat_skill: .id "retribution" .icon "five" .anim "attack_mace" .fx "retribution" .targchestfx "blood_splatter"
+combat_skill: .id "command" .icon "six" .anim "attack_shout" .fx "command"
+combat_skill: .id "bolster" .icon "seven" .anim "attack_ranged" .fx "bolster" .area_pos_offset 0 -35 .target_area_pos_offset 0 -35
+riposte_skill: .id "riposte1" .anim "attack_shield" .fx "riposte" .targchestfx "blood_splatter"
+.end
+
+info:
+resistances: .stun 50% .poison 30% .bleed 40% .disease 30% .move 50% .debuff 30% .death_blow 67% .trap 10%
+weapon: .name "man_at_arms_weapon_0" .atk 0% .dmg 5 10 .crit 3.75% .spd 3
+weapon: .name "man_at_arms_weapon_1" .atk 0% .dmg 6 12 .crit 4.25% .spd 3 .upgradeRequirementCode 0
+weapon: .name "man_at_arms_weapon_2" .atk 0% .dmg 7 13 .crit 4.75% .spd 4 .upgradeRequirementCode 1
+weapon: .name "man_at_arms_weapon_3" .atk 0% .dmg 7 15 .crit 5.25% .spd 4 .upgradeRequirementCode 2
+weapon: .name "man_at_arms_weapon_4" .atk 0% .dmg 8 16 .crit 5.75% .spd 5 .upgradeRequirementCode 3
+armour: .name "man_at_arms_armour_0" .def 5% .prot 0 .hp 31 .spd 0
+armour: .name "man_at_arms_armour_1" .def 10% .prot 0 .hp 38 .spd 0 .upgradeRequirementCode 0
+armour: .name "man_at_arms_armour_2" .def 15% .prot 0 .hp 45 .spd 0 .upgradeRequirementCode 1
+armour: .name "man_at_arms_armour_3" .def 20% .prot 0 .hp 52 .spd 0 .upgradeRequirementCode 2
+armour: .name "man_at_arms_armour_4" .def 25% .prot 0 .hp 59 .spd 0 .upgradeRequirementCode 3
+combat_skill: .id "crush" .level 0 .type "melee" .atk 85% .dmg 0% .crit 5% .launch 12 .target 123 .is_crit_valid True  .generation_guaranteed true
+combat_skill: .id "crush" .level 1 .type "melee" .atk 90% .dmg 0% .crit 6% .launch 12 .target 123 .is_crit_valid True 
+combat_skill: .id "crush" .level 2 .type "melee" .atk 95% .dmg 0% .crit 6% .launch 12 .target 123 .is_crit_valid True 
+combat_skill: .id "crush" .level 3 .type "melee" .atk 100% .dmg 0% .crit 6% .launch 12 .target 123 .is_crit_valid True 
+combat_skill: .id "crush" .level 4 .type "melee" .atk 105% .dmg 0% .crit 7% .launch 12 .target 123 .is_crit_valid True 
+combat_skill: .id "rampart" .level 0 .type "melee" .atk 90% .dmg -60% .crit 5% .move 0 1 .launch 123 .target 123 .is_crit_valid True  .effect "Push 1A" "Stun 1"
+combat_skill: .id "rampart" .level 1 .type "melee" .atk 95% .dmg -60% .crit 6% .move 0 1 .launch 123 .target 123 .is_crit_valid True  .effect "Push 1B" "Stun 2"
+combat_skill: .id "rampart" .level 2 .type "melee" .atk 100% .dmg -60% .crit 6% .move 0 1 .launch 123 .target 123 .is_crit_valid True  .effect "Push 1C" "Stun 3"
+combat_skill: .id "rampart" .level 3 .type "melee" .atk 105% .dmg -60% .crit 6% .move 0 1 .launch 123 .target 123 .is_crit_valid True  .effect "Push 1D" "Stun 4"
+combat_skill: .id "rampart" .level 4 .type "melee" .atk 110% .dmg -60% .crit 7% .move 0 1 .launch 123 .target 123 .is_crit_valid True  .effect "Push 1E" "Stun 5"
+combat_skill: .id "bellow" .level 0 .type "ranged" .atk 90% .dmg -90% .crit 0% .launch 123 .target ~1234 .is_crit_valid True  .effect "Disrupt 1"
+combat_skill: .id "bellow" .level 1 .type "ranged" .atk 95% .dmg -90% .crit 0% .launch 123 .target ~1234 .is_crit_valid True  .effect "Disrupt 2"
+combat_skill: .id "bellow" .level 2 .type "ranged" .atk 100% .dmg -90% .crit 1% .launch 123 .target ~1234 .is_crit_valid True  .effect "Disrupt 3"
+combat_skill: .id "bellow" .level 3 .type "ranged" .atk 105% .dmg -90% .crit 2% .launch 123 .target ~1234 .is_crit_valid True  .effect "Disrupt 4"
+combat_skill: .id "bellow" .level 4 .type "ranged" .atk 110% .dmg -90% .crit 2% .launch 123 .target ~1234 .is_crit_valid True  .effect "Disrupt 5"
+combat_skill: .id "defender" .level 0 .type "melee" .atk 0% .dmg 0% .crit 0% .self_target_valid false .launch 1234 .target @1234 .is_crit_valid True  .effect "MAA Guard 1" "Defender 1"
+combat_skill: .id "defender" .level 1 .type "melee" .atk 0% .dmg 0% .crit 0% .self_target_valid false .launch 1234 .target @1234 .is_crit_valid True  .effect "MAA Guard 1" "Defender 2"
+combat_skill: .id "defender" .level 2 .type "melee" .atk 0% .dmg 0% .crit 0% .self_target_valid false .launch 1234 .target @1234 .is_crit_valid True  .effect "MAA Guard 1" "Defender 3"
+combat_skill: .id "defender" .level 3 .type "melee" .atk 0% .dmg 0% .crit 0% .self_target_valid false .launch 1234 .target @1234 .is_crit_valid True  .effect "MAA Guard 1" "Defender 4"
+combat_skill: .id "defender" .level 4 .type "melee" .atk 0% .dmg 0% .crit 0% .self_target_valid false .launch 1234 .target @1234 .is_crit_valid True  .effect "MAA Guard 1" "Defender 5"
+combat_move_skill: .id "move" .level 0 .type "move" .move 2 2 .launch 4321
+combat_skill: .id "retribution" .level 0 .type "melee" .atk 85% .dmg -75% .crit 0% .launch 123 .target 123 .is_crit_valid True  .effect "MAA Riposte 1" "Mark Self"
+combat_skill: .id "retribution" .level 1 .type "melee" .atk 90% .dmg -75% .crit 0% .launch 123 .target 123 .is_crit_valid True  .effect "MAA Riposte 2" "Mark Self"
+combat_skill: .id "retribution" .level 2 .type "melee" .atk 95% .dmg -75% .crit 1% .launch 123 .target 123 .is_crit_valid True  .effect "MAA Riposte 3" "Mark Self"
+combat_skill: .id "retribution" .level 3 .type "melee" .atk 100% .dmg -75% .crit 2% .launch 123 .target 123 .is_crit_valid True  .effect "MAA Riposte 4" "Mark Self"
+combat_skill: .id "retribution" .level 4 .type "melee" .atk 105% .dmg -75% .crit 2% .launch 123 .target 123 .is_crit_valid True  .effect "MAA Riposte 5" "Mark Self"
+combat_skill: .id "command" .level 0 .type "ranged" .atk 0% .dmg 0% .crit 0% .launch 1234 .target ~@1234 .is_crit_valid True  .effect "Command 1"
+combat_skill: .id "command" .level 1 .type "ranged" .atk 0% .dmg 0% .crit 0% .launch 1234 .target ~@1234 .is_crit_valid True  .effect "Command 2"
+combat_skill: .id "command" .level 2 .type "ranged" .atk 0% .dmg 0% .crit 0% .launch 1234 .target ~@1234 .is_crit_valid True  .effect "Command 3"
+combat_skill: .id "command" .level 3 .type "ranged" .atk 0% .dmg 0% .crit 0% .launch 1234 .target ~@1234 .is_crit_valid True  .effect "Command 4"
+combat_skill: .id "command" .level 4 .type "ranged" .atk 0% .dmg 0% .crit 0% .launch 1234 .target ~@1234 .is_crit_valid True  .effect "Command 5"
+combat_skill: .id "bolster" .level 0 .type "ranged" .atk 0% .dmg 0% .crit 0% .launch 1234 .target ~@1234 .is_crit_valid True  .effect "Bolster 1"
+combat_skill: .id "bolster" .level 1 .type "ranged" .atk 0% .dmg 0% .crit 0% .launch 1234 .target ~@1234 .is_crit_valid True  .effect "Bolster 2"
+combat_skill: .id "bolster" .level 2 .type "ranged" .atk 0% .dmg 0% .crit 0% .launch 1234 .target ~@1234 .is_crit_valid True  .effect "Bolster 3"
+combat_skill: .id "bolster" .level 3 .type "ranged" .atk 0% .dmg 0% .crit 0% .launch 1234 .target ~@1234 .is_crit_valid True  .effect "Bolster 4"
+combat_skill: .id "bolster" .level 4 .type "ranged" .atk 0% .dmg 0% .crit 0% .launch 1234 .target ~@1234 .is_crit_valid True  .effect "Bolster 5"
+riposte_skill: .id "riposte1" .level 0 .type "melee" .atk 90% .dmg -40% .crit 0% .launch 1234 .target 1234 .is_crit_valid True 
+tag: .id "heavy"
+tag: .id "non-religious"
+deaths_door: .buffs deathsdoorACCDebuff deathsdoorDMGLowDebuff deathsdoorDMGHighDebuff deathsdoorSPDDebuff deathsdoorSRDebuff .recovery_buffs mortalityACCDebuff mortalityDMGLowDebuff mortalityDMGHighDebuff mortalitySPDDebuff mortalitySRDebuff .recovery_heart_attack_buffs heartattackACCDebuff heartattackDMGLowDebuff heartattackDMGHighDebuff heartattackSPDDebuff heartattackSRDebuff
+controlled: .target_rank 1
+id_index: .index 11
+generation: .number_of_positive_quirks_min 1 .number_of_positive_quirks_max 2 .number_of_negative_quirks_min 1 .number_of_negative_quirks_max 2 .number_of_class_specific_camping_skills 2 .number_of_shared_camping_skills 1 .number_of_random_combat_skills 4
+skill_selection: .can_select_combat_skills true .number_of_selected_combat_skills_max 4
+.end

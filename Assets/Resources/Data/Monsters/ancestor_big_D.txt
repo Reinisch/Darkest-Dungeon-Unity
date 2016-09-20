@@ -1,0 +1,31 @@
+name: ancestor_big_D
+type: ancestor_big
+
+art:
+commonfx: .deathfx death_large_boss
+skill: .id "ancestor_fuse_two" .anim "attack_fuse" .fx "fuse" .targfx "fuse_target" .area_pos_offset -100 -125 .target_area_pos_offset 50 0
+skill: .id "ancestor_fuse_all" .anim "attack_fuse" .fx "fuse" .targfx "fuse_target" .area_pos_offset -150 -125 .target_area_pos_offset 150 0
+skill: .id "ancestor_contemplate" .anim "attack_think" .fx "contemplate" .targheadfx "contemplate_target" .area_pos_offset 0 -125
+skill: .id "kill_self" .anim "attack_transform" .reset_source_stance false .reset_target_stance false .area_pos_offset 0 -125 .can_display_selection false
+defending_area_pos_offset: .offset 0 -90
+battle_stage: .id big_ancestor
+audio_modifier: .intensity 2
+.end
+
+info:
+display: .size 1
+enemy_type: .id "eldritch"
+enemy_type: .id "man"
+stats: .hp 252 .def 15.75% .prot 0 .spd 10 .stun_resist 72.5% .poison_resist 67.5% .bleed_resist 77.5% .debuff_resist 67.5% .move_resist 0%
+skill: .id "ancestor_fuse_two" .type "ranged" .atk 113.75% .dmg 5 14 .crit 12%  .effect "Ancestor Fuse Two" "Shuffle Self" "Ancestor Big Rider Stress" .launch 4321 .target 1234 .extra_targets_count 1 .extra_targets_chance 1 .is_knowledgeable False
+skill: .id "ancestor_fuse_all" .type "ranged" .atk 113.75% .dmg 2 7 .crit 7%  .effect "Ancestor Fuse All" "Shuffle Self" "Ancestor Big Rider Stress" .launch 4321 .target ~1234 .is_knowledgeable False
+skill: .id "ancestor_contemplate" .type "ranged" .atk 113.75% .dmg 1 3 .crit 0%  .effect "Ancestor Shuffle" "Ancestor Disrupt" "Ancestor Big Contemplate Stress" .launch 4321 .target 1234 .is_crit_valid False .is_knowledgeable False
+personality: .prefskill -1
+loot: .code "NONE" .count 0
+initiative: .number_of_turns_per_round 1
+monster_brain: .id ancestor_big_D
+battle_modifier: .disable_stall_penalty True .can_surprise False .can_be_surprised False .always_surprise False .always_be_surprised False
+skill: .id "kill_self" .type "ranged" .atk 0% .dmg 0 0 .crit 0%  .effect kill_self_queued kill_performer_group_other .launch 1234 .target  .is_crit_valid False .is_knowledgeable False
+death_class: .monster_class_id ancestor_pod_D .is_valid_on_bleed_dot True .is_valid_on_blight_dot True .is_valid_on_crit True .can_die_from_damage False
+battle_backdrop: .background_name heartroom
+.end

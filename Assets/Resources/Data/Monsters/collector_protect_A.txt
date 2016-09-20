@@ -1,0 +1,19 @@
+name: collector_protect_A
+type: collector_protect
+
+art:
+commonfx: .deathfx death_small
+skill: .id "head_guard" .anim "attack_guard" .fx "guard" .area_pos_offset 0 -40 .target_area_pos_offset 50 -50
+.end
+
+info:
+display: .size 1
+enemy_type: .id "eldritch"
+stats: .hp 16 .def 7.5% .prot 0 .spd 7 .stun_resist 25% .poison_resist 40% .bleed_resist 40% .debuff_resist 15% .move_resist 10%
+skill: .id "head_guard" .type "melee" .atk 0% .dmg 0 0 .crit 0%  .effect "Guard 1" "HeadDefend 1" .launch 4321 .target @4321 .self_target_valid False .is_crit_valid False
+personality: .prefskill -1
+loot: .code "NONE" .count 1
+initiative: .number_of_turns_per_round 1
+monster_brain: .id collector_protect
+battle_modifier: .disable_stall_penalty False .can_surprise True .can_be_surprised True .always_surprise False .always_be_surprised False
+.end

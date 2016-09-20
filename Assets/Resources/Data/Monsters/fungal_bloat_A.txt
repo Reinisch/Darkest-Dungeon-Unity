@@ -1,0 +1,25 @@
+name: fungal_bloat_A
+type: fungal_bloat
+
+art:
+commonfx: .deathfx death_medium
+skill: .id "groping_swipe" .anim "attack_melee" .targchestfx "blood_splatter"
+skill: .id "fierce_swipe" .anim "attack_melee" .targchestfx "blood_splatter"
+skill: .id "groping_swipe_weak" .anim "attack_melee" .targchestfx "blood_splatter"
+.end
+
+info:
+display: .size 1
+enemy_type: .id "man"
+enemy_type: .id "eldritch"
+stats: .hp 19 .def 0% .prot 0.33 .spd 0 .stun_resist 25% .poison_resist 60% .bleed_resist 20% .debuff_resist 15% .move_resist 25%
+skill: .id "groping_swipe" .type "melee" .atk 72.5% .dmg 3 5 .crit 6%  .launch 21 .target 12
+skill: .id "fierce_swipe" .type "melee" .atk 82.5% .dmg 3 5 .crit 6%  .effect "Damage Marked Target Lesser" .launch 21 .target 12
+skill: .id "groping_swipe_weak" .type "melee" .atk 42.5% .dmg 2 4 .crit 0%  .launch 43 .target 12 .move 0 1 .is_crit_valid False
+personality: .prefskill -1
+loot: .code "A" .count 1
+initiative: .number_of_turns_per_round 1
+monster_brain: .id kill_marked_target_fungal_bloat
+death_class: .monster_class_id corpse_A .is_valid_on_crit False .type "corpse" 
+battle_modifier: .disable_stall_penalty False .can_surprise True .can_be_surprised True .always_surprise False .always_be_surprised False
+.end

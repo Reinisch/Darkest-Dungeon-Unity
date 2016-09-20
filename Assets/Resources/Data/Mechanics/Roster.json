@@ -1,0 +1,24 @@
+    {
+    "name_id_format" :  "hero_name_%d",
+
+    "resolve_level_thresholds" : 
+    [
+        0,
+        2,
+        8,
+        14,
+        24,
+        36,
+        48
+    ],
+    
+    "town_visit_town_progression":
+    {
+        "idle_hero_stress_heal" : 5.0
+    },
+    
+    "town_visit_non_town_progression":
+    {
+        "idle_hero_stress_heal" : 0.0
+    }
+}

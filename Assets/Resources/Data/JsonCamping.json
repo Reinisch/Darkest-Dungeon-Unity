@@ -1,0 +1,2959 @@
+{
+	"configuration" : 
+	{
+        "class_specific_number_of_classes_threshold" :  4
+	},
+
+	"skills" :
+	[
+
+		{
+
+			"id" : "encourage",
+			"level" : 0,
+			"cost" : 2,
+			"use_limit" : 1,
+			"effects" : 
+			[
+				{ 
+					"selection" : "individual",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+                    "type": "stress_heal_amount",
+                    "sub_type" : "",
+					"amount" :  15
+				}							
+			],
+			"hero_classes" : ["bounty_hunter", "crusader", "vestal", "occultist", "hellion", "grave_robber", "highwayman", "plague_doctor", "jester", "leper", "arbalest", "man_at_arms", "houndmaster", "abomination", "antiquarian", "musketeer" ],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			]
+		},
+
+		{
+			"id" : "first_aid",
+			"level" : 0,
+			"cost" : 2,
+			"use_limit" : 1,
+			"effects" : 
+			[
+				{ 
+					"selection" : "individual",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+                    "type": "health_heal_max_health_percent",
+                    "sub_type" : "",
+					"amount" :  0.15
+				},
+				{ 
+					"selection" : "individual",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 },
+                    "type": "remove_bleeding",
+                    "sub_type" : "",
+					"amount" :  0
+				},
+				{ 
+					"selection" : "individual",
+					"requirements" : [],
+					"chance" : { "code" : "c", "amount": 1.0 },
+                    "type": "remove_poison",
+                    "sub_type" : "",
+					"amount" :  0
+				}
+			],
+			"hero_classes" : ["bounty_hunter", "crusader", "vestal", "occultist", "hellion", "grave_robber", "highwayman", "plague_doctor", "jester", "leper", "arbalest", "man_at_arms", "houndmaster", "abomination", "antiquarian", "musketeer" ],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			]
+		},
+
+		{
+			"id" : "pep_talk",
+			"level" : 0,
+			"cost" : 2,
+			"use_limit" : 1,
+			"effects" : 
+			[
+				{ 
+					"selection" : "individual",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingStressResistBuff",
+					"amount" :  -0.15
+				}
+			],
+			"hero_classes" : ["bounty_hunter", "crusader", "vestal", "occultist", "hellion", "grave_robber", "highwayman", "plague_doctor", "jester", "leper", "arbalest", "man_at_arms", "houndmaster", "abomination", "antiquarian", "musketeer" ],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			]
+		},
+
+		{
+
+			"id" : "hobby",
+			"level" : 0,
+			"cost" : 2,
+			"use_limit" : 1,
+			"effects" : 
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+                    "type": "stress_heal_amount",
+                    "sub_type" : "",
+					"amount" :  12
+				}							
+			],
+			"hero_classes" : [],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			]
+		},
+
+		{
+			"id" : "field_dressing",
+			"level" : 0,
+			"cost" : 3,
+			"use_limit" : 1,
+			"effects" : 
+			[
+				{ 
+					"selection" : "individual",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 0.75 },
+                    "type": "health_heal_max_health_percent",
+                    "sub_type" : "",
+					"amount" :  0.35
+				},
+				{ 
+					"selection" : "individual",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 0.25 },
+                    "type": "health_heal_max_health_percent",
+                    "sub_type" : "",
+					"amount" :  0.50
+				},
+				{ 
+					"selection" : "individual",
+					"requirements" : [],
+					"chance" : { "code" : "c", "amount": 1.0 },
+                    "type": "remove_bleeding",
+                    "sub_type" : "",
+					"amount" :  0
+				}
+			],
+			"hero_classes" : ["arbalest", "musketeer" ],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			]
+		},
+
+
+		{ 
+			"id" : "marching_plan",
+			"level" : 0,
+			"cost" : 3,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "party_other",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingSPDBuffParty",
+					"amount" :  2
+				}
+			],
+			"hero_classes" : ["arbalest", "musketeer"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		}, 		
+
+		{ 
+			"id" : "restring_crossbow",
+			"level" : 0,
+			"cost" : 3,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingACCBuffRanged",
+					"amount" :  0.10
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingDMGLowBuffRanged",
+					"amount" :  0.20
+				},
+                { 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "c", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingDMGHighBuffRanged",
+					"amount" :  0.20
+				},						
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "d", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingCRITBuffRanged",					
+					"amount" :  0.05
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "e", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingSPDBuffParty",
+					"amount" :  -2
+				}
+			],
+			"hero_classes" : ["arbalest"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+
+		{ 
+			"id" : "clean_musket",
+			"level" : 0,
+			"cost" : 3,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingACCBuffRanged",
+					"amount" :  0.10
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingDMGLowBuffRanged",
+					"amount" :  0.20
+				},
+                { 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "c", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingDMGHighBuffRanged",
+					"amount" :  0.20
+				},						
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "d", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingCRITBuffRanged",					
+					"amount" :  0.05
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "e", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingSPDBuffParty",
+					"amount" :  -2
+				}
+			],
+			"hero_classes" : ["musketeer"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+
+		{ 
+			"id" : "triage",
+			"level" : 0,
+			"cost" : 3,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "party_other",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+                    "type": "health_heal_max_health_percent",
+                    "sub_type" : "",
+					"amount" :  0.35
+				}
+			],
+			"hero_classes" : ["arbalest", "musketeer"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},		
+
+
+		{ 
+			"id" : "how_its_done",
+			"level" : 0,
+			"cost" : 3,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingACCBuff",
+					"amount" :  0.10
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingCRITBuff",					
+					"amount" :  0.05
+				}
+			],
+			"hero_classes" : ["bounty_hunter"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		}, 
+
+		{ 
+			"id" : "tracking",
+			"level" : 0,
+			"cost" : 2,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+                    "type": "buff",
+                    "sub_type" : "campingPartySurprise",
+					"amount" : -0.15
+
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 },
+                    "type": "buff",
+                    "sub_type" : "campingMonstersSurprise",
+					"amount" : 0.10
+				}
+			],
+			"hero_classes" : ["bounty_hunter"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		}, 
+
+		{ 
+			"id" : "planned_takedown",
+			"level" : 0,
+			"cost" : 4,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingDMGLowBuffLargeMonsters",
+					"amount" :  0.25
+				},
+                { 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingDMGHighBuffLargeMonsters",
+					"amount" :  0.25
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "c", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingACCBuffLargeMonsters",
+					"amount" :  0.15
+				}
+			],
+			"hero_classes" : ["bounty_hunter"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		}, 
+
+		{ 
+			"id" : "scout_ahead",
+			"level" : 0,
+			"cost" : 3,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+                    "type": "buff",
+                    "sub_type" : "campingScoutingBuff",
+					"amount" :  0.35
+				}
+			],
+			"hero_classes" : ["bounty_hunter"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		}, 
+
+		{ 
+			"id" : "unshakeable_leader",
+			"level" : 0,
+			"cost" : 3,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingStressResistBuff",
+					"amount" :  -0.25
+				}
+			],
+			"hero_classes" : ["crusader"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		}, 
+
+		{ 
+			"id" : "stand_tall",
+			"level" : 0,
+			"cost" : 4,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "individual",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+                    "type": "stress_heal_amount",
+                    "sub_type" : "",
+					"amount" :  15
+				},
+				{ 
+					"selection" : "individual",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 },
+                    "type": "remove_deaths_door_recovery_buffs",
+                    "sub_type" : "",
+					"amount" :  0
+				}
+			],
+			"hero_classes" : ["crusader"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		}, 
+
+		{ 
+			"id" : "zealous_speech",
+			"level" : 0,
+			"cost" : 5,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "party_other",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+                    "type": "stress_heal_amount",
+                    "sub_type" : "",
+					"amount" :  15
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 },
+                    "type": "stress_heal_amount",
+                    "sub_type" : "",
+					"amount" :  15
+				},
+				{ 
+					"selection" : "party_other",
+					"requirements" : [],
+					"chance" : { "code" : "c", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingStressResistBuff",
+					"amount" :  -0.15
+				}
+			],
+			"hero_classes" : ["crusader"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		}, 
+
+		{ 
+			"id" : "zealous_vigil",
+			"level" : 0,
+			"cost" : 4,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+                    "type": "stress_heal_amount",
+                    "sub_type" : "",
+					"amount" :  25
+				},				
+				{ 
+					"selection" : "self",
+					"requirements" : ["afflicted"],
+					"chance" : { "code" : "b", "amount": 1.0 },
+                    "type": "stress_heal_amount",
+                    "sub_type" : "",
+					"amount" :  15
+				},
+				{
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "c", "amount": 1.0 },
+                    "type": "reduce_ambush_chance",
+                    "sub_type" : "",
+					"amount" : 1.0
+				}
+			],
+			"hero_classes" : ["crusader"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+
+		{ 
+			"id" : "forage",
+			"level" : 0,
+			"cost" : 2,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+					"type": "remove_disease",
+					"sub_type": "",
+					"amount": 0
+				},
+				{
+					"selection" : "individual",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 },
+					"type": "remove_disease",
+					"sub_type": "",
+					"amount": 0
+				}
+			],
+			"hero_classes" : ["grave_robber"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+
+		{ 
+			"id" : "gallows_humor",
+			"level" : 0,
+			"cost" : 4,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+                    "type": "stress_heal_amount",
+                    "sub_type" : "",
+					"amount" :  25
+				},
+				{ 
+					"selection" : "party_other",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 0.75 },
+                    "type": "stress_heal_amount",
+                    "sub_type" : "",
+					"amount" :  20
+				},
+				{ 
+					"selection" : "party_other",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 0.25 },
+                    "type": "stress_damage_amount",
+                    "sub_type" : "",
+					"amount" :  10
+				}
+			],
+			"hero_classes" : ["grave_robber", "highwayman"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+
+		{ 
+			"id" : "night_steps",
+			"level" : 0,
+			"cost" : 2,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+                    "type": "buff",
+                    "sub_type" : "campingScoutingBuff",
+					"amount" :  0.30
+				}
+			],
+			"hero_classes" : ["grave_robber"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+
+		{ 
+			"id" : "pilfer",
+			"level" : 0,
+			"cost" : 1,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+					"type": "loot",
+					"sub_type": "S",
+					"amount": 1
+				}			
+
+			],
+			"hero_classes" : ["grave_robber"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+
+		{ 
+			"id" : "battle_trance",
+			"level" : 0,
+			"cost" : 3,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+					"type" : "buff",
+					"sub_type" : "campingACCBuffFrontRank",					
+					"amount" :  0.10
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 },
+					"type" : "buff",
+					"sub_type" : "campingDMGLowBuffFrontRank",					
+					"amount" :  0.20
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "c", "amount": 1.0 },
+					"type" : "buff",
+					"sub_type" : "campingDMGHighBuffFrontRank",					
+					"amount" :  0.20
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "d", "amount": 1.0 },
+					"type" : "buff",
+					"sub_type" : "campingACCBuffNotFrontRank",					
+					"amount" :  -0.10
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "e", "amount": 1.0 },
+					"type" : "buff",
+					"sub_type" : "campingDMGLowBuffNotFrontRank",					
+					"amount" :  -0.15
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "f", "amount": 1.0 },
+					"type" : "buff",
+					"sub_type" : "campingDMGHighBuffNotFrontRank",					
+					"amount" :  -0.15
+				}
+			],
+			"hero_classes" : ["hellion"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+
+		{ 
+			"id" : "revel",
+			"level" : 0,
+			"cost" : 3,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingACCBuff",					
+					"amount" :  -0.05
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingSPDBuff",					
+					"amount" :  -2
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "c", "amount": 1.0 },
+                    "type": "stress_heal_amount",
+                    "sub_type" : "",
+					"amount" :  20
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "d", "amount": 1.0 },
+                    "type": "buff",
+                    "sub_type" : "campingStressResistBuff",
+					"amount" :  -0.10
+				},
+				{ 
+					"selection" : "party_other",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingACCBuff",					
+					"amount" :  -0.05
+				},
+				{ 
+					"selection" : "party_other",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingSPDBuff",					
+					"amount" :  -2
+				},
+				{ 
+					"selection" : "party_other",
+					"requirements" : [],
+					"chance" : { "code" : "c", "amount": 1.0 },
+                    "type": "stress_heal_amount",
+                    "sub_type" : "",
+					"amount" :  20
+				},
+				{ 
+					"selection" : "party_other",
+					"requirements" : [],
+					"chance" : { "code" : "d", "amount": 1.0 },
+                    "type": "buff",
+                    "sub_type" : "campingStressResistBuff",
+					"amount" :  -0.10
+				}
+			],
+			"hero_classes" : ["hellion"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+
+		{ 
+			"id" : "reject_the_gods",
+			"level" : 0,
+			"cost" : 2,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+                    "type": "stress_heal_amount",
+                    "sub_type" : "",
+					"amount" :  30
+				},
+				{ 
+					"selection" : "party_other",
+					"requirements" : ["not_religious"],
+					"chance" : { "code" : "b", "amount": 1.0 },
+                    "type": "stress_damage_amount",
+                    "sub_type" : "",
+					"amount" :  7
+				},
+				{ 
+					"selection" : "party_other",
+					"requirements" : ["religious"],
+					"chance" : { "code" : "c", "amount": 1.0 },
+                    "type": "stress_damage_amount",
+                    "sub_type" : "",
+					"amount" :  15
+				}
+			],
+			"hero_classes" : ["hellion"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+
+		{ 
+			"id" : "sharpen_spear",
+			"level" : 0,
+			"cost" : 3,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+					"type" : "buff",
+					"sub_type" : "campingCRITBuff",					 
+					"amount" :  0.075
+				}
+			],
+			"hero_classes" : ["hellion"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+
+		{ 
+			"id" : "uncatchable",
+			"level" : 0,
+			"cost" : 4,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingDEFBuff",					
+					"amount" :  0.1
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingSPDBuff",					
+					"amount" :  2
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "c", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingDMGLowBuffMelee",					
+					"amount" :  0.2
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "d", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingDMGHighBuffMelee",					
+					"amount" :  0.2
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "e", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingACCBuffMelee",					
+					"amount" :  0.1
+				}
+			],
+			"hero_classes" : ["highwayman"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+
+
+		{ 
+			"id" : "clean_guns",
+			"level" : 0,
+			"cost" : 4,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingACCBuffRanged",
+					"amount" :  0.10
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingDMGLowBuffRanged",
+					"amount" :  0.20
+				},
+                { 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "c", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingDMGHighBuffRanged",
+					"amount" :  0.20
+				},						
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "D", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingCRITBuffRanged",					
+					"amount" :  0.05
+				}
+			],
+			"hero_classes" : ["highwayman"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+
+		{ 
+			"id" : "bandits_sense",
+			"level" : 0,
+			"cost" : 4,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+                    "type": "reduce_ambush_chance",
+                    "sub_type" : "",
+					"amount" : 1.0
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 },
+                    "type": "buff",
+                    "sub_type" : "campingPartySurprise",
+					"amount" : -0.20
+
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "c", "amount": 1.0 },
+                    "type": "buff",
+                    "sub_type" : "campingMonstersSurprise",
+					"amount" : 0.20
+				}				
+			],
+			"hero_classes" : ["highwayman"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+
+		{ 
+			"id" : "maintain_equipment",
+			"level" : 0,
+			"cost" : 4,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingPROTBuff",
+					"amount" :  0.10
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingDMGLowBuff",
+					"amount" :  0.15
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "c", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingDMGHighBuff",
+					"amount" :  0.15
+				}
+			],
+			"hero_classes" : ["man_at_arms"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+
+		{ 
+			"id" : "tactics",
+			"level" : 0,
+			"cost" : 4,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingDEFBuff",
+					"amount" :  0.10
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingCRITBuff",
+					"amount" :  0.03
+				},
+				{ 
+					"selection" : "party_other",
+					"requirements" : [],
+					"chance" : { "code" : "c", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingDEFBuff",
+					"amount" :  0.10
+				},
+				{ 
+					"selection" : "party_other",
+					"requirements" : [],
+					"chance" : { "code" : "d", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingCRITBuff",
+					"amount" :  0.03
+				}
+			],
+			"hero_classes" : ["man_at_arms"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		}, 
+
+		{ 
+			"id" : "instruction",
+			"level" : 0,
+			"cost" : 3,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "individual",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingDEFBuff",
+					"amount" :  0.05
+				},
+				{ 
+					"selection" : "individual",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingSPDBuff",
+					"amount" :  3
+				}
+			],
+			"hero_classes" : ["man_at_arms"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},				
+
+		{ 
+			"id" : "weapons_practice",
+			"level" : 0,
+			"cost" : 4,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "party_other",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingDMGLowBuff",
+					"amount" :  0.10
+				},
+                { 
+					"selection" : "party_other",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingDMGHighBuff",
+					"amount" :  0.10
+				},						
+				{ 
+					"selection" : "party_other",
+					"requirements" : [],
+					"chance" : { "code" : "c", "amount": 0.75 }, 
+					"type" : "buff",
+					"sub_type" : "campingCRITBuff",					
+					"amount" :  0.05
+				}
+			],
+			"hero_classes" : ["man_at_arms"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+
+		{ 
+			"id" : "abandon_hope",
+			"level" : 0,
+			"cost" : 1,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+                    "type": "stress_heal_amount",
+                    "sub_type" : "",
+					"amount" :  25
+				},
+				{ 
+					"selection" : "party_other",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 0.5 },
+                    "type": "stress_damage_amount",
+                    "sub_type" : "",
+					"amount" :  10
+				},
+				{ 
+					"selection" : "party_other",
+					"requirements" : [],
+					"chance" : { "code" : "c", "amount": 0.5 },
+                    "type": "stress_damage_amount",
+                    "sub_type" : "",
+					"amount" :  5
+				}
+			],
+			"hero_classes" : ["occultist"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+
+		{ 
+			"id" : "dark_ritual",
+			"level" : 0,
+			"cost" : 4,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "individual",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+                    "type": "health_heal_max_health_percent",
+                    "sub_type" : "",
+					"amount" :  0.50
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.00 },
+                    "type": "reduce_torch",
+                    "sub_type" : "",
+					"amount" :  100
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "c", "amount": 1.0 },
+                    "type": "stress_damage_amount",
+                    "sub_type" : "",
+					"amount" :  15
+				},
+				{ 
+					"selection" : "individual",
+					"requirements" : [],
+					"chance" : { "code" : "d", "amount": 1.0 },
+                    "type": "remove_deaths_door_recovery_buffs",
+                    "sub_type" : "",
+					"amount" :  0
+				}				
+			],
+			"hero_classes" : ["occultist"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+
+		{ 
+			"id" : "dark_strength",
+			"level" : 0,
+			"cost" : 2,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "individual",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingDMGLowBuff",					
+					"amount" :  0.20
+				},
+                { 
+					"selection" : "individual",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingDMGHighBuff",					
+					"amount" :  0.20
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "c", "amount": 1.00 },
+                    "type": "stress_damage_amount",
+                    "sub_type" : "",
+					"amount" :  15
+				}				
+
+			],
+			"hero_classes" : ["occultist"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+
+		{ 
+			"id" : "unspeakable_commune",
+			"level" : 0,
+			"cost" : 3,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "party_other",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.00 },
+                    "type": "stress_damage_amount",
+                    "sub_type" : "",
+					"amount" :  7
+				},
+				{
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 },
+                    "type": "reduce_ambush_chance",
+                    "sub_type" : "",
+					"amount" : 1.0
+				}
+			],
+			"hero_classes" : ["occultist"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+
+		{ 
+			"id" : "experimental_vapours",
+			"level" : 0,
+			"cost" : 4,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "individual",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+                    "type": "health_heal_max_health_percent",
+                    "sub_type" : "",
+					"amount" :  0.5
+				},
+				{ 
+					"selection" : "individual",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 },
+                    "type": "buff",
+                    "sub_type" : "campingHealReceivedBuff",
+					"amount" :  0.33
+				}
+			],
+			"hero_classes" : ["plague_doctor"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+
+		{ 
+			"id" : "leeches",
+			"level" : 0,
+			"cost" : 2,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "individual",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.00 },
+                    "type": "health_heal_max_health_percent",
+                    "sub_type" : "",
+					"amount" :  0.15
+				},			
+				{ 
+					"selection" : "individual",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 },
+                    "type": "remove_poison",
+                    "sub_type" : "",
+					"amount" :  0
+				},
+				{ 
+					"selection" : "individual",
+					"requirements" : [],
+					"chance" : { "code" : "c", "amount": 1.00 },
+                    "type": "remove_disease",
+                    "sub_type" : "",
+					"amount" :  0
+				}
+			],
+			"hero_classes" : ["plague_doctor"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+		{ 
+			"id" : "preventative_medicine",
+			"level" : 0,
+			"cost" : 1,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+                    "type": "remove_disease",
+                    "sub_type" : "",
+					"amount" :  0
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 },
+                    "type": "buff",
+                    "sub_type" : "campingDiseaseResistBuff",
+					"amount" :  0.20
+				}
+			],
+			"hero_classes" : ["plague_doctor"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+		{ 
+			"id" : "self_medicate",
+			"level" : 0,
+			"cost" : 3,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+                    "type": "stress_heal_amount",
+                    "sub_type" : "",
+					"amount" :  10
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 },
+                    "type": "health_heal_max_health_percent",
+                    "sub_type" : "",
+					"amount" :  0.20
+				},		
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "c", "amount": 1.0 },
+                    "type": "remove_poison",
+                    "sub_type" : "",
+					"amount" :  0
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "d", "amount": 1.0 },
+                    "type": "remove_bleeding",
+                    "sub_type" : "",
+					"amount" :  0
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "e", "amount": 1.0 },
+                    "type": "buff",
+                    "sub_type" : "campingACCBuff",
+					"amount" :  0.1
+				}
+			],
+			"hero_classes" : ["plague_doctor"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+
+		{ 
+			"id" : "bless",
+			"level" : 0,
+			"cost" : 3,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "individual",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+					"type" : "buff",
+					"sub_type" : "campingACCBuff",					
+					"amount" :  0.10					
+				},
+				{ 
+					"selection" : "individual",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 },
+					"type" : "buff",
+					"sub_type" : "campingDEFBuff",
+					"amount" :  0.10										
+				}
+			],
+			"hero_classes" : ["vestal"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			]
+		},
+
+		{ 
+			"id" : "chant",
+			"level" : 0,
+			"cost" : 3,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "individual",
+					"requirements" : ["religious"],
+					"chance" : { "code" : "a", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingStressResistBuff",					
+					"amount" :  -0.20
+				},
+				{ 
+					"selection" : "individual",
+					"requirements" : ["not_religious"],
+					"chance" : { "code" : "b", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingStressResistBuff",					
+					"amount" :  -0.10
+				},
+				{ 
+					"selection" : "individual",
+					"requirements" : ["religious"],
+					"chance" : { "code" : "c", "amount": 1.0 },
+                    "type": "stress_heal_amount",
+                    "sub_type" : "",
+					"amount" :  15
+				},
+				{ 
+					"selection" : "individual",
+					"requirements" : ["not_religious"],
+					"chance" : { "code" : "d", "amount": 1.0 },
+                    "type": "stress_heal_amount",
+                    "sub_type" : "",
+					"amount" :  5
+				}
+			],
+			"hero_classes" : ["vestal"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			]
+		},
+
+		{ 
+			"id" : "pray",
+			"level" : 0,
+			"cost" : 4,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "party_other",
+					"requirements" : ["religious"],
+					"chance" : { "code" : "a", "amount": 1.0 },
+                    "type": "stress_heal_amount",
+                    "sub_type" : "",
+					"amount" :  15
+				},
+				{ 
+					"selection" : "party_other",
+					"requirements" : ["not_religious"],
+					"chance" : { "code" : "b", "amount": 1.0 },
+                    "type": "stress_heal_amount",
+                    "sub_type" : "",
+					"amount" :  5
+				},
+				{ 
+					"selection" : "party_other",
+					"requirements" : ["religious"],
+					"chance" : { "code" : "c", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingPROTBuff",					
+					"amount" :  0.15
+				},
+				{ 
+					"selection" : "party_other",
+					"requirements" : ["not_religious"],
+					"chance" : { "code" : "d", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingPROTBuff",					
+					"amount" :  0.05
+				}
+			],
+			"hero_classes" : ["vestal"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+
+		{ 
+			"id" : "sanctuary",
+			"level" : 0,
+			"cost" : 4,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{
+					"selection" : "self",
+					"requirements" : ["religious"],
+					"chance" : { "code" : "a", "amount": 1.0 },
+                    "type": "reduce_ambush_chance",
+                    "sub_type" : "",
+					"amount" : 1.0
+				},
+				{
+					"selection" : "party_other",
+					"requirements" : ["has_deaths_door_recovery_buffs"],
+					"chance" : { "code" : "b", "amount": 1.0 },
+                    "type": "health_heal_max_health_percent",
+                    "sub_type" : "",
+					"amount" : 0.5
+				},
+				{
+					"selection" : "party_other",
+					"requirements" : ["has_deaths_door_recovery_buffs"],
+					"chance" : { "code" : "c", "amount": 1.0 },
+                    "type": "stress_heal_amount",
+                    "sub_type" : "",
+					"amount" : 25
+				}
+			],
+			"hero_classes" : ["vestal"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			]
+		},
+		{
+
+			"id" : "turn_back_time",
+			"level" : 0,
+			"cost" : 3,
+			"use_limit" : 1,
+			"effects" : 
+			[
+				{ 
+					"selection" : "individual",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+                    "type": "stress_heal_amount",
+                    "sub_type" : "",
+					"amount" :  30
+				},
+				{
+					"selection" : "individual",
+					"requirements" : ["afflicted"],
+					"chance" : { "code" : "b", "amount": 1.0 },
+                    "type": "stress_heal_amount",
+                    "sub_type" : "",
+					"amount" :  15
+				}				
+			],
+			"hero_classes" : ["jester" ],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			]
+		},
+
+		{ 
+			"id" : "every_rose",
+			"level" : 0,
+			"cost" : 3,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "party_other",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+                    "type": "stress_heal_amount",
+                    "sub_type" : "",
+					"amount" :  15
+				},
+				{ 
+					"selection" : "party_other",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingStressResistBuff",					
+					"amount" :  -0.15
+				}
+			],
+			"hero_classes" : ["jester"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+		{ 
+			"id" : "tigers_eye",
+			"level" : 0,
+			"cost" : 3,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "individual",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingACCBuff",
+					"amount" :  0.10
+				},
+				{ 
+					"selection" : "individual",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingCRITBuff",					
+					"amount" :  0.05
+				}
+			],
+			"hero_classes" : ["jester"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		}, 
+		{ 
+			"id" : "mockery",
+			"level" : 0,
+			"cost" : 2,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "individual",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+                    "type": "stress_damage_amount",
+                    "sub_type" : "",
+					"amount" :  20
+				},
+				{ 
+					"selection" : "party_other",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 },
+                    "type": "stress_heal_amount",
+                    "sub_type" : "",
+					"amount" :  20
+				}
+			],
+			"hero_classes" : ["jester"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+		{ 
+			"id" : "let_the_mask_down",
+			"level" : 0,
+			"cost" : 2,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+                    "type": "stress_heal_amount",
+                    "sub_type" : "",
+					"amount" :  25
+				},
+				{ 
+					"selection" : "party_other",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 },
+                    "type": "stress_damage_amount",
+                    "sub_type" : "",
+					"amount" :  5
+				}
+			],
+			"hero_classes" : ["leper"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+		{ 
+			"id" : "bloody_shroud",
+			"level" : 0,
+			"cost" : 3,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+                    "type": "buff",
+                    "sub_type" : "campingBleedResistBuff",
+					"amount" :  0.25
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 },
+                    "type": "buff",
+                    "sub_type" : "campingBlightResistBuff",
+					"amount" :  0.25
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "c", "amount": 1.0 },
+                    "type": "buff",
+                    "sub_type" : "campingMoveResistBuff",
+					"amount" :  0.25
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "d", "amount": 1.0 },
+                    "type": "buff",
+                    "sub_type" : "campingDebuffResistBuff",
+					"amount" :  0.25
+				}				
+			],
+			"hero_classes" : ["leper"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+		{ 
+			"id" : "reflection",
+			"level" : 0,
+			"cost" : 3,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+                    "type": "stress_heal_amount",
+                    "sub_type" : "",
+					"amount" :  20
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingACCBuff",
+					"amount" :  0.10
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "c", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingCRITBuff",
+					"amount" :  0.05
+				}				
+			],
+			"hero_classes" : ["leper"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+		{ 
+			"id" : "quarantine",
+			"level" : 0,
+			"cost" : 3,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+                    "type": "health_damage_max_health_percent",
+                    "sub_type" : "",
+					"amount" :  0.20
+				},
+				{ 
+					"selection" : "party_other",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 0.50 },
+                    "type": "stress_heal_amount",
+                    "sub_type" : "",
+					"amount" :  20
+				},
+				{ 
+					"selection" : "party_other",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 0.50 },
+                    "type": "stress_heal_amount",
+                    "sub_type" : "",
+					"amount" :  15
+				}				
+			],
+			"hero_classes" : ["leper"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+		{ 
+			"id" : "hounds_watch",
+			"level" : 0,
+			"cost" : 4,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+                    "type": "buff",
+                    "sub_type" : "campingPartySurprise",
+					"amount" : -0.20
+
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 },
+                    "type": "buff",
+                    "sub_type" : "campingMonstersSurprise",
+					"amount" : 0.20
+				},
+				{
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "c", "amount": 1.0 },
+                    "type": "reduce_ambush_chance",
+                    "sub_type" : "",
+					"amount" : 1.0
+				}				
+			],
+			"hero_classes" : ["houndmaster"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+		{
+
+			"id" : "therapy_dog",
+			"level" : 0,
+			"cost" : 3,
+			"use_limit" : 1,
+			"effects" : 
+			[
+				{ 
+					"selection" : "party_other",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+                    "type": "stress_heal_amount",
+                    "sub_type" : "",
+					"amount" :  10
+				},
+				{ 
+					"selection" : "party_other",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingStressResistBuff",					
+					"amount" :  -0.1
+				}
+			],
+			"hero_classes" : ["houndmaster" ],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			]
+		},		
+		{
+
+			"id" : "pet_the_hound",
+			"level" : 0,
+			"cost" : 2,
+			"use_limit" : 1,
+			"effects" : 
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+                    "type": "stress_heal_amount",
+                    "sub_type" : "",
+					"amount" :  20
+				}							
+			],
+			"hero_classes" : ["houndmaster"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			]
+		},
+		{ 
+			"id" : "release_the_hound",
+			"level" : 0,
+			"cost" : 4,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+                    "type": "buff",
+                    "sub_type" : "campingScoutingBuff",
+					"amount" :  0.50
+				}
+			],
+			"hero_classes" : ["houndmaster"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+		{ 
+			"id" : "anger_management",
+			"level" : 0,
+			"cost" : 3,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+                    "type": "stress_damage_amount",
+                    "sub_type" : "",
+					"amount" :  20
+				},
+				{ 
+					"selection" : "party_other",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 },
+                    "type": "stress_heal_amount",
+                    "sub_type" : "",
+					"amount" :  10
+				}
+			],
+			"hero_classes" : ["abomination"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+		{ 
+			"id" : "psych_up",
+			"level" : 0,
+			"cost" : 4,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+					"type" : "buff",
+					"sub_type" : "campingDMGLowBuff",					
+					"amount" :  0.25
+				},
+                { 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 },
+					"type" : "buff",
+					"sub_type" : "campingDMGHighBuff",					
+					"amount" :  0.25
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "c", "amount": 1.0 },
+                    "type": "stress_damage_amount",
+                    "sub_type" : "",
+					"amount" :  20
+				}
+			],
+			"hero_classes" : ["abomination"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+		{ 
+			"id" : "the_quickening",
+			"level" : 0,
+			"cost" : 3,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+					"type" : "buff",
+					"sub_type" : "campingSPDBuff",					
+					"amount" :  4
+				}
+			],
+			"hero_classes" : ["abomination"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},		
+		{ 
+			"id" : "eldritch_blood",
+			"level" : 0,
+			"cost" : 3,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+					"type" : "buff",
+					"sub_type" : "campingBlightResistBuff",					
+					"amount" :  0.40
+				},
+                { 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 },
+					"type" : "buff",
+					"sub_type" : "campingBleedResistBuff",					
+					"amount" :  0.40
+				},
+                { 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "c", "amount": 1.0 },
+					"type" : "buff",
+					"sub_type" : "campingDiseaseResistBuff",					
+					"amount" :  0.40
+				},
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "d", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingStressResistBuff",
+					"amount" :  0.20
+				}
+			],
+			"hero_classes" : ["abomination"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+
+		{ 
+			"id" : "supply",
+			"level" : 0,
+			"cost" : 1,
+			"use_limit" : 3,
+			"effects" :
+			[
+				{
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+					"type": "loot",
+					"sub_type": "S",
+					"amount": 1
+				}			
+
+			],
+			"hero_classes" : ["antiquarian"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+
+		{ 
+			"id" : "trinket_scrounge",
+			"level" : 0,
+			"cost" : 2,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+					"type": "loot",
+					"sub_type": "T_ANTIQ_CAMP",
+					"amount": 1
+				}			
+
+			],
+			"hero_classes" : ["antiquarian"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+		{ 
+			"id" : "strange_powders",
+			"level" : 0,
+			"cost" : 2,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "individual",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 },
+                    "type": "buff",
+                    "sub_type" : "campingBleedResistBuff",
+					"amount" :  0.20
+				},
+				{ 
+					"selection" : "individual",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 },
+                    "type": "buff",
+                    "sub_type" : "campingBlightResistBuff",
+					"amount" :  0.20
+				},
+				{ 
+					"selection" : "individual",
+					"requirements" : [],
+					"chance" : { "code" : "c", "amount": 1.0 },
+                    "type": "buff",
+                    "sub_type" : "campingMoveResistBuff",
+					"amount" :  0.20
+				},
+				{ 
+					"selection" : "individual",
+					"requirements" : [],
+					"chance" : { "code" : "d", "amount": 1.0 },
+                    "type": "buff",
+                    "sub_type" : "campingDebuffResistBuff",
+					"amount" :  0.20
+				},
+				{ 
+					"selection" : "individual",
+					"requirements" : [],
+					"chance" : { "code" : "b", "amount": 1.0 },
+                    "type": "buff",
+                    "sub_type" : "campingDiseaseResistBuff",
+					"amount" :  0.20
+				}
+			],
+			"hero_classes" : ["antiquarian"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		},
+
+		{ 
+			"id" : "curious_incantation",
+			"level" : 0,
+			"cost" : 1,
+			"use_limit" : 1,
+			"effects" :
+			[
+				{ 
+					"selection" : "self",
+					"requirements" : [],
+					"chance" : { "code" : "a", "amount": 1.0 }, 
+					"type" : "buff",
+					"sub_type" : "campingStressResistBuff",
+					"amount" :  -0.50
+				}
+			],
+			"hero_classes" : ["antiquarian"],
+			"upgrade_requirements" :  	
+			[
+				{
+					"code" : "0",
+					"currency_cost" :			
+					[
+						{ "type" : "gold", "amount" : 1750 }
+					],
+					"prerequisite_requirements" :
+					[
+						
+					]
+				}
+			] 
+		}
+	] 
+}

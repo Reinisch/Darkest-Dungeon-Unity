@@ -1,0 +1,22 @@
+name: skeleton_militia_B
+type: skeleton_militia
+
+art:
+commonfx: .deathfx death_medium
+skill: .id "sword_strike" .anim "attack_melee" .fx "sword_strike" .targchestfx "blood_splatter"
+skill: .id "sword_strike_weak" .anim "attack_melee" .fx "sword_strike" .targchestfx "blood_splatter"
+.end
+
+info:
+display: .size 1
+enemy_type: .id "unholy"
+stats: .hp 15 .def 8.75% .prot 0.25 .spd 3 .stun_resist 45% .poison_resist 30% .bleed_resist 220% .debuff_resist 35% .move_resist 40%
+skill: .id "sword_strike" .type "melee" .atk 88.75% .dmg 3 10 .crit 11%  .launch 321 .target 123
+skill: .id "sword_strike_weak" .type "melee" .atk 48.75% .dmg 2 6 .crit 0%  .launch 4 .target 12 .move 0 1 .is_crit_valid False
+personality: .prefskill -1
+loot: .code "A" .count 1
+initiative: .number_of_turns_per_round 1
+monster_brain: .id skeleton_soldier_B
+death_class: .monster_class_id corpse_B .is_valid_on_crit False .type "corpse" 
+battle_modifier: .disable_stall_penalty False .can_surprise True .can_be_surprised True .always_surprise False .always_be_surprised False
+.end

@@ -1,0 +1,750 @@
+{
+    "party_names":
+    [
+    	{
+    		"id": "0",
+    		"required_hero_class": [ "vestal", "plague_doctor", "highwayman", "crusader" ]
+		},
+    	{
+    		"id": "1",
+    		"required_hero_class": [ "occultist", "bounty_hunter", "highwayman", "grave_robber" ]
+		},
+    	{
+    		"id": "2",
+    		"required_hero_class": [ "occultist", "grave_robber", "bounty_hunter", "hellion" ]
+		},
+    	{
+    		"id": "3",
+    		"required_hero_class": [ "occultist", "occultist", "hellion", "hellion" ]
+		},
+		{
+    		"id": "4",
+    		"required_hero_class": [ "vestal", "plague_doctor", "grave_robber", "hellion" ]
+		},
+		{
+    		"id": "5",
+    		"required_hero_class": [ "vestal", "hellion", "crusader", "leper" ]
+		},
+		{
+    		"id": "6",
+    		"required_hero_class": [ "vestal", "vestal", "vestal", "vestal" ]
+		},
+		{
+    		"id": "7",
+    		"required_hero_class": [ "plague_doctor", "plague_doctor", "leper", "leper" ]
+		},
+		{
+    		"id": "8",
+    		"required_hero_class": [ "crusader", "crusader", "crusader", "crusader" ]
+		},
+		{
+    		"id": "9",
+    		"required_hero_class": [ "vestal", "plague_doctor", "hellion", "crusader" ]
+		},
+		{
+    		"id": "10",
+    		"required_hero_class": [ "occultist", "plague_doctor", "bounty_hunter", "hellion" ]
+		},
+		{
+    		"id": "11",
+    		"required_hero_class": [ "occultist", "plague_doctor", "grave_robber", "hellion" ]
+		},
+		{
+    		"id": "12",
+    		"required_hero_class": [ "vestal", "vestal", "leper", "leper" ]
+		},
+		{
+    		"id": "13",
+    		"required_hero_class": [ "plague_doctor", "plague_doctor", "plague_doctor", "leper" ]
+		},
+		{
+    		"id": "14",
+    		"required_hero_class": [ "bounty_hunter", "bounty_hunter", "bounty_hunter", "bounty_hunter" ]
+		},
+		{
+    		"id": "15",
+    		"required_hero_class": [ "bounty_hunter", "jester", "grave_robber", "highwayman" ]
+		},
+		{
+    		"id": "16",
+    		"required_hero_class": [ "bounty_hunter", "leper", "hellion", "crusader" ]
+		},
+		{
+    		"id": "17",
+    		"required_hero_class": [ "bounty_hunter", "plague_doctor", "crusader", "crusader" ]
+		},
+		{
+    		"id": "18",
+    		"required_hero_class": [ "bounty_hunter", "vestal", "bounty_hunter", "crusader" ]
+		},
+		{
+    		"id": "19",
+    		"required_hero_class": [ "bounty_hunter", "vestal", "hellion", "hellion" ]
+		},
+		{
+    		"id": "20",
+    		"required_hero_class": [ "crusader", "highwayman", "vestal", "plague_doctor" ]
+		},
+		{
+    		"id": "21",
+    		"required_hero_class": [ "grave_robber", "bounty_hunter", "crusader", "highwayman" ]
+		},
+		{
+    		"id": "22",
+    		"required_hero_class": [ "grave_robber", "bounty_hunter", "grave_robber", "highwayman" ]
+		},
+		{
+    		"id": "23",
+    		"required_hero_class": [ "grave_robber", "grave_robber", "grave_robber", "grave_robber" ]
+		},
+		{
+    		"id": "24",
+    		"required_hero_class": [ "grave_robber", "highwayman", "bounty_hunter", "hellion" ]
+		},
+		{
+    		"id": "25",
+    		"required_hero_class": [ "grave_robber", "highwayman", "bounty_hunter", "highwayman" ]
+		},
+		{
+    		"id": "26",
+    		"required_hero_class": [ "grave_robber", "highwayman", "grave_robber", "highwayman" ]
+		},
+    	{
+    		"id": "27",
+    		"required_hero_class": [ "grave_robber", "jester", "bounty_hunter", "leper" ]
+		},
+    	{
+    		"id": "28",
+    		"required_hero_class": [ "grave_robber", "jester", "highwayman", "bounty_hunter" ]
+		},
+    	{
+    		"id": "29",
+    		"required_hero_class": [ "grave_robber", "plague_doctor", "bounty_hunter", "leper" ]
+		},
+		{
+    		"id": "30",
+    		"required_hero_class": [ "grave_robber", "plague_doctor", "vestal", "leper" ]
+		},
+		{
+    		"id": "31",
+    		"required_hero_class": [ "hellion", "hellion", "hellion", "hellion" ]
+		},
+		{
+    		"id": "32",
+    		"required_hero_class": [ "highwayman", "grave_robber", "bounty_hunter", "hellion" ]
+		},
+		{
+    		"id": "33",
+    		"required_hero_class": [ "highwayman", "grave_robber", "hellion", "leper" ]
+		},
+		{
+    		"id": "34",
+    		"required_hero_class": [ "highwayman", "grave_robber", "jester", "bounty_hunter" ]
+		},
+		{
+    		"id": "35",
+    		"required_hero_class": [ "highwayman", "highwayman", "highwayman", "bounty_hunter" ]
+		},
+		{
+    		"id": "36",
+    		"required_hero_class": [ "jester", "bounty_hunter", "grave_robber", "highwayman" ]
+		},
+		{
+    		"id": "37",
+    		"required_hero_class": [ "jester", "bounty_hunter", "hellion", "crusader" ]
+		},
+		{
+    		"id": "38",
+    		"required_hero_class": [ "jester", "bounty_hunter", "hellion", "leper" ]
+		},
+		{
+    		"id": "39",
+    		"required_hero_class": [ "jester", "grave_robber", "bounty_hunter", "crusader" ]
+		},
+		{
+    		"id": "40",
+    		"required_hero_class": [ "jester", "grave_robber", "hellion", "highwayman" ]
+		},
+		{
+    		"id": "41",
+    		"required_hero_class": [ "jester", "grave_robber", "highwayman", "bounty_hunter" ]
+		},
+		{
+    		"id": "42",
+    		"required_hero_class": [ "jester", "grave_robber", "highwayman", "hellion" ]
+		},
+		{
+    		"id": "43",
+    		"required_hero_class": [ "jester", "grave_robber", "vestal", "crusader" ]
+		},
+		{
+    		"id": "44",
+    		"required_hero_class": [ "jester", "highwayman", "bounty_hunter", "leper" ]
+		},
+		{
+    		"id": "45",
+    		"required_hero_class": [ "jester", "highwayman", "hellion", "leper" ]
+		},
+		{
+    		"id": "46",
+    		"required_hero_class": [ "jester", "jester", "highwayman", "highwayman" ]
+		},
+		{
+    		"id": "47",
+    		"required_hero_class": [ "jester", "jester", "jester", "jester" ]
+		},
+		{
+    		"id": "48",
+    		"required_hero_class": [ "jester", "occultist", "bounty_hunter", "crusader" ]
+		},
+		{
+    		"id": "49",
+    		"required_hero_class": [ "jester", "occultist", "grave_robber", "hellion" ]
+		},
+		{
+    		"id": "50",
+    		"required_hero_class": [ "jester", "occultist", "plague_doctor", "leper" ]
+		},
+		{
+    		"id": "51",
+    		"required_hero_class": [ "jester", "plague_doctor", "highwayman", "leper" ]
+		},
+		{
+    		"id": "52",
+    		"required_hero_class": [ "jester", "plague_doctor", "vestal", "leper" ]
+		},
+    	{
+    		"id": "53",
+    		"required_hero_class": [ "jester", "vestal", "bounty_hunter", "crusader" ]
+		},
+    	{
+    		"id": "54",
+    		"required_hero_class": [ "jester", "vestal", "highwayman", "hellion" ]
+		},
+    	{
+    		"id": "55",
+    		"required_hero_class": [ "jester", "vestal", "plague_doctor", "leper" ]
+		},
+		{
+    		"id": "56",
+    		"required_hero_class": [ "leper", "leper", "leper", "leper" ]
+		},
+		{
+    		"id": "57",
+    		"required_hero_class": [ "occultist", "bounty_hunter", "bounty_hunter", "hellion" ]
+		},
+		{
+    		"id": "58",
+    		"required_hero_class": [ "occultist", "bounty_hunter", "crusader", "highwayman" ]
+		},
+		{
+    		"id": "59",
+    		"required_hero_class": [ "occultist", "bounty_hunter", "hellion", "hellion" ]
+		},
+		{
+    		"id": "60",
+    		"required_hero_class": [ "occultist", "bounty_hunter", "highwayman", "hellion" ]
+		},
+		{
+    		"id": "61",
+    		"required_hero_class": [ "occultist", "bounty_hunter", "jester", "crusader" ]
+		},
+		{
+    		"id": "62",
+    		"required_hero_class": [ "occultist", "grave_robber", "bounty_hunter", "crusader" ]
+		},
+		{
+    		"id": "63",
+    		"required_hero_class": [ "occultist", "grave_robber", "crusader", "hellion" ]
+		},
+		{
+    		"id": "64",
+    		"required_hero_class": [ "occultist", "grave_robber", "hellion", "leper" ]
+		},
+		{
+    		"id": "65",
+    		"required_hero_class": [ "occultist", "grave_robber", "highwayman", "bounty_hunter" ]
+		},
+		{
+    		"id": "66",
+    		"required_hero_class": [ "occultist", "grave_robber", "highwayman", "hellion" ]
+		},
+		{
+    		"id": "67",
+    		"required_hero_class": [ "occultist", "grave_robber", "jester", "leper" ]
+		},
+		{
+    		"id": "68",
+    		"required_hero_class": [ "occultist", "highwayman", "bounty_hunter", "hellion" ]
+		},
+		{
+    		"id": "69",
+    		"required_hero_class": [ "occultist", "highwayman", "bounty_hunter", "leper" ]
+		},
+		{
+    		"id": "70",
+    		"required_hero_class": [ "occultist", "highwayman", "crusader", "leper" ]
+		},
+		{
+    		"id": "71",
+    		"required_hero_class": [ "occultist", "highwayman", "hellion", "hellion" ]
+		},
+		{
+    		"id": "72",
+    		"required_hero_class": [ "occultist", "highwayman", "jester", "bounty_hunter" ]
+		},
+		{
+    		"id": "73",
+    		"required_hero_class": [ "occultist", "highwayman", "leper", "crusader" ]
+		},
+		{
+    		"id": "74",
+    		"required_hero_class": [ "occultist", "jester", "bounty_hunter", "hellion" ]
+		},
+		{
+    		"id": "75",
+    		"required_hero_class": [ "occultist", "jester", "grave_robber", "highwayman" ]
+		},
+		{
+    		"id": "76",
+    		"required_hero_class": [ "occultist", "jester", "grave_robber", "leper" ]
+		},
+		{
+    		"id": "77",
+    		"required_hero_class": [ "occultist", "jester", "highwayman", "hellion" ]
+		},
+		{
+    		"id": "78",
+    		"required_hero_class": [ "occultist", "jester", "vestal", "crusader" ]
+		},
+    	{
+    		"id": "79",
+    		"required_hero_class": [ "occultist", "occultist", "hellion", "crusader" ]
+		},
+    	{
+    		"id": "80",
+    		"required_hero_class": [ "occultist", "occultist", "occultist", "occultist" ]
+		},
+    	{
+    		"id": "81",
+    		"required_hero_class": [ "occultist", "plague_doctor", "bounty_hunter", "crusader" ]
+		},
+		{
+    		"id": "82",
+    		"required_hero_class": [ "occultist", "plague_doctor", "bounty_hunter", "leper" ]
+		},
+		{
+    		"id": "83",
+    		"required_hero_class": [ "occultist", "plague_doctor", "crusader", "leper" ]
+		},
+		{
+    		"id": "84",
+    		"required_hero_class": [ "occultist", "plague_doctor", "grave_robber", "leper" ]
+		},
+		{
+    		"id": "85",
+    		"required_hero_class": [ "occultist", "plague_doctor", "hellion", "hellion" ]
+		},
+		{
+    		"id": "86",
+    		"required_hero_class": [ "occultist", "plague_doctor", "hellion", "highwayman" ]
+		},
+		{
+    		"id": "87",
+    		"required_hero_class": [ "occultist", "plague_doctor", "hellion", "leper" ]
+		},
+		{
+    		"id": "88",
+    		"required_hero_class": [ "occultist", "plague_doctor", "highwayman", "crusader" ]
+		},
+		{
+    		"id": "89",
+    		"required_hero_class": [ "occultist", "plague_doctor", "highwayman", "hellion" ]
+		},
+		{
+    		"id": "90",
+    		"required_hero_class": [ "occultist", "plague_doctor", "highwayman", "leper" ]
+		},
+		{
+    		"id": "91",
+    		"required_hero_class": [ "occultist", "plague_doctor", "jester", "highwayman" ]
+		},
+		{
+    		"id": "92",
+    		"required_hero_class": [ "occultist", "plague_doctor", "jester", "leper" ]
+		},
+		{
+    		"id": "93",
+    		"required_hero_class": [ "occultist", "plague_doctor", "leper", "hellion" ]
+		},
+		{
+    		"id": "94",
+    		"required_hero_class": [ "occultist", "plague_doctor", "leper", "jester" ]
+		},
+		{
+    		"id": "95",
+    		"required_hero_class": [ "occultist", "plague_doctor", "vestal", "leper" ]
+		},
+		{
+    		"id": "96",
+    		"required_hero_class": [ "occultist", "vestal", "crusader", "hellion" ]
+		},
+		{
+    		"id": "97",
+    		"required_hero_class": [ "occultist", "vestal", "crusader", "leper" ]
+		},
+		{
+    		"id": "98",
+    		"required_hero_class": [ "occultist", "vestal", "hellion", "crusader" ]
+		},
+		{
+    		"id": "99",
+    		"required_hero_class": [ "occultist", "vestal", "hellion", "leper" ]
+		},
+		{
+    		"id": "100",
+    		"required_hero_class": [ "occultist", "vestal", "highwayman", "crusader" ]
+		},
+		{
+    		"id": "101",
+    		"required_hero_class": [ "plague_doctor", "bounty_hunter", "bounty_hunter", "jester" ]
+		},
+		{
+    		"id": "102",
+    		"required_hero_class": [ "plague_doctor", "bounty_hunter", "crusader", "hellion" ]
+		},
+		{
+    		"id": "103",
+    		"required_hero_class": [ "plague_doctor", "bounty_hunter", "grave_robber", "highwayman" ]
+		},
+		{
+    		"id": "104",
+    		"required_hero_class": [ "plague_doctor", "bounty_hunter", "highwayman", "leper" ]
+		},
+		{
+    		"id": "105",
+    		"required_hero_class": [ "plague_doctor", "bounty_hunter", "occultist", "hellion" ]
+		},
+		{
+    		"id": "106",
+    		"required_hero_class": [ "plague_doctor", "grave_robber", "grave_robber", "vestal" ]
+		},
+		{
+    		"id": "107",
+    		"required_hero_class": [ "plague_doctor", "grave_robber", "hellion", "leper" ]
+		},
+		{
+    		"id": "108",
+    		"required_hero_class": [ "plague_doctor", "grave_robber", "highwayman", "highwayman" ]
+		},
+		{
+    		"id": "109",
+    		"required_hero_class": [ "plague_doctor", "grave_robber", "leper", "jester" ]
+		},
+		{
+    		"id": "110",
+    		"required_hero_class": [ "plague_doctor", "grave_robber", "vestal", "crusader" ]
+		},
+		{
+    		"id": "111",
+    		"required_hero_class": [ "plague_doctor", "grave_robber", "vestal", "hellion" ]
+		},
+		{
+    		"id": "112",
+    		"required_hero_class": [ "plague_doctor", "highwayman", "leper", "crusader" ]
+		},
+		{
+    		"id": "113",
+    		"required_hero_class": [ "plague_doctor", "highwayman", "vestal", "crusader" ]
+		},
+		{
+    		"id": "114",
+    		"required_hero_class": [ "plague_doctor", "jester", "bounty_hunter", "hellion" ]
+		},
+		{
+    		"id": "115",
+    		"required_hero_class": [ "plague_doctor", "jester", "grave_robber", "leper" ]
+		},
+		{
+    		"id": "116",
+    		"required_hero_class": [ "plague_doctor", "jester", "jester", "jester" ]
+		},
+		{
+    		"id": "117",
+    		"required_hero_class": [ "plague_doctor", "jester", "leper", "crusader" ]
+		},
+		{
+    		"id": "118",
+    		"required_hero_class": [ "plague_doctor", "leper", "occultist", "grave_robber" ]
+		},
+		{
+    		"id": "119",
+    		"required_hero_class": [ "plague_doctor", "occultist", "bounty_hunter", "crusader" ]
+		},
+		{
+    		"id": "120",
+    		"required_hero_class": [ "plague_doctor", "occultist", "bounty_hunter", "leper" ]
+		},
+		{
+    		"id": "121",
+    		"required_hero_class": [ "plague_doctor", "occultist", "grave_robber", "leper" ]
+		},
+		{
+    		"id": "122",
+    		"required_hero_class": [ "plague_doctor", "occultist", "hellion", "hellion" ]
+		},
+    	{
+    		"id": "123",
+    		"required_hero_class": [ "plague_doctor", "occultist", "hellion", "highwayman" ]
+		},
+    	{
+    		"id": "124",
+    		"required_hero_class": [ "plague_doctor", "occultist", "jester", "leper" ]
+		},
+    	{
+    		"id": "125",
+    		"required_hero_class": [ "plague_doctor", "occultist", "leper", "hellion" ]
+		},
+		{
+    		"id": "126",
+    		"required_hero_class": [ "plague_doctor", "occultist", "vestal", "leper" ]
+		},
+		{
+    		"id": "127",
+    		"required_hero_class": [ "plague_doctor", "plague_doctor", "grave_robber", "grave_robber" ]
+		},
+		{
+    		"id": "128",
+    		"required_hero_class": [ "plague_doctor", "plague_doctor", "grave_robber", "leper" ]
+		},
+		{
+    		"id": "129",
+    		"required_hero_class": [ "plague_doctor", "plague_doctor", "plague_doctor", "plague_doctor" ]
+		},
+		{
+    		"id": "130",
+    		"required_hero_class": [ "plague_doctor", "vestal", "bounty_hunter", "crusader" ]
+		},
+		{
+    		"id": "131",
+    		"required_hero_class": [ "plague_doctor", "vestal", "hellion", "hellion" ]
+		},
+		{
+    		"id": "132",
+    		"required_hero_class": [ "plague_doctor", "vestal", "highwayman", "crusader" ]
+		},
+		{
+    		"id": "133",
+    		"required_hero_class": [ "vestal", "bounty_hunter", "bounty_hunter", "crusader" ]
+		},
+		{
+    		"id": "134",
+    		"required_hero_class": [ "vestal", "bounty_hunter", "bounty_hunter", "hellion" ]
+		},
+		{
+    		"id": "135",
+    		"required_hero_class": [ "vestal", "bounty_hunter", "crusader", "leper" ]
+		},
+		{
+    		"id": "136",
+    		"required_hero_class": [ "vestal", "bounty_hunter", "hellion", "crusader" ]
+		},
+		{
+    		"id": "137",
+    		"required_hero_class": [ "vestal", "bounty_hunter", "highwayman", "crusader" ]
+		},
+		{
+    		"id": "138",
+    		"required_hero_class": [ "vestal", "bounty_hunter", "highwayman", "leper" ]
+		},
+		{
+    		"id": "139",
+    		"required_hero_class": [ "vestal", "crusader", "crusader", "crusader" ]
+		},
+		{
+    		"id": "140",
+    		"required_hero_class": [ "vestal", "grave_robber", "bounty_hunter", "crusader" ]
+		},
+		{
+    		"id": "141",
+    		"required_hero_class": [ "vestal", "grave_robber", "bounty_hunter", "hellion" ]
+		},
+		{
+    		"id": "142",
+    		"required_hero_class": [ "vestal", "grave_robber", "crusader", "hellion" ]
+		},
+		{
+    		"id": "143",
+    		"required_hero_class": [ "vestal", "grave_robber", "hellion", "leper" ]
+		},
+		{
+    		"id": "144",
+    		"required_hero_class": [ "vestal", "grave_robber", "leper", "jester" ]
+		},
+		{
+    		"id": "145",
+    		"required_hero_class": [ "vestal", "highwayman", "bounty_hunter", "crusader" ]
+		},
+		{
+    		"id": "146",
+    		"required_hero_class": [ "vestal", "highwayman", "bounty_hunter", "hellion" ]
+		},
+		{
+    		"id": "147",
+    		"required_hero_class": [ "vestal", "highwayman", "crusader", "crusader" ]
+		},
+		{
+    		"id": "148",
+    		"required_hero_class": [ "vestal", "highwayman", "crusader", "hellion" ]
+		},
+		{
+    		"id": "149",
+    		"required_hero_class": [ "vestal", "highwayman", "crusader", "leper" ]
+		},
+		{
+    		"id": "150",
+    		"required_hero_class": [ "vestal", "highwayman", "grave_robber", "bounty_hunter" ]
+		},
+		{
+    		"id": "151",
+    		"required_hero_class": [ "vestal", "highwayman", "grave_robber", "hellion" ]
+		},
+		{
+    		"id": "152",
+    		"required_hero_class": [ "vestal", "highwayman", "hellion", "crusader" ]
+		},
+		{
+    		"id": "153",
+    		"required_hero_class": [ "vestal", "jester", "bounty_hunter", "crusader" ]
+		},
+		{
+    		"id": "154",
+    		"required_hero_class": [ "vestal", "jester", "grave_robber", "highwayman" ]
+		},
+		{
+    		"id": "155",
+    		"required_hero_class": [ "vestal", "jester", "grave_robber", "leper" ]
+		},
+		{
+    		"id": "156",
+    		"required_hero_class": [ "vestal", "jester", "hellion", "crusader" ]
+		},
+		{
+    		"id": "157",
+    		"required_hero_class": [ "vestal", "jester", "hellion", "hellion" ]
+		},
+		{
+    		"id": "158",
+    		"required_hero_class": [ "vestal", "jester", "hellion", "leper" ]
+		},
+		{
+    		"id": "159",
+    		"required_hero_class": [ "vestal", "jester", "leper", "crusader" ]
+		},
+		{
+    		"id": "160",
+    		"required_hero_class": [ "vestal", "occultist", "bounty_hunter", "crusader" ]
+		},
+		{
+    		"id": "161",
+    		"required_hero_class": [ "vestal", "occultist", "bounty_hunter", "leper" ]
+		},
+		{
+    		"id": "162",
+    		"required_hero_class": [ "vestal", "occultist", "crusader", "hellion" ]
+		},
+		{
+    		"id": "163",
+    		"required_hero_class": [ "vestal", "occultist", "grave_robber", "crusader" ]
+		},
+		{
+    		"id": "164",
+    		"required_hero_class": [ "vestal", "occultist", "hellion", "crusader" ]
+		},
+		{
+    		"id": "165",
+    		"required_hero_class": [ "vestal", "occultist", "hellion", "hellion" ]
+		},
+		{
+    		"id": "166",
+    		"required_hero_class": [ "vestal", "occultist", "jester", "leper" ]
+		},
+		{
+    		"id": "167",
+    		"required_hero_class": [ "vestal", "plague_doctor", "bounty_hunter", "crusader" ]
+		},
+		{
+    		"id": "168",
+    		"required_hero_class": [ "vestal", "plague_doctor", "crusader", "crusader" ]
+		},
+    	{
+    		"id": "169",
+    		"required_hero_class": [ "vestal", "plague_doctor", "crusader", "highwayman" ]
+		},
+    	{
+    		"id": "170",
+    		"required_hero_class": [ "vestal", "plague_doctor", "crusader", "leper" ]
+		},
+    	{
+    		"id": "171",
+    		"required_hero_class": [ "vestal", "plague_doctor", "grave_robber", "leper" ]
+		},
+		{
+    		"id": "172",
+    		"required_hero_class": [ "vestal", "plague_doctor", "hellion", "bounty_hunter" ]
+		},
+		{
+    		"id": "173",
+    		"required_hero_class": [ "vestal", "plague_doctor", "hellion", "jester" ]
+		},
+		{
+    		"id": "174",
+    		"required_hero_class": [ "vestal", "plague_doctor", "highwayman", "hellion" ]
+		},
+		{
+    		"id": "175",
+    		"required_hero_class": [ "vestal", "plague_doctor", "highwayman", "leper" ]
+		},
+		{
+    		"id": "176",
+    		"required_hero_class": [ "vestal", "plague_doctor", "jester", "crusader" ]
+		},
+		{
+    		"id": "177",
+    		"required_hero_class": [ "vestal", "plague_doctor", "jester", "leper" ]
+		},
+		{
+    		"id": "178",
+    		"required_hero_class": [ "vestal", "plague_doctor", "leper", "crusader" ]
+		},
+		{
+    		"id": "179",
+    		"required_hero_class": [ "vestal", "vestal", "crusader", "crusader" ]
+		},
+		{
+    		"id": "180",
+    		"required_hero_class": [ "vestal", "vestal", "crusader", "leper" ]
+		},
+		{
+    		"id": "181",
+    		"required_hero_class": [ "vestal", "vestal", "highwayman", "crusader" ]
+		},
+		{
+    		"id": "182",
+    		"required_hero_class": [ "vestal", "vestal", "highwayman", "highwayman" ]
+		},
+		{
+    		"id": "183",
+    		"required_hero_class": [ "vestal", "vestal", "jester", "vestal" ]
+		},
+		{
+    		"id": "184",
+    		"required_hero_class": [ "man_at_arms", "man_at_arms", "man_at_arms", "man_at_arms" ]
+		},
+		{
+    		"id": "185",
+    		"required_hero_class": [ "vestal", "grave_robber", "highwayman", "highwayman" ]
+		}
+    ]
+
+}

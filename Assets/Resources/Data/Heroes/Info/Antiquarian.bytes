@@ -1,0 +1,72 @@
+name: antiquarian
+
+art:
+commonfx: .deathfx death_medium
+combat_skill: .id "kris_stab" .icon "one" .anim "attack_melee" .fx "kris_stab" .targchestfx "blood_splatter"
+combat_skill: .id "festering_vapours" .icon "two" .anim "attack_censer" .fx "festering_vapours" .targchestfx "festering_vapours_target"
+combat_skill: .id "cower" .icon "three" .anim "defend" .fx "cower"
+combat_skill: .id "flashpowder" .icon "four" .anim "attack_ranged" .fx "flashpowder" .targfx "flashpowder_target"
+combat_skill: .id "fortifying_vapours" .icon "five" .anim "attack_heal" .fx "fortifying_vapours" .targfx "fortifying_vapours_target"
+combat_skill: .id "invigorating_vapours" .icon "six" .anim "attack_heal" .fx "invigorating_vapours" .targfx "invigorating_vapours_target"
+combat_skill: .id "protect_me" .icon "seven" .anim "attack_guard" .fx "protect_me"
+.end
+
+info:
+resistances: .stun 20% .poison 20% .bleed 20% .disease 20% .move 20% .debuff 20% .death_blow 67% .trap 10%
+weapon: .name "antiquarian_weapon_0" .atk 0% .dmg 3 5 .crit 2.5% .spd 5
+weapon: .name "antiquarian_weapon_1" .atk 0% .dmg 4 6 .crit 3% .spd 7 .upgradeRequirementCode 0
+weapon: .name "antiquarian_weapon_2" .atk 0% .dmg 4 7 .crit 3.5% .spd 8 .upgradeRequirementCode 1
+weapon: .name "antiquarian_weapon_3" .atk 0% .dmg 5 8 .crit 4% .spd 8 .upgradeRequirementCode 2
+weapon: .name "antiquarian_weapon_4" .atk 0% .dmg 5 9 .crit 4.5% .spd 9 .upgradeRequirementCode 3
+armour: .name "antiquarian_armour_0" .def 10% .prot 0 .hp 17 .spd 0
+armour: .name "antiquarian_armour_1" .def 15% .prot 0 .hp 24 .spd 0 .upgradeRequirementCode 0
+armour: .name "antiquarian_armour_2" .def 20% .prot 0 .hp 31 .spd 0 .upgradeRequirementCode 1
+armour: .name "antiquarian_armour_3" .def 25% .prot 0 .hp 38 .spd 0 .upgradeRequirementCode 2
+armour: .name "antiquarian_armour_4" .def 30% .prot 0 .hp 45 .spd 0 .upgradeRequirementCode 3
+combat_skill: .id "kris_stab" .level 0 .type "melee" .atk 90% .dmg 0% .crit 0% .launch 4321 .target 123 .is_crit_valid True 
+combat_skill: .id "kris_stab" .level 1 .type "melee" .atk 95% .dmg 0% .crit 0% .launch 4321 .target 123 .is_crit_valid True 
+combat_skill: .id "kris_stab" .level 2 .type "melee" .atk 100% .dmg 0% .crit 1% .launch 4321 .target 123 .is_crit_valid True 
+combat_skill: .id "kris_stab" .level 3 .type "melee" .atk 105% .dmg 0% .crit 2% .launch 4321 .target 123 .is_crit_valid True 
+combat_skill: .id "kris_stab" .level 4 .type "melee" .atk 110% .dmg 0% .crit 2% .launch 4321 .target 123 .is_crit_valid True 
+combat_skill: .id "festering_vapours" .level 0 .type "ranged" .atk 95% .dmg -75% .crit 0% .launch 4321 .target 1234 .is_crit_valid True  .effect "Antiq Blight 1" "Antiq Blight Debuff 1"
+combat_skill: .id "festering_vapours" .level 1 .type "ranged" .atk 100% .dmg -75% .crit 0% .launch 4321 .target 1234 .is_crit_valid True  .effect "Antiq Blight 2" "Antiq Blight Debuff 2"
+combat_skill: .id "festering_vapours" .level 2 .type "ranged" .atk 105% .dmg -75% .crit 1% .launch 4321 .target 1234 .is_crit_valid True  .effect "Antiq Blight 3" "Antiq Blight Debuff 3"
+combat_skill: .id "festering_vapours" .level 3 .type "ranged" .atk 110% .dmg -75% .crit 2% .launch 4321 .target 1234 .is_crit_valid True  .effect "Antiq Blight 4" "Antiq Blight Debuff 4"
+combat_skill: .id "festering_vapours" .level 4 .type "ranged" .atk 115% .dmg -75% .crit 2% .launch 4321 .target 1234 .is_crit_valid True  .effect "Antiq Blight 5" "Antiq Blight Debuff 5"
+combat_skill: .id "cower" .level 0 .type "ranged" .atk 0% .dmg 0% .crit 0% .move 1 0 .launch 4321 .target  .is_crit_valid True  .effect "Antiq Cower 1" "Antiq Self Speed 1"
+combat_skill: .id "cower" .level 1 .type "ranged" .atk 0% .dmg 0% .crit 0% .move 1 0 .launch 4321 .target  .is_crit_valid True  .effect "Antiq Cower 2" "Antiq Self Speed 2"
+combat_skill: .id "cower" .level 2 .type "ranged" .atk 0% .dmg 0% .crit 0% .move 1 0 .launch 4321 .target  .is_crit_valid True  .effect "Antiq Cower 3" "Antiq Self Speed 3"
+combat_skill: .id "cower" .level 3 .type "ranged" .atk 0% .dmg 0% .crit 0% .move 1 0 .launch 4321 .target  .is_crit_valid True  .effect "Antiq Cower 4" "Antiq Self Speed 4"
+combat_skill: .id "cower" .level 4 .type "ranged" .atk 0% .dmg 0% .crit 0% .move 1 0 .launch 4321 .target  .is_crit_valid True  .effect "Antiq Cower 5" "Antiq Self Speed 5"
+combat_skill: .id "flashpowder" .level 0 .type "ranged" .atk 95% .dmg -100% .crit 0% .launch 4321 .target 1234 .is_crit_valid True  .effect "Antiq Distract 1"
+combat_skill: .id "flashpowder" .level 1 .type "ranged" .atk 100% .dmg -100% .crit 0% .launch 4321 .target 1234 .is_crit_valid True  .effect "Antiq Distract 2"
+combat_skill: .id "flashpowder" .level 2 .type "ranged" .atk 105% .dmg -100% .crit 0% .launch 4321 .target 1234 .is_crit_valid True  .effect "Antiq Distract 3"
+combat_skill: .id "flashpowder" .level 3 .type "ranged" .atk 110% .dmg -100% .crit 0% .launch 4321 .target 1234 .is_crit_valid True  .effect "Antiq Distract 4"
+combat_skill: .id "flashpowder" .level 4 .type "ranged" .atk 115% .dmg -100% .crit 0% .launch 4321 .target 1234 .is_crit_valid True  .effect "Antiq Distract 5"
+combat_move_skill: .id "move" .level 0 .type "move" .move 2 2 .launch 4321
+combat_skill: .id "fortifying_vapours" .level 0 .heal 1 1 .launch 43 .target @1234 
+combat_skill: .id "fortifying_vapours" .level 1 .heal 1 2 .launch 43 .target @1234 
+combat_skill: .id "fortifying_vapours" .level 2 .heal 2 2 .launch 43 .target @1234 
+combat_skill: .id "fortifying_vapours" .level 3 .heal 2 3 .launch 43 .target @1234 
+combat_skill: .id "fortifying_vapours" .level 4 .heal 3 3 .launch 43 .target @1234 
+combat_skill: .id "invigorating_vapours" .level 0 .type "ranged" .atk 0% .dmg 0% .crit 0% .launch 43 .target ~@1234 .is_crit_valid True  .effect "Antiq Dodge 1"
+combat_skill: .id "invigorating_vapours" .level 1 .type "ranged" .atk 0% .dmg 0% .crit 0% .launch 43 .target ~@1234 .is_crit_valid True  .effect "Antiq Dodge 2"
+combat_skill: .id "invigorating_vapours" .level 2 .type "ranged" .atk 0% .dmg 0% .crit 0% .launch 43 .target ~@1234 .is_crit_valid True  .effect "Antiq Dodge 3"
+combat_skill: .id "invigorating_vapours" .level 3 .type "ranged" .atk 0% .dmg 0% .crit 0% .launch 43 .target ~@1234 .is_crit_valid True  .effect "Antiq Dodge 4"
+combat_skill: .id "invigorating_vapours" .level 4 .type "ranged" .atk 0% .dmg 0% .crit 0% .launch 43 .target ~@1234 .is_crit_valid True  .effect "Antiq Dodge 5"
+combat_skill: .id "protect_me" .level 0 .type "ranged" .atk 0% .dmg 0% .crit 0% .self_target_valid false .launch 4321 .target @1234 .is_crit_valid True  .effect "Antiq DefBuff 1" "Antiq ProtectMe ClearGuardsPerformer" "Antiq ProtectMe ClearGuardsTarget" "Antiq ProtectMe Guard" .generation_guaranteed true
+combat_skill: .id "protect_me" .level 1 .type "ranged" .atk 0% .dmg 0% .crit 0% .self_target_valid false .launch 4321 .target @1234 .is_crit_valid True  .effect "Antiq DefBuff 2" "Antiq ProtectMe ClearGuardsPerformer" "Antiq ProtectMe ClearGuardsTarget" "Antiq ProtectMe Guard"
+combat_skill: .id "protect_me" .level 2 .type "ranged" .atk 0% .dmg 0% .crit 0% .self_target_valid false .launch 4321 .target @1234 .is_crit_valid True  .effect "Antiq DefBuff 3" "Antiq ProtectMe ClearGuardsPerformer" "Antiq ProtectMe ClearGuardsTarget" "Antiq ProtectMe Guard"
+combat_skill: .id "protect_me" .level 3 .type "ranged" .atk 0% .dmg 0% .crit 0% .self_target_valid false .launch 4321 .target @1234 .is_crit_valid True  .effect "Antiq DefBuff 4" "Antiq ProtectMe ClearGuardsPerformer" "Antiq ProtectMe ClearGuardsTarget" "Antiq ProtectMe Guard"
+combat_skill: .id "protect_me" .level 4 .type "ranged" .atk 0% .dmg 0% .crit 0% .self_target_valid false .launch 4321 .target @1234 .is_crit_valid True  .effect "Antiq DefBuff 5" "Antiq ProtectMe ClearGuardsPerformer" "Antiq ProtectMe ClearGuardsTarget" "Antiq ProtectMe Guard"
+tag: .id "light"
+tag: .id "non-religious"
+deaths_door: .buffs deathsdoorACCDebuff deathsdoorDMGLowDebuff deathsdoorDMGHighDebuff deathsdoorSPDDebuff deathsdoorSRDebuff .recovery_buffs mortalityACCDebuff mortalityDMGLowDebuff mortalityDMGHighDebuff mortalitySPDDebuff mortalitySRDebuff .recovery_heart_attack_buffs heartattackACCDebuff heartattackDMGLowDebuff heartattackDMGHighDebuff heartattackSPDDebuff heartattackSRDebuff
+controlled: .target_rank 4
+id_index: .index 14
+generation: .number_of_positive_quirks_min 1 .number_of_positive_quirks_max 2 .number_of_negative_quirks_min 1 .number_of_negative_quirks_max 2 .number_of_class_specific_camping_skills 2 .number_of_shared_camping_skills 1 .number_of_random_combat_skills 4
+skill_selection: .can_select_combat_skills true .number_of_selected_combat_skills_max 4
+extra_battle_loot: .code "ANTIQ" .count 1
+extra_curio_loot: .code "ANTIQ" .count 1
+extra_stack_limit: .id antiquarian_gold
+.end

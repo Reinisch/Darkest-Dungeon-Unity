@@ -1,0 +1,24 @@
+name: ancestor_flawed_D
+type: ancestor_flawed
+
+art:
+commonfx: .deathfx death_medium
+skill: .id "flawed_mark" .anim "attack_tentacle" .fx "mark" .targchestfx "mark_target" .area_pos_offset 0 -25
+skill: .id "flawed_reveal" .anim "attack_maw" .fx "reveal" .targchestfx "reveal_target" .area_pos_offset 0 -10
+.end
+
+info:
+display: .size 1
+enemy_type: .id "eldritch"
+enemy_type: .id "man"
+stats: .hp 29 .def 16.75% .prot 0 .spd 4 .stun_resist 72.5% .poison_resist 57.5% .bleed_resist 57.5% .debuff_resist 57.5% .move_resist 58%
+skill: .id "flawed_mark" .type "melee" .atk 113.75% .dmg 1 3 .crit 0%  .effect "Ancestor Mark" "Flawed Stun" .launch 4321 .target 1234 .is_crit_valid False .is_knowledgeable False
+skill: .id "flawed_reveal" .type "melee" .atk 113.75% .dmg 2 2 .crit 0%  .effect "Ancestor Flawed Stress" .launch 4321 .target 1234 .is_crit_valid False .is_knowledgeable False
+personality: .prefskill -1
+loot: .code "NONE" .count 0
+initiative: .number_of_turns_per_round 1
+monster_brain: .id ancestor_flawed_D
+battle_modifier: .disable_stall_penalty True .can_surprise False .can_be_surprised False .always_surprise False .always_be_surprised False
+life_link: .base_class "ancestor_small"
+death_damage: .target_base_class_id ancestor_small .target_damage 5
+.end

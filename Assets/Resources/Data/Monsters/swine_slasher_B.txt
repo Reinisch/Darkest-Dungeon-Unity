@@ -1,0 +1,21 @@
+name: swine_slasher_B
+type: swine_slasher
+
+art:
+commonfx: .deathfx death_medium
+skill: .id "hook_where_it_hurts" .anim "attack_hook" .fx "hook_where_it_hurts" .targchestfx "blood_splatter"
+.end
+
+info:
+display: .size 1
+enemy_type: .id "man"
+enemy_type: .id "beast"
+stats: .hp 12 .def 16.25% .prot 0.4 .spd 6 .stun_resist 30% .poison_resist 60% .bleed_resist 60% .debuff_resist 35% .move_resist 45%
+skill: .id "hook_where_it_hurts" .type "melee" .atk 88.75% .dmg 4 9 .crit 21%  .effect "Slasher Hook Debuff 3" .launch 1234 .target 123 .move 1 0
+personality: .prefskill 1
+loot: .code "A" .count 1
+initiative: .number_of_turns_per_round 1
+monster_brain: .id swine_slasher_B
+death_class: .monster_class_id corpse_B .is_valid_on_crit False .type "corpse" 
+battle_modifier: .disable_stall_penalty False .can_surprise True .can_be_surprised True .always_surprise False .always_be_surprised False
+.end

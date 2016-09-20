@@ -1,0 +1,70 @@
+name: bounty_hunter
+
+art:
+commonfx: .deathfx death_medium
+combat_skill: .id "collect_bounty" .icon "one" .anim "attack_axe" .fx "collect_bounty" .targchestfx "blood_splatter"	
+combat_skill: .id "target_tag" .icon "two" .anim "attack_point" .fx "target_tag" .targchestfx "target_tag_target"
+combat_skill: .id "come_hither" .icon "three" .anim "attack_hook" .targchestfx "blood_splatter"
+combat_skill: .id "uppercut" .icon "four" .anim "attack_punch" .fx "uppercut" .targchestfx "blood_splatter"
+combat_skill: .id "flashbang" .icon "five" .anim "attack_throw" .fx "flashbang" .targfx "flashbang_target"
+combat_skill: .id "finish_him" .icon "six" .anim "attack_axe" .fx "finish_him" .targchestfx "blood_splatter"	
+combat_skill: .id "hook_and_slice" .icon "seven" .anim "attack_slice" .targchestfx "blood_splatter"
+.end
+
+info:
+resistances: .stun 40% .poison 30% .bleed 30% .disease 20% .move 40% .debuff 30% .death_blow 67% .trap 40%
+weapon: .name "bounty_hunter_weapon_0" .atk 0% .dmg 5 10 .crit 5% .spd 5
+weapon: .name "bounty_hunter_weapon_1" .atk 0% .dmg 6 12 .crit 5.5% .spd 5 .upgradeRequirementCode 0
+weapon: .name "bounty_hunter_weapon_2" .atk 0% .dmg 7 13 .crit 6% .spd 6 .upgradeRequirementCode 1
+weapon: .name "bounty_hunter_weapon_3" .atk 0% .dmg 7 15 .crit 6.5% .spd 6 .upgradeRequirementCode 2
+weapon: .name "bounty_hunter_weapon_4" .atk 0% .dmg 8 16 .crit 7% .spd 7 .upgradeRequirementCode 3
+armour: .name "bounty_hunter_armour_0" .def 5% .prot 0 .hp 25 .spd 0
+armour: .name "bounty_hunter_armour_1" .def 10% .prot 0 .hp 30 .spd 0 .upgradeRequirementCode 0
+armour: .name "bounty_hunter_armour_2" .def 15% .prot 0 .hp 35 .spd 0 .upgradeRequirementCode 1
+armour: .name "bounty_hunter_armour_3" .def 20% .prot 0 .hp 40 .spd 0 .upgradeRequirementCode 2
+armour: .name "bounty_hunter_armour_4" .def 25% .prot 0 .hp 45 .spd 0 .upgradeRequirementCode 3
+combat_skill: .id "collect_bounty" .level 0 .type "melee" .atk 85% .dmg 0% .crit 5% .launch 321 .target 12 .is_crit_valid True  .effect "BH Dmg Marked" "Man Killer 1" .generation_guaranteed true
+combat_skill: .id "collect_bounty" .level 1 .type "melee" .atk 90% .dmg 0% .crit 6% .launch 321 .target 12 .is_crit_valid True  .effect "BH Dmg Marked" "Man Killer 2"
+combat_skill: .id "collect_bounty" .level 2 .type "melee" .atk 95% .dmg 0% .crit 6% .launch 321 .target 12 .is_crit_valid True  .effect "BH Dmg Marked" "Man Killer 3"
+combat_skill: .id "collect_bounty" .level 3 .type "melee" .atk 100% .dmg 0% .crit 6% .launch 321 .target 12 .is_crit_valid True  .effect "BH Dmg Marked" "Man Killer 4"
+combat_skill: .id "collect_bounty" .level 4 .type "melee" .atk 105% .dmg 0% .crit 7% .launch 321 .target 12 .is_crit_valid True  .effect "BH Dmg Marked" "Man Killer 5"
+combat_skill: .id "target_tag" .level 0 .type "ranged" .atk 100% .dmg -100% .crit 0% .launch 4321 .target 1234 .is_crit_valid False  .effect "BH Mark Target" "BH Mark Debuff 1"
+combat_skill: .id "target_tag" .level 1 .type "ranged" .atk 105% .dmg -100% .crit 0% .launch 4321 .target 1234 .is_crit_valid False  .effect "BH Mark Target" "BH Mark Debuff 2"
+combat_skill: .id "target_tag" .level 2 .type "ranged" .atk 110% .dmg -100% .crit 0% .launch 4321 .target 1234 .is_crit_valid False  .effect "BH Mark Target" "BH Mark Debuff 3"
+combat_skill: .id "target_tag" .level 3 .type "ranged" .atk 115% .dmg -100% .crit 0% .launch 4321 .target 1234 .is_crit_valid False  .effect "BH Mark Target" "BH Mark Debuff 4"
+combat_skill: .id "target_tag" .level 4 .type "ranged" .atk 120% .dmg -100% .crit 0% .launch 4321 .target 1234 .is_crit_valid False  .effect "BH Mark Target" "BH Mark Debuff 5"
+combat_skill: .id "come_hither" .level 0 .type "ranged" .atk 90% .dmg -67% .crit 0% .launch 4321 .target 34 .is_crit_valid True  .effect "Pull 2A"
+combat_skill: .id "come_hither" .level 1 .type "ranged" .atk 95% .dmg -67% .crit 0% .launch 4321 .target 34 .is_crit_valid True  .effect "Pull 2B"
+combat_skill: .id "come_hither" .level 2 .type "ranged" .atk 100% .dmg -67% .crit 1% .launch 4321 .target 34 .is_crit_valid True  .effect "Pull 2C"
+combat_skill: .id "come_hither" .level 3 .type "ranged" .atk 105% .dmg -67% .crit 2% .launch 4321 .target 34 .is_crit_valid True  .effect "Pull 2D"
+combat_skill: .id "come_hither" .level 4 .type "ranged" .atk 110% .dmg -67% .crit 2% .launch 4321 .target 34 .is_crit_valid True  .effect "Pull 2E"
+combat_skill: .id "uppercut" .level 0 .type "melee" .atk 85% .dmg -67% .crit 0% .launch 21 .target 12 .is_crit_valid True  .effect "Push 2A" "Strong Stun 1"
+combat_skill: .id "uppercut" .level 1 .type "melee" .atk 90% .dmg -67% .crit 0% .launch 21 .target 12 .is_crit_valid True  .effect "Push 2B" "Strong Stun 2"
+combat_skill: .id "uppercut" .level 2 .type "melee" .atk 95% .dmg -67% .crit 1% .launch 21 .target 12 .is_crit_valid True  .effect "Push 2C" "Strong Stun 3"
+combat_skill: .id "uppercut" .level 3 .type "melee" .atk 100% .dmg -67% .crit 2% .launch 21 .target 12 .is_crit_valid True  .effect "Push 2D" "Strong Stun 4"
+combat_skill: .id "uppercut" .level 4 .type "melee" .atk 105% .dmg -67% .crit 2% .launch 21 .target 12 .is_crit_valid True  .effect "Push 2E" "Strong Stun 5"
+combat_move_skill: .id "move" .level 0 .type "move" .move 2 2 .launch 4321
+combat_skill: .id "flashbang" .level 0 .type "ranged" .atk 95% .dmg -100% .crit 0% .launch 432 .target 1234 .is_crit_valid False  .effect "Strong Stun 1" "Disorient 1"
+combat_skill: .id "flashbang" .level 1 .type "ranged" .atk 100% .dmg -100% .crit 0% .launch 432 .target 1234 .is_crit_valid False  .effect "Strong Stun 2" "Disorient 2"
+combat_skill: .id "flashbang" .level 2 .type "ranged" .atk 105% .dmg -100% .crit 0% .launch 432 .target 1234 .is_crit_valid False  .effect "Strong Stun 3" "Disorient 3"
+combat_skill: .id "flashbang" .level 3 .type "ranged" .atk 110% .dmg -100% .crit 0% .launch 432 .target 1234 .is_crit_valid False  .effect "Strong Stun 4" "Disorient 4"
+combat_skill: .id "flashbang" .level 4 .type "ranged" .atk 115% .dmg -100% .crit 0% .launch 432 .target 1234 .is_crit_valid False  .effect "Strong Stun 5" "Disorient 5"
+combat_skill: .id "finish_him" .level 0 .type "melee" .atk 85% .dmg 0% .crit 2% .launch 321 .target 123 .is_crit_valid True  .effect "Stun Killer 1"
+combat_skill: .id "finish_him" .level 1 .type "melee" .atk 90% .dmg 0% .crit 2% .launch 321 .target 123 .is_crit_valid True  .effect "Stun Killer 2"
+combat_skill: .id "finish_him" .level 2 .type "melee" .atk 95% .dmg 0% .crit 3% .launch 321 .target 123 .is_crit_valid True  .effect "Stun Killer 3"
+combat_skill: .id "finish_him" .level 3 .type "melee" .atk 100% .dmg 0% .crit 4% .launch 321 .target 123 .is_crit_valid True  .effect "Stun Killer 4"
+combat_skill: .id "finish_him" .level 4 .type "melee" .atk 105% .dmg 0% .crit 4% .launch 321 .target 123 .is_crit_valid True  .effect "Stun Killer 5"
+combat_skill: .id "hook_and_slice" .level 0 .type "ranged" .atk 90% .dmg -85% .crit 2% .launch 234 .target 34 .is_crit_valid True  .effect "Strong Bleed 1"
+combat_skill: .id "hook_and_slice" .level 1 .type "ranged" .atk 95% .dmg -85% .crit 2% .launch 234 .target 34 .is_crit_valid True  .effect "Strong Bleed 2"
+combat_skill: .id "hook_and_slice" .level 2 .type "ranged" .atk 100% .dmg -85% .crit 3% .launch 234 .target 34 .is_crit_valid True  .effect "Strong Bleed 3"
+combat_skill: .id "hook_and_slice" .level 3 .type "ranged" .atk 105% .dmg -85% .crit 4% .launch 234 .target 34 .is_crit_valid True  .effect "Strong Bleed 4"
+combat_skill: .id "hook_and_slice" .level 4 .type "ranged" .atk 110% .dmg -85% .crit 4% .launch 234 .target 34 .is_crit_valid True  .effect "Strong Bleed 5"
+riposte_skill: .id "riposte1" .level 0 .type "melee" .atk 85% .dmg 0% .crit 5% .launch 1234 .target 1234 .is_crit_valid True 
+tag: .id "heavy"
+tag: .id "non-religious"
+deaths_door: .buffs deathsdoorACCDebuff deathsdoorDMGLowDebuff deathsdoorDMGHighDebuff deathsdoorSPDDebuff deathsdoorSRDebuff .recovery_buffs mortalityACCDebuff mortalityDMGLowDebuff mortalityDMGHighDebuff mortalitySPDDebuff mortalitySRDebuff .recovery_heart_attack_buffs heartattackACCDebuff heartattackDMGLowDebuff heartattackDMGHighDebuff heartattackSPDDebuff heartattackSRDebuff
+controlled: .target_rank 1
+id_index: .index 5
+generation: .number_of_positive_quirks_min 1 .number_of_positive_quirks_max 2 .number_of_negative_quirks_min 1 .number_of_negative_quirks_max 2 .number_of_class_specific_camping_skills 2 .number_of_shared_camping_skills 1 .number_of_random_combat_skills 4
+skill_selection: .can_select_combat_skills true .number_of_selected_combat_skills_max 4
+.end

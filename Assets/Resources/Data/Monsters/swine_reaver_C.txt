@@ -1,0 +1,23 @@
+name: swine_reaver_C
+type: swine_reaver
+
+art:
+commonfx: .deathfx death_medium
+skill: .id "butcher_cut" .anim "attack_melee" .fx "butcher_cut" .targchestfx "blood_splatter"
+skill: .id "ball_and_chain" .anim "attack_ranged" .targchestfx "blood_splatter"
+.end
+
+info:
+display: .size 1
+enemy_type: .id "man"
+enemy_type: .id "beast"
+stats: .hp 43 .def 22.5% .prot 0.33 .spd 5 .stun_resist 70% .poison_resist 105% .bleed_resist 65% .debuff_resist 60% .move_resist 95%
+skill: .id "butcher_cut" .type "melee" .atk 102.5% .dmg 7 13 .crit 17%  .effect "Bleed 5" "Reaver Cut Debuff 5" .launch 12 .target 123
+skill: .id "ball_and_chain" .type "ranged" .atk 102.5% .dmg 4 8 .crit 17%  .effect "Stun 5" "Reaver Ball Push 1C" .launch 1234 .target 34
+personality: .prefskill -1
+loot: .code "A" .count 1
+initiative: .number_of_turns_per_round 1
+monster_brain: .id swine_reaver_C
+death_class: .monster_class_id corpse_C .is_valid_on_crit False .type "corpse" 
+battle_modifier: .disable_stall_penalty False .can_surprise True .can_be_surprised True .always_surprise False .always_be_surprised False
+.end
