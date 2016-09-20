@@ -28,3 +28,17 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+
+# Game Assets
+/Assets/Animations/
+/Audio/
+/Flares/
+/Gizmos/
+/Models/
+/Plugins/
+/Spine/
+/Sprites/
+/StreamingAssets/
+/Textures/
+/Video/
+
