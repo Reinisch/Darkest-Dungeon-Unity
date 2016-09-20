@@ -30,11 +30,7 @@ sysinfo.txt
 *.unitypackage
 
 # Game Assets
-/Assets/Animations/
 /Assets/Audio/
-/Assets/Flares/
-/Assets/Gizmos/
-/Assets/Models/
 /Assets/Plugins/
 /Assets/Spine/
 /Assets/Sprites/
