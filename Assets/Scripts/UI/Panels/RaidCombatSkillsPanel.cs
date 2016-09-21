@@ -79,8 +79,8 @@ public class RaidCombatSkillsPanel : MonoBehaviour
     }
     void SetUsableCombatSkills()
     {
-        BattleFormation allies = RaidSceneManager.BattleGround.heroFormation;
-        BattleFormation enemies = RaidSceneManager.BattleGround.monsterFormation;
+        BattleFormation allies = RaidSceneManager.BattleGround.HeroFormation;
+        BattleFormation enemies = RaidSceneManager.BattleGround.MonsterFormation;
 
         for (int i = 0; i < skillSlots.Count; i++)
         {

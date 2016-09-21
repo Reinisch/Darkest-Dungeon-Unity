@@ -20,7 +20,7 @@ public class RaidPartyController : MonoBehaviour
 
     void CheckSmoothStop()
     {
-        foreach (var unit in RaidSceneManager.Formations.heroes.party.Units)
+        foreach (var unit in RaidSceneManager.HeroParty.Units)
         {
             if (unit.IsWalking())
             {
@@ -92,13 +92,13 @@ public class RaidPartyController : MonoBehaviour
 
             if(advancment != 0)
             {
-                for (int i = 0; i < RaidSceneManager.BattleGround.heroFormation.party.Units.Count; i++)
+                for (int i = 0; i < RaidSceneManager.BattleGround.HeroParty.Units.Count; i++)
                 {
-                    var trackEntry = RaidSceneManager.BattleGround.heroFormation.party.Units[i].SkeletonAnimations[3].state.GetCurrent(0);
+                    var trackEntry = RaidSceneManager.BattleGround.HeroParty.Units[i].SkeletonAnimations[3].state.GetCurrent(0);
                     if (trackEntry != null) trackEntry.Loop = true;
 
-                    if (RaidSceneManager.BattleGround.heroFormation.party.Units[i].SkeletonAnimations[3].timeScale < 1f)
-                        RaidSceneManager.BattleGround.heroFormation.party.Units[i].SkeletonAnimations[3].timeScale += Time.deltaTime * 3f;
+                    if (RaidSceneManager.BattleGround.HeroParty.Units[i].SkeletonAnimations[3].timeScale < 1f)
+                        RaidSceneManager.BattleGround.HeroParty.Units[i].SkeletonAnimations[3].timeScale += Time.deltaTime * 3f;
                 }
             }
 
@@ -106,14 +106,14 @@ public class RaidPartyController : MonoBehaviour
                 moving = false;
             else if (!moving && advancment != 0)
             {
-                for (int i = 0; i < RaidSceneManager.BattleGround.heroFormation.party.Units.Count; i++)
+                for (int i = 0; i < RaidSceneManager.BattleGround.HeroParty.Units.Count; i++)
                 {
-                    if (!RaidSceneManager.BattleGround.heroFormation.party.Units[i].IsWalking())
+                    if (!RaidSceneManager.BattleGround.HeroParty.Units[i].IsWalking())
                     {
-                        RaidSceneManager.BattleGround.heroFormation.party.Units[i].SkeletonAnimations[3].Reset();
-                        RaidSceneManager.BattleGround.heroFormation.party.Units[i].SetWalking(true);
+                        RaidSceneManager.BattleGround.HeroParty.Units[i].SkeletonAnimations[3].Reset();
+                        RaidSceneManager.BattleGround.HeroParty.Units[i].SetWalking(true);
                     }
-                    RaidSceneManager.BattleGround.heroFormation.party.Units[i].SkeletonAnimations[3].timeScale = 0.75f;
+                    RaidSceneManager.BattleGround.HeroParty.Units[i].SkeletonAnimations[3].timeScale = 0.75f;
                 }
                 moving = true;
             }

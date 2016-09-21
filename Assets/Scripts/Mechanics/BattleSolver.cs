@@ -220,19 +220,17 @@ public static class BattleSolver
 
     public static bool IsSkillUsable(FormationUnit performer, CombatSkill skill)
     {
-        var battleGround = RaidSceneManager.BattleGround;
-
         FormationParty friends;
         FormationParty enemies;
         if (performer.Team == Team.Heroes)
         {
-            friends = battleGround.heroFormation.party;
-            enemies = battleGround.monsterFormation.party;
+            friends = RaidSceneManager.BattleGround.HeroParty;
+            enemies = RaidSceneManager.BattleGround.MonsterParty;
         }
         else
         {
-            friends = battleGround.monsterFormation.party;
-            enemies = battleGround.heroFormation.party;
+            friends = RaidSceneManager.BattleGround.MonsterParty;
+            enemies = RaidSceneManager.BattleGround.HeroParty;
         }
 
         return skill.LaunchRanks.IsLaunchableFrom(performer.Rank, performer.Size) &&
@@ -364,11 +362,11 @@ public static class BattleSolver
     public static List<FormationUnit> GetSkillAvailableTargets(FormationUnit performer, CombatSkill skill)
     {
         if (performer.Team == Team.Heroes)
-            return skill.GetAvailableTargets(performer, RaidSceneManager.BattleGround.heroFormation.party,
-                RaidSceneManager.BattleGround.monsterFormation.party);
+            return skill.GetAvailableTargets(performer, RaidSceneManager.BattleGround.HeroParty,
+                RaidSceneManager.BattleGround.MonsterParty);
         else
-            return skill.GetAvailableTargets(performer, RaidSceneManager.BattleGround.monsterFormation.party,
-                RaidSceneManager.BattleGround.heroFormation.party);
+            return skill.GetAvailableTargets(performer, RaidSceneManager.BattleGround.MonsterParty,
+                RaidSceneManager.BattleGround.HeroParty);
     }
     public static MonsterBrainDecision UseMonsterBrain(FormationUnit performer, string combatSkillOverride = null)
     {
@@ -476,8 +474,8 @@ public static class BattleSolver
             if(skill.TargetRanks.IsMultitarget)
             {
                 var targets = performer.Team == Team.Heroes ?
-                    new List<FormationUnit>(RaidSceneManager.BattleGround.heroFormation.party.Units) :
-                    new List<FormationUnit>(RaidSceneManager.BattleGround.monsterFormation.party.Units);
+                    new List<FormationUnit>(RaidSceneManager.BattleGround.HeroParty.Units) :
+                    new List<FormationUnit>(RaidSceneManager.BattleGround.MonsterParty.Units);
 
                 if (!skill.IsSelfValid)
                     targets.Remove(performer);
@@ -496,8 +494,8 @@ public static class BattleSolver
             if (skill.TargetRanks.IsMultitarget)
             {
                 var targets = performer.Team == Team.Heroes ?
-                    new List<FormationUnit>(RaidSceneManager.BattleGround.monsterFormation.party.Units) :
-                    new List<FormationUnit>(RaidSceneManager.BattleGround.heroFormation.party.Units);
+                    new List<FormationUnit>(RaidSceneManager.BattleGround.MonsterParty.Units) :
+                    new List<FormationUnit>(RaidSceneManager.BattleGround.HeroParty.Units);
 
                 for (int i = targets.Count - 1; i >= 0; i--)
                     if (!skill.TargetRanks.IsTargetableUnit(targets[i]))

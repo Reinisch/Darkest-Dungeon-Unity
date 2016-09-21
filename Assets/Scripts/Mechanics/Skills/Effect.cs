@@ -2641,9 +2641,9 @@ public class ClearRankTargetEffect : SubEffect
             return false;
 
         if (target.Team == Team.Heroes)
-            RaidSceneManager.BattleGround.monsterFormation.rankHolder.ClearMarks();
+            RaidSceneManager.BattleGround.MonsterFormation.rankHolder.ClearMarks();
         else
-            RaidSceneManager.BattleGround.heroFormation.rankHolder.ClearMarks();
+            RaidSceneManager.BattleGround.HeroFormation.rankHolder.ClearMarks();
 
         return true;
     }

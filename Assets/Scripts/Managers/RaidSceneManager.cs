@@ -1879,17 +1879,17 @@ public class RaidSceneManager : MonoBehaviour
             yield return new WaitForSeconds(1f);
 
             #region Stalling
-            if (BattleGround.monsterFormation.IsStallingActive())
+            if (BattleGround.MonsterFormation.IsStallingActive())
             {
                 BattleGround.StallingRoundNumber++;
 
                 if (BattleGround.StallingRoundNumber == 3)
                 {
                     var stallEffect = DarkestDungeonManager.Data.Effects["stall_stress"];
-                    for (int i = 0; i < BattleGround.heroFormation.party.Units.Count; i++)
+                    for (int i = 0; i < BattleGround.HeroParty.Units.Count; i++)
                         for (int j = 0; j < stallEffect.SubEffects.Count; j++)
-                            stallEffect.SubEffects[j].Apply(BattleGround.heroFormation.party.Units[i],
-                                BattleGround.heroFormation.party.Units[i], stallEffect);
+                            stallEffect.SubEffects[j].Apply(BattleGround.HeroParty.Units[i],
+                                BattleGround.HeroParty.Units[i], stallEffect);
 
                     yield return StartCoroutine(ExecuteEffectEvents(false));
                 }
@@ -1901,10 +1901,10 @@ public class RaidSceneManager : MonoBehaviour
                         for (int i = 0; i < stallSet.MonsterSet.Count; i++)
                         {
                             MonsterData summonData = DarkestDungeonManager.Data.Monsters[stallSet.MonsterSet[i]];
-                            if (summonData.Size <= BattleGround.monsterFormation.AvailableSummonSpace)
+                            if (summonData.Size <= BattleGround.MonsterFormation.AvailableSummonSpace)
                             {
                                 GameObject summonObject = Resources.Load("Prefabs/Monsters/" + summonData.TypeId) as GameObject;
-                                RaidSceneManager.BattleGround.SummonUnit(summonData, summonObject, i + 1, true, false);
+                                BattleGround.SummonUnit(summonData, summonObject, i + 1, true, false);
                             }
                         }
                     }
@@ -1918,9 +1918,9 @@ public class RaidSceneManager : MonoBehaviour
 
             #region LifeTime Activations
             tempList.Clear();
-            for (int i = 0; i < battleGround.monsterFormation.party.Units.Count; i++)
-                if (battleGround.monsterFormation.party.Units[i].Character.LifeTime != null)
-                    tempList.Add(battleGround.monsterFormation.party.Units[i]);
+            for (int i = 0; i < battleGround.MonsterParty.Units.Count; i++)
+                if (battleGround.MonsterParty.Units[i].Character.LifeTime != null)
+                    tempList.Add(battleGround.MonsterParty.Units[i]);
 
             if (tempList.Count > 0)
             {
@@ -1999,7 +1999,7 @@ public class RaidSceneManager : MonoBehaviour
             #endregion
 
             #region Round Start Desires
-            tempList.AddRange(battleGround.monsterFormation.party.Units);
+            tempList.AddRange(battleGround.MonsterParty.Units);
             while (tempList.Count > 0)
             {
                 var monsterUnit = tempList[0];
@@ -2035,7 +2035,7 @@ public class RaidSceneManager : MonoBehaviour
                     if (k > 0)
                         yield return new WaitForSeconds(0.2f);
 
-                    tempList.AddRange(battleGround.monsterFormation.party.Units.FindAll(unit => unit.Character.IsMonster
+                    tempList.AddRange(battleGround.MonsterParty.Units.FindAll(unit => unit.Character.IsMonster
                         && (unit.Character as Monster).Data.Shapeshifter != null));
                     if (tempList.Count > 0)
                     {
@@ -2278,17 +2278,17 @@ public class RaidSceneManager : MonoBehaviour
                 #endregion
 
                 #region Life Link Activations
-                for (int i = BattleGround.monsterFormation.party.Units.Count - 1; i >= 0; i--)
+                for (int i = BattleGround.MonsterParty.Units.Count - 1; i >= 0; i--)
                 {
-                    if (BattleGround.monsterFormation.party.Units[i].Character.IsMonster)
+                    if (BattleGround.MonsterParty.Units[i].Character.IsMonster)
                     {
-                        var monster = BattleGround.monsterFormation.party.Units[i].Character as Monster;
+                        var monster = BattleGround.MonsterParty.Units[i].Character as Monster;
                         if (monster.Data.LifeLink != null &&
-                            !BattleGround.IsLifeLinked(BattleGround.monsterFormation.party.Units[i], monster.Data.LifeLink))
+                            !BattleGround.IsLifeLinked(BattleGround.MonsterParty.Units[i], monster.Data.LifeLink))
                         {
-                            PrepareDeath(BattleGround.monsterFormation.party.Units[i]);
+                            PrepareDeath(BattleGround.MonsterParty.Units[i]);
                             yield return new WaitForSeconds(1.2f);
-                            ExecuteDeath(BattleGround.monsterFormation.party.Units[i]);
+                            ExecuteDeath(BattleGround.MonsterParty.Units[i]);
                             yield return new WaitForSeconds(0.3f);
                         }
                     }
@@ -2327,7 +2327,7 @@ public class RaidSceneManager : MonoBehaviour
             if (BattleGround.IsBattleEnded())
                 break;
             #region Turn End Desires
-            tempList.AddRange(battleGround.monsterFormation.party.Units);
+            tempList.AddRange(battleGround.MonsterParty.Units);
             while (tempList.Count > 0)
             {
                 var monsterUnit = tempList[0];
@@ -2364,7 +2364,7 @@ public class RaidSceneManager : MonoBehaviour
         }
 
         #region Round Finish Desires
-        tempList.AddRange(battleGround.monsterFormation.party.Units);
+        tempList.AddRange(battleGround.MonsterParty.Units);
         while (tempList.Count > 0)
         {
             var monsterUnit = tempList[0];
@@ -2451,7 +2451,7 @@ public class RaidSceneManager : MonoBehaviour
 
                             if (deathDamage != null)
                             {
-                                var deathDamageTarget = BattleGround.monsterFormation.party.Units.Find(unit =>
+                                var deathDamageTarget = BattleGround.MonsterParty.Units.Find(unit =>
                                     unit.Character.Class == deathDamage.TargetBaseClass);
 
                                 if (deathDamageTarget != null)
@@ -2521,7 +2521,7 @@ public class RaidSceneManager : MonoBehaviour
 
                             if (deathDamage != null)
                             {
-                                var deathDamageTarget = BattleGround.monsterFormation.party.Units.Find(unit =>
+                                var deathDamageTarget = BattleGround.MonsterParty.Units.Find(unit =>
                                 unit.Character.Class == deathDamage.TargetBaseClass);
 
                                 if (deathDamageTarget != null)
@@ -3206,7 +3206,7 @@ public class RaidSceneManager : MonoBehaviour
 
                         if (deathDamage != null)
                         {
-                            var deathDamageTarget = BattleGround.monsterFormation.party.Units.Find(unit =>
+                            var deathDamageTarget = BattleGround.MonsterParty.Units.Find(unit =>
                                 unit.Character.Class == deathDamage.TargetBaseClass);
 
                             if (deathDamageTarget != null)
@@ -3276,7 +3276,7 @@ public class RaidSceneManager : MonoBehaviour
 
                         if (deathDamage != null)
                         {
-                            var deathDamageTarget = BattleGround.monsterFormation.party.Units.Find(unit =>
+                            var deathDamageTarget = BattleGround.MonsterParty.Units.Find(unit =>
                                 unit.Character.Class == deathDamage.TargetBaseClass);
 
                             if (deathDamageTarget != null)
@@ -3425,9 +3425,9 @@ public class RaidSceneManager : MonoBehaviour
             }
         }
 
-        for(int i = 0; i < BattleGround.monsterFormation.party.Units.Count; i++)
-            if (BattleGround.monsterFormation.party.Units[i].CombatInfo.MarkedForDeath)
-                PrepareDeath(BattleGround.monsterFormation.party.Units[i]);
+        for(int i = 0; i < BattleGround.MonsterParty.Units.Count; i++)
+            if (BattleGround.MonsterParty.Units[i].CombatInfo.MarkedForDeath)
+                PrepareDeath(BattleGround.MonsterParty.Units[i]);
 
         performer.OverlaySlot.UpdateOverlay();
     }
@@ -3829,23 +3829,23 @@ public class RaidSceneManager : MonoBehaviour
                 Formations.UnitDefendOutro(targetUnit);
         }
 
-        for (int i = BattleGround.heroFormation.party.Units.Count - 1; i >= 0; i--)
-            ExecuteDeath(BattleGround.heroFormation.party.Units[i]);
+        for (int i = BattleGround.HeroParty.Units.Count - 1; i >= 0; i--)
+            ExecuteDeath(BattleGround.HeroParty.Units[i]);
 
         List<DeathDamage> deathDamages = new List<DeathDamage>();
-        for (int i = BattleGround.monsterFormation.party.Units.Count - 1; i >= 0; i--)
+        for (int i = BattleGround.MonsterParty.Units.Count - 1; i >= 0; i--)
         {
-            if (BattleGround.monsterFormation.party.Units[i].CombatInfo.IsDead)
-                if (BattleGround.monsterFormation.party.Units[i].Character.DeathDamage != null)
-                    deathDamages.Add(BattleGround.monsterFormation.party.Units[i].Character.DeathDamage);
+            if (BattleGround.MonsterParty.Units[i].CombatInfo.IsDead)
+                if (BattleGround.MonsterParty.Units[i].Character.DeathDamage != null)
+                    deathDamages.Add(BattleGround.MonsterParty.Units[i].Character.DeathDamage);
 
-            ExecuteDeath(BattleGround.monsterFormation.party.Units[i]);
+            ExecuteDeath(BattleGround.MonsterParty.Units[i]);
         }
 
         #region Execute Death Damages
         for (int i = 0; i < deathDamages.Count; i++)
         {
-            var deathDamageTarget = BattleGround.monsterFormation.party.Units.Find(unit =>
+            var deathDamageTarget = BattleGround.MonsterParty.Units.Find(unit =>
             unit.Character.Class == deathDamages[i].TargetBaseClass);
 
             if (deathDamageTarget != null)
@@ -3871,9 +3871,9 @@ public class RaidSceneManager : MonoBehaviour
         yield return new WaitForSeconds(0.075f);
 
         if (brainDecision.TargetInfo.Type == SkillTargetType.Enemy && skillResult.HasCritEffect)
-            for (int j = 0; j < BattleGround.heroFormation.party.Units.Count; j++)
+            for (int j = 0; j < BattleGround.HeroParty.Units.Count; j++)
                 DarkestDungeonManager.Data.Effects["AfflictedAllyStress"].
-                    ApplyIndependent(BattleGround.heroFormation.party.Units[j]);
+                    ApplyIndependent(BattleGround.HeroParty.Units[j]);
 
         yield return StartCoroutine(ExecuteEffectEvents(true));
         RaidEvents.MonsterTooltip.IsDisabled = false;
@@ -4090,23 +4090,23 @@ public class RaidSceneManager : MonoBehaviour
         }
 
 
-        for (int i = BattleGround.heroFormation.party.Units.Count - 1; i >= 0; i--)
-            ExecuteDeath(BattleGround.heroFormation.party.Units[i]);
+        for (int i = BattleGround.HeroParty.Units.Count - 1; i >= 0; i--)
+            ExecuteDeath(BattleGround.HeroParty.Units[i]);
 
         List<DeathDamage> deathDamages = new List<DeathDamage>();
-        for (int i = BattleGround.monsterFormation.party.Units.Count - 1; i >= 0; i--)
+        for (int i = BattleGround.MonsterParty.Units.Count - 1; i >= 0; i--)
         {
-            if (BattleGround.monsterFormation.party.Units[i].CombatInfo.IsDead)
-                if (BattleGround.monsterFormation.party.Units[i].Character.DeathDamage != null)
-                    deathDamages.Add(BattleGround.monsterFormation.party.Units[i].Character.DeathDamage);
+            if (BattleGround.MonsterParty.Units[i].CombatInfo.IsDead)
+                if (BattleGround.MonsterParty.Units[i].Character.DeathDamage != null)
+                    deathDamages.Add(BattleGround.MonsterParty.Units[i].Character.DeathDamage);
 
-            ExecuteDeath(BattleGround.monsterFormation.party.Units[i]);
+            ExecuteDeath(BattleGround.MonsterParty.Units[i]);
         }
 
         #region Execute Death Damages
         for (int i = 0; i < deathDamages.Count; i++)
         {
-            var deathDamageTarget = BattleGround.monsterFormation.party.Units.Find(unit =>
+            var deathDamageTarget = BattleGround.MonsterParty.Units.Find(unit =>
             unit.Character.Class == deathDamages[i].TargetBaseClass);
 
             if (deathDamageTarget != null)
@@ -4317,13 +4317,13 @@ public class RaidSceneManager : MonoBehaviour
 
         #region Execute Deaths
         List<DeathDamage> deathDamages = new List<DeathDamage>();
-        for (int i = BattleGround.monsterFormation.party.Units.Count - 1; i >= 0; i--)
+        for (int i = BattleGround.MonsterParty.Units.Count - 1; i >= 0; i--)
         {
-            if (BattleGround.monsterFormation.party.Units[i].CombatInfo.IsDead)
-                if (BattleGround.monsterFormation.party.Units[i].Character.DeathDamage != null)
-                    deathDamages.Add(BattleGround.monsterFormation.party.Units[i].Character.DeathDamage);
+            if (BattleGround.MonsterParty.Units[i].CombatInfo.IsDead)
+                if (BattleGround.MonsterParty.Units[i].Character.DeathDamage != null)
+                    deathDamages.Add(BattleGround.MonsterParty.Units[i].Character.DeathDamage);
 
-            ExecuteDeath(BattleGround.monsterFormation.party.Units[i]);
+            ExecuteDeath(BattleGround.MonsterParty.Units[i]);
         }
         ExecuteDeath(actionUnit);
         #endregion
@@ -4331,7 +4331,7 @@ public class RaidSceneManager : MonoBehaviour
         #region Execute Death Damages
         for (int i = 0; i < deathDamages.Count; i++)
         {
-            var deathDamageTarget = BattleGround.monsterFormation.party.Units.Find(unit =>
+            var deathDamageTarget = BattleGround.MonsterParty.Units.Find(unit =>
             unit.Character.Class == deathDamages[i].TargetBaseClass);
 
             if (deathDamageTarget != null)
@@ -4360,10 +4360,10 @@ public class RaidSceneManager : MonoBehaviour
         {
             DarkestDungeonManager.Data.Effects["Heal Stress 1"].ApplyIndependent(actionUnit);
 
-            for (int j = 0; j < BattleGround.heroFormation.party.Units.Count; j++)
-                if (BattleGround.heroFormation.party.Units[j] != actionUnit && RandomSolver.CheckSuccess(0.33f))
+            for (int j = 0; j < BattleGround.HeroParty.Units.Count; j++)
+                if (BattleGround.HeroParty.Units[j] != actionUnit && RandomSolver.CheckSuccess(0.33f))
                     DarkestDungeonManager.Data.Effects["Heal Stress 1"].
-                        ApplyIndependent(BattleGround.heroFormation.party.Units[j]);
+                        ApplyIndependent(BattleGround.HeroParty.Units[j]);
         }
         else if (skillResult.HasDeadEffect)
             DarkestDungeonManager.Data.Effects["Heal Stress Chance 1"].ApplyIndependent(actionUnit);
@@ -4372,8 +4372,8 @@ public class RaidSceneManager : MonoBehaviour
         RaidEvents.MonsterTooltip.IsDisabled = false;
 
         #region Trait Comment Attack Result
-        if (BattleGround.heroFormation.party.Units.Contains(actionUnit)
-            && BattleGround.heroFormation.party.Units.Count > 1)
+        if (BattleGround.HeroParty.Units.Contains(actionUnit)
+            && BattleGround.HeroParty.Units.Count > 1)
         {
             for (int i = 0; i < actionUnit.Party.Units.Count; i++)
             {
@@ -4845,11 +4845,11 @@ public class RaidSceneManager : MonoBehaviour
 
         bool executedEvent = false;
 
-        for (int i = 0; i < BattleGround.heroFormation.party.Units.Count; i++)
-            BattleGround.heroFormation.party.Units[i].StackEvents();
+        for (int i = 0; i < BattleGround.HeroParty.Units.Count; i++)
+            BattleGround.HeroParty.Units[i].StackEvents();
         if (includeMonsters)
-            for (int i = 0; i < BattleGround.monsterFormation.party.Units.Count; i++)
-                BattleGround.monsterFormation.party.Units[i].StackEvents();
+            for (int i = 0; i < BattleGround.MonsterParty.Units.Count; i++)
+                BattleGround.MonsterParty.Units[i].StackEvents();
 
         do
         {
@@ -4913,9 +4913,9 @@ public class RaidSceneManager : MonoBehaviour
             {
                 executedEvent = false;
 
-                unitEventQueue.AddRange(BattleGround.heroFormation.party.Units);
+                unitEventQueue.AddRange(BattleGround.HeroParty.Units);
                 if (includeMonsters)
-                    unitEventQueue.AddRange(BattleGround.monsterFormation.party.Units);
+                    unitEventQueue.AddRange(BattleGround.MonsterParty.Units);
 
                 while (unitEventQueue.Count > 0)
                 {
@@ -4991,9 +4991,9 @@ public class RaidSceneManager : MonoBehaviour
         } 
         while (executedEvent);
 
-        for (int i = 0; i < BattleGround.heroFormation.party.Units.Count; i++)
-            BattleGround.heroFormation.party.Units[i].Character.ApplyAllBuffRules(
-                Rules.GetIdleUnitRules(BattleGround.heroFormation.party.Units[i]));
+        for (int i = 0; i < BattleGround.HeroParty.Units.Count; i++)
+            BattleGround.HeroParty.Units[i].Character.ApplyAllBuffRules(
+                Rules.GetIdleUnitRules(BattleGround.HeroParty.Units[i]));
         effectEvent = null;
     }
     IEnumerator ExecuteRandomDialog(FormationUnit unit, string dialogId)
@@ -5242,8 +5242,7 @@ public class RaidSceneManager : MonoBehaviour
         }
         #endregion
 
-        BattleGround.heroFormation.rankHolder.ClearMarks();
-        BattleGround.monsterFormation.rankHolder.ClearMarks();
+        BattleGround.ResetTargetRanks();
 
         #region Stop Soundtrack
         DarkestSoundManager.StopBattleSoundtrack();
@@ -5262,9 +5261,9 @@ public class RaidSceneManager : MonoBehaviour
         #region Destroy Remains
         Formations.HideMonsterOverlay();
 
-        if (BattleGround.monsterFormation.party.Units.Count > 0)
+        if (BattleGround.MonsterParty.Units.Count > 0)
         {
-            foreach (var unit in BattleGround.monsterFormation.party.Units)
+            foreach (var unit in BattleGround.MonsterParty.Units)
             {
                 if (unit.Character.IsMonster)
                 {
@@ -5470,7 +5469,7 @@ public class RaidSceneManager : MonoBehaviour
         {
             RaidEvents.ShowAnnouncment(LocalizationManager.GetString("surprise_announcement"), AnnouncmentPosition.Left);
             tempList.Clear();
-            tempList.AddRange(BattleGround.heroFormation.party.Units);
+            tempList.AddRange(BattleGround.HeroParty.Units);
 
             foreach (var unit in tempList)
             {
@@ -5490,10 +5489,10 @@ public class RaidSceneManager : MonoBehaviour
         else if (BattleGround.SurpriseStatus == SurpriseStatus.MonstersSurprised)
         {
             RaidEvents.ShowAnnouncment(LocalizationManager.GetString("surprise_announcement"), AnnouncmentPosition.Right);
-            for (int i = 0; i < BattleGround.monsterFormation.party.Units.Count; i++)
-                if (BattleGround.monsterFormation.party.Units[i].Character.BattleModifiers != null)
-                    if (BattleGround.monsterFormation.party.Units[i].Character.BattleModifiers.CanBeSurprised == true)
-                        BattleGround.monsterFormation.party.Units[i].SetSurprised(true);
+            for (int i = 0; i < BattleGround.MonsterParty.Units.Count; i++)
+                if (BattleGround.MonsterParty.Units[i].Character.BattleModifiers != null)
+                    if (BattleGround.MonsterParty.Units[i].Character.BattleModifiers.CanBeSurprised == true)
+                        BattleGround.MonsterParty.Units[i].SetSurprised(true);
 
             yield return new WaitForSeconds(1.2f);
             RaidEvents.HideAnnouncment();
@@ -5553,9 +5552,9 @@ public class RaidSceneManager : MonoBehaviour
         #region Destroy Remains
         Formations.HideMonsterOverlay();
 
-        if (BattleGround.monsterFormation.party.Units.Count > 0)
+        if (BattleGround.MonsterParty.Units.Count > 0)
         {
-            foreach (var unit in BattleGround.monsterFormation.party.Units)
+            foreach (var unit in BattleGround.MonsterParty.Units)
             {
                 if (unit.Character.IsMonster)
                 {
@@ -6532,11 +6531,11 @@ public class RaidSceneManager : MonoBehaviour
 
             Monster monster = targetUnit.Character as Monster;
 
-            if(BattleGround.sharedHealthRecord.IsActive)
-                if (BattleGround.sharedHealthRecord.SharedUnits.Contains(targetUnit))
-                    for (int i = 0; i < BattleGround.sharedHealthRecord.SharedUnits.Count; i++)
-                        if (BattleGround.sharedHealthRecord.SharedUnits[i].CombatInfo.IsDead == false)
-                            PrepareDeath(BattleGround.sharedHealthRecord.SharedUnits[i]);
+            if(BattleGround.SharedHealth.IsActive)
+                if (BattleGround.SharedHealth.SharedUnits.Contains(targetUnit))
+                    for (int i = 0; i < BattleGround.SharedHealth.SharedUnits.Count; i++)
+                        if (BattleGround.SharedHealth.SharedUnits[i].CombatInfo.IsDead == false)
+                            PrepareDeath(BattleGround.SharedHealth.SharedUnits[i]);
 
             if (monster.Data.FullCaptor != null && 
                 BattleGround.Captures.Find(capture => capture.CaptorUnit == targetUnit) != null)
@@ -6692,14 +6691,14 @@ public class RaidSceneManager : MonoBehaviour
                     BattleGround.UnitDestroyed(targetUnit);
                     Formations.monsters.DeleteUnit(targetUnit);
 
-                    if (BattleGround.sharedHealthRecord.IsActive)
-                        if (BattleGround.sharedHealthRecord.SharedUnits.Contains(targetUnit))
-                            for (int i = 0; i < BattleGround.sharedHealthRecord.SharedUnits.Count; i++)
-                                if (BattleGround.monsterFormation.party.Units.Contains(BattleGround.sharedHealthRecord.SharedUnits[i]))
-                                    ExecuteDeath(BattleGround.sharedHealthRecord.SharedUnits[i]);
+                    if (BattleGround.SharedHealth.IsActive)
+                        if (BattleGround.SharedHealth.SharedUnits.Contains(targetUnit))
+                            for (int i = 0; i < BattleGround.SharedHealth.SharedUnits.Count; i++)
+                                if (BattleGround.MonsterParty.Units.Contains(BattleGround.SharedHealth.SharedUnits[i]))
+                                    ExecuteDeath(BattleGround.SharedHealth.SharedUnits[i]);
 
-                    if (BattleGround.sharedHealthRecord.IsActive)
-                        BattleGround.sharedHealthRecord.Reset();
+                    if (BattleGround.SharedHealth.IsActive)
+                        BattleGround.SharedHealth.Reset();
                 }
             }
             else if (targetUnit.Character is Hero)
@@ -6750,8 +6749,8 @@ public class RaidSceneManager : MonoBehaviour
                     if (Formations.heroes.party.Units.Count > 0)
                         Formations.heroes.party.Units[0].OverlaySlot.UnitSelected();
                 }
-                for(int i = 0; i < BattleGround.heroFormation.party.Units.Count; i++)
-                    DarkestDungeonManager.Data.Effects["Stress 2"].ApplyIndependent(BattleGround.heroFormation.party.Units[i]);
+                for(int i = 0; i < BattleGround.HeroParty.Units.Count; i++)
+                    DarkestDungeonManager.Data.Effects["Stress 2"].ApplyIndependent(BattleGround.HeroParty.Units[i]);
             }
         }
     }

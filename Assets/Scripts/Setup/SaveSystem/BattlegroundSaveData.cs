@@ -90,7 +90,7 @@ public class BattleGroundSaveData
         LastDamaged = battleGround.LastDamaged;
         LastSkillUsed = battleGround.LastSkillUsed == null ? "" : battleGround.LastSkillUsed;
 
-        MonsterFormation.UpdateFormation(battleGround.monsterFormation);
+        MonsterFormation.UpdateFormation(battleGround.MonsterFormation);
     }
     public void WriteBattlegroundData(BinaryWriter bw)
     {

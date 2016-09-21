@@ -77,8 +77,8 @@ public class PartyFormationManager : MonoBehaviour
 
     public void HideUnitOverlay()
     {
-        if (RaidSceneManager.BattleGround.sharedHealthRecord.IsActive)
-            RaidSceneManager.BattleGround.sharedHealthRecord.Hide();
+        if (RaidSceneManager.BattleGround.SharedHealth.IsActive)
+            RaidSceneManager.BattleGround.SharedHealth.Hide();
         HideHeroOverlay();
         HideMonsterOverlay();
     }
@@ -88,14 +88,14 @@ public class PartyFormationManager : MonoBehaviour
     }
     public void HideMonsterOverlay()
     {
-        if (RaidSceneManager.BattleGround.sharedHealthRecord.IsActive)
-            RaidSceneManager.BattleGround.sharedHealthRecord.Hide();
+        if (RaidSceneManager.BattleGround.SharedHealth.IsActive)
+            RaidSceneManager.BattleGround.SharedHealth.Hide();
         monsters.overlay.Hide();
     }
     public void ShowUnitOverlay()
     {
-        if (RaidSceneManager.BattleGround.sharedHealthRecord.IsActive)
-            RaidSceneManager.BattleGround.sharedHealthRecord.Show();
+        if (RaidSceneManager.BattleGround.SharedHealth.IsActive)
+            RaidSceneManager.BattleGround.SharedHealth.Show();
         ShowHeroOverlay();
         ShowMonsterOverlay();
     }
@@ -105,8 +105,8 @@ public class PartyFormationManager : MonoBehaviour
     }
     public void ShowMonsterOverlay()
     {
-        if (RaidSceneManager.BattleGround.sharedHealthRecord.IsActive)
-            RaidSceneManager.BattleGround.sharedHealthRecord.Show();
+        if (RaidSceneManager.BattleGround.SharedHealth.IsActive)
+            RaidSceneManager.BattleGround.SharedHealth.Show();
         monsters.overlay.Show();
     }
     public void ResetSelections()

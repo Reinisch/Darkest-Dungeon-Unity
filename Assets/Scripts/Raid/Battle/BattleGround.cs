@@ -20,6 +20,35 @@ public class BattleGround : MonoBehaviour
     public RectTransform cameraFocus;
     public Backdrop backdrop;
 
+    public BattleFormation HeroFormation
+    {
+        get
+        {
+            return heroFormation;
+        }
+    }
+    public BattleFormation MonsterFormation
+    {
+        get
+        {
+            return monsterFormation;
+        }
+    }
+    public FormationParty HeroParty
+    {
+        get
+        {
+            return heroFormation.party;
+        }
+    }
+    public FormationParty MonsterParty
+    {
+        get
+        {
+            return monsterFormation.party;
+        }
+    }
+
     public SharedHealthInfo SharedHealth
     {
         get
@@ -65,35 +94,35 @@ public class BattleGround : MonoBehaviour
     {
         get
         {
-            return heroFormation.party.Units.Count;
+            return HeroParty.Units.Count;
         }
     }
     public int MarkedHeroes
     {
         get
         {
-            return heroFormation.party.Units.FindAll(unit => unit.Character.GetStatusEffect(StatusType.Marked).IsApplied).Count;
+            return HeroParty.Units.FindAll(unit => unit.Character.GetStatusEffect(StatusType.Marked).IsApplied).Count;
         }
     }
     public int VirtuedHeroes
     {
         get
         {
-            return heroFormation.party.Units.FindAll(unit => unit.Character.IsVirtued).Count;
+            return HeroParty.Units.FindAll(unit => unit.Character.IsVirtued).Count;
         }
     }
     public int NonVirtuedHeroes
     {
         get
         {
-            return heroFormation.party.Units.FindAll(unit => unit.Character.IsVirtued == false).Count;
+            return HeroParty.Units.FindAll(unit => unit.Character.IsVirtued == false).Count;
         }
     }
     public int NonDeathsDoorHeroes
     {
         get
         {
-            return heroFormation.party.Units.FindAll(unit => unit.Character.AtDeathsDoor == false).Count;
+            return HeroParty.Units.FindAll(unit => unit.Character.AtDeathsDoor == false).Count;
         }
     }
     public int ControlCount
@@ -107,7 +136,7 @@ public class BattleGround : MonoBehaviour
     {
         get
         {
-            return monsterFormation.party.Units.FindAll(unit => unit.Character.IsMonster
+            return MonsterParty.Units.FindAll(unit => unit.Character.IsMonster
                 && !(unit.Character as Monster).Types.Contains(MonsterType.Corpse)).Count;
         }
     }
@@ -115,14 +144,14 @@ public class BattleGround : MonoBehaviour
     {
         get
         {
-            return monsterFormation.party.Units.FindAll(unit => unit.Character.GetStatusEffect(StatusType.Guarded).IsApplied).Count;
+            return MonsterParty.Units.FindAll(unit => unit.Character.GetStatusEffect(StatusType.Guarded).IsApplied).Count;
         }
     }
     public int MonsterSize
     {
         get
         {
-            return monsterFormation.party.Units.FindAll(unit => unit.Character.IsMonster
+            return MonsterParty.Units.FindAll(unit => unit.Character.IsMonster
                 && !(unit.Character as Monster).Types.Contains(MonsterType.Corpse)).Sum(unit => unit.Size);
         }
     }
@@ -142,7 +171,7 @@ public class BattleGround : MonoBehaviour
     }
 
     #region Combat Id Functions
-    public int PickId()
+    private int PickId()
     {
         if(CombatIds.Count > 0)
         {
@@ -153,22 +182,22 @@ public class BattleGround : MonoBehaviour
         }
         return -1;
     }
-    public void ReturnId(int id)
+    private void ReturnId(int id)
     {
         if (!CombatIds.Contains(id))
             CombatIds.Add(id);
     }
-    public void ResetIdSet()
+    private void ResetIds()
     {
         CombatIds = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8 };
     }
-    public FormationUnit FindUnitByCombatId(int id)
+    private FormationUnit FindById(int id)
     {
-        var unitFound = heroFormation.party.Units.Find(unit => unit.CombatInfo.CombatId == id);
+        var unitFound = HeroParty.Units.Find(unit => unit.CombatInfo.CombatId == id);
         if (unitFound != null)
             return unitFound;
         else
-            return monsterFormation.party.Units.Find(unit => unit.CombatInfo.CombatId == id);
+            return MonsterParty.Units.Find(unit => unit.CombatInfo.CombatId == id);
     }
     #endregion
 
@@ -183,49 +212,49 @@ public class BattleGround : MonoBehaviour
         StallingRoundNumber = 0;
         BattleStatus = BattleStatus.Fighting;
         Round.HeroAction = HeroTurnAction.Waiting;
-        Rect.SetParent(heroFormation.RectTransform.parent, false);
+        Rect.SetParent(HeroFormation.RectTransform.parent, false);
 
-        heroFormation.RectTransform.SetParent(Rect, true);
-        cameraFocus.position = new Vector3(heroFormation.ranks.RectTransform.position.x
+        HeroFormation.RectTransform.SetParent(Rect, true);
+        cameraFocus.position = new Vector3(HeroFormation.ranks.RectTransform.position.x
             + Mathf.Abs(monsterPosition.position.x - heroPosition.position.x) / 2, 0, 0);
         RaidSceneManager.DungeonCamera.target = cameraFocus;
 
-        for (int i = 0; i < heroFormation.party.Units.Count; i++)
-            heroFormation.party.Units[i].CombatInfo.PrepareForBattle(PickId());
+        for (int i = 0; i < HeroParty.Units.Count; i++)
+            HeroParty.Units[i].CombatInfo.PrepareForBattle(PickId());
 
-        monsterFormation.gameObject.SetActive(true);
-        monsterFormation.RectTransform.SetParent(Rect, false);
-        monsterFormation.RectTransform.position = new Vector3(heroFormation.ranks.RectTransform.position.x
+        MonsterFormation.gameObject.SetActive(true);
+        MonsterFormation.RectTransform.SetParent(Rect, false);
+        MonsterFormation.RectTransform.position = new Vector3(HeroFormation.ranks.RectTransform.position.x
             + Mathf.Abs(monsterPosition.position.x - heroPosition.position.x),
-            heroFormation.RectTransform.position.y, heroFormation.RectTransform.position.z);
-        monsterFormation.ranks.InstantRelocation();
+            HeroFormation.RectTransform.position.y, HeroFormation.RectTransform.position.z);
+        MonsterFormation.ranks.InstantRelocation();
 
-        monsterFormation.RectTransform.SetAsLastSibling();
-        heroFormation.RectTransform.SetAsLastSibling();
+        MonsterFormation.RectTransform.SetAsLastSibling();
+        HeroFormation.RectTransform.SetAsLastSibling();
     }
     public void InitiateSavedBattle()
     {
-        Rect.SetParent(heroFormation.RectTransform.parent, false);
+        Rect.SetParent(HeroFormation.RectTransform.parent, false);
 
-        heroFormation.RectTransform.SetParent(Rect, true);
-        cameraFocus.position = new Vector3(heroFormation.ranks.RectTransform.position.x
+        HeroFormation.RectTransform.SetParent(Rect, true);
+        cameraFocus.position = new Vector3(HeroFormation.ranks.RectTransform.position.x
             + Mathf.Abs(monsterPosition.position.x - heroPosition.position.x) / 2, 0, 0);
         RaidSceneManager.DungeonCamera.target = cameraFocus;
 
-        monsterFormation.gameObject.SetActive(true);
-        monsterFormation.RectTransform.SetParent(Rect, false);
-        monsterFormation.RectTransform.position = new Vector3(heroFormation.ranks.RectTransform.position.x
+        MonsterFormation.gameObject.SetActive(true);
+        MonsterFormation.RectTransform.SetParent(Rect, false);
+        MonsterFormation.RectTransform.position = new Vector3(HeroFormation.ranks.RectTransform.position.x
             + Mathf.Abs(monsterPosition.position.x - heroPosition.position.x),
-            heroFormation.RectTransform.position.y, heroFormation.RectTransform.position.z);
-        monsterFormation.ranks.InstantRelocation();
+            HeroFormation.RectTransform.position.y, HeroFormation.RectTransform.position.z);
+        MonsterFormation.ranks.InstantRelocation();
 
-        monsterFormation.RectTransform.SetAsLastSibling();
-        heroFormation.RectTransform.SetAsLastSibling();
+        MonsterFormation.RectTransform.SetAsLastSibling();
+        HeroFormation.RectTransform.SetAsLastSibling();
     }
     public void ResetTargetRanks()
     {
-        heroFormation.rankHolder.ClearMarks();
-        monsterFormation.rankHolder.ClearMarks();
+        HeroFormation.rankHolder.ClearMarks();
+        MonsterFormation.rankHolder.ClearMarks();
     }
     public void FinishBattle()
     {
@@ -244,12 +273,12 @@ public class BattleGround : MonoBehaviour
             }
         }
 
-        heroFormation.RectTransform.SetParent(Rect.parent, false);
-        RaidSceneManager.DungeonCamera.target = heroFormation.ranks.RectTransform;
-        monsterFormation.overlay.ResetOverlay();
-        monsterFormation.party.DeleteFormation();
-        monsterFormation.gameObject.SetActive(false);
-        ResetIdSet();
+        HeroFormation.RectTransform.SetParent(Rect.parent, false);
+        RaidSceneManager.DungeonCamera.target = HeroFormation.ranks.RectTransform;
+        MonsterFormation.overlay.ResetOverlay();
+        MonsterParty.DeleteFormation();
+        MonsterFormation.gameObject.SetActive(false);
+        ResetIds();
         backdrop.Deactivate();
         Round.OrderedUnits.Clear();
         RaidSceneManager.TorchMeter.ClearModifier();
@@ -314,14 +343,14 @@ public class BattleGround : MonoBehaviour
     }
     public void SpawnEncounter(BattleEncounter encounter, bool campfireSurprise)
     {
-        monsterFormation.LoadParty(encounter);
-        for (int i = 0; i < monsterFormation.party.Units.Count; i++)
+        MonsterFormation.LoadParty(encounter);
+        for (int i = 0; i < MonsterParty.Units.Count; i++)
         {
-            var monster = monsterFormation.party.Units[i].Character as Monster;
-            monsterFormation.party.Units[i].CombatInfo.PrepareForBattle(PickId(), monster, true);
+            var monster = MonsterParty.Units[i].Character as Monster;
+            MonsterParty.Units[i].CombatInfo.PrepareForBattle(PickId(), monster, true);
             if (monster.TorchlightModifier != null)
                 RaidSceneManager.TorchMeter.Modify(monster.TorchlightModifier);
-            RaidSceneManager.TorchMeter.ApplyBuffsForUnit(monsterFormation.party.Units[i]);
+            RaidSceneManager.TorchMeter.ApplyBuffsForUnit(MonsterParty.Units[i]);
             if (monster.Data.BattleBackdrop != null)
                 backdrop.Activate(monster.Data.BattleBackdrop);
             #region Spawn Check
@@ -329,39 +358,39 @@ public class BattleGround : MonoBehaviour
             {
                 for (int k = 0; k < monster.Data.Spawn.Effects.Count; k++)
                     for (int j = 0; j < monster.Data.Spawn.Effects[k].SubEffects.Count; j++)
-                        monster.Data.Spawn.Effects[k].SubEffects[j].ApplyInstant(monsterFormation.party.Units[i], monsterFormation.party.Units[i], monster.Data.Spawn.Effects[k]);
-                monsterFormation.party.Units[i].OverlaySlot.UpdateOverlay();
+                        monster.Data.Spawn.Effects[k].SubEffects[j].ApplyInstant(MonsterParty.Units[i], MonsterParty.Units[i], monster.Data.Spawn.Effects[k]);
+                MonsterParty.Units[i].OverlaySlot.UpdateOverlay();
             }
             #endregion
         }
-        var shared = monsterFormation.party.Units.Find(unit => unit.Character.SharedHealth != null);
+        var shared = MonsterParty.Units.Find(unit => unit.Character.SharedHealth != null);
         if (shared != null)
-            sharedHealthRecord.Initialize(monsterFormation.party.Units, shared.Character.SharedHealth);
-        monsterFormation.overlay.UpdateOverlay();
+            SharedHealth.Initialize(MonsterParty.Units, shared.Character.SharedHealth);
+        MonsterFormation.overlay.UpdateOverlay();
 
         SurpriseStatus = SurpriseStatus.Nothing;
 
-        if (monsterFormation.AlwaysSurprises() || campfireSurprise)
+        if (MonsterFormation.AlwaysSurprises() || campfireSurprise)
             SurpriseStatus = SurpriseStatus.HeroesSurprised;
-        else if (monsterFormation.AlwaysBeSurprised())
+        else if (MonsterFormation.AlwaysBeSurprised())
             SurpriseStatus = SurpriseStatus.MonstersSurprised;
         else
         {
-            if (monsterFormation.CanBeSurprised())
+            if (MonsterFormation.CanBeSurprised())
             {
                 float monstersSurprised = 0.1f + RaidSceneManager.TorchMeter.CurrentRange.MonstersSurprised;
-                for (int i = 0; i < heroFormation.party.Units.Count; i++)
-                    monstersSurprised += heroFormation.party.Units[i].Character[AttributeType.MonsterSurpirseChance].ModifiedValue;
+                for (int i = 0; i < HeroParty.Units.Count; i++)
+                    monstersSurprised += HeroParty.Units[i].Character[AttributeType.MonsterSurpirseChance].ModifiedValue;
                 monstersSurprised = Mathf.Clamp(monstersSurprised, 0, 0.65f);
                 if (RandomSolver.CheckSuccess(monstersSurprised))
                     SurpriseStatus = SurpriseStatus.MonstersSurprised;
             }
 
-            if (monsterFormation.CanSurprise() && SurpriseStatus == SurpriseStatus.Nothing)
+            if (MonsterFormation.CanSurprise() && SurpriseStatus == SurpriseStatus.Nothing)
             {
                 float heroesSurprised = 0.1f + RaidSceneManager.TorchMeter.CurrentRange.HeroesSurprised;
-                for (int i = 0; i < heroFormation.party.Units.Count; i++)
-                    heroesSurprised += heroFormation.party.Units[i].Character[AttributeType.PartySurpriseChance].ModifiedValue;
+                for (int i = 0; i < HeroParty.Units.Count; i++)
+                    heroesSurprised += HeroParty.Units[i].Character[AttributeType.PartySurpriseChance].ModifiedValue;
                 heroesSurprised = Mathf.Clamp(heroesSurprised, 0, 0.65f);
                 if (RandomSolver.CheckSuccess(heroesSurprised))
                     SurpriseStatus = SurpriseStatus.HeroesSurprised;
@@ -371,27 +400,27 @@ public class BattleGround : MonoBehaviour
     }
     public void LoadEncounter(BattleFormationSaveData encounterSaveData)
     {
-        monsterFormation.LoadParty(encounterSaveData, false);
-        for (int i = 0; i < monsterFormation.party.Units.Count; i++)
+        MonsterFormation.LoadParty(encounterSaveData, false);
+        for (int i = 0; i < MonsterParty.Units.Count; i++)
         {
-            RaidSceneManager.TorchMeter.ApplyBuffsForUnit(monsterFormation.party.Units[i]);
-            if (monsterFormation.party.Units[i].Character.IsMonster)
+            RaidSceneManager.TorchMeter.ApplyBuffsForUnit(MonsterParty.Units[i]);
+            if (MonsterParty.Units[i].Character.IsMonster)
             {
-                if ((monsterFormation.party.Units[i].Character as Monster).Data.BattleBackdrop != null)
-                    backdrop.Activate((monsterFormation.party.Units[i].Character as Monster).Data.BattleBackdrop);
+                if ((MonsterParty.Units[i].Character as Monster).Data.BattleBackdrop != null)
+                    backdrop.Activate((MonsterParty.Units[i].Character as Monster).Data.BattleBackdrop);
             }
         }
-        var shared = monsterFormation.party.Units.Find(unit => unit.Character.SharedHealth != null);
+        var shared = MonsterParty.Units.Find(unit => unit.Character.SharedHealth != null);
         if (shared != null)
-            sharedHealthRecord.Initialize(monsterFormation.party.Units, shared.Character.SharedHealth);
-        monsterFormation.overlay.UpdateOverlay();
+            SharedHealth.Initialize(MonsterParty.Units, shared.Character.SharedHealth);
+        MonsterFormation.overlay.UpdateOverlay();
     }
     public bool IsBattleEnded()
     {
         if (Controls.Count != 0 || Captures.Count != 0)
             return false;
 
-        if (heroFormation.AliveUnitsCount == 0 || monsterFormation.AliveUnitsCount == 0 || BattleStatus == BattleStatus.Finished)
+        if (HeroFormation.AliveUnitsCount == 0 || MonsterFormation.AliveUnitsCount == 0 || BattleStatus == BattleStatus.Finished)
         {
             BattleStatus = BattleStatus.Finished;
             return true;
@@ -400,7 +429,7 @@ public class BattleGround : MonoBehaviour
     }
     public bool IsBattleOnesided()
     {
-        if (heroFormation.AliveUnitsCount == 0 || monsterFormation.AliveUnitsCount == 0)
+        if (HeroFormation.AliveUnitsCount == 0 || MonsterFormation.AliveUnitsCount == 0)
         {
             return true;
         }
@@ -478,7 +507,7 @@ public class BattleGround : MonoBehaviour
         RaidSceneManager.BattleGround.Captures.Remove(captureRecord);
         if (captureRecord.RemoveFromParty)
         {
-            heroFormation.SpawnUnit(captureRecord.PrisonerUnit, 1);
+            HeroFormation.SpawnUnit(captureRecord.PrisonerUnit, 1);
             captureRecord.PrisonerUnit.gameObject.SetActive(true);
             captureRecord.PrisonerUnit.InstantRelocation();
             captureRecord.PrisonerUnit.SetCombatAnimation(true);
@@ -512,7 +541,7 @@ public class BattleGround : MonoBehaviour
         prisoner.Formation.DeleteUnit(prisoner, false);
         Round.OrderedUnits.RemoveAll(unit => unit == prisoner);
 
-        var targetFormation = prisoner.Team == Team.Monsters? heroFormation : monsterFormation;
+        var targetFormation = prisoner.Team == Team.Monsters? HeroFormation : MonsterFormation;
         prisoner.Team = prisoner.Team == Team.Monsters? Team.Heroes : Team.Monsters;
         prisoner.transform.SetParent(targetFormation.party.transform, true);
         prisoner.SetMoveSmoothTime(0.1f);
@@ -537,14 +566,14 @@ public class BattleGround : MonoBehaviour
         FormationUnit newUnit = Instantiate(unitObject).GetComponent<FormationUnit>();
 
         newUnit.Initialize(new Monster(monsterData), targetRank, Team.Monsters);
-        newUnit.transform.SetParent(monsterFormation.party.transform, false);
-        newUnit.RectTransform.position = monsterFormation.rankHolder.rankMarkSlots[targetRank - 1].transform.position;
-        newUnit.Party = monsterFormation.party;
-        newUnit.Formation = monsterFormation;
+        newUnit.transform.SetParent(MonsterParty.transform, false);
+        newUnit.RectTransform.position = MonsterFormation.rankHolder.rankMarkSlots[targetRank - 1].transform.position;
+        newUnit.Party = MonsterParty;
+        newUnit.Formation = MonsterFormation;
         newUnit.CombatInfo.PrepareForBattle(PickId(), newUnit.Character as Monster, canSpawnLoot);
         RaidSceneManager.TorchMeter.ApplyBuffsForUnit(newUnit);
 
-        if (!monsterFormation.ranks.facingRight)
+        if (!MonsterFormation.ranks.facingRight)
             newUnit.InstantFlip();
 
         newUnit.ResetAnimations();
@@ -719,11 +748,11 @@ public class BattleGround : MonoBehaviour
             Round.OrderedUnits.RemoveAll(unit => unit == oldUnit);
         }
 
-        if (sharedHealthRecord.IsActive && data.SharedHealth != null)
+        if (SharedHealth.IsActive && data.SharedHealth != null)
         {
-            sharedHealthRecord.SharedUnits.Remove(oldUnit);
-            sharedHealthRecord.SharedUnits.Add(newUnit);
-            newUnit.Character[AttributeType.HitPoints, true] = sharedHealthRecord.Health;
+            SharedHealth.SharedUnits.Remove(oldUnit);
+            SharedHealth.SharedUnits.Add(newUnit);
+            newUnit.Character[AttributeType.HitPoints, true] = SharedHealth.Health;
         }
 
         Destroy(oldUnit.gameObject);
@@ -797,31 +826,31 @@ public class BattleGround : MonoBehaviour
         LoadEncounter(battleSaveData.MonsterFormation);
 
         #region Load Guard Statuses
-        for(int i = 0; i < heroFormation.party.Units.Count; i++)
+        for(int i = 0; i < HeroParty.Units.Count; i++)
         {
-            var heroGuardedStatus = heroFormation.party.Units[i].Character[StatusType.Guarded] as GuardedStatusEffect;
+            var heroGuardedStatus = HeroParty.Units[i].Character[StatusType.Guarded] as GuardedStatusEffect;
             if(heroGuardedStatus.GuardDuration > 0)
             {
-                var guardUnit = FindUnitByCombatId(heroGuardedStatus.GuardCombatId);
+                var guardUnit = FindById(heroGuardedStatus.GuardCombatId);
                 if(guardUnit != null)
                 {
                     heroGuardedStatus.Guard = guardUnit;
                     var guardStatus = guardUnit.Character[StatusType.Guard] as GuardStatusEffect;
-                    guardStatus.Targets.Add(heroFormation.party.Units[i]);
+                    guardStatus.Targets.Add(HeroParty.Units[i]);
                 }
             }
         }
-        for (int i = 0; i < monsterFormation.party.Units.Count; i++)
+        for (int i = 0; i < MonsterParty.Units.Count; i++)
         {
-            var monsterGuardedStatus = monsterFormation.party.Units[i].Character[StatusType.Guarded] as GuardedStatusEffect;
+            var monsterGuardedStatus = MonsterParty.Units[i].Character[StatusType.Guarded] as GuardedStatusEffect;
             if (monsterGuardedStatus.GuardDuration > 0)
             {
-                var guardUnit = FindUnitByCombatId(monsterGuardedStatus.GuardCombatId);
+                var guardUnit = FindById(monsterGuardedStatus.GuardCombatId);
                 if (guardUnit != null)
                 {
                     monsterGuardedStatus.Guard = guardUnit;
                     var guardStatus = guardUnit.Character[StatusType.Guard] as GuardStatusEffect;
-                    guardStatus.Targets.Add(monsterFormation.party.Units[i]);
+                    guardStatus.Targets.Add(MonsterParty.Units[i]);
                 }
             }
         }
@@ -837,14 +866,14 @@ public class BattleGround : MonoBehaviour
         SurpriseStatus = battleSaveData.SurpriseStatus;
         StallingRoundNumber = battleSaveData.StallingRoundNumber;
 
-        Round.SelectedUnit = FindUnitByCombatId(battleSaveData.SelectedUnitId);
-        Round.SelectedTarget = FindUnitByCombatId(battleSaveData.SelectedTargetId);
+        Round.SelectedUnit = FindById(battleSaveData.SelectedUnitId);
+        Round.SelectedTarget = FindById(battleSaveData.SelectedTargetId);
         LastSkillUsed = battleSaveData.LastSkillUsed;
 
         Round.OrderedUnits.Clear();
         for(int i = 0; i < battleSaveData.OrderedUnitsCombatIds.Count; i++)
         {
-            var newOrderedUnit = FindUnitByCombatId(battleSaveData.OrderedUnitsCombatIds[i]);
+            var newOrderedUnit = FindById(battleSaveData.OrderedUnitsCombatIds[i]);
             if (newOrderedUnit != null)
                 Round.OrderedUnits.Add(newOrderedUnit);
         }
@@ -863,9 +892,9 @@ public class BattleGround : MonoBehaviour
             {
                 Hero hero = DarkestDungeonManager.Campaign.Heroes.Find(estateHero => estateHero.RosterId == prisonerSaveData.RosterId);
                 FormationUnit unit = Instantiate(Resources.Load<GameObject>("Prefabs/Heroes/" + hero.Class)).GetComponent<FormationUnit>();
-                unit.transform.SetParent(heroFormation.party.transform, false);
-                unit.Party = heroFormation.party;
-                unit.Formation = heroFormation;
+                unit.transform.SetParent(HeroParty.transform, false);
+                unit.Party = HeroParty;
+                unit.Formation = HeroFormation;
                 unit.Initialize(hero, prisonerSaveData);
                 unit.ResetAnimations();
 
@@ -884,9 +913,9 @@ public class BattleGround : MonoBehaviour
             {
                 GameObject unitObject = Resources.Load("Prefabs/Monsters/" + prisonerSaveData.Class) as GameObject;
                 FormationUnit unit = Instantiate(unitObject).GetComponent<FormationUnit>();
-                unit.transform.SetParent(heroFormation.party.transform, false);
-                unit.Party = heroFormation.party;
-                unit.Formation = heroFormation;
+                unit.transform.SetParent(HeroParty.transform, false);
+                unit.Party = HeroParty;
+                unit.Formation = HeroFormation;
                 var monsterSave = new Monster(prisonerSaveData);
                 unit.Initialize(monsterSave, prisonerSaveData);
                 unit.ResetAnimations();
@@ -899,39 +928,39 @@ public class BattleGround : MonoBehaviour
     public void LoadEffects(BattleGroundSaveData battleSaveData)
     {
         #region Load Statuses and Immobilize
-        for(int i = 0; i < heroFormation.party.Units.Count; i++)
+        for(int i = 0; i < HeroParty.Units.Count; i++)
         {
-            if (heroFormation.party.Units[i].Character[StatusType.Stun].IsApplied)
-                heroFormation.party.Units[i].SetHalo("stunned");
-            else if (heroFormation.party.Units[i].CombatInfo.IsSurprised)
-                heroFormation.party.Units[i].SetHalo("surprised");
+            if (HeroParty.Units[i].Character[StatusType.Stun].IsApplied)
+                HeroParty.Units[i].SetHalo("stunned");
+            else if (HeroParty.Units[i].CombatInfo.IsSurprised)
+                HeroParty.Units[i].SetHalo("surprised");
 
-            if (heroFormation.party.Units[i].CombatInfo.IsImmobilized)
-                heroFormation.party.Units[i].SetDefendAnimation(true);
+            if (HeroParty.Units[i].CombatInfo.IsImmobilized)
+                HeroParty.Units[i].SetDefendAnimation(true);
 
-            if (heroFormation.party.Units[i].Character.IsMonster == false)
+            if (HeroParty.Units[i].Character.IsMonster == false)
             {
-                var hero = heroFormation.party.Units[i].Character as Hero;
+                var hero = HeroParty.Units[i].Character as Hero;
                 if (hero[StatusType.DeathsDoor].IsApplied)
                     hero.ApplyDeathDoor();
                 else if (hero[StatusType.DeathRecovery].IsApplied)
                     hero.ApplyMortality();
             }
         }
-        for (int i = 0; i < monsterFormation.party.Units.Count; i++)
+        for (int i = 0; i < MonsterParty.Units.Count; i++)
         {
-            if (monsterFormation.party.Units[i].Character[StatusType.Stun].IsApplied)
-                monsterFormation.party.Units[i].SetHalo("stunned");
-            else if (monsterFormation.party.Units[i].CombatInfo.IsSurprised)
-                monsterFormation.party.Units[i].SetHalo("surprised");
+            if (MonsterParty.Units[i].Character[StatusType.Stun].IsApplied)
+                MonsterParty.Units[i].SetHalo("stunned");
+            else if (MonsterParty.Units[i].CombatInfo.IsSurprised)
+                MonsterParty.Units[i].SetHalo("surprised");
 
-            if (monsterFormation.party.Units[i].CombatInfo.IsImmobilized)
-                monsterFormation.party.Units[i].SetDefendAnimation(true);
+            if (MonsterParty.Units[i].CombatInfo.IsImmobilized)
+                MonsterParty.Units[i].SetDefendAnimation(true);
 
-            if (monsterFormation.party.Units[i].Character.IsMonster == false)
+            if (MonsterParty.Units[i].Character.IsMonster == false)
             {
-                monsterFormation.party.Units[i].SetCombatAnimation(true);
-                var hero = monsterFormation.party.Units[i].Character as Hero;
+                MonsterParty.Units[i].SetCombatAnimation(true);
+                var hero = MonsterParty.Units[i].Character as Hero;
                 if (hero[StatusType.DeathsDoor].IsApplied)
                     hero.ApplyDeathDoor();
                 else if (hero[StatusType.DeathRecovery].IsApplied)
@@ -950,8 +979,8 @@ public class BattleGround : MonoBehaviour
 
             if (newCaptureRecord.RemoveFromParty == false)
             {
-                FormationUnit prisoner = FindUnitByCombatId(prisonerId);
-                FormationUnit captor = FindUnitByCombatId(captorId);
+                FormationUnit prisoner = FindById(prisonerId);
+                FormationUnit captor = FindById(captorId);
                 newCaptureRecord.PrisonerUnit = prisoner;
                 newCaptureRecord.CaptorUnit = captor;
                 prisoner.SetCaptureEffect(captor);
@@ -960,7 +989,7 @@ public class BattleGround : MonoBehaviour
             else
             {
                 FormationUnit prisoner = loadedRemovedPrisoners.Find(removedUnit => removedUnit.CombatInfo.CombatId == prisonerId);
-                FormationUnit captor = FindUnitByCombatId(captorId);
+                FormationUnit captor = FindById(captorId);
                 prisoner.RectTransform.position = captor.RectTransform.position;
                 newCaptureRecord.PrisonerUnit = prisoner;
                 newCaptureRecord.CaptorUnit = captor;
@@ -976,8 +1005,8 @@ public class BattleGround : MonoBehaviour
             int companionId = newCompanionRecord.GetHashCompanionId(battleSaveData.Companions[i]);
             int targetId = newCompanionRecord.GetHashTargetId(battleSaveData.Companions[i]);
 
-            FormationUnit companion = FindUnitByCombatId(companionId);
-            FormationUnit target = FindUnitByCombatId(targetId);
+            FormationUnit companion = FindById(companionId);
+            FormationUnit target = FindById(targetId);
             newCompanionRecord.CompanionUnit = companion;
             newCompanionRecord.TargetUnit = target;
             Companions.Add(newCompanionRecord);
@@ -991,8 +1020,8 @@ public class BattleGround : MonoBehaviour
             int prisonerId = newControlRecord.GetHashPrisonerId(battleSaveData.Controls[i]);
             int controllerId = newControlRecord.GetHashControlId(battleSaveData.Controls[i]);
             newControlRecord.DurationLeft = newControlRecord.GetHashDurationLeft(battleSaveData.Controls[i]);
-            FormationUnit prisoner = FindUnitByCombatId(prisonerId);
-            FormationUnit controller = FindUnitByCombatId(controllerId);
+            FormationUnit prisoner = FindById(prisonerId);
+            FormationUnit controller = FindById(controllerId);
             newControlRecord.PrisonerUnit = prisoner;
             newControlRecord.ControllUnit = controller;
             Controls.Add(newControlRecord);

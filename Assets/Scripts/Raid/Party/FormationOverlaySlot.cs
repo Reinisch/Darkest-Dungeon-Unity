@@ -84,7 +84,7 @@ public class FormationOverlaySlot : MonoBehaviour, IPointerClickHandler, IPointe
         {
             if (unit.Character.SharedHealth != null)
             {
-                RaidSceneManager.BattleGround.sharedHealthRecord.UpdateOverlay();
+                RaidSceneManager.BattleGround.SharedHealth.UpdateOverlay();
                 healthBar.gameObject.SetActive(false);
             }
             else
@@ -114,7 +114,7 @@ public class FormationOverlaySlot : MonoBehaviour, IPointerClickHandler, IPointe
         {
             if (TargetUnit.Character.SharedHealth != null)
             {
-                RaidSceneManager.BattleGround.sharedHealthRecord.UpdateOverlay();
+                RaidSceneManager.BattleGround.SharedHealth.UpdateOverlay();
                 healthBar.gameObject.SetActive(false);
             }
             else
@@ -140,7 +140,7 @@ public class FormationOverlaySlot : MonoBehaviour, IPointerClickHandler, IPointe
             if (TargetUnit.Character.SharedHealth != null)
             {
                 healthBar.gameObject.SetActive(false);
-                RaidSceneManager.BattleGround.sharedHealthRecord.UpdateOverlay();
+                RaidSceneManager.BattleGround.SharedHealth.UpdateOverlay();
             }
             else
                 healthBar.gameObject.SetActive(true);

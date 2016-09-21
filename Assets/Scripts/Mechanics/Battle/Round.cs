@@ -92,17 +92,17 @@ public class Round
 
         if(RoundNumber == 0 || RoundNumber == 1)
         {
-            battleground.heroFormation.UpdateBuffRule(BuffRule.FirstRound);
-            battleground.monsterFormation.UpdateBuffRule(BuffRule.FirstRound);
+            battleground.HeroFormation.UpdateBuffRule(BuffRule.FirstRound);
+            battleground.MonsterFormation.UpdateBuffRule(BuffRule.FirstRound);
         }
 
-        foreach (var unit in battleground.heroFormation.party.Units)
+        foreach (var unit in battleground.HeroParty.Units)
         {
             unit.CombatInfo.UpdateNextRound();
             OrderedUnits.Add(unit);
         }
 
-        foreach (var unit in battleground.monsterFormation.party.Units)
+        foreach (var unit in battleground.MonsterParty.Units)
         {
             unit.CombatInfo.UpdateNextRound();
             if (unit.Character.IsMonster)
@@ -125,10 +125,12 @@ public class Round
                     unit.Character.Speed + Random.Range(0, 3) + Random.value :
                     unit.Character.Speed + Random.Range(0, 3) + Random.value ));
             else
-                OrderedUnits = new List<FormationUnit>(OrderedUnits.OrderByDescending(unit => unit.Character.Speed + Random.Range(0, 3) + Random.value));
+                OrderedUnits = new List<FormationUnit>(OrderedUnits.OrderByDescending(unit =>
+                unit.Character.Speed + Random.Range(0, 3) + Random.value));
         }
         else
-            OrderedUnits = new List<FormationUnit>(OrderedUnits.OrderByDescending(unit => unit.Character.Speed + Random.Range(0, 3) + Random.value));
+            OrderedUnits = new List<FormationUnit>(OrderedUnits.OrderByDescending(unit =>
+                unit.Character.Speed + Random.Range(0, 3) + Random.value));
 
         return ++RoundNumber;
     }

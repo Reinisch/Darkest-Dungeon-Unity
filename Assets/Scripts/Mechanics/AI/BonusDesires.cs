@@ -317,7 +317,7 @@ public class BonusInitiativeAllyClassCount : BonusInitiativeDesire
             if (MonstersMax.Value < RaidSceneManager.BattleGround.MonsterNumber)
                 return false;
 
-        int allyCount = RaidSceneManager.BattleGround.monsterFormation.party.Units.FindAll(unit => unit.Character.Class == AllyBaseClass).Count;
+        int allyCount = RaidSceneManager.BattleGround.MonsterParty.Units.FindAll(unit => unit.Character.Class == AllyBaseClass).Count;
         if (allyCount == 0) return false;
 
         if (AllyCountMin != null)
