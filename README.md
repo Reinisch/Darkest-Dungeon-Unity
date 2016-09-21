@@ -1,6 +1,6 @@
 # Darkest Dungeon in Unity
 Darkest Dungeon clone in Unity engine.
-Almost completely identical to original game.
+Almost completely identical to the original game.
 
 ### To do next:
   - Teleport
