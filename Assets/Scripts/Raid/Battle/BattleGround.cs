@@ -259,15 +259,16 @@ public class BattleGround : MonoBehaviour
     public void FinishBattle()
     {
         StallingRoundNumber = 0;
+        var darkenessLoot = DarkestDungeonManager.Data.LootDatabase.DarknessLoot["battle"];
 
-        for (int i = DarkestDungeonManager.Data.LootDatabase.DarknessLoot["battle"].Count - 1; i >= 0; i--)
+        for (int i = darkenessLoot.Count - 1; i >= 0; i--)
         {
-            if (DarkestDungeonManager.Data.LootDatabase.DarknessLoot["battle"][i].DarknessLevel == RaidSceneManager.TorchMeter.CurrentRange.Min)
+            if (darkenessLoot[i].DarknessLevel == RaidSceneManager.TorchMeter.CurrentRange.Min)
             {
-                if (RandomSolver.CheckSuccess(DarkestDungeonManager.Data.LootDatabase.DarknessLoot["battle"][i].Chance))
+                if (RandomSolver.CheckSuccess(darkenessLoot[i].Chance))
                 {
-                    for (int j = 0; j < DarkestDungeonManager.Data.LootDatabase.DarknessLoot["battle"][i].Codes.Count; j++)
-                        BattleLoot.Add(new LootDefinition() { Code = DarkestDungeonManager.Data.LootDatabase.DarknessLoot["battle"][i].Codes[j], Count = 1 });
+                    for (int j = 0; j < darkenessLoot[i].Codes.Count; j++)
+                        BattleLoot.Add(new LootDefinition() { Code = darkenessLoot[i].Codes[j], Count = 1 });
                 }
                 break;
             }
@@ -293,7 +294,8 @@ public class BattleGround : MonoBehaviour
         {
             if (Controls[i].PrisonerUnit.Character.IsMonster == false)
             {
-                var heroInfo = RaidSceneManager.Raid.RaidParty.HeroInfo.Find(info => info.Hero == Controls[i].PrisonerUnit.Character as Hero);
+                var heroInfo = RaidSceneManager.Raid.RaidParty.HeroInfo.Find(info =>
+                    info.Hero == Controls[i].PrisonerUnit.Character as Hero);
                 heroInfo.IsAlive = false;
                 heroInfo.DeathRecord = new DeathRecord()
                 {
@@ -317,7 +319,8 @@ public class BattleGround : MonoBehaviour
         {
             if (Captures[i].PrisonerUnit.Character.IsMonster == false)
             {
-                var heroInfo = RaidSceneManager.Raid.RaidParty.HeroInfo.Find(info => info.Hero == Captures[i].PrisonerUnit.Character as Hero);
+                var heroInfo = RaidSceneManager.Raid.RaidParty.HeroInfo.Find(info =>
+                    info.Hero == Captures[i].PrisonerUnit.Character as Hero);
                 heroInfo.IsAlive = false;
                 heroInfo.DeathRecord = new DeathRecord()
                 {
@@ -358,7 +361,8 @@ public class BattleGround : MonoBehaviour
             {
                 for (int k = 0; k < monster.Data.Spawn.Effects.Count; k++)
                     for (int j = 0; j < monster.Data.Spawn.Effects[k].SubEffects.Count; j++)
-                        monster.Data.Spawn.Effects[k].SubEffects[j].ApplyInstant(MonsterParty.Units[i], MonsterParty.Units[i], monster.Data.Spawn.Effects[k]);
+                        monster.Data.Spawn.Effects[k].SubEffects[j].ApplyInstant(MonsterParty.Units[i],
+                            MonsterParty.Units[i], monster.Data.Spawn.Effects[k]);
                 MonsterParty.Units[i].OverlaySlot.UpdateOverlay();
             }
             #endregion
@@ -483,7 +487,7 @@ public class BattleGround : MonoBehaviour
 
             for (int i = purgingCandidates.Count - 1; i >= 0; i--)
             {
-                if (purgingCandidates[i].Character.IsMonster && (purgingCandidates[i].Character as Monster).Data.Modifiers.CanBeSummonRank)
+                if (purgingCandidates[i].Character.IsMonster && purgingCandidates[i].Character.BattleModifiers.CanBeSummonRank)
                 {
                     RaidSceneManager.Instanse.SummonPurging(purgingCandidates[i]);
                     if (prisoner.Formation.AvailableFreeSpace >= prisoner.Size)
@@ -524,7 +528,8 @@ public class BattleGround : MonoBehaviour
                         subEffect.ApplyInstant(captureRecord.CaptorUnit, captureRecord.PrisonerUnit, captorEffect);
                 }
                 captureRecord.PrisonerUnit.RemoveCaptureEffect();
-                FMODUnity.RuntimeManager.PlayOneShot("event:/char/enemy/" + captureRecord.CaptorUnit.Character.Class + "_capture_fade_out");
+                FMODUnity.RuntimeManager.PlayOneShot("event:/char/enemy/" +
+                    captureRecord.CaptorUnit.Character.Class + "_capture_fade_out");
             }
         }
     }
@@ -595,7 +600,8 @@ public class BattleGround : MonoBehaviour
             #region Companion Check
             if (monsterData.Companion != null)
             {
-                var companion = newUnit.Formation.party.Units.Find(unit => unit.Character.Class == monsterData.Companion.MonsterClass);
+                var companion = newUnit.Formation.party.Units.Find(unit =>
+                    unit.Character.Class == monsterData.Companion.MonsterClass);
                 if(companion != null)
                 {
                     Companions.Add(new CompanionRecord(newUnit, companion));
@@ -612,7 +618,8 @@ public class BattleGround : MonoBehaviour
                     var monster = newUnit.Party.Units[i].Character as Monster;
                     if(monster.Data.Companion != null)
                     {
-                        var companion = newUnit.Party.Units.Find(unit => unit.Character.Class == monster.Data.Companion.MonsterClass);
+                        var companion = newUnit.Party.Units.Find(unit =>
+                        unit.Character.Class == monster.Data.Companion.MonsterClass);
                         if (companion != null)
                         {
                             Companions.Add(new CompanionRecord(newUnit.Party.Units[i], companion));
@@ -637,7 +644,7 @@ public class BattleGround : MonoBehaviour
 
             for (int i = purgingCandidates.Count - 1; i >= 0; i--)
             {
-                if (purgingCandidates[i].Character.IsMonster && (purgingCandidates[i].Character as Monster).Data.Modifiers.CanBeSummonRank)
+                if (purgingCandidates[i].Character.IsMonster && purgingCandidates[i].Character.BattleModifiers.CanBeSummonRank)
                 {
                     RaidSceneManager.Instanse.SummonPurging(purgingCandidates[i]);
                     if (newUnit.Formation.AvailableFreeSpace >= newUnit.Size)
@@ -657,7 +664,8 @@ public class BattleGround : MonoBehaviour
                         #region Companion Check
                         if (monsterData.Companion != null)
                         {
-                            var companion = newUnit.Formation.party.Units.Find(unit => unit.Character.Class == monsterData.Companion.MonsterClass);
+                            var companion = newUnit.Formation.party.Units.Find(unit => 
+                                unit.Character.Class == monsterData.Companion.MonsterClass);
                             if (companion != null)
                             {
                                 Companions.Add(new CompanionRecord(newUnit, companion));
@@ -674,7 +682,8 @@ public class BattleGround : MonoBehaviour
                                 var monster = newUnit.Party.Units[j].Character as Monster;
                                 if (monster.Data.Companion != null)
                                 {
-                                    var companion = newUnit.Party.Units.Find(unit => unit.Character.Class == monster.Data.Companion.MonsterClass);
+                                    var companion = newUnit.Party.Units.Find(unit =>
+                                        unit.Character.Class == monster.Data.Companion.MonsterClass);
                                     if (companion != null)
                                     {
                                         Companions.Add(new CompanionRecord(newUnit.Party.Units[j], companion));
@@ -890,8 +899,10 @@ public class BattleGround : MonoBehaviour
 
             if (prisonerSaveData.IsHero)
             {
-                Hero hero = DarkestDungeonManager.Campaign.Heroes.Find(estateHero => estateHero.RosterId == prisonerSaveData.RosterId);
-                FormationUnit unit = Instantiate(Resources.Load<GameObject>("Prefabs/Heroes/" + hero.Class)).GetComponent<FormationUnit>();
+                Hero hero = DarkestDungeonManager.Campaign.Heroes.Find(estateHero =>
+                    estateHero.RosterId == prisonerSaveData.RosterId);
+                FormationUnit unit = Instantiate(Resources.Load<GameObject>("Prefabs/Heroes/" +
+                    hero.Class)).GetComponent<FormationUnit>();
                 unit.transform.SetParent(HeroParty.transform, false);
                 unit.Party = HeroParty;
                 unit.Formation = HeroFormation;
