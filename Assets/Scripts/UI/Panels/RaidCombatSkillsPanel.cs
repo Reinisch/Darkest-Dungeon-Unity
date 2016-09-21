@@ -110,7 +110,8 @@ public class RaidCombatSkillsPanel : MonoBehaviour
             if (skillSlots[i].Skill.LaunchRanks.IsLaunchableFrom(RaidSceneManager.RaidPanel.SelectedUnit.Rank,
                 RaidSceneManager.RaidPanel.SelectedUnit.Size))
             {
-                if (BattleGround.IsPerformerSkillTargetable(skillSlots[i].Skill, allies, enemies, RaidSceneManager.RaidPanel.SelectedUnit))
+                if (BattleSolver.IsPerformerSkillTargetable(skillSlots[i].Skill,
+                    allies, enemies, RaidSceneManager.RaidPanel.SelectedUnit))
                 {
                     skillSlots[i].SetCombatState();
 

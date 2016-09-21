@@ -200,8 +200,6 @@ public class SkillResultEntry
 
 public static class BattleSolver
 {
-    private static SkillResult skillResult = new SkillResult();
-    private static HeroActionInfo heroActionInfo = new HeroActionInfo();
     public static SkillResult SkillResult
     { 
         get
@@ -216,6 +214,9 @@ public static class BattleSolver
             return heroActionInfo;
         }
     }
+
+    private static SkillResult skillResult = new SkillResult();
+    private static HeroActionInfo heroActionInfo = new HeroActionInfo();
 
     public static bool IsSkillUsable(FormationUnit performer, CombatSkill skill)
     {
@@ -234,7 +235,8 @@ public static class BattleSolver
             enemies = battleGround.heroFormation.party;
         }
 
-        return skill.LaunchRanks.IsLaunchableFrom(performer.Rank, performer.Size) && skill.HasAvailableTargets(performer, friends, enemies);
+        return skill.LaunchRanks.IsLaunchableFrom(performer.Rank, performer.Size) &&
+            skill.HasAvailableTargets(performer, friends, enemies);
     }
     public static bool IsCampingSkillUsable(FormationUnit performer, CampingSkill skill)
     {
@@ -283,7 +285,60 @@ public static class BattleSolver
                 return true;
         }
     }
-    public static void GetTargetsForCampEffect(FormationUnit performer, FormationUnit target, CampEffect effect, List<FormationUnit> finalTargets)
+    public static bool IsPerformerSkillTargetable(CombatSkill skill,
+        BattleFormation allies, BattleFormation enemies, FormationUnit performer)
+    {
+        if (skill.TargetRanks.IsSelfTarget)
+        {
+            if (skill.Heal != null && performer.CombatInfo.BlockedHealUnitIds.Contains(performer.CombatInfo.CombatId))
+                return false;
+            if (skill.IsBuffSkill && performer.CombatInfo.BlockedBuffUnitIds.Contains(performer.CombatInfo.CombatId))
+                return false;
+            return true;
+        }
+
+        if (skill.TargetRanks.IsSelfFormation)
+        {
+            if (skill.IsSelfValid)
+            {
+                if (skill.Heal != null)
+                {
+                    if (performer.CombatInfo.BlockedHealUnitIds.Contains(performer.CombatInfo.CombatId) == false)
+                        return true;
+                }
+                else if (skill.IsBuffSkill)
+                {
+                    if (performer.CombatInfo.BlockedBuffUnitIds.Contains(performer.CombatInfo.CombatId) == false)
+                        return true;
+                }
+                else
+                    return true;
+            }
+
+            for (int i = 0; i < allies.party.Units.Count; i++)
+            {
+                if (skill.Heal != null && performer.CombatInfo.BlockedHealUnitIds.
+                    Contains(allies.party.Units[i].CombatInfo.CombatId))
+                    continue;
+                if (skill.IsBuffSkill && performer.CombatInfo.BlockedBuffUnitIds.
+                    Contains(allies.party.Units[i].CombatInfo.CombatId))
+                    continue;
+
+                if (allies.party.Units[i] != performer && skill.TargetRanks.IsTargetableUnit(allies.party.Units[i]))
+                    return true;
+            }
+        }
+        else
+        {
+            for (int i = 0; i < enemies.party.Units.Count; i++)
+                if (skill.TargetRanks.IsTargetableUnit(enemies.party.Units[i]))
+                    return true;
+        }
+
+        return false;
+    }
+    public static void GetTargetsForCampEffect(FormationUnit performer,
+        FormationUnit target, CampEffect effect, List<FormationUnit> finalTargets)
     {
         finalTargets.Clear();
 
@@ -315,7 +370,6 @@ public static class BattleSolver
             return skill.GetAvailableTargets(performer, RaidSceneManager.BattleGround.monsterFormation.party,
                 RaidSceneManager.BattleGround.heroFormation.party);
     }
-
     public static MonsterBrainDecision UseMonsterBrain(FormationUnit performer, string combatSkillOverride = null)
     {
         if (performer.Character.IsMonster)
@@ -481,14 +535,14 @@ public static class BattleSolver
                 float initialHeal = Random.Range(skill.Heal.MinAmount, skill.Heal.MaxAmount + 1) *
                             (1 + performer.GetSingleAttribute(AttributeType.HpHealPercent).ModifiedValue);
 
-                int heal = Mathf.CeilToInt(initialHeal * (1 + target.GetSingleAttribute(AttributeType.HpHealReceivedPercent).ModifiedValue));
+                int heal = Mathf.CeilToInt(initialHeal * (1 + target[AttributeType.HpHealReceivedPercent].ModifiedValue));
                 if (heal < 1) heal = 1;
                 if (target.AtDeathsDoor)
                     (target as Hero).RevertDeathsDoor();
 
                 if (skill.IsCritValid)
                 {
-                    float critChance = performer.GetSingleAttribute(AttributeType.CritChance).ModifiedValue + skill.CritMod / 100;
+                    float critChance = performer[AttributeType.CritChance].ModifiedValue + skill.CritMod / 100;
                     if (RandomSolver.CheckSuccess(critChance))
                     {
                         int critHeal = Mathf.CeilToInt(heal * 1.5f);
@@ -647,16 +701,16 @@ public static class BattleSolver
         foreach (var effect in skill.Effects)
             effect.Apply(performerUnit, targetUnit, SkillResult);
     }
-
     public static void ApplyConditions(FormationUnit performerUnit, FormationUnit targetUnit, CombatSkill skill)
     {
-        performerUnit.Character.ApplyAllBuffRules(RaidSceneManager.Rules.GetCombatUnitRules(performerUnit, targetUnit, skill, performerUnit.Character.RiposteSkill == skill));
-        targetUnit.Character.ApplyAllBuffRules(RaidSceneManager.Rules.GetCombatUnitRules(targetUnit, performerUnit, null, false));
+        performerUnit.Character.ApplyAllBuffRules(RaidSceneManager.Rules.
+            GetCombatUnitRules(performerUnit, targetUnit, skill, performerUnit.Character.RiposteSkill == skill));
+        targetUnit.Character.ApplyAllBuffRules(RaidSceneManager.Rules.
+            GetCombatUnitRules(targetUnit, performerUnit, null, false));
 
         foreach (var effect in skill.Effects)
             effect.ApplyTargetConditions(performerUnit, targetUnit);
     }
-
     public static void RemoveConditions(FormationUnit performerUnit, FormationUnit targetUnit)
     {
         performerUnit.Character.ApplyAllBuffRules(RaidSceneManager.Rules.GetIdleUnitRules(performerUnit));

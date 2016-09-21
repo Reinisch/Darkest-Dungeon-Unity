@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine.SceneManagement;
 
 public enum DungeonSceneState { Room, Hall }
 public enum StartingMode { Normal, EntranceEncounter, EntranceCurio }
