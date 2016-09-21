@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using FMODUnity;
 
 public class DarkestSoundManager : MonoBehaviour
@@ -7,29 +6,38 @@ public class DarkestSoundManager : MonoBehaviour
     public static DarkestSoundManager Instanse { get; private set; }
     public static FMOD.Studio.System Studio { get; private set; }
 
-    public static FMOD.Studio.EventInstance DungeonInstanse { get; set; }
-    public static FMOD.Studio.EventInstance BattleInstanse { get; set; }
-    public static FMOD.Studio.EventInstance CampingInstanse { get; set; }
+    public static FMOD.Studio.EventInstance DungeonInstanse { get; private set; }
+    public static FMOD.Studio.EventInstance BattleInstanse { get; private set; }
+    public static FMOD.Studio.EventInstance CampingInstanse { get; private set; }
 
     void Awake()
     {
         if (Instanse == null)
         {
-            Studio = FMODUnity.RuntimeManager.StudioSystem;
+            Studio = RuntimeManager.StudioSystem;
             Instanse = this;
         }
-    }
-    void Start()
-    {
-        if (Instanse.gameObject != gameObject)
-            return;
     }
 
     public static void StartDungeonSoundtrack(string dungeonName)
     {
+        StopDungeonSoundtrack();
+
         DungeonInstanse = RuntimeManager.CreateInstance("event:/ambience/dungeon/" + dungeonName);
         if (DungeonInstanse != null)
             DungeonInstanse.start();
+    }
+    public static void ContinueDungeonSoundtrack(string dungeonName)
+    {
+        if (DungeonInstanse != null)
+            DungeonInstanse.setPaused(false);
+        else
+            StartDungeonSoundtrack(dungeonName);
+    }
+    public static void PauseDungeonSoundtrack()
+    {
+        if (DungeonInstanse != null)
+            DungeonInstanse.setPaused(true);
     }
     public static void StopDungeonSoundtrack()
     {
@@ -38,6 +46,33 @@ public class DarkestSoundManager : MonoBehaviour
             DungeonInstanse.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             DungeonInstanse.release();
         }
+    }
+
+    public static void StartBattleSoundtrack(string dungeonName, bool isRoom)
+    {
+        StopBattleSoundtrack();
+
+        BattleInstanse = RuntimeManager.CreateInstance("event:/music/mus_battle_" +
+            dungeonName + (isRoom ? "_room" : "_hallway"));
+        if (BattleInstanse != null)
+            BattleInstanse.start();
+    }
+    public static void StopBattleSoundtrack()
+    {
+        if (BattleInstanse != null)
+        {
+            BattleInstanse.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            BattleInstanse.release();
+        }
+    }
+
+    public static void StartCampingSoundtrack()
+    {
+        StopCampingSoundtrack();
+
+        CampingInstanse = RuntimeManager.CreateInstance("event:/ambience/local/campfire");
+        if (CampingInstanse != null)
+            CampingInstanse.start();
     }
     public static void StopCampingSoundtrack()
     {

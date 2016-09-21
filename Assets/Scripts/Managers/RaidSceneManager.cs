@@ -485,22 +485,10 @@ public class RaidSceneManager : MonoBehaviour
 
     public void OnSceneLeave()
     {
-        DarkestDungeonManager.Instanse.screenFader.Fade(1);
-        if (DarkestSoundManager.DungeonInstanse != null)
-        {
-            DarkestSoundManager.DungeonInstanse.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-            DarkestSoundManager.DungeonInstanse.release();
-        }
-        if (DarkestSoundManager.CampingInstanse != null)
-        {
-            DarkestSoundManager.CampingInstanse.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-            DarkestSoundManager.CampingInstanse.release();
-        }
-        if (DarkestSoundManager.BattleInstanse != null)
-        {
-            DarkestSoundManager.BattleInstanse.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-            DarkestSoundManager.BattleInstanse.release();
-        }
+        DarkestDungeonManager.ScreenFader.Fade(1);
+        DarkestSoundManager.StopDungeonSoundtrack();
+        DarkestSoundManager.StopCampingSoundtrack();
+        DarkestSoundManager.StopBattleSoundtrack();
     }
     IEnumerator ExecuteCampEffect(CampEffect currentEffect, FormationUnit target, bool skipNotification)
     {
@@ -913,9 +901,7 @@ public class RaidSceneManager : MonoBehaviour
             yield break;
 
         #region Transition To Camping
-        DarkestSoundManager.CampingInstanse = FMODUnity.RuntimeManager.CreateInstance("event:/ambience/local/campfire");
-        if (DarkestSoundManager.CampingInstanse != null)
-            DarkestSoundManager.CampingInstanse.start();
+        DarkestSoundManager.StartCampingSoundtrack();
         DisableEnviroment();
         RaidPanel.SwitchBlocked = true;
         Inventory.SetDeactivated();
@@ -1432,11 +1418,7 @@ public class RaidSceneManager : MonoBehaviour
         #endregion
 
         #region Transition From Camping
-        if (DarkestSoundManager.CampingInstanse != null)
-        {
-            DarkestSoundManager.CampingInstanse.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-            DarkestSoundManager.CampingInstanse.release();
-        }
+        DarkestSoundManager.StopCampingSoundtrack();
         Formations.ResetSelections();
         DarkestDungeonManager.Instanse.screenFader.Fade(1);
         yield return new WaitForSeconds(1f);
@@ -3102,21 +3084,12 @@ public class RaidSceneManager : MonoBehaviour
                         }
                         #endregion
 
-                        DarkestDungeonManager.Instanse.screenFader.Fade(2);
+                        DarkestDungeonManager.ScreenFader.Fade(2);
                         yield return new WaitForSeconds(0.5f);
 
-                        BattleGround.heroFormation.rankHolder.ClearMarks();
-                        BattleGround.monsterFormation.rankHolder.ClearMarks();
-
-                        #region Stop Soundtrack
-                        if (DarkestSoundManager.BattleInstanse != null)
-                        {
-                            DarkestSoundManager.BattleInstanse.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-                            DarkestSoundManager.BattleInstanse.release();
-                        }
-                        if (DarkestSoundManager.DungeonInstanse != null)
-                            DarkestSoundManager.DungeonInstanse.setPaused(false);
-                        #endregion
+                        BattleGround.ResetTargetRanks();
+                        DarkestSoundManager.StopBattleSoundtrack();
+                        DarkestSoundManager.ContinueDungeonSoundtrack(Raid.Quest.Dungeon);
 
                         #region Destroy Remains
                         Formations.HideMonsterOverlay();
@@ -5221,19 +5194,8 @@ public class RaidSceneManager : MonoBehaviour
         #endregion
 
         #region Switch Soundtrack
-        if (DarkestSoundManager.DungeonInstanse != null)
-            DarkestSoundManager.DungeonInstanse.setPaused(true);
-
-        if (DarkestSoundManager.BattleInstanse != null)
-        {
-            DarkestSoundManager.BattleInstanse.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-            DarkestSoundManager.BattleInstanse.release();
-        }
-
-        DarkestSoundManager.BattleInstanse = FMODUnity.RuntimeManager.CreateInstance("event:/music/mus_battle_" +
-            currentRaid.Dungeon.Name + (areaView is RaidRoom ? "_room" : "_hallway"));
-        if (DarkestSoundManager.BattleInstanse != null)
-            DarkestSoundManager.BattleInstanse.start();
+        DarkestSoundManager.PauseDungeonSoundtrack();
+        DarkestSoundManager.StartBattleSoundtrack(Raid.Dungeon.Name, SceneState == DungeonSceneState.Room);
         #endregion
 
         #region Battle Loop
@@ -5284,15 +5246,9 @@ public class RaidSceneManager : MonoBehaviour
         BattleGround.monsterFormation.rankHolder.ClearMarks();
 
         #region Stop Soundtrack
-        if (DarkestSoundManager.BattleInstanse != null)
-        {
-            DarkestSoundManager.BattleInstanse.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-            DarkestSoundManager.BattleInstanse.release();
-        }
-
+        DarkestSoundManager.StopBattleSoundtrack();
         FMODUnity.RuntimeManager.PlayOneShot("event:/general/combat/victory");
-        if (DarkestSoundManager.DungeonInstanse != null)
-            DarkestSoundManager.DungeonInstanse.setPaused(false);
+        DarkestSoundManager.ContinueDungeonSoundtrack(Raid.Quest.Dungeon);
         #endregion
 
         #region Check Game Over
@@ -5312,8 +5268,6 @@ public class RaidSceneManager : MonoBehaviour
             {
                 if (unit.Character.IsMonster)
                 {
-
-
                     Monster monster = unit.Character as Monster;
 
                     if (monster.Types.Contains(MonsterType.Corpse))
@@ -5481,19 +5435,8 @@ public class RaidSceneManager : MonoBehaviour
         #endregion
 
         #region Switch Soundtrack
-        if (DarkestSoundManager.DungeonInstanse != null)
-            DarkestSoundManager.DungeonInstanse.setPaused(true);
-
-        if (DarkestSoundManager.BattleInstanse != null)
-        {
-            DarkestSoundManager.BattleInstanse.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-            DarkestSoundManager.BattleInstanse.release();
-        }
-
-        DarkestSoundManager.BattleInstanse = FMODUnity.RuntimeManager.CreateInstance("event:/music/mus_battle_" +
-            currentRaid.Dungeon.Name + (areaView is RaidRoom ? "_room" : "_hallway"));
-        if (DarkestSoundManager.BattleInstanse != null)
-            DarkestSoundManager.BattleInstanse.start();
+        DarkestSoundManager.PauseDungeonSoundtrack();
+        DarkestSoundManager.StartBattleSoundtrack(Raid.Dungeon.Name, SceneState == DungeonSceneState.Room);
         #endregion
 
         #region Battle Loop
@@ -5591,19 +5534,12 @@ public class RaidSceneManager : MonoBehaviour
         }
         #endregion
 
-        BattleGround.heroFormation.rankHolder.ClearMarks();
-        BattleGround.monsterFormation.rankHolder.ClearMarks();
+        BattleGround.ResetTargetRanks();
 
         #region Stop Soundtrack
-        if (DarkestSoundManager.BattleInstanse != null)
-        {
-            DarkestSoundManager.BattleInstanse.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-            DarkestSoundManager.BattleInstanse.release();
-        }
-
+        DarkestSoundManager.StopBattleSoundtrack();
         FMODUnity.RuntimeManager.PlayOneShot("event:/general/combat/victory");
-        if (DarkestSoundManager.DungeonInstanse != null)
-            DarkestSoundManager.DungeonInstanse.setPaused(false);
+        DarkestSoundManager.ContinueDungeonSoundtrack(Raid.Quest.Dungeon);
         #endregion
 
         #region Check Game Over

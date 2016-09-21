@@ -818,7 +818,11 @@ public class BattleGround : MonoBehaviour
         monsterFormation.RectTransform.SetAsLastSibling();
         heroFormation.RectTransform.SetAsLastSibling();
     }
-
+    public void ResetTargetRanks()
+    {
+        heroFormation.rankHolder.ClearMarks();
+        monsterFormation.rankHolder.ClearMarks();
+    }
     public void FinishBattle()
     {
         StallingRoundNumber = 0;
