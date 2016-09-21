@@ -250,9 +250,11 @@ public class Estate
     }
     public void ReequipHero(Hero hero)
     {
-        Equipment weapon = hero.HeroClass.Weapons.Find(wep => wep.UpgradeLevel == GetUpgradedWeaponLevel(hero.RosterId, hero.HeroClass.StringId));
+        Equipment weapon = hero.HeroClass.Weapons.Find(wep => 
+            wep.UpgradeLevel == GetUpgradedWeaponLevel(hero.RosterId, hero.HeroClass.StringId));
         hero.Equip(weapon, HeroEquipmentSlot.Weapon);
-        Equipment armor = hero.HeroClass.Armors.Find(arm => arm.UpgradeLevel == GetUpgradedArmorLevel(hero.RosterId, hero.HeroClass.StringId));
+        Equipment armor = hero.HeroClass.Armors.Find(arm =>
+            arm.UpgradeLevel == GetUpgradedArmorLevel(hero.RosterId, hero.HeroClass.StringId));
         hero.Equip(armor, HeroEquipmentSlot.Armor);
     }
     public void ReskillCombatHero(Hero hero)
@@ -272,7 +274,7 @@ public class Estate
     public void ReskillCampingHero(Hero hero)
     {
         for (int i = 0; i < hero.HeroClass.CampingSkills.Count; i++)
-            hero.CurrentCampingSkills[i] = HeroPurchases[hero.RosterId][hero.HeroClass.CampingSkills[i].Id].PurchasedUpgrades.Contains("0") ?
+            hero.CurrentCampingSkills[i] = HeroPurchases[hero.RosterId][hero.HeroClass.CampingSkills[i].Id].PurchasedUpgrades.Contains("0")?
                 hero.HeroClass.CampingSkills[i] : null;
     }
 
@@ -295,12 +297,14 @@ public class Estate
         {
             if(HeroPurchases[hero.RosterId].ContainsKey(upgrade.Prerequisites[i].TreeId))
             {
-                if (!HeroPurchases[hero.RosterId][upgrade.Prerequisites[i].TreeId].PurchasedUpgrades.Contains(upgrade.Prerequisites[i].RequirementCode))
+                if (!HeroPurchases[hero.RosterId][upgrade.Prerequisites[i].TreeId].PurchasedUpgrades.
+                    Contains(upgrade.Prerequisites[i].RequirementCode))
                     return UpgradeStatus.Locked;
             }
             if (TownPurchases.ContainsKey(upgrade.Prerequisites[i].TreeId))
             {
-                if (!TownPurchases[upgrade.Prerequisites[i].TreeId].PurchasedUpgrades.Contains(upgrade.Prerequisites[i].RequirementCode))
+                if (!TownPurchases[upgrade.Prerequisites[i].TreeId].PurchasedUpgrades.
+                    Contains(upgrade.Prerequisites[i].RequirementCode))
                     return UpgradeStatus.Locked;
             }           
         }
@@ -313,7 +317,8 @@ public class Estate
 
         for(int i = 0; i < upgrade.Prerequisites.Count; i++)
         {
-            if (!TownPurchases[upgrade.Prerequisites[i].TreeId].PurchasedUpgrades.Contains(upgrade.Prerequisites[i].RequirementCode))
+            if (!TownPurchases[upgrade.Prerequisites[i].TreeId].PurchasedUpgrades.
+                Contains(upgrade.Prerequisites[i].RequirementCode))
                 return UpgradeStatus.Locked;
         }
         return UpgradeStatus.Available;

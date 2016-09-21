@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public class Statue : Building
+﻿public class Statue : Building
 {
     public Statue()
     {

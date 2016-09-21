@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -32,8 +31,10 @@ public class StageCoach : Building
     void GeneratePurchaseInfo(Hero hero, Estate estate)
     {
         estate.HeroPurchases.Add(hero.RosterId, new Dictionary<string, UpgradePurchases>());
+        var trees = DarkestDungeonManager.Data.UpgradeTrees.Values.ToList().
+            FindAll(item => item.Id.StartsWith(hero.HeroClass.StringId));
 
-        foreach (var tree in DarkestDungeonManager.Data.UpgradeTrees.Values.ToList().FindAll(item => item.Id.StartsWith(hero.HeroClass.StringId)))
+        foreach (var tree in trees)
             estate.HeroPurchases[hero.RosterId].Add(tree.Id, new UpgradePurchases(tree.Id));
         foreach (var skill in hero.HeroClass.CampingSkills)
             estate.HeroPurchases[hero.RosterId].Add(skill.Id, new UpgradePurchases(skill.Id));
@@ -125,7 +126,8 @@ public class StageCoach : Building
                 {
                     for(int j = 0; j <= RecruitExperienceUpgrades.Count - 1; j++)
                     {
-                        if (RecruitExperienceUpgrades[j].Level <= CurrentRecruitMaxLevel && RandomSolver.CheckSuccess(RecruitExperienceUpgrades[j].Chance))
+                        if (RecruitExperienceUpgrades[j].Level <= CurrentRecruitMaxLevel &&
+                            RandomSolver.CheckSuccess(RecruitExperienceUpgrades[j].Chance))
                         {
                             experienceUpgrade = RecruitExperienceUpgrades[j];
                             break;
@@ -135,13 +137,16 @@ public class StageCoach : Building
                 int id = rosterIds[Random.Range(0, rosterIds.Count)];
                 string heroClass = heroClasses[Random.Range(0, DarkestDungeonManager.Data.HeroClasses.Count)];
                 string heroName = LocalizationManager.GetString("hero_name_" + Random.Range(0, 556).ToString());
-                var newHero = experienceUpgrade == null ? new Hero(id, heroClass, heroName) : new Hero(id, heroClass, heroName, experienceUpgrade);
+                var newHero = experienceUpgrade == null ?
+                    new Hero(id, heroClass, heroName) :
+                    new Hero(id, heroClass, heroName, experienceUpgrade);
                 Heroes.Add(newHero);
                 rosterIds.Remove(id);
                 GeneratePurchaseInfo(newHero, estate);
             }
         }
-        int abominations = DarkestDungeonManager.Campaign.Heroes.FindAll(hero => hero.Class == "abomination").Count + Heroes.FindAll(hero => hero.Class == "abomination").Count;
+        int abominations = DarkestDungeonManager.Campaign.Heroes.FindAll(hero =>
+            hero.Class == "abomination").Count + Heroes.FindAll(hero => hero.Class == "abomination").Count;
         int additionalHeroes = 4 - DarkestDungeonManager.Campaign.Heroes.Count - Heroes.Count + abominations;
         if(abominations > 3)
             return;
@@ -153,7 +158,8 @@ public class StageCoach : Building
             {
                 for (int j = 0; j <= RecruitExperienceUpgrades.Count - 1; j++)
                 {
-                    if (RecruitExperienceUpgrades[j].Level <= CurrentRecruitMaxLevel && RandomSolver.CheckSuccess(RecruitExperienceUpgrades[j].Chance))
+                    if (RecruitExperienceUpgrades[j].Level <= CurrentRecruitMaxLevel &&
+                        RandomSolver.CheckSuccess(RecruitExperienceUpgrades[j].Chance))
                     {
                         experienceUpgrade = RecruitExperienceUpgrades[j];
                         break;
@@ -166,7 +172,9 @@ public class StageCoach : Building
                 heroClass = heroClasses[Random.Range(0, DarkestDungeonManager.Data.HeroClasses.Count)];
 
             string heroName = LocalizationManager.GetString("hero_name_" + Random.Range(0, 556).ToString());
-            var newHero = experienceUpgrade == null ? new Hero(id, heroClass, heroName) : new Hero(id, heroClass, heroName, experienceUpgrade);
+            var newHero = experienceUpgrade == null ?
+                new Hero(id, heroClass, heroName) :
+                new Hero(id, heroClass, heroName, experienceUpgrade);
             Heroes.Add(newHero);
             rosterIds.Remove(id);
             GeneratePurchaseInfo(newHero, estate);

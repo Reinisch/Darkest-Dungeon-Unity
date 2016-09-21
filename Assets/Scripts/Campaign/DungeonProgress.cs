@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class DungeonProgress
 {
@@ -28,7 +27,8 @@ public class DungeonProgress
     {
         get
         {
-            PlotQuest masteryQuest = DarkestDungeonManager.Data.QuestDatabase.PlotQuests.Find(item => item.Dungeon == DungeonName && item.DungeonLevel == MasteryLevel);
+            PlotQuest masteryQuest = DarkestDungeonManager.Data.QuestDatabase.PlotQuests.Find(item =>
+                item.Dungeon == DungeonName && item.DungeonLevel == MasteryLevel);
             if (masteryQuest != null && !DarkestDungeonManager.Campaign.CompletedPlot.Contains(masteryQuest.Id))
                 return masteryQuest;
             return null;
@@ -57,7 +57,8 @@ public class DungeonProgress
 
         while (CurrentXP >= NextLevelXP)
         {
-            PlotQuest masteryQuest = DarkestDungeonManager.Data.QuestDatabase.PlotQuests.Find(item => item.Dungeon == DungeonName && item.DungeonLevel == MasteryLevel);
+            PlotQuest masteryQuest = DarkestDungeonManager.Data.QuestDatabase.PlotQuests.Find(item =>
+                item.Dungeon == DungeonName && item.DungeonLevel == MasteryLevel);
             if(masteryQuest != null)
             {
                 if (!DarkestDungeonManager.Campaign.CompletedPlot.Contains(masteryQuest.Id))
@@ -71,7 +72,8 @@ public class DungeonProgress
             {
                 MasteryLevel++;
                 CurrentXP = CurrentXP - NextLevelXP;
-                NextLevelXP = NextLevelXP = DarkestDungeonManager.Data.CampaignGeneration.DungeonXpLevelThreshold[Mathf.Clamp(MasteryLevel + 1, 0, maxLevel)];
+                NextLevelXP = NextLevelXP = DarkestDungeonManager.Data.CampaignGeneration.
+                    DungeonXpLevelThreshold[Mathf.Clamp(MasteryLevel + 1, 0, maxLevel)];
             }
             else
             {

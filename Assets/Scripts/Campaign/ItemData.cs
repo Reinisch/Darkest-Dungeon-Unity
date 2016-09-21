@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Text;
+﻿using System.Text;
 
 public class ItemData
 {
@@ -27,7 +25,8 @@ public class ItemData
     {
         StringBuilder sb = ToolTipManager.TipBody;
         sb.AppendFormat("<color={0}>", DarkestDungeonManager.Data.HexColors["equipment_tooltip_title"]);
-        sb.Append(LocalizationManager.GetString(LocalizationManager.GetString("str_inventory_title_" + Type + (Type == "journal_page" ? "" : Id))));
+        sb.Append(LocalizationManager.GetString(LocalizationManager.GetString("str_inventory_title_" +
+            Type + (Type == "journal_page" ? "" : Id))));
         sb.AppendFormat("</color><color={0}>", DarkestDungeonManager.Data.HexColors["equipment_tooltip_body"]);
         sb.Append("\n" + LocalizationManager.GetString("str_inventory_description_" + Type + (Type == "journal_page" ? "" : Id)));
         sb.Append("</color>");
@@ -49,7 +48,8 @@ public class ItemData
     {
         StringBuilder sb = ToolTipManager.TipBody;
         sb.AppendFormat("<color={0}>", DarkestDungeonManager.Data.HexColors["equipment_tooltip_title"]);
-        sb.Append(LocalizationManager.GetString(LocalizationManager.GetString("str_inventory_title_" + Type + (Type == "journal_page" ? "" : Id))));
+        sb.Append(LocalizationManager.GetString(LocalizationManager.GetString("str_inventory_title_" +
+            Type + (Type == "journal_page" ? "" : Id))));
         sb.AppendFormat("</color><color={0}>", DarkestDungeonManager.Data.HexColors["equipment_tooltip_body"]);
         sb.Append("\n" + LocalizationManager.GetString("str_inventory_description_" + Type + (Type == "journal_page" ? "" : Id)));
         sb.Append("</color>");

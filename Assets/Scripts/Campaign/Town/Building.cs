@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public enum BuildingType { Abbey, Tavern, Sanitarium, Blacksmith, Guild, CampingTrainer, NomadWagon, StageCoach, Graveyard, Statue }
+﻿public enum BuildingType { Abbey, Tavern, Sanitarium, Blacksmith, Guild, CampingTrainer, NomadWagon, StageCoach, Graveyard, Statue }
 
 public class Building
 {

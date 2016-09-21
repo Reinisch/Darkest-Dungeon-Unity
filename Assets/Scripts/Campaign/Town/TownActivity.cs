@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 
 public interface IActivity
 {
@@ -143,23 +141,27 @@ public class TownActivity : IActivity
                                 {
                                     if (Random.value > 0.5f)
                                     {
-                                        LogActivity(ActivityEffectType.RemoveTrinket, activitySlot.Hero, activitySlot.Hero.LeftTrinket.Id);
+                                        LogActivity(ActivityEffectType.RemoveTrinket, 
+                                            activitySlot.Hero, activitySlot.Hero.LeftTrinket.Id);
                                         activitySlot.Hero.Unequip(TrinketSlot.Left);
                                     }
                                     else
                                     {
-                                        LogActivity(ActivityEffectType.RemoveTrinket, activitySlot.Hero, activitySlot.Hero.RightTrinket.Id);
+                                        LogActivity(ActivityEffectType.RemoveTrinket,
+                                            activitySlot.Hero, activitySlot.Hero.RightTrinket.Id);
                                         activitySlot.Hero.Unequip(TrinketSlot.Right);
                                     }
                                 }
                                 else if (activitySlot.Hero.LeftTrinket != null)
                                 {
-                                    LogActivity(ActivityEffectType.RemoveTrinket, activitySlot.Hero, activitySlot.Hero.LeftTrinket.Id);
+                                    LogActivity(ActivityEffectType.RemoveTrinket, 
+                                        activitySlot.Hero, activitySlot.Hero.LeftTrinket.Id);
                                     activitySlot.Hero.Unequip(TrinketSlot.Left);
                                 }
                                 else if (activitySlot.Hero.RightTrinket != null)
                                 {
-                                    LogActivity(ActivityEffectType.RemoveTrinket, activitySlot.Hero, activitySlot.Hero.RightTrinket.Id);
+                                    LogActivity(ActivityEffectType.RemoveTrinket, 
+                                        activitySlot.Hero, activitySlot.Hero.RightTrinket.Id);
                                     activitySlot.Hero.Unequip(TrinketSlot.Right);
                                 }
                                 activitySlot.Hero.Status = HeroStatus.Available;
@@ -190,12 +192,14 @@ public class TownActivity : IActivity
                                 {
                                     if (change.Amount > 0)
                                     {
-                                        LogActivity(ActivityEffectType.CurrencyGained, activitySlot.Hero, change.Amount.ToString());
+                                        LogActivity(ActivityEffectType.CurrencyGained,
+                                            activitySlot.Hero, change.Amount.ToString());
                                         DarkestDungeonManager.Campaign.Estate.AddGold(change.Amount);
                                     }
                                     else
                                     {
-                                        LogActivity(ActivityEffectType.CurrencyLost, activitySlot.Hero, Mathf.Abs(change.Amount).ToString());
+                                        LogActivity(ActivityEffectType.CurrencyLost,
+                                            activitySlot.Hero, Mathf.Abs(change.Amount).ToString());
                                         DarkestDungeonManager.Campaign.Estate.RemoveGold(-change.Amount);
                                     }
                                 }

@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using System;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -808,13 +805,15 @@ public class ActorActivityRecord : ActivityRecord
                         switch (EffectInfo)
                         {
                             case "townFlagellationDMGLowBuff":
-                                sb.AppendFormat("\n" + LocalizationManager.GetString("str_flagellation_add_buff_townFlagellationDMGLowBuff_story"),
+                                sb.AppendFormat("\n" +
+                                    LocalizationManager.GetString("str_flagellation_add_buff_townFlagellationDMGLowBuff_story"),
                                     DarkestDungeonManager.Data.HexColors["notable"], Actor,
                                     LocalizationManager.GetString("town_name_abbey"),
                                     LocalizationManager.GetString("str_flagellation_add_buff_townFlagellationDMGLowBuff_story_desc"));
                                 break;
                             case "townFlagellationDMGLowDebuff":
-                                sb.AppendFormat("\n" + LocalizationManager.GetString("str_flagellation_add_buff_townFlagellationDMGLowDebuff_story"),
+                                sb.AppendFormat("\n" + 
+                                    LocalizationManager.GetString("str_flagellation_add_buff_townFlagellationDMGLowDebuff_story"),
                                     DarkestDungeonManager.Data.HexColors["notable"], Actor,
                                     LocalizationManager.GetString("town_name_abbey"),
                                     LocalizationManager.GetString("str_flagellation_add_buff_townFlagellationDMGLowDebuff_story_desc"));

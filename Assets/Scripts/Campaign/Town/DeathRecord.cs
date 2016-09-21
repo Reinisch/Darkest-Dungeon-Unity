@@ -1,9 +1,9 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public enum DeathFactor { Hunger, Trap, Obstacle, AttackMonster, BleedMonster, PoisonMonster,
-        AttackFriend, BleedFriend, PoisonFriend, PoisonUnknown, BleedUnknown,
-        Unknown, CaptorMonster, HeartAttack }
+﻿public enum DeathFactor
+{
+    Hunger, Trap, Obstacle, AttackMonster, BleedMonster, PoisonMonster,
+    AttackFriend, BleedFriend, PoisonFriend, PoisonUnknown, BleedUnknown,
+    Unknown, CaptorMonster, HeartAttack
+}
 
 public class DeathRecord
 {

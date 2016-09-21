@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 
 public class QuirkTreatmentActivity
 {
@@ -98,9 +96,11 @@ public class QuirkTreatmentActivity
         for (int i = 1; i <= 3; i++)
         {
             if (i <= QuirkSlots)
-                TreatmentSlots.Add(new TreatmentSlot(true, NegativeQuirkCost.Amount, PositiveQuirkCost.Amount, PermNegativeQuirkCost.Amount, 0));
+                TreatmentSlots.Add(new TreatmentSlot(true, NegativeQuirkCost.Amount,
+                    PositiveQuirkCost.Amount, PermNegativeQuirkCost.Amount, 0));
             else
-                TreatmentSlots.Add(new TreatmentSlot(false, NegativeQuirkCost.Amount, PositiveQuirkCost.Amount, PermNegativeQuirkCost.Amount, 0));
+                TreatmentSlots.Add(new TreatmentSlot(false, NegativeQuirkCost.Amount,
+                    PositiveQuirkCost.Amount, PermNegativeQuirkCost.Amount, 0));
         }
     }
     public void ProvideActivity()
@@ -132,7 +132,8 @@ public class QuirkTreatmentActivity
                     }
 
                     if (treatmentSlot.TargetNegativeQuirk != null && treatmentSlot.TargetPositiveQuirk != null)
-                        LogActivity(ActivityType.LockRemoveQuirk, treatmentSlot.Hero, treatmentSlot.TargetNegativeQuirk, treatmentSlot.TargetPositiveQuirk);
+                        LogActivity(ActivityType.LockRemoveQuirk, treatmentSlot.Hero,
+                            treatmentSlot.TargetNegativeQuirk, treatmentSlot.TargetPositiveQuirk);
                     else if (treatmentSlot.TargetNegativeQuirk != null)
                         LogActivity(ActivityType.RemoveQuirk, treatmentSlot.Hero, treatmentSlot.TargetNegativeQuirk);
                     else if (treatmentSlot.TargetPositiveQuirk != null)
@@ -188,9 +189,11 @@ public class QuirkTreatmentActivity
         for (int i = 1; i <= 3; i++)
         {
             if (i <= QuirkSlots)
-                TreatmentSlots[i - 1].UpdateTreatmentSlot(true, NegativeQuirkCost.Amount, PositiveQuirkCost.Amount, PermNegativeQuirkCost.Amount, 0);
+                TreatmentSlots[i - 1].UpdateTreatmentSlot(true, NegativeQuirkCost.Amount,
+                    PositiveQuirkCost.Amount, PermNegativeQuirkCost.Amount, 0);
             else
-                TreatmentSlots[i - 1].UpdateTreatmentSlot(false, NegativeQuirkCost.Amount, PositiveQuirkCost.Amount, PermNegativeQuirkCost.Amount, 0);
+                TreatmentSlots[i - 1].UpdateTreatmentSlot(false, NegativeQuirkCost.Amount,
+                    PositiveQuirkCost.Amount, PermNegativeQuirkCost.Amount, 0);
         }
     }
     public void UpdateActivitySlots(SaveCampaignData saveData)
@@ -214,14 +217,17 @@ public class QuirkTreatmentActivity
                     TreatmentSlots[i].TargetPositiveQuirk = saveData.sanitariumActivitySlots[0][i].TargetPositiveQuirk;
                     TreatmentSlots[i].TargetNegativeQuirk = saveData.sanitariumActivitySlots[0][i].TargetNegativeQuirk;
 
-                    TreatmentSlots[i].UpdateTreatmentSlot(true, NegativeQuirkCost.Amount, PositiveQuirkCost.Amount, PermNegativeQuirkCost.Amount, 0);
+                    TreatmentSlots[i].UpdateTreatmentSlot(true, NegativeQuirkCost.Amount,
+                        PositiveQuirkCost.Amount, PermNegativeQuirkCost.Amount, 0);
                 }
                 else
-                    TreatmentSlots[i].UpdateTreatmentSlot(true, NegativeQuirkCost.Amount, PositiveQuirkCost.Amount, PermNegativeQuirkCost.Amount, 0);
+                    TreatmentSlots[i].UpdateTreatmentSlot(true, NegativeQuirkCost.Amount,
+                        PositiveQuirkCost.Amount, PermNegativeQuirkCost.Amount, 0);
 
                 }
                 else
-                    TreatmentSlots[i].UpdateTreatmentSlot(false, NegativeQuirkCost.Amount, PositiveQuirkCost.Amount, PermNegativeQuirkCost.Amount, 0);
+                    TreatmentSlots[i].UpdateTreatmentSlot(false, NegativeQuirkCost.Amount,
+                        PositiveQuirkCost.Amount, PermNegativeQuirkCost.Amount, 0);
             }
     }
     public List<ITownUpgrade> GetUpgrades(string treeId, string code)

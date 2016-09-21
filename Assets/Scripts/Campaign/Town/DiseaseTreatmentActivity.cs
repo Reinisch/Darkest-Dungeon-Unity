@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
 
 public class DiseaseTreatmentActivity
@@ -115,14 +113,16 @@ public class DiseaseTreatmentActivity
                             if (cured.Count == 0)
                                 Debug.LogError("Sanitarium treament diseases not found.");
                             else
-                                LogActivity(ActivityType.RemoveAllDiseases, treatmentSlot.Hero, cured.Select(info => info.Quirk.Id).ToArray());
+                                LogActivity(ActivityType.RemoveAllDiseases, 
+                                    treatmentSlot.Hero, cured.Select(info => info.Quirk.Id).ToArray());
                         }
                         else
                         {
                             if (treatmentSlot.Hero.RemoveQuirk(treatmentSlot.TargetDiseaseQuirk) == null)
                                 Debug.LogError("Sanitarium treament disease not found.");
                             else
-                                LogActivity(ActivityType.RemoveDisease, treatmentSlot.Hero, new string[] {treatmentSlot.TargetDiseaseQuirk});
+                                LogActivity(ActivityType.RemoveDisease, 
+                                    treatmentSlot.Hero, new string[] {treatmentSlot.TargetDiseaseQuirk});
                         }
                     }
                     treatmentSlot.Hero.Status = HeroStatus.Available;

@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 
 public enum UpgradeStatus { Purchased, Available, Locked }
@@ -88,13 +86,15 @@ public class HeroUpgrade : TownUpgrade
             if(hero.Resolve.Level < PrerequisiteResolveLevel)
             {
                 sb.AppendFormat("\n<color={0}>", DarkestDungeonManager.Data.HexColors["harmful"]);
-                sb.AppendFormat(LocalizationManager.GetString("upgrade_prerequisite_resolve_level_tooltip_body_format"), PrerequisiteResolveLevel);
+                sb.AppendFormat(LocalizationManager.GetString(
+                    "upgrade_prerequisite_resolve_level_tooltip_body_format"), PrerequisiteResolveLevel);
                 sb.Append("</color>");
             }
             else
             {
                 sb.AppendFormat("\n<color={0}>", DarkestDungeonManager.Data.HexColors["neutral"]);
-                sb.AppendFormat(LocalizationManager.GetString("upgrade_prerequisite_resolve_level_tooltip_body_format"), PrerequisiteResolveLevel);
+                sb.AppendFormat(LocalizationManager.GetString(
+                    "upgrade_prerequisite_resolve_level_tooltip_body_format"), PrerequisiteResolveLevel);
                 sb.Append("</color>");
             }
         }
@@ -126,10 +126,12 @@ public class CostUpgrade : ITownUpgrade
             switch (TreeId)
             {
                 case "sanitarium.disease_quirk_cost":
-                    sb.AppendFormat(LocalizationManager.GetString("upgrade_tree_tooltip_description_reduces_disease_quirk_treatment_cost_format"), 13);
+                    sb.AppendFormat(LocalizationManager.GetString(
+                        "upgrade_tree_tooltip_description_reduces_disease_quirk_treatment_cost_format"), 13);
                     break;
                 default:
-                    sb.AppendFormat(LocalizationManager.GetString("upgrade_tree_tooltip_description_reduces_treatment_cost_format"), Cost.Amount);
+                    sb.AppendFormat(LocalizationManager.GetString(
+                        "upgrade_tree_tooltip_description_reduces_treatment_cost_format"), Cost.Amount);
                     break;
             }
             sb.Append("</color>");
@@ -183,21 +185,27 @@ public class SlotUpgrade : ITownUpgrade
             {
                 case "sanitarium.slots":
                     if(UpgradeCode == "a" || UpgradeCode == "c")
-                        sb.AppendFormat(LocalizationManager.GetString("upgrade_tree_tooltip_description_increases_number_of_disease_slots_format"), NumberOfSlots);
+                        sb.AppendFormat(LocalizationManager.GetString(
+                            "upgrade_tree_tooltip_description_increases_number_of_disease_slots_format"), NumberOfSlots);
                     else
-                        sb.AppendFormat(LocalizationManager.GetString("upgrade_tree_tooltip_description_increases_number_of_quirk_slots_format"), NumberOfSlots);
+                        sb.AppendFormat(LocalizationManager.GetString(
+                            "upgrade_tree_tooltip_description_increases_number_of_quirk_slots_format"), NumberOfSlots);
                     break;
                 case "nomad_wagon.numitems":
-                    sb.AppendFormat(LocalizationManager.GetString("upgrade_tree_tooltip_description_increases_number_of_items_generated_format"), NumberOfSlots);
+                    sb.AppendFormat(LocalizationManager.GetString(
+                        "upgrade_tree_tooltip_description_increases_number_of_items_generated_format"), NumberOfSlots);
                     break;
                 case "stage_coach.numrecruits":
-                    sb.AppendFormat(LocalizationManager.GetString("upgrade_tree_tooltip_description_increases_number_of_heroes_generated_format"), NumberOfSlots);
+                    sb.AppendFormat(LocalizationManager.GetString(
+                        "upgrade_tree_tooltip_description_increases_number_of_heroes_generated_format"), NumberOfSlots);
                     break;
                 case "stage_coach.rostersize":
-                    sb.AppendFormat(LocalizationManager.GetString("upgrade_tree_tooltip_description_increases_size_of_roster_format"), NumberOfSlots);
+                    sb.AppendFormat(LocalizationManager.GetString(
+                        "upgrade_tree_tooltip_description_increases_size_of_roster_format"), NumberOfSlots);
                     break;
                 default:
-                    sb.AppendFormat(LocalizationManager.GetString("upgrade_tree_tooltip_description_increases_number_of_slots_format"), NumberOfSlots);
+                    sb.AppendFormat(LocalizationManager.GetString(
+                        "upgrade_tree_tooltip_description_increases_number_of_slots_format"), NumberOfSlots);
                     break;
             }
             sb.Append("</color>");
@@ -249,16 +257,20 @@ public class DiscountUpgrade : ITownUpgrade
             switch (TreeId)
             {
                 case "blacksmith.cost":
-                    sb.AppendFormat(LocalizationManager.GetString("upgrade_tree_tooltip_description_reduces_cost_of_weapon_and_armour_upgrades_format"), Percent * 100);
+                    sb.AppendFormat(LocalizationManager.GetString(
+                        "upgrade_tree_tooltip_description_reduces_cost_of_weapon_and_armour_upgrades_format"), Percent * 100);
                     break;
                 case "guild.cost":
-                    sb.AppendFormat(LocalizationManager.GetString("upgrade_tree_tooltip_description_reduces_cost_of_combat_skill_upgrades_format"), Percent * 100);
+                    sb.AppendFormat(LocalizationManager.GetString(
+                        "upgrade_tree_tooltip_description_reduces_cost_of_combat_skill_upgrades_format"), Percent * 100);
                     break;
                 case "camping_trainer.cost":
-                    sb.AppendFormat(LocalizationManager.GetString("upgrade_tree_tooltip_description_reduces_cost_of_camping_skills_format"), Percent * 100);
+                    sb.AppendFormat(LocalizationManager.GetString(
+                        "upgrade_tree_tooltip_description_reduces_cost_of_camping_skills_format"), Percent * 100);
                     break;
                 case "nomad_wagon.cost":
-                    sb.AppendFormat(LocalizationManager.GetString("upgrade_tree_tooltip_description_reduces_cost_of_items_format"), Percent * 100);
+                    sb.AppendFormat(LocalizationManager.GetString(
+                        "upgrade_tree_tooltip_description_reduces_cost_of_items_format"), Percent * 100);
                     break;
                 default:
                     break;
@@ -286,7 +298,8 @@ public class ChanceUpgrade : ITownUpgrade
             switch (TreeId)
             {
                 case "sanitarium.disease_quirk_cost":
-                    sb.AppendFormat(LocalizationManager.GetString("upgrade_tree_tooltip_description_disease_cure_all_chance_format"), Chance*100);
+                    sb.AppendFormat(LocalizationManager.GetString(
+                        "upgrade_tree_tooltip_description_disease_cure_all_chance_format"), Chance*100);
                     break;
                 default:
                     break;
@@ -297,4 +310,3 @@ public class ChanceUpgrade : ITownUpgrade
         }
     }
 }
-

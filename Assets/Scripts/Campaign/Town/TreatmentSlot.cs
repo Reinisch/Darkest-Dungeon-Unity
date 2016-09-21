@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public class TreatmentSlot : ActivitySlot
+﻿public class TreatmentSlot : ActivitySlot
 {
     public int BasePositiveCost { get; set; }
     public int BasePermanentCost { get; set; }
@@ -13,7 +10,9 @@ public class TreatmentSlot : ActivitySlot
 
     public TreatmentSlot():base()
     {
+
     }
+
     public TreatmentSlot(bool isUnlocked, int baseNegativeCost, int basePositiveCost, int basePermanentCost, int baseDiseaseCost)
         :base(isUnlocked, baseNegativeCost)
     {

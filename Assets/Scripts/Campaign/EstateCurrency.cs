@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public class EstateCurrency
+﻿public class EstateCurrency
 {
     public int amount;
     public bool isHeirloom;

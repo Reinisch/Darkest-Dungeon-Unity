@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public class CurrencyCost
+﻿public class CurrencyCost
 {
     public string Type { get; set; }
     public int Amount { get; set; }

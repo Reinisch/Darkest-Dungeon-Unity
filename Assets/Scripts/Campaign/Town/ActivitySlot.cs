@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public enum ActivitySlotStatus { Available, Caretaken, Paid, Blocked, Checkout }
+﻿public enum ActivitySlotStatus { Available, Caretaken, Paid, Blocked, Checkout }
 
 public class ActivitySlot
 {
