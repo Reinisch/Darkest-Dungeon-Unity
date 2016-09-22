@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-using System.Collections;
-
 public delegate void WindowEvent();
 
 public class CharacterWindow : MonoBehaviour

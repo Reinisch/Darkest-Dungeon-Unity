@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public class Door : Prop
+﻿public class Door : Prop
 {
     public string TargetArea { get; set; }
     public Direction Direction { get; set; }

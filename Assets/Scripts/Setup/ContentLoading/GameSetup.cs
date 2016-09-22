@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class GameSetup : MonoBehaviour
 {
@@ -14,11 +13,10 @@ public class GameSetup : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKey(KeyCode.M))
-            Time.timeScale += 1;
+        //if (Input.GetKey(KeyCode.M))
+        //    Time.timeScale += 1;
 
-        if (Input.GetKey(KeyCode.N))
-            Time.timeScale -= 1;
-
+        //if (Input.GetKey(KeyCode.N))
+        //    Time.timeScale -= 1;
     }
 }

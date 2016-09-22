@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 
 public enum PopupMovementType
 {
@@ -79,7 +78,8 @@ public class PopupMessage : MonoBehaviour
         rectTransform.localPosition += offset;
 
         if(rectTransform.anchoredPosition.y + speed * smoothTime > -rectTransform.sizeDelta.y)
-            rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, -rectTransform.sizeDelta.y - speed * smoothTime);
+            rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x,
+                -rectTransform.sizeDelta.y - speed * smoothTime);
 
         if (movementType == PopupMovementType.Top)
             targetPosition = rectTransform.localPosition + new Vector3(0, speed * smoothTime, 0);

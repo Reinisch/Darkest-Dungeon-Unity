@@ -1,8 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-
-public class ItemInteraction : CurioInteraction
+﻿public class ItemInteraction : CurioInteraction
 {
     public string ItemId { get; set; }
 

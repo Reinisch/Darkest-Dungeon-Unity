@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -139,7 +138,8 @@ public static class DungeonGenerator
 
         dungeon.Name = quest.Dungeon;
         dungeon.DungeonMash = envData.BattleMashes.Find(mash => mash.MashId == quest.Difficulty);
-        dungeon.SharedMash = DarkestDungeonManager.Data.DungeonEnviromentData["shared"].BattleMashes.Find(mash => mash.MashId == quest.Difficulty);
+        dungeon.SharedMash = DarkestDungeonManager.Data.DungeonEnviromentData["shared"].
+            BattleMashes.Find(mash => mash.MashId == quest.Difficulty);
         return dungeon;
     }
 
@@ -389,7 +389,8 @@ public static class DungeonGenerator
             hallway.Halls.Add(new HallSector(hallway.Id + "_0", hallway, new Door(hallway.Id, genHall.roomA.Id, Direction.Left)));
             for (int i = 1; i <= genData.Spacing; i++)
                 hallway.Halls.Add(new HallSector(hallway.Id + "_" + i.ToString(), hallway));
-            hallway.Halls.Add(new HallSector(hallway.Id + "_" + (genData.Spacing + 1).ToString(), hallway, new Door(hallway.Id, genHall.roomB.Id, Direction.Right)));
+            hallway.Halls.Add(new HallSector(hallway.Id + "_" + (genData.Spacing + 1).ToString(),
+                hallway, new Door(hallway.Id, genHall.roomB.Id, Direction.Right)));
 
             hallway.RoomA = dungeon.Rooms[genHall.roomA.Id];
             hallway.RoomB = dungeon.Rooms[genHall.roomB.Id];

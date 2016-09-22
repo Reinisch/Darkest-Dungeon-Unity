@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
@@ -41,29 +40,34 @@ public class BuildingUpgradeSlot : MonoBehaviour, IPointerEnterHandler, IPointer
         {
             case "sanitarium.cost":
                 sb.AppendFormat("\n<color={0}>", DarkestDungeonManager.Data.HexColors["equipment_tooltip_body"]);
-                sb.AppendFormat(LocalizationManager.GetString("upgrade_tree_tooltip_description_reduces_positive_quirk_treatment_cost_format"), 10);
+                sb.AppendFormat(LocalizationManager.GetString(
+                    "upgrade_tree_tooltip_description_reduces_positive_quirk_treatment_cost_format"), 10);
                 sb.AppendLine();
-                sb.AppendFormat(LocalizationManager.GetString("upgrade_tree_tooltip_description_reduces_negative_quirk_treatment_cost_format"), 10);
+                sb.AppendFormat(LocalizationManager.GetString(
+                    "upgrade_tree_tooltip_description_reduces_negative_quirk_treatment_cost_format"), 10);
                 sb.Append("</color>");
                 toolTip = sb.ToString();
                 break;
             case "blacksmith.weapon":
                 sb.AppendFormat("\n<color={0}>", DarkestDungeonManager.Data.HexColors["equipment_tooltip_body"]);
-                sb.AppendFormat(LocalizationManager.GetString("upgrade_tree_tooltip_description_allows_weapon_upgrades_of_rank_format"),
+                sb.AppendFormat(LocalizationManager.GetString(
+                    "upgrade_tree_tooltip_description_allows_weapon_upgrades_of_rank_format"),
                     UpgradeInfo.Code == "a"? 2 : UpgradeInfo.Code == "b"? 3 : UpgradeInfo.Code == "c"? 4 : 5);
                 sb.Append("</color>");
                 toolTip = sb.ToString();
                 break;
             case "blacksmith.armour":
                 sb.AppendFormat("\n<color={0}>", DarkestDungeonManager.Data.HexColors["equipment_tooltip_body"]);
-                sb.AppendFormat(LocalizationManager.GetString("upgrade_tree_tooltip_description_allows_armour_upgrades_of_rank_format"),
+                sb.AppendFormat(LocalizationManager.GetString(
+                    "upgrade_tree_tooltip_description_allows_armour_upgrades_of_rank_format"),
                     UpgradeInfo.Code == "a"? 2 : UpgradeInfo.Code == "b"? 3 : UpgradeInfo.Code == "c"? 4 : 5);
                 sb.Append("</color>");
                 toolTip = sb.ToString();
                 break;
             case "guild.skill_levels":
                 sb.AppendFormat("\n<color={0}>", DarkestDungeonManager.Data.HexColors["equipment_tooltip_body"]);
-                sb.AppendFormat(LocalizationManager.GetString("upgrade_tree_tooltip_description_allows_combat_skill_upgrades_of_rank_format"),
+                sb.AppendFormat(LocalizationManager.GetString(
+                    "upgrade_tree_tooltip_description_allows_combat_skill_upgrades_of_rank_format"),
                     UpgradeInfo.Code == "a" ? 2 : UpgradeInfo.Code == "b" ? 3 : UpgradeInfo.Code == "c" ? 4 : 5);
                 sb.Append("</color>");
                 toolTip = sb.ToString();
@@ -78,7 +82,8 @@ public class BuildingUpgradeSlot : MonoBehaviour, IPointerEnterHandler, IPointer
         }
 
         if (DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(Tree.Id, UpgradeInfo) == UpgradeStatus.Locked)
-            ToolTipManager.Instanse.Show(toolTip + "\n" + UpgradeInfo.PrerequisitesTooltip(), eventData, rectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
+            ToolTipManager.Instanse.Show(toolTip + "\n" + UpgradeInfo.PrerequisitesTooltip(),
+                eventData, rectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
         else
             ToolTipManager.Instanse.Show(toolTip, eventData, rectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
         

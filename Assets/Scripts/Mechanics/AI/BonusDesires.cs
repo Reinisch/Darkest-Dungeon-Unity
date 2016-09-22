@@ -101,6 +101,7 @@ public class BonusInitiativeHpRatio : BonusInitiativeDesire
         }
     }
 }
+
 public class BonusInitiativeDeath : BonusInitiativeDesire
 {
     public BonusInitiativeDeath()
@@ -152,6 +153,7 @@ public class BonusInitiativeDeath : BonusInitiativeDesire
         }
     }
 }
+
 public class BonusInitiativeGuaranteed : BonusInitiativeDesire
 {
     public int? MonstersMin { get; set; }
@@ -223,6 +225,7 @@ public class BonusInitiativeGuaranteed : BonusInitiativeDesire
         }
     }
 }
+
 public class BonusInitiativeLastSkill : BonusInitiativeDesire
 {
     public string LastCombatSkill { get; set; }
@@ -245,7 +248,8 @@ public class BonusInitiativeLastSkill : BonusInitiativeDesire
             if (MonstersSizeLimit.Value < RaidSceneManager.BattleGround.MonsterSize)
                 return false;
 
-        if (LastCombatSkill == null || RaidSceneManager.BattleGround.LastSkillUsed == null || RaidSceneManager.BattleGround.LastSkillUsed != LastCombatSkill)
+        if (LastCombatSkill == null || RaidSceneManager.BattleGround.LastSkillUsed == null
+            || RaidSceneManager.BattleGround.LastSkillUsed != LastCombatSkill)
             return false;
 
         RaidSceneManager.BattleGround.LastSkillUsed = null;
@@ -289,6 +293,7 @@ public class BonusInitiativeLastSkill : BonusInitiativeDesire
         }
     }
 }
+
 public class BonusInitiativeAllyClassCount : BonusInitiativeDesire
 {
     public string AllyBaseClass { get; set; }
@@ -375,6 +380,7 @@ public class BonusInitiativeAllyClassCount : BonusInitiativeDesire
         }
     }
 }
+
 public class BonusInitiativeAllyLastDamaged : BonusInitiativeDesire
 {
     public string AllyBaseClass { get; set; }

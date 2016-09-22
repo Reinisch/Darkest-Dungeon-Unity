@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 
 public enum LogGoalType { Plot, Roster }
 
@@ -30,6 +29,7 @@ public class LogQuestGoal : MonoBehaviour
             checkIcon.enabled = true;
         else
             checkIcon.enabled = false;
-        goalText.text = string.Format(LocalizationManager.GetString("str_caretaker_goal_hero_resolve"), LocalizationManager.GetString("hero_class_name_" + heroClass.StringId));
+        goalText.text = string.Format(LocalizationManager.GetString("str_caretaker_goal_hero_resolve"),
+            LocalizationManager.GetString("hero_class_name_" + heroClass.StringId));
     }
 }

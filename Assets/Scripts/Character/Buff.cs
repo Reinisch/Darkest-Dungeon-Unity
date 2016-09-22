@@ -1,10 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Specialized;
-using System.Collections.Generic;
-using System.Text;
-
-public enum BuffType : byte
+﻿public enum BuffType : byte
 {
     StatAdd,
     StatMultiply
@@ -64,7 +58,8 @@ public class Buff
             {
                 case AttributeCategory.Modifier:
                     sb.AppendFormat(LocalizationManager.GetString(
-                        ToolTipManager.GetConcat("buff_stat_tooltip_" + CharacterHelper.AttributeTypeToString(AttributeType))), ModifierValue);
+                        ToolTipManager.GetConcat("buff_stat_tooltip_"
+                            + CharacterHelper.AttributeTypeToString(AttributeType))), ModifierValue);
                     break;
                 case AttributeCategory.CombatStat:
                     sb.AppendFormat(LocalizationManager.GetString(
@@ -73,8 +68,9 @@ public class Buff
                     break;
                 default:
                     sb.AppendFormat(LocalizationManager.GetString(
-                        ToolTipManager.GetConcat("buff_stat_tooltip_", CharacterHelper.AttributeCategoryToString(attributeCategory), "_",
-                        CharacterHelper.AttributeTypeToString(AttributeType))), ModifierValue);
+                        ToolTipManager.GetConcat("buff_stat_tooltip_",
+                            CharacterHelper.AttributeCategoryToString(attributeCategory), "_",
+                            CharacterHelper.AttributeTypeToString(AttributeType))), ModifierValue);
                     break;
             }
 
@@ -85,16 +81,16 @@ public class Buff
             {
                 case BuffRule.InRank:
                     sb.AppendFormat(LocalizationManager.GetString(
-                        LocalizationHelper.BuffRuleTooltipString(RuleType, IsFalseRule)), SingleParam + 1, body);
+                        CharacterLocalizationHelper.BuffRuleTooltipString(RuleType, IsFalseRule)), SingleParam + 1, body);
                     break;
                 case BuffRule.EnemyType:
                     sb.AppendFormat(LocalizationManager.GetString(
-                        LocalizationHelper.BuffRuleTooltipString(RuleType, IsFalseRule)), 
+                        CharacterLocalizationHelper.BuffRuleTooltipString(RuleType, IsFalseRule)), 
                         LocalizationManager.GetString("buff_rule_data_tooltip_" + StringParam), body);
                     break;
                 case BuffRule.Skill:
                     sb.AppendFormat(LocalizationManager.GetString(
-                        LocalizationHelper.BuffRuleTooltipString(RuleType, IsFalseRule)),
+                        CharacterLocalizationHelper.BuffRuleTooltipString(RuleType, IsFalseRule)),
                         LocalizationManager.GetString("buff_rule_data_tooltip_" + StringParam), body);
                     break;
                 case BuffRule.LightBelow:
@@ -104,11 +100,11 @@ public class Buff
                 case BuffRule.StressAbove:
                 case BuffRule.StressBelow:
                     sb.AppendFormat(LocalizationManager.GetString(
-                        LocalizationHelper.BuffRuleTooltipString(RuleType, IsFalseRule)), SingleParam, body);
+                        CharacterLocalizationHelper.BuffRuleTooltipString(RuleType, IsFalseRule)), SingleParam, body);
                     break;
                 default:
                     sb.AppendFormat(LocalizationManager.GetString(
-                        LocalizationHelper.BuffRuleTooltipString(RuleType, IsFalseRule)), StringParam, body);
+                        CharacterLocalizationHelper.BuffRuleTooltipString(RuleType, IsFalseRule)), StringParam, body);
                     break;
             }
           
@@ -127,16 +123,19 @@ public class Buff
         {
             case AttributeCategory.Modifier:
                 sb.AppendFormat(LocalizationManager.GetString(
-                    ToolTipManager.GetConcat("buff_stat_tooltip_" + CharacterHelper.AttributeTypeToString(AttributeType))), amount);
+                    ToolTipManager.GetConcat("buff_stat_tooltip_" +
+                        CharacterHelper.AttributeTypeToString(AttributeType))), amount);
                 break;
             case AttributeCategory.CombatStat:
                 sb.AppendFormat(LocalizationManager.GetString(
-                    ToolTipManager.GetConcat("buff_stat_tooltip_", CharacterHelper.BuffTypeToString(Type), "_",
+                    ToolTipManager.GetConcat("buff_stat_tooltip_",
+                    CharacterHelper.BuffTypeToString(Type), "_",
                     CharacterHelper.AttributeTypeToString(AttributeType))), amount);
                 break;
             default:
                 sb.AppendFormat(LocalizationManager.GetString(
-                    ToolTipManager.GetConcat("buff_stat_tooltip_", CharacterHelper.AttributeCategoryToString(attributeCategory), "_",
+                    ToolTipManager.GetConcat("buff_stat_tooltip_",
+                    CharacterHelper.AttributeCategoryToString(attributeCategory), "_",
                     CharacterHelper.AttributeTypeToString(AttributeType))), amount);
                 break;
         }
@@ -148,16 +147,16 @@ public class Buff
         {
             case BuffRule.EnemyType:
                 sb.AppendFormat(LocalizationManager.GetString(
-                    LocalizationHelper.BuffRuleTooltipString(RuleType, IsFalseRule)),
+                    CharacterLocalizationHelper.BuffRuleTooltipString(RuleType, IsFalseRule)),
                     LocalizationManager.GetString("buff_rule_data_tooltip_" + StringParam), body);
                 break;
             case BuffRule.InRank:
                 sb.AppendFormat(LocalizationManager.GetString(
-                    LocalizationHelper.BuffRuleTooltipString(RuleType, IsFalseRule)), SingleParam + 1, body);
+                    CharacterLocalizationHelper.BuffRuleTooltipString(RuleType, IsFalseRule)), SingleParam + 1, body);
                 break;
             case BuffRule.Skill:
                 sb.AppendFormat(LocalizationManager.GetString(
-                    LocalizationHelper.BuffRuleTooltipString(RuleType, IsFalseRule)),
+                    CharacterLocalizationHelper.BuffRuleTooltipString(RuleType, IsFalseRule)),
                     LocalizationManager.GetString("buff_rule_data_tooltip_" + StringParam), body);
                 break;
             case BuffRule.LightBelow:
@@ -167,11 +166,11 @@ public class Buff
             case BuffRule.StressAbove:
             case BuffRule.StressBelow:
                 sb.AppendFormat(LocalizationManager.GetString(
-                    LocalizationHelper.BuffRuleTooltipString(RuleType, IsFalseRule)), SingleParam, body);
+                    CharacterLocalizationHelper.BuffRuleTooltipString(RuleType, IsFalseRule)), SingleParam, body);
                 break;
             default:
                 sb.AppendFormat(LocalizationManager.GetString(
-                    LocalizationHelper.BuffRuleTooltipString(RuleType, IsFalseRule)), StringParam, body);
+                    CharacterLocalizationHelper.BuffRuleTooltipString(RuleType, IsFalseRule)), StringParam, body);
                 break;
         }
 

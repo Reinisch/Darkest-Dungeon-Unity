@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 public delegate void ScrollEvent();
@@ -91,66 +90,66 @@ public class RaidEvents : MonoBehaviour
         #region Popup Colors
         PopupColors = new Dictionary<string, Color>()
         {
-            { "harmful", DarkestDungeonManager.Data.FromHexDatabase("harmful") },                                                                   //!
-            { "notable", DarkestDungeonManager.Data.FromHexDatabase("notable") },                                                                   //!
-            { "pop_text_stress_reduce", DarkestDungeonManager.Data.FromHexDatabase("pop_text_stress_reduce") },                                     //!
-            { "pop_text_outline_stress_reduce", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_stress_reduce") },                     //!
-            { "pop_text_stress_damage", DarkestDungeonManager.Data.FromHexDatabase("pop_text_stress_damage") },                                     //!
-            { "pop_text_outline_stress_damage", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_stress_damage") },                     //!
-            { "pop_text_miss", DarkestDungeonManager.Data.FromHexDatabase("pop_text_miss") },                                                       //!
-            { "pop_text_outline_miss", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_miss") },                                       //!
-            { "pop_text_no_damage", DarkestDungeonManager.Data.FromHexDatabase("pop_text_no_damage") },                                             //!
-            { "pop_text_outline_no_damage", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_no_damage") },                             //!
-            { "pop_text_crit_damage", DarkestDungeonManager.Data.FromHexDatabase("pop_text_crit_damage") },                                         //!
-            { "pop_text_outline_crit_damage", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_crit_damage") },                         //!
-            { "pop_text_damage", DarkestDungeonManager.Data.FromHexDatabase("pop_text_damage") },                                                   //!
-            { "pop_text_outline_damage", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_damage") },                                   //!
-            { "pop_text_deathblow", DarkestDungeonManager.Data.FromHexDatabase("pop_text_deathblow") },                                             //!
-            { "pop_text_outline_deathblow", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_deathblow") },                             //!
-            { "pop_text_death_avoided", DarkestDungeonManager.Data.FromHexDatabase("pop_text_death_avoided") },                                     //!
-            { "pop_text_outline_death_avoided", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_death_avoided") },                     //!
-            { "pop_text_disease_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_disease_resist") },                                   //!
-            { "pop_text_outline_disease_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_disease_resist") },                   //!
-            { "pop_text_pass", DarkestDungeonManager.Data.FromHexDatabase("pop_text_pass") },                                                       //!
-            { "pop_text_outline_pass", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_pass") },                                       //!
-            { "pop_text_heal", DarkestDungeonManager.Data.FromHexDatabase("pop_text_heal") },                                                       //!
-            { "pop_text_outline_heal", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_heal") },                                       //!
-            { "pop_text_heal_crit", DarkestDungeonManager.Data.FromHexDatabase("pop_text_heal_crit") },                                             //!
-            { "pop_text_outline_heal_crit", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_heal_crit") },                             //!
-            { "pop_text_buff", DarkestDungeonManager.Data.FromHexDatabase("pop_text_buff") },                                                       //!
-            { "pop_text_outline_buff", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_buff") },                                       //!
-            { "pop_text_debuff", DarkestDungeonManager.Data.FromHexDatabase("pop_text_debuff") },                                                   //!
-            { "pop_text_outline_debuff", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_debuff") },                                   //!
-            { "pop_text_stun", DarkestDungeonManager.Data.FromHexDatabase("pop_text_stun") },                                                       //!
-            { "pop_text_outline_stun", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_stun") },                                       //!
-            { "pop_text_stun_clear", DarkestDungeonManager.Data.FromHexDatabase("pop_text_stun_clear") },                                           //!
-            { "pop_text_outline_stun_clear", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_stun_clear") },                           //!
-            { "pop_text_poison", DarkestDungeonManager.Data.FromHexDatabase("pop_text_poison") },                                                   //!
-            { "pop_text_outline_poison", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_poison") },                                   //!
-            { "pop_text_bleed", DarkestDungeonManager.Data.FromHexDatabase("pop_text_bleed") },                                                     //!
-            { "pop_text_outline_bleed", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_bleed") },                                     //!
-            { "pop_text_cured", DarkestDungeonManager.Data.FromHexDatabase("pop_text_cured") },                                                     //!
-            { "pop_text_outline_cured", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_cured") },                                     //!
-            { "pop_text_tagged", DarkestDungeonManager.Data.FromHexDatabase("pop_text_tagged") },                                                   //!
-            { "pop_text_outline_tagged", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_tagged") },                                   //!
-            { "pop_text_riposte", DarkestDungeonManager.Data.FromHexDatabase("pop_text_riposte") },                                                 //!
-            { "pop_text_outline_riposte", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_riposte") },                                 //!
-            { "pop_text_guard", DarkestDungeonManager.Data.FromHexDatabase("pop_text_guard") },                                                     //!
-            { "pop_text_outline_guard", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_guard") },                                     //!
+            { "harmful", DarkestDungeonManager.Data.FromHexDatabase("harmful") },
+            { "notable", DarkestDungeonManager.Data.FromHexDatabase("notable") },
+            { "pop_text_stress_reduce", DarkestDungeonManager.Data.FromHexDatabase("pop_text_stress_reduce") },
+            { "pop_text_outline_stress_reduce", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_stress_reduce") },
+            { "pop_text_stress_damage", DarkestDungeonManager.Data.FromHexDatabase("pop_text_stress_damage") },
+            { "pop_text_outline_stress_damage", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_stress_damage") },
+            { "pop_text_miss", DarkestDungeonManager.Data.FromHexDatabase("pop_text_miss") },
+            { "pop_text_outline_miss", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_miss") },
+            { "pop_text_no_damage", DarkestDungeonManager.Data.FromHexDatabase("pop_text_no_damage") },
+            { "pop_text_outline_no_damage", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_no_damage") },
+            { "pop_text_crit_damage", DarkestDungeonManager.Data.FromHexDatabase("pop_text_crit_damage") },
+            { "pop_text_outline_crit_damage", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_crit_damage") },
+            { "pop_text_damage", DarkestDungeonManager.Data.FromHexDatabase("pop_text_damage") },
+            { "pop_text_outline_damage", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_damage") },
+            { "pop_text_deathblow", DarkestDungeonManager.Data.FromHexDatabase("pop_text_deathblow") },
+            { "pop_text_outline_deathblow", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_deathblow") },
+            { "pop_text_death_avoided", DarkestDungeonManager.Data.FromHexDatabase("pop_text_death_avoided") },
+            { "pop_text_outline_death_avoided", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_death_avoided") },
+            { "pop_text_disease_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_disease_resist") },
+            { "pop_text_outline_disease_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_disease_resist") },
+            { "pop_text_pass", DarkestDungeonManager.Data.FromHexDatabase("pop_text_pass") },
+            { "pop_text_outline_pass", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_pass") },
+            { "pop_text_heal", DarkestDungeonManager.Data.FromHexDatabase("pop_text_heal") },
+            { "pop_text_outline_heal", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_heal") },
+            { "pop_text_heal_crit", DarkestDungeonManager.Data.FromHexDatabase("pop_text_heal_crit") },
+            { "pop_text_outline_heal_crit", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_heal_crit") },
+            { "pop_text_buff", DarkestDungeonManager.Data.FromHexDatabase("pop_text_buff") },
+            { "pop_text_outline_buff", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_buff") }, 
+            { "pop_text_debuff", DarkestDungeonManager.Data.FromHexDatabase("pop_text_debuff") },
+            { "pop_text_outline_debuff", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_debuff") },
+            { "pop_text_stun", DarkestDungeonManager.Data.FromHexDatabase("pop_text_stun") },
+            { "pop_text_outline_stun", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_stun") },
+            { "pop_text_stun_clear", DarkestDungeonManager.Data.FromHexDatabase("pop_text_stun_clear") },
+            { "pop_text_outline_stun_clear", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_stun_clear") },
+            { "pop_text_poison", DarkestDungeonManager.Data.FromHexDatabase("pop_text_poison") },
+            { "pop_text_outline_poison", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_poison") },
+            { "pop_text_bleed", DarkestDungeonManager.Data.FromHexDatabase("pop_text_bleed") },
+            { "pop_text_outline_bleed", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_bleed") },
+            { "pop_text_cured", DarkestDungeonManager.Data.FromHexDatabase("pop_text_cured") },
+            { "pop_text_outline_cured", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_cured") },
+            { "pop_text_tagged", DarkestDungeonManager.Data.FromHexDatabase("pop_text_tagged") },
+            { "pop_text_outline_tagged", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_tagged") },
+            { "pop_text_riposte", DarkestDungeonManager.Data.FromHexDatabase("pop_text_riposte") },
+            { "pop_text_outline_riposte", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_riposte") },
+            { "pop_text_guard", DarkestDungeonManager.Data.FromHexDatabase("pop_text_guard") },
+            { "pop_text_outline_guard", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_guard") },
             { "pop_text_full", DarkestDungeonManager.Data.FromHexDatabase("pop_text_full") },
             { "pop_text_outline_full", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_full") },
-            { "pop_text_heart_attack", DarkestDungeonManager.Data.FromHexDatabase("pop_text_heart_attack") },                                       //!
-            { "pop_text_outline_heart_attack", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_heart_attack") },                       //!
-            { "pop_text_move_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_move_resist") },                                         //!
-            { "pop_text_outline_move_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_move_resist") },                         //!
-            { "pop_text_debuff_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_debuff_resist") },                                     //!
-            { "pop_text_outline_debuff_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_debuff_resist") },                     //!
-            { "pop_text_stun_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_stun_resist") },                                         //!
-            { "pop_text_outline_stun_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_stun_resist") },                         //!
-            { "pop_text_poison_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_poison_resist") },                                     //!
-            { "pop_text_outline_poison_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_poison_resist") },                     //!
-            { "pop_text_bleed_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_bleed_resist") },                                       //!
-            { "pop_text_outline_bleed_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_bleed_resist") },                       //!
+            { "pop_text_heart_attack", DarkestDungeonManager.Data.FromHexDatabase("pop_text_heart_attack") },
+            { "pop_text_outline_heart_attack", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_heart_attack") },
+            { "pop_text_move_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_move_resist") },
+            { "pop_text_outline_move_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_move_resist") },
+            { "pop_text_debuff_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_debuff_resist") },
+            { "pop_text_outline_debuff_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_debuff_resist") },
+            { "pop_text_stun_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_stun_resist") },
+            { "pop_text_outline_stun_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_stun_resist") },
+            { "pop_text_poison_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_poison_resist") },
+            { "pop_text_outline_poison_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_poison_resist") },
+            { "pop_text_bleed_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_bleed_resist") }, 
+            { "pop_text_outline_bleed_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_bleed_resist") },
         };
         #endregion
 
@@ -415,7 +414,8 @@ public class RaidEvents : MonoBehaviour
                 break;
         }
 
-        Vector3 screenPosition = RaidSceneManager.DungeonPositionToScreen(unit.RectTransform.TransformPoint(bone.WorldX, bone.WorldY, 0));
+        Vector3 screenPosition = RaidSceneManager.DungeonPositionToScreen(
+            unit.RectTransform.TransformPoint(bone.WorldX, bone.WorldY, 0));
         popupMessage.rectTransform.position = new Vector3(screenPosition.x, screenPosition.y, 0);
         popupMessage.FollowXBone(bone, unit);
         popupMessage.gameObject.SetActive(true);

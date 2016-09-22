@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using System.Collections.Generic;
-using System.Collections;
 using System.Linq;
 
 public class RaidPreparationManager : MonoBehaviour
@@ -77,5 +75,4 @@ public class RaidPreparationManager : MonoBehaviour
             SelectedQuestSlot.Selected = true;
         }
     }
-
 }

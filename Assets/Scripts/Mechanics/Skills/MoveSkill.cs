@@ -1,10 +1,7 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Text;
+﻿using System.Text;
 
 public class MoveSkill : Skill
 {
-    public string Id { get; set; }
     public string Type { get; set; }
 
     public int MoveForward { get; set; }

@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using System.Linq;
 
 public enum TargetDesireType
 {
@@ -61,7 +60,8 @@ public class TargetSelectionRandom : TargetSelectionDesire
         if (decision.SelectedSkill.TargetRanks.IsSelfFormation && !IsFriendlyTargetDesire)
             return false;
 
-        if (!(decision.SelectedSkill.TargetRanks.IsSelfFormation || decision.SelectedSkill.TargetRanks.IsSelfTarget) && !IsEnemyTargetDesire)
+        if (!(decision.SelectedSkill.TargetRanks.IsSelfFormation || 
+            decision.SelectedSkill.TargetRanks.IsSelfTarget) && !IsEnemyTargetDesire)
             return false;
 
         var availableTargets = new List<FormationUnit>(decision.TargetInfo.Targets);
@@ -156,6 +156,7 @@ public class TargetSelectionRandom : TargetSelectionDesire
         }
     }
 }
+
 public class TargetSelectionMarked : TargetSelectionDesire
 {
     public TargetSelectionMarked()
@@ -190,7 +191,8 @@ public class TargetSelectionMarked : TargetSelectionDesire
         if (decision.SelectedSkill.TargetRanks.IsSelfFormation && !IsFriendlyTargetDesire)
             return false;
 
-        if (!(decision.SelectedSkill.TargetRanks.IsSelfFormation || decision.SelectedSkill.TargetRanks.IsSelfTarget) && !IsEnemyTargetDesire)
+        if (!(decision.SelectedSkill.TargetRanks.IsSelfFormation ||
+            decision.SelectedSkill.TargetRanks.IsSelfTarget) && !IsEnemyTargetDesire)
             return false;
 
         var availableTargets = new List<FormationUnit>(decision.TargetInfo.Targets);
@@ -273,6 +275,7 @@ public class TargetSelectionMarked : TargetSelectionDesire
         }
     }
 }
+
 public class TargetSelectionFillCaptor : TargetSelectionDesire
 {
     public TargetSelectionFillCaptor()
@@ -298,7 +301,8 @@ public class TargetSelectionFillCaptor : TargetSelectionDesire
 
     public override bool SelectTarget(FormationUnit performer, MonsterBrainDecision decision)
     {
-        if (decision.SelectedSkill.Effects.Find(effect => effect.SubEffects.Find(subeffect => subeffect is CaptureEffect) != null) == null)
+        if (decision.SelectedSkill.Effects.Find(effect => 
+            effect.SubEffects.Find(subeffect => subeffect is CaptureEffect) != null) == null)
             return false;
 
         if (!(SpecificCombatSkillId == "" || SpecificCombatSkillId == decision.SelectedSkill.Id))
@@ -307,7 +311,8 @@ public class TargetSelectionFillCaptor : TargetSelectionDesire
         if (decision.SelectedSkill.TargetRanks.IsSelfFormation && !IsFriendlyTargetDesire)
             return false;
 
-        if (!(decision.SelectedSkill.TargetRanks.IsSelfFormation || decision.SelectedSkill.TargetRanks.IsSelfTarget) && !IsEnemyTargetDesire)
+        if (!(decision.SelectedSkill.TargetRanks.IsSelfFormation ||
+            decision.SelectedSkill.TargetRanks.IsSelfTarget) && !IsEnemyTargetDesire)
             return false;
 
         var availableTargets = new List<FormationUnit>(decision.TargetInfo.Targets);
@@ -384,6 +389,7 @@ public class TargetSelectionFillCaptor : TargetSelectionDesire
         }
     }
 }
+
 public class TargetSelectionHealth : TargetSelectionDesire
 {
     public string AllyBaseClassId { get; set; }
@@ -418,7 +424,8 @@ public class TargetSelectionHealth : TargetSelectionDesire
         if (decision.SelectedSkill.TargetRanks.IsSelfFormation && !IsFriendlyTargetDesire)
             return false;
 
-        if (!(decision.SelectedSkill.TargetRanks.IsSelfFormation || decision.SelectedSkill.TargetRanks.IsSelfTarget) && !IsEnemyTargetDesire)
+        if (!(decision.SelectedSkill.TargetRanks.IsSelfFormation || 
+            decision.SelectedSkill.TargetRanks.IsSelfTarget) && !IsEnemyTargetDesire)
             return false;
 
         var availableTargets = new List<FormationUnit>(decision.TargetInfo.Targets);
@@ -508,6 +515,7 @@ public class TargetSelectionHealth : TargetSelectionDesire
         }
     }
 }
+
 public class TargetSelectionStress : TargetSelectionDesire
 {
     public bool IsGreaterComparison { get; set; }
@@ -541,7 +549,8 @@ public class TargetSelectionStress : TargetSelectionDesire
         if (decision.SelectedSkill.TargetRanks.IsSelfFormation && !IsFriendlyTargetDesire)
             return false;
 
-        if (!(decision.SelectedSkill.TargetRanks.IsSelfFormation || decision.SelectedSkill.TargetRanks.IsSelfTarget) && !IsEnemyTargetDesire)
+        if (!(decision.SelectedSkill.TargetRanks.IsSelfFormation ||
+            decision.SelectedSkill.TargetRanks.IsSelfTarget) && !IsEnemyTargetDesire)
             return false;
 
         var availableTargets = new List<FormationUnit>(decision.TargetInfo.Targets).FindAll(target => target.Character.IsStressed);
@@ -633,6 +642,7 @@ public class TargetSelectionStress : TargetSelectionDesire
         }
     }
 }
+
 public class TargetSelectionAllyClass : TargetSelectionDesire
 {
     public string AllyBaseClass { get; set; }
@@ -666,10 +676,12 @@ public class TargetSelectionAllyClass : TargetSelectionDesire
         if (decision.SelectedSkill.TargetRanks.IsSelfFormation && !IsFriendlyTargetDesire)
             return false;
 
-        if (!(decision.SelectedSkill.TargetRanks.IsSelfFormation || decision.SelectedSkill.TargetRanks.IsSelfTarget) && !IsEnemyTargetDesire)
+        if (!(decision.SelectedSkill.TargetRanks.IsSelfFormation ||
+            decision.SelectedSkill.TargetRanks.IsSelfTarget) && !IsEnemyTargetDesire)
             return false;
 
-        var availableTargets = new List<FormationUnit>(decision.TargetInfo.Targets).FindAll(target => target.Character.Class == AllyBaseClass);
+        var availableTargets = new List<FormationUnit>(decision.TargetInfo.Targets).
+            FindAll(target => target.Character.Class == AllyBaseClass);
 
         if (Parameters[TargetSelectParameter.CanTargetDeathsDoor].HasValue)
             if (!Parameters[TargetSelectParameter.CanTargetDeathsDoor].Value)
@@ -749,6 +761,7 @@ public class TargetSelectionAllyClass : TargetSelectionDesire
         }
     }
 }
+
 public class TargetSelectionResistance : TargetSelectionDesire
 {
     public AttributeType ResistanceType { get; set; }
@@ -783,7 +796,8 @@ public class TargetSelectionResistance : TargetSelectionDesire
         if (decision.SelectedSkill.TargetRanks.IsSelfFormation && !IsFriendlyTargetDesire)
             return false;
 
-        if (!(decision.SelectedSkill.TargetRanks.IsSelfFormation || decision.SelectedSkill.TargetRanks.IsSelfTarget) && !IsEnemyTargetDesire)
+        if (!(decision.SelectedSkill.TargetRanks.IsSelfFormation ||
+            decision.SelectedSkill.TargetRanks.IsSelfTarget) && !IsEnemyTargetDesire)
             return false;
 
         var availableTargets = new List<FormationUnit>(decision.TargetInfo.Targets);
@@ -894,6 +908,7 @@ public class TargetSelectionResistance : TargetSelectionDesire
         }
     }
 }
+
 public class TargetSelectionRank : TargetSelectionDesire
 {
     public TargetSelectionRank()
@@ -925,7 +940,8 @@ public class TargetSelectionRank : TargetSelectionDesire
         if (decision.SelectedSkill.TargetRanks.IsSelfFormation && !IsFriendlyTargetDesire)
             return false;
 
-        if (!(decision.SelectedSkill.TargetRanks.IsSelfFormation || decision.SelectedSkill.TargetRanks.IsSelfTarget) && !IsEnemyTargetDesire)
+        if (!(decision.SelectedSkill.TargetRanks.IsSelfFormation ||
+            decision.SelectedSkill.TargetRanks.IsSelfTarget) && !IsEnemyTargetDesire)
             return false;
 
         var availableTargets = new List<FormationUnit>(decision.TargetInfo.Targets);

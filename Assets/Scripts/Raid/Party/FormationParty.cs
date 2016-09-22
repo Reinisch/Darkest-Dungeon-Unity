@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 public class FormationParty : MonoBehaviour
@@ -111,8 +110,10 @@ public class FormationParty : MonoBehaviour
         {
             if(unitSaveData.IsHero)
             {
-                Hero hero = DarkestDungeonManager.Campaign.Heroes.Find(estateHero => estateHero.RosterId == unitSaveData.RosterId);
-                FormationUnit unit = Instantiate(Resources.Load<GameObject>("Prefabs/Heroes/" + hero.Class)).GetComponent<FormationUnit>();
+                Hero hero = DarkestDungeonManager.Campaign.Heroes.Find(estateHero =>
+                    estateHero.RosterId == unitSaveData.RosterId);
+                FormationUnit unit = Instantiate(Resources.Load<GameObject>("Prefabs/Heroes/" +
+                    hero.Class)).GetComponent<FormationUnit>();
                 unit.transform.SetParent(transform, false);
                 unit.Party = this;
                 unit.Initialize(hero, unitSaveData);
@@ -130,7 +131,8 @@ public class FormationParty : MonoBehaviour
             }
             else
             {
-                GameObject unitObject = unitSaveData.IsCorpse ? Resources.Load("Prefabs/Monsters/" + unitSaveData.OriginalClass) as GameObject :
+                GameObject unitObject = unitSaveData.IsCorpse ?
+                    Resources.Load("Prefabs/Monsters/" + unitSaveData.OriginalClass) as GameObject :
                     Resources.Load("Prefabs/Monsters/" + unitSaveData.Class) as GameObject;
                 FormationUnit unit = Instantiate(unitObject).GetComponent<FormationUnit>();
                 unit.transform.SetParent(transform, false);

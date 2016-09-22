@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System.Collections;
 
-public class RecruitSlot : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+public class RecruitSlot : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
+    IDragHandler, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     public Image heroPortrait;
     public Text nameLabel;
@@ -28,7 +28,8 @@ public class RecruitSlot : MonoBehaviour, IBeginDragHandler, IEndDragHandler, ID
 
             resolveLabel.text = hero.Resolve.Level.ToString();
             if (hero.Resolve.Level > 0)
-                resolveIcon.sprite = DarkestDungeonManager.Data.Sprites["resolve_level_bar_number_background_lvl" + hero.Resolve.Level.ToString()];
+                resolveIcon.sprite = DarkestDungeonManager.Data.Sprites["resolve_level_bar_number_background_lvl" +
+                    hero.Resolve.Level.ToString()];
             else
                 resolveIcon.sprite = DarkestDungeonManager.Data.Sprites["resolve_level_bar_number_background"];
 

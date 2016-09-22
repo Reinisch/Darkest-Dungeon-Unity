@@ -1,12 +1,9 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public class SkillComponent
+﻿public abstract class Skill
 {
-
+    public string Id { get; set; }
 }
 
-public class HealComponent : SkillComponent
+public class HealComponent
 {
     public int MinAmount { get; set; }
     public int MaxAmount { get; set; }
@@ -18,7 +15,7 @@ public class HealComponent : SkillComponent
     }
 }
 
-public class MoveComponent : SkillComponent
+public class MoveComponent
 {
     public int Pushback { get; set; }
     public int Pullforward { get; set; }
@@ -28,9 +25,4 @@ public class MoveComponent : SkillComponent
         Pushback = push;
         Pullforward = pull;
     }
-}
-
-public class Skill
-{
-
 }

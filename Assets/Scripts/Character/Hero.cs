@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -215,11 +214,9 @@ public class Hero : Character
 
         RevertMortality();
 
-        AddBuff(new BuffInfo(DarkestDungeonManager.Data.Buffs["deathsdoorACCDebuff"], BuffDurationType.Permanent, BuffSourceType.DeathsDoor));
-        AddBuff(new BuffInfo(DarkestDungeonManager.Data.Buffs["deathsdoorDMGLowDebuff"], BuffDurationType.Permanent, BuffSourceType.DeathsDoor));
-        AddBuff(new BuffInfo(DarkestDungeonManager.Data.Buffs["deathsdoorDMGHighDebuff"], BuffDurationType.Permanent, BuffSourceType.DeathsDoor));
-        AddBuff(new BuffInfo(DarkestDungeonManager.Data.Buffs["deathsdoorSPDDebuff"], BuffDurationType.Permanent, BuffSourceType.DeathsDoor));
-        AddBuff(new BuffInfo(DarkestDungeonManager.Data.Buffs["deathsdoorSRDebuff"], BuffDurationType.Permanent, BuffSourceType.DeathsDoor));
+        for(int i = 0; i < HeroClass.DeathDoor.Buffs.Count; i++)
+            AddBuff(new BuffInfo(DarkestDungeonManager.Data.Buffs[HeroClass.DeathDoor.Buffs[i]],
+                BuffDurationType.Permanent, BuffSourceType.DeathsDoor));
     }
     public void RevertDeathsDoor()
     {
@@ -240,11 +237,9 @@ public class Hero : Character
         else
             mortalityStatus.AtDeathRecovery = true;
 
-        AddBuff(new BuffInfo(DarkestDungeonManager.Data.Buffs["mortalityACCDebuff"], BuffDurationType.Camp, BuffSourceType.Mortality));
-        AddBuff(new BuffInfo(DarkestDungeonManager.Data.Buffs["mortalityDMGLowDebuff"], BuffDurationType.Camp, BuffSourceType.Mortality));
-        AddBuff(new BuffInfo(DarkestDungeonManager.Data.Buffs["mortalityDMGHighDebuff"], BuffDurationType.Camp, BuffSourceType.Mortality));
-        AddBuff(new BuffInfo(DarkestDungeonManager.Data.Buffs["mortalitySPDDebuff"], BuffDurationType.Camp, BuffSourceType.Mortality));
-        AddBuff(new BuffInfo(DarkestDungeonManager.Data.Buffs["mortalitySRDebuff"], BuffDurationType.Camp, BuffSourceType.Mortality));
+        for (int i = 0; i < HeroClass.DeathDoor.Buffs.Count; i++)
+            AddBuff(new BuffInfo(DarkestDungeonManager.Data.Buffs[HeroClass.DeathDoor.RecoveryBuffs[i]],
+                BuffDurationType.Permanent, BuffSourceType.Mortality));
     }
     public void RevertMortality()
     {
@@ -377,8 +372,9 @@ public class Hero : Character
     public Quirk AddNegativeQuirk()
     {
         var quirkGroup = quirkData.FindAll(quirkInfo => !quirkInfo.Quirk.IsPositive && !quirkInfo.Quirk.IsDisease);
-        var availableQuirks = DarkestDungeonManager.Data.Quirks.Values.ToList().FindAll(newQuirk => !newQuirk.IsPositive && !newQuirk.IsDisease &&
-                quirkData.TrueForAll(quirkInfo => !quirkInfo.Quirk.IncompatibleQuirks.Contains(newQuirk.Id)) &&
+        var availableQuirks = DarkestDungeonManager.Data.Quirks.Values.ToList().FindAll(newQuirk =>
+                !newQuirk.IsPositive && !newQuirk.IsDisease && quirkData.TrueForAll(quirkInfo =>
+                !quirkInfo.Quirk.IncompatibleQuirks.Contains(newQuirk.Id)) &&
                 quirkData.Find(quirkInfo => quirkInfo.Quirk == newQuirk) == null);
 
         var addedQuirk = availableQuirks[Random.Range(0, availableQuirks.Count)];
@@ -448,7 +444,8 @@ public class Hero : Character
     }
     public Quirk RemoveNegativeQuirk()
     {
-        var negativeQuirks = quirkData.FindAll(quirkInfo => !quirkInfo.Quirk.IsPositive && !quirkInfo.Quirk.IsDisease && !quirkInfo.IsLocked);
+        var negativeQuirks = quirkData.FindAll(quirkInfo => 
+            !quirkInfo.Quirk.IsPositive && !quirkInfo.Quirk.IsDisease && !quirkInfo.IsLocked);
         if (negativeQuirks.Count == 0)
             negativeQuirks = quirkData.FindAll(quirkInfo => !quirkInfo.Quirk.IsPositive && !quirkInfo.Quirk.IsDisease);
 
@@ -588,7 +585,8 @@ public class Hero : Character
 
         #region Quirk Generation
         quirkData = new List<QuirkInfo>();
-        int positiveQuirkNumber = Random.Range(HeroClass.Generation.NumberOfPositiveQuirksMin, HeroClass.Generation.NumberOfPositiveQuirksMax + 1);
+        int positiveQuirkNumber = Random.Range(HeroClass.Generation.NumberOfPositiveQuirksMin,
+            HeroClass.Generation.NumberOfPositiveQuirksMax + 1);
         for (int i = 0; i < positiveQuirkNumber ; i++ )
         {
             var availableQuirks = DarkestDungeonManager.Data.Quirks.Values.ToList().FindAll(newQuirk => newQuirk.IsPositive &&
@@ -598,7 +596,8 @@ public class Hero : Character
             quirkData.Add(new QuirkInfo(availableQuirk, false, 1, false));
             ApplyQuirk(availableQuirk);
         }
-        int negativeQuirkNumber = Random.Range(HeroClass.Generation.NumberOfNegativeQuirksMin, HeroClass.Generation.NumberOfNegativeQuirksMax + 1);
+        int negativeQuirkNumber = Random.Range(HeroClass.Generation.NumberOfNegativeQuirksMin,
+            HeroClass.Generation.NumberOfNegativeQuirksMax + 1);
         for (int i = 0; i < negativeQuirkNumber; i++)
         {
             var availableQuirks = DarkestDungeonManager.Data.Quirks.Values.ToList().FindAll(newQuirk => !newQuirk.IsPositive &&
@@ -682,7 +681,8 @@ public class Hero : Character
 
         #region Equipment Generation
         var weaponTree = DarkestDungeonManager.Data.UpgradeTrees[classId + ".weapon"];
-        int equipLevel = weaponTree.Upgrades.FindAll(upgrade => upgrade is HeroUpgrade && (upgrade as HeroUpgrade).PrerequisiteResolveLevel <= expUpgrade.Level).Count + 1;
+        int equipLevel = weaponTree.Upgrades.FindAll(upgrade => upgrade is HeroUpgrade &&
+            (upgrade as HeroUpgrade).PrerequisiteResolveLevel <= expUpgrade.Level).Count + 1;
         Equipment weapon = HeroClass.Weapons.Find(wep => wep.UpgradeLevel == equipLevel);
         Equip(weapon, HeroEquipmentSlot.Weapon);
         Equipment armor = HeroClass.Armors.Find(arm => arm.UpgradeLevel == equipLevel);
@@ -691,7 +691,8 @@ public class Hero : Character
 
         #region Quirk Generation
         quirkData = new List<QuirkInfo>();
-        int positiveQuirkNumber = Random.Range(HeroClass.Generation.NumberOfPositiveQuirksMin, HeroClass.Generation.NumberOfPositiveQuirksMax + expUpgrade.ExtraPositiveQuirks + 1);
+        int positiveQuirkNumber = Random.Range(HeroClass.Generation.NumberOfPositiveQuirksMin,
+            HeroClass.Generation.NumberOfPositiveQuirksMax + expUpgrade.ExtraPositiveQuirks + 1);
         for (int i = 0; i < positiveQuirkNumber; i++)
         {
             var availableQuirks = DarkestDungeonManager.Data.Quirks.Values.ToList().FindAll(newQuirk => newQuirk.IsPositive &&
@@ -701,7 +702,8 @@ public class Hero : Character
             quirkData.Add(new QuirkInfo(availableQuirk, false, 1, false));
             ApplyQuirk(availableQuirk);
         }
-        int negativeQuirkNumber = Random.Range(HeroClass.Generation.NumberOfNegativeQuirksMin, HeroClass.Generation.NumberOfNegativeQuirksMax + expUpgrade.ExtraNegativeQuirks + 1);
+        int negativeQuirkNumber = Random.Range(HeroClass.Generation.NumberOfNegativeQuirksMin,
+            HeroClass.Generation.NumberOfNegativeQuirksMax + expUpgrade.ExtraNegativeQuirks + 1);
         for (int i = 0; i < negativeQuirkNumber; i++)
         {
             var availableQuirks = DarkestDungeonManager.Data.Quirks.Values.ToList().FindAll(newQuirk => !newQuirk.IsPositive &&
@@ -715,7 +717,8 @@ public class Hero : Character
 
         #region Combat Generation
         var availableSkills = new List<CombatSkill>(HeroClass.CombatSkills);
-        int skillsRequired = Mathf.Clamp(HeroClass.Generation.NumberOfRandomCombatSkills + expUpgrade.ExtraCombatSkills, 0, HeroClass.CombatSkills.Count);
+        int skillsRequired = Mathf.Clamp(HeroClass.Generation.NumberOfRandomCombatSkills +
+            expUpgrade.ExtraCombatSkills, 0, HeroClass.CombatSkills.Count);
         CurrentCombatSkills = new CombatSkill[HeroClass.CombatSkills.Count];
 
         foreach (var guaranteedSkill in availableSkills.FindAll(skill => skill.IsGenerationGuaranteed))

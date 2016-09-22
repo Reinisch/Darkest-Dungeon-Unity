@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using System.Collections;
 
 public delegate void WagonSellEvent(WagonSlot slot);
 public delegate void TrinketSellEvent(Trinket trinket);

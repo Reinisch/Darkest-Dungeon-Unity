@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 public static class SaveLoadManager
 {
@@ -44,7 +42,8 @@ public static class SaveLoadManager
         {
             bw.Write((int)saveHeroData.buffs[i].SourceType);
 
-            if(saveHeroData.buffs[i].SourceType == BuffSourceType.Adventure || saveHeroData.buffs[i].SourceType == BuffSourceType.Estate)
+            if(saveHeroData.buffs[i].SourceType == BuffSourceType.Adventure ||
+                saveHeroData.buffs[i].SourceType == BuffSourceType.Estate)
             {
                 bw.Write((int)saveHeroData.buffs[i].DurationType);
                 bw.Write(saveHeroData.buffs[i].OverridenValue);
@@ -648,7 +647,8 @@ public static class SaveLoadManager
                     int dungeonProgressCount = br.ReadInt32();
                     for (int i = 0; i < dungeonProgressCount; i++)
                     {
-                        var newProgress = new DungeonProgress(br.ReadString(), br.ReadInt32(), br.ReadInt32(), br.ReadBoolean(), br.ReadBoolean());
+                        var newProgress = new DungeonProgress(br.ReadString(), br.ReadInt32(),
+                            br.ReadInt32(), br.ReadBoolean(), br.ReadBoolean());
                         saveData.saveDungeonData.Add(newProgress.DungeonName, newProgress);;
                     }
 
@@ -1108,7 +1108,8 @@ public static class SaveLoadManager
                     #endregion
 
                     var envData = DarkestDungeonManager.Data.DungeonEnviromentData[saveData.Quest.Dungeon];
-                    saveData.Dungeon.SharedMash = DarkestDungeonManager.Data.DungeonEnviromentData["shared"].BattleMashes.Find(mash => mash.MashId == saveData.Quest.Difficulty);
+                    saveData.Dungeon.SharedMash = DarkestDungeonManager.Data.DungeonEnviromentData["shared"].
+                        BattleMashes.Find(mash => mash.MashId == saveData.Quest.Difficulty);
                     saveData.Dungeon.DungeonMash = envData.BattleMashes.Find(mash => mash.MashId == saveData.Quest.Difficulty);
 
                     int sharedExecIdsCount = br.ReadInt32();
@@ -1287,8 +1288,10 @@ public static class SaveLoadManager
         {
             var newHeroPurchases = new Dictionary<string, UpgradePurchases>();
             saveData.instancedPurchases.Add(saveData.saveHeroData[i].rosterId, newHeroPurchases);
-            newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + ".weapon", new UpgradePurchases(saveData.saveHeroData[i].heroClass + ".weapon", new string[0]));
-            newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + ".armour", new UpgradePurchases(saveData.saveHeroData[i].heroClass + ".armour", new string[0]));
+            newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + ".weapon",
+                new UpgradePurchases(saveData.saveHeroData[i].heroClass + ".weapon", new string[0]));
+            newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + ".armour",
+                new UpgradePurchases(saveData.saveHeroData[i].heroClass + ".armour", new string[0]));
             var heroClass = DarkestDungeonManager.Data.HeroClasses[saveData.saveHeroData[i].heroClass];
             for (int j = 0; j < heroClass.CombatSkills.Count; j++)
                 newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + "." + heroClass.CombatSkills[j].Id, new UpgradePurchases(
@@ -2131,9 +2134,11 @@ public static class SaveLoadManager
         {
             var newHeroPurchases = new Dictionary<string, UpgradePurchases>();
             saveData.instancedPurchases.Add(saveData.saveHeroData[i].rosterId, newHeroPurchases);
-            newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + ".weapon", new UpgradePurchases(saveData.saveHeroData[i].heroClass + ".weapon", equipCodes.GetRange(0,
+            newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + ".weapon",
+                new UpgradePurchases(saveData.saveHeroData[i].heroClass + ".weapon", equipCodes.GetRange(0,
                 Mathf.Clamp(saveData.saveHeroData[i].weaponLevel - 1, 0, 4)).ToArray()));
-            newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + ".armour", new UpgradePurchases(saveData.saveHeroData[i].heroClass + ".armour", equipCodes.GetRange(0,
+            newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + ".armour",
+                new UpgradePurchases(saveData.saveHeroData[i].heroClass + ".armour", equipCodes.GetRange(0,
                 Mathf.Clamp(saveData.saveHeroData[i].armorLevel - 1, 0, 4)).ToArray()));
             var heroClass = DarkestDungeonManager.Data.HeroClasses[saveData.saveHeroData[i].heroClass];
             for (int j = 0; j < heroClass.CombatSkills.Count; j++)
@@ -2144,7 +2149,8 @@ public static class SaveLoadManager
             }
             for (int j = 0; j < heroClass.CampingSkills.Count; j++)
             {
-                newHeroPurchases.Add(heroClass.CampingSkills[j].Id, new UpgradePurchases(heroClass.CampingSkills[j].Id, new string[] { "0" }));
+                newHeroPurchases.Add(heroClass.CampingSkills[j].Id,
+                    new UpgradePurchases(heroClass.CampingSkills[j].Id, new string[] { "0" }));
             }
 
             if (saveData.saveHeroData[i].heroClass != "abomination")
@@ -2163,8 +2169,10 @@ public static class SaveLoadManager
         {
             var newHeroPurchases = new Dictionary<string, UpgradePurchases>();
             saveData.instancedPurchases.Add(saveData.stageCoachData[i].rosterId, newHeroPurchases);
-            newHeroPurchases.Add(saveData.stageCoachData[i].heroClass + ".weapon", new UpgradePurchases(saveData.stageCoachData[i].heroClass + ".weapon", new string[0]));
-            newHeroPurchases.Add(saveData.stageCoachData[i].heroClass + ".armour", new UpgradePurchases(saveData.stageCoachData[i].heroClass + ".armour", new string[0]));
+            newHeroPurchases.Add(saveData.stageCoachData[i].heroClass + ".weapon",
+                new UpgradePurchases(saveData.stageCoachData[i].heroClass + ".weapon", new string[0]));
+            newHeroPurchases.Add(saveData.stageCoachData[i].heroClass + ".armour",
+                new UpgradePurchases(saveData.stageCoachData[i].heroClass + ".armour", new string[0]));
             var heroClass = DarkestDungeonManager.Data.HeroClasses[saveData.stageCoachData[i].heroClass];
             for (int j = 0; j < heroClass.CombatSkills.Count; j++)
             {
@@ -2179,9 +2187,11 @@ public static class SaveLoadManager
             for (int j = 0; j < heroClass.CampingSkills.Count; j++)
             {
                 if (j == 0 || j == 2 || j == 4 || j == 5)
-                    newHeroPurchases.Add(heroClass.CampingSkills[j].Id, new UpgradePurchases(heroClass.CampingSkills[j].Id, new string[] { "0" }));
+                    newHeroPurchases.Add(heroClass.CampingSkills[j].Id,
+                        new UpgradePurchases(heroClass.CampingSkills[j].Id, new string[] { "0" }));
                 else
-                    newHeroPurchases.Add(heroClass.CampingSkills[j].Id, new UpgradePurchases(heroClass.CampingSkills[j].Id, new string[] { }));
+                    newHeroPurchases.Add(heroClass.CampingSkills[j].Id,
+                        new UpgradePurchases(heroClass.CampingSkills[j].Id, new string[] { }));
             }
         }
         #endregion
@@ -2260,40 +2270,70 @@ public static class SaveLoadManager
 
         saveData.deathRecords = new List<DeathRecord>()
         {
-            new DeathRecord() { HeroName = "Ronald", HeroClassIndex = 2, Factor = DeathFactor.Hunger, KillerName = "", ResolveLevel = 2, },
-            new DeathRecord() { HeroName = "Losla", HeroClassIndex = 7, Factor = DeathFactor.AttackMonster, KillerName = "necromancer_C", ResolveLevel = 5, },
-            new DeathRecord() { HeroName = "Qweoas", HeroClassIndex = 2, Factor = DeathFactor.AttackMonster, KillerName = "necromancer_C", ResolveLevel = 5, },
-            new DeathRecord() { HeroName = "Klosopas", HeroClassIndex = 1, Factor = DeathFactor.AttackMonster, KillerName = "necromancer_C", ResolveLevel = 6, },
-            new DeathRecord() { HeroName = "Klosopas", HeroClassIndex = 1, Factor = DeathFactor.AttackMonster, KillerName = "necromancer_C", ResolveLevel = 6, },
-            new DeathRecord() { HeroName = "Klosopas", HeroClassIndex = 1, Factor = DeathFactor.AttackMonster, KillerName = "necromancer_C", ResolveLevel = 6, },
-            new DeathRecord() { HeroName = "Klosopas", HeroClassIndex = 1, Factor = DeathFactor.AttackMonster, KillerName = "necromancer_C", ResolveLevel = 6, },
-            new DeathRecord() { HeroName = "Trexos", HeroClassIndex = 0, Factor = DeathFactor.AttackMonster, KillerName = "necromancer_C", ResolveLevel = 4, },
-            new DeathRecord() { HeroName = "Oloks", HeroClassIndex = 9, Factor = DeathFactor.BleedMonster, KillerName = "necromancer_C", ResolveLevel = 1, },
-            new DeathRecord() { HeroName = "Dismas", HeroClassIndex = 10, Factor = DeathFactor.AttackMonster, KillerName = "necromancer_C", ResolveLevel = 5, },
+            new DeathRecord() { HeroName = "Ronald", HeroClassIndex = 2,
+                Factor = DeathFactor.Hunger, KillerName = "", ResolveLevel = 2, },
+            new DeathRecord() { HeroName = "Losla", HeroClassIndex = 7,
+                Factor = DeathFactor.AttackMonster, KillerName = "necromancer_C", ResolveLevel = 5, },
+            new DeathRecord() { HeroName = "Qweoas", HeroClassIndex = 2,
+                Factor = DeathFactor.AttackMonster, KillerName = "necromancer_C", ResolveLevel = 5, },
+            new DeathRecord() { HeroName = "Klosopas", HeroClassIndex = 1,
+                Factor = DeathFactor.AttackMonster, KillerName = "necromancer_C", ResolveLevel = 6, },
+            new DeathRecord() { HeroName = "Klosopas", HeroClassIndex = 1,
+                Factor = DeathFactor.AttackMonster, KillerName = "necromancer_C", ResolveLevel = 6, },
+            new DeathRecord() { HeroName = "Klosopas", HeroClassIndex = 1,
+                Factor = DeathFactor.AttackMonster, KillerName = "necromancer_C", ResolveLevel = 6, },
+            new DeathRecord() { HeroName = "Klosopas", HeroClassIndex = 1,
+                Factor = DeathFactor.AttackMonster, KillerName = "necromancer_C", ResolveLevel = 6, },
+            new DeathRecord() { HeroName = "Trexos", HeroClassIndex = 0,
+                Factor = DeathFactor.AttackMonster, KillerName = "necromancer_C", ResolveLevel = 4, },
+            new DeathRecord() { HeroName = "Oloks", HeroClassIndex = 9,
+                Factor = DeathFactor.BleedMonster, KillerName = "necromancer_C", ResolveLevel = 1, },
+            new DeathRecord() { HeroName = "Dismas", HeroClassIndex = 10,
+                Factor = DeathFactor.AttackMonster, KillerName = "necromancer_C", ResolveLevel = 5, },
         };
 
         saveData.buildingUpgrades = new Dictionary<string, UpgradePurchases>();
 
-        saveData.buildingUpgrades.Add("abbey.meditation", new UpgradePurchases("abbey.meditation", new string[6] { "a", "b", "c", "d", "e", "f" }));
-        saveData.buildingUpgrades.Add("abbey.prayer", new UpgradePurchases("abbey.prayer", new string[3] { "a", "b", "c" }));
-        saveData.buildingUpgrades.Add("abbey.flagellation", new UpgradePurchases("abbey.flagellation", new string[0]));
-        saveData.buildingUpgrades.Add("tavern.bar", new UpgradePurchases("tavern.bar", new string[2] { "a", "b" }));
-        saveData.buildingUpgrades.Add("tavern.gambling", new UpgradePurchases("tavern.gambling", new string[5] { "a", "b", "c", "d", "e" }));
-        saveData.buildingUpgrades.Add("tavern.brothel", new UpgradePurchases("tavern.brothel", new string[1] { "a" }));
-        saveData.buildingUpgrades.Add("sanitarium.cost", new UpgradePurchases("sanitarium.cost", new string[3] { "a", "b", "c" }));
-        saveData.buildingUpgrades.Add("sanitarium.disease_quirk_cost", new UpgradePurchases("sanitarium.disease_quirk_cost", new string[1] { "a" }));
-        saveData.buildingUpgrades.Add("sanitarium.slots", new UpgradePurchases("sanitarium.slots", new string[2] { "a", "b" }));
-        saveData.buildingUpgrades.Add("blacksmith.weapon", new UpgradePurchases("blacksmith.weapon", new string[1] { "a" }));
-        saveData.buildingUpgrades.Add("blacksmith.armour", new UpgradePurchases("blacksmith.armour", new string[2] { "a", "b" }));
-        saveData.buildingUpgrades.Add("blacksmith.cost", new UpgradePurchases("blacksmith.cost", new string[4] { "a", "b", "c", "d" }));
-        saveData.buildingUpgrades.Add("guild.skill_levels", new UpgradePurchases("guild.skill_levels", new string[1] { "a" }));
-        saveData.buildingUpgrades.Add("guild.cost", new UpgradePurchases("guild.cost", new string[2] { "a", "b" }));
-        saveData.buildingUpgrades.Add("camping_trainer.cost", new UpgradePurchases("camping_trainer.cost", new string[2] { "a", "b" }));
-        saveData.buildingUpgrades.Add("nomad_wagon.numitems", new UpgradePurchases("nomad_wagon.numitems", new string[4] { "a", "b", "c", "d" }));
-        saveData.buildingUpgrades.Add("nomad_wagon.cost", new UpgradePurchases("nomad_wagon.cost", new string[0]));
-        saveData.buildingUpgrades.Add("stage_coach.numrecruits", new UpgradePurchases("stage_coach.numrecruits", new string[4] { "a", "b", "c", "d" }));
-        saveData.buildingUpgrades.Add("stage_coach.rostersize", new UpgradePurchases("stage_coach.rostersize", new string[4] { "a", "b", "c", "d" }));
-        saveData.buildingUpgrades.Add("stage_coach.upgraded_recruits", new UpgradePurchases("stage_coach.upgraded_recruits", new string[1] { "a" }));
+        saveData.buildingUpgrades.Add("abbey.meditation",
+            new UpgradePurchases("abbey.meditation", new string[6] { "a", "b", "c", "d", "e", "f" }));
+        saveData.buildingUpgrades.Add("abbey.prayer",
+            new UpgradePurchases("abbey.prayer", new string[3] { "a", "b", "c" }));
+        saveData.buildingUpgrades.Add("abbey.flagellation", 
+            new UpgradePurchases("abbey.flagellation", new string[0]));
+        saveData.buildingUpgrades.Add("tavern.bar",
+            new UpgradePurchases("tavern.bar", new string[2] { "a", "b" }));
+        saveData.buildingUpgrades.Add("tavern.gambling",
+            new UpgradePurchases("tavern.gambling", new string[5] { "a", "b", "c", "d", "e" }));
+        saveData.buildingUpgrades.Add("tavern.brothel",
+            new UpgradePurchases("tavern.brothel", new string[1] { "a" }));
+        saveData.buildingUpgrades.Add("sanitarium.cost",
+            new UpgradePurchases("sanitarium.cost", new string[3] { "a", "b", "c" }));
+        saveData.buildingUpgrades.Add("sanitarium.disease_quirk_cost",
+            new UpgradePurchases("sanitarium.disease_quirk_cost", new string[1] { "a" }));
+        saveData.buildingUpgrades.Add("sanitarium.slots",
+            new UpgradePurchases("sanitarium.slots", new string[2] { "a", "b" }));
+        saveData.buildingUpgrades.Add("blacksmith.weapon",
+            new UpgradePurchases("blacksmith.weapon", new string[1] { "a" }));
+        saveData.buildingUpgrades.Add("blacksmith.armour",
+            new UpgradePurchases("blacksmith.armour", new string[2] { "a", "b" }));
+        saveData.buildingUpgrades.Add("blacksmith.cost", 
+            new UpgradePurchases("blacksmith.cost", new string[4] { "a", "b", "c", "d" }));
+        saveData.buildingUpgrades.Add("guild.skill_levels", 
+            new UpgradePurchases("guild.skill_levels", new string[1] { "a" }));
+        saveData.buildingUpgrades.Add("guild.cost", 
+            new UpgradePurchases("guild.cost", new string[2] { "a", "b" }));
+        saveData.buildingUpgrades.Add("camping_trainer.cost",
+            new UpgradePurchases("camping_trainer.cost", new string[2] { "a", "b" }));
+        saveData.buildingUpgrades.Add("nomad_wagon.numitems",
+            new UpgradePurchases("nomad_wagon.numitems", new string[4] { "a", "b", "c", "d" }));
+        saveData.buildingUpgrades.Add("nomad_wagon.cost",
+            new UpgradePurchases("nomad_wagon.cost", new string[0]));
+        saveData.buildingUpgrades.Add("stage_coach.numrecruits",
+            new UpgradePurchases("stage_coach.numrecruits", new string[4] { "a", "b", "c", "d" }));
+        saveData.buildingUpgrades.Add("stage_coach.rostersize",
+            new UpgradePurchases("stage_coach.rostersize", new string[4] { "a", "b", "c", "d" }));
+        saveData.buildingUpgrades.Add("stage_coach.upgraded_recruits",
+            new UpgradePurchases("stage_coach.upgraded_recruits", new string[1] { "a" }));
 
         #region ActivitySlots
         saveData.abbeyActivitySlots = new List<List<SaveActivitySlot>>()

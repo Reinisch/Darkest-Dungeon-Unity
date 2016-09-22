@@ -1,8 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
-using System.Collections;
-using System.Collections.Generic;
 
 public enum InteractionEventType { Obstacle, Curio }
 public enum InteractionResultType { Waiting, Cancel, ManualInteraction, ItemInteraction }
@@ -164,7 +161,8 @@ public class ScrollEventInteraction : MonoBehaviour
                     handButton.interactable = false;
 
                     interactionSlot.Item = DarkestDungeonManager.Data.Items["quest_item"][curio.ItemInteractions[0].ItemId];
-                    interactionSlot.itemIcon.sprite = DarkestDungeonManager.Data.Sprites["inv_quest_item+" + curio.ItemInteractions[0].ItemId];
+                    interactionSlot.itemIcon.sprite = DarkestDungeonManager.Data.Sprites["inv_quest_item+" +
+                        curio.ItemInteractions[0].ItemId];
                     interactionSlot.itemIcon.enabled = true;
                     interactionSlot.IsItemAllowed = false;
                     interactionSlot.IsItemFixed = true;

@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System.Collections.Generic;
-using System.Collections;
 
 public delegate void ItemInteractionEvent(InventoryItem item);
 public delegate void InteractionActivationEvent(ItemData item);

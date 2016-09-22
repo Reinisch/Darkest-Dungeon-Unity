@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 public class RaidParty
 {
@@ -20,7 +18,8 @@ public class RaidParty
         HeroInfo = new List<RaidHeroInfo>();
         for(int i = 0; i < saveData.HeroInfo.Count; i++)
         {
-            var hero = DarkestDungeonManager.Campaign.Heroes.Find(campaignHero => campaignHero.RosterId == saveData.HeroInfo[i].HeroRosterId);
+            var hero = DarkestDungeonManager.Campaign.Heroes.Find(campaignHero => 
+                campaignHero.RosterId == saveData.HeroInfo[i].HeroRosterId);
             RaidHeroInfo newInfo = new RaidHeroInfo(hero);
             newInfo.IsAlive = saveData.HeroInfo[i].IsAlive;
             if(saveData.HeroInfo[i].IsAlive == false)

@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-using System.Collections;
-
 public class Backdrop : MonoBehaviour
 {
     public Image backdropImage;

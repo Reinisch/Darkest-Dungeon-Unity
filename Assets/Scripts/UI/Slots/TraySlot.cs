@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System.Collections;
-using System.Collections.Generic;
 using System.Text;
 
 public enum TraySlotType { Afflicted, Virtued, DeathsDoor, DeathRecovery, Buff, Debuff, Bleed, Poison, Guard, Riposte, Tag, Trap }
@@ -149,9 +147,11 @@ public class TraySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 var guardEffect = TrayPanel.TargetUnit.Character.GetStatusEffect(StatusType.Guarded) as GuardedStatusEffect;
                 var guard = guardEffect.Guard;
                 string guardText = string.Format(LocalizationManager.GetString("tray_icon_tooltip_guard"), guard.Character.IsMonster ?
-                    LocalizationManager.GetString("str_monstername_" + guard.Character.Name) : guard.Character.Name, guardEffect.GuardDuration);
+                    LocalizationManager.GetString("str_monstername_" + guard.Character.Name) :
+                    guard.Character.Name, guardEffect.GuardDuration);
                 if (guard.Party.Units.FindAll(unit => unit.Character.Name == guard.Character.Name).Count > 1)
-                    guardText = string.Format(LocalizationManager.GetString("tray_icon_tooltip_guard_name_with_rank_format"), guardText, guard.Rank);
+                    guardText = string.Format(LocalizationManager.GetString(
+                        "tray_icon_tooltip_guard_name_with_rank_format"), guardText, guard.Rank);
                 sb.Append(guardText);
                 sb.Append("</color>");
                 break;

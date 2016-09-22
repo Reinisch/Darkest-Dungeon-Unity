@@ -1,9 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 
 public delegate void SkillUpgradeSlotEvent(SkillUpgradeSlot slot);
 
@@ -54,7 +51,8 @@ public class SkillUpgradeSlot : MonoBehaviour, IPointerEnterHandler, IPointerExi
 
         icon.material = DarkestDungeonManager.HighlightMaterial;
         if (DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(Tree.Id, Hero, Upgrade) == UpgradeStatus.Locked)
-            ToolTipManager.Instanse.ShowSkillTooltip(Skill.HeroSkillTooltip(Hero) + "\n" + Upgrade.PrerequisitesTooltip(Hero, DarkestDungeonManager.Campaign.Estate),
+            ToolTipManager.Instanse.ShowSkillTooltip(Skill.HeroSkillTooltip(Hero) + "\n" +
+                Upgrade.PrerequisitesTooltip(Hero, DarkestDungeonManager.Campaign.Estate),
                 Skill, eventData, rectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
         else
             ToolTipManager.Instanse.ShowSkillTooltip(Hero, Skill, eventData, rectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);

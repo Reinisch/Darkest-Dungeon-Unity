@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -36,7 +35,8 @@ public static class QuestGenerator
             {
                 DungeonQuestInfo dungeonInfo = new DungeonQuestInfo();
                 dungeonInfo.Dungeon = dungeon.Id;
-                dungeonInfo.GeneratedTypes = genData.QuestTypes[dungeonInfo.Dungeon].QuestTypeSets[campaign.Dungeons[dungeon.Id].MasteryLevel];
+                dungeonInfo.GeneratedTypes = genData.QuestTypes[dungeonInfo.Dungeon].
+                    QuestTypeSets[campaign.Dungeons[dungeon.Id].MasteryLevel];
                 questInfo.dungeonQuests.Add(dungeonInfo);
             }
         }
@@ -75,9 +75,12 @@ public static class QuestGenerator
 
         int questsLeft = questInfo.questCount;
 
-        float difOneAvailable = campaign.Heroes.FindAll(hero => genData.Difficulties[0].ResolveLevels.Contains(hero.Resolve.Level)).Count;
-        float difTwoAvailable = campaign.Heroes.FindAll(hero => genData.Difficulties[1].ResolveLevels.Contains(hero.Resolve.Level)).Count;
-        float difThreeAvailable = campaign.Heroes.FindAll(hero => genData.Difficulties[2].ResolveLevels.Contains(hero.Resolve.Level)).Count;
+        float difOneAvailable = campaign.Heroes.FindAll(hero => 
+            genData.Difficulties[0].ResolveLevels.Contains(hero.Resolve.Level)).Count;
+        float difTwoAvailable = campaign.Heroes.FindAll(hero => 
+            genData.Difficulties[1].ResolveLevels.Contains(hero.Resolve.Level)).Count;
+        float difThreeAvailable = campaign.Heroes.FindAll(hero =>
+            genData.Difficulties[2].ResolveLevels.Contains(hero.Resolve.Level)).Count;
         float allAvailable = difOneAvailable + difTwoAvailable + difThreeAvailable;
         if (allAvailable == 0)
         {

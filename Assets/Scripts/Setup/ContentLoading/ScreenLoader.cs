@@ -35,7 +35,8 @@ public class ScreenLoader : MonoBehaviour
                     var plot = DarkestDungeonManager.SaveData.Quest as PlotQuest;
                     if(plot.Id != "tutorial")
                     {
-                        title.text = LocalizationManager.GetString("dungeon_name_" + DarkestDungeonManager.SaveData.Quest.Dungeon);
+                        title.text = LocalizationManager.GetString("dungeon_name_" +
+                            DarkestDungeonManager.SaveData.Quest.Dungeon);
                         description.text = LocalizationManager.GetString("str_" + plot.Id + "_tip");
                     }
                     else
@@ -49,8 +50,10 @@ public class ScreenLoader : MonoBehaviour
             {
                 if(DarkestDungeonManager.RaidManager.Quest != null)
                 {
-                    title.text = LocalizationManager.GetString("dungeon_name_" + DarkestDungeonManager.RaidManager.Quest.Dungeon);
-                    description.text = LocalizationManager.GetString("str_" + DarkestDungeonManager.RaidManager.Quest.Dungeon + "_tip");
+                    title.text = LocalizationManager.GetString("dungeon_name_" +
+                        DarkestDungeonManager.RaidManager.Quest.Dungeon);
+                    description.text = LocalizationManager.GetString("str_" +
+                        DarkestDungeonManager.RaidManager.Quest.Dungeon + "_tip");
                 }
             }
         }

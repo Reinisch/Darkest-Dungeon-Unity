@@ -99,6 +99,7 @@ public class SkillSelectionRandom : SkillSelectionDesire
         }
     }
 }
+
 public class SkillSelectionPreferred : SkillSelectionDesire
 {
     public SkillSelectionPreferred()
@@ -172,6 +173,7 @@ public class SkillSelectionPreferred : SkillSelectionDesire
         }
     }
 }
+
 public class SkillSelectionHeal : SkillSelectionDesire
 {
     public string CombatSkillId { get; set; }
@@ -278,6 +280,7 @@ public class SkillSelectionHeal : SkillSelectionDesire
         }
     }
 }
+
 public class SkillSelectionSpecific : SkillSelectionDesire
 {
     public override int Chance
@@ -367,8 +370,10 @@ public class SkillSelectionSpecific : SkillSelectionDesire
                 return false;
 
         var monster = performer.Character as Monster;
-        var availableSkills = monster.Data.CombatSkills.FindAll(skill => skill.Id == CombatSkillId && BattleSolver.IsSkillUsable(performer, skill)
-            && performer.CombatInfo.SkillCooldowns.Find(cooldown => cooldown.SkillId == skill.Id) == null);
+        var availableSkills = monster.Data.CombatSkills.FindAll(skill =>
+            skill.Id == CombatSkillId && BattleSolver.IsSkillUsable(performer, skill) &&
+            performer.CombatInfo.SkillCooldowns.Find(cooldown => cooldown.SkillId == skill.Id) == null);
+
         if (availableSkills.Count > 0)
         {
             decision.Decision = BrainDecisionType.Perform;
@@ -462,6 +467,7 @@ public class SkillSelectionSpecific : SkillSelectionDesire
         }
     }
 }
+
 public class SkillSelectionPerformingTurn : SkillSelectionDesire
 {
     public string CombatSkillId { get; set; }
@@ -534,8 +540,9 @@ public class SkillSelectionPerformingTurn : SkillSelectionDesire
                 return false;
 
         var monster = performer.Character as Monster;
-        var availableSkills = monster.Data.CombatSkills.FindAll(skill => skill.Id == CombatSkillId && BattleSolver.IsSkillUsable(performer, skill)
-            && performer.CombatInfo.SkillCooldowns.Find(cooldown => cooldown.SkillId == skill.Id) == null);
+        var availableSkills = monster.Data.CombatSkills.FindAll(skill =>
+            skill.Id == CombatSkillId && BattleSolver.IsSkillUsable(performer, skill) &&
+            performer.CombatInfo.SkillCooldowns.Find(cooldown => cooldown.SkillId == skill.Id) == null);
 
         if (availableSkills.Count > 0)
         {
@@ -603,6 +610,7 @@ public class SkillSelectionPerformingTurn : SkillSelectionDesire
         }
     }
 }
+
 public class SkillSelectionAllyAlive : SkillSelectionDesire
 {
     public string CombatSkillId { get; set; }
@@ -648,8 +656,10 @@ public class SkillSelectionAllyAlive : SkillSelectionDesire
                 return false;
 
         var monster = performer.Character as Monster;
-        var availableSkills = monster.Data.CombatSkills.FindAll(skill => skill.Id == CombatSkillId && BattleSolver.IsSkillUsable(performer, skill)
-            && performer.CombatInfo.SkillCooldowns.Find(cooldown => cooldown.SkillId == skill.Id) == null);
+        var availableSkills = monster.Data.CombatSkills.FindAll(skill =>
+            skill.Id == CombatSkillId && BattleSolver.IsSkillUsable(performer, skill) &&
+            performer.CombatInfo.SkillCooldowns.Find(cooldown => cooldown.SkillId == skill.Id) == null);
+
         if (availableSkills.Count > 0)
         {
             decision.Decision = BrainDecisionType.Perform;
@@ -716,6 +726,7 @@ public class SkillSelectionAllyAlive : SkillSelectionDesire
         }
     }
 }
+
 public class SkillSelectionFillEmptyCaptor : SkillSelectionDesire
 {
     public bool CanTargetDeathsDoor { get; set; }
@@ -751,13 +762,16 @@ public class SkillSelectionFillEmptyCaptor : SkillSelectionDesire
             return false;
         if (CanTargetLastHero == false && RaidSceneManager.BattleGround.HeroNumber == 1)
             return false;
-        if (performer.Party.Units.Find(unit => unit.Character.IsMonster && (unit.Character as Monster).Data.EmptyCaptor != null) == null)
+        if (performer.Party.Units.Find(unit => unit.Character.IsMonster &&
+            (unit.Character as Monster).Data.EmptyCaptor != null) == null)
             return false;
 
         var monster = performer.Character as Monster;
         var availableSkills = monster.Data.CombatSkills.FindAll(skill => skill.Effects.Find(effect =>
-            effect.SubEffects.Find(subeffect => subeffect is CaptureEffect) != null) != null && BattleSolver.IsSkillUsable(performer, skill) 
-            && performer.CombatInfo.SkillCooldowns.Find(cooldown => cooldown.SkillId == skill.Id) == null);
+            effect.SubEffects.Find(subeffect =>
+                subeffect is CaptureEffect) != null) != null && BattleSolver.IsSkillUsable(performer, skill) &&
+                performer.CombatInfo.SkillCooldowns.Find(cooldown => cooldown.SkillId == skill.Id) == null);
+
         if (availableSkills.Count > 0)
         {
             decision.Decision = BrainDecisionType.Perform;
@@ -812,6 +826,7 @@ public class SkillSelectionFillEmptyCaptor : SkillSelectionDesire
         }
     }
 }
+
 public class SkillSelectionStatus : SkillSelectionDesire
 {
     public StatusType EffectStatus { get; set; }
@@ -844,7 +859,8 @@ public class SkillSelectionStatus : SkillSelectionDesire
         var availableSkills = CombatSkillId != null ? monster.Data.CombatSkills.FindAll(skill => skill.Id == CombatSkillId
             && performer.CombatInfo.SkillCooldowns.Find(cooldown => cooldown.SkillId == skill.Id) == null) :
             monster.Data.CombatSkills.FindAll(skill => BattleSolver.IsSkillUsable(performer, skill)
-            && skill.Effects.Count > 0 && skill.Effects.Find(effect => effect.SubEffects.Find(subEffect => subEffect.Type == EffectSubType.StatBuff
+            && skill.Effects.Count > 0 && skill.Effects.Find(effect =>
+            effect.SubEffects.Find(subEffect => subEffect.Type == EffectSubType.StatBuff
             && (subEffect as CombatStatBuffEffect).TargetStatus == EffectStatus) != null) != null
             && performer.CombatInfo.SkillCooldowns.Find(cooldown => cooldown.SkillId == skill.Id) == null);
 
@@ -915,6 +931,7 @@ public class SkillSelectionStatus : SkillSelectionDesire
         }
     }
 }
+
 public class SkillSelectionAllyDead : SkillSelectionDesire
 {
     public bool FirstInitiativeOnly { get; set; }
@@ -958,7 +975,8 @@ public class SkillSelectionAllyDead : SkillSelectionDesire
             return false;
 
         var monster = performer.Character as Monster;
-        var availableSkills = monster.Data.CombatSkills.FindAll(skill => BattleSolver.IsSkillUsable(performer, skill) && skill.Id == CombatSkillId
+        var availableSkills = monster.Data.CombatSkills.FindAll(skill =>
+            BattleSolver.IsSkillUsable(performer, skill) && skill.Id == CombatSkillId
             && performer.CombatInfo.SkillCooldowns.Find(cooldown => cooldown.SkillId == skill.Id) == null);
         if (availableSkills.Count > 0)
         {

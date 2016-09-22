@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public class CampaignGenerationData
+﻿public class CampaignGenerationData
 {
     public int[] DungeonXpTable { get; set; }
     public int[] DungeonXpLevelThreshold { get; set; }

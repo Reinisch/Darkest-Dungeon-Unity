@@ -151,7 +151,8 @@ public class TorchMeter : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         {
             RaidSceneManager.Formations.heroes.party.Units[j].Character.RemoveLightBuffs();
             for (int k = 0; k < CurrentRange.HeroBuffs.Count; k++)
-                RaidSceneManager.Formations.heroes.party.Units[j].Character.AddBuff(new BuffInfo(CurrentRange.HeroBuffs[k], BuffDurationType.Permanent, BuffSourceType.Light));
+                RaidSceneManager.Formations.heroes.party.Units[j].Character.AddBuff(
+                    new BuffInfo(CurrentRange.HeroBuffs[k], BuffDurationType.Permanent, BuffSourceType.Light));
 
             if (RaidSceneManager.RaidPanel.SelectedUnit == RaidSceneManager.Formations.heroes.party.Units[j])
                 RaidSceneManager.RaidPanel.heroPanel.UpdateHero();
@@ -165,12 +166,14 @@ public class TorchMeter : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 if (RaidSceneManager.Formations.monsters.party.Units[j].Character.IsMonster)
                 {
                     for (int k = 0; k < CurrentRange.MonsterBuffs.Count; k++)
-                        RaidSceneManager.Formations.monsters.party.Units[j].Character.AddBuff(new BuffInfo(CurrentRange.MonsterBuffs[k], BuffDurationType.Permanent, BuffSourceType.Light));
+                        RaidSceneManager.Formations.monsters.party.Units[j].Character.AddBuff(
+                            new BuffInfo(CurrentRange.MonsterBuffs[k], BuffDurationType.Permanent, BuffSourceType.Light));
                 }
                 else
                 {
                     for (int k = 0; k < CurrentRange.HeroBuffs.Count; k++)
-                        RaidSceneManager.Formations.monsters.party.Units[j].Character.AddBuff(new BuffInfo(CurrentRange.HeroBuffs[k], BuffDurationType.Permanent, BuffSourceType.Light));
+                        RaidSceneManager.Formations.monsters.party.Units[j].Character.AddBuff(
+                            new BuffInfo(CurrentRange.HeroBuffs[k], BuffDurationType.Permanent, BuffSourceType.Light));
                 }
             }
         }
@@ -201,32 +204,52 @@ public class TorchMeter : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         Ranges[0].SetChances(0.15f, 0, 0.25f);
 
         Ranges[1].SetChances(0.075f, 0, 0.15f);
-        Ranges[1].HeroBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.StressDmgReceivedPercent, ModifierValue = 0.1f, Type = BuffType.StatAdd });
-        Ranges[1].MonsterBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.DamageHigh, ModifierValue = 0.01f, Type = BuffType.StatAdd });
+        Ranges[1].HeroBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.StressDmgReceivedPercent,
+            ModifierValue = 0.1f, Type = BuffType.StatAdd });
+        Ranges[1].MonsterBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.DamageHigh,
+            ModifierValue = 0.01f, Type = BuffType.StatAdd });
 
         Ranges[2].SetChances(0, 0.15f, 0.10f);
-        Ranges[2].HeroBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.StressDmgReceivedPercent, ModifierValue = 0.2f, Type = BuffType.StatAdd });
-        Ranges[2].HeroBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.CritChance, ModifierValue = 0.01f, Type = BuffType.StatAdd });
-        Ranges[2].MonsterBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.AttackRating, ModifierValue = 0.05f, Type = BuffType.StatAdd });
-        Ranges[2].MonsterBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.DamageLow, ModifierValue = 0.1f, Type = BuffType.StatMultiply });
-        Ranges[2].MonsterBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.DamageHigh, ModifierValue = 0.1f, Type = BuffType.StatMultiply });
-        Ranges[2].MonsterBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.DamageHigh, ModifierValue = 0.02f, Type = BuffType.StatAdd });
+        Ranges[2].HeroBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.StressDmgReceivedPercent,
+            ModifierValue = 0.2f, Type = BuffType.StatAdd });
+        Ranges[2].HeroBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.CritChance,
+            ModifierValue = 0.01f, Type = BuffType.StatAdd });
+        Ranges[2].MonsterBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.AttackRating,
+            ModifierValue = 0.05f, Type = BuffType.StatAdd });
+        Ranges[2].MonsterBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.DamageLow,
+            ModifierValue = 0.1f, Type = BuffType.StatMultiply });
+        Ranges[2].MonsterBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.DamageHigh,
+            ModifierValue = 0.1f, Type = BuffType.StatMultiply });
+        Ranges[2].MonsterBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.DamageHigh,
+            ModifierValue = 0.02f, Type = BuffType.StatAdd });
 
         Ranges[3].SetChances(0, 0.25f, 0.05f);
-        Ranges[3].HeroBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.StressDmgReceivedPercent, ModifierValue = 0.3f, Type = BuffType.StatAdd });
-        Ranges[3].HeroBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.CritChance, ModifierValue = 0.02f, Type = BuffType.StatAdd });
-        Ranges[3].MonsterBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.AttackRating, ModifierValue = 0.1f, Type = BuffType.StatAdd });
-        Ranges[3].MonsterBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.DamageLow, ModifierValue = 0.15f, Type = BuffType.StatMultiply });
-        Ranges[3].MonsterBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.DamageHigh, ModifierValue = 0.15f, Type = BuffType.StatMultiply });
-        Ranges[3].MonsterBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.DamageHigh, ModifierValue = 0.03f, Type = BuffType.StatAdd });
+        Ranges[3].HeroBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.StressDmgReceivedPercent,
+            ModifierValue = 0.3f, Type = BuffType.StatAdd });
+        Ranges[3].HeroBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.CritChance,
+            ModifierValue = 0.02f, Type = BuffType.StatAdd });
+        Ranges[3].MonsterBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.AttackRating,
+            ModifierValue = 0.1f, Type = BuffType.StatAdd });
+        Ranges[3].MonsterBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.DamageLow,
+            ModifierValue = 0.15f, Type = BuffType.StatMultiply });
+        Ranges[3].MonsterBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.DamageHigh,
+            ModifierValue = 0.15f, Type = BuffType.StatMultiply });
+        Ranges[3].MonsterBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.DamageHigh,
+            ModifierValue = 0.03f, Type = BuffType.StatAdd });
 
         Ranges[4].SetChances(0, 0.4f, 0);
-        Ranges[4].HeroBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.StressDmgReceivedPercent, ModifierValue = 0.4f, Type = BuffType.StatAdd });
-        Ranges[4].HeroBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.CritChance, ModifierValue = 0.03f, Type = BuffType.StatAdd });
-        Ranges[4].MonsterBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.AttackRating, ModifierValue = 0.125f, Type = BuffType.StatAdd });
-        Ranges[4].MonsterBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.DamageLow, ModifierValue = 0.25f, Type = BuffType.StatMultiply });
-        Ranges[4].MonsterBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.DamageHigh, ModifierValue = 0.25f, Type = BuffType.StatMultiply });
-        Ranges[4].MonsterBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.DamageHigh, ModifierValue = 0.05f, Type = BuffType.StatAdd });
+        Ranges[4].HeroBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.StressDmgReceivedPercent,
+            ModifierValue = 0.4f, Type = BuffType.StatAdd });
+        Ranges[4].HeroBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.CritChance,
+            ModifierValue = 0.03f, Type = BuffType.StatAdd });
+        Ranges[4].MonsterBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.AttackRating,
+            ModifierValue = 0.125f, Type = BuffType.StatAdd });
+        Ranges[4].MonsterBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.DamageLow,
+            ModifierValue = 0.25f, Type = BuffType.StatMultiply });
+        Ranges[4].MonsterBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.DamageHigh,
+            ModifierValue = 0.25f, Type = BuffType.StatMultiply });
+        Ranges[4].MonsterBuffs.Add(new Buff() { Id = "", AttributeType = AttributeType.DamageHigh,
+            ModifierValue = 0.05f, Type = BuffType.StatAdd });
 
         for(int i = 0; i < Ranges.Count; i++)
         {

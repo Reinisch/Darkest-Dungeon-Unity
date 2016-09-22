@@ -28,6 +28,7 @@ public class DamageOverTimeInstanse
     }
 }
 
+
 public abstract class StatusEffect
 {
     public abstract bool IsApplied { get; }
@@ -73,6 +74,7 @@ public class StunStatusEffect : StatusEffect
         StunApplied = br.ReadBoolean();
     }
 }
+
 public class RiposteStatusEffect : StatusEffect
 {
     public override bool IsApplied
@@ -116,6 +118,7 @@ public class RiposteStatusEffect : StatusEffect
         RiposteDuration = br.ReadInt32();
     }
 }
+
 public class MarkStatusEffect : StatusEffect
 {
     public override bool IsApplied
@@ -159,6 +162,7 @@ public class MarkStatusEffect : StatusEffect
         MarkDuration = br.ReadInt32();
     }
 }
+
 public class DeathsDoorStatusEffect : StatusEffect
 {
     public override bool IsApplied
@@ -195,6 +199,7 @@ public class DeathsDoorStatusEffect : StatusEffect
         AtDeathsDoor = br.ReadBoolean();
     }
 }
+
 public class DeathRecoveryStatusEffect : StatusEffect
 {
     public override bool IsApplied
@@ -231,6 +236,7 @@ public class DeathRecoveryStatusEffect : StatusEffect
         AtDeathRecovery = br.ReadBoolean();
     }
 }
+
 public class GuardStatusEffect : StatusEffect
 {
     public override bool IsApplied
@@ -286,6 +292,7 @@ public class GuardStatusEffect : StatusEffect
     {
     }
 }
+
 public class GuardedStatusEffect : StatusEffect
 {
     public override bool IsApplied
@@ -342,6 +349,7 @@ public class GuardedStatusEffect : StatusEffect
         GuardCombatId = br.ReadInt32();
     }
 }
+
 public class BleedingStatusEffect : StatusEffect, IDamageOverTimeEffect
 {
     public override bool IsApplied
@@ -435,6 +443,7 @@ public class BleedingStatusEffect : StatusEffect, IDamageOverTimeEffect
         DoTs.Clear();
     }
 }
+
 public class PoisonStatusEffect : StatusEffect, IDamageOverTimeEffect
 {
     public override bool IsApplied

@@ -1,11 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine.EventSystems;
 
 public delegate void BattleSkillSlotEvent(BattleSkillSlot slot);
-
 
 public class BattleSkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {

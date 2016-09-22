@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine.EventSystems;
 
 public delegate void SkillSlotEvent(SkillSlot slot);
@@ -136,7 +134,8 @@ public class SkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandl
             skillIcon.material = DarkestDungeonManager.HighlightMaterial;
 
         if (Skill != null)
-            ToolTipManager.Instanse.ShowSkillTooltip(currentHero, Skill, eventData, RectTransform, ToolTipStyle.FromBottom, ToolTipSize.Normal);
+            ToolTipManager.Instanse.ShowSkillTooltip(currentHero, Skill,
+                eventData, RectTransform, ToolTipStyle.FromBottom, ToolTipSize.Normal);
     }
     public virtual void OnPointerExit(PointerEventData eventData)
     {

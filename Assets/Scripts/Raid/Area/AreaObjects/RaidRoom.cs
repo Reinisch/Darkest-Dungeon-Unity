@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System.Collections;
 
 public class RaidRoom : MonoBehaviour, IRaidArea
 {
@@ -37,7 +36,8 @@ public class RaidRoom : MonoBehaviour, IRaidArea
                 if (questCurioObject == null)
                 {
                     Debug.LogError("Curio: " + (Area.Prop as Curio).StringId + " not found.");
-                    questCurio = Instantiate(Resources.Load("Prefabs/Props/SpineCurios/_template") as GameObject).GetComponent<RaidCurio>();
+                    questCurio = Instantiate(Resources.Load("Prefabs/Props/SpineCurios/_template")
+                        as GameObject).GetComponent<RaidCurio>();
                 }
                 else
                     questCurio = Instantiate(questCurioObject).GetComponent<RaidCurio>();
@@ -60,7 +60,8 @@ public class RaidRoom : MonoBehaviour, IRaidArea
                 if (curioObject == null)
                 {
                     Debug.LogError("Curio: " + (Area.Prop as Curio).StringId + " not found.");
-                    curio = Instantiate(Resources.Load("Prefabs/Props/SpineCurios/_template") as GameObject).GetComponent<RaidCurio>();
+                    curio = Instantiate(Resources.Load("Prefabs/Props/SpineCurios/_template")
+                        as GameObject).GetComponent<RaidCurio>();
                 }
                 else
                     curio = Instantiate(curioObject).GetComponent<RaidCurio>();

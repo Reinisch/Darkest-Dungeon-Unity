@@ -103,5 +103,4 @@ public class PositionSet : MonoBehaviour
     {
         gameObject.SetActive(false);
     }
-
 }

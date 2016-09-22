@@ -848,6 +848,7 @@ public class RaidSceneManager : MonoBehaviour
                 yield break;
             }
         }
+        EnablePartyMovement();
         #endregion
 
         #region Battle encounter and scouting

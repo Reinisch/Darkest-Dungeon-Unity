@@ -1,8 +1,4 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.EventSystems;
+﻿using UnityEngine.EventSystems;
 
 public delegate void SkillPurchaseSlotEvent(SkillPurchaseSlot slot);
 
@@ -64,7 +60,8 @@ public class SkillPurchaseSlot : SkillSlot
             skillIcon.material = DarkestDungeonManager.HighlightMaterial;
 
         if (Skill != null)
-            ToolTipManager.Instanse.ShowSkillTooltip(currentHero, Skill, eventData, RectTransform, ToolTipStyle.FromBottom, ToolTipSize.Normal);
+            ToolTipManager.Instanse.ShowSkillTooltip(currentHero, Skill,
+                eventData, RectTransform, ToolTipStyle.FromBottom, ToolTipSize.Normal);
     }
     public override void OnPointerExit(PointerEventData eventData)
     {

@@ -1,9 +1,6 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Text;
-using System.Collections;
-using System;
 
 public enum ToolTipStyle { FromBottom, FromRight, FromTop }
 public enum ToolTipSize { Small, Normal }
@@ -115,7 +112,8 @@ public class ToolTipManager : MonoBehaviour
         }
     }
 
-    public void ShowSkillTooltip(string tip, CombatSkill combatSkill, PointerEventData eventData, RectTransform senderRect, ToolTipStyle style, ToolTipSize size)
+    public void ShowSkillTooltip(string tip, CombatSkill combatSkill,
+        PointerEventData eventData, RectTransform senderRect, ToolTipStyle style, ToolTipSize size)
     {
         if (CurrentTooltip == null)
             CurrentTooltip = skillToolTip;
@@ -131,7 +129,8 @@ public class ToolTipManager : MonoBehaviour
         skillToolTip.UpdateSize(size);
         skillToolTip.Show(senderRect);
     }
-    public void ShowSkillTooltip(Hero hero, CombatSkill combatSkill, PointerEventData eventData, RectTransform senderRect, ToolTipStyle style, ToolTipSize size)
+    public void ShowSkillTooltip(Hero hero, CombatSkill combatSkill,
+        PointerEventData eventData, RectTransform senderRect, ToolTipStyle style, ToolTipSize size)
     {
         if (CurrentTooltip == null)
             CurrentTooltip = skillToolTip;

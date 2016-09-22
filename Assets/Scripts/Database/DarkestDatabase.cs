@@ -2,10 +2,9 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
-using DarkestJson;
 using System.Text.RegularExpressions;
+using DarkestJson;
 
 public class DarkestDatabase : MonoBehaviour
 {
@@ -466,7 +465,8 @@ public class DarkestDatabase : MonoBehaviour
                 case "kill_monster":
                     var questKillData = new QuestKillMonsterData();
                     string monsterString = jsonData.goals[i].data["monster_class_ids"].ToString();
-                    string[] monsters = monsterString.Split(new char[]{'[', ']', ',' ,'\r', '\n', '\"', ' '}, StringSplitOptions.RemoveEmptyEntries);
+                    string[] monsters = monsterString.Split(
+                        new char[]{'[', ']', ',' ,'\r', '\n', '\"', ' '}, StringSplitOptions.RemoveEmptyEntries);
                     questKillData.MonsterNameIds = new List<string>(monsters);
                     questKillData.Amount = (int)(long)jsonData.goals[i].data["amount"];
                     goal.QuestData = questKillData;
@@ -609,14 +609,17 @@ public class DarkestDatabase : MonoBehaviour
             plotQuest.IsSurpriseEnabled = jsonData.plot_quests[i].is_surprise_enabled;
             plotQuest.IsScoutingEnabled = jsonData.plot_quests[i].is_scouting_enabled;
             plotQuest.IsStressClearedOnCompletion = jsonData.plot_quests[i].is_roster_stress_cleared_on_completion;
-            plotQuest.RosterBuffOnFailureMinimumPartyResolveLevel = jsonData.plot_quests[i].roster_buff_on_failure_minimum_party_resolve_level;
+            plotQuest.RosterBuffOnFailureMinimumPartyResolveLevel = 
+                jsonData.plot_quests[i].roster_buff_on_failure_minimum_party_resolve_level;
 
             for(int j = 0; j < jsonData.plot_quests[i].roster_buffs_to_apply_on_failure.Count; j++)
                 plotQuest.RosterBuffsOnFailure.Add(Buffs[jsonData.plot_quests[i].roster_buffs_to_apply_on_failure[j]]);
             for(int j = 0; j < jsonData.plot_quests[i].suggested_trinkets.Count; j++)
-                plotQuest.SuggestedTrinkets.Add(new ItemDefinition("trinket", jsonData.plot_quests[i].suggested_trinkets[j].trinket_id, jsonData.plot_quests[i].suggested_trinkets[j].amount));
+                plotQuest.SuggestedTrinkets.Add(new ItemDefinition("trinket",
+                    jsonData.plot_quests[i].suggested_trinkets[j].trinket_id, jsonData.plot_quests[i].suggested_trinkets[j].amount));
             for (int j = 0; j < jsonData.plot_quests[i].upgrade_tags_to_remove_on_ignore.Count; j++)
-                plotQuest.UpgradeTagsRemovedOnIgnore.Add(new UpgradeTag(jsonData.plot_quests[i].upgrade_tags_to_remove_on_ignore[j].upgrade_tag,
+                plotQuest.UpgradeTagsRemovedOnIgnore.Add(
+                    new UpgradeTag(jsonData.plot_quests[i].upgrade_tags_to_remove_on_ignore[j].upgrade_tag,
                     jsonData.plot_quests[i].upgrade_tags_to_remove_on_ignore[j].amount));
 
             questData.PlotQuests.Add(plotQuest);
@@ -784,7 +787,8 @@ public class DarkestDatabase : MonoBehaviour
         {
             List<ItemDefinition> newStartList = new List<ItemDefinition>();
             for (int j = 0; j < jsonStartLengthList.Count; j++)
-                newStartList.Add(new ItemDefinition(jsonStartLengthList[j].type, jsonStartLengthList[j].id, jsonStartLengthList[j].amount));
+                newStartList.Add(new ItemDefinition(jsonStartLengthList[j].type,
+                    jsonStartLengthList[j].id, jsonStartLengthList[j].amount));
             provisionDatabase.StartingLengthInventories.Add(newStartList);
         }
 
@@ -802,7 +806,8 @@ public class DarkestDatabase : MonoBehaviour
         {
             List<ItemDefinition> newStartList = new List<ItemDefinition>();
             for (int j = 0; j < jsonShopLengthList.Count; j++)
-                newStartList.Add(new ItemDefinition(jsonShopLengthList[j].type, jsonShopLengthList[j].id, jsonShopLengthList[j].amount));
+                newStartList.Add(new ItemDefinition(jsonShopLengthList[j].type,
+                    jsonShopLengthList[j].id, jsonShopLengthList[j].amount));
             provisionDatabase.ShopLengthInventories.Add(newStartList);
         }
 
@@ -958,7 +963,8 @@ public class DarkestDatabase : MonoBehaviour
                     {
                         TownActivityBuff activityBuffSet = new TownActivityBuff();
                         activityBuffSet.Chance = (int)(long)buffSet["chance"];
-                        string[] buffNames = buffSet["buff_library_ids"].ToString().Split(new char[] { '[', ']', ',', '\r', '\n', '\"', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] buffNames = buffSet["buff_library_ids"].ToString().Split(
+                            new char[] { '[', ']', ',', '\r', '\n', '\"', ' ' }, StringSplitOptions.RemoveEmptyEntries);
                         activityBuffSet.BuffNames = new List<string>(buffNames);
                         buffEffect.BuffSets.Add(activityBuffSet);
                     }
@@ -1092,7 +1098,8 @@ public class DarkestDatabase : MonoBehaviour
         {
             if(jsonUpgrade.upgrade_requirement_code == null)
             {
-                sanitarium.QuirkActivity.BasePositiveQuirkCost = new CurrencyCost(jsonUpgrade.cost_currency.type, jsonUpgrade.cost_currency.amount);
+                sanitarium.QuirkActivity.BasePositiveQuirkCost = 
+                    new CurrencyCost(jsonUpgrade.cost_currency.type, jsonUpgrade.cost_currency.amount);
                 sanitarium.QuirkActivity.PositiveQuirkCost = sanitarium.QuirkActivity.BasePositiveQuirkCost;
             }
             else
@@ -1109,7 +1116,8 @@ public class DarkestDatabase : MonoBehaviour
         {
             if (jsonUpgrade.upgrade_requirement_code == null)
             {
-                sanitarium.QuirkActivity.BaseNegativeQuirkCost = new CurrencyCost(jsonUpgrade.cost_currency.type, jsonUpgrade.cost_currency.amount);
+                sanitarium.QuirkActivity.BaseNegativeQuirkCost = 
+                    new CurrencyCost(jsonUpgrade.cost_currency.type, jsonUpgrade.cost_currency.amount);
                 sanitarium.QuirkActivity.NegativeQuirkCost = sanitarium.QuirkActivity.BaseNegativeQuirkCost;
             }
             else
@@ -1126,7 +1134,8 @@ public class DarkestDatabase : MonoBehaviour
         {
             if (jsonUpgrade.upgrade_requirement_code == null)
             {
-                sanitarium.QuirkActivity.BasePermNegativeCost = new CurrencyCost(jsonUpgrade.cost_currency.type, jsonUpgrade.cost_currency.amount);
+                sanitarium.QuirkActivity.BasePermNegativeCost = 
+                    new CurrencyCost(jsonUpgrade.cost_currency.type, jsonUpgrade.cost_currency.amount);
                 sanitarium.QuirkActivity.PermNegativeQuirkCost = sanitarium.QuirkActivity.BasePermNegativeCost;
             }
             else
@@ -1163,7 +1172,8 @@ public class DarkestDatabase : MonoBehaviour
         {
             if (jsonUpgrade.upgrade_requirement_code == null)
             {
-                sanitarium.DiseaseActivity.BaseDiseaseTreatmentCost = new CurrencyCost(jsonUpgrade.cost_currency.type, jsonUpgrade.cost_currency.amount);
+                sanitarium.DiseaseActivity.BaseDiseaseTreatmentCost = 
+                    new CurrencyCost(jsonUpgrade.cost_currency.type, jsonUpgrade.cost_currency.amount);
                 sanitarium.DiseaseActivity.DiseaseTreatmentCost = sanitarium.DiseaseActivity.BaseDiseaseTreatmentCost;
             }
             else
@@ -1380,7 +1390,8 @@ public class DarkestDatabase : MonoBehaviour
     {
         List<Buff> buffs = GetJsonBuffLibrary();
 
-        using (var fs = new FileStream(Application.dataPath + "/Resources/" + buffDataPath + ".bytes", FileMode.Create, FileAccess.Write))
+        using (var fs = new FileStream(Application.dataPath + "/Resources/" +
+            buffDataPath + ".bytes", FileMode.Create, FileAccess.Write))
         {
             using (var bw = new BinaryWriter(fs))
             {
@@ -1405,7 +1416,8 @@ public class DarkestDatabase : MonoBehaviour
     {
         List<Trinket> trinkets = GetJsonTrinketLibrary();
 
-        using (var fs = new FileStream(Application.dataPath + "/Resources/" + trinketDataPath + ".bytes", FileMode.Create, FileAccess.Write))
+        using (var fs = new FileStream(Application.dataPath + "/Resources/" +
+            trinketDataPath + ".bytes", FileMode.Create, FileAccess.Write))
         {
             using (var bw = new BinaryWriter(fs))
             {
@@ -1614,7 +1626,8 @@ public class DarkestDatabase : MonoBehaviour
 
         foreach (var heroAsset in Resources.LoadAll<TextAsset>(heroesDirectory + "Info/"))
         {
-            List<string> heroData = heroAsset.text.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            List<string> heroData = heroAsset.text.Split(
+                new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).ToList();
             HeroClass heroClass = new HeroClass(heroData);
             HeroClasses.Add(heroClass.StringId, heroClass);
         }
@@ -1702,7 +1715,8 @@ public class DarkestDatabase : MonoBehaviour
 
                     for (int itemIndex = 0; itemIndex < 3; itemIndex++)
                     {
-                        if (curioGrid[i + 11 + interactIndex, 7 + itemIndex * 3] != null && curioGrid[i + 11 + interactIndex, 7 + itemIndex * 3] != "")
+                        if (curioGrid[i + 11 + interactIndex, 7 + itemIndex * 3] != null &&
+                            curioGrid[i + 11 + interactIndex, 7 + itemIndex * 3] != "")
                         {
                             CurioResult curioResult = new CurioResult();
                             curioResult.Item = curioGrid[i + 11 + interactIndex, 7 + itemIndex * 3];
@@ -1766,12 +1780,14 @@ public class DarkestDatabase : MonoBehaviour
 
         var effectsAsset = Resources.Load<TextAsset>(effectsDataPath);
 
-        List<string> effectsStrings = effectsAsset.text.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+        List<string> effectsStrings = effectsAsset.text.Split(
+            new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).ToList();
         effectsStrings.RemoveAll(item => !item.StartsWith("effect:"));
         
         foreach(var effectString in effectsStrings)
         {
-            List<string> effectData = Regex.Matches(effectString.Replace("\t"," "), @"[\""].+?[\""]|[^ ]+").Cast<Match>().Select(m => m.Value).ToList();
+            List<string> effectData = Regex.Matches(effectString.Replace("\t"," "),
+                @"[\""].+?[\""]|[^ ]+").Cast<Match>().Select(m => m.Value).ToList();
             for (int i = 0; i < effectData.Count; i++)
                 effectData[i] = effectData[i].Replace("\"", "").Replace("%", "");
             Effect effect = new Effect(effectData);
@@ -1967,7 +1983,8 @@ public class DarkestDatabase : MonoBehaviour
             while (monsterText[index] != ".end")
             {
                 //List<string> data = monsterText[index++].Replace("%", "").Replace("\"", "").Split(' ').ToList();
-                List<string> data = Regex.Matches(monsterText[index++].Replace("\t", " "), @"[\""].+?[\""]|[^ ]+").Cast<Match>().Select(m => m.Value).ToList();
+                List<string> data = Regex.Matches(monsterText[index++].Replace("\t", " "),
+                    @"[\""].+?[\""]|[^ ]+").Cast<Match>().Select(m => m.Value).ToList();
                 for (int i = 0; i < data.Count; i++)
                     data[i] = data[i].Replace("\"", "").Replace("%", "");
 
@@ -2049,7 +2066,8 @@ public class DarkestDatabase : MonoBehaviour
             {
                 //List<string> data = monsterText[index++].Replace("%", "").Replace("\"", "")
                 //    .Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries).ToList();
-                List<string> data = Regex.Matches(monsterText[index++].Replace("\t", " "), @"[\""].+?[\""]|[^ ]+").Cast<Match>().Select(m => m.Value).ToList();
+                List<string> data = Regex.Matches(monsterText[index++].
+                    Replace("\t", " "), @"[\""].+?[\""]|[^ ]+").Cast<Match>().Select(m => m.Value).ToList();
                 for (int i = 0; i < data.Count; i++)
                     data[i] = data[i].Replace("\"", "").Replace("%", "");
                 switch (data[0])
@@ -2112,7 +2130,8 @@ public class DarkestDatabase : MonoBehaviour
                                 }
                             }
 
-                            string[] combatItems = item.Replace("%", "").Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                            string[] combatItems = item.Replace("%", "").Split(
+                                new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
                             if (combatItems[combatItems.Length - 1] == ".effect")
                                 isEffectData = true;
                             riposteData.AddRange(combatItems);

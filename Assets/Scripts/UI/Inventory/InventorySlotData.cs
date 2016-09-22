@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public class InventorySlotData
+﻿public class InventorySlotData
 {
     public ItemDefinition Item { get; set; }
     public ItemData ItemData { get; set; }

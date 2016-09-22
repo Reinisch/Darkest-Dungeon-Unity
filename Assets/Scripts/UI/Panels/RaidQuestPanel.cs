@@ -29,7 +29,8 @@ public class RaidQuestPanel : MonoBehaviour
         }
         else
         {
-            questTitle.text = LocalizationManager.GetString("town_quest_name_" + quest.Type + "+" + quest.Length.ToString() + "+" + quest.Dungeon + "+" + quest.Goal.Id);
+            questTitle.text = LocalizationManager.GetString("town_quest_name_" +
+                quest.Type + "+" + quest.Length.ToString() + "+" + quest.Dungeon + "+" + quest.Goal.Id);
             questGoal.text = quest.Goal.QuestData.GetDataString(quest.Goal.Type);
         }
     }

@@ -1,9 +1,6 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Text;
-using System.Collections;
-using System;
 
 public delegate void MealSlotEvent(MealSlot slot);
 

@@ -1,11 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Text;
-using System;
 
 public class StringTable
 {
@@ -29,7 +24,7 @@ public class StringTable
             if (items.Count == 1)
                 return items[0];
             else
-                return items[UnityEngine.Random.Range(0, items.Count)];
+                return items[Random.Range(0, items.Count)];
         }
     }
 }

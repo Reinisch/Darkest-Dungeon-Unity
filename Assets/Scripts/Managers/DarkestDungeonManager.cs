@@ -1,10 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
-using System.Collections;
-using System.Collections.Generic;
-using Newtonsoft.Json;
-using System;
-using System.Linq;
 using UnityEngine.SceneManagement;
 
 public class DarkestDungeonManager : MonoBehaviour
@@ -119,6 +113,13 @@ public class DarkestDungeonManager : MonoBehaviour
         get
         {
             return Instanse.nextSceneInfo;
+        }
+    }
+    public static MainMenuWindow MainMenu
+    {
+        get
+        {
+            return Instanse.mainMenu;
         }
     }
     public static SaveCampaignData SaveData

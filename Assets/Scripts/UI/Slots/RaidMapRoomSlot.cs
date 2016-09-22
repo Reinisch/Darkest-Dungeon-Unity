@@ -2,8 +2,6 @@
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-using System.Collections;
-
 public class RaidMapRoomSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     public Image roomIcon;
@@ -86,7 +84,8 @@ public class RaidMapRoomSlot : MonoBehaviour, IPointerEnterHandler, IPointerExit
     public void OnPointerEnter(PointerEventData eventData)
     {
         if(MarkedForMove)
-            ToolTipManager.Instanse.Show(LocalizationManager.GetString("str_move_to_this_room"), eventData, SlotRect, ToolTipStyle.FromBottom, ToolTipSize.Small);
+            ToolTipManager.Instanse.Show(LocalizationManager.GetString("str_move_to_this_room"),
+                eventData, SlotRect, ToolTipStyle.FromBottom, ToolTipSize.Small);
     }
     public void OnPointerExit(PointerEventData eventData)
     {

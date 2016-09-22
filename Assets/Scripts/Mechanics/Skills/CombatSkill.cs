@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,7 +6,6 @@ public enum SkillCategory { Damage, Heal, Support }
 
 public class CombatSkill : Skill
 {
-    public string Id { get; set; }
     public int Level { get; set; }
     public string Type { get; set; }
     public SkillCategory Category { get; set; }
@@ -72,8 +70,9 @@ public class CombatSkill : Skill
 
         if (TargetRanks.IsSelfFormation)
             return friends.Units.FindAll(unit =>
-                (((unit == performer) && TargetRanks.IsTargetableUnit(unit) && IsSelfValid) || ((unit != performer) && TargetRanks.IsTargetableUnit(unit)))
-                && (unit.Character.BattleModifiers == null || unit.Character.BattleModifiers.IsValidFriendlyTarget != false));
+                (((unit == performer) && TargetRanks.IsTargetableUnit(unit) && IsSelfValid) ||
+                ((unit != performer) && TargetRanks.IsTargetableUnit(unit))) && (unit.Character.BattleModifiers == null ||
+                unit.Character.BattleModifiers.IsValidFriendlyTarget != false));
         else
             return enemies.Units.FindAll(unit =>
                 ((unit != performer) && TargetRanks.IsTargetableUnit(unit)));

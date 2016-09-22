@@ -31,9 +31,6 @@ public class EstateSceneManager : MonoBehaviour
     public ShopManager shopManager;
     public TownManager townManager;
 
-    public ScreenFader ScreenFader { get; set; }
-    public MainMenuWindow MainMenuWindow { get; set; }
-
     bool menuOpened = false;
     bool realmInventoryOpened = false;
     bool activityLogOpened = false;
@@ -45,7 +42,8 @@ public class EstateSceneManager : MonoBehaviour
     {
         get
         {
-            return menuOpened || realmInventoryOpened || activityLogOpened || characterWindowOpened || glossaryWindow.isActiveAndEnabled;
+            return menuOpened || realmInventoryOpened || activityLogOpened ||
+                characterWindowOpened || glossaryWindow.isActiveAndEnabled;
         }
     }
 
@@ -59,9 +57,7 @@ public class EstateSceneManager : MonoBehaviour
         activityLogWindow.onWindowClose += ActivityLogClose;
         realmInventoryWindow.onWindowClose += RealmInventoryClose;
 
-        ScreenFader = DarkestDungeonManager.Instanse.screenFader;
-        MainMenuWindow = DarkestDungeonManager.Instanse.mainMenu;
-        MainMenuWindow.onWindowClose += MainMenuClose;
+        DarkestDungeonManager.MainMenu.onWindowClose += MainMenuClose;
 
         rosterPanel.onHeroInspect += CharacterWindowSwitch;
 
@@ -102,13 +98,15 @@ public class EstateSceneManager : MonoBehaviour
             if (DarkestDungeonManager.RaidManager.Quest.Goal.Id == "tutorial_final_room")
             {
                 DarkestDungeonManager.Campaign.ExecuteProgress();
-                DarkestDungeonManager.Campaign.CurrentLog().ReturnRecord = new PartyActivityRecord(PartyActionType.Tutorial, DarkestDungeonManager.RaidManager);
+                DarkestDungeonManager.Campaign.CurrentLog().ReturnRecord =
+                    new PartyActivityRecord(PartyActionType.Tutorial, DarkestDungeonManager.RaidManager);
             }
             else
             {
                 DarkestDungeonManager.Campaign.ExecuteProgress();
                 DarkestDungeonManager.Campaign.AdvanceNextWeek();
-                DarkestDungeonManager.Campaign.CurrentLog().ReturnRecord = new PartyActivityRecord(PartyActionType.Result, DarkestDungeonManager.RaidManager);
+                DarkestDungeonManager.Campaign.CurrentLog().ReturnRecord = 
+                    new PartyActivityRecord(PartyActionType.Result, DarkestDungeonManager.RaidManager);
             }
         }
         else
@@ -116,10 +114,13 @@ public class EstateSceneManager : MonoBehaviour
             if (DarkestDungeonManager.SaveData.InRaid)
             {
                 DarkestDungeonManager.SkipTransactions = true;
-                if (!DarkestDungeonManager.SaveData.Quest.IsPlotQuest || DarkestDungeonManager.SaveData.Quest.Goal.Id == "tutorial_final_room")
-                    DarkestDungeonManager.LoadingInfo.SetNextScene("Dungeon", "Screen/loading_screen." + DarkestDungeonManager.SaveData.Quest.Dungeon + "_0");
+                if (!DarkestDungeonManager.SaveData.Quest.IsPlotQuest ||
+                    DarkestDungeonManager.SaveData.Quest.Goal.Id == "tutorial_final_room")
+                    DarkestDungeonManager.LoadingInfo.SetNextScene("Dungeon",
+                        "Screen/loading_screen." + DarkestDungeonManager.SaveData.Quest.Dungeon + "_0");
                 else
-                    DarkestDungeonManager.LoadingInfo.SetNextScene("Dungeon", "Screen/loading_screen.plot_" + (DarkestDungeonManager.SaveData.Quest as PlotQuest).Id);
+                    DarkestDungeonManager.LoadingInfo.SetNextScene("Dungeon",
+                        "Screen/loading_screen.plot_" + (DarkestDungeonManager.SaveData.Quest as PlotQuest).Id);
 
                 SceneManager.LoadScene("LoadingScreen", LoadSceneMode.Single);
                 return;
@@ -132,7 +133,8 @@ public class EstateSceneManager : MonoBehaviour
         currencyPanel.UpdateCurrency();
         rosterPanel.InitializeRoster();
         realmInventoryWindow.Populate();
-        estateTitle.text = string.Format(LocalizationManager.GetString("estate_title_format"), DarkestDungeonManager.Campaign.Estate.EstateTitle);
+        estateTitle.text = string.Format(LocalizationManager.GetString("estate_title_format"),
+            DarkestDungeonManager.Campaign.Estate.EstateTitle);
 
         townManager.InitializeBuildings();
 
@@ -143,6 +145,10 @@ public class EstateSceneManager : MonoBehaviour
             DarkestDungeonManager.SaveData.UpdateFromEstate();
             DarkestDungeonManager.Instanse.SaveGame();
         }
+    }
+    void OnDestroy()
+    {
+        DarkestDungeonManager.MainMenu.onWindowClose -= MainMenuClose;
     }
 
     IEnumerator LoadEstateEvent()
@@ -212,9 +218,11 @@ public class EstateSceneManager : MonoBehaviour
         DarkestDungeonManager.SkipTransactions = true;
         DarkestDungeonManager.Instanse.RaidingManager.QuickStart(shopManager.partyInventory);
         if(DarkestDungeonManager.Instanse.RaidingManager.Quest.IsPlotQuest)
-            DarkestDungeonManager.LoadingInfo.SetNextScene("Dungeon", "Screen/loading_screen.plot_" + (DarkestDungeonManager.Instanse.RaidingManager.Quest as PlotQuest).Id);
+            DarkestDungeonManager.LoadingInfo.SetNextScene("Dungeon", "Screen/loading_screen.plot_" +
+                (DarkestDungeonManager.Instanse.RaidingManager.Quest as PlotQuest).Id);
         else
-            DarkestDungeonManager.LoadingInfo.SetNextScene("Dungeon", "Screen/loading_screen." + DarkestDungeonManager.Instanse.RaidingManager.Quest.Dungeon + "_0");
+            DarkestDungeonManager.LoadingInfo.SetNextScene("Dungeon", "Screen/loading_screen." +
+                DarkestDungeonManager.Instanse.RaidingManager.Quest.Dungeon + "_0");
 
         SceneManager.LoadScene("LoadingScreen", LoadSceneMode.Single);
     }
@@ -366,12 +374,12 @@ public class EstateSceneManager : MonoBehaviour
         {
             bottomPanel.SettingsAnimator.state.SetAnimation(0, "selected", false);
             bottomPanel.SettingsAnimator.state.AddAnimation(0, "selected_loop", true, 0.2f);
-            MainMenuWindow.gameObject.SetActive(menuOpened);
-            MainMenuWindow.OpenMenu();
+            DarkestDungeonManager.MainMenu.gameObject.SetActive(menuOpened);
+            DarkestDungeonManager.MainMenu.OpenMenu();
         }
         else
         {
-            MainMenuWindow.WindowClosed();
+            DarkestDungeonManager.MainMenu.WindowClosed();
         }
 
     }
@@ -413,9 +421,9 @@ public class EstateSceneManager : MonoBehaviour
         if (transitionsEnabled && !townManager.BuildingWindowActive)
         {
             transitionsEnabled = false;
-            ScreenFader.onFadeEnded += EmbarkTransitionFadeComplete;
-            ScreenFader.onAppearEnded += EmbarkTransitionAppearComplete;
-            ScreenFader.Fade();
+            DarkestDungeonManager.ScreenFader.onFadeEnded += EmbarkTransitionFadeComplete;
+            DarkestDungeonManager.ScreenFader.onAppearEnded += EmbarkTransitionAppearComplete;
+            DarkestDungeonManager.ScreenFader.Fade();
         }
     }
     void EmbarkTransitionFadeComplete()
@@ -437,12 +445,12 @@ public class EstateSceneManager : MonoBehaviour
 
         ToolTipManager.Instanse.Hide();
         estateSceneState = EstateSceneState.QuestScreen;
-        ScreenFader.Appear();
+        DarkestDungeonManager.ScreenFader.Appear();
     }
     void EmbarkTransitionAppearComplete()
     {
-        ScreenFader.onFadeEnded -= EmbarkTransitionFadeComplete;
-        ScreenFader.onAppearEnded -= EmbarkTransitionAppearComplete;
+        DarkestDungeonManager.ScreenFader.onFadeEnded -= EmbarkTransitionFadeComplete;
+        DarkestDungeonManager.ScreenFader.onAppearEnded -= EmbarkTransitionAppearComplete;
         transitionsEnabled = true;
     }
 
@@ -451,9 +459,9 @@ public class EstateSceneManager : MonoBehaviour
         if (transitionsEnabled)
         {
             transitionsEnabled = false;
-            ScreenFader.onFadeEnded += ProvisionFadeComplete;
-            ScreenFader.onAppearEnded += ProvisionAppearComplete;
-            ScreenFader.Fade();
+            DarkestDungeonManager.ScreenFader.onFadeEnded += ProvisionFadeComplete;
+            DarkestDungeonManager.ScreenFader.onAppearEnded += ProvisionAppearComplete;
+            DarkestDungeonManager.ScreenFader.Fade();
         }
     }
     void ProvisionFadeComplete()
@@ -476,12 +484,12 @@ public class EstateSceneManager : MonoBehaviour
         shopManager.ActivateShopBehaviour();
 
         estateSceneState = EstateSceneState.ProvisionScreen;
-        ScreenFader.Appear();
+        DarkestDungeonManager.ScreenFader.Appear();
     }
     void ProvisionAppearComplete()
     {
-        ScreenFader.onFadeEnded -= ProvisionFadeComplete;
-        ScreenFader.onAppearEnded -= ProvisionAppearComplete;
+        DarkestDungeonManager.ScreenFader.onFadeEnded -= ProvisionFadeComplete;
+        DarkestDungeonManager.ScreenFader.onAppearEnded -= ProvisionAppearComplete;
         transitionsEnabled = true;
     }
 
@@ -490,24 +498,27 @@ public class EstateSceneManager : MonoBehaviour
         if (transitionsEnabled)
         {
             transitionsEnabled = false;
-            ScreenFader.onFadeEnded += FinalEmbarkFadeComplete;
-            ScreenFader.Fade();
+            DarkestDungeonManager.ScreenFader.onFadeEnded += FinalEmbarkFadeComplete;
+            DarkestDungeonManager.ScreenFader.Fade();
             DarkestDungeonManager.Instanse.RaidingManager.DeployFromPreparation(raidPreparationManager, shopManager);      
         }
     }
     void FinalEmbarkFadeComplete()
     {
-        ScreenFader.Appear();
-        ScreenFader.onFadeEnded -= FinalEmbarkFadeComplete;
+        DarkestDungeonManager.ScreenFader.Appear();
+        DarkestDungeonManager.ScreenFader.onFadeEnded -= FinalEmbarkFadeComplete;
         transitionsEnabled = true;
         shopManager.DeactivateShopBehaviour();
         ToolTipManager.Instanse.Hide();
-        DarkestDungeonManager.Campaign.CurrentLog().EmbarkRecord = new PartyActivityRecord(PartyActionType.Embark, DarkestDungeonManager.RaidManager);
+        DarkestDungeonManager.Campaign.CurrentLog().EmbarkRecord = 
+            new PartyActivityRecord(PartyActionType.Embark, DarkestDungeonManager.RaidManager);
 
         if (DarkestDungeonManager.Instanse.RaidingManager.Quest.IsPlotQuest)
-            DarkestDungeonManager.LoadingInfo.SetNextScene("Dungeon", "Screen/loading_screen." + (DarkestDungeonManager.Instanse.RaidingManager.Quest as PlotQuest).Id);
+            DarkestDungeonManager.LoadingInfo.SetNextScene("Dungeon", "Screen/loading_screen." +
+                (DarkestDungeonManager.Instanse.RaidingManager.Quest as PlotQuest).Id);
         else
-            DarkestDungeonManager.LoadingInfo.SetNextScene("Dungeon", "Screen/loading_screen." + DarkestDungeonManager.Instanse.RaidingManager.Quest.Dungeon + "_0");
+            DarkestDungeonManager.LoadingInfo.SetNextScene("Dungeon", "Screen/loading_screen." + 
+                DarkestDungeonManager.Instanse.RaidingManager.Quest.Dungeon + "_0");
 
         SceneManager.LoadScene("LoadingScreen", LoadSceneMode.Single);
     }
@@ -517,9 +528,9 @@ public class EstateSceneManager : MonoBehaviour
         if (transitionsEnabled)
         {
             transitionsEnabled = false;
-            ScreenFader.onFadeEnded += ReturnFadeComplete;
-            ScreenFader.onAppearEnded += ReturnAppearComplete;
-            ScreenFader.Fade();
+            DarkestDungeonManager.ScreenFader.onFadeEnded += ReturnFadeComplete;
+            DarkestDungeonManager.ScreenFader.onAppearEnded += ReturnAppearComplete;
+            DarkestDungeonManager.ScreenFader.Fade();
         }
     }
     void ReturnFadeComplete()
@@ -552,7 +563,7 @@ public class EstateSceneManager : MonoBehaviour
                 ToolTipManager.Instanse.Hide();
                 break;
         }
-        ScreenFader.Appear();
+        DarkestDungeonManager.ScreenFader.Appear();
     }
     void ReturnAppearComplete()
     {
@@ -565,8 +576,8 @@ public class EstateSceneManager : MonoBehaviour
                 estateSceneState = EstateSceneState.QuestScreen;
                 break;
         }
-        ScreenFader.onFadeEnded -= ReturnFadeComplete;
-        ScreenFader.onAppearEnded -= ReturnAppearComplete;
+        DarkestDungeonManager.ScreenFader.onFadeEnded -= ReturnFadeComplete;
+        DarkestDungeonManager.ScreenFader.onAppearEnded -= ReturnAppearComplete;
         transitionsEnabled = true;
     }
 }

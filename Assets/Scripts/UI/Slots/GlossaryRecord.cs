@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System.Collections;
 using System.Collections.Generic;
 
 public class GlossaryRecord : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
@@ -49,7 +48,8 @@ public class GlossaryRecord : MonoBehaviour, IPointerEnterHandler, IPointerExitH
                     int currentWidth = 0;
                     int currentRect = 0;
                     var line = lines[lineIndex];
-                    var lastCharIndex = lineIndex + 1 == lines.Count ? termDefinitionLabel.text.Length : lines[lineIndex + 1].startCharIdx;
+                    var lastCharIndex = lineIndex + 1 == lines.Count ?
+                        termDefinitionLabel.text.Length : lines[lineIndex + 1].startCharIdx;
                     for(int i = line.startCharIdx; i < lastCharIndex; i++)
                     {
                         CharacterInfo charInfo;
@@ -75,7 +75,8 @@ public class GlossaryRecord : MonoBehaviour, IPointerEnterHandler, IPointerExitH
                         {
                             if (termDefinitionLabel.text[i] == '\"')
                             {
-                                tooltip.localPosition = new Vector2(currentWidth, -GetComponent<RectTransform>().sizeDelta.y / lines.Count * lineIndex);
+                                tooltip.localPosition = new Vector2(currentWidth,
+                                    -GetComponent<RectTransform>().sizeDelta.y / lines.Count * lineIndex);
                                 currentWidth += charInfo.advance;
                                 currentRect = charInfo.advance;
                                 insideTerm = true;

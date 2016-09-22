@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System.Collections;
-
 
 public class HeroSlot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDragHandler, IEndDragHandler, IDropHandler
 {
@@ -146,7 +144,8 @@ public class HeroSlot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBegi
                     while (shifts > 0)
                     {
                         shifted = false;
-                        if (globalMousePos.y + HeroRoster.placeHolder.RectTransform.sizeDelta.y / 2 > HeroRoster.placeHolder.RectTransform.position.y)
+                        if (globalMousePos.y + HeroRoster.placeHolder.RectTransform.sizeDelta.y / 2 > 
+                            HeroRoster.placeHolder.RectTransform.position.y)
                         {
                             HeroRoster.placeHolder.RectTransform.SetSiblingIndex(HeroRoster.placeHolder.RectTransform.GetSiblingIndex() - 1);
                             if (HeroRoster.placeHolder.RectTransform.GetSiblingIndex() == 0)
@@ -154,7 +153,8 @@ public class HeroSlot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBegi
                             shifted = true;
                         }
 
-                        if (globalMousePos.y - HeroRoster.placeHolder.RectTransform.sizeDelta.y / 2 < HeroRoster.placeHolder.RectTransform.position.y)
+                        if (globalMousePos.y - HeroRoster.placeHolder.RectTransform.sizeDelta.y / 2 <
+                            HeroRoster.placeHolder.RectTransform.position.y)
                         {
                             HeroRoster.placeHolder.RectTransform.SetSiblingIndex(HeroRoster.placeHolder.RectTransform.GetSiblingIndex() + 1);
                             if (HeroRoster.placeHolder.RectTransform.GetSiblingIndex() == HeroRoster.HeroSlots.Count)

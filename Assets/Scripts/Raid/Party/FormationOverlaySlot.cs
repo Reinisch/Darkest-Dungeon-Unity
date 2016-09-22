@@ -187,7 +187,8 @@ public class FormationOverlaySlot : MonoBehaviour, IPointerClickHandler, IPointe
             {
                 var neighbour = TargetUnit.Party.Units[targetIndex];
                 var positionX = (rightEdge.position.x + neighbour.OverlaySlot.leftEdge.position.x)/2;
-                selectorPlus.rectTransform.position = new Vector3(positionX, selectorPlus.rectTransform.position.y, selectorPlus.rectTransform.position.z);
+                selectorPlus.rectTransform.position = new Vector3(positionX,
+                    selectorPlus.rectTransform.position.y, selectorPlus.rectTransform.position.z);
                 selectorPlus.gameObject.SetActive(true);
             }
             else

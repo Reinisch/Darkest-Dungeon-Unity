@@ -1,9 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.IO;
-using System.ComponentModel.Design.Serialization;
-
-using UnityStandardAssets.ImageEffects;
 
 public enum LutTextureOrientation { Horizontal, Vertical }
 

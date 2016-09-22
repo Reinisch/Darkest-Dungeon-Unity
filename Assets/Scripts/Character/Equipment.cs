@@ -1,10 +1,10 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
-using System.Collections;
+﻿using System.Collections.Generic;
 using System.Text;
 
 public enum HeroEquipmentSlot
-{ Weapon = 0, Armor = 1 }
+{
+    Weapon = 0, Armor = 1
+}
 
 public class Equipment
 {

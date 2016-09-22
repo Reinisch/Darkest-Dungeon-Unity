@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System.Collections;
 
 public delegate void DragHeroRaidPartyEvent(RaidPartySlot partySlot, HeroSlot heroSlot);
 public delegate void DragPartySlotEvent(InventorySlot slot);

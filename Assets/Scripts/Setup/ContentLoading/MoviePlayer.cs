@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-using System;
-using System.Diagnostics;
 
 #if !UNITY_WEBGL
 public class MoviePlayer : MonoBehaviour

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System;
-using System.Collections;
 
 public enum EffectBoolParams : byte 
 {
@@ -354,7 +353,7 @@ public class Effect
                                 if (float.TryParse(data[i], out parseFloat))
                                     statEffect.StatAddBuffs.Add(AttributeType.HpHealReceivedPercent, parseFloat / 100);
                                 else
-                                    Debug.LogErrorFormat("Failed to parse {0} to float in hp_heal_received_percent effect: {1}", data[i], Name);
+                                    Debug.LogErrorFormat("Failed to parse {0} to float in hp_heal_received effect: {1}", data[i], Name);
 
                                 break;
                             default:
@@ -802,6 +801,7 @@ public class Effect
         return toolTip;
     }
 }
+
 public class SubEffect
 {
     public virtual EffectSubType Type
@@ -916,6 +916,7 @@ public class SetModeEffect : SubEffect
         return string.Format(LocalizationManager.GetString("effect_tooltip_set_actor_mode_format"), modName);
     }
 }
+
 public class ControlEffect : SubEffect
 {
     public override EffectSubType Type
@@ -982,6 +983,7 @@ public class ControlEffect : SubEffect
         return false;
     }
 }
+
 public class SummonMonstersEffect : SubEffect
 {
     public override EffectSubType Type
@@ -1046,7 +1048,8 @@ public class SummonMonstersEffect : SubEffect
             int summonIndex = summonPool[rolledIndex];
             if(SummonLimits.Count > 0)
             {
-                if(SummonLimits[summonIndex] <= performer.Party.Units.FindAll(unit => unit.Character.Name == SummonMonsters[summonIndex]).Count)
+                if(SummonLimits[summonIndex] <= performer.Party.Units.FindAll(unit => 
+                    unit.Character.Name == SummonMonsters[summonIndex]).Count)
                 {
                     i--;
                     summonPool.RemoveAt(rolledIndex);
@@ -1081,6 +1084,7 @@ public class SummonMonstersEffect : SubEffect
         return false;
     }
 }
+
 public class CaptureEffect : SubEffect
 {
     public override EffectSubType Type
@@ -1122,7 +1126,8 @@ public class CaptureEffect : SubEffect
         if (emptyCaptorUnit == null)
             return false;
 
-        MonsterData fullCaptorData = DarkestDungeonManager.Data.Monsters[(emptyCaptorUnit.Character as Monster).Data.EmptyCaptor.FullMonsterClass];
+        MonsterData fullCaptorData = DarkestDungeonManager.Data.
+            Monsters[(emptyCaptorUnit.Character as Monster).Data.EmptyCaptor.FullMonsterClass];
         GameObject unitObject = Resources.Load("Prefabs/Monsters/" + fullCaptorData.TypeId) as GameObject;
         FormationUnit fullCaptorUnit = RaidSceneManager.BattleGround.ReplaceUnit(fullCaptorData, emptyCaptorUnit, unitObject);
 
@@ -1154,6 +1159,7 @@ public class CaptureEffect : SubEffect
         return false;
     }
 }
+
 public class BuffEffect : SubEffect
 {
     public override EffectSubType Type
@@ -1350,6 +1356,7 @@ public class BuffEffect : SubEffect
         }
     }
 }
+
 public class PullEffect : SubEffect
 {
     public override EffectSubType Type
@@ -1390,7 +1397,8 @@ public class PullEffect : SubEffect
         if (target == null)
             return false;
 
-        float moveChance = effect.IntegerParams[EffectIntParams.Chance].HasValue ? (float)effect.IntegerParams[EffectIntParams.Chance].Value / 100 : 1;
+        float moveChance = effect.IntegerParams[EffectIntParams.Chance].HasValue ?
+            (float)effect.IntegerParams[EffectIntParams.Chance].Value / 100 : 1;
 
         moveChance -= target.Character.GetSingleAttribute(AttributeType.Move).ModifiedValue;
         if (performer != null && performer.Character is Hero)
@@ -1418,6 +1426,7 @@ public class PullEffect : SubEffect
         }
     }
 }
+
 public class PushEffect : SubEffect
 {
     public override EffectSubType Type
@@ -1458,7 +1467,8 @@ public class PushEffect : SubEffect
         if (target == null)
             return false;
 
-        float moveChance = effect.IntegerParams[EffectIntParams.Chance].HasValue ? (float)effect.IntegerParams[EffectIntParams.Chance].Value / 100 : 1;
+        float moveChance = effect.IntegerParams[EffectIntParams.Chance].HasValue ?
+            (float)effect.IntegerParams[EffectIntParams.Chance].Value / 100 : 1;
 
         moveChance -= target.Character.GetSingleAttribute(AttributeType.Move).ModifiedValue;
         if (performer != null && performer.Character is Hero)
@@ -1486,6 +1496,7 @@ public class PushEffect : SubEffect
         }
     }
 }
+
 public class StunEffect : SubEffect
 {
     public override EffectSubType Type
@@ -1566,6 +1577,7 @@ public class StunEffect : SubEffect
         }
     }
 }
+
 public class UnstunEffect : SubEffect
 {
     public override EffectSubType Type
@@ -1626,6 +1638,7 @@ public class UnstunEffect : SubEffect
         return false;
     }
 }
+
 public class PoisonEffect : SubEffect
 {
     public override EffectSubType Type
@@ -1671,7 +1684,8 @@ public class PoisonEffect : SubEffect
         if (target == null)
             return false;
 
-        float poisonChance = effect.IntegerParams[EffectIntParams.Chance].HasValue ? (float)effect.IntegerParams[EffectIntParams.Chance].Value / 100 : 1;
+        float poisonChance = effect.IntegerParams[EffectIntParams.Chance].HasValue ?
+            (float)effect.IntegerParams[EffectIntParams.Chance].Value / 100 : 1;
 
         poisonChance -= target.Character.GetSingleAttribute(AttributeType.Poison).ModifiedValue;
         if (performer != null && performer.Character is Hero)
@@ -1709,6 +1723,7 @@ public class PoisonEffect : SubEffect
         }
     }
 }
+
 public class BleedEffect : SubEffect
 {
     public override EffectSubType Type
@@ -1793,6 +1808,7 @@ public class BleedEffect : SubEffect
         }
     }
 }
+
 public class HealEffect : SubEffect
 {
     public override EffectSubType Type
@@ -1906,6 +1922,7 @@ public class HealEffect : SubEffect
         }
     }
 }
+
 public class CureEffect : SubEffect
 {
     public override EffectSubType Type
@@ -1977,6 +1994,7 @@ public class CureEffect : SubEffect
             return false;
     }
 }
+
 public class TagEffect : SubEffect
 {
     public override EffectSubType Type
@@ -2034,6 +2052,7 @@ public class TagEffect : SubEffect
         return false;
     }
 }
+
 public class ClearGuardEffect : SubEffect
 {
     public override EffectSubType Type
@@ -2086,6 +2105,7 @@ public class ClearGuardEffect : SubEffect
         return false;
     }
 }
+
 public class UntagEffect : SubEffect
 {
     public override EffectSubType Type
@@ -2144,6 +2164,7 @@ public class UntagEffect : SubEffect
         return false;
     }
 }
+
 public class CombatStatBuffEffect : SubEffect
 {
     public override EffectSubType Type
@@ -2177,18 +2198,21 @@ public class CombatStatBuffEffect : SubEffect
                 continue;
 
             string newStat = toolTip.Length > 0 ?
-                "\n" + string.Format(LocalizationManager.GetString(LocalizationHelper.BaseStatsAddBonusString(item.Key)), item.Value) :
-                string.Format(LocalizationManager.GetString(LocalizationHelper.BaseStatsAddBonusString(item.Key)), item.Value);
+                "\n" + string.Format(LocalizationManager.GetString(
+                CharacterLocalizationHelper.BaseStatsAddBonusString(item.Key)), item.Value) :
+                string.Format(LocalizationManager.GetString(
+                CharacterLocalizationHelper.BaseStatsAddBonusString(item.Key)), item.Value);
             if (TargetStatus != StatusType.None)
             {
                 string statusFormat = LocalizationManager.GetString("buff_rule_tooltip_actorStatus");
-                toolTip += string.Format(statusFormat, LocalizationManager.GetString(LocalizationHelper.StatusString(TargetStatus)), newStat);
+                toolTip += string.Format(statusFormat, LocalizationManager.GetString(
+                    CharacterLocalizationHelper.StatusString(TargetStatus)), newStat);
             }
             else if (!(TargetMonsterType == MonsterType.None || TargetMonsterType == MonsterType.Unknown))
             {
                 string monsterFormat = LocalizationManager.GetString("buff_rule_tooltip_monsterType");
                 toolTip += string.Format(monsterFormat, LocalizationManager.GetString(
-                    LocalizationHelper.MonsterTypeString(TargetMonsterType)), newStat);
+                    CharacterLocalizationHelper.MonsterTypeString(TargetMonsterType)), newStat);
             }
             else
                 toolTip += newStat;
@@ -2199,19 +2223,22 @@ public class CombatStatBuffEffect : SubEffect
             if (item.Key == AttributeType.DamageLow || item.Value == 0)
                 continue;
             string newStat = toolTip.Length > 0 ?
-                "\n" + string.Format(LocalizationManager.GetString(LocalizationHelper.BaseStatsMultBonusString(item.Key)), item.Value) :
-                string.Format(LocalizationManager.GetString(LocalizationHelper.BaseStatsMultBonusString(item.Key)), item.Value);
+                "\n" + string.Format(LocalizationManager.GetString(
+                CharacterLocalizationHelper.BaseStatsMultBonusString(item.Key)), item.Value) :
+                string.Format(LocalizationManager.GetString(
+                CharacterLocalizationHelper.BaseStatsMultBonusString(item.Key)), item.Value);
 
             if (TargetStatus != StatusType.None)
             {
                 string statusFormat = LocalizationManager.GetString("buff_rule_tooltip_actorStatus");
-                toolTip += string.Format(statusFormat, LocalizationManager.GetString(LocalizationHelper.StatusString(TargetStatus)), newStat);
+                toolTip += string.Format(statusFormat, LocalizationManager.GetString(
+                    CharacterLocalizationHelper.StatusString(TargetStatus)), newStat);
             }
             else if (!(TargetMonsterType == MonsterType.None || TargetMonsterType == MonsterType.Unknown))
             {
                 string monsterFormat = LocalizationManager.GetString("buff_rule_tooltip_monsterType");
                 toolTip += string.Format(monsterFormat, LocalizationManager.GetString(
-                    LocalizationHelper.MonsterTypeString(TargetMonsterType)), newStat);
+                    CharacterLocalizationHelper.MonsterTypeString(TargetMonsterType)), newStat);
             }
             else
                 toolTip += newStat;
@@ -2268,13 +2295,15 @@ public class CombatStatBuffEffect : SubEffect
         {
             foreach (var statInfo in StatAddBuffs)
             {
-                target.Character.AddBuff(new BuffInfo(new Buff() { Id = "", Type = BuffType.StatAdd, AttributeType = statInfo.Key, ModifierValue = statInfo.Value },
-                BuffDurationType.Camp, BuffSourceType.Adventure));
+                target.Character.AddBuff(new BuffInfo(new Buff() { Id = "", Type = BuffType.StatAdd,
+                    AttributeType = statInfo.Key, ModifierValue = statInfo.Value },
+                    BuffDurationType.Camp, BuffSourceType.Adventure));
             }
             foreach (var statInfo in StatMultBuffs)
             {
-                target.Character.AddBuff(new BuffInfo(new Buff() { Id = "", Type = BuffType.StatMultiply, AttributeType = statInfo.Key, ModifierValue = statInfo.Value },
-                BuffDurationType.Camp, BuffSourceType.Adventure));
+                target.Character.AddBuff(new BuffInfo(new Buff() { Id = "", Type = BuffType.StatMultiply,
+                    AttributeType = statInfo.Key, ModifierValue = statInfo.Value },
+                    BuffDurationType.Camp, BuffSourceType.Adventure));
             }
         }
         else if (effect.IntegerParams[EffectIntParams.Duration].HasValue)
@@ -2283,43 +2312,51 @@ public class CombatStatBuffEffect : SubEffect
             {
                 foreach (var statInfo in StatAddBuffs)
                 {
-                    target.Character.AddBuff(new BuffInfo(new Buff() { Id = "", Type = BuffType.StatAdd, AttributeType = statInfo.Key, ModifierValue = statInfo.Value },
-                    BuffDurationType.Camp, BuffSourceType.Adventure));
+                    target.Character.AddBuff(new BuffInfo(new Buff() { Id = "", Type = BuffType.StatAdd,
+                        AttributeType = statInfo.Key, ModifierValue = statInfo.Value },
+                        BuffDurationType.Camp, BuffSourceType.Adventure));
                 }
                 foreach (var statInfo in StatMultBuffs)
                 {
-                    target.Character.AddBuff(new BuffInfo(new Buff() { Id = "", Type = BuffType.StatMultiply, AttributeType = statInfo.Key, ModifierValue = statInfo.Value },
-                    BuffDurationType.Camp, BuffSourceType.Adventure));
+                    target.Character.AddBuff(new BuffInfo(new Buff() { Id = "", Type = BuffType.StatMultiply,
+                        AttributeType = statInfo.Key, ModifierValue = statInfo.Value },
+                        BuffDurationType.Camp, BuffSourceType.Adventure));
                 }
             }
             else
             {
                 foreach (var statInfo in StatAddBuffs)
-                    target.Character.AddBuff(new BuffInfo(new Buff() { Id = "", Type = BuffType.StatAdd, AttributeType = statInfo.Key, ModifierValue = statInfo.Value },
-                    BuffDurationType.Round, BuffSourceType.Adventure, effect.IntegerParams[EffectIntParams.Duration].Value));
+                    target.Character.AddBuff(new BuffInfo(new Buff() { Id = "", Type = BuffType.StatAdd,
+                        AttributeType = statInfo.Key, ModifierValue = statInfo.Value },
+                        BuffDurationType.Round, BuffSourceType.Adventure, effect.IntegerParams[EffectIntParams.Duration].Value));
                 foreach (var statInfo in StatMultBuffs)
-                    target.Character.AddBuff(new BuffInfo(new Buff() { Id = "", Type = BuffType.StatMultiply, AttributeType = statInfo.Key, ModifierValue = statInfo.Value },
-                    BuffDurationType.Round, BuffSourceType.Adventure, effect.IntegerParams[EffectIntParams.Duration].Value));
+                    target.Character.AddBuff(new BuffInfo(new Buff() { Id = "", Type = BuffType.StatMultiply,
+                        AttributeType = statInfo.Key, ModifierValue = statInfo.Value },
+                        BuffDurationType.Round, BuffSourceType.Adventure, effect.IntegerParams[EffectIntParams.Duration].Value));
             }
         }
         else
         {
             foreach (var statInfo in StatAddBuffs)
-                target.Character.AddBuff(new BuffInfo(new Buff() { Id = "", Type = BuffType.StatAdd, AttributeType = statInfo.Key, ModifierValue = statInfo.Value },
-                BuffDurationType.Round, BuffSourceType.Adventure, 3));
+                target.Character.AddBuff(new BuffInfo(new Buff() { Id = "", Type = BuffType.StatAdd,
+                    AttributeType = statInfo.Key, ModifierValue = statInfo.Value },
+                    BuffDurationType.Round, BuffSourceType.Adventure, 3));
             foreach (var statInfo in StatMultBuffs)
-                target.Character.AddBuff(new BuffInfo(new Buff() { Id = "", Type = BuffType.StatMultiply, AttributeType = statInfo.Key, ModifierValue = statInfo.Value },
-                BuffDurationType.Round, BuffSourceType.Adventure, 3));
+                target.Character.AddBuff(new BuffInfo(new Buff() { Id = "", Type = BuffType.StatMultiply,
+                    AttributeType = statInfo.Key, ModifierValue = statInfo.Value },
+                    BuffDurationType.Round, BuffSourceType.Adventure, 3));
         }
     }
     void ApplyConditional(FormationUnit target, Effect effect)
     {
         foreach (var statInfo in StatAddBuffs)
-            target.Character.AddBuff(new BuffInfo(new Buff() { Id = "", Type = BuffType.StatAdd, AttributeType = statInfo.Key, ModifierValue = statInfo.Value },
-            BuffDurationType.Round, BuffSourceType.Condition));
+            target.Character.AddBuff(new BuffInfo(new Buff() { Id = "", Type = BuffType.StatAdd,
+                AttributeType = statInfo.Key, ModifierValue = statInfo.Value },
+                BuffDurationType.Round, BuffSourceType.Condition));
         foreach (var statInfo in StatMultBuffs)
-            target.Character.AddBuff(new BuffInfo(new Buff() { Id = "", Type = BuffType.StatMultiply, AttributeType = statInfo.Key, ModifierValue = statInfo.Value },
-            BuffDurationType.Round, BuffSourceType.Condition));
+            target.Character.AddBuff(new BuffInfo(new Buff() { Id = "", Type = BuffType.StatMultiply,
+                AttributeType = statInfo.Key, ModifierValue = statInfo.Value },
+                BuffDurationType.Round, BuffSourceType.Condition));
     }
     public bool IsPositive()
     {
@@ -2481,6 +2518,7 @@ public class CombatStatBuffEffect : SubEffect
         }
     }
 }
+
 public class DiseaseEffect : SubEffect
 {
     public override EffectSubType Type
@@ -2517,7 +2555,8 @@ public class DiseaseEffect : SubEffect
         if (target == null || target.Character is Hero == false)
             return false;
 
-        float diseaseTriggerChance = effect.IntegerParams[EffectIntParams.Chance].HasValue ? (float)effect.IntegerParams[EffectIntParams.Chance].Value / 100 : 1;
+        float diseaseTriggerChance = effect.IntegerParams[EffectIntParams.Chance].HasValue ?
+            (float)effect.IntegerParams[EffectIntParams.Chance].Value / 100 : 1;
         if (!RandomSolver.CheckSuccess(diseaseTriggerChance))
             return false;
 
@@ -2544,7 +2583,8 @@ public class DiseaseEffect : SubEffect
         if (target == null || target.Character is Hero == false)
             return false;
 
-        float diseaseTriggerChance = effect.IntegerParams[EffectIntParams.Chance].HasValue ? (float)effect.IntegerParams[EffectIntParams.Chance].Value / 100 : 1;
+        float diseaseTriggerChance = effect.IntegerParams[EffectIntParams.Chance].HasValue ?
+            (float)effect.IntegerParams[EffectIntParams.Chance].Value / 100 : 1;
         if (!RandomSolver.CheckSuccess(diseaseTriggerChance))
             return false;
 
@@ -2580,6 +2620,7 @@ public class DiseaseEffect : SubEffect
         }
     }
 }
+
 public class PerformerRankTargetEffect : SubEffect
 {
     public override EffectSubType Type
@@ -2614,6 +2655,7 @@ public class PerformerRankTargetEffect : SubEffect
         return ApplyInstant(performer, target, effect);
     }
 }
+
 public class ClearRankTargetEffect : SubEffect
 {
     public override EffectSubType Type
@@ -2652,6 +2694,7 @@ public class ClearRankTargetEffect : SubEffect
         return ApplyInstant(performer, target, effect);
     }
 }
+
 public class ImmobilizeEffect : SubEffect
 {
     public override EffectSubType Type
@@ -2691,6 +2734,7 @@ public class ImmobilizeEffect : SubEffect
         return ApplyInstant(performer, target, effect);
     }
 }
+
 public class UnimmobilizeEffect : SubEffect
 {
     public override EffectSubType Type
@@ -2730,6 +2774,7 @@ public class UnimmobilizeEffect : SubEffect
         return ApplyInstant(performer, target, effect);
     }
 }
+
 public class KillEffect : SubEffect
 {
     public override EffectSubType Type
@@ -2773,6 +2818,7 @@ public class KillEffect : SubEffect
         return ApplyInstant(performer, target, effect);
     }
 }
+
 public class KillEnemyTypeEffect : SubEffect
 {
     public override EffectSubType Type
@@ -2847,6 +2893,7 @@ public class KillEnemyTypeEffect : SubEffect
         return ApplyInstant(performer, target, effect);
     }
 }
+
 public class StressEffect : SubEffect
 {
     public override EffectSubType Type
@@ -3009,6 +3056,7 @@ public class StressEffect : SubEffect
         return damage;
     }
 }
+
 public class StressHealEffect : SubEffect
 {
     public override EffectSubType Type
@@ -3151,6 +3199,7 @@ public class StressHealEffect : SubEffect
         return heal;
     }
 }
+
 public class ShuffleTargetEffect : SubEffect
 {
     public override EffectSubType Type
@@ -3213,7 +3262,8 @@ public class ShuffleTargetEffect : SubEffect
         }
         else
         {
-            float moveChance = effect.IntegerParams[EffectIntParams.Chance].HasValue ? (float)effect.IntegerParams[EffectIntParams.Chance].Value / 100 : 1;
+            float moveChance = effect.IntegerParams[EffectIntParams.Chance].HasValue ?
+                (float)effect.IntegerParams[EffectIntParams.Chance].Value / 100 : 1;
 
             moveChance -= target.Character.GetSingleAttribute(AttributeType.Move).ModifiedValue;
             if (performer != null && performer.Character is Hero)
@@ -3296,6 +3346,7 @@ public class ShuffleTargetEffect : SubEffect
 
     }
 }
+
 public class GuardEffect : SubEffect
 {
     public override EffectSubType Type
@@ -3415,6 +3466,7 @@ public class GuardEffect : SubEffect
         return LocalizationManager.GetString("effect_tooltip_guard");
     }
 }
+
 public class RiposteEffect : SubEffect
 {
     public override EffectSubType Type
@@ -3472,11 +3524,13 @@ public class RiposteEffect : SubEffect
 
         foreach (var statInfo in StatAddBuffs)
             if(statInfo.Value != 0)
-                target.Character.AddBuff(new BuffInfo(new Buff() { Id = "", Type = BuffType.StatAdd, RuleType = BuffRule.Riposting, AttributeType = statInfo.Key, ModifierValue = statInfo.Value },
+                target.Character.AddBuff(new BuffInfo(new Buff() { Id = "", Type = BuffType.StatAdd,
+                    RuleType = BuffRule.Riposting, AttributeType = statInfo.Key, ModifierValue = statInfo.Value },
                     BuffDurationType.Round, BuffSourceType.Adventure, duration));
         foreach (var statInfo in StatMultBuffs)
             if (statInfo.Value != 0)
-                target.Character.AddBuff(new BuffInfo(new Buff() { Id = "", Type = BuffType.StatMultiply, RuleType = BuffRule.Riposting, AttributeType = statInfo.Key, ModifierValue = statInfo.Value },
+                target.Character.AddBuff(new BuffInfo(new Buff() { Id = "", Type = BuffType.StatMultiply,
+                    RuleType = BuffRule.Riposting, AttributeType = statInfo.Key, ModifierValue = statInfo.Value },
                     BuffDurationType.Round, BuffSourceType.Adventure, duration));
 
         return true;

@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public class EffectEvent
+﻿public class EffectEvent
 {
     public FormationUnit Performer { get; private set; }
     public FormationUnit Target { get; private set; }

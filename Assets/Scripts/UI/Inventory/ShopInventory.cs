@@ -78,7 +78,8 @@ public class ShopInventory : MonoBehaviour
         {
             int itemsSold = 0;
 
-            var thisItemShopSlot = ShopSlots.Find(shopSlot => shopSlot.gameObject.activeSelf && shopSlot.InventoryItem == slot.SlotItem.ItemData);
+            var thisItemShopSlot = ShopSlots.Find(shopSlot =>
+                shopSlot.gameObject.activeSelf && shopSlot.InventoryItem == slot.SlotItem.ItemData);
             if (thisItemShopSlot == null || thisItemShopSlot.InitialAmount == thisItemShopSlot.Item.Amount)
                 return 0;
             else
@@ -100,7 +101,8 @@ public class ShopInventory : MonoBehaviour
     {
         if (slot.SlotItem.Amount > 0)
         {
-            var thisItemShopSlot = ShopSlots.Find(shopSlot => shopSlot.gameObject.activeSelf && shopSlot.InventoryItem == slot.SlotItem.ItemData);
+            var thisItemShopSlot = ShopSlots.Find(shopSlot =>
+                shopSlot.gameObject.activeSelf && shopSlot.InventoryItem == slot.SlotItem.ItemData);
             if (thisItemShopSlot == null || thisItemShopSlot.InitialAmount == thisItemShopSlot.Item.Amount)
                 return false;
             else

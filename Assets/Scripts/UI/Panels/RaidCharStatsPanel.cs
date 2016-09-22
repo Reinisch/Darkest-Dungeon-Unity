@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 
 public class RaidCharStatsPanel : MonoBehaviour
 {
@@ -23,11 +22,15 @@ public class RaidCharStatsPanel : MonoBehaviour
             character.GetPairedAttribute(AttributeType.Stress).CurrentValue,
             character.GetPairedAttribute(AttributeType.Stress).ModifiedValue);
 
-        dodge.text = string.Format("{0:+0.#%;-0.#%;+0%}", System.Math.Round((double)character.GetSingleAttribute(AttributeType.DefenseRating).ModifiedValue, 3));
-        prot.text = string.Format("{0:+0.#%;-0.#%;+0%}", System.Math.Round((double)character.GetSingleAttribute(AttributeType.ProtectionRating).ModifiedValue, 3));
+        dodge.text = string.Format("{0:+0.#%;-0.#%;+0%}",
+            System.Math.Round((double)character.GetSingleAttribute(AttributeType.DefenseRating).ModifiedValue, 3));
+        prot.text = string.Format("{0:+0.#%;-0.#%;+0%}", 
+            System.Math.Round((double)character.GetSingleAttribute(AttributeType.ProtectionRating).ModifiedValue, 3));
         speed.text = string.Format("{0}", character.GetSingleAttribute(AttributeType.SpeedRating).ModifiedValue);
-        accuracyMod.text = string.Format("{0:+#;-#;+0}", character.GetSingleAttribute(AttributeType.AttackRating).ModifiedValue * 100);
-        crit.text = string.Format("{0:+0.#%;-0.#%;+0%}", System.Math.Round((double)character.GetSingleAttribute(AttributeType.CritChance).ModifiedValue, 3));
+        accuracyMod.text = string.Format("{0:+#;-#;+0}", 
+            character.GetSingleAttribute(AttributeType.AttackRating).ModifiedValue * 100);
+        crit.text = string.Format("{0:+0.#%;-0.#%;+0%}",
+            System.Math.Round((double)character.GetSingleAttribute(AttributeType.CritChance).ModifiedValue, 3));
         damage.text = string.Format("{0:#.#}-{1:#.#}",
             character.GetSingleAttribute(AttributeType.DamageLow).ModifiedValue,
             character.GetSingleAttribute(AttributeType.DamageHigh).ModifiedValue);

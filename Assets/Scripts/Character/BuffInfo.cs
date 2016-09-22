@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public enum BuffDurationType { Undefined, Permanent, Round, Combat, Camp, Raid, Activity, QuestComplete, IdleTownVisit }
+﻿public enum BuffDurationType { Undefined, Permanent, Round, Combat, Camp, Raid, Activity, QuestComplete, IdleTownVisit }
 public enum BuffSourceType { Estate, Quirk, Trinket, Adventure, Condition, Trait, DeathsDoor, Mortality, Light }
 
 public class BuffInfo

@@ -26,7 +26,8 @@ public class BlacksmithHeroWindow : MonoBehaviour
                 int lastWepIndex = -1;
                 for (int i = 0; i < treeSlot.upgrades.Count; i++)
                 {
-                    treeSlot.upgrades[i].Initialize(hero, weaponTree, weaponTree.Upgrades[i] as HeroUpgrade, hero.HeroClass.Weapons.Find(wep => wep.UpgradeLevel == i + 2));
+                    treeSlot.upgrades[i].Initialize(hero, weaponTree, weaponTree.Upgrades[i] as HeroUpgrade, 
+                        hero.HeroClass.Weapons.Find(wep => wep.UpgradeLevel == i + 2));
                     var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(weaponTree.Id, hero, treeSlot.upgrades[i].Upgrade);
                     TownManager.UpdateUpgradeSlot(status, treeSlot.upgrades[i], discountWep);
                     if (status == UpgradeStatus.Purchased)
@@ -41,7 +42,8 @@ public class BlacksmithHeroWindow : MonoBehaviour
                 int lastArmIndex = -1;
                 for (int i = 0; i < treeSlot.upgrades.Count; i++)
                 {
-                    treeSlot.upgrades[i].Initialize(hero, armorTree, armorTree.Upgrades[i] as HeroUpgrade, hero.HeroClass.Armors.Find(arm => arm.UpgradeLevel == i + 2));
+                    treeSlot.upgrades[i].Initialize(hero, armorTree, armorTree.Upgrades[i] as HeroUpgrade,
+                        hero.HeroClass.Armors.Find(arm => arm.UpgradeLevel == i + 2));
                     var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(armorTree.Id, hero, treeSlot.upgrades[i].Upgrade);
                     TownManager.UpdateUpgradeSlot(status, treeSlot.upgrades[i], discountArm);
                     if (status == UpgradeStatus.Purchased)

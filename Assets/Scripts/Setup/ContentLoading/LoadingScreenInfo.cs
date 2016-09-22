@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public class LoadingScreenInfo
+﻿public class LoadingScreenInfo
 {
     public string NextScene { get; private set; }
     public string TextureName { get; private set; }

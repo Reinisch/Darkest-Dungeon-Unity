@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 
 public class SelectedQuestPanel : MonoBehaviour
 {
@@ -31,8 +30,10 @@ public class SelectedQuestPanel : MonoBehaviour
         }
         else
         {
-            questTitle.text = LocalizationManager.GetString("town_quest_name_" + quest.Type + "+" + quest.Length.ToString() + "+" + quest.Dungeon + "+" + quest.Goal.Id);
-            questDescription.text = LocalizationManager.GetString("town_quest_description_" + quest.Type + "+" + quest.Length.ToString() + "+" + quest.Dungeon + "+" + quest.Goal.Id);
+            questTitle.text = LocalizationManager.GetString("town_quest_name_" + quest.Type +
+                "+" + quest.Length.ToString() + "+" + quest.Dungeon + "+" + quest.Goal.Id);
+            questDescription.text = LocalizationManager.GetString("town_quest_description_" +
+                quest.Type + "+" + quest.Length.ToString() + "+" + quest.Dungeon + "+" + quest.Goal.Id);
             questLength.text = quest.Length.ToString();
             campfireAmount.text = "x" + (quest.Length - 1).ToString();
             questLength.text = LocalizationManager.GetString("town_quest_length_" + quest.Length.ToString());

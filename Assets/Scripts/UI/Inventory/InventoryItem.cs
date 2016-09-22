@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System.Collections.Generic;
-using System.Collections;
 
-public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDragHandler, IBeginDragHandler, IEndDragHandler, IDropHandler, IPointerClickHandler
+public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
+    IDragHandler, IBeginDragHandler, IEndDragHandler, IDropHandler, IPointerClickHandler
 {
     public Image itemIcon;
     public Image rarityIcon;
@@ -213,7 +212,8 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                                 Deactivated = true;
                             break;
                         case "bandage":
-                            if (RaidSceneManager.RaidPanel.SelectedHero != null && RaidSceneManager.RaidPanel.SelectedHero[StatusType.Bleeding].IsApplied)
+                            if (RaidSceneManager.RaidPanel.SelectedHero != null &&
+                                RaidSceneManager.RaidPanel.SelectedHero[StatusType.Bleeding].IsApplied)
                             {
                                 if (RaidSceneManager.RaidPanel.SelectedUnit.CombatInfo.BlockedItems.Contains(ItemData.Id))
                                     Deactivated = true;
@@ -224,7 +224,8 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                                 Deactivated = true;
                             break;
                         case "antivenom":
-                            if (RaidSceneManager.RaidPanel.SelectedHero != null && RaidSceneManager.RaidPanel.SelectedHero[StatusType.Poison].IsApplied)
+                            if (RaidSceneManager.RaidPanel.SelectedHero != null && 
+                                RaidSceneManager.RaidPanel.SelectedHero[StatusType.Poison].IsApplied)
                             {
                                 if (RaidSceneManager.RaidPanel.SelectedUnit.CombatInfo.BlockedItems.Contains(ItemData.Id))
                                     Deactivated = true;
@@ -238,7 +239,8 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                             Deactivated = true;
                             break;
                         case "medicinal_herbs":
-                            if (RaidSceneManager.RaidPanel.SelectedHero != null && RaidSceneManager.RaidPanel.SelectedHero.HasDebuffs())
+                            if (RaidSceneManager.RaidPanel.SelectedHero != null &&
+                                RaidSceneManager.RaidPanel.SelectedHero.HasDebuffs())
                             {
                                 if (RaidSceneManager.RaidPanel.SelectedUnit.CombatInfo.BlockedItems.Contains(ItemData.Id))
                                     Deactivated = true;
@@ -274,7 +276,8 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                     }
                     break;
                 case "provision":
-                    if (RaidSceneManager.RaidPanel.SelectedHero != null && RaidSceneManager.RaidPanel.SelectedHero.Health.ValueRatio < 1)
+                    if (RaidSceneManager.RaidPanel.SelectedHero != null && 
+                        RaidSceneManager.RaidPanel.SelectedHero.Health.ValueRatio < 1)
                         Deactivated = false;
                     else
                         Deactivated = true;
@@ -315,7 +318,8 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                             Deactivated = true;
                             break;
                         case "bandage":
-                            if (RaidSceneManager.RaidPanel.SelectedHero != null && RaidSceneManager.RaidPanel.SelectedHero[StatusType.Bleeding].IsApplied)
+                            if (RaidSceneManager.RaidPanel.SelectedHero != null &&
+                                RaidSceneManager.RaidPanel.SelectedHero[StatusType.Bleeding].IsApplied)
                             {
                                 if (RaidSceneManager.RaidPanel.SelectedUnit.CombatInfo.BlockedItems.Contains(ItemData.Id))
                                     Deactivated = true;
@@ -326,7 +330,8 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                                 Deactivated = true;
                             break;
                         case "antivenom":
-                            if (RaidSceneManager.RaidPanel.SelectedHero != null && RaidSceneManager.RaidPanel.SelectedHero[StatusType.Poison].IsApplied)
+                            if (RaidSceneManager.RaidPanel.SelectedHero != null &&
+                                RaidSceneManager.RaidPanel.SelectedHero[StatusType.Poison].IsApplied)
                             {
                                 if (RaidSceneManager.RaidPanel.SelectedUnit.CombatInfo.BlockedItems.Contains(ItemData.Id))
                                     Deactivated = true;
@@ -368,7 +373,8 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                                 Deactivated = true;
                             break;
                         case "dog_treats":
-                            if (RaidSceneManager.RaidPanel.SelectedHero != null && RaidSceneManager.RaidPanel.SelectedHero.Class == "hound_master")
+                            if (RaidSceneManager.RaidPanel.SelectedHero != null &&
+                                RaidSceneManager.RaidPanel.SelectedHero.Class == "hound_master")
                             {
                                 if (RaidSceneManager.RaidPanel.SelectedUnit.CombatInfo.BlockedItems.Contains(ItemData.Id))
                                     Deactivated = true;
@@ -626,13 +632,15 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     }
     public virtual void OnBeginDrag(PointerEventData eventData)
     {
-        if ((Slot.Inventory.Configuration == InventoryConfiguration.Equipment && Slot.Inventory.State == InventoryState.Disabled) || eventData.button == PointerEventData.InputButton.Right)
+        if ((Slot.Inventory.Configuration == InventoryConfiguration.Equipment &&
+            Slot.Inventory.State == InventoryState.Disabled) || eventData.button == PointerEventData.InputButton.Right)
         {
             eventData.dragging = false;
             eventData.pointerDrag = null;
             return;
         }
-        if (Slot.Inventory.Configuration == InventoryConfiguration.LootInventory && Slot.Inventory.State == InventoryState.Disabled)
+        if (Slot.Inventory.Configuration == InventoryConfiguration.LootInventory &&
+            Slot.Inventory.State == InventoryState.Disabled)
         {
             eventData.dragging = false;
             eventData.pointerDrag = null;
@@ -665,7 +673,8 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
         if (eventData.button == PointerEventData.InputButton.Left)
         {
-            if(Input.GetKey(KeyCode.LeftShift) && (Slot.Inventory.State == InventoryState.Peaceful || Slot.Inventory.State == InventoryState.PeacefulLooting))
+            if(Input.GetKey(KeyCode.LeftShift) && 
+                (Slot.Inventory.State == InventoryState.Peaceful || Slot.Inventory.State == InventoryState.PeacefulLooting))
             {
                 if(Slot.Inventory.Configuration == InventoryConfiguration.RaidInventory && Item.Type != "quest_item")
                     RemoveItems(1);

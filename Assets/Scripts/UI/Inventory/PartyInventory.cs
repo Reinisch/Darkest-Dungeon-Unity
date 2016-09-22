@@ -66,7 +66,8 @@ public class PartyInventory : MonoBehaviour, IInventory
                         {
                             InventorySlots[i].SetActiveState(false);
                         }
-                        else if (trinket.ClassRequirements.Count > 0 && !trinket.ClassRequirements.Contains(charEquipmentPanel.CurrentHero.Class))
+                        else if (trinket.ClassRequirements.Count > 0 && 
+                            !trinket.ClassRequirements.Contains(charEquipmentPanel.CurrentHero.Class))
                         {
                             InventorySlots[i].SetActiveState(false);
                         }
@@ -118,8 +119,10 @@ public class PartyInventory : MonoBehaviour, IInventory
 
         for (int i = 0; i < partyPanel.PartySlots.Count; i++)
             if(DarkestDungeonManager.Data.Provision.HeroClassItemList.ContainsKey(partyPanel.PartySlots[i].SelectedHero.Hero.Class))
-                for (int j = 0; j < DarkestDungeonManager.Data.Provision.HeroClassItemList[partyPanel.PartySlots[i].SelectedHero.Hero.Class].Count; j++)
-                    DistributeItem(DarkestDungeonManager.Data.Provision.HeroClassItemList[partyPanel.PartySlots[i].SelectedHero.Hero.Class][j]);
+                for (int j = 0; j < DarkestDungeonManager.Data.Provision.
+                    HeroClassItemList[partyPanel.PartySlots[i].SelectedHero.Hero.Class].Count; j++)
+                    DistributeItem(DarkestDungeonManager.Data.Provision.
+                        HeroClassItemList[partyPanel.PartySlots[i].SelectedHero.Hero.Class][j]);
 
         for (int i = 0; i < quest.Goal.StartingItems.Count; i++)
             DistributeItem(quest.Goal.StartingItems[i]);

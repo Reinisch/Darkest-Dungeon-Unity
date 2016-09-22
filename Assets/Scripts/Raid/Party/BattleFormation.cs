@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 
 public class BattleFormation : MonoBehaviour
 {
@@ -25,7 +23,8 @@ public class BattleFormation : MonoBehaviour
         {
             int freeSpace = 4;
             for(int i = 0; i < party.Units.Count; i++)
-                if (!(party.Units[i].Character.IsMonster && (party.Units[i].Character as Monster).Data.Modifiers != null && (party.Units[i].Character as Monster).Data.Modifiers.CanBeSummonRank))
+                if (!(party.Units[i].Character.IsMonster && party.Units[i].Character.BattleModifiers != null
+                    && party.Units[i].Character.BattleModifiers.CanBeSummonRank))
                     freeSpace -= party.Units[i].Size;
             return freeSpace;
         }
@@ -70,6 +69,7 @@ public class BattleFormation : MonoBehaviour
 
         party.Units[0].OverlaySlot.UnitSelected();
     }
+
     public void LoadParty(BattleEncounter encounter)
     {
         party.CreateFormation(encounter);
@@ -79,6 +79,7 @@ public class BattleFormation : MonoBehaviour
             unit.Formation = this;
         overlay.LockOnUnits(party);
     }
+
     public void LoadParty(BattleFormationSaveData formationData, bool isHeroFormation)
     {
         if (isHeroFormation)
@@ -115,6 +116,7 @@ public class BattleFormation : MonoBehaviour
             party.Units[i].Character.ApplySingleBuffRule(RaidSceneManager.Rules.GetIdleUnitRules(party.Units[i]), rule);
     }
 
+
     public void SwapUnits(FormationUnit swapper, FormationUnit target)
     {
         if (swapper.RankSlot.Ranks != target.RankSlot.Ranks)
@@ -130,6 +132,7 @@ public class BattleFormation : MonoBehaviour
         swapper.Character.ApplySingleBuffRule(RaidSceneManager.Rules.GetIdleUnitRules(swapper), BuffRule.InRank);
         target.Character.ApplySingleBuffRule(RaidSceneManager.Rules.GetIdleUnitRules(target), BuffRule.InRank);
     }
+
     public void SpawnCorpse(FormationUnit deadUnit, Monster corpse)
     {
         if (!party.Units.Contains(deadUnit))
@@ -141,12 +144,14 @@ public class BattleFormation : MonoBehaviour
         deadUnit.CombatInfo.IsDead = false;
         deadUnit.CombatInfo.PrepareForBattle(deadUnit.CombatInfo.CombatId, corpse, true);
     }
+
     public void SpawnUnit(FormationUnit spawnUnit, int targetRank)
     {
         party.AddUnit(spawnUnit, targetRank);
         ranks.RedistributeParty(party);
         overlay.FreeSlot.LockOnUnit(spawnUnit);
     }
+
     public void DeleteUnit(FormationUnit deadUnit, bool destroy = true)
     {
         if (!party.Units.Contains(deadUnit))
@@ -158,6 +163,7 @@ public class BattleFormation : MonoBehaviour
         if(destroy)
             Destroy(deadUnit.gameObject);
     }
+
     public void DeleteUnitDelayed(FormationUnit deadUnit, float delay)
     {
         if (!party.Units.Contains(deadUnit))
@@ -168,6 +174,7 @@ public class BattleFormation : MonoBehaviour
         deadUnit.RankSlot.ClearSlot();
         Destroy(deadUnit.gameObject, delay);
     }
+
 
     public bool IsStallingActive()
     {
@@ -180,10 +187,12 @@ public class BattleFormation : MonoBehaviour
 
         return true;
     }
+
     public bool ContainsBaseClass(string baseClass)
     {
         return party.Units.Find(unit => unit.Character.Class == baseClass) != null;
     }
+
     public bool CanBeSurprised()
     {
         for (int i = 0; i < party.Units.Count; i++)
@@ -192,6 +201,7 @@ public class BattleFormation : MonoBehaviour
 
         return false;
     }
+
     public bool AlwaysBeSurprised()
     {
         for (int i = 0; i < party.Units.Count; i++)
@@ -200,6 +210,7 @@ public class BattleFormation : MonoBehaviour
 
         return true;
     }
+
     public bool CanSurprise()
     {
         for (int i = 0; i < party.Units.Count; i++)
@@ -208,6 +219,7 @@ public class BattleFormation : MonoBehaviour
 
         return false;
     }
+
     public bool AlwaysSurprises()
     {
         for (int i = 0; i < party.Units.Count; i++)
@@ -216,5 +228,4 @@ public class BattleFormation : MonoBehaviour
 
         return false;
     }
-    
 }

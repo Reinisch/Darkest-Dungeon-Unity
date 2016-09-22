@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public class QuirkInfo
+﻿public class QuirkInfo
 {
     public Quirk Quirk { get; set; }
     public bool IsLocked { get; set; }

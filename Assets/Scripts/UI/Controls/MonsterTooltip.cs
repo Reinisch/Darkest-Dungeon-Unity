@@ -59,7 +59,8 @@ public class MonsterTooltip : MonoBehaviour
     void Update()
     {
         if (targetPosition != monsterIndicator.position.x)
-            monsterIndicator.position = new Vector3(Mathf.SmoothDamp(monsterIndicator.position.x, targetPosition, ref velocity, 0.2f), monsterIndicator.position.y, monsterIndicator.position.z);
+            monsterIndicator.position = new Vector3(Mathf.SmoothDamp(monsterIndicator.position.x,
+                targetPosition, ref velocity, 0.2f), monsterIndicator.position.y, monsterIndicator.position.z);
     }
 
     public void UpdateTooltiop(FormationUnit monsterUnit)
@@ -67,8 +68,10 @@ public class MonsterTooltip : MonoBehaviour
         Monster monster = monsterUnit.Character as Monster;
 
         monsterLabel.text = LocalizationManager.GetString("str_monstername_" + monster.Data.StringId);
-        monsterDodge.text = string.Format(LocalizationManager.GetString("monster_tooltip_dodge_format"), System.Math.Round((double)monster.Dodge, 3));
-        monsterProt.text = string.Format(LocalizationManager.GetString("monster_tooltip_prot_format"), System.Math.Round((double)monster.Protection, 3));
+        monsterDodge.text = string.Format(LocalizationManager.GetString("monster_tooltip_dodge_format"),
+            System.Math.Round((double)monster.Dodge, 3));
+        monsterProt.text = string.Format(LocalizationManager.GetString("monster_tooltip_prot_format"),
+            System.Math.Round((double)monster.Protection, 3));
         monsterSpeed.text = string.Format(LocalizationManager.GetString("monster_tooltip_speed_format"), monster.Speed);
         monsterHealth.text = string.Format(LocalizationManager.GetString("monster_tooltip_hp_format"),
             Mathf.RoundToInt(monster.Health.CurrentValue), Mathf.RoundToInt(monster.Health.ModifiedValue));
@@ -77,7 +80,8 @@ public class MonsterTooltip : MonoBehaviour
         for (int i = 0; i < monsterTypesCounter; i++)
         {
             monsterTypes[i].enabled = true;
-            monsterTypes[i].text = LocalizationManager.GetString(LocalizationHelper.MonsterTooltipTypeString(monster.Data.EnemyTypes[i]));
+            monsterTypes[i].text = LocalizationManager.GetString(
+                CharacterLocalizationHelper.MonsterTooltipTypeString(monster.Data.EnemyTypes[i]));
         }
         for (int i = monsterTypesCounter; i < monsterTypes.Count; i++)
             monsterTypes[i].enabled = false;
@@ -107,13 +111,15 @@ public class MonsterTooltip : MonoBehaviour
         for (int i = monsterSkillCounter; i < monsterSkills.Count; i++)
             monsterSkills[i].ResetSkill();
     }
-    public void UpdateTooltiop(FormationUnit monsterUnit, float hitChance, float critChance, int minDamage, int maxDamage)
+    public void UpdateTooltip(FormationUnit monsterUnit, float hitChance, float critChance, int minDamage, int maxDamage)
     {
         Monster monster = monsterUnit.Character as Monster;
 
         monsterLabel.text = LocalizationManager.GetString("str_monstername_" + monster.Data.StringId);
-        monsterDodge.text = string.Format(LocalizationManager.GetString("monster_tooltip_dodge_format"),System.Math.Round((double)monster.Dodge, 3));
-        monsterProt.text = string.Format(LocalizationManager.GetString("monster_tooltip_prot_format"), System.Math.Round((double)monster.Protection, 3));
+        monsterDodge.text = string.Format(LocalizationManager.GetString("monster_tooltip_dodge_format"),
+            System.Math.Round((double)monster.Dodge, 3));
+        monsterProt.text = string.Format(LocalizationManager.GetString("monster_tooltip_prot_format"),
+            System.Math.Round((double)monster.Protection, 3));
         monsterSpeed.text = string.Format(LocalizationManager.GetString("monster_tooltip_speed_format"), monster.Speed);
         monsterHealth.text = string.Format(LocalizationManager.GetString("monster_tooltip_hp_format"), 
             Mathf.RoundToInt(monster.Health.CurrentValue), Mathf.RoundToInt(monster.Health.ModifiedValue));
@@ -122,7 +128,8 @@ public class MonsterTooltip : MonoBehaviour
         for (int i = 0; i < monsterTypesCounter; i++)
         {
             monsterTypes[i].enabled = true;
-            monsterTypes[i].text = LocalizationManager.GetString(LocalizationHelper.MonsterTooltipTypeString(monster.Data.EnemyTypes[i]));
+            monsterTypes[i].text = LocalizationManager.GetString(
+                CharacterLocalizationHelper.MonsterTooltipTypeString(monster.Data.EnemyTypes[i]));
         }
         for (int i = monsterTypesCounter; i < monsterTypes.Count; i++)
             monsterTypes[i].enabled = false;
@@ -170,7 +177,7 @@ public class MonsterTooltip : MonoBehaviour
                     BattleSolver.CalculateSkillPotential(RaidSceneManager.RaidPanel.SelectedUnit, monsterUnit, combatSkill);
                     if (BattleSolver.HeroActionInfo.IsValid)
                     {
-                        UpdateTooltiop(monsterUnit, BattleSolver.HeroActionInfo.ChanceToHit, BattleSolver.HeroActionInfo.ChanceToCrit,
+                        UpdateTooltip(monsterUnit, BattleSolver.HeroActionInfo.ChanceToHit, BattleSolver.HeroActionInfo.ChanceToCrit,
                             BattleSolver.HeroActionInfo.MinDamage, BattleSolver.HeroActionInfo.MaxDamage);
                         return;
                     }

@@ -96,10 +96,13 @@ public class SaveSlot : MonoBehaviour
             DarkestDungeonManager.SaveData = saveData;
             if(DarkestDungeonManager.SaveData.InRaid)
             {
-                if (!DarkestDungeonManager.SaveData.Quest.IsPlotQuest || DarkestDungeonManager.SaveData.Quest.Goal.Id == "tutorial_final_room")
-                    DarkestDungeonManager.LoadingInfo.SetNextScene("Dungeon", "Screen/loading_screen." + DarkestDungeonManager.SaveData.Quest.Dungeon + "_0");
+                if (!DarkestDungeonManager.SaveData.Quest.IsPlotQuest || 
+                    DarkestDungeonManager.SaveData.Quest.Goal.Id == "tutorial_final_room")
+                    DarkestDungeonManager.LoadingInfo.SetNextScene("Dungeon",
+                        "Screen/loading_screen." + DarkestDungeonManager.SaveData.Quest.Dungeon + "_0");
                 else
-                    DarkestDungeonManager.LoadingInfo.SetNextScene("Dungeon", "Screen/loading_screen.plot_" + (DarkestDungeonManager.SaveData.Quest as PlotQuest).Id);
+                    DarkestDungeonManager.LoadingInfo.SetNextScene("Dungeon",
+                        "Screen/loading_screen.plot_" + (DarkestDungeonManager.SaveData.Quest as PlotQuest).Id);
             }
             else
                 DarkestDungeonManager.LoadingInfo.SetNextScene("EstateManagement", "Screen/loading_screen.town_visit");

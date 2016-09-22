@@ -1,9 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 
 public delegate void EquipmentUpgradeSlotEvent(EquipmentUpgradeSlot slot);
 
@@ -52,7 +49,8 @@ public class EquipmentUpgradeSlot : MonoBehaviour, IPointerEnterHandler, IPointe
 
         icon.material = DarkestDungeonManager.HighlightMaterial;
         if(DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(Tree.Id, Hero, Upgrade) == UpgradeStatus.Locked)
-            ToolTipManager.Instanse.Show(Equipment.Tooltip + "\n" + Upgrade.PrerequisitesTooltip(Hero, DarkestDungeonManager.Campaign.Estate),
+            ToolTipManager.Instanse.Show(Equipment.Tooltip + "\n" +
+                Upgrade.PrerequisitesTooltip(Hero, DarkestDungeonManager.Campaign.Estate),
                 eventData, rectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
         else
             ToolTipManager.Instanse.Show(Equipment.Tooltip, eventData, rectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);

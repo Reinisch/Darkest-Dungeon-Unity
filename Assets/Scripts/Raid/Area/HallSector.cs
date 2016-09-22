@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public class HallSector : Area
+﻿public class HallSector : Area
 {
     public Hallway Hallway { get; private set; }
 

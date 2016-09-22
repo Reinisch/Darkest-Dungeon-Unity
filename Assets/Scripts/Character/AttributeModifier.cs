@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public class FlatModifier
+﻿public class FlatModifier
 {
     public AttributeType TargetAttribute { get; set; }
     public float ModifierValue { get; set; }

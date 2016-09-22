@@ -183,14 +183,16 @@ public class RaidCombatSkillsPanel : MonoBehaviour
             int selectedSkills = Mathf.Min(RaidSceneManager.RaidPanel.SelectedHero.SelectedCombatSkills.Count, skillSlots.Count);
 
             for (int i = 0; i < selectedSkills; i++)
-                skillSlots[i].UpdateSkill(RaidSceneManager.RaidPanel.SelectedHero, RaidSceneManager.RaidPanel.SelectedHero.SelectedCombatSkills[i]);
+                skillSlots[i].UpdateSkill(RaidSceneManager.RaidPanel.SelectedHero,
+                    RaidSceneManager.RaidPanel.SelectedHero.SelectedCombatSkills[i]);
 
             for (int i = selectedSkills; i < skillSlots.Count; i++)
                 skillSlots[i].ResetSkill();
         }
         else
         {
-            var modeSkills = RaidSceneManager.RaidPanel.SelectedHero.SelectedCombatSkills.FindAll(skill => skill.ValidModes.Contains(RaidSceneManager.RaidPanel.SelectedHero.Mode.Id));
+            var modeSkills = RaidSceneManager.RaidPanel.SelectedHero.SelectedCombatSkills.FindAll(skill =>
+                skill.ValidModes.Contains(RaidSceneManager.RaidPanel.SelectedHero.Mode.Id));
             int selectedSkills = Mathf.Min(RaidSceneManager.RaidPanel.SelectedHero.SelectedCombatSkills.Count, modeSkills.Count);
 
             for (int i = 0; i < selectedSkills; i++)
@@ -207,7 +209,8 @@ public class RaidCombatSkillsPanel : MonoBehaviour
         int selectedSkills = Mathf.Min(RaidSceneManager.RaidPanel.SelectedHero.SelectedCampingSkills.Count, campingSlots.Count);
 
         for (int i = 0; i < selectedSkills; i++)
-            campingSlots[i].UpdateSkill(RaidSceneManager.RaidPanel.SelectedHero, RaidSceneManager.RaidPanel.SelectedHero.SelectedCampingSkills[i]);
+            campingSlots[i].UpdateSkill(RaidSceneManager.RaidPanel.SelectedHero,
+                RaidSceneManager.RaidPanel.SelectedHero.SelectedCampingSkills[i]);
 
         for (int i = selectedSkills; i < skillSlots.Count; i++)
             skillSlots[i].ResetSkill();

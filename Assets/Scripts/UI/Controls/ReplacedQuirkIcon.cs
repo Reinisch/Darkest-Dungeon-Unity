@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System.Collections;
-using System;
 
 public class ReplacedQuirkIcon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
@@ -15,7 +13,8 @@ public class ReplacedQuirkIcon : MonoBehaviour, IPointerEnterHandler, IPointerEx
         if(quirkSlot.QuirkInfo != null && quirkSlot.QuirkInfo.IsReplaced)
         {
             var tooltipFormat = LocalizationManager.GetString("str_quirk_replaces");
-            tooltipFormat = string.Format(tooltipFormat, LocalizationManager.GetString("str_quirk_name_" + quirkSlot.QuirkInfo.ReplacedQuirk));
+            tooltipFormat = string.Format(tooltipFormat, LocalizationManager.GetString(
+                "str_quirk_name_" + quirkSlot.QuirkInfo.ReplacedQuirk));
             ToolTipManager.Instanse.Show(tooltipFormat, eventData, rectTransform, ToolTipStyle.FromTop, ToolTipSize.Normal);
         }
     }

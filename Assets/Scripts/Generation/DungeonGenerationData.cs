@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public class DungeonGenerationData
+﻿public class DungeonGenerationData
 {
     public string Length { get; set; }
     public string QuestType { get; set; }
@@ -50,6 +47,4 @@ public class DungeonGenerationData
 
     public int RoomTresureMin { get; set; }
     public int RoomTresureMax { get; set; }
-
-
 }

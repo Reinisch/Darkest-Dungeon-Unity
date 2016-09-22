@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 public enum MonsterType : byte
 {
@@ -227,7 +225,8 @@ public class Monster : Character
         Data = monsterData;
         Brain = DarkestDungeonManager.Data.Brains[monsterData.MonsterBrainId];
     }
-    public Monster(FormationUnitSaveData unitSaveData) : base (unitSaveData, DarkestDungeonManager.Data.Monsters[unitSaveData.Name])
+    public Monster(FormationUnitSaveData unitSaveData) :
+        base (unitSaveData, DarkestDungeonManager.Data.Monsters[unitSaveData.Name])
     {
         Data = DarkestDungeonManager.Data.Monsters[unitSaveData.Name];
         Brain = DarkestDungeonManager.Data.Brains[Data.MonsterBrainId];

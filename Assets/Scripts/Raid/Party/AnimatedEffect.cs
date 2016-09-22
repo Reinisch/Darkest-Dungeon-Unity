@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class AnimatedEffect : MonoBehaviour
 {
@@ -22,7 +21,8 @@ public class AnimatedEffect : MonoBehaviour
     {
         if (follower != null)
         {
-            if(followUnit != null && (follower.SkeletonRenderer == null || follower.SkeletonRenderer.gameObject.activeSelf == false))
+            if(followUnit != null && (follower.SkeletonRenderer == null || 
+                follower.SkeletonRenderer.gameObject.activeSelf == false))
             {
                 if (followUnit != null)
                 {

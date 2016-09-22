@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 
 public class ResolveBar : MonoBehaviour
 {
@@ -13,7 +12,8 @@ public class ResolveBar : MonoBehaviour
         levelText.text = hero.Resolve.Level.ToString();
         resolveXpBarSlider.value = hero.Resolve.Ratio;
         if(hero.Resolve.Level > 0)
-            resolveIcon.sprite = DarkestDungeonManager.Data.Sprites["resolve_level_bar_number_background_lvl" + hero.Resolve.Level.ToString()];
+            resolveIcon.sprite = DarkestDungeonManager.Data.Sprites["resolve_level_bar_number_background_lvl"
+                + hero.Resolve.Level.ToString()];
         else
             resolveIcon.sprite = DarkestDungeonManager.Data.Sprites["resolve_level_bar_number_background"];
     }

@@ -49,7 +49,8 @@ public class RaidHallSector : MonoBehaviour, IRaidArea
             case AreaType.Door:
                 if(Prop == null)
                 {
-                    GameObject doorObject = Resources.Load("Prefabs/Props/SpineDoors/" + RaidSceneManager.Raid.Quest.Dungeon + "/Door") as GameObject;
+                    GameObject doorObject = Resources.Load("Prefabs/Props/SpineDoors/" +
+                        RaidSceneManager.Raid.Quest.Dungeon + "/Door") as GameObject;
                     RaidDoor door = Instantiate(doorObject).GetComponent<RaidDoor>();
                     door.Initialize(this);
                     Prop = door;
@@ -71,7 +72,8 @@ public class RaidHallSector : MonoBehaviour, IRaidArea
                 if (curioObject == null)
                 {
                     Debug.LogError("Curio: " + (Area.Prop as Curio).StringId + " not found.");
-                    curio = Instantiate(Resources.Load("Prefabs/Props/SpineCurios/_template") as GameObject).GetComponent<RaidCurio>();
+                    curio = Instantiate(Resources.Load("Prefabs/Props/SpineCurios/_template")
+                        as GameObject).GetComponent<RaidCurio>();
                 }
                 else
                     curio = Instantiate(curioObject).GetComponent<RaidCurio>();
@@ -96,7 +98,8 @@ public class RaidHallSector : MonoBehaviour, IRaidArea
                 if (obstacleObject == null)
                 {
                     Debug.LogError("Obstacle: " + (Area.Prop as Obstacle).StringId + " not found.");
-                    obstacle = Instantiate(Resources.Load("Prefabs/Props/SpineObstacles/_template") as GameObject).GetComponent<RaidObstacle>();
+                    obstacle = Instantiate(Resources.Load("Prefabs/Props/SpineObstacles/_template") 
+                        as GameObject).GetComponent<RaidObstacle>();
                 }
                 else
                     obstacle = Instantiate(obstacleObject).GetComponent<RaidObstacle>();
@@ -121,7 +124,8 @@ public class RaidHallSector : MonoBehaviour, IRaidArea
                 if (trapObject == null)
                 {
                     Debug.LogError("Trap: " + (Area.Prop as Trap).StringId + " not found.");
-                    trap = Instantiate(Resources.Load("Prefabs/Props/SpineTraps/_template") as GameObject).GetComponent<RaidTrap>();
+                    trap = Instantiate(Resources.Load("Prefabs/Props/SpineTraps/_template")
+                        as GameObject).GetComponent<RaidTrap>();
                 }
                 else
                     trap = Instantiate(trapObject).GetComponent<RaidTrap>();
@@ -201,8 +205,10 @@ public class RaidHallSector : MonoBehaviour, IRaidArea
                             if (!RaidSceneManager.Raid.Dungeon.SharedMashExecutionIds.Contains(0))
                             {
                                 RaidSceneManager.Raid.Dungeon.SharedMashExecutionIds.Add(0);
-                                if (RandomSolver.CheckSuccess((float)RaidSceneManager.Raid.Dungeon.SharedMash.HallEncounters[0].Chance / 100))
-                                    Area.BattleEncounter = new BattleEncounter(RaidSceneManager.Raid.Dungeon.SharedMash.HallEncounters[0].MonsterSet);
+                                if (RandomSolver.CheckSuccess((float)RaidSceneManager.Raid.Dungeon.
+                                    SharedMash.HallEncounters[0].Chance / 100))
+                                    Area.BattleEncounter = new BattleEncounter(RaidSceneManager.Raid.Dungeon.
+                                        SharedMash.HallEncounters[0].MonsterSet);
                             }
                         }
                         
@@ -211,8 +217,10 @@ public class RaidHallSector : MonoBehaviour, IRaidArea
                             if (!RaidSceneManager.Raid.Dungeon.SharedMashExecutionIds.Contains(1))
                             {
                                 RaidSceneManager.Raid.Dungeon.SharedMashExecutionIds.Add(1);
-                                if (RandomSolver.CheckSuccess((float)RaidSceneManager.Raid.Dungeon.SharedMash.HallEncounters[1].Chance / 100))
-                                    Area.BattleEncounter = new BattleEncounter(RaidSceneManager.Raid.Dungeon.SharedMash.HallEncounters[1].MonsterSet);
+                                if (RandomSolver.CheckSuccess((float)RaidSceneManager.Raid.Dungeon.
+                                    SharedMash.HallEncounters[1].Chance / 100))
+                                    Area.BattleEncounter = new BattleEncounter(RaidSceneManager.Raid.Dungeon.
+                                        SharedMash.HallEncounters[1].MonsterSet);
                             }
                         }
                     }
@@ -237,7 +245,8 @@ public class RaidHallSector : MonoBehaviour, IRaidArea
                     {
                         if(triggeredHero.Character.Trait != null)
                         {
-                            if(triggeredHero.Character.Trait.CurioTag == "All" || curio.Tags.Contains(triggeredHero.Character.Trait.CurioTag))
+                            if(triggeredHero.Character.Trait.CurioTag == "All" ||
+                                curio.Tags.Contains(triggeredHero.Character.Trait.CurioTag))
                             {
                                 if(RandomSolver.CheckSuccess(triggeredHero.Character.Trait.TagChance))
                                 {

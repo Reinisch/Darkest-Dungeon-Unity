@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 public class MonsterBrain
 {
@@ -17,26 +15,5 @@ public class MonsterBrain
         SkillDesireSet = new List<SkillSelectionDesire>();
         TargetDesireSet = new List<TargetSelectionDesire>();
         BonusDesireSet = new List<BonusInitiativeDesire>();
-    }
-}
-
-public class SkillCooldown
-{
-    public string SkillId { get; private set; }
-    public int Amount { get; private set; }
-
-    public SkillCooldown(string skillId, int amount)
-    {
-        SkillId = skillId;
-        Amount = amount;
-    }
-
-    public bool ReduceCooldown()
-    {
-        return --Amount <= 0;
-    }
-    public SkillCooldown Copy()
-    {
-        return new SkillCooldown(SkillId, Amount);
     }
 }

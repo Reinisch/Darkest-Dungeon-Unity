@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
-using System.Collections;
 using System.Collections.Generic;
 
 public class CharCombatSkillPanel : MonoBehaviour
@@ -107,11 +105,14 @@ public class CharCombatSkillPanel : MonoBehaviour
         for(int i = 0; i < 4; i++)
         {
             if (friendlyCheck[i + 1])
-                teamStrengthPips[i].state.SetAnimation(0, "skill_strength_friendly_" + Mathf.Clamp(teamStrCount[i + 1], 1, 4).ToString(), false);
+                teamStrengthPips[i].state.SetAnimation(0, "skill_strength_friendly_" +
+                    Mathf.Clamp(teamStrCount[i + 1], 1, 4).ToString(), false);
             else
-                teamStrengthPips[i].state.SetAnimation(0, "skill_strength_hero_" + Mathf.Clamp(teamStrCount[i + 1], 0, 4).ToString(), false);
+                teamStrengthPips[i].state.SetAnimation(0, "skill_strength_hero_" + 
+                    Mathf.Clamp(teamStrCount[i + 1], 0, 4).ToString(), false);
 
-            targetStrengthPips[i].state.SetAnimation(0, "skill_strength_target_" + Mathf.Clamp(targetStrCount[i + 1], 0, 4).ToString(), false);
+            targetStrengthPips[i].state.SetAnimation(0, "skill_strength_target_" +
+                Mathf.Clamp(targetStrCount[i + 1], 0, 4).ToString(), false);
         }
     }
 

@@ -79,7 +79,7 @@ public class ActivityLogWindow : MonoBehaviour
         if (log.HeroRecords.Count > 0)
         {
             for (int i = 0; i < log.HeroRecords.Count; i++)
-                height += Mathf.Max(130, TextGenerator.GetPreferredHeight(log.HeroRecords[i].Description, RecordSettings)) * 1.0056074766355140186915887850467f;
+                height += Mathf.Max(130, TextGenerator.GetPreferredHeight(log.HeroRecords[i].Description, RecordSettings)) * 1.0056f;
 
             if (log.HeroRecords.Count > 1)
                 height += 20 * (log.HeroRecords.Count - 1);

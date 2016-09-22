@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
-using System.Collections;
 using System.Collections.Generic;
 
 public class CampController : MonoBehaviour
@@ -23,7 +21,8 @@ public class CampController : MonoBehaviour
         for(int i = 0; i < positions; i++)
         {
             RaidSceneManager.Rules.SetCamping(true);
-            RaidSceneManager.HeroParty.Units[i].Character.ApplyAllBuffRules(RaidSceneManager.Rules.GetIdleUnitRules(RaidSceneManager.HeroParty.Units[i]));
+            RaidSceneManager.HeroParty.Units[i].Character.ApplyAllBuffRules(
+                RaidSceneManager.Rules.GetIdleUnitRules(RaidSceneManager.HeroParty.Units[i]));
             RaidSceneManager.HeroParty.Units[i].Character.RemoveCampingBuffs();
             RaidSceneManager.Formations.heroes.party.Units[i].SetRectTarget(campingPositions[i], 0, true);
             RaidSceneManager.Formations.heroes.party.Units[i].InstantRelocation();
@@ -49,7 +48,8 @@ public class CampController : MonoBehaviour
         for (int i = 0; i < positions; i++)
         {
             RaidSceneManager.Rules.SetCamping(false);
-            RaidSceneManager.HeroParty.Units[i].Character.ApplyAllBuffRules(RaidSceneManager.Rules.GetIdleUnitRules(RaidSceneManager.HeroParty.Units[i]));
+            RaidSceneManager.HeroParty.Units[i].Character.ApplyAllBuffRules(
+                RaidSceneManager.Rules.GetIdleUnitRules(RaidSceneManager.HeroParty.Units[i]));
             RaidSceneManager.HeroParty.Units[i].CombatInfo.SkillsUsedThisTurn.Clear();
             RaidSceneManager.Formations.heroes.party.Units[i].DeleteTarget(0, true);
             RaidSceneManager.Formations.heroes.party.Units[i].InstantRelocation();

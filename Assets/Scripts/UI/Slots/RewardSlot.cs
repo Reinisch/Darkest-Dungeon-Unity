@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System.Collections;
 
 public class RewardSlot : BaseSlot, IPointerEnterHandler, IPointerExitHandler
 {
@@ -23,7 +22,8 @@ public class RewardSlot : BaseSlot, IPointerEnterHandler, IPointerExitHandler
         else if (Item.Type == "gold" || Item.Type == "provision")
         {
             rarityFrame.enabled = false;
-            int thresholdIndex = Mathf.Clamp(Mathf.RoundToInt((float)Item.Amount / DarkestDungeonManager.Data.Items[Item.Type][Item.Id].StackLimit / 0.25f), 0, 3);
+            int thresholdIndex = Mathf.Clamp(Mathf.RoundToInt((float)Item.Amount /
+                DarkestDungeonManager.Data.Items[Item.Type][Item.Id].StackLimit / 0.25f), 0, 3);
             itemFrame.sprite = DarkestDungeonManager.Data.Sprites["inv_" + Item.Type + "+" + Item.Id + "_" + thresholdIndex];
             amountText.text = Item.Amount.ToString();
         }
@@ -54,7 +54,8 @@ public class RewardSlot : BaseSlot, IPointerEnterHandler, IPointerExitHandler
         else if (Item.Type == "gold" || Item.Type == "provision")
         {
             rarityFrame.enabled = false;
-            int thresholdIndex = Mathf.Clamp(Mathf.RoundToInt((float)Item.Amount / DarkestDungeonManager.Data.Items[Item.Type][Item.Id].StackLimit / 0.25f), 0, 3);
+            int thresholdIndex = Mathf.Clamp(Mathf.RoundToInt((float)Item.Amount /
+                DarkestDungeonManager.Data.Items[Item.Type][Item.Id].StackLimit / 0.25f), 0, 3);
             itemFrame.sprite = DarkestDungeonManager.Data.Sprites["inv_" + Item.Type + "+" + Item.Id + "_" + thresholdIndex];
         }
         else if (item.Type == "trinket")
