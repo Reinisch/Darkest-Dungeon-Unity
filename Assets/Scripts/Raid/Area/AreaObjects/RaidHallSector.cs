@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 public interface IRaidArea : IPointerClickHandler
 {
@@ -224,7 +225,7 @@ public class RaidHallSector : MonoBehaviour, IRaidArea
                             }
                         }
                     }
-                    
+
                     RaidSceneManager.Instanse.EncounterMonsters(this);
                 }
                 #endregion

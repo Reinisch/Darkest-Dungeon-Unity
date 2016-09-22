@@ -788,11 +788,15 @@ public class RaidSceneManager : MonoBehaviour
         Raid.CurrentLocation = room;
         if (Raid.LastRoom == null)
             Raid.LastRoom = room;
-        else if (fromRaidSector != null)
+        else if (fromRaidSector != null && transitionType != RoomTransitionType.Teleport)
             Raid.LastRoom = fromRaidSector.HallSector.Hallway.OppositeRoom(room);
+        else
+            Raid.LastSector = null;
 
         roomView.LoadRoom(room, fromRaidSector != null ?
-            fromRaidSector.HallSector : null, transitionType == RoomTransitionType.CombatLoad);
+            fromRaidSector.HallSector : null, 
+            (transitionType == RoomTransitionType.CombatLoad ||
+            transitionType == RoomTransitionType.Teleport));
 
         if(transitionType == RoomTransitionType.FromHallway)
             MapPanel.FocusTarget();
@@ -820,7 +824,55 @@ public class RaidSceneManager : MonoBehaviour
 
         #region Show dungeon
         DarkestDungeonManager.Instanse.screenFader.Appear(2);
-        yield return new WaitForSeconds(0.5f);
+        #region Check for teleport actions
+        if (transitionType == RoomTransitionType.Teleport && !room.HasActiveBattle)
+        {
+            if (RaidPanel.SelectedUnit != null)
+                RaidPanel.SelectedUnit.OverlaySlot.UnitSelected();
+
+            #region Execute Hero Transformations
+            for (int i = 0; i < Formations.heroes.party.Units.Count; i++)
+            {
+                var hero = Formations.heroes.party.Units[i].Character as Hero;
+                if (Formations.heroes.party.Units[i].Character.Mode != null
+                    && Formations.heroes.party.Units[i].Character.Mode.AfflictionSkillId != null)
+                {
+                    var battleFinishSkill = hero.SelectedCombatSkills.Find(skill => skill.Id ==
+                        Formations.heroes.party.Units[i].Character.Mode.BattleCompleteSkillId);
+                    if (battleFinishSkill != null)
+                    {
+                        SkillTargetInfo targetInfo = BattleSolver.SelectSkillTargets(Formations.heroes.party.Units[i],
+                            Formations.heroes.party.Units[i], battleFinishSkill).
+                            UpdateSkillInfo(Formations.heroes.party.Units[i], battleFinishSkill);
+                        yield return StartCoroutine(ExecuteHeroSkill(Formations.heroes.party.Units[i],
+                            targetInfo, battleFinishSkill));
+                    }
+                }
+            }
+            #endregion
+
+            foreach (var hero in Formations.heroes.party.Units)
+                hero.SetCombatAnimation(false);
+
+            yield return StartCoroutine(ExecuteEffectEvents(false));
+            yield return new WaitForSeconds(0.3f);
+
+            if (HeroParty.Units.Count == 0)
+            {
+                StartCoroutine(RaidResultsEvent());
+                yield break;
+            }
+        }
+        else if (transitionType == RoomTransitionType.Teleport && room.HasActiveBattle)
+        {
+            currentEvent = EncounterEvent(RoomView.raidRoom);
+            StartCoroutine(currentEvent);
+            yield break;
+        }
+        else
+            yield return new WaitForSeconds(0.5f);
+        #endregion
+
         RaidPanel.SwitchBlocked = false;
         if (fromRaidSector == null)
         {
@@ -2308,7 +2360,12 @@ public class RaidSceneManager : MonoBehaviour
                         yield break;
                 }
                 else if (unit.Team == Team.Monsters)
+                {
                     yield return StartCoroutine(MonsterTurn(unit));
+
+                    if (BattleGround.Round.HeroAction == HeroTurnAction.Retreat)
+                        yield break;
+                }
                 #endregion
             }
             else
@@ -2322,7 +2379,11 @@ public class RaidSceneManager : MonoBehaviour
                         yield break;
                 }
                 else if (BattleGround.Round.SelectedUnit.Team == Team.Monsters)
+                {
                     yield return StartCoroutine(MonsterTurn(BattleGround.Round.SelectedUnit));
+                    if (BattleGround.Round.HeroAction == HeroTurnAction.Retreat)
+                        yield break;
+                }
             }
 
             if (BattleGround.IsBattleEnded())
@@ -3335,8 +3396,8 @@ public class RaidSceneManager : MonoBehaviour
         BattleGround.Round.OnMonsterTurn();
         
         yield return StartCoroutine(ExecuteMonsterSkill(actionUnit));
-
-        BattleGround.Round.PostMonsterTurn();
+        if(BattleGround.Round.HeroAction != HeroTurnAction.Retreat)
+            BattleGround.Round.PostMonsterTurn();
     }
     IEnumerator MonsterOverriddenTurn(FormationUnit actionUnit, string combatSkillOverride)
     {
@@ -3672,6 +3733,90 @@ public class RaidSceneManager : MonoBehaviour
         yield return new WaitForSeconds(0.01f);
         ExecuteSlidingSetup(actionUnit, brainDecision.TargetInfo);
         yield return new WaitForSeconds(0.70f);
+
+        #region Teleport Skill
+        if(brainDecision.SelectedSkill.Type == "teleport")
+        {
+            DarkestDungeonManager.ScreenFader.Fade(2);
+            yield return new WaitForSeconds(0.6f);
+
+            BattleGround.ResetTargetRanks();
+            DarkestSoundManager.StopBattleSoundtrack();
+            DarkestSoundManager.ContinueDungeonSoundtrack(Raid.Quest.Dungeon);
+
+            #region Destroy Remains
+            Formations.HideMonsterOverlay();
+            RaidEvents.roundIndicator.Disappear();
+            RaidEvents.roundIndicator.End();
+            BattleGround.RetreatFromBattle();
+            Formations.ResetSelections();
+            #endregion
+
+            #region Reset Hero Statuses
+            foreach (var hero in Formations.heroes.party.Units)
+            {
+                hero.ResetHalo();
+                hero.Character.GetStatusEffect(StatusType.Stun).ResetStatus();
+                hero.Character.GetStatusEffect(StatusType.Guard).ResetStatus();
+                hero.Character.GetStatusEffect(StatusType.Guarded).ResetStatus();
+                hero.Character.UpdateDurations(BuffDurationType.Combat);
+                hero.OverlaySlot.UpdateOverlay();
+            }
+            #endregion
+
+            #region Reset Animation and Selection
+            RaidEvents.MonsterTooltip.Hide();
+            #endregion
+
+            if (brainDecision.TargetInfo.Type == SkillTargetType.Party)
+            {
+                foreach (var targetUnit in brainDecision.TargetInfo.Targets)
+                    if (actionUnit != targetUnit)
+                        Formations.UnitBuffedOutro(targetUnit);
+            }
+            else if (brainDecision.TargetInfo.Type == SkillTargetType.Enemy)
+            {
+                foreach (var targetUnit in brainDecision.TargetInfo.Targets)
+                    Formations.UnitDefendOutro(targetUnit);
+            }
+
+            dungeonCamera.Zoom(60, 0.1f);
+            DungeonCamera.blur.enabled = false;
+            TorchMeter.Show();
+            yield return new WaitForSeconds(0.2f);
+            BattleGround.Round.HeroAction = HeroTurnAction.Retreat;
+            var targetRooms = Raid.Dungeon.Rooms.Values.ToList().
+                FindAll(targetRoom => targetRoom.Doors.Count == 1 && targetRoom != Raid.CurrentLocation);
+            if (targetRooms.Count == 0)
+                targetRooms = Raid.Dungeon.Rooms.Values.ToList().
+                FindAll(targetRoom => targetRoom.Doors.Count == 2 && targetRoom != Raid.CurrentLocation);
+
+            if(targetRooms.Count == 0)
+                targetRooms.Add(Raid.Dungeon.StartingRoom);
+            if (SceneState == DungeonSceneState.Hall)
+            {
+                HallwayView.CurrentSector.SetInside(false);
+                currentEvent = RoomLoadingEvent(targetRooms[Random.Range(0, targetRooms.Count)],
+                    RoomTransitionType.Teleport, HallwayView.CurrentSector);
+            }
+            else if (SceneState == DungeonSceneState.Room)
+            {
+                currentEvent = RoomLoadingEvent(targetRooms[Random.Range(0, targetRooms.Count)],
+                    RoomTransitionType.Teleport);
+            }
+            #region Remove Combat States and Restrictions
+            QuestPanel.SetPeacefulState();
+            Formations.ShowHeroOverlay();
+            RaidPanel.SetPeacefulState();
+            EnableEnviroment();
+            BattleGround.LeaveBattleGround();
+            Inventory.SetPeacefulState(false);
+            StartCoroutine(currentEvent);
+            #endregion
+            yield break;
+        }
+        #endregion
+
         #region Riposte Skill Activation
         List<FormationUnit> riposters = new List<FormationUnit>();
         List<SkillResult> riposteResults = new List<SkillResult>();
