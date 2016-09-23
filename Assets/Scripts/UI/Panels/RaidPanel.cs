@@ -61,6 +61,12 @@ public class RaidPanel : MonoBehaviour
     {
         bannerPanel.SetPeacefulState();
     }
+    public void LockOnMap()
+    {
+        SwitchBlocked = true;
+        if (!IsMapActive)
+            RightPanelSwitched(true);
+    }
     public void RightPanelSwitched(bool forced = false)
     {
         if (SwitchBlocked && forced == false)

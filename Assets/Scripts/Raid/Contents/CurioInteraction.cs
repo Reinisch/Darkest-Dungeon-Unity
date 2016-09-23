@@ -13,6 +13,9 @@ public class CurioInteraction : IProportionValue
 
     public virtual string ResultString()
     {
-        return ResultType;
+        if (ResultType == "scouting")
+            return "scout";
+        else
+            return ResultType;
     }
 }

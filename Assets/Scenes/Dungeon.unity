@@ -25728,12 +25728,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa7b848c585364a4eba2b37b7a6ecf38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingMode: 1
+  startingMode: 2
   startingItems:
-  - cell_white_D
-  - cell_white_D
-  - cell_white_D
-  - cell_white_D
+  - discarded_pack
   dungeonCamera: {fileID: 447450558}
   hallwayView: {fileID: 1199950669}
   roomView: {fileID: 970925681}

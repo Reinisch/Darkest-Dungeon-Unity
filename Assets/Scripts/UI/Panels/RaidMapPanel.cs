@@ -230,6 +230,9 @@ public class RaidMapPanel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         if(area is Room)
         {
             RoomSlots[area.Id].UpdateRoom();
+            if (RaidSceneManager.SceneState == DungeonSceneState.Hall)
+                if (RaidSceneManager.HallwayView.TargetRoom == area)
+                    SetMovingRoom(RaidSceneManager.HallwayView.TargetRoom);
         }
         else if (area is HallSector)
         {

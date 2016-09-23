@@ -211,6 +211,7 @@ public class RaidSceneManager : MonoBehaviour
     private List<FormationUnit> tempList = new List<FormationUnit>(4);
     private List<CampEffect> campEffects = new List<CampEffect>(10);
     private List<CampEffect> chosenEffects = new List<CampEffect>(2);
+    private Dictionary<Room, int> currentScoutedRooms = new Dictionary<Room, int>();
     
     private WaitForSeconds waitForZeroThree = new WaitForSeconds(0.3f);
     private WaitForSeconds waitForOneTwo = new WaitForSeconds(1.2f);
@@ -904,8 +905,10 @@ public class RaidSceneManager : MonoBehaviour
         #endregion
 
         #region Battle encounter and scouting
-        if (room.BattleEncounter != null && !room.BattleEncounter.Cleared)
+        if (room.HasActiveBattle)
         {
+            DisablePartyMovement();
+
             if (room.Knowledge == Knowledge.Hidden || room.Knowledge == Knowledge.Scouted)
             {
                 room.Knowledge = Knowledge.Visited;
@@ -5848,6 +5851,7 @@ public class RaidSceneManager : MonoBehaviour
         DarkestDungeonManager.Instanse.SaveGame();
         currentEvent = null;
     }
+
     IEnumerator ScoutingHallway(Hallway hallway, Direction direction, int tiles)
     {
         int scoutingSectors = Mathf.Min(hallway.HallCount, tiles);
@@ -5858,32 +5862,47 @@ public class RaidSceneManager : MonoBehaviour
             for (int i = 0; i < scoutingSectors; i++)
             {
                 if (hallway.Halls[i].Knowledge == Knowledge.Hidden)
+                {
                     hallway.Halls[i].Knowledge = Knowledge.Scouted;
 
-                if(hallway.Halls[i].Type != AreaType.Door)
-                {
-                    FMODUnity.RuntimeManager.PlayOneShot("event:/general/map/scout_hallway");
-                    MapPanel.UpdateArea(hallway.Halls[i]);
-                    yield return new WaitForSeconds(0.4f);
+                    if (hallway.Halls[i].Type != AreaType.Door)
+                    {
+                        FMODUnity.RuntimeManager.PlayOneShot("event:/general/map/scout_hallway");
+                        MapPanel.UpdateArea(hallway.Halls[i]);
+                        yield return new WaitForSeconds(0.4f);
+                    }
                 }
+                else if (hallway.Halls[i].Type != AreaType.Door)
+                    yield return new WaitForSeconds(0.4f);
             }
 
             if(scoutingSectors == hallway.HallCount)
             {
                 if(hallway.RoomB.Knowledge == Knowledge.Hidden)
+                {
                     hallway.RoomB.Knowledge = Knowledge.Scouted;
+                    MapPanel.UpdateArea(hallway.RoomB);
+                    FMODUnity.RuntimeManager.PlayOneShot("event:/general/map/scout_room");
+                    yield return new WaitForSeconds(0.5f);
+                }
+                else
+                    yield return new WaitForSeconds(0.5f);
 
-                MapPanel.UpdateArea(hallway.RoomB);
-                FMODUnity.RuntimeManager.PlayOneShot("event:/general/map/scout_room");
-                yield return new WaitForSeconds(0.5f);
+                if (currentScoutedRooms.ContainsKey(hallway.RoomB))
+                {
+                    if (currentScoutedRooms[hallway.RoomB] < tiles)
+                        currentScoutedRooms[hallway.RoomB] = tiles;
+                    else
+                        tiles = 0;
+                }
+                else
+                    currentScoutedRooms.Add(hallway.RoomB, tiles);
 
-                if(tiles > 0)
+                if (tiles > 0)
                 {
                     for (int i = 0; i < hallway.RoomB.Doors.Count; i++)
                     {
-                        if (direction == Direction.Left && hallway.RoomB.Doors[i].Direction == Direction.Right)
-                            continue;
-                        if (direction == Direction.Bot && hallway.RoomB.Doors[i].Direction == Direction.Top)
+                        if (hallway.RoomB.Doors[i].TargetArea == hallway.Id)
                             continue;
 
                         StartCoroutine(ScoutingHallway(Raid.Dungeon.Hallways[hallway.RoomB.Doors[i].TargetArea],
@@ -5895,35 +5914,50 @@ public class RaidSceneManager : MonoBehaviour
         }
         else if (direction == Direction.Top || direction == Direction.Right)
         {
-            for (int i = scoutingSectors - 1; i >= 0; i--)
+            for (int i = hallway.HallCount - 1; i >= hallway.HallCount - scoutingSectors; i--)
             {
                 if (hallway.Halls[i].Knowledge == Knowledge.Hidden)
+                {
                     hallway.Halls[i].Knowledge = Knowledge.Scouted;
 
-                if (hallway.Halls[i].Type != AreaType.Door)
-                {
-                    FMODUnity.RuntimeManager.PlayOneShot("event:/general/map/scout_hallway");
-                    MapPanel.UpdateArea(hallway.Halls[i]);
-                    yield return new WaitForSeconds(0.4f);
+                    if (hallway.Halls[i].Type != AreaType.Door)
+                    {
+                        FMODUnity.RuntimeManager.PlayOneShot("event:/general/map/scout_hallway");
+                        MapPanel.UpdateArea(hallway.Halls[i]);
+                        yield return new WaitForSeconds(0.4f);
+                    }
                 }
+                else if (hallway.Halls[i].Type != AreaType.Door)
+                    yield return new WaitForSeconds(0.4f);
             }
 
             if (scoutingSectors == hallway.HallCount)
             {
                 if (hallway.RoomA.Knowledge == Knowledge.Hidden)
+                {
                     hallway.RoomA.Knowledge = Knowledge.Scouted;
-                
-                MapPanel.UpdateArea(hallway.RoomA);
-                FMODUnity.RuntimeManager.PlayOneShot("event:/general/map/scout_room");
-                yield return new WaitForSeconds(0.5f);
+                    MapPanel.UpdateArea(hallway.RoomA);
+                    FMODUnity.RuntimeManager.PlayOneShot("event:/general/map/scout_room");
+                    yield return new WaitForSeconds(0.5f);
+                }
+                else
+                    yield return new WaitForSeconds(0.5f);
+
+                if (currentScoutedRooms.ContainsKey(hallway.RoomA))
+                {
+                    if (currentScoutedRooms[hallway.RoomA] < tiles)
+                        currentScoutedRooms[hallway.RoomA] = tiles;
+                    else
+                        tiles = 0;
+                }
+                else
+                    currentScoutedRooms.Add(hallway.RoomA, tiles);
 
                 if (tiles > 0)
                 {
                     for (int i = 0; i < hallway.RoomA.Doors.Count; i++)
                     {
-                        if (direction == Direction.Right && hallway.RoomA.Doors[i].Direction == Direction.Left)
-                            continue;
-                        if (direction == Direction.Top && hallway.RoomA.Doors[i].Direction == Direction.Bot)
+                        if (hallway.RoomA.Doors[i].TargetArea == hallway.Id)
                             continue;
 
                         StartCoroutine(ScoutingHallway(Raid.Dungeon.Hallways[hallway.RoomA.Doors[i].TargetArea],
@@ -5935,9 +5969,158 @@ public class RaidSceneManager : MonoBehaviour
         }
         scoutingCounter--;
     }
+    IEnumerator CurioScoutingHallway(HallSector hallSector, Direction direction, int tiles)
+    {
+        if (direction == Direction.Bot || direction == Direction.Left)
+        {
+            int hallIndex = hallSector.Hallway.Halls.IndexOf(hallSector);
+            int tilesScouted = Mathf.Min(hallIndex, tiles);
+            int lastHallIndex = hallIndex - tilesScouted;
+
+            for (int i = hallIndex - 1; i >= lastHallIndex; i--)
+            {
+                if (hallSector.Hallway.Halls[i].Knowledge == Knowledge.Hidden)
+                {
+                    hallSector.Hallway.Halls[i].Knowledge = Knowledge.Scouted;
+
+                    if (hallSector.Hallway.Halls[i].Type != AreaType.Door)
+                    {
+                        FMODUnity.RuntimeManager.PlayOneShot("event:/general/map/scout_hallway");
+                        MapPanel.UpdateArea(hallSector.Hallway.Halls[i]);
+                        if(hallSector.Hallway.Halls[i].Type == AreaType.Trap)
+                        {
+                            var raidSector = HallwayView.raidHallway.HallSectors.
+                                Find(trapSector => trapSector.HallSector == hallSector.Hallway.Halls[i]);
+                            if(raidSector != null)
+                                (raidSector.Prop as RaidTrap).SkeletonAnimation.MeshRenderer.enabled = true;
+                        }
+                        yield return new WaitForSeconds(0.4f);
+                    }
+                }
+                else if (hallSector.Hallway.Halls[i].Type != AreaType.Door)
+                    yield return new WaitForSeconds(0.4f);
+            }
+
+            tiles -= tilesScouted;
+
+            if (tiles >= 0)
+            {
+                if (hallSector.Hallway.RoomA.Knowledge == Knowledge.Hidden)
+                {
+                    hallSector.Hallway.RoomA.Knowledge = Knowledge.Scouted;
+
+                    MapPanel.UpdateArea(hallSector.Hallway.RoomA);
+                    if (HallwayView.TargetRoom == hallSector.Hallway.RoomA)
+                        MapPanel.SetMovingRoom(hallSector.Hallway.RoomA);
+
+                    FMODUnity.RuntimeManager.PlayOneShot("event:/general/map/scout_room");
+                    yield return new WaitForSeconds(0.5f);
+                }
+                else
+                    yield return new WaitForSeconds(0.5f);
+
+                if (currentScoutedRooms.ContainsKey(hallSector.Hallway.RoomA))
+                {
+                    if (currentScoutedRooms[hallSector.Hallway.RoomA] < tiles)
+                        currentScoutedRooms[hallSector.Hallway.RoomA] = tiles;
+                    else
+                        tiles = 0;
+                }
+                else
+                    currentScoutedRooms.Add(hallSector.Hallway.RoomA, tiles);
+
+                if (tiles > 0)
+                {
+                    for (int i = 0; i < hallSector.Hallway.RoomA.Doors.Count; i++)
+                    {
+                        if (hallSector.Hallway.RoomA.Doors[i].TargetArea == hallSector.Hallway.Id)
+                            continue;
+
+                        StartCoroutine(ScoutingHallway(Raid.Dungeon.Hallways[hallSector.Hallway.RoomA.Doors[i].TargetArea],
+                            hallSector.Hallway.RoomA.Doors[i].Direction, tiles));
+                        scoutingCounter++;
+                    }
+                }
+            }
+        }
+        else if(direction == Direction.Top || direction == Direction.Right)
+        {
+            int hallIndex = hallSector.Hallway.Halls.IndexOf(hallSector);
+            int tilesScouted = Mathf.Min(hallSector.Hallway.Halls.Count - hallSector.Hallway.Halls.IndexOf(hallSector) - 1, tiles);
+            int lastHallIndex = hallIndex + tilesScouted;
+
+            for (int i = hallIndex + 1; i <= lastHallIndex; i++)
+            {
+                if (hallSector.Hallway.Halls[i].Knowledge == Knowledge.Hidden)
+                {
+                    hallSector.Hallway.Halls[i].Knowledge = Knowledge.Scouted;
+
+                    if (hallSector.Hallway.Halls[i].Type != AreaType.Door)
+                    {
+                        FMODUnity.RuntimeManager.PlayOneShot("event:/general/map/scout_hallway");
+                        MapPanel.UpdateArea(hallSector.Hallway.Halls[i]);
+                        if (hallSector.Hallway.Halls[i].Type == AreaType.Trap)
+                        {
+                            var raidSector = HallwayView.raidHallway.HallSectors.
+                                Find(trapSector => trapSector.HallSector == hallSector.Hallway.Halls[i]);
+                            if (raidSector != null)
+                                (raidSector.Prop as RaidTrap).SkeletonAnimation.MeshRenderer.enabled = true;
+                        }
+                        yield return new WaitForSeconds(0.4f);
+                    }
+                }
+                else if (hallSector.Hallway.Halls[i].Type != AreaType.Door)
+                    yield return new WaitForSeconds(0.4f);
+            }
+            tiles -= tilesScouted;
+
+            if (tiles >= 0)
+            {
+                if (hallSector.Hallway.RoomB.Knowledge == Knowledge.Hidden)
+                {
+                    hallSector.Hallway.RoomB.Knowledge = Knowledge.Scouted;
+
+                    MapPanel.UpdateArea(hallSector.Hallway.RoomB);
+                    if (HallwayView.TargetRoom == hallSector.Hallway.RoomB)
+                        MapPanel.SetMovingRoom(hallSector.Hallway.RoomB);
+
+                    FMODUnity.RuntimeManager.PlayOneShot("event:/general/map/scout_room");
+                    yield return new WaitForSeconds(0.5f);
+                }
+                else
+                    yield return new WaitForSeconds(0.5f);
+
+                if (currentScoutedRooms.ContainsKey(hallSector.Hallway.RoomB))
+                {
+                    if (currentScoutedRooms[hallSector.Hallway.RoomB] < tiles)
+                        currentScoutedRooms[hallSector.Hallway.RoomB] = tiles;
+                    else
+                        tiles = 0;
+                }
+                else
+                    currentScoutedRooms.Add(hallSector.Hallway.RoomB, tiles);
+
+                if (tiles > 0)
+                {
+                    for (int i = 0; i < hallSector.Hallway.RoomB.Doors.Count; i++)
+                    {
+                        if (hallSector.Hallway.RoomB.Doors[i].TargetArea == hallSector.Hallway.Id)
+                            continue;
+
+                        StartCoroutine(ScoutingHallway(Raid.Dungeon.Hallways[hallSector.Hallway.RoomB.Doors[i].TargetArea],
+                            hallSector.Hallway.RoomB.Doors[i].Direction, tiles));
+                        scoutingCounter++;
+                    }
+                }
+            }
+        }
+        scoutingCounter--;
+    }
     IEnumerator ScoutingEvent(Room room)
     {
-        float scoutingChance = 0.25f + TorchMeter.CurrentRange.ScoutingChance;
+        currentScoutedRooms.Clear();
+
+        float scoutingChance = 0.25f + TorchMeter.CurrentRange.ScoutingChance - 3;
         for (int i = 0; i < Formations.heroes.party.Units.Count; i++)
             scoutingChance += Formations.heroes.party.Units[i].Character[AttributeType.ScoutingChance].ModifiedValue;
 
@@ -5973,8 +6156,187 @@ public class RaidSceneManager : MonoBehaviour
 
             RaidPanel.SwitchBlocked = false;
         }
+        currentScoutedRooms.Clear();
         yield break;
     }
+    IEnumerator CurioScoutingEvent(Area area, CurioResult result)
+    {
+        RaidPanel.LockOnMap();
+        MapPanel.FocusTarget(1f);
+        yield return new WaitForSeconds(0.6f);
+
+        MapPanel.SetScoutingRadar();
+        FMODUnity.RuntimeManager.PlayOneShot("event:/general/map/scout_start");
+        yield return new WaitForSeconds(1f);
+
+        if (result.Item.EndsWith("all"))
+        {
+            int scoutingTiles = 0;
+            if (result.Item.StartsWith("0"))
+            {
+                scoutingTiles = 1000;
+            }
+            else
+                scoutingTiles = (int.Parse(result.Item.Substring(0, 1)) - 1) * 6;
+
+            if (scoutingTiles > 0)
+            {
+                if(area is HallSector)
+                {
+                    scoutingCounter = 2;
+
+                    StartCoroutine(CurioScoutingHallway(area as HallSector, Direction.Left, scoutingTiles));
+                    StartCoroutine(CurioScoutingHallway(area as HallSector, Direction.Right, scoutingTiles));
+                }
+                else
+                {
+                    scoutingCounter = 0;
+                    var room = area as Room;
+
+                    for (int i = 0; i < room.Doors.Count; i++)
+                    {
+                        StartCoroutine(ScoutingHallway(Raid.Dungeon.Hallways[room.Doors[i].TargetArea],
+                            room.Doors[i].Direction, scoutingTiles));
+                        scoutingCounter++;
+                    }
+                }
+
+                while (scoutingCounter > 0)
+                    yield return null;
+            }
+        }
+        else if (result.Item.EndsWith("traps"))
+        {
+            MapPanel.FocusTarget(0.8f);
+            yield return new WaitForSeconds(0.3f);
+
+            foreach (var hallway in Raid.Dungeon.Hallways.Values)
+            {
+                foreach(var hallwaySlot in hallway.Halls)
+                {
+                    if (hallwaySlot.Type == AreaType.Trap && 
+                        (hallwaySlot.Knowledge == Knowledge.Hidden || hallwaySlot.Knowledge == Knowledge.Visited))
+                    {
+                        hallwaySlot.Knowledge = Knowledge.Scouted;
+
+                        if (hallwaySlot.Type != AreaType.Door)
+                        {
+                            FMODUnity.RuntimeManager.PlayOneShot("event:/general/map/scout_hallway");
+                            MapPanel.UpdateArea(hallwaySlot);
+                            if (SceneState == DungeonSceneState.Hall && HallwayView.Hallway == hallway)
+                            {
+                                var raidSector = HallwayView.raidHallway.HallSectors.
+                                    Find(trapSector => trapSector.HallSector == hallwaySlot);
+                                if (raidSector != null)
+                                    (raidSector.Prop as RaidTrap).SkeletonAnimation.MeshRenderer.enabled = true;
+                            }
+                        }
+                        yield return new WaitForSeconds(0.4f);
+                    }
+                }
+            }
+        }
+        else if (result.Item.EndsWith("obstacles"))
+        {
+            MapPanel.FocusTarget(0.8f);
+            yield return new WaitForSeconds(0.3f);
+
+            foreach (var hallway in Raid.Dungeon.Hallways.Values)
+            {
+                foreach (var hallwaySlot in hallway.Halls)
+                {
+                    if (hallwaySlot.Type == AreaType.Obstacle && hallwaySlot.Knowledge == Knowledge.Hidden)
+                    {
+                        hallwaySlot.Knowledge = Knowledge.Scouted;
+
+                        if (hallwaySlot.Type != AreaType.Door)
+                        {
+                            FMODUnity.RuntimeManager.PlayOneShot("event:/general/map/scout_hallway");
+                            MapPanel.UpdateArea(hallwaySlot);
+                        }
+                        yield return new WaitForSeconds(0.4f);
+                    }
+                }
+            }
+        }
+        else if (result.Item.EndsWith("hall_battles"))
+        {
+            MapPanel.FocusTarget(0.8f);
+            yield return new WaitForSeconds(0.3f);
+
+            foreach (var hallway in Raid.Dungeon.Hallways.Values)
+            {
+                foreach (var hallwaySlot in hallway.Halls)
+                {
+                    if (hallwaySlot.HasActiveBattle && hallwaySlot.Knowledge == Knowledge.Hidden)
+                    {
+                        hallwaySlot.Knowledge = Knowledge.Scouted;
+
+                        if (hallwaySlot.Type != AreaType.Door)
+                        {
+                            FMODUnity.RuntimeManager.PlayOneShot("event:/general/map/scout_hallway");
+                            MapPanel.UpdateArea(hallwaySlot);
+                        }
+                        yield return new WaitForSeconds(0.4f);
+                    }
+                }
+            }
+        }
+        else if (result.Item.EndsWith("room_battles"))
+        {
+            MapPanel.FocusTarget(0.8f);
+            yield return new WaitForSeconds(0.3f);
+
+            foreach (var room in Raid.Dungeon.Rooms.Values)
+            {
+                if (room.HasActiveBattle && room.Knowledge == Knowledge.Hidden)
+                {
+                    room.Knowledge = Knowledge.Scouted;
+
+                    FMODUnity.RuntimeManager.PlayOneShot("event:/general/map/scout_room");
+                    MapPanel.UpdateArea(room);
+                    
+                    yield return new WaitForSeconds(0.6f);
+                }
+            }
+        }
+        else if (result.Item.EndsWith("curios"))
+        {
+            foreach (var room in Raid.Dungeon.Rooms.Values)
+            {
+                if ( (room.Type == AreaType.Curio || room.Type == AreaType.BattleCurio) && room.Knowledge == Knowledge.Hidden)
+                {
+                    room.Knowledge = Knowledge.Scouted;
+
+                    FMODUnity.RuntimeManager.PlayOneShot("event:/general/map/scout_room");
+                    MapPanel.UpdateArea(room);
+                    yield return new WaitForSeconds(0.6f);
+                }
+            }
+            foreach (var hallway in Raid.Dungeon.Hallways.Values)
+            {
+                foreach (var hallwaySlot in hallway.Halls)
+                {
+                    if (hallwaySlot.Type == AreaType.Curio && hallwaySlot.Knowledge == Knowledge.Hidden)
+                    {
+                        hallwaySlot.Knowledge = Knowledge.Scouted;
+
+                        if (hallwaySlot.Type != AreaType.Door)
+                        {
+                            FMODUnity.RuntimeManager.PlayOneShot("event:/general/map/scout_hallway");
+                            MapPanel.UpdateArea(hallwaySlot);
+                        }
+                        yield return new WaitForSeconds(0.4f);
+                    }
+                }
+            }
+        }
+
+        RaidPanel.SwitchBlocked = false;
+        currentScoutedRooms.Clear();
+        yield break;
+    }
+
     IEnumerator CompletionCrestEvent()
     {
         Raid.QuestCompleted = true;
@@ -6236,9 +6598,14 @@ public class RaidSceneManager : MonoBehaviour
         switch (curioInteraction.ResultType)
         {
             case "nothing":
-            case "summon":
-            case "scouting":
             case "teleport":
+                break;
+            case "summon":
+                break;
+            case "scouting":
+                #region Scouting
+                yield return StartCoroutine(CurioScoutingEvent(areaView.Area, curioResult));
+                #endregion
                 break;
             case "loot":
                 #region Curio Loot Event

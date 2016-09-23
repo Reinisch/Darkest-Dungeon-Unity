@@ -1699,6 +1699,7 @@ public class DarkestDatabase : MonoBehaviour
                             interaction.Results.Add(curioResult);
                         }
                     }
+
                     curio.Results.Add(interaction);
                 }
             }        
