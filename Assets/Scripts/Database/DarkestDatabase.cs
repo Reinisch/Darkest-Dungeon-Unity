@@ -66,6 +66,7 @@ public class DarkestDatabase : MonoBehaviour
     public List<CampingSkill> CampingSkills { get; set; }
     public List<Trait> Traits { get; set; }
 
+    public TownEventDatabase EventDatabase { get; set; }
     public HeroSpriteDatabase HeroSprites { get; set; }
     public QuestDatabase QuestDatabase { get; set; }
     public LootDatabase LootDatabase { get; set; }
@@ -118,6 +119,7 @@ public class DarkestDatabase : MonoBehaviour
         LoadColours();
         LoadIconSets();
         LoadMonsters();
+        LoadJsonTownEvents();
 
         GC.Collect();
     }
@@ -1612,6 +1614,13 @@ public class DarkestDatabase : MonoBehaviour
 
         foreach (var tree in GetJsonHeroUpgradeTree())
             UpgradeTrees.Add(tree.Id, tree);
+    }
+    public void LoadJsonTownEvents()
+    {
+        TextAsset jsonText = Resources.Load<TextAsset>(townEventsDataPath);
+        var jsonEvents = JsonDarkestDeserializer.GetJsonTownEvents(jsonText.text);
+
+        EventDatabase = new TownEventDatabase();
     }
 
     public void LoadJsonBuildings()
