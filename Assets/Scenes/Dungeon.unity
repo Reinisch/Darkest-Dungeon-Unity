@@ -7174,7 +7174,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 241194736}
   m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -120}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 30, y: 0, z: -180}
   m_Children: []
@@ -25730,7 +25730,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startingMode: 2
   startingItems:
-  - discarded_pack
+  - shamblers_altar
   dungeonCamera: {fileID: 447450558}
   hallwayView: {fileID: 1199950669}
   roomView: {fileID: 970925681}
@@ -50866,7 +50866,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_SortingLayerID: 820191947
-  m_SortingOrder: 15
+  m_SortingOrder: 4
   m_TargetDisplay: 0
 --- !u!1 &1644941709
 GameObject:

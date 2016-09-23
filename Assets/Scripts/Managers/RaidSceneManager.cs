@@ -6601,6 +6601,19 @@ public class RaidSceneManager : MonoBehaviour
             case "teleport":
                 break;
             case "summon":
+                #region Summon
+                if (Raid.Dungeon.DungeonMash.NamedEncounters.ContainsKey(curioResult.Item))
+                {
+                    var summonMash = RandomSolver.ChooseByRandom(Raid.Dungeon.DungeonMash.NamedEncounters[curioResult.Item]);
+                    if (summonMash != null)
+                    {
+                        areaView.Area.BattleEncounter = new BattleEncounter(summonMash.MonsterSet);
+                        currentEvent = EncounterEvent(areaView);
+                        StartCoroutine(currentEvent);
+                        yield break;
+                    }
+                }
+                #endregion
                 break;
             case "scouting":
                 #region Scouting
