@@ -19,6 +19,7 @@ public class DarkestDatabase : MonoBehaviour
     const string trinketDataPath = "Data/Trinkets";
     const string itemDataPath = "Data/Inventory/Items";
     const string dungeonGenerationDataPath = "Data/Mechanics/MapGenerator";
+    const string townEventsDataPath = "Data/Mechanics/TownEvents";
     const string effectsDataPath = "Data/Mechanics/Effects";
 
     const string cryptsEnviromentDataPath = "Data/Dungeons/Crypts";

@@ -3,6 +3,62 @@ using Newtonsoft.Json;
 
 namespace DarkestJson
 {
+    #region Town Events
+    public class JsonTownEventDatabase
+    {
+        public List<JsonTownEventOption> settings;
+        public List<JsonTownEvent> events;
+        public List<JsonTownGuarantee> quest_type_event_guarantees;
+    }
+    public class JsonTownGuarantee
+    {
+        public string dungeon_type;
+        public string quest_type;
+        public string event_id;
+    }
+    public class JsonTownEventOption
+    {
+        public string id;
+        public List<int> event_chance_per_town_visits;
+    }
+    public class JsonTownEvent
+    {
+        public string id;
+        public float base_chance;
+        public float per_not_rolled_additional_chance;
+        public int cooldown;
+        public JsonTownEventRequirements requirements;
+        public List<string> town_ambience_parameter_ids;
+        public string tone;
+        public string sprite;
+        public string sprite_attachment;
+        public List<JsonTownEventData> data;
+    }
+    public class JsonTownEventData
+    {
+        public string type;
+        public string string_data;
+        public float number_data;
+    }
+    public class JsonTownEventRequirements
+    {
+        public int minimum_week;
+        public int dead_heroes;
+        public List<JsonTownEventHeroCount> hero_level_counts;
+        public List<JsonTownEventUpgrade> upgrades_purchased;
+    }
+    public class JsonTownEventHeroCount
+    {
+        public int level;
+        public int count;
+    }
+    public class JsonTownEventUpgrade
+    {
+        public string treee_id;
+        public string requrement_code;
+    }
+    #endregion
+
     #region Provision
     public class JsonProvision
     {
@@ -743,6 +799,11 @@ namespace DarkestJson
 
     public static class JsonDarkestDeserializer
     {
+        public static JsonTownEventDatabase GetJsonTownEvents(string eventString)
+        {
+            return JsonConvert.DeserializeObject<JsonTownEventDatabase>(eventString);
+        }
+
         public static JsonProvision GetJsonProvision(string provisionString)
         {
             return JsonConvert.DeserializeObject<JsonProvision>(provisionString);
