@@ -19,7 +19,7 @@ namespace DarkestJson
     public class JsonTownEventOption
     {
         public string id;
-        public List<int> event_chance_per_town_visits;
+        public List<float> event_chance_per_town_visits;
     }
     public class JsonTownEvent
     {
@@ -28,7 +28,7 @@ namespace DarkestJson
         public float per_not_rolled_additional_chance;
         public int cooldown;
         public JsonTownEventRequirements requirements;
-        public List<string> town_ambience_parameter_ids;
+        public List<string> town_ambience_paramater_ids;
         public string tone;
         public string sprite;
         public string sprite_attachment;
@@ -54,7 +54,7 @@ namespace DarkestJson
     }
     public class JsonTownEventUpgrade
     {
-        public string treee_id;
+        public string tree_id;
         public string requrement_code;
     }
     #endregion
