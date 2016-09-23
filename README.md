@@ -3,11 +3,10 @@ Darkest Dungeon clone in Unity engine.
 Almost completely identical to the original game.
 
 ### To do next:
-  - Shumbler curio summon
   - Town events
-  - Predefined maps
   - Tutorial
   - Narration and sounds
+  - Predefined maps
   - Character and dungeon color LuTs
   - Finish all barks
 
