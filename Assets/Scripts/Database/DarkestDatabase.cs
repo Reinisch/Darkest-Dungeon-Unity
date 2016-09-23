@@ -1621,6 +1621,125 @@ public class DarkestDatabase : MonoBehaviour
         var jsonEvents = JsonDarkestDeserializer.GetJsonTownEvents(jsonText.text);
 
         EventDatabase = new TownEventDatabase();
+        for(int i = 0; i < jsonEvents.settings.Count; i++)
+        {
+            var eventOption = new TownEventOption();
+            eventOption.Id = jsonEvents.settings[i].id;
+            eventOption.Frequency = jsonEvents.settings[i].event_chance_per_town_visits;
+            EventDatabase.Settings.Add(eventOption);
+        }
+
+        for (int i = 0; i < jsonEvents.quest_type_event_guarantees.Count; i++)
+        {
+            var eventGuarantee = new TownEventGuarantee();
+            eventGuarantee.Dungeon = jsonEvents.quest_type_event_guarantees[i].dungeon_type;
+            eventGuarantee.QuestType = jsonEvents.quest_type_event_guarantees[i].quest_type;
+            eventGuarantee.EventId = jsonEvents.quest_type_event_guarantees[i].event_id;
+            EventDatabase.Guarantees.Add(eventGuarantee);
+        }
+
+        foreach(var jsonEvent in jsonEvents.events)
+        {
+            var townEvent = new TownEvent();
+
+            townEvent.Id = jsonEvent.id;
+            
+            switch(jsonEvent.tone)
+            {
+                case "good":
+                    townEvent.Tone = TownEventTone.Good;
+                    break;
+                case "bad":
+                    townEvent.Tone = TownEventTone.Bad;
+                    break;
+                case "neutral":
+                    townEvent.Tone = TownEventTone.Neutral;
+                    break;
+                default:
+                    townEvent.Tone = TownEventTone.Neutral;
+                    Debug.LogError("Unknown event tone: " + jsonEvent.tone);
+                    break;
+            }
+
+            townEvent.Cooldown = jsonEvent.cooldown;
+            townEvent.ChancePerNotRolled = jsonEvent.per_not_rolled_additional_chance;
+            townEvent.Chance = jsonEvent.base_chance;
+
+            townEvent.MinimumWeek = jsonEvent.requirements.minimum_week;
+            townEvent.DeadHeroes = jsonEvent.requirements.dead_heroes;
+            for (int i = 0; i < jsonEvent.requirements.hero_level_counts.Count; i++)
+                townEvent.LevelHeroes.Add(jsonEvent.requirements.hero_level_counts[i].level,
+                    jsonEvent.requirements.hero_level_counts[i].count);
+            for (int i = 0; i < jsonEvent.requirements.upgrades_purchased.Count; i++)
+                townEvent.Purchases.Add(jsonEvent.requirements.upgrades_purchased[i].tree_id,
+                    jsonEvent.requirements.upgrades_purchased[i].requrement_code);
+
+            townEvent.AmbienceParameters = jsonEvent.town_ambience_paramater_ids;
+            townEvent.Sprite = jsonEvent.sprite;
+            townEvent.SpriteAttachment = jsonEvent.sprite_attachment;
+
+            foreach(var jsonEventData in jsonEvent.data)
+            {
+                var townEventData = new TownEventData();
+                townEventData.StringData = jsonEventData.string_data;
+                townEventData.NumberData = jsonEventData.number_data;
+
+                switch(jsonEventData.type)
+                {
+                    case "embark_party_buff":
+                        townEventData.Type = TownEventDataType.EmbarkPartyBuff;
+                        break;
+                    case "idle_resolve_level":
+                        townEventData.Type = TownEventDataType.IdleResolve;
+                        break;
+                    case "bonus_recruit":
+                        townEventData.Type = TownEventDataType.BonusRecruit;
+                        break;
+                    case "in_activity_buff":
+                        townEventData.Type = TownEventDataType.InActivityBuff;
+                        break;
+                    case "activity_lock":
+                        townEventData.Type = TownEventDataType.ActivityLock;
+                        break;
+                    case "activity_cost_change":
+                        townEventData.Type = TownEventDataType.ActivityCostChange;
+                        break;
+                    case "provision_item_type_cost_change":
+                        townEventData.Type = TownEventDataType.ProvisionTypeCostChange;
+                        break;
+                    case "provision_item_type_amount_change":
+                        townEventData.Type = TownEventDataType.ProvisionTypeAmountChange;
+                        break;
+                    case "upgrade_tag_discount":
+                        townEventData.Type = TownEventDataType.UpgradeTagDiscount;
+                        break;
+                    case "free_activity":
+                        townEventData.Type = TownEventDataType.FreeActivity;
+                        break;
+                    case "dead_recruit":
+                        townEventData.Type = TownEventDataType.DeadRecruit;
+                        break;
+                    case "remove_quest_hero_level_restriction":
+                        townEventData.Type = TownEventDataType.NoLevelRestriction;
+                        break;
+                    case "upgrade_tag_free":
+                        townEventData.Type = TownEventDataType.UpgradeTagFree;
+                        break;
+                    case "idle_buff":
+                        townEventData.Type = TownEventDataType.IdleBuff;
+                        break;
+                    case "plot_quest":
+                        townEventData.Type = TownEventDataType.PlotQuest;
+                        break;
+                    default:
+                        Debug.LogError("Unknown event data type: " + jsonEventData.type);
+                        break;
+                }
+                townEvent.Data.Add(townEventData);
+            }
+
+            EventDatabase.Events.Add(townEvent);
+        }
     }
 
     public void LoadJsonBuildings()
