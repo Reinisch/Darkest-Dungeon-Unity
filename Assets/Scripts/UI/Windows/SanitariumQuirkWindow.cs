@@ -92,8 +92,17 @@ public class SanitariumQuirkWindow : MonoBehaviour
             }
             else
             {
-                treatmentButton.gameObject.SetActive(false);
-                costLabel.gameObject.SetActive(false);
+                if (SelectedSlot.TreatmentSlot.TargetPositiveQuirk != null || SelectedSlot.TreatmentSlot.TargetNegativeQuirk != null)
+                {
+                    treatmentButton.gameObject.SetActive(true);
+                    costLabel.gameObject.SetActive(true);
+                    costLabel.text = LocalizationManager.GetString("town_free");
+                }
+                else
+                {
+                    treatmentButton.gameObject.SetActive(false);
+                    costLabel.gameObject.SetActive(false);
+                }
             }
         }
     }
@@ -113,7 +122,7 @@ public class SanitariumQuirkWindow : MonoBehaviour
                     cost += SelectedSlot.TreatmentSlot.BaseCost;
             }
         }
-        if (cost != 0)
+        if (cost != 0 || DarkestDungeonManager.Campaign.EventModifiers.IsActivityFree(SelectedSlot.activityName))
         {
             if (SelectedSlot.TreatmentSlot.Status == ActivitySlotStatus.Checkout)
             {

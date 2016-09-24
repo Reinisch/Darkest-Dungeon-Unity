@@ -94,14 +94,22 @@ public class QuirkTreatmentActivity
             }
         }
 
+        bool isActivityFree = DarkestDungeonManager.Campaign.EventModifiers.IsActivityFree(Id);
+        float costModifier = DarkestDungeonManager.Campaign.EventModifiers.ActivityCostModifier(Id);
+
         for (int i = 1; i <= 3; i++)
         {
             if (i <= QuirkSlots)
-                TreatmentSlots.Add(new TreatmentSlot(true, NegativeQuirkCost.Amount,
-                    PositiveQuirkCost.Amount, PermNegativeQuirkCost.Amount, 0));
+            {
+                if (isActivityFree)
+                    TreatmentSlots.Add(new TreatmentSlot(true, 0, 0, 0, 0));
+                else
+                    TreatmentSlots.Add(new TreatmentSlot(true, (int) (NegativeQuirkCost.Amount * costModifier),
+                        (int)(PositiveQuirkCost.Amount * costModifier), (int)(PermNegativeQuirkCost.Amount * costModifier), 0));
+            }
             else
-                TreatmentSlots.Add(new TreatmentSlot(false, NegativeQuirkCost.Amount,
-                    PositiveQuirkCost.Amount, PermNegativeQuirkCost.Amount, 0));
+                TreatmentSlots.Add(new TreatmentSlot(false, (int)(NegativeQuirkCost.Amount * costModifier),
+                        (int)(PositiveQuirkCost.Amount * costModifier), (int)(PermNegativeQuirkCost.Amount * costModifier), 0));
         }
     }
     public void ProvideActivity()
@@ -187,18 +195,29 @@ public class QuirkTreatmentActivity
             }
         }
 
+        bool isActivityFree = DarkestDungeonManager.Campaign.EventModifiers.IsActivityFree(Id);
+        float costModifier = DarkestDungeonManager.Campaign.EventModifiers.ActivityCostModifier(Id);
+
         for (int i = 1; i <= 3; i++)
         {
             if (i <= QuirkSlots)
-                TreatmentSlots[i - 1].UpdateTreatmentSlot(true, NegativeQuirkCost.Amount,
-                    PositiveQuirkCost.Amount, PermNegativeQuirkCost.Amount, 0);
+            {
+                if(isActivityFree)
+                    TreatmentSlots[i - 1].UpdateTreatmentSlot(true, 0, 0, 0, 0);
+                else
+                    TreatmentSlots[i - 1].UpdateTreatmentSlot(true, (int)(NegativeQuirkCost.Amount * costModifier),
+                        (int)(PositiveQuirkCost.Amount * costModifier), (int)(PermNegativeQuirkCost.Amount * costModifier), 0);
+            }
             else
-                TreatmentSlots[i - 1].UpdateTreatmentSlot(false, NegativeQuirkCost.Amount,
-                    PositiveQuirkCost.Amount, PermNegativeQuirkCost.Amount, 0);
+                TreatmentSlots[i - 1].UpdateTreatmentSlot(false, (int)(NegativeQuirkCost.Amount * costModifier),
+                        (int)(PositiveQuirkCost.Amount * costModifier), (int)(PermNegativeQuirkCost.Amount * costModifier), 0);
         }
     }
     public void UpdateActivitySlots(SaveCampaignData saveData)
     {
+        bool isActivityFree = DarkestDungeonManager.Campaign.EventModifiers.IsActivityFree(Id);
+        float costModifier = DarkestDungeonManager.Campaign.EventModifiers.ActivityCostModifier(Id);
+
         for (int i = 0; i < 3; i++)
         {
             if (i + 1 <= QuirkSlots)
@@ -217,19 +236,18 @@ public class QuirkTreatmentActivity
                     TreatmentSlots[i].TargetDiseaseQuirk = saveData.sanitariumActivitySlots[0][i].TargetDiseaseQuirk;
                     TreatmentSlots[i].TargetPositiveQuirk = saveData.sanitariumActivitySlots[0][i].TargetPositiveQuirk;
                     TreatmentSlots[i].TargetNegativeQuirk = saveData.sanitariumActivitySlots[0][i].TargetNegativeQuirk;
-
-                    TreatmentSlots[i].UpdateTreatmentSlot(true, NegativeQuirkCost.Amount,
-                        PositiveQuirkCost.Amount, PermNegativeQuirkCost.Amount, 0);
                 }
-                else
-                    TreatmentSlots[i].UpdateTreatmentSlot(true, NegativeQuirkCost.Amount,
-                        PositiveQuirkCost.Amount, PermNegativeQuirkCost.Amount, 0);
 
-                }
+                if (isActivityFree)
+                    TreatmentSlots[i].UpdateTreatmentSlot(true, 0, 0, 0, 0);
                 else
-                    TreatmentSlots[i].UpdateTreatmentSlot(false, NegativeQuirkCost.Amount,
-                        PositiveQuirkCost.Amount, PermNegativeQuirkCost.Amount, 0);
+                    TreatmentSlots[i].UpdateTreatmentSlot(true, (int)(NegativeQuirkCost.Amount * costModifier),
+                        (int)(PositiveQuirkCost.Amount * costModifier), (int)(PermNegativeQuirkCost.Amount * costModifier), 0);
             }
+            else
+                TreatmentSlots[i].UpdateTreatmentSlot(false, (int)(NegativeQuirkCost.Amount * costModifier),
+                       (int)(PositiveQuirkCost.Amount * costModifier), (int)(PermNegativeQuirkCost.Amount * costModifier), 0);
+        }
     }
     public List<ITownUpgrade> GetUpgrades(string treeId, string code)
     {

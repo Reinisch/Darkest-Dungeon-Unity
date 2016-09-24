@@ -81,12 +81,20 @@ public class DiseaseTreatmentActivity
             }
         }
 
+        bool isActivityFree = DarkestDungeonManager.Campaign.EventModifiers.IsActivityFree(Id);
+        float costModifier = DarkestDungeonManager.Campaign.EventModifiers.ActivityCostModifier(Id);
+
         for (int i = 1; i <= 3; i++)
         {
             if (i <= DiseaseSlots)
-                TreatmentSlots.Add(new TreatmentSlot(true, 0, 0, 0, DiseaseTreatmentCost.Amount));
+            {
+                if (isActivityFree)
+                    TreatmentSlots.Add(new TreatmentSlot(true, 0, 0, 0, 0));
+                else
+                    TreatmentSlots.Add(new TreatmentSlot(true, 0, 0, 0, (int)(DiseaseTreatmentCost.Amount * costModifier)));
+            }
             else
-                TreatmentSlots.Add(new TreatmentSlot(false, 0, 0, 0, DiseaseTreatmentCost.Amount));
+                TreatmentSlots.Add(new TreatmentSlot(false, 0, 0, 0, (int)(DiseaseTreatmentCost.Amount * costModifier)));
         }
     }
     public void ProvideActivity()
@@ -163,16 +171,27 @@ public class DiseaseTreatmentActivity
             }
         }
 
+        bool isActivityFree = DarkestDungeonManager.Campaign.EventModifiers.IsActivityFree(Id);
+        float costModifier = DarkestDungeonManager.Campaign.EventModifiers.ActivityCostModifier(Id);
+
         for (int i = 1; i <= 3; i++)
         {
             if (i <= DiseaseSlots)
-                TreatmentSlots[i - 1].UpdateTreatmentSlot(true, 0, 0, 0, DiseaseTreatmentCost.Amount);
+            {
+                if (isActivityFree)
+                    TreatmentSlots[i - 1].UpdateTreatmentSlot(true, 0, 0, 0, 0);
+                else
+                    TreatmentSlots[i - 1].UpdateTreatmentSlot(true, 0, 0, 0, (int)(DiseaseTreatmentCost.Amount * costModifier));
+            }
             else
-                TreatmentSlots[i - 1].UpdateTreatmentSlot(false, 0, 0, 0, DiseaseTreatmentCost.Amount);
+                TreatmentSlots[i - 1].UpdateTreatmentSlot(false, 0, 0, 0, (int)(DiseaseTreatmentCost.Amount * costModifier));
         }
     }
     public void UpdateActivitySlots(SaveCampaignData saveData)
     {
+        bool isActivityFree = DarkestDungeonManager.Campaign.EventModifiers.IsActivityFree(Id);
+        float costModifier = DarkestDungeonManager.Campaign.EventModifiers.ActivityCostModifier(Id);
+
         for (int i = 0; i < 3; i++)
         {
             if (i + 1 <= DiseaseSlots)
@@ -191,15 +210,15 @@ public class DiseaseTreatmentActivity
                     TreatmentSlots[i].TargetDiseaseQuirk = saveData.sanitariumActivitySlots[1][i].TargetDiseaseQuirk;
                     TreatmentSlots[i].TargetPositiveQuirk = saveData.sanitariumActivitySlots[1][i].TargetPositiveQuirk;
                     TreatmentSlots[i].TargetNegativeQuirk = saveData.sanitariumActivitySlots[1][i].TargetNegativeQuirk;
-
-                    TreatmentSlots[i].UpdateTreatmentSlot(true, 0, 0, 0, DiseaseTreatmentCost.Amount);
                 }
-                else
-                    TreatmentSlots[i].UpdateTreatmentSlot(true, 0, 0, 0, DiseaseTreatmentCost.Amount);
 
+                if (isActivityFree)
+                    TreatmentSlots[i].UpdateTreatmentSlot(true, 0, 0, 0, 0);
+                else
+                    TreatmentSlots[i].UpdateTreatmentSlot(true, 0, 0, 0, (int)(DiseaseTreatmentCost.Amount * costModifier));
             }
             else
-                TreatmentSlots[i].UpdateTreatmentSlot(false, 0, 0, 0, DiseaseTreatmentCost.Amount);
+                TreatmentSlots[i].UpdateTreatmentSlot(false, 0, 0, 0, (int)(DiseaseTreatmentCost.Amount * costModifier));
         }
     }
     public List<ITownUpgrade> GetUpgrades(string treeId, string code)

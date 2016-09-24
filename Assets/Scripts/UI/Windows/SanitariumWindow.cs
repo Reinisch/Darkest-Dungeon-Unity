@@ -112,6 +112,8 @@ public class SanitariumWindow : BuildingWindow
 
     public void UpdateSlots()
     {
+        Sanitarium.UpdateBuilding(DarkestDungeonManager.Campaign.Estate.TownPurchases);
+
         for (int i = 0; i < 3; i++)
         {
             quirkSlots[i].UpdateSlot();

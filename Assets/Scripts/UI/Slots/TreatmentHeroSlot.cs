@@ -6,12 +6,15 @@ public delegate void TreatmentSlotEvent(TreatmentHeroSlot slot);
 
 public class TreatmentHeroSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDropHandler, IPointerClickHandler
 {
+    public string activityName;
+
     public Text heroLabel;
 
     public Image lockerIcon;
     public Image activeIcon;
     public Image buttonIcon;
     public Image slotIcon;
+    public Image freeIcon;
 
     public TreatmentSlot TreatmentSlot { get; set; }
     public RectTransform RectTransform { get; set; }
@@ -138,6 +141,7 @@ public class TreatmentHeroSlot : MonoBehaviour, IPointerEnterHandler, IPointerEx
         buttonIcon.gameObject.SetActive(true);
         lockerIcon.gameObject.SetActive(false);
         activeIcon.gameObject.SetActive(true);
+        freeIcon.gameObject.SetActive(false);
 
         if (TreatmentSlot.Hero != null)
             slotIcon.sprite = DarkestDungeonManager.HeroSprites[TreatmentSlot.Hero.ClassStringId]["A"].Portrait;
@@ -149,6 +153,7 @@ public class TreatmentHeroSlot : MonoBehaviour, IPointerEnterHandler, IPointerEx
         buttonIcon.gameObject.SetActive(false);
         lockerIcon.gameObject.SetActive(false);
         activeIcon.gameObject.SetActive(false);
+        freeIcon.gameObject.SetActive(false);
 
         if (TreatmentSlot.Hero != null)
             slotIcon.sprite = DarkestDungeonManager.HeroSprites[TreatmentSlot.Hero.ClassStringId]["A"].Portrait;
@@ -160,6 +165,7 @@ public class TreatmentHeroSlot : MonoBehaviour, IPointerEnterHandler, IPointerEx
         buttonIcon.gameObject.SetActive(false);
         lockerIcon.gameObject.SetActive(true);
         activeIcon.gameObject.SetActive(false);
+        freeIcon.gameObject.SetActive(false);
     }
     void SetActivitySlotOpened()
     {
@@ -168,6 +174,11 @@ public class TreatmentHeroSlot : MonoBehaviour, IPointerEnterHandler, IPointerEx
         buttonIcon.gameObject.SetActive(false);
         lockerIcon.gameObject.SetActive(false);
         activeIcon.gameObject.SetActive(false);
+        if (DarkestDungeonManager.Campaign.EventModifiers.FreeActivities.ContainsKey(activityName) &&
+            DarkestDungeonManager.Campaign.EventModifiers.FreeActivities[activityName] == true)
+            freeIcon.gameObject.SetActive(true);
+        else
+            freeIcon.gameObject.SetActive(false);
         slotIcon.sprite = DarkestDungeonManager.Data.Sprites["hero_slot.background"];
     }
     void SetActivitySlotHighlighted()
@@ -177,6 +188,11 @@ public class TreatmentHeroSlot : MonoBehaviour, IPointerEnterHandler, IPointerEx
         buttonIcon.gameObject.SetActive(false);
         lockerIcon.gameObject.SetActive(false);
         activeIcon.gameObject.SetActive(false);
+        if (DarkestDungeonManager.Campaign.EventModifiers.FreeActivities.ContainsKey(activityName) &&
+            DarkestDungeonManager.Campaign.EventModifiers.FreeActivities[activityName] == true)
+            freeIcon.gameObject.SetActive(true);
+        else
+            freeIcon.gameObject.SetActive(false);
         slotIcon.sprite = DarkestDungeonManager.Data.Sprites["hero_slot.backgroundhightlight"];
     }
 
