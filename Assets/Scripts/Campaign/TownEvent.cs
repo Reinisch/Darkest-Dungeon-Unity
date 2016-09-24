@@ -40,17 +40,57 @@ public class TownEvent : ISingleProportion
     public Dictionary<int, int> LevelHeroes { get; set; }
     public Dictionary<string, string> Purchases { get; set; }
 
-    public List<string> AmbienceParameters { get; set; }
     public string Sprite { get; set; }
     public string SpriteAttachment { get; set; }
-
+    public List<string> AmbienceParameters { get; set; }
     public List<TownEventData> Data { get; set; }
+
+    public bool IsPossible
+    {
+        get
+        {
+            if (Chance == 0 || activeCooldown > 0)
+                return false;
+            if (MinimumWeek > DarkestDungeonManager.Campaign.CurrentWeek)
+                return false;
+            if (DeadHeroes > DarkestDungeonManager.Campaign.Estate.Graveyard.Records.Count)
+                return false;
+
+            foreach (var levelHero in LevelHeroes)
+                if (DarkestDungeonManager.Campaign.Heroes.FindAll(hero => hero.Resolve.Level >= levelHero.Key).Count < levelHero.Value)
+                    return false;
+
+            foreach (var purchase in Purchases)
+                if (!DarkestDungeonManager.Campaign.Estate.TownPurchases.ContainsKey(purchase.Key) ||
+                    !DarkestDungeonManager.Campaign.Estate.TownPurchases[purchase.Key].PurchasedUpgrades.Contains(purchase.Value))
+                        return false;
+
+            return true;
+        }
+    }
 
     public TownEvent()
     {
         LevelHeroes = new Dictionary<int, int>();
         Purchases = new Dictionary<string, string>();
         Data = new List<TownEventData>();
+    }
+
+    public void EventTriggered(bool isRolled)
+    {
+        if(isRolled)
+        {
+            if (Cooldown != 0)
+                activeCooldown = Cooldown;
+            notRolledAmount = 0;
+        }
+        else
+        {
+            if (ChancePerNotRolled != 0)
+                notRolledAmount++;
+            if (activeCooldown > 0)
+                activeCooldown--;
+        }
     }
 }
 

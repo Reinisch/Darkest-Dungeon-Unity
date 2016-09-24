@@ -15,6 +15,9 @@ public class Campaign
     public List<string> CompletedPlot { get; set; }
 
     public bool AreQuestsReady { get; set; }
+    public TownEvent TriggeredEvent { get; set; }
+    public TownEvent GuaranteedEvent { get; set; }
+    public TownEventOption EventsOption { get; set; }
 
     public Dictionary<string, DungeonProgress> Dungeons { get; set; }
 
@@ -30,9 +33,35 @@ public class Campaign
     }
     public void ExecuteProgress()
     {
+        TriggeredEvent = null;
+        GuaranteedEvent = null;
+
+        var possibleEvents = DarkestDungeonManager.Data.EventDatabase.Events.FindAll(townEvent => townEvent.IsPossible);
+        if (possibleEvents.Count > 0 && RandomSolver.CheckSuccess(EventsOption.Frequency[0]))
+        {
+            TriggeredEvent = RandomSolver.ChooseBySingleRandom(possibleEvents);
+            TriggeredEvent.EventTriggered(true);
+
+            possibleEvents.Remove(TriggeredEvent);
+            for (int i = 0; i < possibleEvents.Count; i++)
+                possibleEvents[i].EventTriggered(false);
+        }
+
         Estate.ExecuteProgress();
         GenerateQuests();
         SearchMissingHeroes();
+    }
+    public void CheckGuarantees(Quest completedQuest)
+    {
+        if(EventsOption.Frequency[0] > 0)
+        {
+            var eventGuarantee = DarkestDungeonManager.Data.EventDatabase.Guarantees.Find(guarantee =>
+                guarantee.Dungeon == completedQuest.Dungeon && guarantee.QuestType == completedQuest.Type);
+
+            if(eventGuarantee != null)
+                GuaranteedEvent = DarkestDungeonManager.Data.EventDatabase.Events.Find(guarantEvent => 
+                    guarantEvent.Id == eventGuarantee.EventId);
+        }
     }
     public void AdvanceNextWeek()
     {
@@ -77,6 +106,8 @@ public class Campaign
         Logs = new List<WeekActivityLog>(saveData.activityLog);
         if (Logs.Count == 0)
             Logs.Add(new WeekActivityLog(CurrentWeek));
+
+        EventsOption = DarkestDungeonManager.Data.EventDatabase.Settings[2];
     } 
 
     public WeekActivityLog CurrentLog()

@@ -108,6 +108,9 @@ public class EstateSceneManager : MonoBehaviour
                 DarkestDungeonManager.Campaign.CurrentLog().ReturnRecord = 
                     new PartyActivityRecord(PartyActionType.Result, DarkestDungeonManager.RaidManager);
             }
+
+            if(DarkestDungeonManager.RaidManager.Status == RaidStatus.Success)
+                DarkestDungeonManager.Campaign.CheckGuarantees(DarkestDungeonManager.RaidManager.Quest);
         }
         else
         {
