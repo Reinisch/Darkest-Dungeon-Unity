@@ -43,6 +43,7 @@ public class QuirkTreatmentActivity
         SlotUpgrades = new List<SlotUpgrade>();
 
         TreatmentSlots = new List<TreatmentSlot>();
+        Id = "treatment";
     }
 
     public void Reset()

@@ -110,9 +110,6 @@ public class EstateSceneManager : MonoBehaviour
                 DarkestDungeonManager.Campaign.CurrentLog().ReturnRecord = 
                     new PartyActivityRecord(PartyActionType.Result, DarkestDungeonManager.RaidManager);
             }
-
-            if(DarkestDungeonManager.RaidManager.Status == RaidStatus.Success)
-                DarkestDungeonManager.Campaign.CheckGuarantees(DarkestDungeonManager.RaidManager.Quest);
         }
         else
         {
@@ -157,6 +154,7 @@ public class EstateSceneManager : MonoBehaviour
         {
             DarkestDungeonManager.SaveData.UpdateFromEstate();
             DarkestDungeonManager.Instanse.SaveGame();
+            DarkestDungeonManager.RaidManager.Status = RaidStatus.Preparation;
         }
     }
     void OnDestroy()
@@ -236,6 +234,8 @@ public class EstateSceneManager : MonoBehaviour
         else
             DarkestDungeonManager.LoadingInfo.SetNextScene("Dungeon", "Screen/loading_screen." +
                 DarkestDungeonManager.Instanse.RaidingManager.Quest.Dungeon + "_0");
+
+        DarkestDungeonManager.Campaign.CheckEmbarkBuffs(DarkestDungeonManager.RaidManager.RaidParty);
 
         SceneManager.LoadScene("LoadingScreen", LoadSceneMode.Single);
     }
@@ -565,6 +565,8 @@ public class EstateSceneManager : MonoBehaviour
         else
             DarkestDungeonManager.LoadingInfo.SetNextScene("Dungeon", "Screen/loading_screen." + 
                 DarkestDungeonManager.Instanse.RaidingManager.Quest.Dungeon + "_0");
+
+        DarkestDungeonManager.Campaign.CheckEmbarkBuffs(DarkestDungeonManager.RaidManager.RaidParty);
 
         SceneManager.LoadScene("LoadingScreen", LoadSceneMode.Single);
     }

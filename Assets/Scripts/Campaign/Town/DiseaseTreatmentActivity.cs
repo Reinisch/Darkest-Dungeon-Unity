@@ -40,6 +40,7 @@ public class DiseaseTreatmentActivity
         SlotUpgrades = new List<SlotUpgrade>();
 
         TreatmentSlots = new List<TreatmentSlot>();
+        Id = "disease_treatment";
     }
 
     public void Reset()

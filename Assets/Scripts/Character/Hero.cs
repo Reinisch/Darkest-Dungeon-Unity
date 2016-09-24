@@ -40,7 +40,6 @@ public class Hero : Character
                 return 0.5f;
         }
     }
-
     public override List<SkillArtInfo> SkillArtInfo
     {
         get

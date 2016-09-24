@@ -103,7 +103,7 @@ public class TavernWindow : BuildingWindow
                 tree.upgrades[i].Tree = DarkestDungeonManager.Data.UpgradeTrees[tree.treeId];
                 tree.upgrades[i].UpgradeInfo = currentUpgrades[i];
                 tree.upgrades[i].TownUpgrades = new List<ITownUpgrade>(new ITownUpgrade[] {
-                    Tavern.Activities.Find(activity => activity.Id == tree.treeId).GetUpgradeByCode(currentUpgrades[i].Code) });
+                    Tavern.Activities.Find(activity => activity.TreeId == tree.treeId).GetUpgradeByCode(currentUpgrades[i].Code) });
                 tree.upgrades[i].onClick += TavernWindow_onUpgradeClick;
                 var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(tree.treeId, currentUpgrades[i]);
                 TownManager.UpdateUpgradeSlot(status, tree.upgrades[i]);
@@ -126,6 +126,8 @@ public class TavernWindow : BuildingWindow
     
     public void UpdateSlots()
     {
+        Tavern.UpdateBuilding(DarkestDungeonManager.Campaign.Estate.TownPurchases);
+
         for (int i = 0; i < 3; i++)
         {
             barSlots[i].UpdateSlot();

@@ -104,7 +104,7 @@ public class AbbeyWindow : BuildingWindow
                 tree.upgrades[i].Tree = DarkestDungeonManager.Data.UpgradeTrees[tree.treeId];
                 tree.upgrades[i].UpgradeInfo = currentUpgrades[i];
                 tree.upgrades[i].TownUpgrades = new List<ITownUpgrade>(new ITownUpgrade[] {
-                    Abbey.Activities.Find(activity => activity.Id == tree.treeId).GetUpgradeByCode(currentUpgrades[i].Code) });
+                    Abbey.Activities.Find(activity => activity.TreeId == tree.treeId).GetUpgradeByCode(currentUpgrades[i].Code) });
                 tree.upgrades[i].onClick += AbbeyWindow_onUpgradeClick;
                 var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(tree.treeId, currentUpgrades[i]);
                 TownManager.UpdateUpgradeSlot(status, tree.upgrades[i]);
@@ -127,6 +127,8 @@ public class AbbeyWindow : BuildingWindow
 
     public void UpdateSlots()
     {
+        Abbey.UpdateBuilding(DarkestDungeonManager.Campaign.Estate.TownPurchases);
+
         for (int i = 0; i < 3; i++)
         {
             cloisterSlots[i].UpdateSlot();

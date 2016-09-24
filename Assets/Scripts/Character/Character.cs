@@ -1405,6 +1405,12 @@ public class Character
             if (buffInfo[i].SourceType == BuffSourceType.Adventure && buffInfo[i].Buff.IsPositive() == false)
                 RemoveBuff(buffInfo[i]);
     }
+    public void RemoveAllBuffsWithSource(BuffSourceType sourceType)
+    {
+        for (int i = buffInfo.Count - 1; i >= 0; i--)
+            if (buffInfo[i].SourceType == sourceType)
+                RemoveBuff(buffInfo[i]);
+    }
 
     public void ApplySingleBuffRule(RaidRuleInfo raidRuleInfo, BuffRule rule)
     {

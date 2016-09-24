@@ -23,7 +23,7 @@ public class Tavern : Building
 
             for (int i = activity.CostUpgrades.Count - 1; i >= 0; i--)
             {
-                if (purchases[activity.Id].PurchasedUpgrades.Contains(activity.CostUpgrades[i].UpgradeCode))
+                if (purchases[activity.TreeId].PurchasedUpgrades.Contains(activity.CostUpgrades[i].UpgradeCode))
                 {
                     activity.ActivityCost = activity.CostUpgrades[i].Cost;
                     break;
@@ -31,7 +31,7 @@ public class Tavern : Building
             }
             for (int i = activity.SlotUpgrades.Count - 1; i >= 0; i--)
             {
-                if (purchases[activity.Id].PurchasedUpgrades.Contains(activity.SlotUpgrades[i].UpgradeCode))
+                if (purchases[activity.TreeId].PurchasedUpgrades.Contains(activity.SlotUpgrades[i].UpgradeCode))
                 {
                     activity.NumberOfSlots = activity.SlotUpgrades[i].NumberOfSlots;
                     break;
@@ -39,7 +39,7 @@ public class Tavern : Building
             }
             for (int i = activity.StressUpgrades.Count - 1; i >= 0; i--)
             {
-                if (purchases[activity.Id].PurchasedUpgrades.Contains(activity.StressUpgrades[i].UpgradeCode))
+                if (purchases[activity.TreeId].PurchasedUpgrades.Contains(activity.StressUpgrades[i].UpgradeCode))
                 {
                     activity.StressHealAmount = activity.StressUpgrades[i].StressHeal;
                     break;
@@ -49,12 +49,18 @@ public class Tavern : Building
 
         foreach (var activity in Activities)
         {
+            bool isActivityLocked = DarkestDungeonManager.Campaign.EventModifiers.IsActivityLocked(activity.Id);
+            bool isActivityFree = DarkestDungeonManager.Campaign.EventModifiers.IsActivityFree(activity.Id);
+            float costModifier = DarkestDungeonManager.Campaign.EventModifiers.ActivityCostModifier(activity.Id);
+
             for (int i = 1; i <= 3; i++)
             {
                 if (i <= activity.NumberOfSlots)
-                    activity.ActivitySlots.Add(new ActivitySlot(true, activity.ActivityCost.Amount));
+                    activity.ActivitySlots.Add(new ActivitySlot(isActivityLocked ? false : true,
+                        isActivityFree ? 0 : (int)(activity.ActivityCost.Amount * costModifier)));
                 else
-                    activity.ActivitySlots.Add(new ActivitySlot(false, activity.ActivityCost.Amount));
+                    activity.ActivitySlots.Add(new ActivitySlot(false, isActivityFree ?
+                        0 : (int)(activity.ActivityCost.Amount * costModifier)));
             }
         }
     }
@@ -65,7 +71,7 @@ public class Tavern : Building
         {
             for (int i = activity.CostUpgrades.Count - 1; i >= 0; i--)
             {
-                if (purchases[activity.Id].PurchasedUpgrades.Contains(activity.CostUpgrades[i].UpgradeCode))
+                if (purchases[activity.TreeId].PurchasedUpgrades.Contains(activity.CostUpgrades[i].UpgradeCode))
                 {
                     activity.ActivityCost = activity.CostUpgrades[i].Cost;
                     break;
@@ -73,7 +79,7 @@ public class Tavern : Building
             }
             for (int i = activity.SlotUpgrades.Count - 1; i >= 0; i--)
             {
-                if (purchases[activity.Id].PurchasedUpgrades.Contains(activity.SlotUpgrades[i].UpgradeCode))
+                if (purchases[activity.TreeId].PurchasedUpgrades.Contains(activity.SlotUpgrades[i].UpgradeCode))
                 {
                     activity.NumberOfSlots = activity.SlotUpgrades[i].NumberOfSlots;
                     break;
@@ -81,7 +87,7 @@ public class Tavern : Building
             }
             for (int i = activity.StressUpgrades.Count - 1; i >= 0; i--)
             {
-                if (purchases[activity.Id].PurchasedUpgrades.Contains(activity.StressUpgrades[i].UpgradeCode))
+                if (purchases[activity.TreeId].PurchasedUpgrades.Contains(activity.StressUpgrades[i].UpgradeCode))
                 {
                     activity.StressHealAmount = activity.StressUpgrades[i].StressHeal;
                     break;
@@ -91,12 +97,18 @@ public class Tavern : Building
 
         foreach (var activity in Activities)
         {
+            bool isActivityLocked = DarkestDungeonManager.Campaign.EventModifiers.IsActivityLocked(activity.Id);
+            bool isActivityFree = DarkestDungeonManager.Campaign.EventModifiers.IsActivityFree(activity.Id);
+            float costModifier = DarkestDungeonManager.Campaign.EventModifiers.ActivityCostModifier(activity.Id);
+
             for (int i = 1; i <= 3; i++)
             {
                 if (i <= activity.NumberOfSlots)
-                    activity.ActivitySlots[i - 1].UpdateSlot(true, activity.ActivityCost.Amount);
+                    activity.ActivitySlots[i - 1].UpdateSlot(isActivityLocked ? false : true,
+                        isActivityFree ? 0 : (int)(activity.ActivityCost.Amount * costModifier));
                 else
-                    activity.ActivitySlots[i - 1].UpdateSlot(false, activity.ActivityCost.Amount);
+                    activity.ActivitySlots[i - 1].UpdateSlot(false, isActivityFree ?
+                        0 : (int)(activity.ActivityCost.Amount * costModifier));
             }
         }
     }
@@ -105,28 +117,35 @@ public class Tavern : Building
     {
         for (int activityIndex = 0; activityIndex < Activities.Count; activityIndex++)
         {
+            bool isActivityLocked = DarkestDungeonManager.Campaign.EventModifiers.IsActivityLocked(Activities[activityIndex].Id);
+            bool isActivityFree = DarkestDungeonManager.Campaign.EventModifiers.IsActivityFree(Activities[activityIndex].Id);
+            float costModifier = DarkestDungeonManager.Campaign.EventModifiers.ActivityCostModifier(Activities[activityIndex].Id);
+
             for (int i = 0; i < 3; i++)
             {
                 if (i + 1 <= Activities[activityIndex].NumberOfSlots)
                 {
-                    if (saveData.tavernActivitySlots.Count > activityIndex && saveData.tavernActivitySlots[activityIndex].Count > i)
+                    if (saveData.abbeyActivitySlots.Count > activityIndex && saveData.abbeyActivitySlots[activityIndex].Count > i)
                     {
                         var activityHero = DarkestDungeonManager.Campaign.Heroes.Find(hero =>
-                            hero.RosterId == saveData.tavernActivitySlots[activityIndex][i].HeroRosterId);
+                            hero.RosterId == saveData.abbeyActivitySlots[activityIndex][i].HeroRosterId);
 
                         Activities[activityIndex].ActivitySlots[i].Hero = activityHero;
                         if (activityHero != null)
-                            Activities[activityIndex].ActivitySlots[i].Status = saveData.tavernActivitySlots[activityIndex][i].Status;
+                            Activities[activityIndex].ActivitySlots[i].Status = saveData.abbeyActivitySlots[activityIndex][i].Status;
                         else
                             Activities[activityIndex].ActivitySlots[i].Status = ActivitySlotStatus.Available;
 
-                        Activities[activityIndex].ActivitySlots[i].UpdateSlot(true, Activities[activityIndex].ActivityCost.Amount);
+                        Activities[activityIndex].ActivitySlots[i].UpdateSlot(isActivityLocked ? false : true,
+                            isActivityFree ? 0 : (int)(Activities[activityIndex].ActivityCost.Amount * costModifier));
                     }
                     else
-                        Activities[activityIndex].ActivitySlots[i].UpdateSlot(true, Activities[activityIndex].ActivityCost.Amount);
+                        Activities[activityIndex].ActivitySlots[i].UpdateSlot(isActivityLocked ? false : true,
+                            isActivityFree ? 0 : (int)(Activities[activityIndex].ActivityCost.Amount * costModifier));
                 }
                 else
-                    Activities[activityIndex].ActivitySlots[i].UpdateSlot(false, Activities[activityIndex].ActivityCost.Amount);
+                    Activities[activityIndex].ActivitySlots[i].UpdateSlot(false,
+                        isActivityFree ? 0 : (int)(Activities[activityIndex].ActivityCost.Amount * costModifier));
             }
         }
     }

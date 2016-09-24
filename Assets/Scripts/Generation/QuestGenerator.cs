@@ -93,6 +93,8 @@ public static class QuestGenerator
         int difTwos = Mathf.RoundToInt(difTwoAvailable / allAvailable * questsLeft);
         int difThrees = Mathf.RoundToInt(difThreeAvailable / allAvailable * questsLeft);
 
+        difOnes += questsLeft - (difOnes + difTwos + difThrees);
+
         for (int i = 0; i < difOnes; i++)
             difficulties.Add(1);
         for (int i = 0; i < difTwos; i++)
@@ -119,7 +121,7 @@ public static class QuestGenerator
             }
         }
 
-        for (int i = 0; i < questInfo.dungeonCount; i++)
+        for (int i = 0; i < questInfo.dungeonQuests.Count; i++)
         {
             Quest quest = new Quest();
             int difIndex = Random.Range(0, difficulties.Count);

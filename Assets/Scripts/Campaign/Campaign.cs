@@ -7,7 +7,6 @@ public class Campaign
     public int QuestsComleted { get; set; }
 
     public Estate Estate { get; set; }
-
     public RealmInventory RealmInventory { get; set; }
     public List<WeekActivityLog> Logs { get; set; }
     public List<Hero> Heroes { get; set; }
@@ -17,6 +16,7 @@ public class Campaign
     public bool AreQuestsReady { get; set; }
     public TownEvent TriggeredEvent { get; set; }
     public TownEvent GuaranteedEvent { get; set; }
+    public EventModifiers EventModifiers { get; set; }
     public TownEventOption EventsOption { get; set; }
 
     public Dictionary<string, DungeonProgress> Dungeons { get; set; }
@@ -33,18 +33,51 @@ public class Campaign
     }
     public void ExecuteProgress()
     {
+        foreach(var eventEntry in EventModifiers.EventData)
+        {
+            switch(eventEntry.Type)
+            {
+                case TownEventDataType.IdleBuff:
+                    for (int i = 0; i < Heroes.Count; i++)
+                        if (Heroes[i].Status == HeroStatus.Available)
+                            Heroes[i].AddBuff(new BuffInfo(DarkestDungeonManager.Data.Buffs[eventEntry.StringData],
+                               BuffDurationType.IdleTownVisit, BuffSourceType.Estate));
+                    break;
+                case TownEventDataType.IdleResolve:
+                    for (int i = 0; i < Heroes.Count; i++)
+                        if (Heroes[i].Class == eventEntry.StringData)
+                        {
+                            for (int j = 0; j < eventEntry.NumberData; j++)
+                                Heroes[i].Resolve.AddExperience(Heroes[i].Resolve.NextLevelXP - Heroes[i].Resolve.CurrentXP);
+
+                            Heroes[i].UpdateResolve();
+                        }
+                    break;
+                case TownEventDataType.InActivityBuff:
+                    for (int i = 0; i < Heroes.Count; i++)
+                        if (Heroes[i].Status == HeroStatus.Abbey || Heroes[i].Status == HeroStatus.Tavern)
+                            for (int j = 0; j < eventEntry.NumberData; j++)
+                                Heroes[i].AddBuff(new BuffInfo(DarkestDungeonManager.Data.Buffs[eventEntry.StringData],
+                                    BuffDurationType.IdleTownVisit, BuffSourceType.Estate));
+                    break;
+                default:
+                    break;
+            }
+        }
+
         TriggeredEvent = null;
         GuaranteedEvent = null;
+        EventModifiers.Reset();
 
         var possibleEvents = DarkestDungeonManager.Data.EventDatabase.Events.FindAll(townEvent => townEvent.IsPossible);
-        if (possibleEvents.Count > 0 && RandomSolver.CheckSuccess(EventsOption.Frequency[0]))
+        if (possibleEvents.Count > 0 && EventsOption.Frequency.Count > 3 && RandomSolver.CheckSuccess(EventsOption.Frequency[3]))
         {
+            for (int i = 0; i < DarkestDungeonManager.Data.EventDatabase.Events.Count; i++)
+                DarkestDungeonManager.Data.EventDatabase.Events[i].EventTriggered(false);
+
             TriggeredEvent = RandomSolver.ChooseBySingleRandom(possibleEvents);
             TriggeredEvent.EventTriggered(true);
-
-            possibleEvents.Remove(TriggeredEvent);
-            for (int i = 0; i < possibleEvents.Count; i++)
-                possibleEvents[i].EventTriggered(false);
+            EventModifiers.IncludeEvent(TriggeredEvent);
         }
 
         Estate.ExecuteProgress();
@@ -59,19 +92,44 @@ public class Campaign
                 guarantee.Dungeon == completedQuest.Dungeon && guarantee.QuestType == completedQuest.Type);
 
             if(eventGuarantee != null)
-                GuaranteedEvent = DarkestDungeonManager.Data.EventDatabase.Events.Find(guarantEvent => 
+            {
+                GuaranteedEvent = DarkestDungeonManager.Data.EventDatabase.Events.Find(guarantEvent =>
                     guarantEvent.Id == eventGuarantee.EventId);
+
+                EventModifiers.IncludeEvent(GuaranteedEvent);
+            }
         }
     }
     public void AdvanceNextWeek()
     {
         CurrentWeek++;
         Logs.Add(new WeekActivityLog(CurrentWeek));
+
+        if (DarkestDungeonManager.RaidManager.Status == RaidStatus.Success)
+            CheckGuarantees(DarkestDungeonManager.RaidManager.Quest);
+
+        for (int i = 0; i < Heroes.Count; i++)
+            Heroes[i].RemoveAllBuffsWithSource(BuffSourceType.Estate);
+    }
+
+    public void CheckEmbarkBuffs(RaidParty raidParty)
+    {
+        if (TriggeredEvent == null)
+            return;
+
+        foreach(var eventEntry in EventModifiers.EventData)
+            if (eventEntry.Type == TownEventDataType.EmbarkPartyBuff)
+                for (int j = 0; j < raidParty.HeroInfo.Count; j++)
+                {
+                    var embarkBuff = new BuffInfo(DarkestDungeonManager.Data.Buffs[eventEntry.StringData],
+                        BuffDurationType.IdleTownVisit, BuffSourceType.Estate);
+                    raidParty.HeroInfo[j].Hero.AddBuff(embarkBuff);
+                }
     }
 
     public Campaign()
     {
-
+        EventModifiers = new EventModifiers();
     }
 
     public void Load(SaveCampaignData saveData)
@@ -122,5 +180,126 @@ public class Campaign
     {
         Quests = QuestGenerator.GenerateQuests(DarkestDungeonManager.Campaign);
         AreQuestsReady = true;
+    }
+}
+
+public class EventModifiers
+{
+    public bool NoLevelRestrictions { get; set; }
+    public Dictionary<string, bool> ActivityLocks { get; set; }
+    public Dictionary<string, bool> FreeActivities { get; set; }
+    public Dictionary<string, float> ActivityCostModifiers { get; set; }
+    public Dictionary<string, float> ProvisionCostModifiers { get; set; }
+    public Dictionary<string, float> ProvisionAmountModifiers { get; set; }
+    public Dictionary<string, float> UpgradeTagCostModifiers { get; set; }
+    public Dictionary<string, int> FreeUpgradeTags { get; set; }
+    public List<TownEventData> EventData { get; set; }
+
+    public bool IsActivityFree(string activityName)
+    {
+        if (FreeActivities.ContainsKey(activityName) && FreeActivities[activityName] == true)
+            return true;
+
+        return false;
+    }
+    public bool IsActivityLocked(string activityName)
+    {
+        if (ActivityLocks.ContainsKey(activityName) && ActivityLocks[activityName] == true)
+            return true;
+
+        return false;
+    }
+    public float ActivityCostModifier(string activityName)
+    {
+        if (ActivityCostModifiers.ContainsKey(activityName))
+            return 1 + ActivityCostModifiers[activityName];
+        else
+            return 1;
+    }
+
+    public EventModifiers()
+    {
+        ActivityLocks = new Dictionary<string, bool>();
+        FreeActivities = new Dictionary<string, bool>();
+        ActivityCostModifiers = new Dictionary<string, float>();
+        ProvisionCostModifiers = new Dictionary<string, float>();
+        ProvisionAmountModifiers = new Dictionary<string, float>();
+        UpgradeTagCostModifiers = new Dictionary<string, float>();
+        FreeUpgradeTags = new Dictionary<string, int>();
+
+        EventData = new List<TownEventData>();
+    }
+
+    public void Reset()
+    {
+        NoLevelRestrictions = false;
+
+        ActivityLocks.Clear();
+        FreeActivities.Clear();
+        ActivityCostModifiers.Clear();
+        ProvisionCostModifiers.Clear();
+        ProvisionAmountModifiers.Clear();
+        UpgradeTagCostModifiers.Clear();
+        FreeUpgradeTags.Clear();
+
+        EventData.Clear();
+    }
+    public void IncludeEvent(TownEvent townEvent)
+    {
+        for(int i = 0; i < townEvent.Data.Count; i++)
+        {
+            var newEventData = new TownEventData();
+            newEventData.Type = townEvent.Data[i].Type;
+            newEventData.StringData = townEvent.Data[i].StringData;
+            newEventData.NumberData = townEvent.Data[i].NumberData;
+            EventData.Add(newEventData);
+
+            switch(townEvent.Data[i].Type)
+            {
+                case TownEventDataType.ActivityCostChange:
+                    if (!ActivityCostModifiers.ContainsKey(townEvent.Data[i].StringData))
+                        ActivityCostModifiers.Add(townEvent.Data[i].StringData, 0);
+
+                    ActivityCostModifiers[townEvent.Data[i].StringData] += townEvent.Data[i].NumberData;
+                    break;
+                case TownEventDataType.ActivityLock:
+                    if (!ActivityLocks.ContainsKey(townEvent.Data[i].StringData))
+                        ActivityLocks.Add(townEvent.Data[i].StringData, true);
+                    break;
+                case TownEventDataType.FreeActivity:
+                    if (!FreeActivities.ContainsKey(townEvent.Data[i].StringData))
+                        FreeActivities.Add(townEvent.Data[i].StringData, true);
+                    break;
+                case TownEventDataType.NoLevelRestriction:
+                    NoLevelRestrictions = true;
+                    break;
+                case TownEventDataType.ProvisionTypeAmountChange:
+                    if (!ProvisionAmountModifiers.ContainsKey(townEvent.Data[i].StringData))
+                        ProvisionAmountModifiers.Add(townEvent.Data[i].StringData, 0);
+
+                    ProvisionAmountModifiers[townEvent.Data[i].StringData] += townEvent.Data[i].NumberData;
+                    break;
+                case TownEventDataType.ProvisionTypeCostChange:
+                    if (!ProvisionCostModifiers.ContainsKey(townEvent.Data[i].StringData))
+                        ProvisionCostModifiers.Add(townEvent.Data[i].StringData, 0);
+
+                    ProvisionCostModifiers[townEvent.Data[i].StringData] += townEvent.Data[i].NumberData;
+                    break;
+                case TownEventDataType.UpgradeTagDiscount:
+                    if (!UpgradeTagCostModifiers.ContainsKey(townEvent.Data[i].StringData))
+                        UpgradeTagCostModifiers.Add(townEvent.Data[i].StringData, 0);
+
+                    UpgradeTagCostModifiers[townEvent.Data[i].StringData] += townEvent.Data[i].NumberData;
+                    break;
+                case TownEventDataType.UpgradeTagFree:
+                    if (!FreeUpgradeTags.ContainsKey(townEvent.Data[i].StringData))
+                        FreeUpgradeTags.Add(townEvent.Data[i].StringData, 0);
+
+                    FreeUpgradeTags[townEvent.Data[i].StringData] += (int)townEvent.Data[i].NumberData;
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }

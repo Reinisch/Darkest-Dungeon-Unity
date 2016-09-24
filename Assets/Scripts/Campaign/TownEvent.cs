@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 
 public enum TownEventTone
 {
@@ -66,6 +67,109 @@ public class TownEvent : ISingleProportion
                         return false;
 
             return true;
+        }
+    }
+    public string EffectTooltip
+    {
+        get
+        {
+            var sb = ToolTipManager.TipBody;
+            for(int i = 0; i < Data.Count; i++)
+            {
+                switch(Data[i].Type)
+                {
+                    case TownEventDataType.ActivityCostChange:
+                        sb.AppendFormat(LocalizationManager.GetString("town_event_info_format_activity_cost_change"),
+                            LocalizationManager.GetString("town_activity_name_" + Data[i].StringData),
+                            Data[i].NumberData);
+                        sb.AppendLine();
+                        break;
+                    case TownEventDataType.ActivityLock:
+                        sb.AppendFormat(LocalizationManager.GetString("town_event_info_format_activity_lock"),
+                            LocalizationManager.GetString("town_activity_name_" + Data[i].StringData));
+                        sb.AppendLine();
+                        break;
+                    case TownEventDataType.BonusRecruit:
+                    case TownEventDataType.DeadRecruit:
+                        break;
+                    case TownEventDataType.EmbarkPartyBuff:
+                        var buffTooltip = DarkestDungeonManager.Data.Buffs[Data[i].StringData].ToolTip;
+                        if (buffTooltip.Length > 0)
+                        {
+                            sb.AppendFormat(LocalizationManager.GetString("town_event_info_format_embark_party_buff"), buffTooltip);
+                            sb.AppendLine();
+                        }
+                        break;
+                    case TownEventDataType.FreeActivity:
+                        if(Data.FindAll(data => data.Type == TownEventDataType.FreeActivity).Count > 3)
+                        {
+                            sb.Append(LocalizationManager.GetString("town_event_info_free_all_activities"));
+                            return sb.ToString();
+                        }
+                        else
+                        {
+                            sb.AppendFormat(LocalizationManager.GetString("town_event_info_format_free_activity"),
+                            LocalizationManager.GetString("town_activity_name_" + Data[i].StringData));
+                            sb.AppendLine();
+                        }
+                        break;
+                    case TownEventDataType.IdleBuff:
+                        var idleBuffTooltip = DarkestDungeonManager.Data.Buffs[Data[i].StringData].ToolTip;
+                        if (idleBuffTooltip.Length > 0)
+                        {
+                            sb.AppendFormat(LocalizationManager.GetString("town_event_info_format_idle_buff"), idleBuffTooltip);
+                            sb.AppendLine();
+                        }
+                        break;
+                    case TownEventDataType.IdleResolve:
+                        sb.AppendFormat(LocalizationManager.GetString("town_event_info_format_idle_resolve_level"),
+                            LocalizationManager.GetString("hero_class_name_" + Data[i].StringData), Data[i].NumberData);
+                        sb.AppendLine();
+                        break;
+                    case TownEventDataType.InActivityBuff:
+                        if (Tone == TownEventTone.Good)
+                        {
+                            sb.Append(LocalizationManager.GetString("town_event_info_in_activity_buff_stress_heal_buff"));
+                            return sb.ToString();
+                        }
+                        else if (Tone == TownEventTone.Bad)
+                        {
+                            sb.Append(LocalizationManager.GetString("town_event_info_in_activity_buff_stress_heal_debuff"));
+                            return sb.ToString();
+                        }
+                        break; 
+                    case TownEventDataType.NoLevelRestriction:
+                        sb.Append(LocalizationManager.GetString("town_event_info_remove_quest_hero_level_restriction"));
+                        sb.AppendLine();
+                        break;
+                    case TownEventDataType.PlotQuest:
+                        sb.AppendFormat(LocalizationManager.GetString("town_event_info_format_plot_quest"),
+                            LocalizationManager.GetString("town_quest_name_" + Data[i].StringData));
+                        sb.AppendLine();
+                        break;
+                    case TownEventDataType.ProvisionTypeAmountChange:
+                        sb.AppendFormat(LocalizationManager.GetString("town_event_info_format_provision_item_type_amount_change"),
+                            LocalizationManager.GetString("str_inventory_type_name_" + Data[i].StringData), Data[i].NumberData);
+                        sb.AppendLine();
+                        break;
+                    case TownEventDataType.ProvisionTypeCostChange:
+                        sb.AppendFormat(LocalizationManager.GetString("town_event_info_format_provision_item_type_cost_change"),
+                            LocalizationManager.GetString("str_inventory_type_name_" + Data[i].StringData), Data[i].NumberData);
+                        sb.AppendLine();
+                        break;
+                    case TownEventDataType.UpgradeTagDiscount:
+                        sb.AppendFormat(LocalizationManager.GetString("town_event_info_format_upgrade_tag_discount"),
+                            LocalizationManager.GetString("upgrade_tag_name_" + Data[i].StringData), Data[i].NumberData);
+                        sb.AppendLine();
+                        break;
+                    case TownEventDataType.UpgradeTagFree:
+                        sb.AppendFormat(LocalizationManager.GetString("town_event_info_format_upgrade_tag_free"),
+                            LocalizationManager.GetString("upgrade_tag_name_" + Data[i].StringData), Data[i].NumberData);
+                        sb.AppendLine();
+                        break;
+                }
+            }
+            return sb.ToString().TrimEnd('\n');
         }
     }
 

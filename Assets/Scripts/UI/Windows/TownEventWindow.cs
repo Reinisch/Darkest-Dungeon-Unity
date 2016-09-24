@@ -44,6 +44,7 @@ public class TownEventWindow : MonoBehaviour
         {
             eventRecruits.gameObject.SetActive(false);
             eventEffects.gameObject.SetActive(true);
+            eventEffects.text = townEvent.EffectTooltip;
         }
     }
 }

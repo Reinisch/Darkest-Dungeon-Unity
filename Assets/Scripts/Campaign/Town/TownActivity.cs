@@ -3,13 +3,14 @@ using System.Collections.Generic;
 
 public interface IActivity
 {
-    string Id { get; set; }
+    string TreeId { get; set; }
     List<ActivitySlot> ActivitySlots { get; set; }
 }
 
 public class TownActivity : IActivity
 {
     public string Id { get; set; }
+    public string TreeId { get; set; }
     public ActivityType ActivityType { get; private set; }
 
     public int BaseSlots { get; set; }
@@ -41,28 +42,34 @@ public class TownActivity : IActivity
             log.HeroRecords.Add(new ActorActivityRecord(ActivityType, effectType, hero, effectInfo, StressHealAmount));
     }
 
-    public TownActivity(string id)
+    public TownActivity(string treeId)
     {
-        Id = id;
-        switch (Id)
+        TreeId = treeId;
+        switch (TreeId)
         {
             case "abbey.meditation":
                 ActivityType = ActivityType.MeditationStressHeal;
+                Id = "meditation";
                 break;
             case "abbey.prayer":
                 ActivityType = ActivityType.PrayerStressHeal;
+                Id = "prayer";
                 break;
             case "abbey.flagellation":
                 ActivityType = ActivityType.FlagellationStressHeal;
+                Id = "flagellation";
                 break;
             case "tavern.bar":
                 ActivityType = ActivityType.BarStressHeal;
+                Id = "bar";
                 break;
             case "tavern.gambling":
                 ActivityType = ActivityType.GambleStressHeal;
+                Id = "gambling";
                 break;
             case "tavern.brothel":
                 ActivityType = ActivityType.BrothelStressHeal;
+                Id = "brothel";
                 break;
         }
         SideEffects = new List<TownEffect>();
