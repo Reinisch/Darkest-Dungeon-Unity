@@ -89,7 +89,7 @@ public class ShopInventory : MonoBehaviour
                 thisItemShopSlot.UpdateAmount();
             }
 
-            DarkestDungeonManager.Campaign.Estate.Currencies["gold"].amount += itemsSold * slot.SlotItem.ItemData.PurchasePrice;
+            DarkestDungeonManager.Campaign.Estate.Currencies["gold"].amount += itemsSold * thisItemShopSlot.Cost;
             currencyPanel.CurrencyIncreased("gold");
             currencyPanel.UpdateCurrency();
             return itemsSold;
@@ -110,7 +110,7 @@ public class ShopInventory : MonoBehaviour
                 thisItemShopSlot.Item.Amount++;
                 thisItemShopSlot.UpdateAmount();
             }
-            DarkestDungeonManager.Campaign.Estate.Currencies["gold"].amount += slot.SlotItem.ItemData.PurchasePrice;
+            DarkestDungeonManager.Campaign.Estate.Currencies["gold"].amount += thisItemShopSlot.Cost;
             currencyPanel.CurrencyIncreased("gold");
             currencyPanel.UpdateCurrency();
             return true;

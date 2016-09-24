@@ -64,9 +64,11 @@ public class WagonInventory : MonoBehaviour
     }
     public void UpdatePrices()
     {
+        float eventDiscount = DarkestDungeonManager.Campaign.EventModifiers.UpgradeTagDiscount("trinket");
+
         for (int i = 0; i < NomadWagon.Trinkets.Count; i++)
         {
-            wagonSlots[i].UpdatePrice(NomadWagon.Discount);
+            wagonSlots[i].UpdatePrice(NomadWagon.Discount + eventDiscount);
         }
     }
 }

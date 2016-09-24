@@ -1,5 +1,6 @@
 ﻿using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine;
 
 public delegate void ShopSlotEvent(ShopSlot slot, InventorySlot dropSlot);
 
@@ -19,8 +20,12 @@ public class ShopSlot : BaseSlot, IPointerEnterHandler, IPointerExitHandler
 
     public void SetItem(ItemDefinition newItem)
     {
-        Item = newItem;
-        InitialAmount = Item.Amount;
+        int amount = Mathf.CeilToInt(newItem.Amount *
+            DarkestDungeonManager.Campaign.EventModifiers.ProvisionAmountModifier(newItem.Type));
+
+        Item = new ItemDefinition(newItem.Type, newItem.Id, amount);
+        InitialAmount = amount;
+
         InventoryItem = DarkestDungeonManager.Data.Items[Item.Type][Item.Id];
         if (Item.Type == "gold" || Item.Type == "provision")
         {
@@ -30,9 +35,10 @@ public class ShopSlot : BaseSlot, IPointerEnterHandler, IPointerExitHandler
         {
             itemIcon.sprite = DarkestDungeonManager.Data.Sprites["inv_" + Item.Type + "+" + Item.Id];
         }
-        Cost = InventoryItem.PurchasePrice;
+        Cost = (int) (InventoryItem.PurchasePrice *
+            DarkestDungeonManager.Campaign.EventModifiers.ProvisionCostModifier(newItem.Type));
         costText.text = Cost.ToString();
-        amountLabel.text = newItem.Amount.ToString();
+        amountLabel.text = InitialAmount.ToString();
     }
     public void UpdateAmount()
     {

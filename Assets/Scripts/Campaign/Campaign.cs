@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class Campaign
 {
@@ -215,6 +216,27 @@ public class EventModifiers
             return 1 + ActivityCostModifiers[activityName];
         else
             return 1;
+    }
+    public float ProvisionCostModifier(string itemType)
+    {
+        if (ProvisionCostModifiers.ContainsKey(itemType))
+            return 1 + ProvisionCostModifiers[itemType];
+        else
+            return 1;
+    }
+    public float ProvisionAmountModifier(string itemType)
+    {
+        if (ProvisionAmountModifiers.ContainsKey(itemType))
+            return 1 + ProvisionAmountModifiers[itemType];
+        else
+            return 1;
+    }
+    public float UpgradeTagDiscount(string tag)
+    {
+        if (UpgradeTagCostModifiers.ContainsKey(tag))
+            return UpgradeTagCostModifiers[tag];
+        else
+            return 0;
     }
 
     public EventModifiers()
