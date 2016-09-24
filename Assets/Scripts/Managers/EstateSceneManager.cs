@@ -20,6 +20,7 @@ public class EstateSceneManager : MonoBehaviour
     public ActivityLogWindow activityLogWindow;
     public GlossaryWindow glossaryWindow;
     public RealmInventoryWindow realmInventoryWindow;
+    public TownEventWindow townEventWindow;
 
     public EstateCurrencyPanel currencyPanel;
     public HeroRosterPanel rosterPanel;
@@ -43,7 +44,7 @@ public class EstateSceneManager : MonoBehaviour
         get
         {
             return menuOpened || realmInventoryOpened || activityLogOpened ||
-                characterWindowOpened || glossaryWindow.isActiveAndEnabled;
+                characterWindowOpened || glossaryWindow.isActiveAndEnabled || townEventWindow.isActiveAndEnabled;
         }
     }
 
@@ -65,6 +66,7 @@ public class EstateSceneManager : MonoBehaviour
         bottomPanel.onRealmInventoryIconClick += RealmInventoryClick;
         bottomPanel.onMainMenuIconClick += MainMenuClick;
         bottomPanel.onGlossaryIconClick += GlossaryClick;
+        bottomPanel.onTownEventIconClick += TownEventClick;
 
         bottomPanel.onPrepareEmbarkButtonClick += EmbarkButtonClick;
         bottomPanel.onProvisionButtonClick += ProvisionClick;
@@ -132,6 +134,14 @@ public class EstateSceneManager : MonoBehaviour
 
         glossaryWindow.Initialize();
         activityLogWindow.Initialize();
+
+        if (DarkestDungeonManager.Campaign.TriggeredEvent == null)
+            bottomPanel.townEventButton.gameObject.SetActive(false);
+        else
+        {
+            bottomPanel.townEventButton.gameObject.SetActive(true);
+            townEventWindow.UpdateEvent(DarkestDungeonManager.Campaign.TriggeredEvent);
+        }
 
         currencyPanel.UpdateCurrency();
         rosterPanel.InitializeRoster();
@@ -239,6 +249,10 @@ public class EstateSceneManager : MonoBehaviour
             realmInventoryWindow.WindowClosed();
         if (townManager.BuildingWindowActive)
             townManager.CloseBuildingWindow();
+        if (glossaryWindow.isActiveAndEnabled)
+            GlossaryClose();
+        if (townEventWindow.isActiveAndEnabled)
+            TownEventClose();
 
         var partyRecord = new PartyActivityRecord(PartyActionType.Embark,
             Types[Random.Range(0, Types.Count)], Difficulties[Random.Range(0, Difficulties.Count)],
@@ -271,6 +285,14 @@ public class EstateSceneManager : MonoBehaviour
 
         DarkestDungeonManager.Campaign.CurrentLog().ReturnRecord = returnRecord;
         activityLogWindow.RecalculateHeight();
+
+        if (DarkestDungeonManager.Campaign.TriggeredEvent == null)
+            bottomPanel.townEventButton.gameObject.SetActive(false);
+        else
+        {
+            bottomPanel.townEventButton.gameObject.SetActive(true);
+            townEventWindow.UpdateEvent(DarkestDungeonManager.Campaign.TriggeredEvent);
+        }
 
         //ProgressLoop();
     }
@@ -335,6 +357,11 @@ public class EstateSceneManager : MonoBehaviour
     {
         bottomPanel.GlossaryAnimator.state.SetAnimation(0, "idle", false);
         glossaryWindow.gameObject.SetActive(false);
+    }
+    public void TownEventClose()
+    {
+        bottomPanel.TownEventAnimator.state.SetAnimation(0, "idle", false);
+        townEventWindow.gameObject.SetActive(false);
     }
 
     public void CharacterWindowSwitch(Hero hero, bool interactable)
@@ -416,6 +443,22 @@ public class EstateSceneManager : MonoBehaviour
         {
             bottomPanel.GlossaryAnimator.state.SetAnimation(0, "selected", true);
             glossaryWindow.gameObject.SetActive(true);
+        }
+    }
+    public void TownEventClick()
+    {
+        if (townManager.BuildingWindowActive)
+            return;
+
+        if (townEventWindow.isActiveAndEnabled)
+        {
+            bottomPanel.TownEventAnimator.state.SetAnimation(0, "idle", false);
+            townEventWindow.gameObject.SetActive(false);
+        }
+        else
+        {
+            bottomPanel.TownEventAnimator.state.SetAnimation(0, "selected", true);
+            townEventWindow.gameObject.SetActive(true);
         }
     }
 

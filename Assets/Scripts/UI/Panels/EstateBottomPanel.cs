@@ -7,6 +7,7 @@ public class EstateBottomPanel : MonoBehaviour
     public Button realmInventoryButton;
     public Button settingsButton;
     public Button glossaryButton;
+    public Button townEventButton;
 
     public Button prepareEmbarkButton;
     public Button provisionButton;
@@ -16,11 +17,13 @@ public class EstateBottomPanel : MonoBehaviour
     public SkeletonAnimation SettingsAnimator { get; set; }
     public SkeletonAnimation ActivityLogAnimator { get; set; }
     public SkeletonAnimation GlossaryAnimator { get; set; }
+    public SkeletonAnimation TownEventAnimator { get; set; }
 
     public event WindowEvent onActivityIconClick;
     public event WindowEvent onRealmInventoryIconClick;
     public event WindowEvent onMainMenuIconClick;
     public event WindowEvent onGlossaryIconClick;
+    public event WindowEvent onTownEventIconClick;
 
     public event WindowEvent onPrepareEmbarkButtonClick;
     public event WindowEvent onProvisionButtonClick;
@@ -32,6 +35,7 @@ public class EstateBottomPanel : MonoBehaviour
         SettingsAnimator = settingsButton.gameObject.GetComponentInChildren<SkeletonAnimation>();
         ActivityLogAnimator = activityLogButton.gameObject.GetComponentInChildren<SkeletonAnimation>();
         GlossaryAnimator = glossaryButton.gameObject.GetComponentInChildren<SkeletonAnimation>();
+        TownEventAnimator = townEventButton.gameObject.GetComponentInChildren<SkeletonAnimation>();
     }
 
     public void EnableTransitions()
@@ -66,6 +70,11 @@ public class EstateBottomPanel : MonoBehaviour
     {
         if (onGlossaryIconClick != null)
             onGlossaryIconClick();
+    }
+    public void TownEventClicked()
+    {
+        if (onTownEventIconClick != null)
+            onTownEventIconClick();
     }
 
     public void EmbarkPreparationClicked()

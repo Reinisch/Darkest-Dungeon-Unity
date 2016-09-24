@@ -21,17 +21,20 @@ public class RecruitSlot : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         else
         {
             Hero = hero;
-            nameLabel.text = Hero.HeroName;
-            heroPortrait.sprite = DarkestDungeonManager.HeroSprites[Hero.ClassStringId]["A"].Portrait;
-            classLabel.text = LocalizationManager.GetString("str_resolve_" + Hero.Resolve.Level.ToString())
-                + " " + LocalizationManager.GetString("hero_class_name_" + Hero.ClassStringId);
+            if(nameLabel != null)
+            {
+                nameLabel.text = Hero.HeroName;
+                classLabel.text = LocalizationManager.GetString("str_resolve_" + Hero.Resolve.Level.ToString())
+                    + " " + LocalizationManager.GetString("hero_class_name_" + Hero.ClassStringId);
 
-            resolveLabel.text = hero.Resolve.Level.ToString();
-            if (hero.Resolve.Level > 0)
-                resolveIcon.sprite = DarkestDungeonManager.Data.Sprites["resolve_level_bar_number_background_lvl" +
-                    hero.Resolve.Level.ToString()];
-            else
-                resolveIcon.sprite = DarkestDungeonManager.Data.Sprites["resolve_level_bar_number_background"];
+                resolveLabel.text = hero.Resolve.Level.ToString();
+                if (hero.Resolve.Level > 0)
+                    resolveIcon.sprite = DarkestDungeonManager.Data.Sprites["resolve_level_bar_number_background_lvl" +
+                        hero.Resolve.Level.ToString()];
+                else
+                    resolveIcon.sprite = DarkestDungeonManager.Data.Sprites["resolve_level_bar_number_background"];
+            }
+            heroPortrait.sprite = DarkestDungeonManager.HeroSprites[Hero.ClassStringId]["A"].Portrait;
 
             transform.parent.gameObject.SetActive(true);
         }
@@ -51,7 +54,6 @@ public class RecruitSlot : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         if (eventData.button == PointerEventData.InputButton.Right)
             HeroRoster.RecruitSlotClicked(this);
     }
-
     public void OnDrag(PointerEventData eventData)
     {
         DragManager.Instanse.OnDrag(this, eventData);
