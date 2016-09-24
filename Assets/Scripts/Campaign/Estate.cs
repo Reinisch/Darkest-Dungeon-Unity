@@ -323,6 +323,31 @@ public class Estate
         return UpgradeStatus.Available;
     }
 
+    public bool BuyUpgrade(string treeId, Hero hero, TownUpgrade upgrade, float discount, bool isFree)
+    {
+        if (!isFree && !CanPayPrice(upgrade.Cost, discount))
+            return false;
+
+        if (!HeroPurchases.ContainsKey(hero.RosterId))
+        {
+            HeroPurchases.Add(hero.RosterId, new Dictionary<string, UpgradePurchases>());
+        }
+
+        if (!HeroPurchases[hero.RosterId].ContainsKey(treeId))
+        {
+            HeroPurchases[hero.RosterId].Add(treeId, new UpgradePurchases(treeId, upgrade.Code));
+        }
+        else
+        {
+            if (HeroPurchases[hero.RosterId][treeId].PurchasedUpgrades.Contains(upgrade.Code))
+                return false;
+
+            HeroPurchases[hero.RosterId][treeId].PurchasedUpgrades.Add(upgrade.Code);
+        }
+        if (!isFree)
+            RemoveCurrency(upgrade.Cost, discount);
+        return true;
+    }
     public bool BuyUpgrade(CampingSkill skill, Hero hero, float discount)
     {
         if (!CanPayPrice(skill.CurrencyCost, discount))
@@ -342,9 +367,9 @@ public class Estate
         RemoveCurrency(skill.CurrencyCost, discount);
         return true;
     }
-    public bool BuyUpgrade(string treeId, TownUpgrade upgrade)
+    public bool BuyUpgrade(string treeId, TownUpgrade upgrade, bool isFree)
     {
-        if (!CanPayPrice(upgrade.Cost))
+        if (!isFree && !CanPayPrice(upgrade.Cost))
             return false;
 
         if (!TownPurchases.ContainsKey(treeId))
@@ -359,57 +384,8 @@ public class Estate
             TownPurchases[treeId].PurchasedUpgrades.Add(upgrade.Code);
         }
 
-        RemoveCurrency(upgrade.Cost);
-        return true;
-    }
-    public bool BuyUpgrade(string treeId, Hero hero, TownUpgrade upgrade)
-    {
-        if (!CanPayPrice(upgrade.Cost))
-            return false;
-
-        if (!HeroPurchases.ContainsKey(hero.RosterId))
-        {
-            HeroPurchases.Add(hero.RosterId, new Dictionary<string, UpgradePurchases>());
-        }
-
-        if (!HeroPurchases[hero.RosterId].ContainsKey(treeId))
-        {
-            HeroPurchases[hero.RosterId].Add(treeId, new UpgradePurchases(treeId, upgrade.Code));
-        }
-        else
-        {
-            if (HeroPurchases[hero.RosterId][treeId].PurchasedUpgrades.Contains(upgrade.Code))
-                return false;
-
-            HeroPurchases[hero.RosterId][treeId].PurchasedUpgrades.Add(upgrade.Code);
-        }
-
-        RemoveCurrency(upgrade.Cost);
-        return true;
-    }
-    public bool BuyUpgrade(string treeId, Hero hero, TownUpgrade upgrade, float discount)
-    {
-        if (!CanPayPrice(upgrade.Cost, discount))
-            return false;
-
-        if (!HeroPurchases.ContainsKey(hero.RosterId))
-        {
-            HeroPurchases.Add(hero.RosterId, new Dictionary<string, UpgradePurchases>());
-        }
-
-        if (!HeroPurchases[hero.RosterId].ContainsKey(treeId))
-        {
-            HeroPurchases[hero.RosterId].Add(treeId, new UpgradePurchases(treeId, upgrade.Code));
-        }
-        else
-        {
-            if (HeroPurchases[hero.RosterId][treeId].PurchasedUpgrades.Contains(upgrade.Code))
-                return false;
-
-            HeroPurchases[hero.RosterId][treeId].PurchasedUpgrades.Add(upgrade.Code);
-        }
-
-        RemoveCurrency(upgrade.Cost, discount);
+        if(!isFree)
+            RemoveCurrency(upgrade.Cost);
         return true;
     }
 

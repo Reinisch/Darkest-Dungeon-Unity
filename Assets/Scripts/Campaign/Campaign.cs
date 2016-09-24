@@ -238,6 +238,18 @@ public class EventModifiers
         else
             return 0;
     }
+    public bool HasFreeUpgrade(string tag)
+    {
+        if (FreeUpgradeTags.ContainsKey(tag) && FreeUpgradeTags[tag] > 0)
+            return true;
+
+        return false;
+    }
+    public void RemoveUpgradeTag(string tag)
+    {
+        if (FreeUpgradeTags.ContainsKey(tag) && FreeUpgradeTags[tag] > 0)
+            FreeUpgradeTags[tag]--;
+    }
 
     public EventModifiers()
     {

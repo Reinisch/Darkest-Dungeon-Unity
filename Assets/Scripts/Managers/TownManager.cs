@@ -114,12 +114,24 @@ public class TownManager : MonoBehaviour
         slot.icon.sprite = availableUpgradeIcon;
         slot.costFrame.gameObject.SetActive(true);
 
-        if (DarkestDungeonManager.Campaign.Estate.CanPayPrice(slot.Upgrade.Cost[0], discount))
+        bool isFree = false;
+        for (int i = 0; i < slot.Tree.Tags.Count; i++)
+            if (DarkestDungeonManager.Campaign.EventModifiers.HasFreeUpgrade(slot.Tree.Tags[i]))
+                isFree = true;
+
+        if (isFree || DarkestDungeonManager.Campaign.Estate.CanPayPrice(slot.Upgrade.Cost[0], discount))
             slot.costFrame.heirloomOneAmount.color = Color.white;
         else
             slot.costFrame.heirloomOneAmount.color = Color.red;
 
-        slot.costFrame.heirloomOneAmount.text = Mathf.RoundToInt(slot.Upgrade.Cost[0].Amount * discount).ToString();
+        if (isFree)
+        {
+            slot.costFrame.heirloomOneAmount.text = "0";
+        }
+        else
+        {
+            slot.costFrame.heirloomOneAmount.text = Mathf.RoundToInt(slot.Upgrade.Cost[0].Amount * discount).ToString();
+        }
     }
     public void SetUpgradeSlotLocked(SkillUpgradeSlot slot)
     {
@@ -139,12 +151,24 @@ public class TownManager : MonoBehaviour
         slot.icon.sprite = availableUpgradeIcon;
         slot.costFrame.gameObject.SetActive(true);
 
-        if (DarkestDungeonManager.Campaign.Estate.CanPayPrice(slot.Upgrade.Cost[0], discount))
+        bool isFree = false;
+        for (int i = 0; i < slot.Tree.Tags.Count; i++)
+            if (DarkestDungeonManager.Campaign.EventModifiers.HasFreeUpgrade(slot.Tree.Tags[i]))
+                isFree = true;
+
+        if (isFree || DarkestDungeonManager.Campaign.Estate.CanPayPrice(slot.Upgrade.Cost[0], discount))
             slot.costFrame.heirloomOneAmount.color = Color.white;
         else
             slot.costFrame.heirloomOneAmount.color = Color.red;
 
-        slot.costFrame.heirloomOneAmount.text = Mathf.RoundToInt(slot.Upgrade.Cost[0].Amount * discount).ToString();
+        if(isFree)
+        {
+            slot.costFrame.heirloomOneAmount.text = "0";
+        }
+        else
+        {
+            slot.costFrame.heirloomOneAmount.text = Mathf.RoundToInt(slot.Upgrade.Cost[0].Amount * discount).ToString();
+        }
     }
     public void SetUpgradeSlotLocked(EquipmentUpgradeSlot slot)
     {
@@ -164,12 +188,24 @@ public class TownManager : MonoBehaviour
         slot.icon.sprite = availableUpgradeIcon;
         slot.costFrame.gameObject.SetActive(true);
 
-        if (DarkestDungeonManager.Campaign.Estate.CanPayPrice(slot.UpgradeInfo.Cost[1]))
+        bool isFree = false;
+        for (int i = 0; i < slot.Tree.Tags.Count; i++)
+            if (DarkestDungeonManager.Campaign.EventModifiers.HasFreeUpgrade(slot.Tree.Tags[i]))
+                isFree = true;
+
+        if (isFree || DarkestDungeonManager.Campaign.Estate.CanPayPrice(slot.UpgradeInfo.Cost[1]))
             slot.costFrame.heirloomOneAmount.color = Color.white;
         else
             slot.costFrame.heirloomOneAmount.color = Color.red;
 
-        slot.costFrame.heirloomOneAmount.text = slot.UpgradeInfo.Cost[1].Amount.ToString();
+        if (isFree)
+        {
+            slot.costFrame.heirloomOneAmount.text = "0";
+        }
+        else
+        {
+            slot.costFrame.heirloomOneAmount.text = slot.UpgradeInfo.Cost[1].Amount.ToString();
+        }
 
         if ( !(slot.costFrame.heirloomTwoIcon == null || slot.UpgradeInfo.Cost.Count < 3) )
         {
@@ -177,7 +213,11 @@ public class TownManager : MonoBehaviour
                 slot.costFrame.heirloomTwoAmount.color = Color.white;
             else
                 slot.costFrame.heirloomTwoAmount.color = Color.red;
-            slot.costFrame.heirloomTwoAmount.text = slot.UpgradeInfo.Cost[2].Amount.ToString();
+
+            if(isFree)
+                slot.costFrame.heirloomTwoAmount.text = "0";
+            else
+                slot.costFrame.heirloomTwoAmount.text = slot.UpgradeInfo.Cost[2].Amount.ToString();
         }
     }
     public void SetUpgradeSlotLocked(BuildingUpgradeSlot slot)

@@ -41,7 +41,16 @@ public class CampingTrainerWindow : BuildingWindow
         var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(slot.Tree.Id, slot.UpgradeInfo);
         if (status == UpgradeStatus.Available)
         {
-            if (DarkestDungeonManager.Campaign.Estate.BuyUpgrade(slot.Tree.Id, slot.UpgradeInfo))
+            bool isFree = false;
+            for (int i = 0; i < slot.Tree.Tags.Count; i++)
+                if (DarkestDungeonManager.Campaign.EventModifiers.HasFreeUpgrade(slot.Tree.Tags[i]))
+                {
+                    isFree = true;
+                    DarkestDungeonManager.Campaign.EventModifiers.RemoveUpgradeTag(slot.Tree.Tags[i]);
+                    break;
+                }
+
+            if (DarkestDungeonManager.Campaign.Estate.BuyUpgrade(slot.Tree.Id, slot.UpgradeInfo, isFree))
             {
                 TownManager.EstateSceneManager.currencyPanel.UpdateCurrency();
                 UpdateUpgradeTrees();

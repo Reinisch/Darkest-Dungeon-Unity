@@ -61,6 +61,7 @@ public class BlacksmithHeroWindow : MonoBehaviour
                 float discountWep = 1 - DarkestDungeonManager.Campaign.Estate.Blacksmith.Discount;
                 var weaponTree = DarkestDungeonManager.Data.UpgradeTrees[hero.ClassStringId + ".weapon"];
                 treeSlot.currentEquipment.UpdateEquipment(hero.Weapon, hero);
+
                 int lastWepIndex = -1;
                 for (int i = 0; i < treeSlot.upgrades.Count; i++)
                 {
@@ -99,9 +100,18 @@ public class BlacksmithHeroWindow : MonoBehaviour
         var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(slot.Tree.Id, slot.Hero, slot.Upgrade);
         if (status == UpgradeStatus.Available)
         {
+            bool isFree = false;
+            for (int i = 0; i < slot.Tree.Tags.Count; i++)
+                if (DarkestDungeonManager.Campaign.EventModifiers.HasFreeUpgrade(slot.Tree.Tags[i]))
+                {
+                    isFree = true;
+                    DarkestDungeonManager.Campaign.EventModifiers.RemoveUpgradeTag(slot.Tree.Tags[i]);
+                    break;
+                }
+
             float discount = 1 - DarkestDungeonManager.Campaign.Estate.Blacksmith.Discount;
 
-            if (DarkestDungeonManager.Campaign.Estate.BuyUpgrade(slot.Tree.Id, slot.Hero, slot.Upgrade, discount))
+            if (DarkestDungeonManager.Campaign.Estate.BuyUpgrade(slot.Tree.Id, slot.Hero, slot.Upgrade, discount, isFree))
             {
                 TownManager.EstateSceneManager.currencyPanel.CurrencyDecreased("gold");
                 TownManager.EstateSceneManager.currencyPanel.UpdateCurrency();
