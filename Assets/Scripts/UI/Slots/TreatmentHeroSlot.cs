@@ -46,6 +46,7 @@ public class TreatmentHeroSlot : MonoBehaviour, IPointerEnterHandler, IPointerEx
                 break;
             case ActivitySlotStatus.Blocked:
             case ActivitySlotStatus.Caretaken:
+            case ActivitySlotStatus.Crierd:
             case ActivitySlotStatus.Checkout:
             case ActivitySlotStatus.Paid:
             default:
@@ -73,6 +74,7 @@ public class TreatmentHeroSlot : MonoBehaviour, IPointerEnterHandler, IPointerEx
                     break;
                 case ActivitySlotStatus.Blocked:
                 case ActivitySlotStatus.Caretaken:
+                case ActivitySlotStatus.Crierd:
                 default:
                     SetActivitySlotClosed();
                     break;

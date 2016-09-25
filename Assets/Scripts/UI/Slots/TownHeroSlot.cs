@@ -53,6 +53,9 @@ public class TownHeroSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 case ActivitySlotStatus.Caretaken:
                     SetActivitySlotOccupiedCaretaken();
                     break;
+                case ActivitySlotStatus.Crierd:
+                    SetActivitySlotOccupiedCrierd();
+                    break;
                 case ActivitySlotStatus.Checkout:
                     SetActivitySlotOccupiedCheckout();
                     break;
@@ -112,6 +115,7 @@ public class TownHeroSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 break;
             case ActivitySlotStatus.Blocked:
             case ActivitySlotStatus.Caretaken:
+            case ActivitySlotStatus.Crierd:
             case ActivitySlotStatus.Checkout:
             case ActivitySlotStatus.Paid:
             default:
@@ -193,6 +197,19 @@ public class TownHeroSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         activeIcon.gameObject.SetActive(false);
 
         slotIcon.sprite = DarkestDungeonManager.Data.Sprites["caretaker_portrait"];
+    }
+    public void SetActivitySlotOccupiedCrierd()
+    {
+        heroLabel.text = "";
+        costLabel.gameObject.SetActive(false);
+
+        buttonIcon.gameObject.SetActive(false);
+        lockerIcon.gameObject.SetActive(false);
+        eventLockerIcon.gameObject.SetActive(false);
+        freeIcon.gameObject.SetActive(false);
+        activeIcon.gameObject.SetActive(false);
+
+        slotIcon.sprite = DarkestDungeonManager.Data.Sprites["crier_portrait"];
     }
 
     public void SetActivitySlotClosed()
@@ -276,6 +293,9 @@ public class TownHeroSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     {
         if (ActivitySlot.Status == ActivitySlotStatus.Caretaken)
             ToolTipManager.Instanse.Show(LocalizationManager.GetString("str_cant_place_hero_here_caretaker"),
+                eventData, RectTransform, ToolTipStyle.FromBottom, ToolTipSize.Small);
+        else if (ActivitySlot.Status == ActivitySlotStatus.Crierd)
+            ToolTipManager.Instanse.Show(LocalizationManager.GetString("str_cant_place_hero_here_crier"),
                 eventData, RectTransform, ToolTipStyle.FromBottom, ToolTipSize.Small);
     }
     public void OnPointerExit(PointerEventData eventData)

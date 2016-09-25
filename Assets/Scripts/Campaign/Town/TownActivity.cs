@@ -88,6 +88,7 @@ public class TownActivity : IActivity
             switch(activitySlot.Status)
             {
                 case ActivitySlotStatus.Caretaken:
+                case ActivitySlotStatus.Crierd:
                     activitySlot.Status = ActivitySlotStatus.Available;
                     activitySlot.Hero = null;
                     break;

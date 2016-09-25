@@ -81,7 +81,7 @@ public class Campaign
             TriggeredEvent.EventTriggered(true);
             EventModifiers.IncludeEvent(TriggeredEvent);
         }
-
+        
         GenerateQuests();
         SearchMissingHeroes();
     }
@@ -92,6 +92,11 @@ public class Campaign
 
         if (DarkestDungeonManager.RaidManager.Status == RaidStatus.Success)
             CheckGuarantees(DarkestDungeonManager.RaidManager.Quest);
+
+        if (TriggeredEvent != null || GuaranteedEvent != null)
+            Estate.RedeployCrier();
+        else
+            Estate.KickCrier();
 
         for (int i = 0; i < Heroes.Count; i++)
             Heroes[i].RemoveAllBuffsWithSource(BuffSourceType.Estate);

@@ -75,6 +75,28 @@ public class Estate
         if (availableSlots.Count > 0)
             availableSlots[Random.Range(0, availableSlots.Count)].Status = ActivitySlotStatus.Caretaken;
     }
+    public void RedeployCrier()
+    {
+        var availableSlots = new List<ActivitySlot>();
+        foreach (var activity in Tavern.Activities.Concat(Abbey.Activities))
+            availableSlots.AddRange(activity.ActivitySlots.FindAll(slot =>
+                slot.IsUnlocked && slot.Status == ActivitySlotStatus.Available));
+
+        if (availableSlots.Count > 0)
+            availableSlots[Random.Range(0, availableSlots.Count)].Status = ActivitySlotStatus.Crierd;
+    }
+    public void KickCrier()
+    {
+        foreach (var activity in Tavern.Activities.Concat(Abbey.Activities))
+        {
+            var crierSlot = activity.ActivitySlots.Find(slot => slot.Status == ActivitySlotStatus.Crierd);
+            if(crierSlot != null)
+            {
+                crierSlot.Status = ActivitySlotStatus.Available;
+                return;
+            }
+        }
+    }
     public void ExecuteProgress()
     {
         NomadWagon.RestockTrinkets();
