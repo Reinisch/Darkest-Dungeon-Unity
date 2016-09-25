@@ -10,8 +10,11 @@ public class DeathRecordSlot : MonoBehaviour
     public Text heroName;
     public Text deathDescription;
 
+    public DeathRecord Record { get; set; }
+
     public void UpgdateRecord(DeathRecord newRecord, GraveyardWindow window)
     {
+        Record = newRecord;
         resolveIcon.sprite = window.resolveIcons[newRecord.ResolveLevel];
         heroPortrait.sprite = DarkestDungeonManager.HeroSprites[DarkestDungeonManager.Data.HeroClasses.Values.ToList().
             Find(item => item.IndexId == newRecord.HeroClassIndex).StringId]["A"].Portrait;

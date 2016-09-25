@@ -38,6 +38,7 @@ public class TownEventWindow : MonoBehaviour
         if(isRecruitEvent)
         {
             eventRecruits.gameObject.SetActive(true);
+            eventRecruits.UpdateRecruitPanel(DarkestDungeonManager.Campaign.Estate.StageCoach.EventHeroes);
             eventEffects.gameObject.SetActive(false);
         }
         else

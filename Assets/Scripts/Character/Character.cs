@@ -473,7 +473,7 @@ public class Character
                     new SingleAttribute(heroClass.Resistanses[HeroResistances[i]], AttributeCategory.Resistance));
             else
                 AddSingleAttribute(HeroResistances[i],
-                    new SingleAttribute(heroClass.Resistanses[HeroResistances[i]]+ level * 0.1f, AttributeCategory.Resistance));
+                    new SingleAttribute(heroClass.Resistanses[HeroResistances[i]] + level * 0.1f, AttributeCategory.Resistance));
     }
     public Character(HeroClass heroClass)
     {

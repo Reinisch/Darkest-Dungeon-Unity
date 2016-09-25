@@ -14,17 +14,13 @@ public class RecruitPanel : MonoBehaviour
         }
     }
 
-    public void UpdateRecruitPanel()
+    public void UpdateRecruitPanel(List<Hero> heroes)
     {
-        int currentIndex = 0;
-        for (int i = 0; i < DarkestDungeonManager.Campaign.Estate.StageCoach.Heroes.Count; i++)
-        {
-            currentIndex = i;
-            recruitSlots[i].UpdateSlot(DarkestDungeonManager.Campaign.Estate.StageCoach.Heroes[i]);
-        }
-        for(int i = currentIndex + 1; i < recruitSlots.Count; i++)
-        {
+        int updatableSlots = Mathf.Min(recruitSlots.Count, heroes.Count);
+        for (int i = 0; i < updatableSlots; i++)
+            recruitSlots[i].UpdateSlot(heroes[i]);
+
+        for (int i = updatableSlots; i < recruitSlots.Count; i++)
             recruitSlots[i].RemoveSlot();
-        }
     }
 }

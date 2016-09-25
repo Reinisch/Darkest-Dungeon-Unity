@@ -104,7 +104,8 @@ public class RecruitSlot : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
 
         HeroRoster.Dragging = false;
         HeroRoster.rosterLive.gameObject.SetActive(false);
-        heroPortrait.sprite = DarkestDungeonManager.HeroSprites[Hero.ClassStringId]["A"].Portrait;
+        if(Hero != null)
+            heroPortrait.sprite = DarkestDungeonManager.HeroSprites[Hero.ClassStringId]["A"].Portrait;
 
         HeroRoster.placeHolder.slotController.SetBool("isHidden", true);
         HeroRoster.placeHolder.slotController.SetTrigger("hide");

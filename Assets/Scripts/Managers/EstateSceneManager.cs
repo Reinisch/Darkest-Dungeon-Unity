@@ -57,6 +57,7 @@ public class EstateSceneManager : MonoBehaviour
         characterWindow.onWindowClose += RosterCharacterInfoClose;
         activityLogWindow.onWindowClose += ActivityLogClose;
         realmInventoryWindow.onWindowClose += RealmInventoryClose;
+        rosterPanel.onHeroResurrection += RosterPanel_onHeroResurrection;
 
         DarkestDungeonManager.MainMenu.onWindowClose += MainMenuClose;
 
@@ -180,6 +181,11 @@ public class EstateSceneManager : MonoBehaviour
     {
         bottomPanel.provisionButton.interactable = false;
     }
+    void RosterPanel_onHeroResurrection(DeathRecord record)
+    {
+        (townManager.buildingWindows[2] as GraveyardWindow).HeroResurrected(record);
+        townEventWindow.eventRecruits.UpdateRecruitPanel(DarkestDungeonManager.Campaign.Estate.StageCoach.EventHeroes);
+    }
 
     #region Quik Start Generation Options
     public List<string> Difficulties = new List<string>() { "1", "3", "5", "6" };
@@ -271,7 +277,8 @@ public class EstateSceneManager : MonoBehaviour
         (townManager.buildingWindows[3] as SanitariumWindow).UpdateSlots();
         (townManager.buildingWindows[4] as TavernWindow).UpdateSlots();
         (townManager.buildingWindows[8] as NomadWagonWindow).wagonInventory.UpdateShop();
-        (townManager.buildingWindows[9] as StageCoachWindow).recruitPanel.UpdateRecruitPanel();
+        (townManager.buildingWindows[9] as StageCoachWindow).recruitPanel.
+            UpdateRecruitPanel(DarkestDungeonManager.Campaign.Estate.StageCoach.Heroes);
 
         rosterPanel.UpdateRoster();
 
@@ -325,7 +332,8 @@ public class EstateSceneManager : MonoBehaviour
         (townManager.buildingWindows[3] as SanitariumWindow).UpdateSlots();
         (townManager.buildingWindows[4] as TavernWindow).UpdateSlots();
         (townManager.buildingWindows[8] as NomadWagonWindow).wagonInventory.UpdateShop();
-        (townManager.buildingWindows[9] as StageCoachWindow).recruitPanel.UpdateRecruitPanel();
+        (townManager.buildingWindows[9] as StageCoachWindow).recruitPanel.
+            UpdateRecruitPanel(DarkestDungeonManager.Campaign.Estate.StageCoach.Heroes);
 
         rosterPanel.UpdateRoster();
     }

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
+public enum RecruitResult { None, StageCoach, Bonus, Graveyard }
+
 public class Estate
 {
     public string EstateTitle { get; private set; }
@@ -26,7 +28,7 @@ public class Estate
 	public Estate(SaveCampaignData saveData)
     {
         rosterIds = new List<int>();
-        for (int i = 1; i < 40; i++)
+        for (int i = 1; i < 100; i++)
             rosterIds.Add(i);
 
         EstateTitle = saveData.hamletTitle;
@@ -83,6 +85,14 @@ public class Estate
         Sanitarium.ProvideActivity();
 
         RedeployCaretaker();
+    }
+    public void RestockBonus(string bonusClass, int bonusAmount)
+    {
+        StageCoach.RestockBonus(rosterIds, this, bonusClass, bonusAmount);
+    }
+    public void RestockFromGrave(int bonusAmount)
+    {
+        StageCoach.RestockFromGrave(rosterIds, this, bonusAmount);
     }
 
     public void ReturnRosterId(int id)
@@ -242,10 +252,27 @@ public class Estate
         return 1;
     }
 
-    public void RecruitHero(Hero hero)
+    public DeathRecord RecruitHero(Hero hero)
     {
-        if(!StageCoach.Heroes.Remove(hero))
-            Debug.LogError("Can't find recruited hero in stage coach");
+        if (StageCoach.Heroes.Remove(hero))
+            return null;
+
+        if (StageCoach.EventHeroes.Contains(hero))
+        {
+            int removedIndex = StageCoach.EventHeroes.IndexOf(hero);
+            StageCoach.EventHeroes.Remove(hero);
+
+            if (StageCoach.GraveIndexes.Count > 0)
+            {
+                int deadRecordIndex = StageCoach.GraveIndexes[removedIndex];
+                var deathRecord = Graveyard.Records[deadRecordIndex];
+                Graveyard.Records.RemoveAt(deadRecordIndex);
+                StageCoach.ClearDeadRecruits(rosterIds, this);
+                return deathRecord;
+            }
+            return null;
+        }
+        return null;
     }
     public void ReequipHero(Hero hero)
     {

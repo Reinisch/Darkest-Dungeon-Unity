@@ -19,6 +19,8 @@ public class StageCoach : Building
     public List<RecruitUpgrade> RecruitExperienceUpgrades { get; set; }
 
     public List<Hero> Heroes { get; set; }
+    public List<Hero> EventHeroes { get; set; }
+    public List<int> GraveIndexes { get; set; }
 
     public StageCoach()
     {
@@ -26,6 +28,8 @@ public class StageCoach : Building
         RosterSlotUpgrades = new List<SlotUpgrade>();
         RecruitExperienceUpgrades = new List<RecruitUpgrade>();
         Heroes = new List<Hero>();
+        EventHeroes = new List<Hero>();
+        GraveIndexes = new List<int>();
     }
 
     void GeneratePurchaseInfo(Hero hero, Estate estate)
@@ -88,7 +92,10 @@ public class StageCoach : Building
     public void RestockHeroes(List<int> rosterIds, Estate estate)
     {
         var heroClasses = DarkestDungeonManager.Data.HeroClasses.Keys.ToList();
-
+        Heroes.AddRange(EventHeroes);
+        EventHeroes.Clear();
+        GraveIndexes.Clear();
+        #region Clear unrecruited heroes
         if(Heroes != null && Heroes.Count > 0)
         {
             for(int i = 0; i < Heroes.Count; i++)
@@ -103,6 +110,8 @@ public class StageCoach : Building
                 estate.HeroPurchases.Remove(Heroes[i].RosterId);
             }
         }
+        #endregion
+        #region Create new recruits
         Heroes = new List<Hero>();
         if(DarkestDungeonManager.RaidManager.Quest != null && DarkestDungeonManager.RaidManager.Quest.Goal.Id == "tutorial_final_room")
         {
@@ -145,6 +154,8 @@ public class StageCoach : Building
                 GeneratePurchaseInfo(newHero, estate);
             }
         }
+        #endregion
+        #region Add recruits for minimum of one party
         int abominations = DarkestDungeonManager.Campaign.Heroes.FindAll(hero =>
             hero.Class == "abomination").Count + Heroes.FindAll(hero => hero.Class == "abomination").Count;
         int additionalHeroes = 4 - DarkestDungeonManager.Campaign.Heroes.Count - Heroes.Count + abominations;
@@ -179,6 +190,121 @@ public class StageCoach : Building
             rosterIds.Remove(id);
             GeneratePurchaseInfo(newHero, estate);
         }
+        #endregion
+    }
+    public void RestockBonus(List<int> rosterIds, Estate estate, string bonusClass, int bonusAmount)
+    {
+        EventHeroes.Clear();
+        GraveIndexes.Clear();
+
+        #region Clear unrecruited heroes
+        if (EventHeroes.Count > 0)
+        {
+            for (int i = 0; i < EventHeroes.Count; i++)
+            {
+                if (rosterIds.Contains(EventHeroes[i].RosterId))
+                {
+                    Debug.LogError("Same id returned while restocking heroes.");
+                }
+                else
+                    rosterIds.Add(EventHeroes[i].RosterId);
+
+                estate.HeroPurchases.Remove(EventHeroes[i].RosterId);
+            }
+        }
+        #endregion
+
+        #region Create bonus recruits
+        for (int i = 0; i < bonusAmount; i++)
+        {
+            RecruitUpgrade experienceUpgrade = null;
+
+            if (CurrentRecruitMaxLevel > 0)
+            {
+                for (int j = 0; j <= RecruitExperienceUpgrades.Count - 1; j++)
+                {
+                    if (RecruitExperienceUpgrades[j].Level <= CurrentRecruitMaxLevel &&
+                        RandomSolver.CheckSuccess(RecruitExperienceUpgrades[j].Chance))
+                    {
+                        experienceUpgrade = RecruitExperienceUpgrades[j];
+                        break;
+                    }
+                }
+            }
+            int id = rosterIds[Random.Range(0, rosterIds.Count)];
+            string heroClass = DarkestDungeonManager.Data.HeroClasses[bonusClass].StringId;
+            string heroName = LocalizationManager.GetString("hero_name_" + Random.Range(0, 556).ToString());
+            var newHero = experienceUpgrade == null ?
+                new Hero(id, heroClass, heroName) :
+                new Hero(id, heroClass, heroName, experienceUpgrade);
+            EventHeroes.Add(newHero);
+            rosterIds.Remove(id);
+            GeneratePurchaseInfo(newHero, estate);
+        }
+        #endregion
+    }
+    public void RestockFromGrave(List<int> rosterIds, Estate estate, int bonusAmount)
+    {
+        EventHeroes.Clear();
+        GraveIndexes.Clear();
+
+        #region Clear unrecruited heroes
+        if (EventHeroes.Count > 0)
+        {
+            for (int i = 0; i < EventHeroes.Count; i++)
+            {
+                if (rosterIds.Contains(EventHeroes[i].RosterId))
+                {
+                    Debug.LogError("Same id returned while restocking heroes.");
+                }
+                else
+                    rosterIds.Add(EventHeroes[i].RosterId);
+
+                estate.HeroPurchases.Remove(EventHeroes[i].RosterId);
+            }
+        }
+        #endregion
+
+        bonusAmount = Mathf.Min(estate.Graveyard.Records.Count, bonusAmount);
+        var deadRecruitsRecords = new List<DeathRecord>(estate.Graveyard.Records);
+        var heroClasses = DarkestDungeonManager.Data.HeroClasses.Values.ToList();
+
+        #region Create dead recruits
+        for (int i = 0; i < bonusAmount; i++)
+        {
+            int id = rosterIds[Random.Range(0, rosterIds.Count)];
+            var deadRecord = deadRecruitsRecords[Random.Range(0, deadRecruitsRecords.Count)];
+            string heroClass = heroClasses.Find(deadClass => deadClass.IndexId == deadRecord.HeroClassIndex).StringId;
+            var newHero = new Hero(id, heroClass, deadRecord);
+            EventHeroes.Add(newHero);
+            rosterIds.Remove(id);
+            GeneratePurchaseInfo(newHero, estate);
+            GraveIndexes.Add(estate.Graveyard.Records.IndexOf(deadRecord));
+            deadRecruitsRecords.Remove(deadRecord);
+        }
+        #endregion
+    }
+    public void ClearDeadRecruits(List<int> rosterIds, Estate estate)
+    {
+        EventHeroes.Clear();
+        GraveIndexes.Clear();
+
+        #region Clear unrecruited heroes
+        if (EventHeroes.Count > 0)
+        {
+            for (int i = 0; i < EventHeroes.Count; i++)
+            {
+                if (rosterIds.Contains(EventHeroes[i].RosterId))
+                {
+                    Debug.LogError("Same id returned while restocking heroes.");
+                }
+                else
+                    rosterIds.Add(EventHeroes[i].RosterId);
+
+                estate.HeroPurchases.Remove(EventHeroes[i].RosterId);
+            }
+        }
+        #endregion
     }
 
     public void InitializeBuilding(Dictionary<string, UpgradePurchases> purchases)

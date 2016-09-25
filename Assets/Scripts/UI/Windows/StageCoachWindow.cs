@@ -18,7 +18,7 @@ public class StageCoachWindow : BuildingWindow
     public override void Initialize()
     {
         StageCoach = DarkestDungeonManager.Campaign.Estate.StageCoach;
-        recruitPanel.UpdateRecruitPanel();
+        recruitPanel.UpdateRecruitPanel(DarkestDungeonManager.Campaign.Estate.StageCoach.Heroes);
         float ratio = DarkestDungeonManager.Campaign.Estate.GetBuildingUpgradeRatio(BuildingType.StageCoach);
         upgradeWindow.upgradedValue.text = Mathf.RoundToInt(ratio * 100).ToString() + "%";
 

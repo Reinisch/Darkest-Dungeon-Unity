@@ -69,6 +69,7 @@ public class Campaign
         TriggeredEvent = null;
         GuaranteedEvent = null;
         EventModifiers.Reset();
+        Estate.ExecuteProgress();
 
         var possibleEvents = DarkestDungeonManager.Data.EventDatabase.Events.FindAll(townEvent => townEvent.IsPossible);
         if (possibleEvents.Count > 0 && EventsOption.Frequency.Count > 3 && RandomSolver.CheckSuccess(EventsOption.Frequency[3]))
@@ -81,9 +82,19 @@ public class Campaign
             EventModifiers.IncludeEvent(TriggeredEvent);
         }
 
-        Estate.ExecuteProgress();
         GenerateQuests();
         SearchMissingHeroes();
+    }
+    public void AdvanceNextWeek()
+    {
+        CurrentWeek++;
+        Logs.Add(new WeekActivityLog(CurrentWeek));
+
+        if (DarkestDungeonManager.RaidManager.Status == RaidStatus.Success)
+            CheckGuarantees(DarkestDungeonManager.RaidManager.Quest);
+
+        for (int i = 0; i < Heroes.Count; i++)
+            Heroes[i].RemoveAllBuffsWithSource(BuffSourceType.Estate);
     }
     public void CheckGuarantees(Quest completedQuest)
     {
@@ -101,18 +112,6 @@ public class Campaign
             }
         }
     }
-    public void AdvanceNextWeek()
-    {
-        CurrentWeek++;
-        Logs.Add(new WeekActivityLog(CurrentWeek));
-
-        if (DarkestDungeonManager.RaidManager.Status == RaidStatus.Success)
-            CheckGuarantees(DarkestDungeonManager.RaidManager.Quest);
-
-        for (int i = 0; i < Heroes.Count; i++)
-            Heroes[i].RemoveAllBuffsWithSource(BuffSourceType.Estate);
-    }
-
     public void CheckEmbarkBuffs(RaidParty raidParty)
     {
         if (TriggeredEvent == null)
@@ -330,6 +329,13 @@ public class EventModifiers
                         FreeUpgradeTags.Add(townEvent.Data[i].StringData, 0);
 
                     FreeUpgradeTags[townEvent.Data[i].StringData] += (int)townEvent.Data[i].NumberData;
+                    break;
+                case TownEventDataType.BonusRecruit:
+                    DarkestDungeonManager.Campaign.Estate.RestockBonus(townEvent.Data[i].StringData,
+                        (int)townEvent.Data[i].NumberData);
+                    break;
+                case TownEventDataType.DeadRecruit:
+                    DarkestDungeonManager.Campaign.Estate.RestockFromGrave((int)townEvent.Data[i].NumberData);
                     break;
                 default:
                     break;

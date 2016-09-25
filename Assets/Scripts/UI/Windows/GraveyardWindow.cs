@@ -16,16 +16,27 @@ public class GraveyardWindow : BuildingWindow
     public override TownManager TownManager { get; set; }
     public Graveyard Graveyard { get; private set; }
 
+    private List<DeathRecordSlot> existingRecordSlots { get; set; }
+
     public override void Initialize()
     {
         Graveyard = DarkestDungeonManager.Campaign.Estate.Graveyard;
-        
-        foreach(var deathRecord in Graveyard.Records)
+        existingRecordSlots = new List<DeathRecordSlot>();
+
+        foreach (var deathRecord in Graveyard.Records)
         {
             var newRecordSlot = Instantiate(recordTemplate);
             newRecordSlot.transform.SetParent(recordsRect, false);
-            newRecordSlot.GetComponent<DeathRecordSlot>().UpgdateRecord(deathRecord, this);
+            var newSlot = newRecordSlot.GetComponent<DeathRecordSlot>();
+            newSlot.UpgdateRecord(deathRecord, this);
+            existingRecordSlots.Add(newSlot);
         }
+    }
+    public void HeroResurrected(DeathRecord record)
+    {
+        var resurrectedRecord = existingRecordSlots.Find(existingRecord => existingRecord.Record == record);
+        if (resurrectedRecord != null)
+            Destroy(resurrectedRecord.gameObject);
     }
 
     void Update()

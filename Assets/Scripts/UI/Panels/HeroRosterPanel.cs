@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 public delegate void HeroInspectEvent(Hero hero, bool interactable);
 public delegate void HeroSlotEvent(HeroSlot heroSlot);
+public delegate void HeroResurrectionEvent(DeathRecord record);
 
 public class HeroRosterPanel : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDropHandler
 {
@@ -23,6 +24,7 @@ public class HeroRosterPanel : MonoBehaviour, IPointerEnterHandler, IPointerExit
     public event HeroInspectEvent onHeroInspect;
     public event HeroSlotEvent onHeroSlotBeginDragging;
     public event HeroSlotEvent onHeroSlotEndDragging;
+    public event HeroResurrectionEvent onHeroResurrection;
 
     void Awake()
     {
@@ -54,7 +56,10 @@ public class HeroRosterPanel : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
         var newSlot = CreateSlot(recruitSlot.Hero);
         DarkestDungeonManager.Campaign.Heroes.Add(recruitSlot.Hero);
-        DarkestDungeonManager.Campaign.Estate.RecruitHero(recruitSlot.Hero);
+        var deathRecord = DarkestDungeonManager.Campaign.Estate.RecruitHero(recruitSlot.Hero);
+        if (deathRecord != null && onHeroResurrection != null)
+            onHeroResurrection(deathRecord);
+
         if (heroSlot != null)
             newSlot.RectTransform.SetSiblingIndex(heroSlot.RectTransform.GetSiblingIndex());
         else
