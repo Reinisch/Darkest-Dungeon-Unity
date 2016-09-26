@@ -157,8 +157,11 @@ public class Campaign
             Heroes.Add(new Hero(Estate, saveData.saveHeroData[i]));
         for (int i = 0; i < saveData.stageCoachData.Length; i++)
             Estate.StageCoach.Heroes.Add(new Hero(Estate, saveData.stageCoachData[i]));
+        for (int i = 0; i < saveData.stageEventData.Length; i++)
+            Estate.StageCoach.EventHeroes.Add(new Hero(Estate, saveData.stageEventData[i]));
         for (int i = 0; i < saveData.wagonData.Count; i++)
             Estate.NomadWagon.Trinkets.Add(DarkestDungeonManager.Data.Items["trinket"][saveData.wagonData[i]] as Trinket);
+        Estate.StageCoach.GraveIndexes = saveData.deathEventData;
 
         Estate.Abbey.UpdateActivitySlots(saveData);
         Estate.Tavern.UpdateActivitySlots(saveData);

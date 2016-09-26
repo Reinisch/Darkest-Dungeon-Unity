@@ -178,6 +178,12 @@ public static class SaveLoadManager
                     bw.Write(saveData.stageCoachData.Length);
                     for (int i = 0; i < saveData.stageCoachData.Length; i++)
                         WriteHero(bw, saveData.stageCoachData[i]);
+                    bw.Write(saveData.stageEventData.Length);
+                    for (int i = 0; i < saveData.stageEventData.Length; i++)
+                        WriteHero(bw, saveData.stageEventData[i]);
+                    bw.Write(saveData.deathEventData.Count);
+                    for (int i = 0; i < saveData.deathEventData.Count; i++)
+                        bw.Write(saveData.deathEventData[i]);
                     // Trinkets
                     bw.Write(saveData.trinketData.Count);
                     for (int i = 0; i < saveData.trinketData.Count; i++)
@@ -692,6 +698,14 @@ public static class SaveLoadManager
                     saveData.stageCoachData = new SaveHeroData[br.ReadInt32()];
                     for (int i = 0; i < saveData.stageCoachData.Length; i++)
                         saveData.stageCoachData[i] = ReadHero(br);
+
+                    saveData.stageEventData = new SaveHeroData[br.ReadInt32()];
+                    for (int i = 0; i < saveData.stageEventData.Length; i++)
+                        saveData.stageEventData[i] = ReadHero(br);
+
+                    int deathEventGraveIndexCount = br.ReadInt32();
+                    for (int i = 0; i < deathEventGraveIndexCount; i++)
+                        saveData.deathEventData.Add(br.ReadInt32());
 
                     int trinketCount = br.ReadInt32();
                     for (int i = 0; i < trinketCount; i++)

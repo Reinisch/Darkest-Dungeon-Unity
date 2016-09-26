@@ -28,6 +28,8 @@ public class SaveCampaignData
 
     public SaveHeroData[] saveHeroData;
     public SaveHeroData[] stageCoachData;
+    public SaveHeroData[] stageEventData;
+    public List<int> deathEventData;
 
     public Dictionary<string, DungeonProgress> saveDungeonData;
     public List<DeathRecord> deathRecords;
@@ -96,6 +98,8 @@ public class SaveCampaignData
         saveDungeonData = new Dictionary<string, DungeonProgress>();
         eventData = new List<SaveEventData>();
         eventModifers = new EventModifiers();
+        deathEventData = new List<int>();
+        stageEventData = new SaveHeroData[0];
 
         tavernActivitySlots = new List<List<SaveActivitySlot>>();
         abbeyActivitySlots = new List<List<SaveActivitySlot>>();
@@ -118,6 +122,8 @@ public class SaveCampaignData
         saveDungeonData = new Dictionary<string, DungeonProgress>();
         eventData = new List<SaveEventData>();
         eventModifers = new EventModifiers();
+        deathEventData = new List<int>();
+        stageEventData = new SaveHeroData[0];
 
         tavernActivitySlots = new List<List<SaveActivitySlot>>();
         abbeyActivitySlots = new List<List<SaveActivitySlot>>();
@@ -141,6 +147,8 @@ public class SaveCampaignData
         saveDungeonData = new Dictionary<string, DungeonProgress>();
         eventData = new List<SaveEventData>();
         eventModifers = new EventModifiers();
+        deathEventData = new List<int>();
+        stageEventData = new SaveHeroData[0];
 
         tavernActivitySlots = new List<List<SaveActivitySlot>>();
         abbeyActivitySlots = new List<List<SaveActivitySlot>>();
@@ -196,6 +204,13 @@ public class SaveCampaignData
             stageCoachData[i] = new SaveHeroData();
             campaign.Estate.StageCoach.Heroes[i].UpdateSaveData(stageCoachData[i]);
         }
+        stageEventData = new SaveHeroData[campaign.Estate.StageCoach.EventHeroes.Count];
+        for (int i = 0; i < campaign.Estate.StageCoach.EventHeroes.Count; i++)
+        {
+            stageEventData[i] = new SaveHeroData();
+            campaign.Estate.StageCoach.EventHeroes[i].UpdateSaveData(stageEventData[i]);
+        }
+        deathEventData = campaign.Estate.StageCoach.GraveIndexes;
         #endregion
 
         deathRecords = campaign.Estate.Graveyard.Records;
