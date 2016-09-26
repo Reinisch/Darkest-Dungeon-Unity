@@ -131,11 +131,6 @@ public class Tavern : Building
                             hero.RosterId == saveData.abbeyActivitySlots[activityIndex][i].HeroRosterId);
 
                         Activities[activityIndex].ActivitySlots[i].Hero = activityHero;
-                        if (activityHero != null)
-                            Activities[activityIndex].ActivitySlots[i].Status = saveData.abbeyActivitySlots[activityIndex][i].Status;
-                        else
-                            Activities[activityIndex].ActivitySlots[i].Status = ActivitySlotStatus.Available;
-
                         Activities[activityIndex].ActivitySlots[i].UpdateSlot(isActivityLocked ? false : true,
                             isActivityFree ? 0 : (int)(Activities[activityIndex].ActivityCost.Amount * costModifier));
                     }
@@ -146,6 +141,8 @@ public class Tavern : Building
                 else
                     Activities[activityIndex].ActivitySlots[i].UpdateSlot(false,
                         isActivityFree ? 0 : (int)(Activities[activityIndex].ActivityCost.Amount * costModifier));
+
+                Activities[activityIndex].ActivitySlots[i].Status = saveData.tavernActivitySlots[activityIndex][i].Status;
             }
         }
     }
