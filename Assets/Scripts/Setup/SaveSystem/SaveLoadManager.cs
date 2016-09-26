@@ -370,6 +370,63 @@ public static class SaveLoadManager
                         }
                     }
                     #endregion
+
+                    #region Town Events
+                    bw.Write(saveData.currentEvent == null ? "" : saveData.currentEvent);
+                    bw.Write(saveData.guaranteedEvent == null ? "" : saveData.guaranteedEvent);
+
+                    bw.Write(saveData.eventData.Count);
+                    for(int i = 0; i < saveData.eventData.Count; i++)
+                    {
+                        bw.Write(saveData.eventData[i].EventId);
+                        bw.Write(saveData.eventData[i].ActiveCooldown);
+                        bw.Write(saveData.eventData[i].NotRolledAmount);
+                    }
+                    bw.Write(saveData.eventModifers.NoLevelRestrictions);
+
+                    bw.Write(saveData.eventModifers.ActivityLocks.Count);
+                    foreach(var entry in saveData.eventModifers.ActivityLocks)
+                    {
+                        bw.Write(entry.Key);
+                        bw.Write(entry.Value);
+                    }
+                    bw.Write(saveData.eventModifers.FreeActivities.Count);
+                    foreach (var entry in saveData.eventModifers.FreeActivities)
+                    {
+                        bw.Write(entry.Key);
+                        bw.Write(entry.Value);
+                    }
+                    bw.Write(saveData.eventModifers.ActivityCostModifiers.Count);
+                    foreach (var entry in saveData.eventModifers.ActivityCostModifiers)
+                    {
+                        bw.Write(entry.Key);
+                        bw.Write(entry.Value);
+                    }
+                    bw.Write(saveData.eventModifers.ProvisionCostModifiers.Count);
+                    foreach (var entry in saveData.eventModifers.ProvisionCostModifiers)
+                    {
+                        bw.Write(entry.Key);
+                        bw.Write(entry.Value);
+                    }
+                    bw.Write(saveData.eventModifers.ProvisionAmountModifiers.Count);
+                    foreach (var entry in saveData.eventModifers.ProvisionAmountModifiers)
+                    {
+                        bw.Write(entry.Key);
+                        bw.Write(entry.Value);
+                    }
+                    bw.Write(saveData.eventModifers.UpgradeTagCostModifiers.Count);
+                    foreach (var entry in saveData.eventModifers.UpgradeTagCostModifiers)
+                    {
+                        bw.Write(entry.Key);
+                        bw.Write(entry.Value);
+                    }
+                    bw.Write(saveData.eventModifers.FreeUpgradeTags.Count);
+                    foreach (var entry in saveData.eventModifers.FreeUpgradeTags)
+                    {
+                        bw.Write(entry.Key);
+                        bw.Write(entry.Value);
+                    }
+                    #endregion
                     #endregion
 
                     #region Raid
@@ -879,6 +936,50 @@ public static class SaveLoadManager
                         }
                         saveData.sanitariumActivitySlots.Add(newActivitySlotList);
                     }
+                    #endregion
+
+                    #region Town Events
+                    saveData.currentEvent = br.ReadString();
+                    saveData.guaranteedEvent = br.ReadString();
+
+                    int eventDataCount = br.ReadInt32();
+                    for (int i = 0; i < eventDataCount; i++)
+                    {
+                        SaveEventData saveEventData = new SaveEventData();
+                        saveEventData.EventId = br.ReadString();
+                        saveEventData.ActiveCooldown = br.ReadInt32();
+                        saveEventData.NotRolledAmount = br.ReadInt32();
+                        saveData.eventData.Add(saveEventData);
+                    }
+                    saveData.eventModifers.NoLevelRestrictions = br.ReadBoolean();
+
+                    int dictionaryCount = br.ReadInt32();
+                    for (int i = 0; i < dictionaryCount; i++)
+                        saveData.eventModifers.ActivityLocks.Add(br.ReadString(), br.ReadBoolean());
+
+                    dictionaryCount = br.ReadInt32();
+                    for (int i = 0; i < dictionaryCount; i++)
+                        saveData.eventModifers.FreeActivities.Add(br.ReadString(), br.ReadBoolean());
+
+                    dictionaryCount = br.ReadInt32();
+                    for (int i = 0; i < dictionaryCount; i++)
+                        saveData.eventModifers.ActivityCostModifiers.Add(br.ReadString(), br.ReadSingle());
+
+                    dictionaryCount = br.ReadInt32();
+                    for (int i = 0; i < dictionaryCount; i++)
+                        saveData.eventModifers.ProvisionCostModifiers.Add(br.ReadString(), br.ReadSingle());
+
+                    dictionaryCount = br.ReadInt32();
+                    for (int i = 0; i < dictionaryCount; i++)
+                        saveData.eventModifers.ProvisionAmountModifiers.Add(br.ReadString(), br.ReadSingle());
+
+                    dictionaryCount = br.ReadInt32();
+                    for (int i = 0; i < dictionaryCount; i++)
+                        saveData.eventModifers.UpgradeTagCostModifiers.Add(br.ReadString(), br.ReadSingle());
+
+                    dictionaryCount = br.ReadInt32();
+                    for (int i = 0; i < dictionaryCount; i++)
+                        saveData.eventModifers.FreeUpgradeTags.Add(br.ReadString(), br.ReadInt32());
                     #endregion
                     #endregion
 

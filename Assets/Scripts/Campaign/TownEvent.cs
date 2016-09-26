@@ -69,6 +69,13 @@ public class TownEvent : ISingleProportion
             return true;
         }
     }
+    public bool IsDefault
+    {
+        get
+        {
+            return activeCooldown == 0 && notRolledAmount == 0;
+        }
+    }
     public string EffectTooltip
     {
         get
@@ -195,6 +202,24 @@ public class TownEvent : ISingleProportion
             if (activeCooldown > 0)
                 activeCooldown--;
         }
+    }
+    public void SetDefaultState()
+    {
+        activeCooldown = 0;
+        notRolledAmount = 0;
+    }
+    public void UpdateFromSave(SaveEventData eventData)
+    {
+        activeCooldown = eventData.ActiveCooldown;
+        notRolledAmount = eventData.NotRolledAmount;
+    }
+    public SaveEventData GetSaveData()
+    {
+        SaveEventData eventData = new SaveEventData();
+        eventData.ActiveCooldown = activeCooldown;
+        eventData.NotRolledAmount = notRolledAmount;
+        eventData.EventId = Id;
+        return eventData;
     }
 }
 

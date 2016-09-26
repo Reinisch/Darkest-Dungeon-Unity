@@ -38,8 +38,14 @@ public class SaveCampaignData
     public List<List<SaveActivitySlot>> tavernActivitySlots;
     public List<List<SaveActivitySlot>> abbeyActivitySlots;
     public List<List<SaveActivitySlot>> sanitariumActivitySlots;
-    #endregion
 
+    public string currentEvent;
+    public string guaranteedEvent;
+
+    public List<SaveEventData> eventData;
+    public EventModifiers eventModifers;
+    #endregion
+    
     #region Raid
     public bool InRaid { get; set; }
     public bool QuestCompleted { get; set; }
@@ -88,6 +94,8 @@ public class SaveCampaignData
         completedPlot = new List<string>();
         InventoryItems = new List<InventorySlotData>();
         saveDungeonData = new Dictionary<string, DungeonProgress>();
+        eventData = new List<SaveEventData>();
+        eventModifers = new EventModifiers();
 
         tavernActivitySlots = new List<List<SaveActivitySlot>>();
         abbeyActivitySlots = new List<List<SaveActivitySlot>>();
@@ -108,6 +116,8 @@ public class SaveCampaignData
         completedPlot = new List<string>();
         InventoryItems = new List<InventorySlotData>();
         saveDungeonData = new Dictionary<string, DungeonProgress>();
+        eventData = new List<SaveEventData>();
+        eventModifers = new EventModifiers();
 
         tavernActivitySlots = new List<List<SaveActivitySlot>>();
         abbeyActivitySlots = new List<List<SaveActivitySlot>>();
@@ -129,6 +139,8 @@ public class SaveCampaignData
         completedPlot = new List<string>();
         InventoryItems = new List<InventorySlotData>();
         saveDungeonData = new Dictionary<string, DungeonProgress>();
+        eventData = new List<SaveEventData>();
+        eventModifers = new EventModifiers();
 
         tavernActivitySlots = new List<List<SaveActivitySlot>>();
         abbeyActivitySlots = new List<List<SaveActivitySlot>>();
@@ -243,6 +255,15 @@ public class SaveCampaignData
 
             sanitariumActivitySlots[1][i].UpdateFromTreatment(campaign.Estate.Sanitarium.DiseaseActivity.TreatmentSlots[i]);
         }
+
+        currentEvent = campaign.TriggeredEvent == null ? "" : campaign.TriggeredEvent.Id;
+        guaranteedEvent = campaign.GuaranteedEvent == null ? "" : campaign.GuaranteedEvent.Id;
+
+        eventData.Clear();
+        for (int i = 0; i < DarkestDungeonManager.Data.EventDatabase.Events.Count; i++)
+            if (!DarkestDungeonManager.Data.EventDatabase.Events[i].IsDefault)
+                eventData.Add(DarkestDungeonManager.Data.EventDatabase.Events[i].GetSaveData());
+        eventModifers = campaign.EventModifiers;
 
         InRaid = false;
         #endregion

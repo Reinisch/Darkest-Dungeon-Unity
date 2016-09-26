@@ -74,10 +74,10 @@ public class Campaign
         var possibleEvents = DarkestDungeonManager.Data.EventDatabase.Events.FindAll(townEvent => townEvent.IsPossible);
         if (possibleEvents.Count > 0 && EventsOption.Frequency.Count > 3 && RandomSolver.CheckSuccess(EventsOption.Frequency[3]))
         {
+            TriggeredEvent = RandomSolver.ChooseBySingleRandom(possibleEvents);
             for (int i = 0; i < DarkestDungeonManager.Data.EventDatabase.Events.Count; i++)
                 DarkestDungeonManager.Data.EventDatabase.Events[i].EventTriggered(false);
 
-            TriggeredEvent = RandomSolver.ChooseBySingleRandom(possibleEvents);
             TriggeredEvent.EventTriggered(true);
             EventModifiers.IncludeEvent(TriggeredEvent);
         }
@@ -134,11 +134,15 @@ public class Campaign
 
     public Campaign()
     {
-        EventModifiers = new EventModifiers();
     }
 
     public void Load(SaveCampaignData saveData)
     {
+        EventModifiers = saveData.eventModifers;
+
+        foreach (var townEvent in DarkestDungeonManager.Data.EventDatabase.Events)
+            townEvent.SetDefaultState();
+
         SaveSlotId = saveData.saveId;
         CurrentWeek = saveData.currentWeek;
 
@@ -171,7 +175,28 @@ public class Campaign
             Logs.Add(new WeekActivityLog(CurrentWeek));
 
         EventsOption = DarkestDungeonManager.Data.EventDatabase.Settings[2];
-    } 
+
+        if(saveData.currentEvent != "")
+        {
+            TriggeredEvent = DarkestDungeonManager.Data.EventDatabase.Events.Find(townEvent => townEvent.Id == saveData.currentEvent);
+            if (TriggeredEvent != null)
+                EventModifiers.EventData.AddRange(TriggeredEvent.Data);
+        }
+
+        if(saveData.guaranteedEvent != "")
+        {
+            GuaranteedEvent = DarkestDungeonManager.Data.EventDatabase.Events.Find(townEvent => townEvent.Id == saveData.guaranteedEvent);
+            if (GuaranteedEvent != null)
+                EventModifiers.EventData.AddRange(GuaranteedEvent.Data);
+        }
+
+        foreach(var saveEventEntry in saveData.eventData)
+        {
+            var targetEvent = DarkestDungeonManager.Data.EventDatabase.Events.Find(townEvent => townEvent.Id == saveEventEntry.EventId);
+            if(targetEvent != null)
+                targetEvent.UpdateFromSave(saveEventEntry);
+        }
+    }
 
     public WeekActivityLog CurrentLog()
     {
@@ -286,11 +311,7 @@ public class EventModifiers
     {
         for(int i = 0; i < townEvent.Data.Count; i++)
         {
-            var newEventData = new TownEventData();
-            newEventData.Type = townEvent.Data[i].Type;
-            newEventData.StringData = townEvent.Data[i].StringData;
-            newEventData.NumberData = townEvent.Data[i].NumberData;
-            EventData.Add(newEventData);
+            EventData.AddRange(townEvent.Data);
 
             switch(townEvent.Data[i].Type)
             {
