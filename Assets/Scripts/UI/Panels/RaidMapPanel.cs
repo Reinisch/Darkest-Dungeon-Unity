@@ -91,9 +91,8 @@ public class RaidMapPanel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             }
 
             var hallSlot = Instantiate(predefinedHallSlotTemplate);
-            hallSlot.rectTransform.SetParent(hallContainer, false);
-            hallSlot.rectTransform.localPosition = hallBeginning;
-            hallSlot.Initialize();
+            hallSlot.RectTransform.SetParent(hallContainer, false);
+            hallSlot.RectTransform.localPosition = hallBeginning;
 
             foreach (var generatedSector in generatedHallway.Value.Halls)
             {
@@ -103,11 +102,11 @@ public class RaidMapPanel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 var hallSectorSlot = Instantiate(hallSectorSlotTemplate);
                 hallSectorSlot.rectTransform.SetParent(hallContainer, false);
                 hallSectorSlot.rectTransform.localPosition = hallBeginning;
-                hallSectorSlot.rectTransform.SetParent(hallSlot.rectTransform, true);
+                hallSectorSlot.rectTransform.SetParent(hallSlot.RectTransform, true);
                 hallSlot.RaidMapHallSectorSlots.Add(hallSectorSlot);
                 hallBeginning += nextHallStep;
             }
-            hallSlot.SetPredefinedHall(generatedHallway.Value);
+            hallSlot.SetHall(generatedHallway.Value);
             HallSlots.Add(generatedHallway.Value.Id, hallSlot);
         }
         #endregion

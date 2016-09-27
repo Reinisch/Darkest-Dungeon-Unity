@@ -16,6 +16,7 @@ public class RaidMapRoomSlot : MonoBehaviour, IPointerEnterHandler, IPointerExit
     public Room Room { get; set; }
     public bool HasRoom { get; set; }
     public bool MarkedForMove { get; set; }
+
     public RectTransform SlotRect
     {
         get
