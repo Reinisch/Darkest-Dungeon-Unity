@@ -170,7 +170,7 @@ public class Campaign
 
         Dungeons = saveData.saveDungeonData;
         Quests = saveData.generatedQuests;
-        if (Quests.Count == 0)
+        if (Quests.Count == 0 && saveData.InRaid == false)
             GenerateQuests();
 
         Logs = new List<WeekActivityLog>(saveData.activityLog);

@@ -385,7 +385,7 @@ public class Character
         {
             var prot = GetSingleAttribute(AttributeType.ProtectionRating);
             if (prot != null)
-                return Mathf.Clamp(prot.ModifiedValue, 0, Mathf.Max(0.85f, prot.RawValue));
+                return Mathf.Clamp(prot.ModifiedValue, -1, Mathf.Max(0.85f, prot.RawValue));
             else
                 return 0;
         }

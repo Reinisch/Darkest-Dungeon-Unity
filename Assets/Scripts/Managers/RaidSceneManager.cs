@@ -2391,6 +2391,7 @@ public class RaidSceneManager : MonoBehaviour
 
             if (BattleGround.IsBattleEnded())
                 break;
+
             #region Turn End Desires
             tempList.AddRange(battleGround.MonsterParty.Units);
             while (tempList.Count > 0)
@@ -2453,6 +2454,90 @@ public class RaidSceneManager : MonoBehaviour
                     break;
                 }
             }
+        }
+        tempList.Clear();
+        #endregion
+
+        #region Idle units status effects
+        tempList.AddRange(BattleGround.MonsterParty.Units);
+        bool hasIdleDamage = false, hasIdleDeath = false;
+        foreach (var idleUnit in tempList)
+        {
+            #region Status Effect and Buffs
+            if (idleUnit.Character.GetStatusEffect(StatusType.Bleeding).IsApplied)
+            {
+                var bleedEffect = idleUnit.Character.GetStatusEffect(StatusType.Bleeding) as BleedingStatusEffect;
+                int damage = Mathf.CeilToInt(bleedEffect.CurrentTickDamage * 1.5f);
+                idleUnit.Character.Health.DecreaseValue(damage);
+                FMODUnity.RuntimeManager.PlayOneShot("event:/general/status/bleed_dot");
+                idleUnit.OverlaySlot.UpdateOverlay();
+
+                #region Damage Activation
+                if (Mathf.RoundToInt(idleUnit.Character.Health.CurrentValue) != 0)
+                {
+                    RaidEvents.ShowPopupMessage(idleUnit, PopupMessageType.Damage, damage.ToString());
+                    hasIdleDamage = true;
+                }
+                else
+                {
+                    PrepareDeath(idleUnit);
+                    hasIdleDeath = true;
+                }
+                #endregion
+            }
+
+            if (idleUnit.Character.GetStatusEffect(StatusType.Poison).IsApplied)
+            {
+                var poisonEffect = idleUnit.Character.GetStatusEffect(StatusType.Poison) as PoisonStatusEffect;
+                int damage = Mathf.CeilToInt(poisonEffect.CurrentTickDamage * 1.5f);
+                RaidEvents.ShowPopupMessage(idleUnit, PopupMessageType.Damage, damage.ToString());
+                idleUnit.Character.Health.DecreaseValue(damage);
+                FMODUnity.RuntimeManager.PlayOneShot("event:/general/status/poison_dot");
+                idleUnit.OverlaySlot.UpdateOverlay();
+
+                #region Damage Activation
+                if (Mathf.RoundToInt(idleUnit.Character.Health.CurrentValue) != 0)
+                {
+                    RaidEvents.ShowPopupMessage(idleUnit, PopupMessageType.Damage, damage.ToString());
+                    hasIdleDamage = true;
+                }
+                else
+                {
+                    PrepareDeath(idleUnit);
+                    hasIdleDeath = true;
+                }
+                #endregion
+            }
+
+            if (idleUnit.CombatInfo.IsSurprised)
+                idleUnit.SetSurprised(false);
+
+            if (idleUnit.Character.GetStatusEffect(StatusType.Stun).IsApplied)
+            {
+                var stunStatus = idleUnit.Character.GetStatusEffect(StatusType.Stun) as StunStatusEffect;
+                stunStatus.StunApplied = false;
+                idleUnit.ResetHalo();
+                idleUnit.Character.ApplyStunRecovery();
+                idleUnit.Character.UpdateRound();
+                idleUnit.OverlaySlot.UpdateOverlay();
+            }
+            else
+            {
+                idleUnit.Character.UpdateRound();
+                idleUnit.OverlaySlot.UpdateOverlay();
+            }
+            #endregion
+        }
+        if (hasIdleDeath)
+        {
+            yield return new WaitForSeconds(1.4f);
+            for (int i = 0; i < tempList.Count; i++)
+                ExecuteDeath(tempList[i]);
+            yield return new WaitForSeconds(0.2f);
+        }
+        else if (hasIdleDamage)
+        {
+            yield return new WaitForSeconds(0.3f);
         }
         tempList.Clear();
         #endregion
