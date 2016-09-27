@@ -2459,7 +2459,7 @@ public class RaidSceneManager : MonoBehaviour
         #endregion
 
         #region Idle units status effects
-        tempList.AddRange(BattleGround.MonsterParty.Units);
+        tempList.AddRange(BattleGround.MonsterParty.Units.FindAll(targetUnit => targetUnit.CombatInfo.TotalInitiatives == 0));
         bool hasIdleDamage = false, hasIdleDeath = false;
         foreach (var idleUnit in tempList)
         {
