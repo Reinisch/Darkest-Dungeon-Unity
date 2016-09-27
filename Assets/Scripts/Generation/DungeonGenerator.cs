@@ -12,6 +12,7 @@ public static class DungeonGenerator
         string[] lengthes = new string[]{"", "short", "medium", "long"};
 
         Dungeon dungeon = new Dungeon();
+        dungeon.IsRandomlyGenerated = true;
         DungeonGenerationData genData = DarkestDungeonManager.Data.DungeonGenerationData.Find(item =>
             item.Dungeon == quest.Dungeon &&
             item.Length == lengthes[quest.Length] &&
@@ -359,7 +360,7 @@ public static class DungeonGenerator
         Dictionary<string, Room> finalAreas = new Dictionary<string, Room>();
         foreach (var genRoom in rooms)
         {
-            Room room = new Room(genRoom.Id);
+            Room room = new Room(genRoom.Id, genRoom.gridX, genRoom.gridY);
 
             if(genRoom.left != null && genRoom.left.Exists)
                 room.Doors.Add(new Door(genRoom.Id, genRoom.left.Id, Direction.Left));

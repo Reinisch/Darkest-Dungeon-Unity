@@ -44,6 +44,20 @@ public class RaidHallway : MonoBehaviour
 
     public void LoadHallway(Hallway hallway, Direction direction, bool loadBattleSave)
     {
+        while(hallway.HallCount > ActiveSectorCount)
+        {
+            var newSector = Instantiate(HallSectors[StartDoorSector].gameObject).GetComponent<RaidHallSector>();
+            newSector.RectTransform.SetParent(HallSectors[StartDoorSector].RectTransform.parent, false);
+            newSector.RectTransform.SetSiblingIndex(HallSectors[StartDoorSector].RectTransform.GetSiblingIndex() + 1);
+            HallSectors.Insert(StartDoorSector + 1, newSector);
+        }
+        while(hallway.HallCount < ActiveSectorCount)
+        {
+            var removedSector = HallSectors[StartDoorSector + 1];
+            HallSectors.RemoveAt(StartDoorSector + 1);
+            Destroy(removedSector);
+        }
+
         if (direction == Direction.Bot || direction == Direction.Left )
         {
             RaidSceneManager.Raid.RaidParty.IsMovingLeft = true;

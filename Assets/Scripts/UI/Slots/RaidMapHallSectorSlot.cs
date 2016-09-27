@@ -13,17 +13,20 @@ public class RaidMapHallSectorSlot : MonoBehaviour
     public void SetSector(HallSector sector)
     {
         Sector = sector;
-        indicator.SetActive(false);
+        if(indicator != null)
+            indicator.SetActive(false);
         UpdateSector();
     }
 
     public void SetIndicator()
     {
-        indicator.SetActive(true);
+        if (indicator != null)
+            indicator.SetActive(true);
     }
     public void RemoveIndicator()
     {
-        indicator.SetActive(false);
+        if (indicator != null)
+            indicator.SetActive(false);
     }
 
     public void UpdateSector()

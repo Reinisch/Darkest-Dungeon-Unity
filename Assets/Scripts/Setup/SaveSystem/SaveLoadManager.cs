@@ -495,6 +495,8 @@ public static class SaveLoadManager
                     foreach(var room in saveData.Dungeon.Rooms.Values)
                     {
                         bw.Write(room.Id);
+                        bw.Write(room.GridX);
+                        bw.Write(room.GridY);
                         bw.Write(room.Doors.Count);
                         for(int j = 0; j < room.Doors.Count; j++)
                         {
@@ -1074,7 +1076,7 @@ public static class SaveLoadManager
                     int roomCount = br.ReadInt32();
                     for (int i = 0; i < roomCount; i++)
                     {
-                        var room = new Room(br.ReadString());
+                        var room = new Room(br.ReadString(), br.ReadInt32(), br.ReadInt32());
                         int doorCount = br.ReadInt32();
                         for (int j = 0; j < doorCount; j++)
                         {
@@ -1583,11 +1585,11 @@ public static class SaveLoadManager
         #region Dungeon
         saveData.Dungeon = new Dungeon();
         saveData.Dungeon.Name = "weald";
-        saveData.Dungeon.GridSizeX = 2;
-        saveData.Dungeon.GridSizeY = 2;
+        saveData.Dungeon.GridSizeX = 9;
+        saveData.Dungeon.GridSizeY = 1;
         saveData.Dungeon.StartingRoomId = "room1_1";
 
-        Room room = new Room("room1_1")
+        Room room = new Room("room1_1", 1, 1)
         {
             Knowledge = Knowledge.Completed,
             Type = AreaType.Entrance,
@@ -1599,7 +1601,7 @@ public static class SaveLoadManager
         };
         saveData.Dungeon.Rooms.Add(room.Id, room);
 
-        room = new Room("room2_1")
+        room = new Room("room2_1", 9, 1)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.BattleTresure,
@@ -1630,10 +1632,17 @@ public static class SaveLoadManager
             new HallSector("2", hallway)
             {
                 Knowledge = Knowledge.Hidden,
+                TextureId = "7",
+                Type = AreaType.Curio,
+                Prop = DarkestDungeonManager.Data.Curios["travellers_tent_tutorial"],
+            },
+            new HallSector("3", hallway)
+            {
+                Knowledge = Knowledge.Hidden,
                 TextureId = "8",
                 Type = AreaType.Empty,
             },
-            new HallSector("3", hallway)
+            new HallSector("4", hallway)
             {
                 Knowledge = Knowledge.Hidden,
                 TextureId = "2",
@@ -1641,13 +1650,13 @@ public static class SaveLoadManager
                 BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["weald"].BattleMashes.
                     Find(mash => mash.MashId == 1).NamedEncounters["tutorial_1"][0].MonsterSet),
             },
-            new HallSector("4", hallway)
+            new HallSector("5", hallway)
             {
                 Knowledge = Knowledge.Hidden,
                 TextureId = "1",
                 Type = AreaType.Empty,
             },
-            new HallSector("5", hallway, new Door(hallway.Id, hallway.RoomB.Id, Direction.Right)),
+            new HallSector("6", hallway, new Door(hallway.Id, hallway.RoomB.Id, Direction.Right)),
         };
         saveData.Dungeon.Hallways.Add(hallway.Id, hallway);
         #endregion

@@ -17,6 +17,29 @@ public class Hallway
     public Room RoomA { get; set; }
     public Room RoomB { get; set; }
 
+    public Direction DirectionFromA
+    {
+        get
+        {
+            var targetDoor = RoomA.Doors.Find(door => door.TargetArea == Id);
+            if (targetDoor != null)
+                return targetDoor.Direction;
+            else
+                return Direction.Right;
+        }
+    }
+    public Direction DirectionFromB
+    {
+        get
+        {
+            var targetDoor = RoomB.Doors.Find(door => door.TargetArea == Id);
+            if (targetDoor != null)
+                return targetDoor.Direction;
+            else
+                return Direction.Right;
+        }
+    }
+
     public Hallway(string id)
     {
         Id = id;
