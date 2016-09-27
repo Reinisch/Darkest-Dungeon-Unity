@@ -5,7 +5,6 @@ public class RaidMapHallSectorSlot : MonoBehaviour
 {
     public Image hallSectorIcon;
     public Image marker;
-    public GameObject indicator;
     public RectTransform rectTransform;
 
     public HallSector Sector { get; set; }
@@ -13,20 +12,17 @@ public class RaidMapHallSectorSlot : MonoBehaviour
     public void SetSector(HallSector sector)
     {
         Sector = sector;
-        if(indicator != null)
-            indicator.SetActive(false);
         UpdateSector();
     }
 
-    public void SetIndicator()
+    public void SetIndicator(RectTransform indicator)
     {
-        if (indicator != null)
-            indicator.SetActive(true);
+        indicator.position = rectTransform.position;
+        indicator.gameObject.SetActive(true);
     }
-    public void RemoveIndicator()
+    public void RemoveIndicator(RectTransform indicator)
     {
-        if (indicator != null)
-            indicator.SetActive(false);
+        indicator.gameObject.SetActive(false);
     }
 
     public void UpdateSector()

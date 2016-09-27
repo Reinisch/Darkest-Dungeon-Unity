@@ -19,8 +19,6 @@ public class Dungeon
     public int HallwayCurios { get; set; }
     public int HallwayHunger { get; set; }
 
-    public bool IsRandomlyGenerated { get; set; }
-
     public Room StartingRoom
     {
         get

@@ -12,7 +12,6 @@ public static class DungeonGenerator
         string[] lengthes = new string[]{"", "short", "medium", "long"};
 
         Dungeon dungeon = new Dungeon();
-        dungeon.IsRandomlyGenerated = true;
         DungeonGenerationData genData = DarkestDungeonManager.Data.DungeonGenerationData.Find(item =>
             item.Dungeon == quest.Dungeon &&
             item.Length == lengthes[quest.Length] &&
@@ -137,6 +136,8 @@ public static class DungeonGenerator
         PopulateHalls(dungeon, genData);
         LoadHallEnviroment(dungeon, envData, quest.Difficulty);
 
+        dungeon.GridSizeX = 1 + (xSize - 1) * 7;
+        dungeon.GridSizeY = 1 + (ySize - 1) * 7;
         dungeon.Name = quest.Dungeon;
         dungeon.DungeonMash = envData.BattleMashes.Find(mash => mash.MashId == quest.Difficulty);
         dungeon.SharedMash = DarkestDungeonManager.Data.DungeonEnviromentData["shared"].
@@ -360,7 +361,7 @@ public static class DungeonGenerator
         Dictionary<string, Room> finalAreas = new Dictionary<string, Room>();
         foreach (var genRoom in rooms)
         {
-            Room room = new Room(genRoom.Id, genRoom.gridX, genRoom.gridY);
+            Room room = new Room(genRoom.Id, 1 + (genRoom.gridX - 1) * 7, 1 + (genRoom.gridY - 1) * 7);
 
             if(genRoom.left != null && genRoom.left.Exists)
                 room.Doors.Add(new Door(genRoom.Id, genRoom.left.Id, Direction.Left));

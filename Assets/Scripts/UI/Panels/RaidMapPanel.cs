@@ -6,19 +6,16 @@ using System.Collections.Generic;
 
 public class RaidMapPanel : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    public GridLayoutGroup roomGrid;
-    public GridLayoutGroup verticalHallGrid;
-    public GridLayoutGroup horizontalHallGrid;
-
     public GameObject roomSlotTemplate;
-    public RaidMapHallwaySlot verticalHallSlotTemplate;
-    public RaidMapHallwaySlot horizontalHallSlotTemplate;
     public RaidMapHallwaySlot predefinedHallSlotTemplate;
     public RaidMapHallSectorSlot hallSectorSlotTemplate;
 
+    public RectTransform roomContainer;
+    public RectTransform hallContainer;
+    public RectTransform hallIndicator;
+
     public RectTransform mapContent;
     public ScrollRect scrollRect;
-    public RectTransform scrollArea;
     public RectTransform leftBot;
     public RectTransform rightTop;
 
@@ -44,6 +41,10 @@ public class RaidMapPanel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public RaidMapRoomSlot LastCurrentRoom { get; set; }
     public RaidMapHallSectorSlot LastHallwaySector { get; set; }
 
+    Vector2 GetGridOffset(Room room)
+    {
+        return new Vector2(baseHallSize * room.GridX, baseHallSize * room.GridY);
+    }
     public void LoadDungeon(Dungeon dungeon)
     {
         RoomSlots = new Dictionary<string, RaidMapRoomSlot>();
@@ -51,132 +52,65 @@ public class RaidMapPanel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
         Dungeon = dungeon;
 
-        if(Dungeon.IsRandomlyGenerated)
+        #region Map UI Instantiation
+        int horizontalSize = baseHallSize * dungeon.GridSizeX;
+        int verticalSize = baseHallSize * dungeon.GridSizeY;
+        Vector2 botLeft = new Vector2(-horizontalSize / 2, -verticalSize / 2);
+        foreach (var generatedRoom in Dungeon.Rooms)
         {
-            #region Randomly Generated Map
-            roomGrid.constraintCount = dungeon.GridSizeX;
-            verticalHallGrid.constraintCount = dungeon.GridSizeX;
-            horizontalHallGrid.constraintCount = dungeon.GridSizeX - 1;
-
-            for (int j = 1; j <= dungeon.GridSizeY; j++)
-            {
-                for (int i = 1; i <= dungeon.GridSizeX; i++)
-                {
-                    RaidMapRoomSlot slot = Instantiate(roomSlotTemplate).GetComponentInChildren<RaidMapRoomSlot>();
-                    slot.container.SetParent(roomGrid.transform, false);
-                    Room room;
-                    if (dungeon.Rooms.TryGetValue("room" + i.ToString() + "_" + j.ToString(), out room))
-                    {
-                        slot.SetRoom(room);
-                        RoomSlots.Add(room.Id, slot);
-                    }
-                    else
-                        slot.SetEmpty();
-                }
-            }
-
-            for (int j = 1; j <= dungeon.GridSizeY; j++)
-            {
-                for (int i = 2; i <= dungeon.GridSizeX; i++)
-                {
-                    RaidMapHallwaySlot slot = Instantiate(horizontalHallSlotTemplate);
-                    slot.rectTransform.SetParent(horizontalHallGrid.transform, false);
-                    Hallway hallway;
-                    if (dungeon.Hallways.TryGetValue("hallroom" + (i).ToString() + "_" + j.ToString()
-                        + "_room" + (i - 1).ToString() + "_" + j.ToString(), out hallway))
-                    {
-                        slot.SetHall(hallway);
-                        HallSlots.Add(hallway.Id, slot);
-                    }
-                    else
-                        slot.SetEmpty();
-                }
-            }
-
-            for (int j = 2; j <= dungeon.GridSizeY; j++)
-            {
-                for (int i = 1; i <= dungeon.GridSizeX; i++)
-                {
-                    RaidMapHallwaySlot slot = Instantiate(verticalHallSlotTemplate);
-                    slot.rectTransform.SetParent(verticalHallGrid.transform, false);
-                    Hallway hallway;
-                    if (dungeon.Hallways.TryGetValue("hallroom" + (i).ToString() + "_" + (j).ToString()
-                        + "_room" + (i).ToString() + "_" + (j - 1).ToString(), out hallway))
-                    {
-                        slot.SetHall(hallway);
-                        HallSlots.Add(hallway.Id, slot);
-                    }
-                    else
-                        slot.SetEmpty();
-                }
-            }
-            #endregion
+            RaidMapRoomSlot roomSlot = Instantiate(roomSlotTemplate).GetComponentInChildren<RaidMapRoomSlot>();
+            roomSlot.container.SetParent(roomContainer, false);
+            roomSlot.container.localPosition = botLeft + GetGridOffset(generatedRoom.Value);
+            roomSlot.SetRoom(generatedRoom.Value);
+            RoomSlots.Add(generatedRoom.Value.Id, roomSlot);
         }
-        else
+
+        foreach (var generatedHallway in Dungeon.Hallways)
         {
-            int horizontalSize = baseHallSize * dungeon.GridSizeX;
-            int verticalSize = baseHallSize * dungeon.GridSizeY;
-            Vector2 botLeft = new Vector2(-horizontalSize / 2, -verticalSize / 2);
+            Vector2 hallBeginning = botLeft + GetGridOffset(generatedHallway.Value.RoomA);
+            Vector2 nextHallStep = Vector2.zero;
 
-            #region Predefined Map
-            foreach(var generatedRoom in Dungeon.Rooms)
+            switch (generatedHallway.Value.DirectionFromA)
             {
-                RaidMapRoomSlot roomSlot = Instantiate(roomSlotTemplate).GetComponentInChildren<RaidMapRoomSlot>();
-                roomSlot.container.SetParent(mapContent, false);
-                roomSlot.container.localPosition = botLeft +
-                    new Vector2(baseHallSize * generatedRoom.Value.GridX, baseHallSize * generatedRoom.Value.GridY);
-                roomSlot.SetRoom(generatedRoom.Value);
-                RoomSlots.Add(generatedRoom.Value.Id, roomSlot);
+                case Direction.Bot:
+                    hallBeginning += new Vector2(0, -baseHallSize * 2);
+                    nextHallStep = new Vector2(0, -baseHallSize);
+                    break;
+                case Direction.Left:
+                    hallBeginning += new Vector2(-baseHallSize * 2, 0);
+                    nextHallStep = new Vector2(-baseHallSize, 0);
+                    break;
+                case Direction.Right:
+                    hallBeginning += new Vector2(baseHallSize * 2, 0);
+                    nextHallStep = new Vector2(baseHallSize, 0);
+                    break;
+                case Direction.Top:
+                    hallBeginning += new Vector2(0, baseHallSize * 2);
+                    nextHallStep = new Vector2(0, baseHallSize);
+                    break;
             }
 
-            foreach(var generatedHallway in Dungeon.Hallways)
+            var hallSlot = Instantiate(predefinedHallSlotTemplate);
+            hallSlot.rectTransform.SetParent(hallContainer, false);
+            hallSlot.rectTransform.localPosition = hallBeginning;
+            hallSlot.Initialize();
+
+            foreach (var generatedSector in generatedHallway.Value.Halls)
             {
-                Vector2 hallBeginning = botLeft + new Vector2(baseHallSize * generatedHallway.Value.RoomA.GridX,
-                    baseHallSize * generatedHallway.Value.RoomA.GridY);
-                Vector2 nextHallStep = Vector2.zero;
+                if (generatedSector.Type == AreaType.Door)
+                    continue;
 
-                switch (generatedHallway.Value.DirectionFromA)
-                {
-                    case Direction.Bot:
-                        hallBeginning += new Vector2(0, -baseHallSize * 2);
-                        nextHallStep = new Vector2(0, -baseHallSize);
-                        break;
-                    case Direction.Left:
-                        hallBeginning += new Vector2(-baseHallSize * 2, 0);
-                        nextHallStep = new Vector2(-baseHallSize, 0);
-                        break;
-                    case Direction.Right:
-                        hallBeginning += new Vector2(baseHallSize * 2, 0);
-                        nextHallStep = new Vector2(baseHallSize, 0);
-                        break;
-                    case Direction.Top:
-                        hallBeginning += new Vector2(0, baseHallSize * 2);
-                        nextHallStep = new Vector2(0, baseHallSize);
-                        break;
-                }
-
-                var hallSlot = Instantiate(predefinedHallSlotTemplate);
-                hallSlot.rectTransform.SetParent(mapContent, false);
-                hallSlot.rectTransform.localPosition = hallBeginning;
-                hallSlot.Initialize();
-
-                foreach (var generatedSector in generatedHallway.Value.Halls)
-                {
-                    if (generatedSector.Type == AreaType.Door)
-                        continue;
-
-                    var hallSectorSlot = Instantiate(hallSectorSlotTemplate);
-                    hallSectorSlot.rectTransform.SetParent(mapContent, false);
-                    hallSectorSlot.rectTransform.localPosition = hallBeginning;
-                    //hallSectorSlot.rectTransform.SetParent(hallSlot.rectTransform, true);
-                    hallSlot.RaidMapHallSectorSlots.Add(hallSectorSlot);
-                    hallBeginning += nextHallStep;
-                }
-                hallSlot.SetPredefinedHall(generatedHallway.Value);
-                HallSlots.Add(generatedHallway.Value.Id, hallSlot);
+                var hallSectorSlot = Instantiate(hallSectorSlotTemplate);
+                hallSectorSlot.rectTransform.SetParent(hallContainer, false);
+                hallSectorSlot.rectTransform.localPosition = hallBeginning;
+                hallSectorSlot.rectTransform.SetParent(hallSlot.rectTransform, true);
+                hallSlot.RaidMapHallSectorSlots.Add(hallSectorSlot);
+                hallBeginning += nextHallStep;
             }
-            #endregion
+            hallSlot.SetPredefinedHall(generatedHallway.Value);
+            HallSlots.Add(generatedHallway.Value.Id, hallSlot);
         }
+        #endregion
     }
 
     public void SetScoutingRadar()
@@ -216,7 +150,7 @@ public class RaidMapPanel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     {
         if (LastHallwaySector != null)
         {
-            LastHallwaySector.RemoveIndicator();   
+            LastHallwaySector.RemoveIndicator(hallIndicator);   
             LastHallwaySector = null;
         }
 
@@ -235,12 +169,12 @@ public class RaidMapPanel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         }
 
         if (LastHallwaySector != null)
-            LastHallwaySector.RemoveIndicator();       
+            LastHallwaySector.RemoveIndicator(hallIndicator);       
 
 
         LastHallwaySector = HallSlots[hallsector.Hallway.Id].RaidMapHallSectorSlots.Find(item => item.Sector.Id == hallsector.Id);
         if(LastHallwaySector != null)
-            LastHallwaySector.SetIndicator();
+            LastHallwaySector.SetIndicator(hallIndicator);
     }
     public void SetMovingRoom(Room room)
     {

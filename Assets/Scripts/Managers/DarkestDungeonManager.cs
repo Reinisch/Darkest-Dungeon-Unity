@@ -203,7 +203,7 @@ public class DarkestDungeonManager : MonoBehaviour
         {
             SaveLoadManager.WriteStartingSave(new SaveCampaignData(1, "Darkest"));
             SaveLoadManager.WriteTestingSave(new SaveCampaignData(2, "Middle"));
-            SaveData = SaveLoadManager.ReadSave(1);
+            SaveData = SaveLoadManager.ReadSave(2);
         }
         campaign = new Campaign();
         campaign.Load(SaveData);
