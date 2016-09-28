@@ -50,8 +50,29 @@ public class RaidHallSector : MonoBehaviour, IRaidArea
             case AreaType.Door:
                 if(Prop == null)
                 {
-                    GameObject doorObject = Resources.Load("Prefabs/Props/SpineDoors/" +
-                        RaidSceneManager.Raid.Quest.Dungeon + "/Door") as GameObject;
+                    GameObject doorObject = null;
+                    if(RaidSceneManager.Raid.Quest.Dungeon == "darkestdungeon")
+                        switch (RaidSceneManager.Raid.Quest.Id)
+                        {
+                            case "plot_darkest_dungeon_1":
+                                doorObject = Resources.Load("Prefabs/Props/SpineDoors/darkestdungeon/quest_1/Door") as GameObject;
+                                break;
+                            case "plot_darkest_dungeon_2":
+                                doorObject = Resources.Load("Prefabs/Props/SpineDoors/darkestdungeon/quest_2/Door") as GameObject;
+                                break;
+                            case "plot_darkest_dungeon_3":
+                                doorObject = Resources.Load("Prefabs/Props/SpineDoors/darkestdungeon/quest_3/Door") as GameObject;
+                                break;
+                            case "plot_darkest_dungeon_4":
+                                doorObject = Resources.Load("Prefabs/Props/SpineDoors/darkestdungeon/quest_4/Door") as GameObject;
+                                break;
+                            default:
+                                goto case "plot_darkest_dungeon_1";
+                        }
+                    else
+                        doorObject = Resources.Load("Prefabs/Props/SpineDoors/" + 
+                            RaidSceneManager.Raid.Quest.Dungeon + "/Door") as GameObject;
+
                     RaidDoor door = Instantiate(doorObject).GetComponent<RaidDoor>();
                     door.Initialize(this);
                     Prop = door;
@@ -153,7 +174,7 @@ public class RaidHallSector : MonoBehaviour, IRaidArea
     }
     public void UpdateEnviroment()
     {
-        var sprites = DarkestDungeonManager.Data.Sprites;
+        var sprites = DarkestDungeonManager.Data.DungeonSprites;
         if(Area.Type == AreaType.Door)
         {
             hallWall.sprite = sprites[RaidSceneManager.Raid.Quest.Dungeon + ".corridor_door.basic_0"];
@@ -167,7 +188,7 @@ public class RaidHallSector : MonoBehaviour, IRaidArea
     }
     public void UpdateBorder()
     {
-        var sprites = DarkestDungeonManager.Data.Sprites;
+        var sprites = DarkestDungeonManager.Data.DungeonSprites;
         hallWall.sprite = sprites[RaidSceneManager.Raid.Quest.Dungeon + ".corridor_wall.1_0"];
         hallFloor.sprite = sprites[RaidSceneManager.Raid.Quest.Dungeon + ".corridor_wall.1_1"];
     }

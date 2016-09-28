@@ -45,6 +45,10 @@ public class RaidMapPanel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     {
         return new Vector2(baseHallSize * room.GridX, baseHallSize * room.GridY);
     }
+    Vector2 GetGridOffset(HallSector sector)
+    {
+        return new Vector2(baseHallSize * sector.GridX, baseHallSize * sector.GridY);
+    }
     public void LoadDungeon(Dungeon dungeon)
     {
         RoomSlots = new Dictionary<string, RaidMapRoomSlot>();
@@ -67,44 +71,23 @@ public class RaidMapPanel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
         foreach (var generatedHallway in Dungeon.Hallways)
         {
-            Vector2 hallBeginning = botLeft + GetGridOffset(generatedHallway.Value.RoomA);
-            Vector2 nextHallStep = Vector2.zero;
-
-            switch (generatedHallway.Value.DirectionFromA)
-            {
-                case Direction.Bot:
-                    hallBeginning += new Vector2(0, -baseHallSize * 2);
-                    nextHallStep = new Vector2(0, -baseHallSize);
-                    break;
-                case Direction.Left:
-                    hallBeginning += new Vector2(-baseHallSize * 2, 0);
-                    nextHallStep = new Vector2(-baseHallSize, 0);
-                    break;
-                case Direction.Right:
-                    hallBeginning += new Vector2(baseHallSize * 2, 0);
-                    nextHallStep = new Vector2(baseHallSize, 0);
-                    break;
-                case Direction.Top:
-                    hallBeginning += new Vector2(0, baseHallSize * 2);
-                    nextHallStep = new Vector2(0, baseHallSize);
-                    break;
-            }
+            Vector2 hallLocation = botLeft + GetGridOffset(generatedHallway.Value.RoomA);
 
             var hallSlot = Instantiate(predefinedHallSlotTemplate);
             hallSlot.RectTransform.SetParent(hallContainer, false);
-            hallSlot.RectTransform.localPosition = hallBeginning;
+            hallSlot.RectTransform.localPosition = hallLocation;
 
             foreach (var generatedSector in generatedHallway.Value.Halls)
             {
                 if (generatedSector.Type == AreaType.Door)
                     continue;
 
+                hallLocation = botLeft + GetGridOffset(generatedSector);
                 var hallSectorSlot = Instantiate(hallSectorSlotTemplate);
                 hallSectorSlot.rectTransform.SetParent(hallContainer, false);
-                hallSectorSlot.rectTransform.localPosition = hallBeginning;
+                hallSectorSlot.rectTransform.localPosition = hallLocation;
                 hallSectorSlot.rectTransform.SetParent(hallSlot.RectTransform, true);
                 hallSlot.RaidMapHallSectorSlots.Add(hallSectorSlot);
-                hallBeginning += nextHallStep;
             }
             hallSlot.SetHall(generatedHallway.Value);
             HallSlots.Add(generatedHallway.Value.Id, hallSlot);

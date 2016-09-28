@@ -20,6 +20,17 @@ public class UpgradeTag
 
 public class Quest
 {
+    public virtual string Id
+    {
+        get
+        {
+            return Type;
+        }
+        set
+        {
+
+        }
+    }
     public bool IsPlotQuest { get; set; }
     public string Type { get; set; }
     public string Dungeon { get; set; }

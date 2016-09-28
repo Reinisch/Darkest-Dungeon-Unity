@@ -2,7 +2,7 @@
 
 public class PlotQuest : Quest
 {
-    public string Id { get; set; }
+    public override string Id { get; set; }
     public int DungeonLevel { get; set; }
 
     public PlotTrinketReward PlotTrinket { get; set; }

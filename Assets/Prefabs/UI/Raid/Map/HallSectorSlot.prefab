@@ -40,7 +40,7 @@ GameObject:
   - 114: {fileID: 114000014273775970}
   - 114: {fileID: 114000010694554958}
   m_Layer: 5
-  m_Name: FreeHallSectorSlot
+  m_Name: HallSectorSlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -103,7 +103,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hallSectorIcon: {fileID: 114000014070559584}
   marker: {fileID: 114000010413104402}
-  indicator: {fileID: 0}
   rectTransform: {fileID: 224000011455646506}
 --- !u!114 &114000014070559584
 MonoBehaviour:

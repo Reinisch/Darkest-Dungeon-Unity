@@ -22,6 +22,7 @@ GameObject:
   - 33: {fileID: 33000011917786068}
   - 23: {fileID: 23000010506588894}
   - 114: {fileID: 114000013607581862}
+  - 114: {fileID: 114000014274742568}
   m_Layer: 0
   m_Name: Door
   m_TagString: Untagged
@@ -78,7 +79,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skeletonDataAsset: {fileID: 11400000, guid: 260e1628af4ca8746b8382d55edd574c, type: 2}
   initialSkinName: default
-  calculateNormals: 0
+  calculateNormals: 1
   calculateTangents: 0
   zSpacing: 0
   renderMeshes: 1
@@ -89,6 +90,17 @@ MonoBehaviour:
   timeScale: 1
   loop: 1
   _animationName: closed
+--- !u!114 &114000014274742568
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013692144556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c62ed1383db8fde4db7f5aad1b1b4aff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &224000013320567986
 RectTransform:
   m_ObjectHideFlags: 1

@@ -51,6 +51,7 @@ public class DarkestDatabase : MonoBehaviour
     public Dictionary<string, UpgradeTree> UpgradeTrees { get; set; }
 
     public Dictionary<string, Sprite> Sprites { get; set; }
+    public Dictionary<string, Sprite> DungeonSprites { get; set; }
     public Dictionary<string, MonsterBrain> Brains { get; set; }
     public Dictionary<string, MonsterData> Monsters { get; set; }
     public Dictionary<string, HeroClass> HeroClasses { get; set; }
@@ -1965,17 +1966,41 @@ public class DarkestDatabase : MonoBehaviour
     }
     public void LoadSprites()
     {
-        List<IconDatabase> iconDatabases = new List<IconDatabase>(GetComponentsInChildren<IconDatabase>());
+        DungeonSprites = new Dictionary<string, Sprite>();
         Sprites = new Dictionary<string, Sprite>();
-        for (int i = 0; i < iconDatabases.Count; i++)
+    }
+    public void LoadDungeon(string dungeon, string quest = null)
+    {
+        DungeonSprites.Clear();
+        switch(dungeon)
         {
-            for (int j = 0; j < iconDatabases[i].spriteIcons.Count; j++)
-            {
-                if (Sprites.ContainsKey(iconDatabases[i].spriteIcons[j].name))
-                    Debug.Log(iconDatabases[i].spriteIcons[j].name);
-                else
-                    Sprites.Add(iconDatabases[i].spriteIcons[j].name, iconDatabases[i].spriteIcons[j]);
-            }
+            case "darkestdungeon":
+                switch(quest)
+                {
+                    case "plot_darkest_dungeon_1":
+                        foreach (var dungeonSprite in Resources.LoadAll<Sprite>("Dungeons/darkestdungeon/quest_1"))
+                            DungeonSprites.Add(dungeonSprite.name, dungeonSprite);
+                        break;
+                    case "plot_darkest_dungeon_2":
+                        foreach (var dungeonSprite in Resources.LoadAll<Sprite>("Dungeons/darkestdungeon/quest_2"))
+                            DungeonSprites.Add(dungeonSprite.name, dungeonSprite);
+                        break;
+                    case "plot_darkest_dungeon_3":
+                        foreach (var dungeonSprite in Resources.LoadAll<Sprite>("Dungeons/darkestdungeon/quest_3"))
+                            DungeonSprites.Add(dungeonSprite.name, dungeonSprite);
+                        break;
+                    case "plot_darkest_dungeon_4":
+                        foreach (var dungeonSprite in Resources.LoadAll<Sprite>("Dungeons/darkestdungeon/quest_4"))
+                            DungeonSprites.Add(dungeonSprite.name, dungeonSprite);
+                        break;
+                    default:
+                        goto case "plot_darkest_dungeon_1";
+                }
+                break;
+            default:
+                foreach (var dungeonSprite in Resources.LoadAll<Sprite>("Dungeons/" + dungeon))
+                    DungeonSprites.Add(dungeonSprite.name, dungeonSprite);
+                break;
         }
     }
     public void LoadColours()

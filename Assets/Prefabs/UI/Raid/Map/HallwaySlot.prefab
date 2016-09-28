@@ -22,7 +22,7 @@ GameObject:
   - 222: {fileID: 222000012206283164}
   - 114: {fileID: 114000012396475334}
   m_Layer: 5
-  m_Name: PredefinedHallSlot
+  m_Name: HallwaySlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -90,9 +90,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c67ae8beac959e744982b64b8c982ad6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hallSet: {fileID: 224000013258556074}
-  rectTransform: {fileID: 224000010796073354}
-  slotGroup: {fileID: 224000013258556074}
 --- !u!114 &114000012440205826
 MonoBehaviour:
   m_ObjectHideFlags: 1

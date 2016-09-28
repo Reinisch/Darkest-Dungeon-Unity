@@ -267,6 +267,7 @@ public class RaidSceneManager : MonoBehaviour
                 currentRaid.RaidParty = DarkestDungeonManager.RaidManager.RaidParty;
             }
 
+            DarkestDungeonManager.Data.LoadDungeon(currentRaid.Quest.Dungeon, currentRaid.Quest.Id);
             Rules = new RaidRuleInfo(currentRaid.Quest.Dungeon, BattleGround, TorchMeter);
             RaidEvents.Initialize();
         }
@@ -625,14 +626,14 @@ public class RaidSceneManager : MonoBehaviour
         RoomView.SetActive(false);
         HallwayView.SetActive(true);
 
-        PartyController.TranseferToPassage(HallwayView.hallwayPassage);
-        PartyController.enabled = false;
-        DisablePartyMovement();
-
         if (transitionType == HallTransitionType.FromRoom)
             Raid.ResetRoundSector(hallSector);
         hallwayView.LoadHallway(hallSector.Hallway, direction, fromRoom, transitionType == HallTransitionType.CombatLoad);
 
+        yield return new WaitForEndOfFrame();
+        PartyController.TranseferToPassage(HallwayView.hallwayPassage);
+        PartyController.enabled = false;
+        DisablePartyMovement();
         yield return new WaitForEndOfFrame();
 
         var targetRaidSector = HallwayView.raidHallway.HallSectors.Find(raidSector => raidSector.Area == hallSector);

@@ -2,10 +2,15 @@
 {
     public Hallway Hallway { get; private set; }
 
-    public HallSector(string id, Hallway parentHallway)
+    public int GridX { get; set; }
+    public int GridY { get; set; }
+
+    public HallSector(string id, int gridX, int gridY, Hallway parentHallway)
     {
         Id = id;
         Hallway = parentHallway;
+        GridX = gridX;
+        GridY = gridY;
 
         Knowledge = Knowledge.Hidden;
         Type = AreaType.Empty;
@@ -15,10 +20,12 @@
         MashId = 0;
     }
 
-    public HallSector(string id, Hallway parentHallway, Door door)
+    public HallSector(string id, int gridX, int gridY, Hallway parentHallway, Door door)
     {
         Id = id;
         Hallway = parentHallway;
+        GridX = gridX;
+        GridY = gridY;
 
         Knowledge = Knowledge.Hidden;
         Type = AreaType.Door;

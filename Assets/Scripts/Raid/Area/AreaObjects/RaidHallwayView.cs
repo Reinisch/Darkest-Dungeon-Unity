@@ -64,7 +64,7 @@ public class RaidHallwayView : MonoBehaviour
 
     public void UpdateEnviroment()
     {
-        var sprites = DarkestDungeonManager.Data.Sprites;
+        var sprites = DarkestDungeonManager.Data.DungeonSprites;
 
         farBackground.sprite = sprites[RaidSceneManager.Raid.Quest.Dungeon + ".corridor.back"];
         midBackground.sprite = sprites[RaidSceneManager.Raid.Quest.Dungeon + ".corridor.mid"];
@@ -73,5 +73,10 @@ public class RaidHallwayView : MonoBehaviour
         leftWall.additionalWall.sprite = leftWall.borderWall.sprite;
         rightWall.borderWall.sprite = leftWall.borderWall.sprite;
         rightWall.additionalWall.sprite = leftWall.borderWall.sprite;
+
+        leftWall.rectTransform.localPosition = new Vector3(-raidHallway.ActiveSectorCount * 360 + 80,
+            leftWall.rectTransform.localPosition.y, leftWall.rectTransform.localPosition.z);
+        rightWall.rectTransform.localPosition = new Vector3(raidHallway.ActiveSectorCount * 360 - 80,
+            leftWall.rectTransform.localPosition.y, leftWall.rectTransform.localPosition.z);
     }
 }

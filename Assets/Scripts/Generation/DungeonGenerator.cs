@@ -388,14 +388,38 @@ public static class DungeonGenerator
         {
             Hallway hallway = new Hallway(genHall.Id);
 
-            hallway.Halls.Add(new HallSector(hallway.Id + "_0", hallway, new Door(hallway.Id, genHall.roomA.Id, Direction.Left)));
-            for (int i = 1; i <= genData.Spacing; i++)
-                hallway.Halls.Add(new HallSector(hallway.Id + "_" + i.ToString(), hallway));
-            hallway.Halls.Add(new HallSector(hallway.Id + "_" + (genData.Spacing + 1).ToString(),
-                hallway, new Door(hallway.Id, genHall.roomB.Id, Direction.Right)));
-
             hallway.RoomA = dungeon.Rooms[genHall.roomA.Id];
             hallway.RoomB = dungeon.Rooms[genHall.roomB.Id];
+            int hallIncrementX = 0, hallIncrementY = 0;
+            int hallGridX = hallway.RoomA.GridX, hallGridY = hallway.RoomA.GridY;
+
+            if (hallway.RoomA.GridX < hallway.RoomB.GridX)
+                hallIncrementX = 1;
+            else if (hallway.RoomA.GridX > hallway.RoomB.GridX)
+                hallIncrementX = -1;
+
+            if (hallway.RoomA.GridY < hallway.RoomB.GridY)
+                hallIncrementY = 1;
+            else if (hallway.RoomA.GridY > hallway.RoomB.GridY)
+                hallIncrementY = -1;
+
+            hallGridX += hallIncrementX;
+            hallGridY += hallIncrementY;
+
+            hallway.Halls.Add(new HallSector(hallway.Id + "_0", hallGridX, hallGridY, hallway,
+                new Door(hallway.Id, genHall.roomA.Id, Direction.Left)));
+
+            for (int i = 1; i <= genData.Spacing; i++)
+            {
+                hallGridX += hallIncrementX;
+                hallGridY += hallIncrementY;
+                hallway.Halls.Add(new HallSector(hallway.Id + "_" + i.ToString(), hallGridX, hallGridY, hallway));
+            }
+
+            hallGridX += hallIncrementX;
+            hallGridY += hallIncrementY;
+            hallway.Halls.Add(new HallSector(hallway.Id + "_" + (genData.Spacing + 1).ToString(), hallGridX, hallGridY,
+                hallway, new Door(hallway.Id, genHall.roomB.Id, Direction.Right)));
 
             finalHallways.Add(hallway.Id, hallway);
         }

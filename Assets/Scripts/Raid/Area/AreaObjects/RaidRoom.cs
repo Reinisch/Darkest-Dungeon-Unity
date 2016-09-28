@@ -94,7 +94,7 @@ public class RaidRoom : MonoBehaviour, IRaidArea
 
     public void UpdateEnviroment()
     {
-        roomWall.sprite = DarkestDungeonManager.Data.Sprites[RaidSceneManager.Raid.Quest.Dungeon + ".room_wall." + Area.TextureId];
+        roomWall.sprite = DarkestDungeonManager.Data.DungeonSprites[RaidSceneManager.Raid.Quest.Dungeon + ".room_wall." + Area.TextureId];
     }
 
     public void CompleteArea()

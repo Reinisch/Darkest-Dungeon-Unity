@@ -23,7 +23,11 @@ public class DarkestSoundManager : MonoBehaviour
     {
         StopDungeonSoundtrack();
 
-        DungeonInstanse = RuntimeManager.CreateInstance("event:/ambience/dungeon/" + dungeonName);
+        if(dungeonName == "darkestdungeon")
+            DungeonInstanse = RuntimeManager.CreateInstance("event:/ambience/dungeon/quest/" + RaidSceneManager.Raid.Quest.Id);
+        else
+            DungeonInstanse = RuntimeManager.CreateInstance("event:/ambience/dungeon/" + dungeonName);
+
         if (DungeonInstanse != null)
             DungeonInstanse.start();
     }
