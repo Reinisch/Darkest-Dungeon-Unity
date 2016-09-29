@@ -93,7 +93,7 @@ public class ScrollEventLoot : MonoBehaviour
         else
             Close();
     }
-    public void LoadCurioLoot(Curio curio, CurioResult curioResult, RaidInfo raid, bool keepLoot)
+    public void LoadCurioLoot(Curio curio, CurioInteraction interaction, CurioResult curioResult, RaidInfo raid, bool keepLoot)
     {
         KeepLoot = keepLoot;
         if (keepLoot)
@@ -123,8 +123,19 @@ public class ScrollEventLoot : MonoBehaviour
             }
         }
         else
-            foreach(var item in RaidSolver.GenerateLoot(curioResult, raid))
-                partyInventory.DistributeItem(item);
+        {
+            if(curioResult.IsCombined)
+            {
+                foreach (var result in interaction.Results)
+                    if (result.IsCombined)
+                        foreach (var item in RaidSolver.GenerateLoot(result, raid))
+                            partyInventory.DistributeItem(item);
+            }
+            else
+                foreach (var item in RaidSolver.GenerateLoot(curioResult, raid))
+                    partyInventory.DistributeItem(item);
+        }
+            
 
         partyInventory.DeactivateEmptySlots();
 

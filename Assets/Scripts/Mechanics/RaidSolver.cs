@@ -141,7 +141,7 @@ public static class RaidSolver
                     ItemDefinition trinketDef = new ItemDefinition();
                     trinketDef.Type = trinketItem.Type;
                     trinketDef.Id = trinketItem.Id;
-                    trinketDef.Amount = trinketDef.Amount;
+                    trinketDef.Amount = 1;
                     lootItems.Add(trinketDef);
                     break;
                 case LootType.Nothing:

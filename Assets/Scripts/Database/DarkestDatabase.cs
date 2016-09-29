@@ -1823,7 +1823,10 @@ public class DarkestDatabase : MonoBehaviour
                             curioResult.Item = curioGrid[i + 2 + resultIndex, 7 + typeIndex * 3];
                             curioResult.Chance = int.Parse(curioGrid[i + 2 + resultIndex, 8 + typeIndex * 3]);
                             if (curioGrid[i + 2 + resultIndex, 9 + typeIndex * 3] == "<- # Draws")
+                            {
                                 curioResult.Draws = curioResult.Chance;
+                                curioResult.IsCombined = true;
+                            }
                             else
                                 curioResult.Draws = 1;
                             interaction.Results.Add(curioResult);
@@ -1853,9 +1856,13 @@ public class DarkestDatabase : MonoBehaviour
                             curioResult.Item = curioGrid[i + 11 + interactIndex, 7 + itemIndex * 3];
                             curioResult.Chance = int.Parse(curioGrid[i + 11 + interactIndex, 8 + itemIndex * 3]);
                             if (curioGrid[i + 11 + interactIndex, 9 + itemIndex * 3] == "<- # Draws")
+                            {
                                 curioResult.Draws = curioResult.Chance;
+                                curioResult.IsCombined = true;
+                            }
                             else
                                 curioResult.Draws = 1;
+
                             itemInteraction.Results.Add(curioResult);
                         }
                     }
