@@ -212,8 +212,8 @@ public class RaidCombatSkillsPanel : MonoBehaviour
             campingSlots[i].UpdateSkill(RaidSceneManager.RaidPanel.SelectedHero,
                 RaidSceneManager.RaidPanel.SelectedHero.SelectedCampingSkills[i]);
 
-        for (int i = selectedSkills; i < skillSlots.Count; i++)
-            skillSlots[i].ResetSkill();
+        for (int i = selectedSkills; i < campingSlots.Count; i++)
+            campingSlots[i].ResetSkill();
     }
 
     public void SetMode(SkillPanelMode mode)

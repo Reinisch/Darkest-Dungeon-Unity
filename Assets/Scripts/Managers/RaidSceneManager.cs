@@ -1903,7 +1903,10 @@ public class RaidSceneManager : MonoBehaviour
         else if (overlaySlot.IsSelectionLocked == false)
         {
             CharacterWindow.WindowOpened();
-            CharacterWindow.UpdateRaidCharacterInfo(overlaySlot.TargetUnit.Character as Hero, true);
+            if (Raid.CampingPhase == CampingPhase.None)
+                CharacterWindow.UpdateRaidCharacterInfo(overlaySlot.TargetUnit.Character as Hero, true);
+            else
+                CharacterWindow.UpdateRaidCharacterInfo(overlaySlot.TargetUnit.Character as Hero, false);
         }
     }
     public void TargetRoomSelected(Room room)
@@ -6206,7 +6209,7 @@ public class RaidSceneManager : MonoBehaviour
     {
         currentScoutedRooms.Clear();
 
-        float scoutingChance = 0.25f + TorchMeter.CurrentRange.ScoutingChance + 3;
+        float scoutingChance = 0.25f + TorchMeter.CurrentRange.ScoutingChance;
         for (int i = 0; i < Formations.heroes.party.Units.Count; i++)
             scoutingChance += Formations.heroes.party.Units[i].Character[AttributeType.ScoutingChance].ModifiedValue;
 

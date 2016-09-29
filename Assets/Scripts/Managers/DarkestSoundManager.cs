@@ -9,6 +9,7 @@ public class DarkestSoundManager : MonoBehaviour
     public static FMOD.Studio.EventInstance DungeonInstanse { get; private set; }
     public static FMOD.Studio.EventInstance BattleInstanse { get; private set; }
     public static FMOD.Studio.EventInstance CampingInstanse { get; private set; }
+    public static FMOD.Studio.EventInstance CampingMusicInstanse { get; private set; }
 
     void Awake()
     {
@@ -77,6 +78,9 @@ public class DarkestSoundManager : MonoBehaviour
         CampingInstanse = RuntimeManager.CreateInstance("event:/ambience/local/campfire");
         if (CampingInstanse != null)
             CampingInstanse.start();
+        CampingMusicInstanse = RuntimeManager.CreateInstance("event:/music/mus_camp");
+        if (CampingMusicInstanse != null)
+            CampingMusicInstanse.start();
     }
     public static void StopCampingSoundtrack()
     {
@@ -84,6 +88,11 @@ public class DarkestSoundManager : MonoBehaviour
         {
             CampingInstanse.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             CampingInstanse.release();
+        }
+        if (CampingMusicInstanse != null)
+        {
+            CampingMusicInstanse.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            CampingMusicInstanse.release();
         }
     }
 }

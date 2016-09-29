@@ -36,10 +36,10 @@ public class QuestKillMonsterData : IQuestData
     public bool IsQuestCompleted()
     {
         foreach (var monsterId in MonsterNameIds)
-            if (!RaidSceneManager.Raid.KilledMonsters.Contains(monsterId))
-                return false;
+            if (RaidSceneManager.Raid.KilledMonsters.Contains(monsterId))
+                return true;
 
-        return true;
+        return false;
     }
 }
 

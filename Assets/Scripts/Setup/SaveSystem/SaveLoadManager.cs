@@ -1434,7 +1434,6 @@ public static class SaveLoadManager
         saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(4);
         saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(5);
 
-
         saveData.instancedPurchases[2]["highwayman.opened_vein"].PurchasedUpgrades.Add("0");
         saveData.instancedPurchases[2]["highwayman.pistol_shot"].PurchasedUpgrades.Add("0");
         saveData.instancedPurchases[2]["highwayman.grape_shot_blast"].PurchasedUpgrades.Add("0");
@@ -1446,9 +1445,9 @@ public static class SaveLoadManager
         saveData.instancedPurchases[2]["first_aid"].PurchasedUpgrades.Add("0");
         saveData.instancedPurchases[2]["clean_guns"].PurchasedUpgrades.Add("0");
         saveData.instancedPurchases[2]["bandits_sense"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(1);
-        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(5);
-        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(6);
+        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(1);
+        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(5);
+        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(6);
         #endregion
 
         #region Activity Log
@@ -2629,9 +2628,9 @@ public static class SaveLoadManager
         saveData.instancedPurchases[2]["first_aid"].PurchasedUpgrades.Add("0");
         saveData.instancedPurchases[2]["clean_guns"].PurchasedUpgrades.Add("0");
         saveData.instancedPurchases[2]["bandits_sense"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(1);
-        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(5);
-        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(6);
+        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(1);
+        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(5);
+        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(6);
         #endregion
 
         #region Activity Log
@@ -2753,8 +2752,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Name = saveData.Quest.Dungeon;
         saveData.Dungeon.GridSizeX = 28;
         saveData.Dungeon.GridSizeY = 11;
-        //saveData.Dungeon.StartingRoomId = "entry";
-        saveData.Dungeon.StartingRoomId = "room2_mid";
+        saveData.Dungeon.StartingRoomId = "entry";
 
         #region Rooms
         #region Entry 1/7
@@ -3651,10 +3649,8 @@ public static class SaveLoadManager
 
         #region Data
         saveData.ExploredRoomCount = 1;
-        //saveData.CurrentLocation = "entry";
-        //saveData.LastRoom = "entry";
-        saveData.CurrentLocation = "room8_mid";
-        saveData.LastRoom = "room8_mid";
+        saveData.CurrentLocation = "entry";
+        saveData.LastRoom = "entry";
         saveData.PreviousLastSector = "";
         saveData.LastSector = "";
         saveData.KilledMonsters = new List<string>();
