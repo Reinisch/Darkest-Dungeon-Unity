@@ -24,6 +24,20 @@ public class PlotQuest : Quest
         newQuest.Length = Length;
         newQuest.Goal = Goal;
 
+        newQuest.IsProgression = IsProgression;
+        newQuest.HasStatueContents = HasStatueContents;
+        newQuest.CompletionDungeonXp = CompletionDungeonXp;
+        newQuest.CanRetreat = CanRetreat;
+        newQuest.AlwaysRetreatFromRaid = AlwaysRetreatFromRaid;
+        newQuest.RetreatKillCount = RetreatKillCount;
+        newQuest.IsSurpriseEnabled = IsSurpriseEnabled;
+        newQuest.IsScoutingEnabled = IsScoutingEnabled;
+        newQuest.IsStressClearedOnCompletion = IsStressClearedOnCompletion;
+        newQuest.RosterBuffOnFailureMinimumPartyResolveLevel = RosterBuffOnFailureMinimumPartyResolveLevel;
+        newQuest.RosterBuffsOnFailure = RosterBuffsOnFailure;
+        newQuest.SuggestedTrinkets = SuggestedTrinkets;
+        newQuest.UpgradeTagsRemovedOnIgnore = UpgradeTagsRemovedOnIgnore;
+
         newQuest.Reward = new CompletionReward();
         newQuest.Reward.ResolveXP = Reward.ResolveXP;
         newQuest.Reward.ItemDefinitions = new List<ItemDefinition>(Reward.ItemDefinitions);
