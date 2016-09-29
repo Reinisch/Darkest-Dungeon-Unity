@@ -6206,7 +6206,7 @@ public class RaidSceneManager : MonoBehaviour
     {
         currentScoutedRooms.Clear();
 
-        float scoutingChance = 0.25f + TorchMeter.CurrentRange.ScoutingChance;
+        float scoutingChance = 0.25f + TorchMeter.CurrentRange.ScoutingChance + 3;
         for (int i = 0; i < Formations.heroes.party.Units.Count; i++)
             scoutingChance += Formations.heroes.party.Units[i].Character[AttributeType.ScoutingChance].ModifiedValue;
 
@@ -6709,11 +6709,11 @@ public class RaidSceneManager : MonoBehaviour
             case "loot":
                 #region Curio Loot Event
                 if(triggerQuirk != null)
-                    RaidEvents.LoadCurioLoot(curio, curioResult, triggerQuirk.KeepLoot);
+                    RaidEvents.LoadCurioLoot(curio, curioInteraction, curioResult, triggerQuirk.KeepLoot);
                 else if (triggerTrait != null)
-                    RaidEvents.LoadCurioLoot(curio, curioResult, triggerTrait.KeepLoot);
+                    RaidEvents.LoadCurioLoot(curio, curioInteraction, curioResult, triggerTrait.KeepLoot);
                 else
-                    RaidEvents.LoadCurioLoot(curio, curioResult);
+                    RaidEvents.LoadCurioLoot(curio, curioInteraction, curioResult);
 
                 Formations.UnlockSelections();
                 if (RaidEvents.loot.partyInventory.HasSomething())

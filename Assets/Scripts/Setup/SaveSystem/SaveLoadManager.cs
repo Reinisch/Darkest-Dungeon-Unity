@@ -2748,14 +2748,17 @@ public static class SaveLoadManager
         #endregion
 
         #region Dungeon
+
         saveData.Dungeon = new Dungeon();
         saveData.Dungeon.Name = saveData.Quest.Dungeon;
-        saveData.Dungeon.GridSizeX = 14;
-        saveData.Dungeon.GridSizeY = 5;
-        saveData.Dungeon.StartingRoomId = "entry";
+        saveData.Dungeon.GridSizeX = 28;
+        saveData.Dungeon.GridSizeY = 11;
+        //saveData.Dungeon.StartingRoomId = "entry";
+        saveData.Dungeon.StartingRoomId = "room2_mid";
 
         #region Rooms
-        Room room = new Room("entry", 1, 5)
+        #region Entry 1/7
+        Room room = new Room("entry", 1, 7)
         {
             Knowledge = Knowledge.Completed,
             Type = AreaType.Entrance,
@@ -2766,26 +2769,180 @@ public static class SaveLoadManager
             TextureId = "plot_darkest_dungeon_1_enter",
         };
         saveData.Dungeon.Rooms.Add(room.Id, room);
-
-        room = new Room("room2_1", 14, 5)
+        #endregion
+        #region Room 2 Mid 14/7
+        room = new Room("room2_mid", 14, 7)
+        {
+            Knowledge = Knowledge.Hidden,
+            Type = AreaType.Battle,
+            MashId = 6,
+            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
+                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_1_mash_03"][0].MonsterSet),
+            Doors = new List<Door>(),
+            TextureId = "random2",
+        };
+        saveData.Dungeon.Rooms.Add(room.Id, room);
+        #endregion
+        #region Room 3 Top 18/11
+        room = new Room("room3_top", 18, 11)
+        {
+            Knowledge = Knowledge.Hidden,
+            Type = AreaType.Empty,
+            MashId = 1,
+            Doors = new List<Door>(),
+            TextureId = "random4",
+        };
+        saveData.Dungeon.Rooms.Add(room.Id, room);
+        #endregion
+        #region Room 3 Bot 18/3
+        room = new Room("room3_bot", 18, 3)
+        {
+            Knowledge = Knowledge.Hidden,
+            Type = AreaType.Empty,
+            MashId = 1,
+            Doors = new List<Door>(),
+            TextureId = "random1",
+        };
+        saveData.Dungeon.Rooms.Add(room.Id, room);
+        #endregion
+        #region Room 4 Mid 22/7
+        room = new Room("room4_mid", 22, 7)
+        {
+            Knowledge = Knowledge.Hidden,
+            Type = AreaType.Empty,
+            MashId = 1,
+            Doors = new List<Door>(),
+            TextureId = "random1",
+        };
+        saveData.Dungeon.Rooms.Add(room.Id, room);
+        #endregion
+        #region Room 5 Mid 28/7
+        room = new Room("room5_mid", 28, 7)
+        {
+            Knowledge = Knowledge.Hidden,
+            Type = AreaType.Empty,
+            MashId = 1,
+            Doors = new List<Door>(),
+            TextureId = "random2",
+        };
+        saveData.Dungeon.Rooms.Add(room.Id, room);
+        #endregion
+        #region Room 5 Top 28/13
+        room = new Room("room5_top", 28, 13)
+        {
+            Knowledge = Knowledge.Hidden,
+            Type = AreaType.Battle,
+            MashId = 1,
+            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
+                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_1_mash_07"][0].MonsterSet),
+            Doors = new List<Door>(),
+            TextureId = "random2",
+        };
+        saveData.Dungeon.Rooms.Add(room.Id, room);
+        #endregion
+        #region Room 5 Bot 28/1
+        room = new Room("room5_bot", 28, 1)
+        {
+            Knowledge = Knowledge.Hidden,
+            Type = AreaType.Empty,
+            MashId = 1,
+            Doors = new List<Door>(),
+            TextureId = "random2",
+        };
+        saveData.Dungeon.Rooms.Add(room.Id, room);
+        #endregion
+        #region Room 6 Mid 34/7
+        room = new Room("room6_mid", 34, 7)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.BattleTresure,
+            Prop = DarkestDungeonManager.Data.Curios["ancestors_knapsack"],
+            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
+                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_1_mash_09"][0].MonsterSet),
+            MashId = 6,
+            Doors = new List<Door>(),
+            TextureId = "random2",
+        };
+        saveData.Dungeon.Rooms.Add(room.Id, room);
+        #endregion
+        #region Room 6 Top 34/13
+        room = new Room("room6_top", 34, 13)
+        {
+            Knowledge = Knowledge.Hidden,
+            Type = AreaType.Empty,
             MashId = 1,
-            Prop = DarkestDungeonManager.Data.Curios["bandits_trapped_chest"],
-            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["weald"].BattleMashes.
-                    Find(mash => mash.MashId == 1).NamedEncounters["tutorial_2"][0].MonsterSet),
+            Doors = new List<Door>(),
+            TextureId = "random2",
+        };
+        saveData.Dungeon.Rooms.Add(room.Id, room);
+        #endregion
+        #region Room 6 Bot 34/1
+        room = new Room("room6_bot", 34, 1)
+        {
+            Knowledge = Knowledge.Hidden,
+            Type = AreaType.Empty,
+            MashId = 1,
+            Doors = new List<Door>(),
+            TextureId = "random2",
+        };
+        saveData.Dungeon.Rooms.Add(room.Id, room);
+        #endregion
+        #region Room 7 Mid 40/7
+        room = new Room("room7_mid", 40, 7)
+        {
+            Knowledge = Knowledge.Hidden,
+            Type = AreaType.Battle,
+            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
+                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_1_mash_10"][0].MonsterSet),
+            MashId = 6,
+            Doors = new List<Door>(),
+            TextureId = "random2",
+        };
+        saveData.Dungeon.Rooms.Add(room.Id, room);
+        #endregion
+        #region Room 7 Top 40/13
+        room = new Room("room7_top", 40, 13)
+        {
+            Knowledge = Knowledge.Hidden,
+            Type = AreaType.Empty,
+            MashId = 1,
+            Doors = new List<Door>(),
+            TextureId = "random2",
+        };
+        saveData.Dungeon.Rooms.Add(room.Id, room);
+        #endregion
+        #region Room 7 Bot 40/1
+        room = new Room("room7_bot", 40, 1)
+        {
+            Knowledge = Knowledge.Hidden,
+            Type = AreaType.Empty,
+            MashId = 1,
+            Doors = new List<Door>(),
+            TextureId = "random2",
+        };
+        saveData.Dungeon.Rooms.Add(room.Id, room);
+        #endregion
+        #region Room 8 Mid 49/7
+        room = new Room("room8_mid", 49, 7)
+        {
+            Knowledge = Knowledge.Hidden,
+            Type = AreaType.Boss,
+            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
+                    Find(mash => mash.MashId == 6).BossEncounters.Find(enc => enc.MonsterSet.Contains("shuffler_D")).MonsterSet),
+            MashId = 6,
             Doors = new List<Door>(),
             TextureId = "plot_darkest_dungeon_1_final",
         };
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
+        #endregion
 
         #region Hallways
-        Hallway hallway = new Hallway("hallroom2_1_entry");
-        hallway.RoomA = saveData.Dungeon.Rooms["room2_1"];
+        #region 14/7 to 1/7
+        Hallway hallway = new Hallway("room2_mid_to_entry");
+        hallway.RoomA = saveData.Dungeon.Rooms["room2_mid"];
         hallway.RoomB = saveData.Dungeon.Rooms["entry"];
-        hallway.RoomA.Doors.Add(new Door("room2_1", hallway.Id, Direction.Left));
+        hallway.RoomA.Doors.Add(new Door("room2_mid", hallway.Id, Direction.Left));
         hallway.RoomB.Doors.Add(new Door("entry", hallway.Id, Direction.Right));
         hallway.Halls = new List<HallSector>()
         {
@@ -2794,8 +2951,9 @@ public static class SaveLoadManager
             {
                 Knowledge = Knowledge.Hidden,
                 TextureId = "5",
-                Type = AreaType.Curio,
-                Prop = DarkestDungeonManager.Data.Curios["travellers_tent_tutorial"],
+                Type = AreaType.Battle,
+                BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
+                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_1_mash_02"][0].MonsterSet),
             },
             new HallSector("2", hallway.RoomA.GridX - 3, hallway.RoomA.GridY, hallway)
             {
@@ -2819,7 +2977,9 @@ public static class SaveLoadManager
             {
                 Knowledge = Knowledge.Hidden,
                 TextureId = "1",
-                Type = AreaType.Empty,
+                Type = AreaType.Battle,
+                BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
+                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_1_mash_01"][0].MonsterSet),
             },
             new HallSector("6", hallway.RoomA.GridX - 7, hallway.RoomA.GridY, hallway)
             {
@@ -2837,9 +2997,7 @@ public static class SaveLoadManager
             {
                 Knowledge = Knowledge.Hidden,
                 TextureId = "3",
-                Type = AreaType.Battle,
-                BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["weald"].BattleMashes.
-                    Find(mash => mash.MashId == 1).NamedEncounters["tutorial_1"][0].MonsterSet),
+                Type = AreaType.Empty,
             },
             new HallSector("9", hallway.RoomA.GridX - 10, hallway.RoomA.GridY, hallway)
             {
@@ -2856,6 +3014,614 @@ public static class SaveLoadManager
             new HallSector("11", hallway.RoomA.GridX - 12, hallway.RoomA.GridY, hallway, new Door(hallway.Id, hallway.RoomB.Id, Direction.Right)),
         };
         saveData.Dungeon.Hallways.Add(hallway.Id, hallway);
+        #endregion
+        #region 18/11 to 14/7
+        hallway = new Hallway("room3_top_to_room2_mid");
+        hallway.RoomA = saveData.Dungeon.Rooms["room3_top"];
+        hallway.RoomB = saveData.Dungeon.Rooms["room2_mid"];
+        hallway.RoomA.Doors.Add(new Door("room3_top", hallway.Id, Direction.Left));
+        hallway.RoomB.Doors.Add(new Door("room2_mid", hallway.Id, Direction.Top));
+        hallway.Halls = new List<HallSector>()
+        {
+            new HallSector("0", hallway.RoomA.GridX - 1, hallway.RoomA.GridY, hallway, new Door(hallway.Id, hallway.RoomA.Id, Direction.Left)),
+            new HallSector("1", hallway.RoomA.GridX - 2, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "5",
+                Type = AreaType.Battle,
+                BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
+                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_1_mash_04"][0].MonsterSet),
+            },
+            new HallSector("2", hallway.RoomA.GridX - 3, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "4",
+                Type = AreaType.Empty,
+            },
+            new HallSector("3", hallway.RoomA.GridX - 4, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "3",
+                Type = AreaType.Empty,
+            },
+            new HallSector("4", hallway.RoomA.GridX - 4, hallway.RoomA.GridY - 1, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "2",
+                Type = AreaType.Empty,
+            },
+            new HallSector("5", hallway.RoomA.GridX - 4, hallway.RoomA.GridY - 2, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "1",
+                Type = AreaType.Empty,
+            },
+            new HallSector("6", hallway.RoomA.GridX - 4, hallway.RoomA.GridY - 3, hallway, new Door(hallway.Id, hallway.RoomB.Id, Direction.Right)),
+        };
+        saveData.Dungeon.Hallways.Add(hallway.Id, hallway);
+        #endregion
+        #region 18/3 to 14/7
+        hallway = new Hallway("room3_bot_to_room2_mid");
+        hallway.RoomA = saveData.Dungeon.Rooms["room3_bot"];
+        hallway.RoomB = saveData.Dungeon.Rooms["room2_mid"];
+        hallway.RoomA.Doors.Add(new Door("room3_bot", hallway.Id, Direction.Left));
+        hallway.RoomB.Doors.Add(new Door("room2_mid", hallway.Id, Direction.Top));
+        hallway.Halls = new List<HallSector>()
+        {
+            new HallSector("0", hallway.RoomA.GridX - 1, hallway.RoomA.GridY, hallway, new Door(hallway.Id, hallway.RoomA.Id, Direction.Left)),
+            new HallSector("1", hallway.RoomA.GridX - 2, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "5",
+                Type = AreaType.Battle,
+                BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
+                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_1_mash_05"][0].MonsterSet),
+            },
+            new HallSector("2", hallway.RoomA.GridX - 3, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "4",
+                Type = AreaType.Empty,
+            },
+            new HallSector("3", hallway.RoomA.GridX - 4, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "3",
+                Type = AreaType.Empty,
+            },
+            new HallSector("4", hallway.RoomA.GridX - 4, hallway.RoomA.GridY + 1, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "2",
+                Type = AreaType.Empty,
+            },
+            new HallSector("5", hallway.RoomA.GridX - 4, hallway.RoomA.GridY + 2, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "1",
+                Type = AreaType.Empty,
+            },
+            new HallSector("6", hallway.RoomA.GridX - 4, hallway.RoomA.GridY + 3, hallway, new Door(hallway.Id, hallway.RoomB.Id, Direction.Right)),
+        };
+        saveData.Dungeon.Hallways.Add(hallway.Id, hallway);
+        #endregion
+        #region 22/7 to 18/11
+        hallway = new Hallway("room4_mid_to_room3_top");
+        hallway.RoomA = saveData.Dungeon.Rooms["room4_mid"];
+        hallway.RoomB = saveData.Dungeon.Rooms["room3_top"];
+        hallway.RoomA.Doors.Add(new Door("room4_mid", hallway.Id, Direction.Left));
+        hallway.RoomB.Doors.Add(new Door("room3_top", hallway.Id, Direction.Top));
+        hallway.Halls = new List<HallSector>()
+        {
+            new HallSector("0", hallway.RoomA.GridX, hallway.RoomA.GridY + 1, hallway, new Door(hallway.Id, hallway.RoomA.Id, Direction.Left)),
+            new HallSector("1", hallway.RoomA.GridX, hallway.RoomA.GridY + 2, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "5",
+                Type = AreaType.Empty,
+            },
+            new HallSector("2", hallway.RoomA.GridX, hallway.RoomA.GridY + 3, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "4",
+                Type = AreaType.Empty,
+            },
+            new HallSector("3", hallway.RoomA.GridX, hallway.RoomA.GridY + 4, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "3",
+                Type = AreaType.Empty,
+            },
+            new HallSector("4", hallway.RoomA.GridX - 1, hallway.RoomA.GridY + 4, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "2",
+                Type = AreaType.Empty,
+            },
+            new HallSector("5", hallway.RoomA.GridX - 2, hallway.RoomA.GridY + 4, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "1",
+                Type = AreaType.Empty,
+            },
+            new HallSector("6", hallway.RoomA.GridX - 3, hallway.RoomA.GridY + 4, hallway, new Door(hallway.Id, hallway.RoomB.Id, Direction.Right)),
+        };
+        saveData.Dungeon.Hallways.Add(hallway.Id, hallway);
+        #endregion
+        #region 22/7 to 18/3
+        hallway = new Hallway("room4_mid_to_room3_bot");
+        hallway.RoomA = saveData.Dungeon.Rooms["room4_mid"];
+        hallway.RoomB = saveData.Dungeon.Rooms["room3_bot"];
+        hallway.RoomA.Doors.Add(new Door("room4_mid", hallway.Id, Direction.Left));
+        hallway.RoomB.Doors.Add(new Door("room3_bot", hallway.Id, Direction.Top));
+        hallway.Halls = new List<HallSector>()
+        {
+            new HallSector("0", hallway.RoomA.GridX, hallway.RoomA.GridY - 1, hallway, new Door(hallway.Id, hallway.RoomA.Id, Direction.Left)),
+            new HallSector("1", hallway.RoomA.GridX, hallway.RoomA.GridY - 2, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "5",
+                Type = AreaType.Empty,
+            },
+            new HallSector("2", hallway.RoomA.GridX, hallway.RoomA.GridY - 3, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "4",
+                Type = AreaType.Empty,
+            },
+            new HallSector("3", hallway.RoomA.GridX, hallway.RoomA.GridY - 4, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "3",
+                Type = AreaType.Empty,
+            },
+            new HallSector("4", hallway.RoomA.GridX - 1, hallway.RoomA.GridY - 4, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "2",
+                Type = AreaType.Empty,
+            },
+            new HallSector("5", hallway.RoomA.GridX - 2, hallway.RoomA.GridY - 4, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "1",
+                Type = AreaType.Empty,
+            },
+            new HallSector("6", hallway.RoomA.GridX - 3, hallway.RoomA.GridY - 4, hallway, new Door(hallway.Id, hallway.RoomB.Id, Direction.Right)),
+        };
+        saveData.Dungeon.Hallways.Add(hallway.Id, hallway);
+        #endregion
+        #region 28/7 to 22/7
+        hallway = new Hallway("room5_mid_to_room4_mid");
+        hallway.RoomA = saveData.Dungeon.Rooms["room5_mid"];
+        hallway.RoomB = saveData.Dungeon.Rooms["room4_mid"];
+        hallway.RoomA.Doors.Add(new Door("room5_mid", hallway.Id, Direction.Left));
+        hallway.RoomB.Doors.Add(new Door("room4_mid", hallway.Id, Direction.Top));
+        hallway.Halls = new List<HallSector>()
+        {
+            new HallSector("0", hallway.RoomA.GridX - 1, hallway.RoomA.GridY, hallway, new Door(hallway.Id, hallway.RoomA.Id, Direction.Left)),
+            new HallSector("1", hallway.RoomA.GridX - 2, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "5",
+                Type = AreaType.Empty,
+            },
+            new HallSector("2", hallway.RoomA.GridX - 3, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "4",
+                Type = AreaType.Battle,
+                BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
+                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_1_mash_06"][0].MonsterSet),
+            },
+            new HallSector("3", hallway.RoomA.GridX - 4, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "3",
+                Type = AreaType.Empty,
+            },
+            new HallSector("4", hallway.RoomA.GridX - 5, hallway.RoomA.GridY, hallway, new Door(hallway.Id, hallway.RoomB.Id, Direction.Right)),
+        };
+        saveData.Dungeon.Hallways.Add(hallway.Id, hallway);
+        #endregion
+        #region 28/13 to 28/7
+        hallway = new Hallway("room5_top_to_room5_mid");
+        hallway.RoomA = saveData.Dungeon.Rooms["room5_top"];
+        hallway.RoomB = saveData.Dungeon.Rooms["room5_mid"];
+        hallway.RoomA.Doors.Add(new Door("room5_top", hallway.Id, Direction.Left));
+        hallway.RoomB.Doors.Add(new Door("room5_mid", hallway.Id, Direction.Top));
+        hallway.Halls = new List<HallSector>()
+        {
+            new HallSector("0", hallway.RoomA.GridX, hallway.RoomA.GridY - 1, hallway, new Door(hallway.Id, hallway.RoomA.Id, Direction.Left)),
+            new HallSector("1", hallway.RoomA.GridX, hallway.RoomA.GridY - 2, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "5",
+                Type = AreaType.Empty,
+            },
+            new HallSector("2", hallway.RoomA.GridX, hallway.RoomA.GridY - 3, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "4",
+                Type = AreaType.Empty,
+            },
+            new HallSector("3", hallway.RoomA.GridX, hallway.RoomA.GridY - 4, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "3",
+                Type = AreaType.Empty,
+            },
+            new HallSector("4", hallway.RoomA.GridX, hallway.RoomA.GridY - 5, hallway, new Door(hallway.Id, hallway.RoomB.Id, Direction.Right)),
+        };
+        saveData.Dungeon.Hallways.Add(hallway.Id, hallway);
+        #endregion
+        #region 28/1 to 28/7
+        hallway = new Hallway("room5_bot_to_room5_mid");
+        hallway.RoomA = saveData.Dungeon.Rooms["room5_bot"];
+        hallway.RoomB = saveData.Dungeon.Rooms["room5_mid"];
+        hallway.RoomA.Doors.Add(new Door("room5_bot", hallway.Id, Direction.Left));
+        hallway.RoomB.Doors.Add(new Door("room5_mid", hallway.Id, Direction.Top));
+        hallway.Halls = new List<HallSector>()
+        {
+            new HallSector("0", hallway.RoomA.GridX, hallway.RoomA.GridY + 1, hallway, new Door(hallway.Id, hallway.RoomA.Id, Direction.Left)),
+            new HallSector("1", hallway.RoomA.GridX, hallway.RoomA.GridY + 2, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "5",
+                Type = AreaType.Battle,
+                BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
+                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_1_mash_08"][0].MonsterSet),
+            },
+            new HallSector("2", hallway.RoomA.GridX, hallway.RoomA.GridY + 3, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "4",
+                Type = AreaType.Empty,
+            },
+            new HallSector("3", hallway.RoomA.GridX, hallway.RoomA.GridY + 4, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "3",
+                Type = AreaType.Empty,
+            },
+            new HallSector("4", hallway.RoomA.GridX, hallway.RoomA.GridY + 5, hallway, new Door(hallway.Id, hallway.RoomB.Id, Direction.Right)),
+        };
+        saveData.Dungeon.Hallways.Add(hallway.Id, hallway);
+        #endregion
+        #region 34/1 to 28/1
+        hallway = new Hallway("room6_bot_to_room5_bot");
+        hallway.RoomA = saveData.Dungeon.Rooms["room6_bot"];
+        hallway.RoomB = saveData.Dungeon.Rooms["room5_bot"];
+        hallway.RoomA.Doors.Add(new Door("room6_bot", hallway.Id, Direction.Left));
+        hallway.RoomB.Doors.Add(new Door("room5_bot", hallway.Id, Direction.Top));
+        hallway.Halls = new List<HallSector>()
+        {
+            new HallSector("0", hallway.RoomA.GridX - 1, hallway.RoomA.GridY, hallway, new Door(hallway.Id, hallway.RoomA.Id, Direction.Left)),
+            new HallSector("1", hallway.RoomA.GridX - 2, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "5",
+                Type = AreaType.Empty,
+            },
+            new HallSector("2", hallway.RoomA.GridX - 3, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "4",
+                Type = AreaType.Empty,
+            },
+            new HallSector("3", hallway.RoomA.GridX - 4, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "3",
+                Type = AreaType.Empty,
+            },
+            new HallSector("4", hallway.RoomA.GridX - 5, hallway.RoomA.GridY, hallway, new Door(hallway.Id, hallway.RoomB.Id, Direction.Right)),
+        };
+        saveData.Dungeon.Hallways.Add(hallway.Id, hallway);
+        #endregion
+        #region 34/13 to 28/13
+        hallway = new Hallway("room6_top_to_room5_top");
+        hallway.RoomA = saveData.Dungeon.Rooms["room6_top"];
+        hallway.RoomB = saveData.Dungeon.Rooms["room5_top"];
+        hallway.RoomA.Doors.Add(new Door("room6_top", hallway.Id, Direction.Left));
+        hallway.RoomB.Doors.Add(new Door("room5_top", hallway.Id, Direction.Top));
+        hallway.Halls = new List<HallSector>()
+        {
+            new HallSector("0", hallway.RoomA.GridX - 1, hallway.RoomA.GridY, hallway, new Door(hallway.Id, hallway.RoomA.Id, Direction.Left)),
+            new HallSector("1", hallway.RoomA.GridX - 2, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "5",
+                Type = AreaType.Empty,
+            },
+            new HallSector("2", hallway.RoomA.GridX - 3, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "4",
+                Type = AreaType.Empty,
+            },
+            new HallSector("3", hallway.RoomA.GridX - 4, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "3",
+                Type = AreaType.Empty,
+            },
+            new HallSector("4", hallway.RoomA.GridX - 5, hallway.RoomA.GridY, hallway, new Door(hallway.Id, hallway.RoomB.Id, Direction.Right)),
+        };
+        saveData.Dungeon.Hallways.Add(hallway.Id, hallway);
+        #endregion
+        #region 34/1 to 34/7
+        hallway = new Hallway("room6_bot_to_room6_mid");
+        hallway.RoomA = saveData.Dungeon.Rooms["room6_bot"];
+        hallway.RoomB = saveData.Dungeon.Rooms["room6_mid"];
+        hallway.RoomA.Doors.Add(new Door("room6_bot", hallway.Id, Direction.Left));
+        hallway.RoomB.Doors.Add(new Door("room6_mid", hallway.Id, Direction.Top));
+        hallway.Halls = new List<HallSector>()
+        {
+            new HallSector("0", hallway.RoomA.GridX, hallway.RoomA.GridY + 1, hallway, new Door(hallway.Id, hallway.RoomA.Id, Direction.Left)),
+            new HallSector("1", hallway.RoomA.GridX, hallway.RoomA.GridY + 2, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "5",
+                Type = AreaType.Empty,
+            },
+            new HallSector("2", hallway.RoomA.GridX, hallway.RoomA.GridY + 3, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "4",
+                Type = AreaType.Empty,
+            },
+            new HallSector("3", hallway.RoomA.GridX, hallway.RoomA.GridY + 4, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "3",
+                Type = AreaType.Empty,
+            },
+            new HallSector("4", hallway.RoomA.GridX, hallway.RoomA.GridY + 5, hallway, new Door(hallway.Id, hallway.RoomB.Id, Direction.Right)),
+        };
+        saveData.Dungeon.Hallways.Add(hallway.Id, hallway);
+        #endregion
+        #region 34/13 to 34/7
+        hallway = new Hallway("room6_top_to_room6_mid");
+        hallway.RoomA = saveData.Dungeon.Rooms["room6_top"];
+        hallway.RoomB = saveData.Dungeon.Rooms["room6_mid"];
+        hallway.RoomA.Doors.Add(new Door("room6_top", hallway.Id, Direction.Left));
+        hallway.RoomB.Doors.Add(new Door("room6_mid", hallway.Id, Direction.Top));
+        hallway.Halls = new List<HallSector>()
+        {
+            new HallSector("0", hallway.RoomA.GridX, hallway.RoomA.GridY - 1, hallway, new Door(hallway.Id, hallway.RoomA.Id, Direction.Left)),
+            new HallSector("1", hallway.RoomA.GridX, hallway.RoomA.GridY - 2, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "5",
+                Type = AreaType.Empty,
+            },
+            new HallSector("2", hallway.RoomA.GridX, hallway.RoomA.GridY - 3, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "4",
+                Type = AreaType.Battle,
+                BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
+                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_1_mash_08"][0].MonsterSet),
+            },
+            new HallSector("3", hallway.RoomA.GridX, hallway.RoomA.GridY - 4, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "3",
+                Type = AreaType.Empty,
+            },
+            new HallSector("4", hallway.RoomA.GridX, hallway.RoomA.GridY - 5, hallway, new Door(hallway.Id, hallway.RoomB.Id, Direction.Right)),
+        };
+        saveData.Dungeon.Hallways.Add(hallway.Id, hallway);
+        #endregion
+        #region 40/7 to 34/7
+        hallway = new Hallway("room7_mid_to_room6_mid");
+        hallway.RoomA = saveData.Dungeon.Rooms["room7_mid"];
+        hallway.RoomB = saveData.Dungeon.Rooms["room6_mid"];
+        hallway.RoomA.Doors.Add(new Door("room7_mid", hallway.Id, Direction.Left));
+        hallway.RoomB.Doors.Add(new Door("room6_mid", hallway.Id, Direction.Top));
+        hallway.Halls = new List<HallSector>()
+        {
+            new HallSector("0", hallway.RoomA.GridX - 1, hallway.RoomA.GridY, hallway, new Door(hallway.Id, hallway.RoomA.Id, Direction.Left)),
+            new HallSector("1", hallway.RoomA.GridX - 2, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "5",
+                Type = AreaType.Empty,
+            },
+            new HallSector("2", hallway.RoomA.GridX - 3, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "4",
+                Type = AreaType.Empty,
+            },
+            new HallSector("3", hallway.RoomA.GridX - 4, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "3",
+                Type = AreaType.Empty,
+            },
+            new HallSector("4", hallway.RoomA.GridX - 5, hallway.RoomA.GridY, hallway, new Door(hallway.Id, hallway.RoomB.Id, Direction.Right)),
+        };
+        saveData.Dungeon.Hallways.Add(hallway.Id, hallway);
+        #endregion
+        #region 40/13 to 34/13
+        hallway = new Hallway("room7_top_to_room6_top");
+        hallway.RoomA = saveData.Dungeon.Rooms["room7_top"];
+        hallway.RoomB = saveData.Dungeon.Rooms["room6_top"];
+        hallway.RoomA.Doors.Add(new Door("room7_top", hallway.Id, Direction.Left));
+        hallway.RoomB.Doors.Add(new Door("room6_top", hallway.Id, Direction.Top));
+        hallway.Halls = new List<HallSector>()
+        {
+            new HallSector("0", hallway.RoomA.GridX - 1, hallway.RoomA.GridY, hallway, new Door(hallway.Id, hallway.RoomA.Id, Direction.Left)),
+            new HallSector("1", hallway.RoomA.GridX - 2, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "5",
+                Type = AreaType.Empty,
+            },
+            new HallSector("2", hallway.RoomA.GridX - 3, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "4",
+                Type = AreaType.Empty,
+            },
+            new HallSector("3", hallway.RoomA.GridX - 4, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "3",
+                Type = AreaType.Empty,
+            },
+            new HallSector("4", hallway.RoomA.GridX - 5, hallway.RoomA.GridY, hallway, new Door(hallway.Id, hallway.RoomB.Id, Direction.Right)),
+        };
+        saveData.Dungeon.Hallways.Add(hallway.Id, hallway);
+        #endregion
+        #region 40/1 to 34/1
+        hallway = new Hallway("room7_bot_to_room6_bot");
+        hallway.RoomA = saveData.Dungeon.Rooms["room7_bot"];
+        hallway.RoomB = saveData.Dungeon.Rooms["room6_bot"];
+        hallway.RoomA.Doors.Add(new Door("room7_bot", hallway.Id, Direction.Left));
+        hallway.RoomB.Doors.Add(new Door("room6_bot", hallway.Id, Direction.Top));
+        hallway.Halls = new List<HallSector>()
+        {
+            new HallSector("0", hallway.RoomA.GridX - 1, hallway.RoomA.GridY, hallway, new Door(hallway.Id, hallway.RoomA.Id, Direction.Left)),
+            new HallSector("1", hallway.RoomA.GridX - 2, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "5",
+                Type = AreaType.Empty,
+            },
+            new HallSector("2", hallway.RoomA.GridX - 3, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "4",
+                Type = AreaType.Battle,
+                BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
+                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_1_mash_07"][0].MonsterSet),
+            },
+            new HallSector("3", hallway.RoomA.GridX - 4, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "3",
+                Type = AreaType.Empty,
+            },
+            new HallSector("4", hallway.RoomA.GridX - 5, hallway.RoomA.GridY, hallway, new Door(hallway.Id, hallway.RoomB.Id, Direction.Right)),
+        };
+        saveData.Dungeon.Hallways.Add(hallway.Id, hallway);
+        #endregion
+        #region 40/1 to 40/7
+        hallway = new Hallway("room7_bot_to_room7_mid");
+        hallway.RoomA = saveData.Dungeon.Rooms["room7_bot"];
+        hallway.RoomB = saveData.Dungeon.Rooms["room7_mid"];
+        hallway.RoomA.Doors.Add(new Door("room7_bot", hallway.Id, Direction.Left));
+        hallway.RoomB.Doors.Add(new Door("room7_mid", hallway.Id, Direction.Top));
+        hallway.Halls = new List<HallSector>()
+        {
+            new HallSector("0", hallway.RoomA.GridX, hallway.RoomA.GridY + 1, hallway, new Door(hallway.Id, hallway.RoomA.Id, Direction.Left)),
+            new HallSector("1", hallway.RoomA.GridX, hallway.RoomA.GridY + 2, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "5",
+                Type = AreaType.Empty,
+            },
+            new HallSector("2", hallway.RoomA.GridX, hallway.RoomA.GridY + 3, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "4",
+                Type = AreaType.Empty,
+            },
+            new HallSector("3", hallway.RoomA.GridX, hallway.RoomA.GridY + 4, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "3",
+                Type = AreaType.Empty,
+            },
+            new HallSector("4", hallway.RoomA.GridX, hallway.RoomA.GridY + 5, hallway, new Door(hallway.Id, hallway.RoomB.Id, Direction.Right)),
+        };
+        saveData.Dungeon.Hallways.Add(hallway.Id, hallway);
+        #endregion
+        #region 40/13 to 40/7
+        hallway = new Hallway("room7_top_to_room7_mid");
+        hallway.RoomA = saveData.Dungeon.Rooms["room7_top"];
+        hallway.RoomB = saveData.Dungeon.Rooms["room7_mid"];
+        hallway.RoomA.Doors.Add(new Door("room7_top", hallway.Id, Direction.Left));
+        hallway.RoomB.Doors.Add(new Door("room7_mid", hallway.Id, Direction.Top));
+        hallway.Halls = new List<HallSector>()
+        {
+            new HallSector("0", hallway.RoomA.GridX, hallway.RoomA.GridY - 1, hallway, new Door(hallway.Id, hallway.RoomA.Id, Direction.Left)),
+            new HallSector("1", hallway.RoomA.GridX, hallway.RoomA.GridY - 2, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "5",
+                Type = AreaType.Empty,
+            },
+            new HallSector("2", hallway.RoomA.GridX, hallway.RoomA.GridY - 3, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "4",
+                Type = AreaType.Empty,
+            },
+            new HallSector("3", hallway.RoomA.GridX, hallway.RoomA.GridY - 4, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "3",
+                Type = AreaType.Empty,
+            },
+            new HallSector("4", hallway.RoomA.GridX, hallway.RoomA.GridY - 5, hallway, new Door(hallway.Id, hallway.RoomB.Id, Direction.Right)),
+        };
+        saveData.Dungeon.Hallways.Add(hallway.Id, hallway);
+        #endregion
+        #region 49/7 to 40/7
+        hallway = new Hallway("room8_mid_to_room7_mid");
+        hallway.RoomA = saveData.Dungeon.Rooms["room8_mid"];
+        hallway.RoomB = saveData.Dungeon.Rooms["room7_mid"];
+        hallway.RoomA.Doors.Add(new Door("room8_mid", hallway.Id, Direction.Left));
+        hallway.RoomB.Doors.Add(new Door("room7_mid", hallway.Id, Direction.Top));
+        hallway.Halls = new List<HallSector>()
+        {
+            new HallSector("0", hallway.RoomA.GridX - 1, hallway.RoomA.GridY, hallway, new Door(hallway.Id, hallway.RoomA.Id, Direction.Left)),
+            new HallSector("1", hallway.RoomA.GridX - 2, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "5",
+                Type = AreaType.Empty,
+            },
+            new HallSector("2", hallway.RoomA.GridX - 3, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "4",
+                Type = AreaType.Battle,
+                BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
+                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_1_mash_11"][0].MonsterSet),
+            },
+            new HallSector("3", hallway.RoomA.GridX - 4, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "3",
+                Type = AreaType.Empty,
+            },
+            new HallSector("4", hallway.RoomA.GridX - 5, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "3",
+                Type = AreaType.Empty,
+            },
+            new HallSector("5", hallway.RoomA.GridX - 6, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "3",
+                Type = AreaType.Empty,
+            },
+            new HallSector("6", hallway.RoomA.GridX - 7, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "3",
+                Type = AreaType.Empty,
+            },
+            new HallSector("7", hallway.RoomA.GridX - 8, hallway.RoomA.GridY, hallway, new Door(hallway.Id, hallway.RoomB.Id, Direction.Right)),
+        };
+        saveData.Dungeon.Hallways.Add(hallway.Id, hallway);
+        #endregion
         #endregion
         #endregion
 
@@ -2885,8 +3651,10 @@ public static class SaveLoadManager
 
         #region Data
         saveData.ExploredRoomCount = 1;
-        saveData.CurrentLocation = "entry";
-        saveData.LastRoom = "entry";
+        //saveData.CurrentLocation = "entry";
+        //saveData.LastRoom = "entry";
+        saveData.CurrentLocation = "room8_mid";
+        saveData.LastRoom = "room8_mid";
         saveData.PreviousLastSector = "";
         saveData.LastSector = "";
         saveData.KilledMonsters = new List<string>();

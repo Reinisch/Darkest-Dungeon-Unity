@@ -410,7 +410,7 @@ public static class BattleSolver
 
             if (target.BattleModifiers != null && target.BattleModifiers.CanBeDamagedDirectly == false)
                 damage = 0;
-
+            
             if (skill.IsCritValid)
             {
                 float critChance = performer.GetSingleAttribute(AttributeType.CritChance).ModifiedValue + skill.CritMod;
@@ -510,7 +510,7 @@ public static class BattleSolver
         performerUnit.Character.ApplyAllBuffRules(RaidSceneManager.Rules.
             GetCombatUnitRules(performerUnit, targetUnit, skill, performerUnit.Character.RiposteSkill == skill));
         targetUnit.Character.ApplyAllBuffRules(RaidSceneManager.Rules.
-            GetCombatUnitRules(targetUnit, performerUnit, null, false));
+            GetCombatUnitRules(targetUnit, performerUnit, skill, false));
 
         foreach (var effect in skill.Effects)
             effect.ApplyTargetConditions(performerUnit, targetUnit);

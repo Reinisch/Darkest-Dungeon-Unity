@@ -472,9 +472,9 @@ public class RaidEvents : MonoBehaviour
     {
         itemInteraction.LoadInteraction(curio, areaView);
     }
-    public void LoadCurioLoot(Curio curio, CurioResult result, bool keepLoot = false)
+    public void LoadCurioLoot(Curio curio, CurioInteraction interaction, CurioResult result, bool keepLoot = false)
     {
-        loot.LoadCurioLoot(curio, result, RaidSceneManager.Raid, keepLoot);
+        loot.LoadCurioLoot(curio, interaction, result, RaidSceneManager.Raid, keepLoot);
     }
     public void LoadBattleLoot(List<LootDefinition> battleLoot)
     {

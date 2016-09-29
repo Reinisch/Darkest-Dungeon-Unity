@@ -55,7 +55,7 @@ public class RaidHallway : MonoBehaviour
         {
             var removedSector = HallSectors[StartDoorSector + 1];
             HallSectors.RemoveAt(StartDoorSector + 1);
-            Destroy(removedSector);
+            Destroy(removedSector.gameObject);
         }
 
         if (direction == Direction.Bot || direction == Direction.Left )

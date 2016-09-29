@@ -815,7 +815,7 @@ public class BattleGround : MonoBehaviour
         ReturnId(deadUnit.CombatInfo.CombatId);
         Round.OrderedUnits.RemoveAll(unit => unit == deadUnit);
         if (deadUnit.Character.IsMonster)
-            RaidSceneManager.Raid.KilledMonsters.Add(deadUnit.Character.Class);
+            RaidSceneManager.Raid.KilledMonsters.Add(deadUnit.Character.Name);
     }
     public void UnitCorpsed(FormationUnit deadUnit)
     {
@@ -826,7 +826,7 @@ public class BattleGround : MonoBehaviour
         deadUnit.Character.GetStatusEffect(StatusType.Guard).ResetStatus();
         Round.OrderedUnits.RemoveAll(unit => unit == deadUnit);
         if (deadUnit.Character.IsMonster)
-            RaidSceneManager.Raid.KilledMonsters.Add(deadUnit.Character.Class);
+            RaidSceneManager.Raid.KilledMonsters.Add(deadUnit.Character.Name);
     }
 
     public void LoadBattle(BattleGroundSaveData battleSaveData)
