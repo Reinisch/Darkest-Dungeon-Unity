@@ -199,7 +199,7 @@ public static class SaveLoadManager
                         bw.Write(dungeonProgress.Value.MasteryLevel);
                         bw.Write(dungeonProgress.Value.CurrentXP);
                         bw.Write(dungeonProgress.Value.IsUnlocked);
-                        bw.Write(dungeonProgress.Value.PlotQuestCompleted);
+                        bw.Write(dungeonProgress.Value.IsEvent);
                     }
                     // Hero deaths
                     bw.Write(saveData.deathRecords.Count);
@@ -1915,6 +1915,7 @@ public static class SaveLoadManager
         saveData.saveDungeonData.Add("weald", new DungeonProgress("weald", 0, 0, true, false));
         saveData.saveDungeonData.Add("cove", new DungeonProgress("cove", 0, 0, true, false));
         saveData.saveDungeonData.Add("darkestdungeon", new DungeonProgress("darkestdungeon", 1, 0, true, false));
+        saveData.saveDungeonData.Add("town", new DungeonProgress("town", 1, 0, true, true));
 
         saveData.deathRecords = new List<DeathRecord>();
 
@@ -2833,6 +2834,7 @@ public static class SaveLoadManager
         saveData.saveDungeonData.Add("weald", new DungeonProgress("weald", 5, 32, true, false));
         saveData.saveDungeonData.Add("cove", new DungeonProgress("cove", 3, 1, true, false));
         saveData.saveDungeonData.Add("darkestdungeon", new DungeonProgress("darkestdungeon", 1, 0, true, false));
+        saveData.saveDungeonData.Add("town", new DungeonProgress("town", 1, 0, true, true));
 
         saveData.deathRecords = new List<DeathRecord>()
         {
@@ -3098,6 +3100,7 @@ public static class SaveLoadManager
         saveData.saveDungeonData.Add("weald", new DungeonProgress("weald", 0, 0, true, false));
         saveData.saveDungeonData.Add("cove", new DungeonProgress("cove", 0, 0, true, false));
         saveData.saveDungeonData.Add("darkestdungeon", new DungeonProgress("darkestdungeon", 1, 0, true, false));
+        saveData.saveDungeonData.Add("town", new DungeonProgress("town", 1, 0, true, true));
 
         saveData.deathRecords = new List<DeathRecord>();
 
@@ -3199,7 +3202,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Name = saveData.Quest.Dungeon;
         saveData.Dungeon.GridSizeX = 49;
         saveData.Dungeon.GridSizeY = 13;
-        saveData.Dungeon.StartingRoomId = "room8_mid";
+        saveData.Dungeon.StartingRoomId = "entry";
 
         #region Rooms
         #region Entry 1/7
@@ -4096,8 +4099,8 @@ public static class SaveLoadManager
 
         #region Data
         saveData.ExploredRoomCount = 1;
-        saveData.CurrentLocation = "room8_mid";
-        saveData.LastRoom = "room8_mid";
+        saveData.CurrentLocation = "entry";
+        saveData.LastRoom = "entry";
         saveData.PreviousLastSector = "";
         saveData.LastSector = "";
         saveData.KilledMonsters = new List<string>();

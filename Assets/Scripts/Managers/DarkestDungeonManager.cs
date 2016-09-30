@@ -201,9 +201,9 @@ public class DarkestDungeonManager : MonoBehaviour
     {
         if (SaveData == null)
         {
-            SaveLoadManager.WriteStartingSave(new SaveCampaignData(1, "Darkest"));
+            //SaveLoadManager.WriteStartingSave(new SaveCampaignData(1, "Darkest"));
             SaveLoadManager.WriteTestingSave(new SaveCampaignData(2, "Middle"));
-            SaveLoadManager.WriteDarkestQuestOneSave(new SaveCampaignData(3, "Map"));
+            //SaveLoadManager.WriteDarkestQuestOneSave(new SaveCampaignData(3, "Map"));
             SaveData = SaveLoadManager.ReadSave(2);
             //SaveLoadManager.WriteDungeonMap(SaveData, "DD_map1");
         }

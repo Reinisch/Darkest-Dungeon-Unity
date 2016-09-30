@@ -8,20 +8,20 @@ public class RaidPreparationManager : MonoBehaviour
     public SelectedQuestPanel selectedQuestPanel;
     public RaidPartyPanel raidPartyPanel;
 
-    bool areQuestsDistributed = false;
-
     public QuestSlot SelectedQuestSlot { get; set; }
     public List<DungeonPanel> DungeonPanels { get; private set; }
 
+    bool initialized = false;
+
     void DistributeQuests()
     {
-        if (!areQuestsDistributed)
+        if (!DarkestDungeonManager.Campaign.AreQuestsReady)
         {
             List<Quest> quests = DarkestDungeonManager.Campaign.Quests;
             quests = quests.OrderBy(quest => quest.Difficulty).ToList();
             foreach (var panel in DungeonPanels)
                 panel.DistributeQuests(quests);
-            areQuestsDistributed = true;
+            DarkestDungeonManager.Campaign.AreQuestsReady = true;
         }
     }
     void SelectAnyQuest()
@@ -55,12 +55,16 @@ public class RaidPreparationManager : MonoBehaviour
 
     public void Initialize()
     {
+        if (initialized)
+            return;
+
         DungeonPanels = new List<DungeonPanel>(dungeonPanels.GetComponentsInChildren<DungeonPanel>());
         for (int i = 0; i < DungeonPanels.Count; i++)
         {
             DungeonPanels[i].Initialize();
             DungeonPanels[i].onQuestSelected += RaidManager_onQuestSelected;
         }
+        initialized = true;
     }
 
     public void UpdateUI()

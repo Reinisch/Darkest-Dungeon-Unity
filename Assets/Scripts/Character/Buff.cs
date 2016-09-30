@@ -83,12 +83,21 @@ public class Buff
                     sb.AppendFormat(LocalizationManager.GetString(
                         CharacterLocalizationHelper.BuffRuleTooltipString(RuleType, IsFalseRule)), SingleParam + 1, body);
                     break;
+                case BuffRule.Size:
+                    sb.AppendFormat(LocalizationManager.GetString(
+                        CharacterLocalizationHelper.BuffRuleTooltipString(RuleType, IsFalseRule)), SingleParam, body);
+                    break;
                 case BuffRule.EnemyType:
                     sb.AppendFormat(LocalizationManager.GetString(
                         CharacterLocalizationHelper.BuffRuleTooltipString(RuleType, IsFalseRule)), 
                         LocalizationManager.GetString("buff_rule_data_tooltip_" + StringParam), body);
                     break;
                 case BuffRule.Skill:
+                    sb.AppendFormat(LocalizationManager.GetString(
+                        CharacterLocalizationHelper.BuffRuleTooltipString(RuleType, IsFalseRule)),
+                        LocalizationManager.GetString("buff_rule_data_tooltip_" + StringParam), body);
+                    break;
+                case BuffRule.Status:
                     sb.AppendFormat(LocalizationManager.GetString(
                         CharacterLocalizationHelper.BuffRuleTooltipString(RuleType, IsFalseRule)),
                         LocalizationManager.GetString("buff_rule_data_tooltip_" + StringParam), body);
@@ -154,7 +163,16 @@ public class Buff
                 sb.AppendFormat(LocalizationManager.GetString(
                     CharacterLocalizationHelper.BuffRuleTooltipString(RuleType, IsFalseRule)), SingleParam + 1, body);
                 break;
+            case BuffRule.Size:
+                sb.AppendFormat(LocalizationManager.GetString(
+                    CharacterLocalizationHelper.BuffRuleTooltipString(RuleType, IsFalseRule)), SingleParam + 1, body);
+                break;
             case BuffRule.Skill:
+                sb.AppendFormat(LocalizationManager.GetString(
+                    CharacterLocalizationHelper.BuffRuleTooltipString(RuleType, IsFalseRule)),
+                    LocalizationManager.GetString("buff_rule_data_tooltip_" + StringParam), body);
+                break;
+            case BuffRule.Status:
                 sb.AppendFormat(LocalizationManager.GetString(
                     CharacterLocalizationHelper.BuffRuleTooltipString(RuleType, IsFalseRule)),
                     LocalizationManager.GetString("buff_rule_data_tooltip_" + StringParam), body);

@@ -23,6 +23,7 @@ public static class QuestGenerator
         foreach (var info in questGenerationInfo.dungeonQuests)
             foreach (var quest in info.Quests)
                 generatedQuests.Add(quest);
+
         return generatedQuests;
     }
 
@@ -156,6 +157,31 @@ public static class QuestGenerator
                     questInfo.dungeonQuests.Add(dungeonQuest);
                 }
             }
+        }
+
+        foreach (var townEventData in campaign.EventModifiers.EventData)
+        {
+            if (townEventData.Type == TownEventDataType.PlotQuest)
+            {
+                var plotQuest = DarkestDungeonManager.Data.QuestDatabase.PlotQuests.
+                    Find(quest => quest.Id == townEventData.StringData);
+
+                if(plotQuest != null && !campaign.CompletedPlot.Contains(plotQuest.Id))
+                {
+                    DungeonQuestInfo dungeonQuest = questInfo.dungeonQuests.Find(item => item.Dungeon == plotQuest.Dungeon);
+                    if (dungeonQuest != null)
+                    {
+                        dungeonQuest.Quests.Add(plotQuest.Copy());
+                    }
+                    else
+                    {
+                        dungeonQuest = new DungeonQuestInfo() { Dungeon = plotQuest.Dungeon };
+                        dungeonQuest.Quests.Add(plotQuest.Copy());
+                        questInfo.dungeonQuests.Add(dungeonQuest);
+                    }
+                }
+            }
+
         }
     }
     static void DistributeQuestTypes(QuestGenerationInfo questInfo, QuestDatabase questData)

@@ -212,7 +212,7 @@ public class Campaign
     public void GenerateQuests()
     {
         Quests = QuestGenerator.GenerateQuests(DarkestDungeonManager.Campaign);
-        AreQuestsReady = true;
+        AreQuestsReady = false;
     }
 }
 

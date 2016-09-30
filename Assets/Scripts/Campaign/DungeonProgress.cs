@@ -10,7 +10,7 @@ public class DungeonProgress
     public int CurrentXP { get; set; }
     public int NextLevelXP { get; set; }
 
-    public bool PlotQuestCompleted { get; set; }
+    public bool IsEvent { get; set; }
     public bool IsUnlocked { get; set; }
 
     public float XpRatio
@@ -47,12 +47,12 @@ public class DungeonProgress
         }
     }
 
-    public DungeonProgress(string dungeonName, int masteryLevel, int currentXP, bool isUnlocked, bool plotCompleted)
+    public DungeonProgress(string dungeonName, int masteryLevel, int currentXP, bool isUnlocked, bool isEvent)
     {
         DungeonName = dungeonName;
 
         IsUnlocked = isUnlocked;
-        PlotQuestCompleted = plotCompleted;
+        IsEvent = isEvent;
 
         MasteryLevel = Mathf.Clamp(masteryLevel, 0, maxLevel);
         CurrentXP = currentXP;

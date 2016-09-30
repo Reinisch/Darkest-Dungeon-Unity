@@ -14,6 +14,8 @@ public class DungeonPanel : MonoBehaviour
 
     public event QuestSelectionEvent onQuestSelected;
 
+    private DungeonProgress dungeonProgressData;
+
     public void Initialize()
     {
         QuestSlots = new List<QuestSlot>(transform.FindChild("DungeonFrame")
@@ -24,9 +26,9 @@ public class DungeonPanel : MonoBehaviour
             QuestSlots[i].onQuestSelected += DungeonPanel_onQuestSelected;
         }
 
-        DungeonProgress progress = DarkestDungeonManager.Campaign.Dungeons[dungeon];
-        dangeonProgress.value = progress.XpRatio;
-        dangeonProgressLevel.text = progress.MasteryLevel.ToString();
+        dungeonProgressData = DarkestDungeonManager.Campaign.Dungeons[dungeon];
+        dangeonProgress.value = dungeonProgressData.XpRatio;
+        dangeonProgressLevel.text = dungeonProgressData.MasteryLevel.ToString();
     }
 
     public void DistributeQuests(List<Quest> quests)
@@ -45,8 +47,14 @@ public class DungeonPanel : MonoBehaviour
             }
         }
 
+        if (currentSlot == 0 && dungeonProgressData.IsEvent)
+            gameObject.SetActive(false);
+        else
+            gameObject.SetActive(true);
+
         for (int i = currentSlot; i < QuestSlots.Count; i++)
             QuestSlots[i].gameObject.SetActive(false);
+
     }
 
     void DungeonPanel_onQuestSelected(QuestSlot questSlot)
