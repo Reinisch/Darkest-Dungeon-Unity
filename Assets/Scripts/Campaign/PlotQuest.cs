@@ -4,6 +4,8 @@ public class PlotQuest : Quest
 {
     public override string Id { get; set; }
     public int DungeonLevel { get; set; }
+    public string RaidMap { get; set; }
+    public string PlotDependency { get; set; }
 
     public PlotTrinketReward PlotTrinket { get; set; }
 
@@ -15,6 +17,7 @@ public class PlotQuest : Quest
     {
         var newQuest = new PlotQuest();
         newQuest.Id = Id;
+        newQuest.PlotDependency = PlotDependency;
         newQuest.DungeonLevel = DungeonLevel;
         newQuest.PlotTrinket = PlotTrinket;
         newQuest.IsPlotQuest = true;
@@ -22,6 +25,7 @@ public class PlotQuest : Quest
         newQuest.Dungeon = Dungeon;
         newQuest.Difficulty = Difficulty;
         newQuest.Length = Length;
+        newQuest.RaidMap = RaidMap;
         newQuest.Goal = Goal;
 
         newQuest.IsProgression = IsProgression;

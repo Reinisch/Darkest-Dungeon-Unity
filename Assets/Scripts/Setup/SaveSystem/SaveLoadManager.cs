@@ -1335,6 +1335,454 @@ public static class SaveLoadManager
             File.Delete(Application.persistentDataPath + "\\Saves\\DarkestSave" + slotId + ".darkestsave");
     }
 
+    public static void WriteDungeonMap(SaveCampaignData saveData, string mapName)
+    {
+        if (!Directory.Exists(Application.persistentDataPath + "\\Maps\\"))
+            Directory.CreateDirectory(Application.persistentDataPath + "\\Maps\\");
+
+        using (var fs = new FileStream(Application.persistentDataPath + "\\Maps\\" + mapName +
+                    ".darkestmap", FileMode.Create, FileAccess.Write))
+        {
+            using (var bw = new BinaryWriter(fs))
+            {
+                bw.Write(saveData.Dungeon.Name);
+                bw.Write(saveData.Dungeon.GridSizeX);
+                bw.Write(saveData.Dungeon.GridSizeY);
+                bw.Write(saveData.Dungeon.StartingRoomId);
+
+                #region Rooms
+                bw.Write(saveData.Dungeon.Rooms.Count);
+                foreach (var room in saveData.Dungeon.Rooms.Values)
+                {
+                    bw.Write(room.Id);
+                    bw.Write(room.GridX);
+                    bw.Write(room.GridY);
+                    bw.Write(room.Doors.Count);
+                    for (int j = 0; j < room.Doors.Count; j++)
+                    {
+                        bw.Write(room.Doors[j].TargetArea);
+                        bw.Write((int)room.Doors[j].Direction);
+                    }
+                    bw.Write(room.TextureId);
+                    bw.Write((int)room.Type);
+                    bw.Write((int)room.Knowledge);
+                    bw.Write(room.Prop != null ? true : false);
+                    if (room.Prop != null)
+                    {
+                        bw.Write((int)room.Prop.Type);
+                        switch (room.Prop.Type)
+                        {
+                            case AreaType.Door:
+                                var door = room.Prop as Door;
+                                bw.Write(door.TargetArea);
+                                bw.Write((int)door.Direction);
+                                break;
+                            case AreaType.Curio:
+                                bw.Write((room.Prop as Curio).IsQuestCurio);
+                                bw.Write(room.Prop.StringId);
+                                break;
+                            case AreaType.Obstacle:
+                            case AreaType.Trap:
+                                bw.Write(room.Prop.StringId);
+                                break;
+                        }
+                    }
+                    bw.Write(room.BattleEncounter != null ? true : false);
+                    if (room.BattleEncounter != null)
+                    {
+                        bw.Write(room.BattleEncounter.Monsters.Count);
+                        for (int j = 0; j < room.BattleEncounter.Monsters.Count; j++)
+                            bw.Write(room.BattleEncounter.Monsters[j].Data.StringId);
+                        bw.Write(room.BattleEncounter.Cleared);
+                    }
+                }
+                #endregion
+
+                #region Hallways
+                bw.Write(saveData.Dungeon.Hallways.Count);
+                foreach (var hallway in saveData.Dungeon.Hallways.Values)
+                {
+                    bw.Write(hallway.Id);
+                    bw.Write(hallway.RoomA.Id);
+                    bw.Write(hallway.RoomB.Id);
+                    bw.Write(hallway.Halls.Count);
+                    for (int j = 0; j < hallway.Halls.Count; j++)
+                    {
+                        bw.Write(hallway.Halls[j].Id);
+                        bw.Write(hallway.Halls[j].GridX);
+                        bw.Write(hallway.Halls[j].GridY);
+                        bw.Write(hallway.Halls[j].TextureId);
+                        bw.Write((int)hallway.Halls[j].Type);
+                        bw.Write((int)hallway.Halls[j].Knowledge);
+                        bw.Write(hallway.Halls[j].Prop != null ? true : false);
+                        if (hallway.Halls[j].Prop != null)
+                        {
+                            bw.Write((int)hallway.Halls[j].Prop.Type);
+                            switch (hallway.Halls[j].Prop.Type)
+                            {
+                                case AreaType.Door:
+                                    var door = hallway.Halls[j].Prop as Door;
+                                    bw.Write(door.TargetArea);
+                                    bw.Write((int)door.Direction);
+                                    break;
+                                case AreaType.Curio:
+                                    bw.Write((hallway.Halls[j].Prop as Curio).IsQuestCurio);
+                                    bw.Write(hallway.Halls[j].Prop.StringId);
+                                    break;
+                                case AreaType.Obstacle:
+                                case AreaType.Trap:
+                                    bw.Write(hallway.Halls[j].Prop.StringId);
+                                    break;
+                            }
+                        }
+                        bw.Write(hallway.Halls[j].BattleEncounter != null ? true : false);
+                        if (hallway.Halls[j].BattleEncounter != null)
+                        {
+                            bw.Write(hallway.Halls[j].BattleEncounter.Monsters.Count);
+                            for (int i = 0; i < hallway.Halls[j].BattleEncounter.Monsters.Count; i++)
+                                bw.Write(hallway.Halls[j].BattleEncounter.Monsters[i].Data.StringId);
+                            bw.Write(hallway.Halls[j].BattleEncounter.Cleared);
+                        }
+                    }
+                }
+                #endregion
+            }
+        }
+    }
+    public static void ReadDungeonMap(SaveCampaignData saveData, string mapName)
+    {
+        using (var fs = new FileStream(Application.persistentDataPath + "\\Saves\\DarkestSave" + saveData.saveId +
+                    ".darkestsave", FileMode.Open, FileAccess.Read))
+        {
+            using (var br = new BinaryReader(fs))
+            {
+                saveData.Dungeon = new Dungeon();
+                saveData.Dungeon.Name = br.ReadString();
+                saveData.Dungeon.GridSizeX = br.ReadInt32();
+                saveData.Dungeon.GridSizeY = br.ReadInt32();
+                saveData.Dungeon.StartingRoomId = br.ReadString();
+
+                #region Rooms
+                int roomCount = br.ReadInt32();
+                for (int i = 0; i < roomCount; i++)
+                {
+                    var room = new Room(br.ReadString(), br.ReadInt32(), br.ReadInt32());
+                    int doorCount = br.ReadInt32();
+                    for (int j = 0; j < doorCount; j++)
+                    {
+                        room.Doors.Add(new Door("to", br.ReadString(), (Direction)br.ReadInt32()));
+                    }
+                    room.TextureId = br.ReadString();
+                    room.Type = (AreaType)br.ReadInt32();
+                    room.Knowledge = (Knowledge)br.ReadInt32();
+                    bool hasProp = br.ReadBoolean();
+                    if (hasProp)
+                    {
+                        AreaType propType = (AreaType)br.ReadInt32();
+
+                        switch (propType)
+                        {
+                            case AreaType.Door:
+                                room.Prop = new Door("to", br.ReadString(), (Direction)br.ReadInt32());
+                                break;
+                            case AreaType.Curio:
+                                bool isQuestCurio = br.ReadBoolean();
+                                if (isQuestCurio)
+                                {
+                                    if (saveData.Quest.Goal.Type == "activate")
+                                    {
+                                        if (saveData.Quest.Goal.QuestData is QuestActivateData)
+                                        {
+                                            var activateData = saveData.Quest.Goal.QuestData as QuestActivateData;
+                                            var curio = new Curio(activateData.CurioName); br.ReadString();
+                                            curio.IsQuestCurio = true;
+
+                                            if (saveData.Quest.Goal.StartingItems.Count > 0)
+                                            {
+                                                curio.ItemInteractions.Add(new ItemInteraction()
+                                                {
+                                                    Chance = 1,
+                                                    ItemId = saveData.Quest.Goal.StartingItems[0].Id,
+                                                    ResultType = "loot",
+                                                    Results = new List<CurioResult>(),
+                                                });
+                                            }
+                                            room.Prop = curio;
+                                        }
+                                    }
+                                    else if (saveData.Quest.Goal.Type == "gather")
+                                    {
+                                        if (saveData.Quest.Goal.QuestData is QuestGatherData)
+                                        {
+                                            var gatherData = saveData.Quest.Goal.QuestData as QuestGatherData;
+                                            var curio = new Curio(gatherData.CurioName); br.ReadString();
+                                            curio.IsQuestCurio = true;
+
+                                            var curioInteraction = new CurioInteraction();
+                                            curioInteraction.Chance = 1;
+                                            curioInteraction.ResultType = "loot";
+                                            curioInteraction.Results = new List<CurioResult>();
+                                            curioInteraction.Results.Add(new CurioResult()
+                                            {
+                                                Chance = 1,
+                                                Draws = 1,
+                                                Item = gatherData.Item.Id,
+                                            });
+                                            curio.Results.Add(curioInteraction);
+                                            room.Prop = curio;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    Curio newCurio = DarkestDungeonManager.Data.Curios[br.ReadString()];
+                                    newCurio.IsQuestCurio = isQuestCurio;
+                                    room.Prop = newCurio;
+                                }
+                                break;
+                            case AreaType.Obstacle:
+                                room.Prop = DarkestDungeonManager.Data.Obstacles[br.ReadString()];
+                                break;
+                            case AreaType.Trap:
+                                room.Prop = DarkestDungeonManager.Data.Traps[br.ReadString()];
+                                break;
+                        }
+                    }
+                    bool hasBattle = br.ReadBoolean();
+                    if (hasBattle)
+                    {
+                        room.BattleEncounter = new BattleEncounter();
+                        int monsterCount = br.ReadInt32();
+                        for (int j = 0; j < monsterCount; j++)
+                            room.BattleEncounter.Monsters.Add(new Monster(DarkestDungeonManager.Data.Monsters[br.ReadString()]));
+                        room.BattleEncounter.Cleared = br.ReadBoolean();
+                    }
+                    saveData.Dungeon.Rooms.Add(room.Id, room);
+                }
+                #endregion
+
+                #region Hallways
+                int hallwayCount = br.ReadInt32();
+                for (int i = 0; i < hallwayCount; i++)
+                {
+                    var hallway = new Hallway(br.ReadString());
+                    hallway.RoomA = saveData.Dungeon.Rooms[br.ReadString()];
+                    hallway.RoomB = saveData.Dungeon.Rooms[br.ReadString()];
+                    int hallsCount = br.ReadInt32();
+                    for (int j = 0; j < hallsCount; j++)
+                    {
+                        var hallSector = new HallSector(br.ReadString(), br.ReadInt32(), br.ReadInt32(), hallway);
+                        hallSector.TextureId = br.ReadString();
+                        hallSector.Type = (AreaType)br.ReadInt32();
+                        hallSector.Knowledge = (Knowledge)br.ReadInt32();
+                        bool hasProp = br.ReadBoolean();
+                        if (hasProp)
+                        {
+                            AreaType propType = (AreaType)br.ReadInt32();
+
+                            switch (propType)
+                            {
+                                case AreaType.Door:
+                                    hallSector.Prop = new Door("to", br.ReadString(), (Direction)br.ReadInt32());
+                                    break;
+                                case AreaType.Curio:
+                                    bool isQuestCurio = br.ReadBoolean();
+                                    Curio newCurio = DarkestDungeonManager.Data.Curios[br.ReadString()];
+                                    newCurio.IsQuestCurio = isQuestCurio;
+                                    hallSector.Prop = newCurio;
+                                    break;
+                                case AreaType.Obstacle:
+                                    hallSector.Prop = DarkestDungeonManager.Data.Obstacles[br.ReadString()];
+                                    break;
+                                case AreaType.Trap:
+                                    hallSector.Prop = DarkestDungeonManager.Data.Traps[br.ReadString()];
+                                    break;
+                            }
+                        }
+                        bool hasBattle = br.ReadBoolean();
+                        if (hasBattle)
+                        {
+                            hallSector.BattleEncounter = new BattleEncounter();
+                            int monsterCount = br.ReadInt32();
+                            for (int k = 0; k < monsterCount; k++)
+                                hallSector.BattleEncounter.Monsters.Add(new Monster(DarkestDungeonManager.Data.Monsters[br.ReadString()]));
+                            hallSector.BattleEncounter.Cleared = br.ReadBoolean();
+                        }
+                        hallway.Halls.Add(hallSector);
+                    }
+                    saveData.Dungeon.Hallways.Add(hallway.Id, hallway);
+                }
+                #endregion
+            }
+        }
+    }
+    public static Dungeon LoadDungeonMap(string mapName, Quest quest)
+    {
+        TextAsset mapAsset = Resources.Load("Data/Maps/" + mapName) as TextAsset;
+        using (BinaryReader br = new BinaryReader(new MemoryStream(mapAsset.bytes)))
+        {
+            Dungeon loadedDungeon;
+            loadedDungeon = new Dungeon();
+            loadedDungeon.Name = br.ReadString();
+            loadedDungeon.GridSizeX = br.ReadInt32();
+            loadedDungeon.GridSizeY = br.ReadInt32();
+            loadedDungeon.StartingRoomId = br.ReadString();
+
+            #region Rooms
+            int roomCount = br.ReadInt32();
+            for (int i = 0; i < roomCount; i++)
+            {
+                var room = new Room(br.ReadString(), br.ReadInt32(), br.ReadInt32());
+                int doorCount = br.ReadInt32();
+                for (int j = 0; j < doorCount; j++)
+                {
+                    room.Doors.Add(new Door("to", br.ReadString(), (Direction)br.ReadInt32()));
+                }
+                room.TextureId = br.ReadString();
+                room.Type = (AreaType)br.ReadInt32();
+                room.Knowledge = (Knowledge)br.ReadInt32();
+                bool hasProp = br.ReadBoolean();
+                if (hasProp)
+                {
+                    AreaType propType = (AreaType)br.ReadInt32();
+
+                    switch (propType)
+                    {
+                        case AreaType.Door:
+                            room.Prop = new Door("to", br.ReadString(), (Direction)br.ReadInt32());
+                            break;
+                        case AreaType.Curio:
+                            bool isQuestCurio = br.ReadBoolean();
+                            if (isQuestCurio)
+                            {
+                                if (quest.Goal.Type == "activate")
+                                {
+                                    if (quest.Goal.QuestData is QuestActivateData)
+                                    {
+                                        var activateData = quest.Goal.QuestData as QuestActivateData;
+                                        var curio = new Curio(activateData.CurioName); br.ReadString();
+                                        curio.IsQuestCurio = true;
+
+                                        if (quest.Goal.StartingItems.Count > 0)
+                                        {
+                                            curio.ItemInteractions.Add(new ItemInteraction()
+                                            {
+                                                Chance = 1,
+                                                ItemId = quest.Goal.StartingItems[0].Id,
+                                                ResultType = "loot",
+                                                Results = new List<CurioResult>(),
+                                            });
+                                        }
+                                        room.Prop = curio;
+                                    }
+                                }
+                                else if (quest.Goal.Type == "gather")
+                                {
+                                    if (quest.Goal.QuestData is QuestGatherData)
+                                    {
+                                        var gatherData = quest.Goal.QuestData as QuestGatherData;
+                                        var curio = new Curio(gatherData.CurioName); br.ReadString();
+                                        curio.IsQuestCurio = true;
+
+                                        var curioInteraction = new CurioInteraction();
+                                        curioInteraction.Chance = 1;
+                                        curioInteraction.ResultType = "loot";
+                                        curioInteraction.Results = new List<CurioResult>();
+                                        curioInteraction.Results.Add(new CurioResult()
+                                        {
+                                            Chance = 1,
+                                            Draws = 1,
+                                            Item = gatherData.Item.Id,
+                                        });
+                                        curio.Results.Add(curioInteraction);
+                                        room.Prop = curio;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                Curio newCurio = DarkestDungeonManager.Data.Curios[br.ReadString()];
+                                newCurio.IsQuestCurio = isQuestCurio;
+                                room.Prop = newCurio;
+                            }
+                            break;
+                        case AreaType.Obstacle:
+                            room.Prop = DarkestDungeonManager.Data.Obstacles[br.ReadString()];
+                            break;
+                        case AreaType.Trap:
+                            room.Prop = DarkestDungeonManager.Data.Traps[br.ReadString()];
+                            break;
+                    }
+                }
+                bool hasBattle = br.ReadBoolean();
+                if (hasBattle)
+                {
+                    room.BattleEncounter = new BattleEncounter();
+                    int monsterCount = br.ReadInt32();
+                    for (int j = 0; j < monsterCount; j++)
+                        room.BattleEncounter.Monsters.Add(new Monster(DarkestDungeonManager.Data.Monsters[br.ReadString()]));
+                    room.BattleEncounter.Cleared = br.ReadBoolean();
+                }
+                loadedDungeon.Rooms.Add(room.Id, room);
+            }
+            #endregion
+            #region Hallways
+            int hallwayCount = br.ReadInt32();
+            for (int i = 0; i < hallwayCount; i++)
+            {
+                var hallway = new Hallway(br.ReadString());
+                hallway.RoomA = loadedDungeon.Rooms[br.ReadString()];
+                hallway.RoomB = loadedDungeon.Rooms[br.ReadString()];
+                int hallsCount = br.ReadInt32();
+                for (int j = 0; j < hallsCount; j++)
+                {
+                    var hallSector = new HallSector(br.ReadString(), br.ReadInt32(), br.ReadInt32(), hallway);
+                    hallSector.TextureId = br.ReadString();
+                    hallSector.Type = (AreaType)br.ReadInt32();
+                    hallSector.Knowledge = (Knowledge)br.ReadInt32();
+                    bool hasProp = br.ReadBoolean();
+                    if (hasProp)
+                    {
+                        AreaType propType = (AreaType)br.ReadInt32();
+
+                        switch (propType)
+                        {
+                            case AreaType.Door:
+                                hallSector.Prop = new Door("to", br.ReadString(), (Direction)br.ReadInt32());
+                                break;
+                            case AreaType.Curio:
+                                bool isQuestCurio = br.ReadBoolean();
+                                Curio newCurio = DarkestDungeonManager.Data.Curios[br.ReadString()];
+                                newCurio.IsQuestCurio = isQuestCurio;
+                                hallSector.Prop = newCurio;
+                                break;
+                            case AreaType.Obstacle:
+                                hallSector.Prop = DarkestDungeonManager.Data.Obstacles[br.ReadString()];
+                                break;
+                            case AreaType.Trap:
+                                hallSector.Prop = DarkestDungeonManager.Data.Traps[br.ReadString()];
+                                break;
+                        }
+                    }
+                    bool hasBattle = br.ReadBoolean();
+                    if (hasBattle)
+                    {
+                        hallSector.BattleEncounter = new BattleEncounter();
+                        int monsterCount = br.ReadInt32();
+                        for (int k = 0; k < monsterCount; k++)
+                            hallSector.BattleEncounter.Monsters.Add(new Monster(DarkestDungeonManager.Data.Monsters[br.ReadString()]));
+                        hallSector.BattleEncounter.Cleared = br.ReadBoolean();
+                    }
+                    hallway.Halls.Add(hallSector);
+                }
+                loadedDungeon.Hallways.Add(hallway.Id, hallway);
+            }
+            #endregion
+
+            return loadedDungeon;
+        }
+    }
+
     public static SaveCampaignData WriteStartingSave(SaveCampaignData saveData)
     {
         saveData.isFirstStart = true;
@@ -1466,7 +1914,7 @@ public static class SaveLoadManager
         saveData.saveDungeonData.Add("warrens", new DungeonProgress("warrens", 0, 0, true, false));
         saveData.saveDungeonData.Add("weald", new DungeonProgress("weald", 0, 0, true, false));
         saveData.saveDungeonData.Add("cove", new DungeonProgress("cove", 0, 0, true, false));
-        saveData.saveDungeonData.Add("darkest", new DungeonProgress("darkest", 0, 0, false, false));
+        saveData.saveDungeonData.Add("darkestdungeon", new DungeonProgress("darkestdungeon", 1, 0, true, false));
 
         saveData.deathRecords = new List<DeathRecord>();
 
@@ -2384,7 +2832,7 @@ public static class SaveLoadManager
         saveData.saveDungeonData.Add("warrens", new DungeonProgress("warrens", 6, 16, true, false));
         saveData.saveDungeonData.Add("weald", new DungeonProgress("weald", 5, 32, true, false));
         saveData.saveDungeonData.Add("cove", new DungeonProgress("cove", 3, 1, true, false));
-        saveData.saveDungeonData.Add("darkest", new DungeonProgress("darkest", 1, 0, false, false));
+        saveData.saveDungeonData.Add("darkestdungeon", new DungeonProgress("darkestdungeon", 1, 0, true, false));
 
         saveData.deathRecords = new List<DeathRecord>()
         {
@@ -2649,7 +3097,7 @@ public static class SaveLoadManager
         saveData.saveDungeonData.Add("warrens", new DungeonProgress("warrens", 0, 0, true, false));
         saveData.saveDungeonData.Add("weald", new DungeonProgress("weald", 0, 0, true, false));
         saveData.saveDungeonData.Add("cove", new DungeonProgress("cove", 0, 0, true, false));
-        saveData.saveDungeonData.Add("darkest", new DungeonProgress("darkest", 0, 0, false, false));
+        saveData.saveDungeonData.Add("darkestdungeon", new DungeonProgress("darkestdungeon", 1, 0, true, false));
 
         saveData.deathRecords = new List<DeathRecord>();
 
@@ -2747,12 +3195,11 @@ public static class SaveLoadManager
         #endregion
 
         #region Dungeon
-
         saveData.Dungeon = new Dungeon();
         saveData.Dungeon.Name = saveData.Quest.Dungeon;
-        saveData.Dungeon.GridSizeX = 28;
-        saveData.Dungeon.GridSizeY = 11;
-        saveData.Dungeon.StartingRoomId = "entry";
+        saveData.Dungeon.GridSizeX = 49;
+        saveData.Dungeon.GridSizeY = 13;
+        saveData.Dungeon.StartingRoomId = "room8_mid";
 
         #region Rooms
         #region Entry 1/7
@@ -3649,8 +4096,8 @@ public static class SaveLoadManager
 
         #region Data
         saveData.ExploredRoomCount = 1;
-        saveData.CurrentLocation = "entry";
-        saveData.LastRoom = "entry";
+        saveData.CurrentLocation = "room8_mid";
+        saveData.LastRoom = "room8_mid";
         saveData.PreviousLastSector = "";
         saveData.LastSector = "";
         saveData.KilledMonsters = new List<string>();

@@ -561,12 +561,14 @@ public class DarkestDatabase : MonoBehaviour
         {
             PlotQuest plotQuest = new PlotQuest();
             plotQuest.Id = jsonData.plot_quests[i].id;
+            plotQuest.PlotDependency = jsonData.plot_quests[i].plot_quest_dependency;
             plotQuest.DungeonLevel = jsonData.plot_quests[i].dungeon_level;
             plotQuest.IsPlotQuest = jsonData.plot_quests[i].quest.is_plot_quest;
             plotQuest.Type = jsonData.plot_quests[i].quest.type;
             plotQuest.Dungeon = jsonData.plot_quests[i].quest.dungeon;
             plotQuest.Difficulty = jsonData.plot_quests[i].quest.difficulty;
             plotQuest.Length = jsonData.plot_quests[i].quest.length;
+            plotQuest.RaidMap = jsonData.plot_quests[i].quest.map_name;
             if (jsonData.plot_quests[i].quest.goal_ids.Count > 1)
                 Debug.LogError("Multiple goals in " + jsonData.plot_quests[i].id);
             plotQuest.Goal = questData.QuestGoals[jsonData.plot_quests[i].quest.goal_ids[0]];

@@ -33,7 +33,10 @@ public class RewardSlot : BaseSlot, IPointerEnterHandler, IPointerExitHandler
             itemFrame.sprite = DarkestDungeonManager.Data.Sprites["inv_" + item.Type + "+" + item.Id];
             Trinket trinket = DarkestDungeonManager.Data.Items[item.Type][item.Id] as Trinket;
             rarityFrame.sprite = DarkestDungeonManager.Data.Sprites["rarity_" + trinket.Rarity];
-            amountText.text = "";
+            if (item.Amount > 1)
+                amountText.text = Item.Amount.ToString();
+            else
+                amountText.text = "";
         }
         else
         {

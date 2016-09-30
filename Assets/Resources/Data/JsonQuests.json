@@ -2319,7 +2319,7 @@
                             },
                             "2": {
                                 "id": "dd_trinket",
-                                "type": "trinket_unlock",
+                                "type": "trinket",
                                 "amount": 3
                             }
                         }

@@ -630,6 +630,7 @@ namespace DarkestJson
     public class JsonPlotQuest
     {
         public string id;
+        public string plot_quest_dependency;
         public int dungeon_level;
         public JsonPlotQuestData quest;
         public List<JsonPlotAddTrinketData> additional_trinket_completion_rewards;

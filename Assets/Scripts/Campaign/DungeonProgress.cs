@@ -27,10 +27,22 @@ public class DungeonProgress
     {
         get
         {
-            PlotQuest masteryQuest = DarkestDungeonManager.Data.QuestDatabase.PlotQuests.Find(item =>
-                item.Dungeon == DungeonName && item.DungeonLevel == MasteryLevel);
-            if (masteryQuest != null && !DarkestDungeonManager.Campaign.CompletedPlot.Contains(masteryQuest.Id))
-                return masteryQuest;
+            var dungeonPlot = DarkestDungeonManager.Data.QuestDatabase.PlotQuests.FindAll(item =>
+                item.Dungeon == DungeonName && item.DungeonLevel <= MasteryLevel);
+            for(int i = 0; i < dungeonPlot.Count; i++)
+            {
+                if (!DarkestDungeonManager.Campaign.CompletedPlot.Contains(dungeonPlot[i].Id))
+                {
+                    var plotDependency = (dungeonPlot[i] as PlotQuest).PlotDependency;
+                    if (plotDependency != null)
+                    {
+                        if (DarkestDungeonManager.Campaign.CompletedPlot.Contains(plotDependency))
+                            return dungeonPlot[i];
+                    }
+                    else
+                        return dungeonPlot[i];
+                }
+            }
             return null;
         }
     }
@@ -45,7 +57,6 @@ public class DungeonProgress
         MasteryLevel = Mathf.Clamp(masteryLevel, 0, maxLevel);
         CurrentXP = currentXP;
         NextLevelXP = DarkestDungeonManager.Data.CampaignGeneration.DungeonXpLevelThreshold[Mathf.Clamp(MasteryLevel + 1, 0, maxLevel)];
-
     }
 
     public void AddExperience(int expAmount)

@@ -102,25 +102,6 @@ public static class QuestGenerator
         for (int i = 0; i < difThrees; i++)
             difficulties.Add(5);
 
-        foreach(var dungeon in campaign.Dungeons)
-        {
-            var plotMastery = dungeon.Value.CurrentPlotQuest;
-            if (plotMastery != null)
-            {
-                DungeonQuestInfo dungeonQuest = questInfo.dungeonQuests.Find(item => item.Dungeon == dungeon.Value.DungeonName);
-                if (dungeonQuest != null)
-                {
-                    dungeonQuest.Quests.Add(plotMastery.Copy());
-                }
-                else
-                {
-                    dungeonQuest = new DungeonQuestInfo() { Dungeon = plotMastery.Dungeon };
-                    dungeonQuest.Quests.Add(plotMastery.Copy());
-                    questInfo.dungeonQuests.Add(dungeonQuest);
-                }
-            }
-        }
-
         for (int i = 0; i < questInfo.dungeonQuests.Count; i++)
         {
             Quest quest = new Quest();
@@ -154,6 +135,25 @@ public static class QuestGenerator
                         dungeonInfo.Quests.Add(quest);
                         questsLeft--;
                     }
+                }
+            }
+        }
+
+        foreach (var dungeon in campaign.Dungeons)
+        {
+            var plotMastery = dungeon.Value.CurrentPlotQuest;
+            if (plotMastery != null)
+            {
+                DungeonQuestInfo dungeonQuest = questInfo.dungeonQuests.Find(item => item.Dungeon == dungeon.Value.DungeonName);
+                if (dungeonQuest != null)
+                {
+                    dungeonQuest.Quests.Add(plotMastery.Copy());
+                }
+                else
+                {
+                    dungeonQuest = new DungeonQuestInfo() { Dungeon = plotMastery.Dungeon };
+                    dungeonQuest.Quests.Add(plotMastery.Copy());
+                    questInfo.dungeonQuests.Add(dungeonQuest);
                 }
             }
         }
