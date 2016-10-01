@@ -263,7 +263,8 @@ public class RaidSceneManager : MonoBehaviour
             {
                 currentRaid = new RaidInfo();
                 currentRaid.Quest = DarkestDungeonManager.Instanse.RaidingManager.Quest;
-                if(currentRaid.Quest.IsPlotQuest && (currentRaid.Quest as PlotQuest).RaidMap != null)
+                if(currentRaid.Quest.Dungeon == "darkestdungeon" && currentRaid.Quest.IsPlotQuest &&
+                    (currentRaid.Quest as PlotQuest).RaidMap != null)
                     currentRaid.Dungeon = SaveLoadManager.LoadDungeonMap((currentRaid.Quest as PlotQuest).RaidMap, currentRaid.Quest);
                 else
                     currentRaid.Dungeon = DungeonGenerator.GenerateDungeon(currentRaid.Quest);
@@ -296,10 +297,10 @@ public class RaidSceneManager : MonoBehaviour
             Inventory.DistributeItem(new ItemDefinition("supply", "medicinal_herbs", 4));
             Inventory.DistributeItem(new ItemDefinition("supply", "antivenom", 4));
             Inventory.DistributeItem(new ItemDefinition("supply", "bandage", 4));
-            Inventory.DistributeItem(new ItemDefinition("supply", "dog_treats", 4));
+            Inventory.DistributeItem(new ItemDefinition("quest_item", "beacon_light", 3));
             Inventory.DistributeItem(new ItemDefinition("supply", "torch", 12));
             Inventory.DistributeItem(new ItemDefinition("provision", "", 12));
-            Inventory.DistributeItem(new ItemDefinition("supply", "firewood", 3));
+            Inventory.DistributeItem(new ItemDefinition("supply", "firewood", 2));
 #endif
             Inventory.SetDeactivated();
             RaidPanel.heroPanel.equipmentPanel.SetDisabled();
@@ -336,10 +337,10 @@ public class RaidSceneManager : MonoBehaviour
             Inventory.DistributeItem(new ItemDefinition("supply", "medicinal_herbs", 4));
             Inventory.DistributeItem(new ItemDefinition("supply", "antivenom", 4));
             Inventory.DistributeItem(new ItemDefinition("supply", "bandage", 4));
-            Inventory.DistributeItem(new ItemDefinition("supply", "dog_treats", 4));
+            Inventory.DistributeItem(new ItemDefinition("quest_item", "beacon_light", 3));
             Inventory.DistributeItem(new ItemDefinition("supply", "torch", 12));
             Inventory.DistributeItem(new ItemDefinition("provision", "", 12));
-            Inventory.DistributeItem(new ItemDefinition("supply", "firewood", 3));
+            Inventory.DistributeItem(new ItemDefinition("supply", "firewood", 2));
 #endif
             Inventory.SetDeactivated();
             RaidPanel.bannerPanel.skillPanel.SetMode(SkillPanelMode.Combat);
@@ -4117,6 +4118,9 @@ public class RaidSceneManager : MonoBehaviour
                     ApplyIndependent(BattleGround.HeroParty.Units[j]);
 
         yield return StartCoroutine(ExecuteEffectEvents(true));
+        for (int i = 0; i < brainDecision.TargetInfo.Targets.Count; i++)
+            BattleSolver.RemoveConditions(brainDecision.TargetInfo.Targets[i]);
+        BattleSolver.RemoveConditions(actionUnit);
         RaidEvents.MonsterTooltip.IsDisabled = false;
         #region Trait Comment Self and Ally
         if(brainDecision.TargetInfo.Type == SkillTargetType.Enemy)
@@ -4370,6 +4374,9 @@ public class RaidSceneManager : MonoBehaviour
         Formations.ResetSelections();
         yield return new WaitForSeconds(0.075f);
         yield return StartCoroutine(ExecuteEffectEvents(true));
+        for (int i = 0; i < brainDecision.TargetInfo.Targets.Count; i++)
+            BattleSolver.RemoveConditions(brainDecision.TargetInfo.Targets[i]);
+        BattleSolver.RemoveConditions(actionUnit);
         RaidEvents.MonsterTooltip.IsDisabled = false;
     }
     IEnumerator ExecuteHeroSkill(FormationUnit actionUnit, SkillTargetInfo targetInfo, CombatSkill skill)
@@ -4610,6 +4617,11 @@ public class RaidSceneManager : MonoBehaviour
             DarkestDungeonManager.Data.Effects["Heal Stress Chance 1"].ApplyIndependent(actionUnit);
 
         yield return StartCoroutine(ExecuteEffectEvents(true));
+
+        for (int i = 0; i < targetInfo.Targets.Count; i++)
+            BattleSolver.RemoveConditions(targetInfo.Targets[i]);
+        BattleSolver.RemoveConditions(actionUnit);
+
         RaidEvents.MonsterTooltip.IsDisabled = false;
 
         #region Trait Comment Attack Result
@@ -6660,6 +6672,9 @@ public class RaidSceneManager : MonoBehaviour
             message = LocalizationManager.GetString(stringId + "_" + curioResult.Item);
 
         areaView.CompleteArea();
+        if(curio.StringId == "beacon")
+               (areaView.Prop as RaidCurio).SkeletonAnimation.state.AddAnimation(0, "disturbed", true, 1.8f);
+
         Formations.InvestigateCurioIntro(areaView.Prop);
         RaidEvents.ShowAnnouncment(message);
         dungeonCamera.TargetFOV = 50;

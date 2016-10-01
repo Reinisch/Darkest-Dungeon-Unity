@@ -76,7 +76,32 @@ public class RaidRoom : MonoBehaviour, IRaidArea
             case AreaType.Boss:
                 if (Prop != null)
                     Destroy(Prop.gameObject);
-                
+
+                if(Area.Prop != null && Area.Prop.Type == AreaType.Curio)
+                {
+                    RaidCurio questBossCurio;
+                    GameObject questBossObject = Resources.Load("Prefabs/Props/SpineCurios/"
+                        + (Area.Prop as Curio).StringId) as GameObject;
+
+                    if (questBossObject == null)
+                    {
+                        Debug.LogError("Curio: " + (Area.Prop as Curio).StringId + " not found.");
+                        questBossCurio = Instantiate(Resources.Load("Prefabs/Props/SpineCurios/_template")
+                            as GameObject).GetComponent<RaidCurio>();
+                    }
+                    else
+                        questBossCurio = Instantiate(questBossObject).GetComponent<RaidCurio>();
+
+                    questBossCurio.Initialize(this);
+                    Prop = questBossCurio;
+                    Prop.RectTransform.SetParent(RectTransform, false);
+                    if (Area.Knowledge == Knowledge.Completed)
+                    {
+                        questBossCurio.Activate();
+                        if((Area.Prop as Curio).StringId == "beacon")
+                            questBossCurio.SkeletonAnimation.state.SetAnimation(0, "disturbed", true);
+                    }
+                }
                 break;
             case AreaType.Entrance:
                 if (Prop != null)
@@ -111,8 +136,7 @@ public class RaidRoom : MonoBehaviour, IRaidArea
     }
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (Area.Type == AreaType.BattleCurio || Area.Type == AreaType.Curio
-            || Area.Type == AreaType.BattleTresure)
+        if (Prop != null && Prop.PropType == PropType.Curio)
         {
             if (!(Prop as RaidCurio).Investigated)
                 RaidSceneManager.Instanse.ActivateCurio(this);

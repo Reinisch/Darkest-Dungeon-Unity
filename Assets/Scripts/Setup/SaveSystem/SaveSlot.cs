@@ -128,6 +128,7 @@ public class SaveSlot : MonoBehaviour
         saveData.hamletTitle = titleInput.text;
         saveData.saveId = slotId;
         SaveLoadManager.WriteStartingSave(saveData);
+        saveData = SaveLoadManager.ReadSave(slotId);
         FillPopulatedSave();
 
         titleInput.interactable = false;

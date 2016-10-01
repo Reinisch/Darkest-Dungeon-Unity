@@ -59,8 +59,9 @@ public class ResultItemWindow : MonoBehaviour
                     }
                     else if (rewardSlot.Item.Type == "trinket")
                     {
-                        DarkestDungeonManager.Campaign.RealmInventory.Trinkets.Add(
-                            DarkestDungeonManager.Data.Items[rewardSlot.Item.Type][rewardSlot.Item.Id] as Trinket);
+                        for(int i = 0; i < rewardSlot.Item.Amount; i++)
+                            DarkestDungeonManager.Campaign.RealmInventory.Trinkets.Add(
+                                DarkestDungeonManager.Data.Items[rewardSlot.Item.Type][rewardSlot.Item.Id] as Trinket);
                     }
                 }
             }

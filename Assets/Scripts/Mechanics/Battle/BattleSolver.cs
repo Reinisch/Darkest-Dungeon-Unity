@@ -515,12 +515,16 @@ public static class BattleSolver
         foreach (var effect in skill.Effects)
             effect.ApplyTargetConditions(performerUnit, targetUnit);
     }
+    public static void RemoveConditions(FormationUnit targetUnit)
+    {
+        targetUnit.Character.ApplyAllBuffRules(RaidSceneManager.Rules.GetIdleUnitRules(targetUnit));
+        targetUnit.Character.RemoveConditionalBuffs();
+    }
     public static void RemoveConditions(FormationUnit performerUnit, FormationUnit targetUnit)
     {
-        performerUnit.Character.ApplyAllBuffRules(RaidSceneManager.Rules.GetIdleUnitRules(performerUnit));
-        targetUnit.Character.ApplyAllBuffRules(RaidSceneManager.Rules.GetIdleUnitRules(targetUnit));
-
-        performerUnit.Character.RemoveConditionalBuffs();
-        targetUnit.Character.RemoveConditionalBuffs();
+        //performerUnit.Character.ApplyAllBuffRules(RaidSceneManager.Rules.GetIdleUnitRules(performerUnit));
+        //targetUnit.Character.ApplyAllBuffRules(RaidSceneManager.Rules.GetIdleUnitRules(targetUnit));
+        //performerUnit.Character.RemoveConditionalBuffs();
+        //targetUnit.Character.RemoveConditionalBuffs();
     }
 }
