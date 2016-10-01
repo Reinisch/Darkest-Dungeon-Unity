@@ -203,10 +203,10 @@ public class DarkestDungeonManager : MonoBehaviour
         {
             SaveLoadManager.WriteStartingSave(new SaveCampaignData(1, "Darkest"));
             SaveLoadManager.WriteTestingSave(new SaveCampaignData(2, "Middle"));
-            SaveLoadManager.WriteDarkestQuestOneSave(new SaveCampaignData(3, "Map"));
-            SaveLoadManager.WriteDarkestQuestTwoSave(new SaveCampaignData(3, "Map"));
-            SaveData = SaveLoadManager.ReadSave(3);
-            //SaveLoadManager.WriteDungeonMap(SaveData, "DD_map1");
+            //SaveLoadManager.WriteDarkestQuestOneSave(new SaveCampaignData(3, "Map"));
+            //SaveLoadManager.WriteDarkestQuestTwoSave(new SaveCampaignData(3, "Map"));
+            SaveData = SaveLoadManager.ReadSave(2);
+            //SaveLoadManager.WriteDungeonMap(SaveData, "DD_map2");
         }
         campaign = new Campaign();
         campaign.Load(SaveData);

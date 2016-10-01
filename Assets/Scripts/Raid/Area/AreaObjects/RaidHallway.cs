@@ -46,7 +46,7 @@ public class RaidHallway : MonoBehaviour
     {
         while(hallway.HallCount > ActiveSectorCount)
         {
-            var newSector = Instantiate(HallSectors[StartDoorSector].gameObject).GetComponent<RaidHallSector>();
+            var newSector = Instantiate(HallSectors[StartDoorSector - 1].gameObject).GetComponent<RaidHallSector>();
             newSector.RectTransform.SetParent(HallSectors[StartDoorSector].RectTransform.parent, false);
             newSector.RectTransform.SetSiblingIndex(HallSectors[StartDoorSector].RectTransform.GetSiblingIndex() + 1);
             HallSectors.Insert(StartDoorSector + 1, newSector);

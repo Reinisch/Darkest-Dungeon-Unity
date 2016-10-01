@@ -18,10 +18,14 @@ public class ScreenLoader : MonoBehaviour
         if (!DarkestDungeonManager.SkipTransactions)
             loadingImage.sprite = Resources.Load<Sprite>(DarkestDungeonManager.LoadingInfo.TextureName);
         else
+        {
+            async = SceneManager.LoadSceneAsync(DarkestDungeonManager.LoadingInfo.NextScene);
+            imageAnimator.SetBool("LoadingEnded", true);
             Faded();
+        }
 
 
-        if(DarkestDungeonManager.LoadingInfo.NextScene == "EstateManagement")
+        if (DarkestDungeonManager.LoadingInfo.NextScene == "EstateManagement")
         {
             title.text = LocalizationManager.GetString("str_town_title");
             description.text = LocalizationManager.GetString("str_town_tip");
