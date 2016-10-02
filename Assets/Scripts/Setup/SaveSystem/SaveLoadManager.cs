@@ -8451,4 +8451,395 @@ public static class SaveLoadManager
         WriteSave(saveData);
         return saveData;
     }
+    public static SaveCampaignData WriteStartingPlusSave(SaveCampaignData saveData)
+    {
+        saveData.isFirstStart = true;
+        saveData.gameVersion = Application.version;
+        saveData.locationName = "Raid";
+        saveData.questsCompleted = 0;
+        saveData.currentWeek = 1;
+
+        saveData.goldAmount = 1000;
+        saveData.bustsAmount = 10;
+        saveData.deedsAmount = 10;
+        saveData.portraitsAmount = 10;
+        saveData.crestsAmount = 10;
+
+        #region Initial Heroes
+        saveData.saveHeroData = new SaveHeroData[2]
+        {
+            #region Hero 1
+            new SaveHeroData()
+            {
+                rosterId = 1,
+                name = "Reynald",
+                heroClass = "crusader",
+                resolveLevel = 0,
+                resolveXP = 0,
+                stressLevel = 10,
+                weaponLevel = 1,
+                armorLevel = 1,
+                leftTrinketId = "",
+                rightTrinketId = "",
+                quirks = new List<QuirkInfo>()
+                {
+                    new QuirkInfo("warrior_of_light"),
+                    new QuirkInfo("kleptomaniac"),
+                    new QuirkInfo("god_fearing"),
+                },
+            },
+            #endregion
+            #region Hero 2
+            new SaveHeroData()
+            {
+                rosterId = 2,
+                name = "Dismas",
+                heroClass = "highwayman",
+                resolveLevel = 0,
+                resolveXP = 0,
+                stressLevel = 10,
+                weaponLevel = 1,
+                armorLevel = 1,
+                leftTrinketId = "",
+                rightTrinketId = "",
+                quirks = new List<QuirkInfo>()
+                {
+                    new QuirkInfo("hard_noggin"),
+                    new QuirkInfo("known_cheat"),
+                    new QuirkInfo("quick_reflexes"),
+                },
+            },
+            #endregion
+        };
+        #endregion
+
+        #region StageCoach Heroes
+        saveData.stageCoachData = new SaveHeroData[0];
+        #endregion
+
+        #region Initial Hero Purchases
+        saveData.instancedPurchases = new Dictionary<int, Dictionary<string, UpgradePurchases>>();
+        for (int i = 0; i < saveData.saveHeroData.Length; i++)
+        {
+            var newHeroPurchases = new Dictionary<string, UpgradePurchases>();
+            saveData.instancedPurchases.Add(saveData.saveHeroData[i].rosterId, newHeroPurchases);
+            newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + ".weapon",
+                new UpgradePurchases(saveData.saveHeroData[i].heroClass + ".weapon", new string[0]));
+            newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + ".armour",
+                new UpgradePurchases(saveData.saveHeroData[i].heroClass + ".armour", new string[0]));
+            var heroClass = DarkestDungeonManager.Data.HeroClasses[saveData.saveHeroData[i].heroClass];
+            for (int j = 0; j < heroClass.CombatSkills.Count; j++)
+                newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + "." + heroClass.CombatSkills[j].Id, new UpgradePurchases(
+                    saveData.saveHeroData[i].heroClass + "." + heroClass.CombatSkills[j].Id, new string[0]));
+            for (int j = 0; j < heroClass.CampingSkills.Count; j++)
+                newHeroPurchases.Add(heroClass.CampingSkills[j].Id, new UpgradePurchases(
+                    heroClass.CampingSkills[j].Id, new string[0]));
+        }
+        saveData.instancedPurchases[1]["crusader.smite"].PurchasedUpgrades.Add("0");
+        saveData.instancedPurchases[1]["crusader.zealous_accusation"].PurchasedUpgrades.Add("0");
+        saveData.instancedPurchases[1]["crusader.stunning_blow"].PurchasedUpgrades.Add("0");
+        saveData.instancedPurchases[1]["crusader.bulwark_of_faith"].PurchasedUpgrades.Add("0");
+        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(0);
+        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(1);
+        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(2);
+        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(3);
+        saveData.instancedPurchases[1]["encourage"].PurchasedUpgrades.Add("0");
+        saveData.instancedPurchases[1]["stand_tall"].PurchasedUpgrades.Add("0");
+        saveData.instancedPurchases[1]["zealous_speech"].PurchasedUpgrades.Add("0");
+        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(0);
+        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(4);
+        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(5);
+
+        saveData.instancedPurchases[2]["highwayman.opened_vein"].PurchasedUpgrades.Add("0");
+        saveData.instancedPurchases[2]["highwayman.pistol_shot"].PurchasedUpgrades.Add("0");
+        saveData.instancedPurchases[2]["highwayman.grape_shot_blast"].PurchasedUpgrades.Add("0");
+        saveData.instancedPurchases[2]["highwayman.take_aim"].PurchasedUpgrades.Add("0");
+        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(6);
+        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(1);
+        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(3);
+        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(4);
+        saveData.instancedPurchases[2]["first_aid"].PurchasedUpgrades.Add("0");
+        saveData.instancedPurchases[2]["clean_guns"].PurchasedUpgrades.Add("0");
+        saveData.instancedPurchases[2]["bandits_sense"].PurchasedUpgrades.Add("0");
+        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(1);
+        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(5);
+        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(6);
+        #endregion
+
+        #region Activity Log
+        saveData.activityLog = new List<WeekActivityLog>();
+        saveData.completedPlot = new List<string>();
+        saveData.generatedQuests = new List<Quest>();
+        #endregion
+
+        #region Estate Misc
+        saveData.trinketData.Clear();
+
+        saveData.wagonData.Clear();
+
+        saveData.saveDungeonData.Clear();
+        saveData.saveDungeonData.Add("crypts", new DungeonProgress("crypts", 0, 0, true, false));
+        saveData.saveDungeonData.Add("warrens", new DungeonProgress("warrens", 0, 0, true, false));
+        saveData.saveDungeonData.Add("weald", new DungeonProgress("weald", 0, 0, true, false));
+        saveData.saveDungeonData.Add("cove", new DungeonProgress("cove", 0, 0, true, false));
+        saveData.saveDungeonData.Add("darkestdungeon", new DungeonProgress("darkestdungeon", 1, 0, true, false));
+        saveData.saveDungeonData.Add("town", new DungeonProgress("town", 1, 0, true, true));
+
+        saveData.deathRecords = new List<DeathRecord>();
+
+        saveData.buildingUpgrades = new Dictionary<string, UpgradePurchases>();
+
+        saveData.buildingUpgrades.Add("abbey.meditation", new UpgradePurchases("abbey.meditation", new string[0]));
+        saveData.buildingUpgrades.Add("abbey.prayer", new UpgradePurchases("abbey.prayer", new string[0]));
+        saveData.buildingUpgrades.Add("abbey.flagellation", new UpgradePurchases("abbey.flagellation", new string[0]));
+        saveData.buildingUpgrades.Add("tavern.bar", new UpgradePurchases("tavern.bar", new string[0]));
+        saveData.buildingUpgrades.Add("tavern.gambling", new UpgradePurchases("tavern.gambling", new string[0]));
+        saveData.buildingUpgrades.Add("tavern.brothel", new UpgradePurchases("tavern.brothel", new string[0]));
+        saveData.buildingUpgrades.Add("sanitarium.cost", new UpgradePurchases("sanitarium.cost", new string[0]));
+        saveData.buildingUpgrades.Add("sanitarium.disease_quirk_cost", new UpgradePurchases("sanitarium.disease_quirk_cost", new string[0]));
+        saveData.buildingUpgrades.Add("sanitarium.slots", new UpgradePurchases("sanitarium.slots", new string[0]));
+        saveData.buildingUpgrades.Add("blacksmith.weapon", new UpgradePurchases("blacksmith.weapon", new string[0]));
+        saveData.buildingUpgrades.Add("blacksmith.armour", new UpgradePurchases("blacksmith.armour", new string[0]));
+        saveData.buildingUpgrades.Add("blacksmith.cost", new UpgradePurchases("blacksmith.cost", new string[0]));
+        saveData.buildingUpgrades.Add("guild.skill_levels", new UpgradePurchases("guild.skill_levels", new string[0]));
+        saveData.buildingUpgrades.Add("guild.cost", new UpgradePurchases("guild.cost", new string[0]));
+        saveData.buildingUpgrades.Add("camping_trainer.cost", new UpgradePurchases("camping_trainer.cost", new string[0]));
+        saveData.buildingUpgrades.Add("nomad_wagon.numitems", new UpgradePurchases("nomad_wagon.numitems", new string[0]));
+        saveData.buildingUpgrades.Add("nomad_wagon.cost", new UpgradePurchases("nomad_wagon.cost", new string[0]));
+        saveData.buildingUpgrades.Add("stage_coach.numrecruits", new UpgradePurchases("stage_coach.numrecruits", new string[0]));
+        saveData.buildingUpgrades.Add("stage_coach.rostersize", new UpgradePurchases("stage_coach.rostersize", new string[0]));
+        saveData.buildingUpgrades.Add("stage_coach.upgraded_recruits", new UpgradePurchases("stage_coach.upgraded_recruits", new string[0]));
+        #endregion
+
+        #region ActivitySlots
+        saveData.abbeyActivitySlots = new List<List<SaveActivitySlot>>()
+        {
+            new List<SaveActivitySlot>()
+            {
+                 new SaveActivitySlot(),
+                 new SaveActivitySlot(),
+                 new SaveActivitySlot(),
+            },
+            new List<SaveActivitySlot>()
+            {
+                 new SaveActivitySlot(),
+                 new SaveActivitySlot(),
+                 new SaveActivitySlot(),
+            },
+            new List<SaveActivitySlot>()
+            {
+                 new SaveActivitySlot(),
+                 new SaveActivitySlot(),
+                 new SaveActivitySlot(),
+            },
+        };
+        saveData.tavernActivitySlots = new List<List<SaveActivitySlot>>()
+        {
+            new List<SaveActivitySlot>()
+            {
+                 new SaveActivitySlot(),
+                 new SaveActivitySlot(),
+                 new SaveActivitySlot(),
+            },
+            new List<SaveActivitySlot>()
+            {
+                 new SaveActivitySlot(),
+                 new SaveActivitySlot(),
+                 new SaveActivitySlot(),
+            },
+            new List<SaveActivitySlot>()
+            {
+                 new SaveActivitySlot(),
+                 new SaveActivitySlot(),
+                 new SaveActivitySlot(),
+            },
+        };
+        saveData.sanitariumActivitySlots = new List<List<SaveActivitySlot>>()
+        {
+            new List<SaveActivitySlot>()
+            {
+                 new SaveActivitySlot(),
+                 new SaveActivitySlot(),
+                 new SaveActivitySlot(),
+            },
+            new List<SaveActivitySlot>()
+            {
+                 new SaveActivitySlot(),
+                 new SaveActivitySlot(),
+                 new SaveActivitySlot(),
+            },
+        };
+        #endregion
+
+        saveData.InRaid = true;
+
+        #region Quest
+        saveData.QuestCompleted = false;
+        saveData.Quest = new PlotQuest()
+        {
+            IsPlotQuest = true,
+            Id = "tutorial",
+            Difficulty = 1,
+            Type = "tutorial_room",
+            Dungeon = "weald",
+            DungeonLevel = 1,
+            Goal = DarkestDungeonManager.Data.QuestDatabase.QuestGoals["tutorial_final_room"],
+            Length = 1,
+            PlotTrinket = new PlotTrinketReward() { Amount = 0, Rarity = "very_common" },
+            Reward = new CompletionReward()
+            {
+                ResolveXP = 2,
+                ItemDefinitions = new List<ItemDefinition>()
+                 {
+                     new ItemDefinition("gold", "", 5000),
+                 }
+            },
+
+            CanRetreat = false,
+            CompletionDungeonXp = false,
+        };
+        #endregion
+
+        #region Dungeon
+        saveData.Dungeon = new Dungeon();
+        saveData.Dungeon.Name = "weald";
+        saveData.Dungeon.GridSizeX = 9;
+        saveData.Dungeon.GridSizeY = 1;
+        saveData.Dungeon.StartingRoomId = "room1_1";
+
+        Room room = new Room("room1_1", 1, 1)
+        {
+            Knowledge = Knowledge.Completed,
+            Type = AreaType.Entrance,
+            MashId = 1,
+            Prop = null,
+            BattleEncounter = null,
+            Doors = new List<Door>(),
+            TextureId = "effigy_0",
+        };
+        saveData.Dungeon.Rooms.Add(room.Id, room);
+
+        room = new Room("room2_1", 8, 1)
+        {
+            Knowledge = Knowledge.Hidden,
+            Type = AreaType.BattleTresure,
+            MashId = 1,
+            Prop = DarkestDungeonManager.Data.Curios["bandits_trapped_chest"],
+            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["weald"].BattleMashes.
+                    Find(mash => mash.MashId == 1).NamedEncounters["tutorial_2"][0].MonsterSet),
+            Doors = new List<Door>(),
+            TextureId = "effigy_1",
+        };
+        saveData.Dungeon.Rooms.Add(room.Id, room);
+
+        Hallway hallway = new Hallway("hallroom2_1_room1_1");
+        hallway.RoomA = saveData.Dungeon.Rooms["room2_1"];
+        hallway.RoomB = saveData.Dungeon.Rooms["room1_1"];
+        hallway.RoomA.Doors.Add(new Door("room2_1", hallway.Id, Direction.Left));
+        hallway.RoomB.Doors.Add(new Door("room1_1", hallway.Id, Direction.Right));
+        hallway.Halls = new List<HallSector>()
+        {
+            new HallSector("0", 7, 1, hallway, new Door(hallway.Id, hallway.RoomA.Id, Direction.Left)),
+            new HallSector("1", 6, 1, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "7",
+                Type = AreaType.Curio,
+                Prop = DarkestDungeonManager.Data.Curios["open_grave"],
+            },
+            new HallSector("2", 5, 1, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "8",
+                Type = AreaType.Empty,
+            },
+            new HallSector("3", 4, 1, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "2",
+                Type = AreaType.Battle,
+                BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["weald"].BattleMashes.
+                    Find(mash => mash.MashId == 1).NamedEncounters["tutorial_1"][0].MonsterSet),
+            },
+            new HallSector("4", 3, 1, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = "1",
+                Type = AreaType.Empty,
+            },
+            new HallSector("5", 2, 1, hallway, new Door(hallway.Id, hallway.RoomB.Id, Direction.Right)),
+        };
+        saveData.Dungeon.Hallways.Add(hallway.Id, hallway);
+        #endregion
+
+        #region Party
+        saveData.RaidParty = new RaidPartySaveData()
+        {
+            IsMovingLeft = false,
+            HeroInfo = new List<RaidPartyHeroInfoSaveData>()
+            {
+                new RaidPartyHeroInfoSaveData()
+                {
+                Factor = DeathFactor.AttackMonster,
+                Killer = "",
+                IsAlive = true,
+                HeroRosterId = 1,
+                },
+                new RaidPartyHeroInfoSaveData()
+                {
+                Factor = DeathFactor.AttackMonster,
+                Killer = "",
+                IsAlive = true,
+                HeroRosterId = 2,
+                },
+            }
+        };
+        #endregion
+
+        #region Data
+        saveData.ExploredRoomCount = 1;
+        saveData.CurrentLocation = "room1_1";
+        saveData.LastRoom = "room1_1";
+        saveData.PreviousLastSector = "";
+        saveData.LastSector = "";
+        saveData.KilledMonsters = new List<string>();
+        saveData.InvestigatedCurios = new List<string>();
+
+        saveData.TorchAmount = 100;
+        saveData.MaxTorchAmount = 100;
+        saveData.ModifiedMinTorch = -1;
+        saveData.ModifiedMaxTorch = -1;
+        #endregion
+
+        #region Formation
+        saveData.HeroFormationData = new BattleFormationSaveData();
+        saveData.HeroFormationData.unitData.Add(new FormationUnitSaveData()
+        {
+            IsHero = true,
+            RosterId = 1,
+            Rank = 1,
+            CombatInfo = new FormationUnitInfo()
+            {
+                CombatId = 1,
+            }
+        });
+        saveData.HeroFormationData.unitData.Add(new FormationUnitSaveData()
+        {
+            IsHero = true,
+            RosterId = 2,
+            Rank = 2,
+            CombatInfo = new FormationUnitInfo()
+            {
+                CombatId = 2,
+            }
+        });
+        #endregion
+
+        #region Inventory
+        saveData.InventoryItems = new List<InventorySlotData>();
+        #endregion
+
+        WriteSave(saveData);
+        return saveData;
+    }
 }
