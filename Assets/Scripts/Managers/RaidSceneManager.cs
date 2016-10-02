@@ -7097,24 +7097,31 @@ public class RaidSceneManager : MonoBehaviour
             if (obstacle.TorchlightPenalty < 0)
                 TorchMeter.DecreaseTorch(Mathf.Abs(Mathf.RoundToInt(obstacle.TorchlightPenalty)));
 
-            foreach(var heroUnit in Formations.heroes.party.Units)
+            if(obstacle.HealthPenalty != 0)
             {
-                int damage = Mathf.RoundToInt(Mathf.Abs(obstacle.HealthPenalty) * heroUnit.Character.Health.ModifiedValue);
-                heroUnit.Character.Health.DecreaseValue(damage);
-                RaidEvents.ShowPopupMessage(heroUnit, PopupMessageType.Damage, damage.ToString());
-                heroUnit.OverlaySlot.UpdateOverlay();
+                foreach (var heroUnit in Formations.heroes.party.Units)
+                {
+                    int damage = Mathf.RoundToInt(Mathf.Abs(obstacle.HealthPenalty) * heroUnit.Character.Health.ModifiedValue);
+                    heroUnit.Character.Health.DecreaseValue(damage);
+                    RaidEvents.ShowPopupMessage(heroUnit, PopupMessageType.Damage, damage.ToString());
+                    heroUnit.OverlaySlot.UpdateOverlay();
+                }
+                yield return new WaitForSeconds(0.6f);
+                timeWasted += 0.6f;
             }
-            yield return new WaitForSeconds(0.6f);
-            timeWasted += 0.6f;
 
             BattleSolver.SkillResult.Reset();
 
-            foreach (var heroUnit in Formations.heroes.party.Units)
+            if(obstacle.FailEffects.Count > 0)
             {
-                BattleSolver.SkillResult.AddResultEntry(new SkillResultEntry(heroUnit, SkillResultType.Hit));
-                foreach (var failEffect in obstacle.FailEffects)
-                    failEffect.Apply(null, heroUnit, BattleSolver.SkillResult);
+                foreach (var heroUnit in Formations.heroes.party.Units)
+                {
+                    BattleSolver.SkillResult.AddResultEntry(new SkillResultEntry(heroUnit, SkillResultType.Hit));
+                    foreach (var failEffect in obstacle.FailEffects)
+                        failEffect.Apply(null, heroUnit, BattleSolver.SkillResult);
+                }
             }
+            
             yield return StartCoroutine(ExecuteEffectEvents(false));
 
             #region Check Game Over

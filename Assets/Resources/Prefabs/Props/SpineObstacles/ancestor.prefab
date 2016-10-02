@@ -27,7 +27,7 @@ GameObject:
   - 61: {fileID: 61000013952919052}
   - 114: {fileID: 114000010149972618}
   m_Layer: 0
-  m_Name: ancestor_ghost
+  m_Name: ancestor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
