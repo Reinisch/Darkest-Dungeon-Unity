@@ -15,16 +15,6 @@ public class ScreenLoader : MonoBehaviour
 
     void Awake()
     {
-        if (!DarkestDungeonManager.SkipTransactions)
-            loadingImage.sprite = Resources.Load<Sprite>(DarkestDungeonManager.LoadingInfo.TextureName);
-        else
-        {
-            async = SceneManager.LoadSceneAsync(DarkestDungeonManager.LoadingInfo.NextScene);
-            imageAnimator.SetBool("LoadingEnded", true);
-            Faded();
-        }
-
-
         if (DarkestDungeonManager.LoadingInfo.NextScene == "EstateManagement")
         {
             title.text = LocalizationManager.GetString("str_town_title");
@@ -32,34 +22,36 @@ public class ScreenLoader : MonoBehaviour
         }
         else if (DarkestDungeonManager.LoadingInfo.NextScene == "Dungeon")
         {
-            if(DarkestDungeonManager.SaveData != null && DarkestDungeonManager.SaveData.InRaid)
+            var currentQuest = DarkestDungeonManager.SaveData != null && DarkestDungeonManager.SaveData.InRaid ?
+                DarkestDungeonManager.SaveData.Quest : DarkestDungeonManager.RaidManager.Quest;
+
+            if (currentQuest.IsPlotQuest)
             {
-                if(DarkestDungeonManager.SaveData.Quest.IsPlotQuest)
+                if (currentQuest.Id != "tutorial")
                 {
-                    var plot = DarkestDungeonManager.SaveData.Quest as PlotQuest;
-                    if(plot.Id != "tutorial")
-                    {
-                        title.text = LocalizationManager.GetString("dungeon_name_" +
-                            DarkestDungeonManager.SaveData.Quest.Dungeon);
-                        description.text = LocalizationManager.GetString("str_" + plot.Id + "_tip");
-                    }
-                    else
-                    {
-                        title.text = LocalizationManager.GetString("dungeon_name_tutorial");
-                        description.text = LocalizationManager.GetString("town_quest_goal_start_plural_tutorial_room");
-                    }
-                }        
+                    title.text = LocalizationManager.GetString("dungeon_name_" + currentQuest.Dungeon);
+                    description.text = LocalizationManager.GetString("str_" + currentQuest.Id + "_tip");
+                }
+                else
+                {
+                    title.text = LocalizationManager.GetString("dungeon_name_tutorial");
+                    description.text = LocalizationManager.GetString("town_quest_goal_start_plural_tutorial_room");
+                }
             }
             else
             {
-                if(DarkestDungeonManager.RaidManager.Quest != null)
-                {
-                    title.text = LocalizationManager.GetString("dungeon_name_" +
-                        DarkestDungeonManager.RaidManager.Quest.Dungeon);
-                    description.text = LocalizationManager.GetString("str_" +
-                        DarkestDungeonManager.RaidManager.Quest.Dungeon + "_tip");
-                }
+                title.text = LocalizationManager.GetString("dungeon_name_" + currentQuest.Dungeon);
+                description.text = LocalizationManager.GetString("str_" + currentQuest.Dungeon + "_tip");
             }
+        }
+
+        if (!DarkestDungeonManager.SkipTransactions)
+            loadingImage.sprite = Resources.Load<Sprite>(DarkestDungeonManager.LoadingInfo.TextureName);
+        else
+        {
+            async = SceneManager.LoadSceneAsync(DarkestDungeonManager.LoadingInfo.NextScene);
+            imageAnimator.SetBool("LoadingEnded", true);
+            Faded();
         }
     }
 	void Start()

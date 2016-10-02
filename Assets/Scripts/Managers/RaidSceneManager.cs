@@ -6668,15 +6668,19 @@ public class RaidSceneManager : MonoBehaviour
         string stringId = "str_curio_" + curio.StringId + "_" + curioInteraction.ResultString();
         string message = LocalizationManager.GetString(stringId);
 
-        if (stringId == message)
+        if (stringId == message && curioResult != null)
+        {
+            stringId = stringId + "_" + curioResult.Item;
             message = LocalizationManager.GetString(stringId + "_" + curioResult.Item);
+        }
 
         areaView.CompleteArea();
-        if(curio.StringId == "beacon")
-               (areaView.Prop as RaidCurio).SkeletonAnimation.state.AddAnimation(0, "disturbed", true, 1.8f);
-
+        if(curio.StringId == "beacon" || curio.StringId == "teleporter")
+            (areaView.Prop as RaidCurio).SkeletonAnimation.state.AddAnimation(0, "disturbed", true, 1.8f);
+        
         Formations.InvestigateCurioIntro(areaView.Prop);
-        RaidEvents.ShowAnnouncment(message);
+        if(stringId != message)
+            RaidEvents.ShowAnnouncment(message);
         dungeonCamera.TargetFOV = 50;
 
         GameObject animationObject = Resources.Load<GameObject>("Prefabs/Effects/interaction_curio");
@@ -6697,7 +6701,8 @@ public class RaidSceneManager : MonoBehaviour
         yield return new WaitForSeconds(0.10f);
         areaView.Prop.SetSortingOrder(PartyFormationManager.BackgroundOrder);
         yield return new WaitForSeconds(0.05f);
-        RaidEvents.HideAnnouncment();
+        if (stringId != message)
+            RaidEvents.HideAnnouncment();
         Formations.ShowHeroOverlay();
         #endregion
         var interactorUnit = RaidPanel.SelectedUnit;
@@ -6740,12 +6745,8 @@ public class RaidSceneManager : MonoBehaviour
                 if (RaidEvents.loot.partyInventory.HasSomething())
                     yield return StartCoroutine(LootEvent());
 
-                if (curio.IsQuestCurio && curio.Results.Count == 0)
-                {
-                    if (!Raid.QuestCompleted && Raid.CheckQuestGoals())
-                        yield return StartCoroutine(CompletionCrestEvent());
-                    break;
-                }
+                if (curio.IsQuestCurio && !Raid.QuestCompleted && Raid.CheckQuestGoals())
+                    yield return StartCoroutine(CompletionCrestEvent());
                 #endregion
                 break;
             case "quirk":

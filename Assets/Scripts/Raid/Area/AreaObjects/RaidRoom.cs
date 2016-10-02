@@ -98,7 +98,7 @@ public class RaidRoom : MonoBehaviour, IRaidArea
                     if (Area.Knowledge == Knowledge.Completed)
                     {
                         questBossCurio.Activate();
-                        if((Area.Prop as Curio).StringId == "beacon")
+                        if((Area.Prop as Curio).StringId == "beacon" || (Area.Prop as Curio).StringId == "teleporter")
                             questBossCurio.SkeletonAnimation.state.SetAnimation(0, "disturbed", true);
                     }
                 }

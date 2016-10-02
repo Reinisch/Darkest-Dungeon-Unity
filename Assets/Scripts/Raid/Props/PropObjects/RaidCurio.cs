@@ -35,7 +35,7 @@ public class RaidCurio : RaidProp, IPointerEnterHandler, IPointerExitHandler, IP
         if (!Investigated)
         {
             SkeletonAnimation.state.ClearTracks();
-            SkeletonAnimation.state.SetAnimation(0, "active", false);          
+            SkeletonAnimation.state.SetAnimation(0, "active", true);          
         }
     }
     public void OnPointerExit(PointerEventData eventData)
@@ -43,7 +43,7 @@ public class RaidCurio : RaidProp, IPointerEnterHandler, IPointerExitHandler, IP
         if (!Investigated)
         {
             SkeletonAnimation.state.ClearTracks();
-            SkeletonAnimation.state.SetAnimation(0, "idle", false);
+            SkeletonAnimation.state.SetAnimation(0, "idle", true);
         }
     }
 

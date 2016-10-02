@@ -128,7 +128,7 @@ MonoBehaviour:
   logErrors: 0
   submeshSeparators: []
   timeScale: 1
-  loop: 0
+  loop: 1
   _animationName: idle
 --- !u!222 &222000013221157308
 CanvasRenderer:
