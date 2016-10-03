@@ -66,6 +66,11 @@ public class TownEvent : ISingleProportion
                     !DarkestDungeonManager.Campaign.Estate.TownPurchases[purchase.Key].PurchasedUpgrades.Contains(purchase.Value))
                         return false;
 
+            for (int i = 0; i < Data.Count; i++)
+                if (Data[i].Type == TownEventDataType.PlotQuest)
+                    if (DarkestDungeonManager.Campaign.CompletedPlot.Contains(Data[i].StringData))
+                        return false;
+
             return true;
         }
     }
