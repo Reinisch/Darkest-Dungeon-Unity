@@ -208,8 +208,9 @@ public class DarkestDungeonManager : MonoBehaviour
             //SaveLoadManager.WriteDarkestQuestThreeSave(new SaveCampaignData(3, "Map"));
             //SaveLoadManager.WriteDarkestQuestFourSave(new SaveCampaignData(3, "Map"));
             //SaveLoadManager.WriteStartingPlusSave(new SaveCampaignData(3, "Map"));
+            //SaveLoadManager.WriteTownInvasionSave(new SaveCampaignData(3, "Map"));
             SaveData = SaveLoadManager.ReadSave(2);
-            //SaveLoadManager.WriteDungeonMap(SaveData, "post_game_complete_start_map");
+            //SaveLoadManager.WriteDungeonMap(SaveData, "town_invasion_0");
         }
         campaign = new Campaign();
         campaign.Load(SaveData);

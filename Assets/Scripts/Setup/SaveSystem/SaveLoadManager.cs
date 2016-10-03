@@ -2825,7 +2825,7 @@ public static class SaveLoadManager
         {
             "leper", "crusader", "plot_tutorial_crypts",
             "plot_darkest_dungeon_1", "plot_darkest_dungeon_2",
-            "plot_darkest_dungeon_3", "plot_darkest_dungeon_4",
+            "plot_darkest_dungeon_3", 
         };
         #endregion
 
@@ -8800,6 +8800,738 @@ public static class SaveLoadManager
         saveData.ExploredRoomCount = 1;
         saveData.CurrentLocation = "room1_1";
         saveData.LastRoom = "room1_1";
+        saveData.PreviousLastSector = "";
+        saveData.LastSector = "";
+        saveData.KilledMonsters = new List<string>();
+        saveData.InvestigatedCurios = new List<string>();
+
+        saveData.TorchAmount = 100;
+        saveData.MaxTorchAmount = 100;
+        saveData.ModifiedMinTorch = -1;
+        saveData.ModifiedMaxTorch = -1;
+        #endregion
+
+        #region Formation
+        saveData.HeroFormationData = new BattleFormationSaveData();
+        saveData.HeroFormationData.unitData.Add(new FormationUnitSaveData()
+        {
+            IsHero = true,
+            RosterId = 1,
+            Rank = 1,
+            CombatInfo = new FormationUnitInfo()
+            {
+                CombatId = 1,
+            }
+        });
+        saveData.HeroFormationData.unitData.Add(new FormationUnitSaveData()
+        {
+            IsHero = true,
+            RosterId = 2,
+            Rank = 2,
+            CombatInfo = new FormationUnitInfo()
+            {
+                CombatId = 2,
+            }
+        });
+        #endregion
+
+        #region Inventory
+        saveData.InventoryItems = new List<InventorySlotData>();
+        #endregion
+
+        WriteSave(saveData);
+        return saveData;
+    }
+    public static SaveCampaignData WriteTownInvasionSave(SaveCampaignData saveData)
+    {
+        saveData.isFirstStart = true;
+        saveData.gameVersion = Application.version;
+        saveData.locationName = "Raid";
+        saveData.questsCompleted = 0;
+        saveData.currentWeek = 1;
+
+        saveData.goldAmount = 1000;
+        saveData.bustsAmount = 10;
+        saveData.deedsAmount = 10;
+        saveData.portraitsAmount = 10;
+        saveData.crestsAmount = 10;
+
+        #region Initial Heroes
+        saveData.saveHeroData = new SaveHeroData[2]
+        {
+            #region Hero 1
+            new SaveHeroData()
+            {
+                rosterId = 1,
+                name = "Reynald",
+                heroClass = "crusader",
+                resolveLevel = 0,
+                resolveXP = 0,
+                stressLevel = 10,
+                weaponLevel = 1,
+                armorLevel = 1,
+                leftTrinketId = "",
+                rightTrinketId = "dd_trinket",
+                quirks = new List<QuirkInfo>()
+                {
+                    new QuirkInfo("warrior_of_light"),
+                    new QuirkInfo("kleptomaniac"),
+                    new QuirkInfo("god_fearing"),
+                },
+            },
+            #endregion
+            #region Hero 2
+            new SaveHeroData()
+            {
+                rosterId = 2,
+                name = "Dismas",
+                heroClass = "highwayman",
+                resolveLevel = 0,
+                resolveXP = 0,
+                stressLevel = 10,
+                weaponLevel = 1,
+                armorLevel = 1,
+                leftTrinketId = "",
+                rightTrinketId = "dd_trinket",
+                quirks = new List<QuirkInfo>()
+                {
+                    new QuirkInfo("hard_noggin"),
+                    new QuirkInfo("known_cheat"),
+                    new QuirkInfo("quick_reflexes"),
+                },
+            },
+            #endregion
+        };
+        #endregion
+
+        #region StageCoach Heroes
+        saveData.stageCoachData = new SaveHeroData[0];
+        #endregion
+
+        #region Initial Hero Purchases
+        saveData.instancedPurchases = new Dictionary<int, Dictionary<string, UpgradePurchases>>();
+        for (int i = 0; i < saveData.saveHeroData.Length; i++)
+        {
+            var newHeroPurchases = new Dictionary<string, UpgradePurchases>();
+            saveData.instancedPurchases.Add(saveData.saveHeroData[i].rosterId, newHeroPurchases);
+            newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + ".weapon",
+                new UpgradePurchases(saveData.saveHeroData[i].heroClass + ".weapon", new string[0]));
+            newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + ".armour",
+                new UpgradePurchases(saveData.saveHeroData[i].heroClass + ".armour", new string[0]));
+            var heroClass = DarkestDungeonManager.Data.HeroClasses[saveData.saveHeroData[i].heroClass];
+            for (int j = 0; j < heroClass.CombatSkills.Count; j++)
+                newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + "." + heroClass.CombatSkills[j].Id, new UpgradePurchases(
+                    saveData.saveHeroData[i].heroClass + "." + heroClass.CombatSkills[j].Id, new string[0]));
+            for (int j = 0; j < heroClass.CampingSkills.Count; j++)
+                newHeroPurchases.Add(heroClass.CampingSkills[j].Id, new UpgradePurchases(
+                    heroClass.CampingSkills[j].Id, new string[0]));
+        }
+        saveData.instancedPurchases[1]["crusader.smite"].PurchasedUpgrades.Add("0");
+        saveData.instancedPurchases[1]["crusader.zealous_accusation"].PurchasedUpgrades.Add("0");
+        saveData.instancedPurchases[1]["crusader.stunning_blow"].PurchasedUpgrades.Add("0");
+        saveData.instancedPurchases[1]["crusader.bulwark_of_faith"].PurchasedUpgrades.Add("0");
+        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(0);
+        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(1);
+        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(2);
+        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(3);
+        saveData.instancedPurchases[1]["encourage"].PurchasedUpgrades.Add("0");
+        saveData.instancedPurchases[1]["stand_tall"].PurchasedUpgrades.Add("0");
+        saveData.instancedPurchases[1]["zealous_speech"].PurchasedUpgrades.Add("0");
+        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(0);
+        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(4);
+        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(5);
+
+
+        saveData.instancedPurchases[2]["highwayman.opened_vein"].PurchasedUpgrades.Add("0");
+        saveData.instancedPurchases[2]["highwayman.pistol_shot"].PurchasedUpgrades.Add("0");
+        saveData.instancedPurchases[2]["highwayman.grape_shot_blast"].PurchasedUpgrades.Add("0");
+        saveData.instancedPurchases[2]["highwayman.take_aim"].PurchasedUpgrades.Add("0");
+        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(6);
+        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(1);
+        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(3);
+        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(4);
+        saveData.instancedPurchases[2]["first_aid"].PurchasedUpgrades.Add("0");
+        saveData.instancedPurchases[2]["clean_guns"].PurchasedUpgrades.Add("0");
+        saveData.instancedPurchases[2]["bandits_sense"].PurchasedUpgrades.Add("0");
+        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(1);
+        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(5);
+        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(6);
+        #endregion
+
+        #region Activity Log
+        saveData.activityLog = new List<WeekActivityLog>();
+        saveData.completedPlot = new List<string>();
+        saveData.generatedQuests = new List<Quest>();
+        #endregion
+
+        #region Estate Misc
+        saveData.trinketData.Clear();
+
+        saveData.wagonData.Clear();
+
+        saveData.saveDungeonData.Clear();
+        saveData.saveDungeonData.Add("crypts", new DungeonProgress("crypts", 0, 0, true, false));
+        saveData.saveDungeonData.Add("warrens", new DungeonProgress("warrens", 0, 0, true, false));
+        saveData.saveDungeonData.Add("weald", new DungeonProgress("weald", 0, 0, true, false));
+        saveData.saveDungeonData.Add("cove", new DungeonProgress("cove", 0, 0, true, false));
+        saveData.saveDungeonData.Add("darkestdungeon", new DungeonProgress("darkestdungeon", 1, 0, true, false));
+        saveData.saveDungeonData.Add("town", new DungeonProgress("town", 1, 0, true, true));
+
+        saveData.deathRecords = new List<DeathRecord>();
+
+        saveData.buildingUpgrades = new Dictionary<string, UpgradePurchases>();
+
+        saveData.buildingUpgrades.Add("abbey.meditation", new UpgradePurchases("abbey.meditation", new string[0]));
+        saveData.buildingUpgrades.Add("abbey.prayer", new UpgradePurchases("abbey.prayer", new string[0]));
+        saveData.buildingUpgrades.Add("abbey.flagellation", new UpgradePurchases("abbey.flagellation", new string[0]));
+        saveData.buildingUpgrades.Add("tavern.bar", new UpgradePurchases("tavern.bar", new string[0]));
+        saveData.buildingUpgrades.Add("tavern.gambling", new UpgradePurchases("tavern.gambling", new string[0]));
+        saveData.buildingUpgrades.Add("tavern.brothel", new UpgradePurchases("tavern.brothel", new string[0]));
+        saveData.buildingUpgrades.Add("sanitarium.cost", new UpgradePurchases("sanitarium.cost", new string[0]));
+        saveData.buildingUpgrades.Add("sanitarium.disease_quirk_cost", new UpgradePurchases("sanitarium.disease_quirk_cost", new string[0]));
+        saveData.buildingUpgrades.Add("sanitarium.slots", new UpgradePurchases("sanitarium.slots", new string[0]));
+        saveData.buildingUpgrades.Add("blacksmith.weapon", new UpgradePurchases("blacksmith.weapon", new string[0]));
+        saveData.buildingUpgrades.Add("blacksmith.armour", new UpgradePurchases("blacksmith.armour", new string[0]));
+        saveData.buildingUpgrades.Add("blacksmith.cost", new UpgradePurchases("blacksmith.cost", new string[0]));
+        saveData.buildingUpgrades.Add("guild.skill_levels", new UpgradePurchases("guild.skill_levels", new string[0]));
+        saveData.buildingUpgrades.Add("guild.cost", new UpgradePurchases("guild.cost", new string[0]));
+        saveData.buildingUpgrades.Add("camping_trainer.cost", new UpgradePurchases("camping_trainer.cost", new string[0]));
+        saveData.buildingUpgrades.Add("nomad_wagon.numitems", new UpgradePurchases("nomad_wagon.numitems", new string[0]));
+        saveData.buildingUpgrades.Add("nomad_wagon.cost", new UpgradePurchases("nomad_wagon.cost", new string[0]));
+        saveData.buildingUpgrades.Add("stage_coach.numrecruits", new UpgradePurchases("stage_coach.numrecruits", new string[0]));
+        saveData.buildingUpgrades.Add("stage_coach.rostersize", new UpgradePurchases("stage_coach.rostersize", new string[0]));
+        saveData.buildingUpgrades.Add("stage_coach.upgraded_recruits", new UpgradePurchases("stage_coach.upgraded_recruits", new string[0]));
+        #endregion
+
+        #region ActivitySlots
+        saveData.abbeyActivitySlots = new List<List<SaveActivitySlot>>()
+        {
+            new List<SaveActivitySlot>()
+            {
+                 new SaveActivitySlot(),
+                 new SaveActivitySlot(),
+                 new SaveActivitySlot(),
+            },
+            new List<SaveActivitySlot>()
+            {
+                 new SaveActivitySlot(),
+                 new SaveActivitySlot(),
+                 new SaveActivitySlot(),
+            },
+            new List<SaveActivitySlot>()
+            {
+                 new SaveActivitySlot(),
+                 new SaveActivitySlot(),
+                 new SaveActivitySlot(),
+            },
+        };
+        saveData.tavernActivitySlots = new List<List<SaveActivitySlot>>()
+        {
+            new List<SaveActivitySlot>()
+            {
+                 new SaveActivitySlot(),
+                 new SaveActivitySlot(),
+                 new SaveActivitySlot(),
+            },
+            new List<SaveActivitySlot>()
+            {
+                 new SaveActivitySlot(),
+                 new SaveActivitySlot(),
+                 new SaveActivitySlot(),
+            },
+            new List<SaveActivitySlot>()
+            {
+                 new SaveActivitySlot(),
+                 new SaveActivitySlot(),
+                 new SaveActivitySlot(),
+            },
+        };
+        saveData.sanitariumActivitySlots = new List<List<SaveActivitySlot>>()
+        {
+            new List<SaveActivitySlot>()
+            {
+                 new SaveActivitySlot(),
+                 new SaveActivitySlot(),
+                 new SaveActivitySlot(),
+            },
+            new List<SaveActivitySlot>()
+            {
+                 new SaveActivitySlot(),
+                 new SaveActivitySlot(),
+                 new SaveActivitySlot(),
+            },
+        };
+        #endregion
+
+        saveData.InRaid = true;
+
+        #region Quest
+        saveData.QuestCompleted = false;
+        saveData.Quest = DarkestDungeonManager.Data.QuestDatabase.PlotQuests.Find(quest =>
+            quest.Id == "plot_town_invasion_0").Copy();
+        #endregion
+
+        #region Dungeon
+        saveData.Dungeon = new Dungeon();
+        saveData.Dungeon.Name = saveData.Quest.Dungeon;
+        saveData.Dungeon.GridSizeX = 33;
+        saveData.Dungeon.GridSizeY = 30;
+        saveData.Dungeon.StartingRoomId = "room:17/13";
+
+        #region Rooms
+        #region Room 17/13 Entrance
+        Room room = new Room("room:17/13", 17, 13)
+        {
+            Knowledge = Knowledge.Hidden,
+            Type = AreaType.Entrance,
+            MashId = 6,
+            Doors = new List<Door>(),
+            TextureId = "start",
+        };
+        saveData.Dungeon.Rooms.Add(room.Id, room);
+        #endregion
+        #region Room 17/23 Vvulf
+        room = new Room("room:17/23", 17, 23)
+        {
+            Knowledge = Knowledge.Hidden,
+            Type = AreaType.Boss,
+            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["town"].BattleMashes.
+                    Find(mash => mash.MashId == 6).BossEncounters.Find(enc => enc.MonsterSet.Contains("brigand_sapper_D")).MonsterSet),
+            MashId = 6,
+            Doors = new List<Door>(),
+            TextureId = "altar",
+        };
+        saveData.Dungeon.Rooms.Add(room.Id, room);
+        #endregion
+        #region Room 12/18
+        room = new Room("room:12/18", 12, 18)
+        {
+            Knowledge = Knowledge.Hidden,
+            Type = AreaType.Battle,
+            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["town"].BattleMashes.
+                    Find(mash => mash.MashId == 6).NamedEncounters["town_incursion_03"][0].MonsterSet),
+            MashId = 6,
+            Doors = new List<Door>(),
+            TextureId = "square",
+        };
+        saveData.Dungeon.Rooms.Add(room.Id, room);
+        #endregion
+        #region Room 22/18
+        room = new Room("room:22/18", 22, 18)
+        {
+            Knowledge = Knowledge.Hidden,
+            Type = AreaType.Battle,
+            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["town"].BattleMashes.
+                    Find(mash => mash.MashId == 6).NamedEncounters["town_incursion_04"][0].MonsterSet),
+            MashId = 6,
+            Doors = new List<Door>(),
+            TextureId = "square",
+        };
+        saveData.Dungeon.Rooms.Add(room.Id, room);
+        #endregion
+        #region Room 7/18
+        room = new Room("room:7/18", 7, 18)
+        {
+            Knowledge = Knowledge.Hidden,
+            Type = AreaType.BattleCurio,
+            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["town"].BattleMashes.
+                    Find(mash => mash.MashId == 6).NamedEncounters["town_incursion_05"][0].MonsterSet),
+            MashId = 6,
+            Prop = DarkestDungeonManager.Data.Curios["ancestors_knapsack"],
+            Doors = new List<Door>(),
+            TextureId = "square",
+        };
+        saveData.Dungeon.Rooms.Add(room.Id, room);
+        #endregion
+        #region Room 27/18
+        room = new Room("room:27/18", 27, 18)
+        {
+            Knowledge = Knowledge.Hidden,
+            Type = AreaType.BattleCurio,
+            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["town"].BattleMashes.
+                    Find(mash => mash.MashId == 6).NamedEncounters["town_incursion_06"][0].MonsterSet),
+            MashId = 6,
+            Prop = DarkestDungeonManager.Data.Curios["ancestors_knapsack"],
+            Doors = new List<Door>(),
+            TextureId = "square",
+        };
+        saveData.Dungeon.Rooms.Add(room.Id, room);
+        #endregion
+        #region Room 17/18
+        room = new Room("room:17/18", 17, 18)
+        {
+            Knowledge = Knowledge.Hidden,
+            Type = AreaType.BattleCurio,
+            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["town"].BattleMashes.
+                    Find(mash => mash.MashId == 6).NamedEncounters["town_incursion_06"][0].MonsterSet),
+            MashId = 6,
+            Prop = DarkestDungeonManager.Data.Curios["ancestors_knapsack"],
+            Doors = new List<Door>(),
+            TextureId = "square",
+        };
+        saveData.Dungeon.Rooms.Add(room.Id, room);
+        #endregion
+
+        #endregion
+
+        #region Hallways
+        #region 17/13 to 12/18
+        Hallway hallway = new Hallway("17/13_to_12/18");
+        hallway.RoomA = saveData.Dungeon.Rooms["room:17/13"];
+        hallway.RoomB = saveData.Dungeon.Rooms["room:12/18"];
+        hallway.RoomA.Doors.Add(new Door("room:17/13", hallway.Id, Direction.Left));
+        hallway.RoomB.Doors.Add(new Door("room:12/18", hallway.Id, Direction.Right));
+        hallway.Halls = new List<HallSector>()
+        {
+            new HallSector("0", hallway.RoomA.GridX - 1, hallway.RoomA.GridY, hallway, new Door(hallway.Id, hallway.RoomA.Id, Direction.Left)),
+            new HallSector("1", hallway.RoomA.GridX - 2, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                Type = AreaType.Battle,
+                BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["town"].BattleMashes.
+                    Find(mash => mash.MashId == 6).NamedEncounters["town_incursion_weak_01"][0].MonsterSet),
+            },
+            new HallSector("2", hallway.RoomA.GridX - 3, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                Type = AreaType.Obstacle,
+                Prop = DarkestDungeonManager.Data.Obstacles["town_rubble"],
+            },
+            new HallSector("3", hallway.RoomA.GridX - 3, hallway.RoomA.GridY + 1, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                Type = AreaType.Empty,
+            },
+            new HallSector("4", hallway.RoomA.GridX - 4, hallway.RoomA.GridY + 1, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                Type = AreaType.Battle,
+                BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["town"].BattleMashes.
+                    Find(mash => mash.MashId == 6).NamedEncounters["town_incursion_01"][0].MonsterSet),
+            },
+            new HallSector("5", hallway.RoomA.GridX - 4, hallway.RoomA.GridY + 2, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                Type = AreaType.Curio,
+                Prop = DarkestDungeonManager.Data.Curios["travellers_tent"]
+            },
+            new HallSector("6", hallway.RoomA.GridX - 5, hallway.RoomA.GridY + 2, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                Type = AreaType.Empty,
+            },
+            new HallSector("7", hallway.RoomA.GridX - 5, hallway.RoomA.GridY + 3, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                Type = AreaType.Empty,
+            },
+            new HallSector("8", hallway.RoomA.GridX - 5, hallway.RoomA.GridY + 4, hallway, new Door(hallway.Id, hallway.RoomB.Id, Direction.Right)),
+        };
+        saveData.Dungeon.Hallways.Add(hallway.Id, hallway);
+        #endregion
+        #region 17/13 to 22/18
+        hallway = new Hallway("17/13_to_22/18");
+        hallway.RoomA = saveData.Dungeon.Rooms["room:17/13"];
+        hallway.RoomB = saveData.Dungeon.Rooms["room:22/18"];
+        hallway.RoomA.Doors.Add(new Door("room:17/13", hallway.Id, Direction.Left));
+        hallway.RoomB.Doors.Add(new Door("room:22/18", hallway.Id, Direction.Right));
+        hallway.Halls = new List<HallSector>()
+        {
+            new HallSector("0", hallway.RoomA.GridX + 1, hallway.RoomA.GridY, hallway, new Door(hallway.Id, hallway.RoomA.Id, Direction.Left)),
+            new HallSector("1", hallway.RoomA.GridX + 2, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                Type = AreaType.Battle,
+                BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["town"].BattleMashes.
+                    Find(mash => mash.MashId == 6).NamedEncounters["town_incursion_weak_02"][0].MonsterSet),
+            },
+            new HallSector("2", hallway.RoomA.GridX + 3, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                Type = AreaType.Obstacle,
+                Prop = DarkestDungeonManager.Data.Obstacles["town_rubble"],
+            },
+            new HallSector("3", hallway.RoomA.GridX + 3, hallway.RoomA.GridY + 1, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                Type = AreaType.Empty,
+            },
+            new HallSector("4", hallway.RoomA.GridX + 4, hallway.RoomA.GridY + 1, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                Type = AreaType.Battle,
+                BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["town"].BattleMashes.
+                    Find(mash => mash.MashId == 6).NamedEncounters["town_incursion_02"][0].MonsterSet),
+            },
+            new HallSector("5", hallway.RoomA.GridX + 4, hallway.RoomA.GridY + 2, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                Type = AreaType.Curio,
+                Prop = DarkestDungeonManager.Data.Curios["travellers_tent"]
+            },
+            new HallSector("6", hallway.RoomA.GridX + 5, hallway.RoomA.GridY + 2, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                Type = AreaType.Empty,
+            },
+            new HallSector("7", hallway.RoomA.GridX + 5, hallway.RoomA.GridY + 3, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                Type = AreaType.Empty,
+            },
+            new HallSector("8", hallway.RoomA.GridX + 5, hallway.RoomA.GridY + 4, hallway, new Door(hallway.Id, hallway.RoomB.Id, Direction.Right)),
+        };
+        saveData.Dungeon.Hallways.Add(hallway.Id, hallway);
+        #endregion
+        #region 17/23 to 12/18
+        hallway = new Hallway("17/23_to_12/18");
+        hallway.RoomA = saveData.Dungeon.Rooms["room:17/23"];
+        hallway.RoomB = saveData.Dungeon.Rooms["room:12/18"];
+        hallway.RoomA.Doors.Add(new Door("room:17/23", hallway.Id, Direction.Left));
+        hallway.RoomB.Doors.Add(new Door("room:12/18", hallway.Id, Direction.Right));
+        hallway.Halls = new List<HallSector>()
+        {
+            new HallSector("0", hallway.RoomA.GridX - 1, hallway.RoomA.GridY, hallway, new Door(hallway.Id, hallway.RoomA.Id, Direction.Left)),
+            new HallSector("1", hallway.RoomA.GridX - 2, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                Type = AreaType.Empty,
+            },
+            new HallSector("2", hallway.RoomA.GridX - 3, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                Type = AreaType.Empty,
+            },
+            new HallSector("3", hallway.RoomA.GridX - 3, hallway.RoomA.GridY - 1, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                Type = AreaType.Battle,
+                BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["town"].BattleMashes.
+                    Find(mash => mash.MashId == 6).NamedEncounters["town_incursion_07"][0].MonsterSet),
+            },
+            new HallSector("4", hallway.RoomA.GridX - 4, hallway.RoomA.GridY - 1, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                Type = AreaType.Obstacle,
+                Prop = DarkestDungeonManager.Data.Obstacles["town_rubble"],
+            },
+            new HallSector("5", hallway.RoomA.GridX - 4, hallway.RoomA.GridY - 2, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                Type = AreaType.Curio,
+                Prop = DarkestDungeonManager.Data.Curios["crate"]
+            },
+            new HallSector("6", hallway.RoomA.GridX - 5, hallway.RoomA.GridY - 2, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["town"].BattleMashes.
+                    Find(mash => mash.MashId == 6).NamedEncounters["town_incursion_weak_07"][0].MonsterSet),
+                Type = AreaType.Battle,
+            },
+            new HallSector("7", hallway.RoomA.GridX - 5, hallway.RoomA.GridY - 3, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                Type = AreaType.Empty,
+            },
+            new HallSector("8", hallway.RoomA.GridX - 5, hallway.RoomA.GridY - 4, hallway, new Door(hallway.Id, hallway.RoomB.Id, Direction.Right)),
+        };
+        saveData.Dungeon.Hallways.Add(hallway.Id, hallway);
+        #endregion
+        #region 17/23 to 22/18
+        hallway = new Hallway("17/23_to_22/18");
+        hallway.RoomA = saveData.Dungeon.Rooms["room:17/23"];
+        hallway.RoomB = saveData.Dungeon.Rooms["room:22/18"];
+        hallway.RoomA.Doors.Add(new Door("room:17/23", hallway.Id, Direction.Left));
+        hallway.RoomB.Doors.Add(new Door("room:22/18", hallway.Id, Direction.Right));
+        hallway.Halls = new List<HallSector>()
+        {
+            new HallSector("0", hallway.RoomA.GridX + 1, hallway.RoomA.GridY, hallway, new Door(hallway.Id, hallway.RoomA.Id, Direction.Left)),
+            new HallSector("1", hallway.RoomA.GridX + 2, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                Type = AreaType.Empty,
+            },
+            new HallSector("2", hallway.RoomA.GridX + 3, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                Type = AreaType.Empty,
+            },
+            new HallSector("3", hallway.RoomA.GridX + 3, hallway.RoomA.GridY - 1, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                Type = AreaType.Battle,
+                BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["town"].BattleMashes.
+                    Find(mash => mash.MashId == 6).NamedEncounters["town_incursion_08"][0].MonsterSet),
+            },
+            new HallSector("4", hallway.RoomA.GridX + 4, hallway.RoomA.GridY - 1, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                Type = AreaType.Obstacle,
+                Prop = DarkestDungeonManager.Data.Obstacles["town_rubble"],
+            },
+            new HallSector("5", hallway.RoomA.GridX + 4, hallway.RoomA.GridY - 2, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                Type = AreaType.Curio,
+                Prop = DarkestDungeonManager.Data.Curios["crate"]
+            },
+            new HallSector("6", hallway.RoomA.GridX + 5, hallway.RoomA.GridY - 2, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["town"].BattleMashes.
+                    Find(mash => mash.MashId == 6).NamedEncounters["town_incursion_weak_08"][0].MonsterSet),
+                Type = AreaType.Battle,
+            },
+            new HallSector("7", hallway.RoomA.GridX + 5, hallway.RoomA.GridY - 3, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                Type = AreaType.Empty,
+            },
+            new HallSector("8", hallway.RoomA.GridX + 5, hallway.RoomA.GridY - 4, hallway, new Door(hallway.Id, hallway.RoomB.Id, Direction.Right)),
+        };
+        saveData.Dungeon.Hallways.Add(hallway.Id, hallway);
+        #endregion
+        #region 12/18 to 7/18
+        hallway = new Hallway("12/18_to_7/18");
+        hallway.RoomA = saveData.Dungeon.Rooms["room:12/18"];
+        hallway.RoomB = saveData.Dungeon.Rooms["room:7/18"];
+        hallway.RoomA.Doors.Add(new Door("room:12/18", hallway.Id, Direction.Left));
+        hallway.RoomB.Doors.Add(new Door("room:7/18", hallway.Id, Direction.Right));
+        hallway.Halls = new List<HallSector>()
+        {
+            new HallSector("0", hallway.RoomA.GridX - 1, hallway.RoomA.GridY, hallway, new Door(hallway.Id, hallway.RoomA.Id, Direction.Left)),
+            new HallSector("1", hallway.RoomA.GridX - 2, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                Type = AreaType.Empty,
+            },
+            new HallSector("2", hallway.RoomA.GridX - 3, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                Type = AreaType.Battle,
+                BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["town"].BattleMashes.
+                    Find(mash => mash.MashId == 6).NamedEncounters["town_incursion_weak_05"][0].MonsterSet),
+            },
+            new HallSector("3", hallway.RoomA.GridX - 4, hallway.RoomA.GridY, hallway, new Door(hallway.Id, hallway.RoomB.Id, Direction.Right)),
+        };
+        saveData.Dungeon.Hallways.Add(hallway.Id, hallway);
+        #endregion
+        #region 22/18 to 27/18
+        hallway = new Hallway("22/18_to_27/18");
+        hallway.RoomA = saveData.Dungeon.Rooms["room:22/18"];
+        hallway.RoomB = saveData.Dungeon.Rooms["room:27/18"];
+        hallway.RoomA.Doors.Add(new Door("room:22/18", hallway.Id, Direction.Left));
+        hallway.RoomB.Doors.Add(new Door("room:27/18", hallway.Id, Direction.Right));
+        hallway.Halls = new List<HallSector>()
+        {
+            new HallSector("0", hallway.RoomA.GridX + 1, hallway.RoomA.GridY, hallway, new Door(hallway.Id, hallway.RoomA.Id, Direction.Left)),
+            new HallSector("1", hallway.RoomA.GridX + 2, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                Type = AreaType.Empty,
+            },
+            new HallSector("2", hallway.RoomA.GridX + 3, hallway.RoomA.GridY, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                Type = AreaType.Battle,
+                BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["town"].BattleMashes.
+                    Find(mash => mash.MashId == 6).NamedEncounters["town_incursion_weak_06"][0].MonsterSet),
+            },
+            new HallSector("3", hallway.RoomA.GridX + 4, hallway.RoomA.GridY, hallway, new Door(hallway.Id, hallway.RoomB.Id, Direction.Right)),
+        };
+        saveData.Dungeon.Hallways.Add(hallway.Id, hallway);
+        #endregion
+        #region 17/23 to 17/18
+        hallway = new Hallway("17/23_to_17/18");
+        hallway.RoomA = saveData.Dungeon.Rooms["room:17/23"];
+        hallway.RoomB = saveData.Dungeon.Rooms["room:17/18"];
+        hallway.RoomA.Doors.Add(new Door("room:17/23", hallway.Id, Direction.Left));
+        hallway.RoomB.Doors.Add(new Door("room:17/18", hallway.Id, Direction.Right));
+        hallway.Halls = new List<HallSector>()
+        {
+            new HallSector("0", hallway.RoomA.GridX, hallway.RoomA.GridY - 1, hallway, new Door(hallway.Id, hallway.RoomA.Id, Direction.Left)),
+            new HallSector("1", hallway.RoomA.GridX, hallway.RoomA.GridY - 2, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                Type = AreaType.Obstacle,
+                Prop = DarkestDungeonManager.Data.Obstacles["town_rubble"],
+            },
+            new HallSector("2", hallway.RoomA.GridX, hallway.RoomA.GridY - 3, hallway)
+            {
+                Knowledge = Knowledge.Hidden,
+                TextureId = Random.Range(1, 6).ToString(),
+                Type = AreaType.Battle,
+                BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["town"].BattleMashes.
+                    Find(mash => mash.MashId == 6).NamedEncounters["town_incursion_weak_06"][0].MonsterSet),
+            },
+            new HallSector("3", hallway.RoomA.GridX, hallway.RoomA.GridY - 4, hallway, new Door(hallway.Id, hallway.RoomB.Id, Direction.Right)),
+        };
+        saveData.Dungeon.Hallways.Add(hallway.Id, hallway);
+        #endregion
+        #endregion
+        #endregion
+
+        #region Party
+        saveData.RaidParty = new RaidPartySaveData()
+        {
+            IsMovingLeft = false,
+            HeroInfo = new List<RaidPartyHeroInfoSaveData>()
+            {
+                new RaidPartyHeroInfoSaveData()
+                {
+                Factor = DeathFactor.AttackMonster,
+                Killer = "",
+                IsAlive = true,
+                HeroRosterId = 1,
+                },
+                new RaidPartyHeroInfoSaveData()
+                {
+                Factor = DeathFactor.AttackMonster,
+                Killer = "",
+                IsAlive = true,
+                HeroRosterId = 2,
+                },
+            }
+        };
+        #endregion
+
+        #region Data
+        saveData.ExploredRoomCount = 1;
+        saveData.CurrentLocation = "room:17/13";
+        saveData.LastRoom = "room:17/13";
         saveData.PreviousLastSector = "";
         saveData.LastSector = "";
         saveData.KilledMonsters = new List<string>();

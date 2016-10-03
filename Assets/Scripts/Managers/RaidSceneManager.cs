@@ -263,8 +263,7 @@ public class RaidSceneManager : MonoBehaviour
             {
                 currentRaid = new RaidInfo();
                 currentRaid.Quest = DarkestDungeonManager.Instanse.RaidingManager.Quest;
-                if(currentRaid.Quest.Dungeon == "darkestdungeon" && currentRaid.Quest.IsPlotQuest &&
-                    (currentRaid.Quest as PlotQuest).RaidMap != null)
+                if(currentRaid.Quest.IsPlotQuest && (currentRaid.Quest as PlotQuest).RaidMap != null)
                     currentRaid.Dungeon = SaveLoadManager.LoadDungeonMap((currentRaid.Quest as PlotQuest).RaidMap, currentRaid.Quest);
                 else
                     currentRaid.Dungeon = DungeonGenerator.GenerateDungeon(currentRaid.Quest);
