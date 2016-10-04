@@ -2,6 +2,20 @@
 
 public class Curio : Prop
 {
+    public string OriginalId
+    {
+        get
+        {
+            if (StringId == "tutorial_shovel")
+                return "unlocked_strongbox";
+            else if (StringId == "tutorial_key")
+                return "discarded_pack";
+            else if (StringId == "tutorial_holy")
+                return "sack";
+
+            return StringId;
+        }
+    }
     public bool IsFullCurio { get; set; }
     public bool IsQuestCurio { get; set; }
     public string ResultTypes { get; set; }

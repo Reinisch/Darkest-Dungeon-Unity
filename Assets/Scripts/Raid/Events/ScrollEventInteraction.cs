@@ -190,8 +190,8 @@ public class ScrollEventInteraction : MonoBehaviour
             interactionSlot.IsItemFixed = false;
         }
 
-        title.text = LocalizationManager.GetString("str_curio_title_" + curio.StringId);
-        description.text = LocalizationManager.GetString("str_curio_content_" + curio.StringId);
+        title.text = LocalizationManager.GetString("str_curio_title_" + curio.OriginalId);
+        description.text = LocalizationManager.GetString("str_curio_content_" + curio.OriginalId);
 
         ScrollOpened();
     }

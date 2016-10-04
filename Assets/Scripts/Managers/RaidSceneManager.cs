@@ -6640,7 +6640,7 @@ public class RaidSceneManager : MonoBehaviour
         }
         Inventory.SetDeactivated();
 
-        var oneShotCurio = FMODUnity.RuntimeManager.CreateInstance("event:/props/curios/" + curio.StringId);
+        var oneShotCurio = FMODUnity.RuntimeManager.CreateInstance("event:/props/curios/" + curio.OriginalId);
         if(curioInteraction is ItemInteraction)
         {
             oneShotCurio.setParameterValue("item_index", curio.ItemInteractions.IndexOf(curioInteraction as ItemInteraction) + 1);
@@ -6664,7 +6664,7 @@ public class RaidSceneManager : MonoBehaviour
         Formations.LockSelections();
 
         #region Curio Investigation
-        string stringId = "str_curio_" + curio.StringId + "_" + curioInteraction.ResultString();
+        string stringId = "str_curio_" + curio.OriginalId + "_" + curioInteraction.ResultString();
         string message = LocalizationManager.GetString(stringId);
 
         if (stringId == message && curioResult != null)
@@ -6674,7 +6674,7 @@ public class RaidSceneManager : MonoBehaviour
         }
 
         areaView.CompleteArea();
-        if(curio.StringId == "beacon" || curio.StringId == "teleporter")
+        if(curio.OriginalId == "beacon" || curio.OriginalId == "teleporter")
             (areaView.Prop as RaidCurio).SkeletonAnimation.state.AddAnimation(0, "disturbed", true, 1.8f);
         
         Formations.InvestigateCurioIntro(areaView.Prop);
