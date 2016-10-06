@@ -2,19 +2,21 @@
 using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using System;
 
 public class ScreenLoader : MonoBehaviour
 {
     AsyncOperation async;
 
     public Image loadingImage;
-    public Animator imageAnimator;
     public Text title;
     public Text description;
     public Text continueText;
 
     void Awake()
     {
+        DarkestDungeonManager.ScreenFader.StartFaded();
+
         if (DarkestDungeonManager.LoadingInfo.NextScene == "EstateManagement")
         {
             title.text = LocalizationManager.GetString("str_town_title");
@@ -46,13 +48,13 @@ public class ScreenLoader : MonoBehaviour
         }
 
         if (!DarkestDungeonManager.SkipTransactions)
-            loadingImage.sprite = Resources.Load<Sprite>(DarkestDungeonManager.LoadingInfo.TextureName);
-        else
         {
-            async = SceneManager.LoadSceneAsync(DarkestDungeonManager.LoadingInfo.NextScene);
-            imageAnimator.SetBool("LoadingEnded", true);
-            Faded();
+            var loadingScreen = Resources.Load<Sprite>(DarkestDungeonManager.LoadingInfo.TextureName);
+            if (loadingScreen != null)
+                loadingImage.sprite = loadingScreen;
         }
+        else
+            SceneManager.LoadScene(DarkestDungeonManager.LoadingInfo.NextScene);
     }
 	void Start()
     {
@@ -61,21 +63,26 @@ public class ScreenLoader : MonoBehaviour
             StartCoroutine(SceneLoading());
         }
 	}
-    void Faded()
-    {
-        async.allowSceneActivation = true;
-    }
 
     IEnumerator SceneLoading()
     {
+        Resources.UnloadUnusedAssets();
+        GC.Collect();
+        DarkestDungeonManager.ScreenFader.Appear(1);
+        yield return new WaitForSeconds(1f);
+
         async = SceneManager.LoadSceneAsync(DarkestDungeonManager.LoadingInfo.NextScene);
         async.allowSceneActivation = false;
+        
         while (!async.isDone)
         {
-            if (async.progress >= 0.6f)
+            if (async.progress >= 0.8f)
                 break;
             yield return null;
         }
-        imageAnimator.SetBool("LoadingEnded", true);
+        yield return new WaitForSeconds(0.5f);
+        DarkestDungeonManager.ScreenFader.Fade(1);
+        yield return new WaitForSeconds(1f);
+        async.allowSceneActivation = true;
     }
 }
