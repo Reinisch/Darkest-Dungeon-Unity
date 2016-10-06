@@ -107,6 +107,7 @@ public class SaveSlot : MonoBehaviour
             else
                 DarkestDungeonManager.LoadingInfo.SetNextScene("EstateManagement", "Screen/loading_screen.town_visit");
 
+            DarkestSoundManager.PlayOneShot("event:/general/title_screen/start_game");
             DarkestDungeonManager.Instanse.LoadSave();
             SaveSelector.FadeToLoadingScreen();
         }
@@ -114,6 +115,7 @@ public class SaveSlot : MonoBehaviour
     public void NukeButtonClick()
     {
         SaveLoadManager.DeleteSave(slotId);
+        DarkestSoundManager.PlayOneShot("event:/ui/town/button_click");
         FillEmptySave();
     }
 
@@ -133,6 +135,7 @@ public class SaveSlot : MonoBehaviour
 
         titleInput.interactable = false;
         titleInput.enabled = false;
+        DarkestSoundManager.PlayOneShot("event:/ui/town/button_click");
         SaveSelector.SaveNamingCompleted();
     }
 

@@ -128,6 +128,7 @@ public class SaveSelector : MonoBehaviour
             sceneryRect.offsetMin = offsetMin;
             yield return 0;
         }
+        DarkestSoundManager.StopTitleMusic();
         SceneManager.LoadScene("LoadingScreen");
         yield break;
     }
@@ -146,11 +147,15 @@ public class SaveSelector : MonoBehaviour
         saveFrame.gameObject.SetActive(true);
 
         sliderCoroutine = SceneSlider();
-        StartCoroutine(sliderCoroutine);       
+        StartCoroutine(sliderCoroutine);
+
+        DarkestSoundManager.PlayOneShot("event:/general/title_screen/campaign_button");
     }
 
     public void SaveNamingStart(SaveSlot namingSaveSlot)
     {
+        DarkestSoundManager.PlayOneShot("event:/general/title_screen/letter_open");
+        
         selectedSaveSlot = namingSaveSlot;
         for (int i = 0; i < slotNumber; i++)
             saveSlots[i].DisableInteraction();

@@ -10,6 +10,7 @@ public class DarkestSoundManager : MonoBehaviour
     public static FMOD.Studio.EventInstance BattleInstanse { get; private set; }
     public static FMOD.Studio.EventInstance CampingInstanse { get; private set; }
     public static FMOD.Studio.EventInstance CampingMusicInstanse { get; private set; }
+    public static FMOD.Studio.EventInstance TitleMusicInstanse { get; private set; }
 
     void Awake()
     {
@@ -17,6 +18,32 @@ public class DarkestSoundManager : MonoBehaviour
         {
             Studio = RuntimeManager.StudioSystem;
             Instanse = this;
+        }
+    }
+
+    public static void PlayOneShot(string eventId)
+    {
+        RuntimeManager.PlayOneShot(eventId);
+    }
+
+    public static void PlayTitleMusic(bool isIntro)
+    {
+        StopTitleMusic();
+
+        if (isIntro)
+            TitleMusicInstanse = RuntimeManager.CreateInstance("event:/music/_music_assets/title_intro");
+        else
+            TitleMusicInstanse = RuntimeManager.CreateInstance("event:/music/_music_assets/title_outro");
+
+        if (TitleMusicInstanse != null)
+            TitleMusicInstanse.start();
+    }
+    public static void StopTitleMusic()
+    {
+        if (TitleMusicInstanse != null)
+        {
+            TitleMusicInstanse.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            TitleMusicInstanse.release();
         }
     }
 

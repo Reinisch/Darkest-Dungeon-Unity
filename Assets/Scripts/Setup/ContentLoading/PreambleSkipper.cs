@@ -7,13 +7,26 @@ public class PreambleSkipper : MonoBehaviour
     IEnumerator slideCoroutine;
     bool isSliding = false;
 
+    float waitForPreable = 3f;
+
     void Awake()
     {
         rect = GetComponent<RectTransform>();
     }
 
+    void Start()
+    {
+        DarkestSoundManager.PlayTitleMusic(true);
+    }
+
     void Update()
     {
+        if (waitForPreable > 0)
+        {
+            waitForPreable -= Time.deltaTime;
+            return;
+        }
+
         if (isSliding == false)
         {
             if (Input.anyKey)
@@ -27,14 +40,25 @@ public class PreambleSkipper : MonoBehaviour
 
     IEnumerator StartSceneSlider()
     {
+        float distance = rect.offsetMax.y/2;
+
         while (true)
         {
             Vector2 offsetMax = rect.offsetMax;
-            offsetMax.y += Time.deltaTime * 1000;
+            offsetMax.y += Time.deltaTime * 1500;
             rect.offsetMax = offsetMax;
             Vector2 offsetMin = rect.offsetMin;
-            offsetMin.y += Time.deltaTime * 1000;
+            offsetMin.y += Time.deltaTime * 1500;
             rect.offsetMin = offsetMin;
+
+            if (distance < 0)
+            {
+                if(offsetMax.y > distance)
+                {
+                    distance = 1;
+                    DarkestSoundManager.PlayTitleMusic(false);
+                }
+            }
 
             if (rect.offsetMax.y >= 0 || rect.offsetMin.y >= 0)
             {
