@@ -293,10 +293,10 @@ public class RaidSceneManager : MonoBehaviour
             Inventory.LoadItems(DarkestDungeonManager.SaveData.InventoryItems);
 #if UNITY_EDITOR
             Inventory.DistributeItem(new ItemDefinition("supply", "holy_water", 4));
+            Inventory.DistributeItem(new ItemDefinition("supply", "shovel", 4));
             Inventory.DistributeItem(new ItemDefinition("supply", "medicinal_herbs", 4));
             Inventory.DistributeItem(new ItemDefinition("supply", "antivenom", 4));
             Inventory.DistributeItem(new ItemDefinition("supply", "bandage", 4));
-            Inventory.DistributeItem(new ItemDefinition("quest_item", "beacon_light", 3));
             Inventory.DistributeItem(new ItemDefinition("supply", "torch", 12));
             Inventory.DistributeItem(new ItemDefinition("provision", "", 12));
             Inventory.DistributeItem(new ItemDefinition("supply", "firewood", 2));
@@ -336,7 +336,7 @@ public class RaidSceneManager : MonoBehaviour
             Inventory.DistributeItem(new ItemDefinition("supply", "medicinal_herbs", 4));
             Inventory.DistributeItem(new ItemDefinition("supply", "antivenom", 4));
             Inventory.DistributeItem(new ItemDefinition("supply", "bandage", 4));
-            Inventory.DistributeItem(new ItemDefinition("quest_item", "beacon_light", 3));
+            Inventory.DistributeItem(new ItemDefinition("supply", "shovel", 4));
             Inventory.DistributeItem(new ItemDefinition("supply", "torch", 12));
             Inventory.DistributeItem(new ItemDefinition("provision", "", 12));
             Inventory.DistributeItem(new ItemDefinition("supply", "firewood", 2));

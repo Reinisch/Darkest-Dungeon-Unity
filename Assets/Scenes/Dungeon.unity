@@ -25762,7 +25762,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startingMode: 0
   startingItems:
-  - shamblers_altar
+  - locked_strongbox
   dungeonCamera: {fileID: 447450558}
   hallwayView: {fileID: 1199950669}
   roomView: {fileID: 970925681}

@@ -11,6 +11,11 @@ public class GameSetup : MonoBehaviour
         QualitySettings.vSyncCount = 0;
     }
 
+    void Start()
+    {
+        //FMODUnity.RuntimeManager.GetBus("bus:/").setFaderLevel(0.2f);
+    }
+
     void Update()
     {
         //if (Input.GetKey(KeyCode.M))

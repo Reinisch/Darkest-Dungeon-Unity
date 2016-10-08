@@ -127,13 +127,14 @@ public class ScrollEventLoot : MonoBehaviour
             if(curioResult.IsCombined)
             {
                 foreach (var result in interaction.Results)
-                    if (result.IsCombined)
+                    if (result.IsCombined && result.Item != "Nothing")
                         foreach (var item in RaidSolver.GenerateLoot(result, raid))
                             partyInventory.DistributeItem(item);
             }
             else
-                foreach (var item in RaidSolver.GenerateLoot(curioResult, raid))
-                    partyInventory.DistributeItem(item);
+                if(curioResult.Item != "Nothing")
+                    foreach (var item in RaidSolver.GenerateLoot(curioResult, raid))
+                        partyInventory.DistributeItem(item);
         }
             
 
