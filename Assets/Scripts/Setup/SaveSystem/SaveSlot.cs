@@ -107,7 +107,6 @@ public class SaveSlot : MonoBehaviour
             else
                 DarkestDungeonManager.LoadingInfo.SetNextScene("EstateManagement", "Screen/loading_screen.town_visit");
 
-            DarkestSoundManager.PlayOneShot("event:/general/title_screen/start_game");
             DarkestDungeonManager.Instanse.LoadSave();
             SaveSelector.FadeToLoadingScreen();
         }

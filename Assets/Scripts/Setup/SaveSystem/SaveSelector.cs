@@ -64,6 +64,8 @@ public class SaveSelector : MonoBehaviour
 
     IEnumerator SceneSlider()
     {
+        DarkestSoundManager.PlayOneShot("event:/general/title_screen/campaign_button");
+
         while (true)
         {
             Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(null, rect.position);
@@ -113,6 +115,18 @@ public class SaveSelector : MonoBehaviour
     }
     IEnumerator SceneFade(float seconds, float speed)
     {
+        float titleVolume = 0;
+        DarkestSoundManager.TitleMusicInstanse.getVolume(out titleVolume);
+
+        for (float nextVolume = titleVolume; nextVolume >= 0; nextVolume -= Time.deltaTime * 3f)
+        {
+            DarkestSoundManager.TitleMusicInstanse.setVolume(nextVolume);
+            yield return null;
+        }
+
+        DarkestSoundManager.StopTitleMusic();
+        DarkestSoundManager.PlayOneShot("event:/general/title_screen/start_game");
+
         while (true)
         {
             if (seconds <= 0)
@@ -128,7 +142,6 @@ public class SaveSelector : MonoBehaviour
             sceneryRect.offsetMin = offsetMin;
             yield return 0;
         }
-        DarkestSoundManager.StopTitleMusic();
         SceneManager.LoadScene("LoadingScreen");
         yield break;
     }
@@ -148,8 +161,6 @@ public class SaveSelector : MonoBehaviour
 
         sliderCoroutine = SceneSlider();
         StartCoroutine(sliderCoroutine);
-
-        DarkestSoundManager.PlayOneShot("event:/general/title_screen/campaign_button");
     }
 
     public void SaveNamingStart(SaveSlot namingSaveSlot)

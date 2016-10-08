@@ -68,12 +68,12 @@ public class ScreenLoader : MonoBehaviour
     {
         Resources.UnloadUnusedAssets();
         GC.Collect();
+        yield return new WaitForEndOfFrame();
         DarkestDungeonManager.ScreenFader.Appear(1);
         yield return new WaitForSeconds(1f);
-
         async = SceneManager.LoadSceneAsync(DarkestDungeonManager.LoadingInfo.NextScene);
         async.allowSceneActivation = false;
-        
+
         while (!async.isDone)
         {
             if (async.progress >= 0.8f)
