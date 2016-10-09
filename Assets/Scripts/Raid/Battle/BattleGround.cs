@@ -273,6 +273,12 @@ public class BattleGround : MonoBehaviour
                 break;
             }
         }
+        for (int i = 0; i < HeroParty.Units.Count; i++)
+        {
+            var hero = (Hero)HeroParty.Units[i].Character;
+            if (hero.HeroClass.ExtraBattleLoot != null)
+                BattleLoot.Add(hero.HeroClass.ExtraBattleLoot);
+        }
 
         HeroFormation.RectTransform.SetParent(Rect.parent, false);
         RaidSceneManager.DungeonCamera.target = HeroFormation.ranks.RectTransform;

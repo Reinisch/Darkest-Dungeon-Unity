@@ -135,8 +135,15 @@ public class ScrollEventLoot : MonoBehaviour
                 if(curioResult.Item != "Nothing")
                     foreach (var item in RaidSolver.GenerateLoot(curioResult, raid))
                         partyInventory.DistributeItem(item);
+
+            if(RaidSceneManager.RaidPanel.SelectedHero != null)
+            {
+                var extraLoot = RaidSceneManager.RaidPanel.SelectedHero.HeroClass.ExtraCurioLoot;
+                if (extraLoot != null)
+                    foreach (var item in RaidSolver.GenerateLoot(extraLoot.Code, extraLoot.Count, raid))
+                        partyInventory.DistributeItem(item);
+            }
         }
-            
 
         partyInventory.DeactivateEmptySlots();
 

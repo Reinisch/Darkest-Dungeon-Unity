@@ -30,10 +30,10 @@ public class ItemData
         sb.AppendFormat("</color><color={0}>", DarkestDungeonManager.Data.HexColors["equipment_tooltip_body"]);
         sb.Append("\n" + LocalizationManager.GetString("str_inventory_description_" + Type + (Type == "journal_page" ? "" : Id)));
         sb.Append("</color>");
-        if (PurchasePrice != 0)
+        if (SellPrice != 0)
         {
             sb.AppendFormat("\n<color={0}>", DarkestDungeonManager.Data.HexColors["inventory_tooltip_gold_value"]);
-            sb.AppendFormat(LocalizationManager.GetString("str_inventory_gold_value_format"), PurchasePrice);
+            sb.AppendFormat(LocalizationManager.GetString("str_inventory_gold_value_format"), SellPrice);
             sb.Append("</color>");
         }
         if (discard)
@@ -53,11 +53,11 @@ public class ItemData
         sb.AppendFormat("</color><color={0}>", DarkestDungeonManager.Data.HexColors["equipment_tooltip_body"]);
         sb.Append("\n" + LocalizationManager.GetString("str_inventory_description_" + Type + (Type == "journal_page" ? "" : Id)));
         sb.Append("</color>");
-        if (PurchasePrice != 0)
+        if (SellPrice != 0)
         {
 
             sb.AppendFormat("\n<color={0}>", DarkestDungeonManager.Data.HexColors["inventory_tooltip_gold_value"]);
-            sb.AppendFormat(LocalizationManager.GetString("str_inventory_gold_value_format"), PurchasePrice);
+            sb.AppendFormat(LocalizationManager.GetString("str_inventory_gold_value_format"), SellPrice);
             sb.Append("</color>");
         }
         if (discard)
