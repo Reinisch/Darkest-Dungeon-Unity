@@ -2,17 +2,29 @@
 
 public class ItemData
 {
+    private int stackLimit;
+
     public string Type { get; set; }
     public string Id { get; set; }
-    public int StackLimit { get; set; }
     public int PurchasePrice { get; set; }
     public int SellPrice { get; set; }
+    public int ExtraStackLimit { get; set; }
+    public int StackLimit
+    {
+        get
+        {
+            return stackLimit + ExtraStackLimit;
+        }
+        set
+        {
+            stackLimit = value;
+        }
+    }
 
     public ItemData()
     {
 
     }
-
     public ItemData(string type, string id, int limit, int goldValue, int sellValue)
     {
         Type = type;

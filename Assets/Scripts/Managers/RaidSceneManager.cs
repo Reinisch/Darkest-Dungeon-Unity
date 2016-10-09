@@ -270,6 +270,8 @@ public class RaidSceneManager : MonoBehaviour
                 currentRaid.RaidParty = DarkestDungeonManager.RaidManager.RaidParty;
             }
 
+            UpdateExtraStackLimit();
+
             DarkestDungeonManager.Data.LoadDungeon(currentRaid.Quest.Dungeon, currentRaid.Quest.Id);
             Rules = new RaidRuleInfo(currentRaid.Quest.Dungeon, BattleGround, TorchMeter);
             RaidEvents.Initialize();
@@ -477,6 +479,27 @@ public class RaidSceneManager : MonoBehaviour
             }
         }
     }
+    void UpdateExtraStackLimit()
+    {
+        ResetExtraStackLimit();
+
+        for (int i = 0; i < currentRaid.RaidParty.HeroInfo.Count; i++)
+            if(currentRaid.RaidParty.HeroInfo[i].Hero.HeroClass.ExtraStackLimit != null)
+            {
+                switch(currentRaid.RaidParty.HeroInfo[i].Hero.HeroClass.ExtraStackLimit)
+                {
+                    case "antiquarian_gold":
+                        DarkestDungeonManager.Data.Items["gold"][""].ExtraStackLimit += 500;
+                        break;
+                    default:
+                        break;
+                }
+            }
+    }
+    void ResetExtraStackLimit()
+    {
+        DarkestDungeonManager.Data.Items["gold"][""].ExtraStackLimit = 0;
+    }
 
     #region Transitions
     public static Vector3 DungeonPositionToScreen(Vector3 position)
@@ -494,6 +517,7 @@ public class RaidSceneManager : MonoBehaviour
         DarkestSoundManager.StopDungeonSoundtrack();
         DarkestSoundManager.StopCampingSoundtrack();
         DarkestSoundManager.StopBattleSoundtrack();
+        ResetExtraStackLimit();
     }
     IEnumerator ExecuteCampEffect(CampEffect currentEffect, FormationUnit target, bool skipNotification)
     {
