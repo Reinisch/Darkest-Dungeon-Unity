@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public delegate void RaidPartySlotEvent(HeroSlot heroSlot);
+public delegate bool RaidPartySlotCheck(HeroSlot heroSlot);
 
 public class RaidPartySlot : MonoBehaviour, IDropHandler, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
@@ -26,6 +27,7 @@ public class RaidPartySlot : MonoBehaviour, IDropHandler, IDragHandler, IBeginDr
 
     public event RaidPartySlotEvent onDropOut;
     public event RaidPartySlotEvent onDropIn;
+    public RaidPartySlotCheck compatibilityCheck;
 
     bool isDragging = false;
 
@@ -118,6 +120,12 @@ public class RaidPartySlot : MonoBehaviour, IDropHandler, IDragHandler, IBeginDr
             return;
 
         if (!RaidPartyPanel.IsResolveEligible(DragManager.Instanse.HeroItem.Hero))
+        {
+            // Implement bark
+            return;
+        }
+
+        if (!compatibilityCheck(DragManager.Instanse.HeroItem))
         {
             // Implement bark
             return;

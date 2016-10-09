@@ -32,6 +32,24 @@ public class RaidPartyPanel : MonoBehaviour
 
         return true;
     }
+    public bool IsCompatible(Hero hero)
+    {
+        for (int i = 0; i < PartySlots.Count; i++)
+        {
+            if (PartySlots[i].SelectedHero == null)
+                continue;
+
+            if(hero.HeroClass.IncompatiablePartyTag != null)
+                if (PartySlots[i].SelectedHero.Hero.HeroClass.Tags.Contains(hero.HeroClass.IncompatiablePartyTag))
+                    return false;
+
+            if (PartySlots[i].SelectedHero.Hero.HeroClass.IncompatiablePartyTag != null)
+                if (hero.HeroClass.Tags.Contains(PartySlots[i].SelectedHero.Hero.HeroClass.IncompatiablePartyTag))
+                    return false;
+        }
+
+        return true;
+    }
 
     void Awake()
     {
@@ -41,6 +59,7 @@ public class RaidPartyPanel : MonoBehaviour
             PartySlots[i].SlotId = i + 1;
             PartySlots[i].onDropIn += RaidPartyPanel_onDropIn;
             PartySlots[i].onDropOut += RaidPartyPanel_onDropOut;
+            PartySlots[i].compatibilityCheck = RaidPartyPanel_compatibilityCheck;
         }
     }
 
@@ -63,7 +82,6 @@ public class RaidPartyPanel : MonoBehaviour
             PartyDisassembled();
         }
     }
-
     void RaidPartyPanel_onDropIn(HeroSlot heroSlot)
     {
         partyMembersPrepared++;
@@ -71,6 +89,10 @@ public class RaidPartyPanel : MonoBehaviour
         {
             PartyAssembled();
         }
+    }
+    bool RaidPartyPanel_compatibilityCheck(HeroSlot heroSlot)
+    {
+        return IsCompatible(heroSlot.Hero);
     }
 
     void ActivateDropOutPanel(RaidPartySlot partySlot, HeroSlot heroSlot)
