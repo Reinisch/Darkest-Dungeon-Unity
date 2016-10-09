@@ -5,8 +5,9 @@ using System.Collections;
 #if !UNITY_WEBGL
 public class MoviePlayer : MonoBehaviour
 {
+    public MovieTexture movie;
+
     GameIntro gameIntro;
-    MovieTexture movie;
     AudioSource audioSource;
     IEnumerator videoCoroutine;
     int skipFrames = 6;

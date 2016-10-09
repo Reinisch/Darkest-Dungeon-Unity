@@ -116,12 +116,16 @@ public class SaveSelector : MonoBehaviour
     IEnumerator SceneFade(float seconds, float speed)
     {
         float titleVolume = 0;
-        DarkestSoundManager.TitleMusicInstanse.getVolume(out titleVolume);
 
-        for (float nextVolume = titleVolume; nextVolume >= 0; nextVolume -= Time.deltaTime * 3f)
+        if(DarkestSoundManager.TitleMusicInstanse != null)
         {
-            DarkestSoundManager.TitleMusicInstanse.setVolume(nextVolume);
-            yield return null;
+            DarkestSoundManager.TitleMusicInstanse.getVolume(out titleVolume);
+
+            for (float nextVolume = titleVolume; nextVolume >= 0; nextVolume -= Time.deltaTime * 3f)
+            {
+                DarkestSoundManager.TitleMusicInstanse.setVolume(nextVolume);
+                yield return null;
+            }
         }
 
         DarkestSoundManager.StopTitleMusic();

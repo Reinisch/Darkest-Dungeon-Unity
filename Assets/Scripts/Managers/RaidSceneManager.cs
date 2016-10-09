@@ -5721,15 +5721,18 @@ public class RaidSceneManager : MonoBehaviour
 
         #region Starting Sound Effects
         var oneShotStart = FMODUnity.RuntimeManager.CreateInstance("event:/general/combat/start");
-        if (BattleGround.SurpriseStatus == SurpriseStatus.Nothing)
-            oneShotStart.setParameterValue("start_condition", 0);
-        else if (BattleGround.SurpriseStatus == SurpriseStatus.MonstersSurprised)
-            oneShotStart.setParameterValue("start_condition", 1);
-        else
-            oneShotStart.setParameterValue("start_condition", 2);
+        if (oneShotStart != null)
+        {
+            if (BattleGround.SurpriseStatus == SurpriseStatus.Nothing)
+                oneShotStart.setParameterValue("start_condition", 0);
+            else if (BattleGround.SurpriseStatus == SurpriseStatus.MonstersSurprised)
+                oneShotStart.setParameterValue("start_condition", 1);
+            else
+                oneShotStart.setParameterValue("start_condition", 2);
 
-        oneShotStart.start();
-        oneShotStart.release();
+            oneShotStart.start();
+            oneShotStart.release();
+        }
 
         foreach(var unit in Formations.monsters.party.Units)
             FMODUnity.RuntimeManager.PlayOneShot("event:/char/enemy/" + unit.Character.Class + "_vo_aggro");
@@ -6665,25 +6668,28 @@ public class RaidSceneManager : MonoBehaviour
         Inventory.SetDeactivated();
 
         var oneShotCurio = FMODUnity.RuntimeManager.CreateInstance("event:/props/curios/" + curio.OriginalId);
-        if(curioInteraction is ItemInteraction)
+        if (oneShotCurio != null)
         {
-            oneShotCurio.setParameterValue("item_index", curio.ItemInteractions.IndexOf(curioInteraction as ItemInteraction) + 1);
-            oneShotCurio.setParameterValue("result_category", 2);
-        }
-        else
-        {
-            oneShotCurio.setParameterValue("item_index", 0);
-            if(curio.IsQuestCurio)
+            if (curioInteraction is ItemInteraction)
+            {
+                oneShotCurio.setParameterValue("item_index", curio.ItemInteractions.IndexOf(curioInteraction as ItemInteraction) + 1);
                 oneShotCurio.setParameterValue("result_category", 2);
-            else if (curio.ResultTypes == "mixed")
-                oneShotCurio.setParameterValue("result_category", 1);
-            else if (curio.ResultTypes == "good")
-                oneShotCurio.setParameterValue("result_category", 2);
+            }
             else
-                oneShotCurio.setParameterValue("result_category", 0);
+            {
+                oneShotCurio.setParameterValue("item_index", 0);
+                if (curio.IsQuestCurio)
+                    oneShotCurio.setParameterValue("result_category", 2);
+                else if (curio.ResultTypes == "mixed")
+                    oneShotCurio.setParameterValue("result_category", 1);
+                else if (curio.ResultTypes == "good")
+                    oneShotCurio.setParameterValue("result_category", 2);
+                else
+                    oneShotCurio.setParameterValue("result_category", 0);
+            }
+            oneShotCurio.start();
+            oneShotCurio.release();
         }
-        oneShotCurio.start();
-        oneShotCurio.release();
 
         Formations.LockSelections();
 

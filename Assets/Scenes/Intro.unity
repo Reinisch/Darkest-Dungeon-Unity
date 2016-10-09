@@ -329,6 +329,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d9a3f89ba3bcbf44b6bfdcfd3c2d186, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  movie: {fileID: 0}
 --- !u!82 &682881497
 AudioSource:
   m_ObjectHideFlags: 0
@@ -415,6 +416,7 @@ GameObject:
   - 92: {fileID: 719767460}
   - 124: {fileID: 719767459}
   - 81: {fileID: 719767458}
+  - 114: {fileID: 719767463}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -490,6 +492,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!114 &719767463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 719767457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1131012694
 GameObject:
   m_ObjectHideFlags: 0

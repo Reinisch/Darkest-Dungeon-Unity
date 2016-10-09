@@ -25,7 +25,12 @@ public class GameIntro : MonoBehaviour
         if (++currentLogo < gameLogos.Length)
             gameLogos[currentLogo].Play();
         else
-            gameMovie.Play();
+        {
+            if (gameMovie.movie != null)
+                gameMovie.Play();
+            else
+                FinishIntro();
+        }
     }
 
     public void FinishIntro()
