@@ -117,10 +117,7 @@ public class RaidPartySlot : MonoBehaviour, IDropHandler, IDragHandler, IBeginDr
         if (droppedItem == null || DarkestDungeonManager.RaidManager.Quest == null)
             return;
 
-        int maxLevel = DarkestDungeonManager.Data.QuestDatabase.
-            LevelRestrictions[DarkestDungeonManager.RaidManager.Quest.Difficulty];
-
-        if (DragManager.Instanse.HeroItem.Hero.Resolve.Level > maxLevel)
+        if (!RaidPartyPanel.IsResolveEligible(DragManager.Instanse.HeroItem.Hero))
         {
             // Implement bark
             return;

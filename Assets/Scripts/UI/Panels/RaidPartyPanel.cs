@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 using System.Collections.Generic;
 
 public delegate void RaidPartyEvent();
@@ -9,6 +10,9 @@ public class RaidPartyPanel : MonoBehaviour
     const int slotNumber = 4;
     int partyMembersPrepared = 0;
     public HeroDiscardPanel heroDiscardPanel;
+    public Image eventOverlay;
+    public List<Sprite> availableOverlays;
+
     public bool IsPartyPrepared { get { return partyMembersPrepared == 4; } }
     public List<RaidPartySlot> PartySlots { get; private set; }
 
@@ -17,6 +21,9 @@ public class RaidPartyPanel : MonoBehaviour
 
     public static bool IsResolveEligible(Hero hero)
     {
+        if (DarkestDungeonManager.Campaign.EventModifiers.NoLevelRestrictions)
+            return true;
+
         int maxLevel = DarkestDungeonManager.Data.QuestDatabase.
                 LevelRestrictions[DarkestDungeonManager.RaidManager.Quest.Difficulty];
 
@@ -76,6 +83,23 @@ public class RaidPartyPanel : MonoBehaviour
         heroDiscardPanel.gameObject.SetActive(false);
     }
 
+    public void CheckUniqueEventOverlay()
+    {
+        if (DarkestDungeonManager.Campaign.TriggeredEvent != null)
+        {
+            eventOverlay.sprite = availableOverlays.Find(overlay =>
+                overlay.name == DarkestDungeonManager.Campaign.TriggeredEvent.Id);
+            if (eventOverlay.sprite != null)
+                eventOverlay.SetNativeSize();
+        }
+        else
+            eventOverlay.sprite = null;
+
+        if (eventOverlay.sprite == null)
+            eventOverlay.enabled = false;
+        else
+            eventOverlay.enabled = true;
+    }
     public void CheckRestrictions()
     {
         for (int i = 0; i < PartySlots.Count; i++)
@@ -100,6 +124,7 @@ public class RaidPartyPanel : MonoBehaviour
             DragManager.Instanse.onStartDraggingPartyHero += PartySlots[i].MarkSlots;
             DragManager.Instanse.onEndDraggingPartyHero += PartySlots[i].UnmarkSlots;
         }
+        CheckUniqueEventOverlay();
     }
     public void DeactivateDragManagerBehaviour()
     {
