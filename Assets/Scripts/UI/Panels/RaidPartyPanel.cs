@@ -15,6 +15,17 @@ public class RaidPartyPanel : MonoBehaviour
     public event RaidPartyEvent onPartyAssembled;
     public event RaidPartyEvent onPartyDisassembled;
 
+    public static bool IsResolveEligible(Hero hero)
+    {
+        int maxLevel = DarkestDungeonManager.Data.QuestDatabase.
+                LevelRestrictions[DarkestDungeonManager.RaidManager.Quest.Difficulty];
+
+        if (hero.Resolve.Level > maxLevel)
+            return false;
+
+        return true;
+    }
+
     void Awake()
     {
         PartySlots = new List<RaidPartySlot>(transform.FindChild("PartySlots").GetComponentsInChildren<RaidPartySlot>());
@@ -63,6 +74,18 @@ public class RaidPartyPanel : MonoBehaviour
     void DeactivateDropOutPanel(RaidPartySlot partySlot, HeroSlot heroSlot)
     {
         heroDiscardPanel.gameObject.SetActive(false);
+    }
+
+    public void CheckRestrictions()
+    {
+        for (int i = 0; i < PartySlots.Count; i++)
+        {
+            if (PartySlots[i].SelectedHero != null && !IsResolveEligible(PartySlots[i].SelectedHero.Hero))
+            {
+                // Implement bark
+                PartySlots[i].ItemDroppedOut(PartySlots[i].SelectedHero);
+            }
+        }
     }
 
     public void ActivateDragManagerBehaviour()

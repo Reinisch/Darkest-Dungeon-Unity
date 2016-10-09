@@ -445,6 +445,7 @@ public class DarkestDatabase : MonoBehaviour
         JsonQuestDatabase jsonData = JsonDarkestDeserializer.GetJsonQuestDatabase(jsonText.text);
         QuestDatabase questData = new QuestDatabase();
         questData.FailStressPenalty = jsonData.stress_damage;
+        questData.LevelRestrictions.AddRange(jsonData.restriction.difficulty.resolve_level_threshold_table);
         #region Quest Goals
         for (int i = 0; i < jsonData.goals.Count; i ++)
         {

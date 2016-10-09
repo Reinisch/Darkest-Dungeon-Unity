@@ -39,7 +39,8 @@ public class RaidPartySlot : MonoBehaviour, IDropHandler, IDragHandler, IBeginDr
     {
         if(SelectedHero == null || SelectedHero.Hero.RosterId == heroSlot.Hero.RosterId)
         {
-            SlotAnimator.SetBool("marked", true);
+            if(RaidPartyPanel.IsResolveEligible(heroSlot.Hero))
+                SlotAnimator.SetBool("marked", true);
         }
     }
     public void UnmarkSlots(RaidPartySlot partySlot, HeroSlot heroSlot)
@@ -113,31 +114,39 @@ public class RaidPartySlot : MonoBehaviour, IDropHandler, IDragHandler, IBeginDr
     public void OnDrop(PointerEventData eventData)
     {
         var droppedItem = DragManager.Instanse.HeroItem;
+        if (droppedItem == null || DarkestDungeonManager.RaidManager.Quest == null)
+            return;
 
-        if (droppedItem != null)
+        int maxLevel = DarkestDungeonManager.Data.QuestDatabase.
+            LevelRestrictions[DarkestDungeonManager.RaidManager.Quest.Difficulty];
+
+        if (DragManager.Instanse.HeroItem.Hero.Resolve.Level > maxLevel)
         {
-            if (SelectedHero == null)
+            // Implement bark
+            return;
+        }
+
+        if (SelectedHero == null)
+        {
+            if (droppedItem.PartySlot != null)
             {
-                if (droppedItem.PartySlot != null)
-                {
-                    droppedItem.PartySlot.ItemDroppedOut(droppedItem);
-                    ItemDroppedIn(droppedItem);
-                }
-                else
-                    ItemDroppedIn(droppedItem);
+                droppedItem.PartySlot.ItemDroppedOut(droppedItem);
+                ItemDroppedIn(droppedItem);
+            }
+            else
+                ItemDroppedIn(droppedItem);
+        }
+        else
+        {
+            if (droppedItem.PartySlot != null)
+            {
+                droppedItem.PartySlot.ItemSwapped(SelectedHero);
+                ItemSwapped(droppedItem);
             }
             else
             {
-                if (droppedItem.PartySlot != null)
-                {
-                    droppedItem.PartySlot.ItemSwapped(SelectedHero);
-                    ItemSwapped(droppedItem);
-                }
-                else
-                {
-                    ItemDroppedOut(SelectedHero);
-                    ItemDroppedIn(droppedItem);
-                }
+                ItemDroppedOut(SelectedHero);
+                ItemDroppedIn(droppedItem);
             }
         }
     }

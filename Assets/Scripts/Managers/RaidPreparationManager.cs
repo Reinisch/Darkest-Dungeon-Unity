@@ -51,6 +51,9 @@ public class RaidPreparationManager : MonoBehaviour
         questSlot.Selected = true;
         SelectedQuestSlot = questSlot;
         selectedQuestPanel.SetSelectedQuest(questSlot.Quest);
+        DarkestDungeonManager.RaidManager.Quest = SelectedQuestSlot.Quest;
+
+        raidPartyPanel.CheckRestrictions();
     }
 
     public void Initialize()
