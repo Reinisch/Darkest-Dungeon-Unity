@@ -3464,7 +3464,8 @@ public static class SaveLoadManager
             {
                 Knowledge = Knowledge.Hidden,
                 TextureId = "2",
-                Type = AreaType.Empty,
+                Type = AreaType.Battle,
+                BattleEncounter = new BattleEncounter(new List<string>() { "formless_melee_A", "formless_guard_A", "formless_weak_A", "formless_ranged_A" }),
             },
             new HallSector("10", hallway.RoomA.GridX - 11, hallway.RoomA.GridY, hallway)
             {

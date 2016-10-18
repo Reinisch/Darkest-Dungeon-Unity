@@ -289,6 +289,9 @@ public class BattleGround : MonoBehaviour
         backdrop.Deactivate();
         Round.OrderedUnits.Clear();
         RaidSceneManager.TorchMeter.ClearModifier();
+
+        if (SharedHealth.IsActive)
+            SharedHealth.Reset();
     }
     public void LeaveBattleGround()
     {

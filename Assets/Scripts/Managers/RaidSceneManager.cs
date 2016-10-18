@@ -3277,6 +3277,7 @@ public class RaidSceneManager : MonoBehaviour
                         RaidEvents.roundIndicator.Disappear();
                         RaidEvents.roundIndicator.End();
                         BattleGround.RetreatFromBattle();
+                        yield return new WaitForSeconds(0.2f);
                         #endregion
 
                         #region Reset Hero Statuses
@@ -4990,7 +4991,7 @@ public class RaidSceneManager : MonoBehaviour
             var bleedEffect = unitEventQueue[i].Character.GetStatusEffect(StatusType.Bleeding) as BleedingStatusEffect;
             if(bleedEffect.IsApplied)
             {
-                int damage = bleedEffect.CurrentTickDamage * 100;
+                int damage = bleedEffect.CurrentTickDamage;
                 unitEventQueue[i].Character.Health.DecreaseValue(damage);
                 unitEventQueue[i].OverlaySlot.UpdateOverlay();
                 executedBleed = true;
@@ -5044,12 +5045,13 @@ public class RaidSceneManager : MonoBehaviour
             var poisonEffect = unitEventQueue[i].Character.GetStatusEffect(StatusType.Poison) as PoisonStatusEffect;
             if (poisonEffect.IsApplied)
             {
-                unitEventQueue[i].Character.Health.DecreaseValue(poisonEffect.CurrentTickDamage);
+                int damage = poisonEffect.CurrentTickDamage;
+                unitEventQueue[i].Character.Health.DecreaseValue(damage);
                 unitEventQueue[i].OverlaySlot.UpdateOverlay();
                 executedPoison = true;
 
                 if (Mathf.RoundToInt(unitEventQueue[i].Character.Health.CurrentValue) != 0)
-                    RaidEvents.ShowPopupMessage(unitEventQueue[i], PopupMessageType.Damage, poisonEffect.CurrentTickDamage.ToString());
+                    RaidEvents.ShowPopupMessage(unitEventQueue[i], PopupMessageType.Damage, damage.ToString());
                 else if (unitEventQueue[i].Character.AtDeathsDoor)
                 {
                     if (PrepareDeath(unitEventQueue[i]))
