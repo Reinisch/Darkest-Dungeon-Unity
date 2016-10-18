@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using FMODUnity;
+using System.Collections.Generic;
 
 public class DarkestSoundManager : MonoBehaviour
 {
@@ -12,12 +13,95 @@ public class DarkestSoundManager : MonoBehaviour
     public static FMOD.Studio.EventInstance CampingMusicInstanse { get; private set; }
     public static FMOD.Studio.EventInstance TitleMusicInstanse { get; private set; }
 
+    public static List<FMOD.Studio.EventInstance> NarrationQueue { get; private set; }
+    public static FMOD.Studio.EventInstance CurrentNarration { get; private set; }
+    private FMOD.Studio.PLAYBACK_STATE narrationState;
+
     void Awake()
     {
         if (Instanse == null)
         {
             Studio = RuntimeManager.StudioSystem;
+            NarrationQueue = new List<FMOD.Studio.EventInstance>();
             Instanse = this;
+        }
+    }
+    void Update()
+    {
+        if(CurrentNarration == null)
+        {
+            if(NarrationQueue.Count > 0)
+            {
+                CurrentNarration = NarrationQueue[0];
+                CurrentNarration.start();
+            }
+        }
+        else
+        {
+            CurrentNarration.getPlaybackState(out narrationState);
+            if(narrationState == FMOD.Studio.PLAYBACK_STATE.STOPPED)
+            {
+                CurrentNarration.release();
+                NarrationQueue.Remove(CurrentNarration);
+                CurrentNarration = null;
+            }
+        }
+    }
+
+    public static void ExecuteNarration(string id, NarrationPlace place, params string[] tags)
+    {
+        if (!DarkestDungeonManager.Data.Narration.ContainsKey(id))
+            return;
+
+        NarrationEntry narrationEntry = DarkestDungeonManager.Data.Narration[id];
+
+        if (!RandomSolver.CheckSuccess(narrationEntry.Chance))
+            return;
+
+        var possibleEvents = narrationEntry.AudioEvents.FindAll(audioEvent => audioEvent.IsPossible(place));
+        if (possibleEvents.Count == 0)
+            return;
+
+        NarrationAudioEvent narrationEvent = possibleEvents[Random.Range(0, possibleEvents.Count)];
+        if (narrationEvent.QueueOnlyOnEmpty && NarrationQueue.Count > 0)
+            return;
+
+        if (!RandomSolver.CheckSuccess(narrationEvent.Chance))
+            return;
+
+        var narrationInstanse = RuntimeManager.CreateInstance("event:" + narrationEvent.AudioEvent);
+        if (narrationInstanse != null)
+            NarrationQueue.Add(narrationInstanse);
+
+        switch(place)
+        {
+            case NarrationPlace.Campaign:
+                if(narrationEvent.MaxCampaignOccurrences > 0)
+                {
+                    if (!DarkestDungeonManager.Campaign.NarrationCampaignInfo.ContainsKey(narrationEvent.AudioEvent))
+                        DarkestDungeonManager.Campaign.NarrationCampaignInfo.Add(narrationEvent.AudioEvent, 0);
+
+                    DarkestDungeonManager.Campaign.NarrationCampaignInfo[narrationEvent.AudioEvent]++;
+                }
+                break;
+            case NarrationPlace.Raid:
+                if (narrationEvent.MaxRaidOccurrences > 0)
+                {
+                    if (!DarkestDungeonManager.Campaign.NarrationRaidInfo.ContainsKey(narrationEvent.AudioEvent))
+                        DarkestDungeonManager.Campaign.NarrationRaidInfo.Add(narrationEvent.AudioEvent, 0);
+
+                    DarkestDungeonManager.Campaign.NarrationRaidInfo[narrationEvent.AudioEvent]++;
+                }
+                break;
+            case NarrationPlace.Town:
+                if (narrationEvent.MaxTownVisitOccurrences > 0)
+                {
+                    if (!DarkestDungeonManager.Campaign.NarrationTownInfo.ContainsKey(narrationEvent.AudioEvent))
+                        DarkestDungeonManager.Campaign.NarrationTownInfo.Add(narrationEvent.AudioEvent, 0);
+
+                    DarkestDungeonManager.Campaign.NarrationTownInfo[narrationEvent.AudioEvent]++;
+                }
+                break;
         }
     }
 

@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+public enum NarrationPlace { Raid, Town, Campaign }
+
 public class NarrationAudioEvent
 {
     public bool QueueOnlyOnEmpty { get; set; }
     public bool QueueWhilePlaying { get; set; }
+    public string AudioEvent { get; set; }
     public float Chance { get; set; }
     public float Priority { get; set; }
     public int MaxRaidOccurrences { get; set; }
@@ -17,5 +20,55 @@ public class NarrationAudioEvent
     public NarrationAudioEvent()
     {
         Tags = new List<string>();
+    }
+
+    public bool IsPossible(NarrationPlace narrationPlace, params string[] tags)
+    {
+        switch(narrationPlace)
+        {
+            case NarrationPlace.Campaign:
+                if (MaxCampaignOccurrences > 0)
+                {
+                    if (DarkestDungeonManager.Campaign.NarrationCampaignInfo.ContainsKey(AudioEvent))
+                        if (DarkestDungeonManager.Campaign.NarrationRaidInfo[AudioEvent] >= MaxCampaignOccurrences)
+                            return false;
+                }
+                break;
+            case NarrationPlace.Raid:
+                if (MaxRaidOccurrences > 0)
+                {
+                    if (DarkestDungeonManager.Campaign.NarrationRaidInfo.ContainsKey(AudioEvent))
+                        if (DarkestDungeonManager.Campaign.NarrationRaidInfo[AudioEvent] >= MaxRaidOccurrences)
+                            return false;
+                }
+                break;
+            case NarrationPlace.Town:
+                if (MaxTownVisitOccurrences > 0)
+                {
+                    if (DarkestDungeonManager.Campaign.NarrationTownInfo.ContainsKey(AudioEvent))
+                        if (DarkestDungeonManager.Campaign.NarrationRaidInfo[AudioEvent] >= MaxTownVisitOccurrences)
+                            return false;
+                }
+                break;
+        }
+
+        if(Tags.Count > 0)
+        {
+            if(CheckAllTags)
+            {
+                for (int i = 0; i < tags.Length; i++)
+                    if (!Tags.Contains(tags[i]))
+                        return false;
+            }
+            else
+            {
+                for (int i = 0; i < tags.Length; i++)
+                    if (Tags.Contains(tags[i]))
+                        return true;
+
+                return false;
+            }
+        }
+        return true;
     }
 }

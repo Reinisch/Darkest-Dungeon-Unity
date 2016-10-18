@@ -29,6 +29,8 @@ public class ScreenLoader : MonoBehaviour
 
             if (currentQuest.IsPlotQuest)
             {
+                DarkestSoundManager.ExecuteNarration("loading_screen_start", NarrationPlace.Raid, currentQuest.Id);
+
                 if (currentQuest.Id != "tutorial")
                 {
                     title.text = LocalizationManager.GetString("dungeon_name_" + currentQuest.Dungeon);
@@ -42,6 +44,8 @@ public class ScreenLoader : MonoBehaviour
             }
             else
             {
+                DarkestSoundManager.ExecuteNarration("loading_screen_start", NarrationPlace.Raid, currentQuest.Type, currentQuest.Dungeon);
+
                 title.text = LocalizationManager.GetString("dungeon_name_" + currentQuest.Dungeon);
                 description.text = LocalizationManager.GetString("str_" + currentQuest.Dungeon + "_tip");
             }
@@ -81,6 +85,10 @@ public class ScreenLoader : MonoBehaviour
             yield return null;
         }
         yield return new WaitForSeconds(0.5f);
+
+        while (DarkestSoundManager.NarrationQueue.Count > 0)
+            yield return null;
+
         DarkestDungeonManager.ScreenFader.Fade(1);
         yield return new WaitForSeconds(1f);
         async.allowSceneActivation = true;

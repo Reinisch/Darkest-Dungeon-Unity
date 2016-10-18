@@ -1534,6 +1534,7 @@ public class DarkestDatabase : MonoBehaviour
                 NarrationAudioEvent audioEvent = new NarrationAudioEvent();
                 audioEvent.QueueOnlyOnEmpty = jsonAudioEvent.queue_only_on_empty;
                 audioEvent.QueueWhilePlaying = jsonAudioEvent.queue_while_audio_playing;
+                audioEvent.AudioEvent = jsonAudioEvent.audio_event;
                 audioEvent.Chance = jsonAudioEvent.chance;
                 audioEvent.Priority = jsonAudioEvent.priority;
                 audioEvent.MaxRaidOccurrences = jsonAudioEvent.max_raid_occurrences;

@@ -22,6 +22,10 @@ public class Campaign
 
     public Dictionary<string, DungeonProgress> Dungeons { get; set; }
 
+    public Dictionary<string, int> NarrationRaidInfo { get; set; }
+    public Dictionary<string, int> NarrationTownInfo { get; set; }
+    public Dictionary<string, int> NarrationCampaignInfo { get; set; }
+
     public void SearchMissingHeroes()
     {
         for (int i = 0; i < Heroes.Count; i++)
@@ -133,6 +137,9 @@ public class Campaign
 
     public Campaign()
     {
+        NarrationRaidInfo = new Dictionary<string, int>();
+        NarrationTownInfo = new Dictionary<string, int>();
+        NarrationCampaignInfo = new Dictionary<string, int>();
     }
 
     public void Load(SaveCampaignData saveData)

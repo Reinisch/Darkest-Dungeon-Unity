@@ -22,6 +22,7 @@ namespace DarkestJson
     {
         public bool queue_only_on_empty;
         public bool queue_while_audio_playing;
+        public string audio_event;
         public float chance;
         public float priority;
         public int max_raid_occurrences;
