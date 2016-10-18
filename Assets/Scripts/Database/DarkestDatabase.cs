@@ -8,11 +8,7 @@ using DarkestJson;
 
 public class DarkestDatabase : MonoBehaviour
 {
-    const int heroDataVersion = 1;
-    const int buffDataVersion = 1;
-    const int trinketDataVersion = 1;
-    const int itemDataVersion = 1;
-
+    #region Paths
     const string monstersDirectory = "Data/Monsters/";
     const string heroesDirectory = "Data/Heroes/";
     const string buffDataPath = "Data/Buffs";
@@ -36,6 +32,7 @@ public class DarkestDatabase : MonoBehaviour
     const string jsonCampaignGenerationPath = "Data/Mechanics/Campaign";
     const string jsonProvisionPath = "Data/Mechanics/Provision";
     const string jsonBuffDatabasePath = "Data/JsonBuffs";
+    const string jsonNarrationDataPath = "Data/Narration";
     const string jsonTraitDatabasePath = "Data/JsonTraits";
     const string jsonCampingPath = "Data/JsonCamping";
     const string jsonAIDatabasePath = "Data/JsonAI";
@@ -46,6 +43,7 @@ public class DarkestDatabase : MonoBehaviour
     const string jsonHeroUpgradesPath = "Data/Upgrades/Heroes";
     const string jsonBuildingUpgradesPath = "Data/Upgrades/Building";
     const string jsonBuildingDataPath = "Data/Buildings/";
+    #endregion
 
     public Dictionary<string, Building> Buildings { get; set; }
     public Dictionary<string, UpgradeTree> UpgradeTrees { get; set; }
@@ -82,6 +80,8 @@ public class DarkestDatabase : MonoBehaviour
     public Dictionary<AreaType, Sprite> MapHallIconSet { get; private set; }
     public Dictionary<Knowledge, Sprite> MapRoomKnowledgeSet { get; private set; }
     public Dictionary<Knowledge, Sprite> MapHallKnowledgeSet { get; private set; }
+
+    public Dictionary<string, NarrationEntry> Narration { get; private set; }
 
     public bool ItemExists(ItemDefinition itemDefinition)
     {
@@ -121,6 +121,7 @@ public class DarkestDatabase : MonoBehaviour
         LoadIconSets();
         LoadMonsters();
         LoadJsonTownEvents();
+        LoadNarration();
 
         GC.Collect();
     }
@@ -1402,7 +1403,7 @@ public class DarkestDatabase : MonoBehaviour
         {
             using (var bw = new BinaryWriter(fs))
             {
-                bw.Write(heroDataVersion);
+                bw.Write(1);
                 bw.Write(buffs.Count);
 
                 for(int i = 0; i < buffs.Count; i++)
@@ -1428,7 +1429,7 @@ public class DarkestDatabase : MonoBehaviour
         {
             using (var bw = new BinaryWriter(fs))
             {
-                bw.Write(trinketDataVersion);
+                bw.Write(1);
                 bw.Write(trinkets.Count);
 
                 for (int i = 0; i < trinkets.Count; i++)
@@ -1459,8 +1460,7 @@ public class DarkestDatabase : MonoBehaviour
         {
             using (var br = new BinaryReader(s))
             {
-                int version = br.ReadInt32();
-                if (version != buffDataVersion) { }
+                br.ReadInt32();
                 int buffCount = br.ReadInt32();
 
                 for (int i = 0; i < buffCount; i++)
@@ -1491,8 +1491,7 @@ public class DarkestDatabase : MonoBehaviour
         {
             using (var br = new BinaryReader(s))
             {
-                int version = br.ReadInt32();
-                if (version != trinketDataVersion) { }
+                br.ReadInt32();
                 int trinketCount = br.ReadInt32();
 
                 for (int i = 0; i < trinketCount; i++)
@@ -1519,6 +1518,35 @@ public class DarkestDatabase : MonoBehaviour
         }
     }
 
+    public void LoadNarration()
+    {
+        TextAsset jsonText = Resources.Load<TextAsset>(jsonNarrationDataPath);
+        var jsonNarration = JsonDarkestDeserializer.GetJsonNarration(jsonText.text);
+        Narration = new Dictionary<string, NarrationEntry>();
+        foreach(var jsonNarrationEntry in jsonNarration.entries)
+        {
+            NarrationEntry narrationEntry = new NarrationEntry();
+            narrationEntry.Id = jsonNarrationEntry.id;
+            narrationEntry.Chance = jsonNarrationEntry.chance;
+            narrationEntry.Tone = jsonNarrationEntry.tone;
+            foreach(var jsonAudioEvent in jsonNarrationEntry.audio_events)
+            {
+                NarrationAudioEvent audioEvent = new NarrationAudioEvent();
+                audioEvent.QueueOnlyOnEmpty = jsonAudioEvent.queue_only_on_empty;
+                audioEvent.QueueWhilePlaying = jsonAudioEvent.queue_while_audio_playing;
+                audioEvent.Chance = jsonAudioEvent.chance;
+                audioEvent.Priority = jsonAudioEvent.priority;
+                audioEvent.MaxRaidOccurrences = jsonAudioEvent.max_raid_occurrences;
+                audioEvent.MaxTownVisitOccurrences = jsonAudioEvent.max_town_visit_occurrences;
+                audioEvent.MaxCampaignOccurrences = jsonAudioEvent.max_campaign_occurrences;
+                audioEvent.Filter = jsonAudioEvent.filter;
+                audioEvent.CheckAllTags = jsonAudioEvent.check_all_tags;
+                audioEvent.Tags = jsonAudioEvent.tags;
+                narrationEntry.AudioEvents.Add(audioEvent);
+            }
+            Narration.Add(narrationEntry.Id, narrationEntry);
+        }
+    }
     public void LoadJsonAI()
     {
         Brains = new Dictionary<string, MonsterBrain>();
