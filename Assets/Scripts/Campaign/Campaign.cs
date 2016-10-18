@@ -119,15 +119,14 @@ public class Campaign
     }
     public void CheckEmbarkBuffs(RaidParty raidParty)
     {
-        if (TriggeredEvent == null)
+        if (TriggeredEvent == null && GuaranteedEvent == null)
             return;
 
         foreach(var eventEntry in EventModifiers.EventData)
             if (eventEntry.Type == TownEventDataType.EmbarkPartyBuff)
                 for (int j = 0; j < raidParty.HeroInfo.Count; j++)
                 {
-                    var embarkBuff = new BuffInfo(DarkestDungeonManager.Data.Buffs[eventEntry.StringData],
-                        BuffDurationType.IdleTownVisit, BuffSourceType.Estate);
+                    var embarkBuff = new BuffInfo(DarkestDungeonManager.Data.Buffs[eventEntry.StringData],BuffSourceType.Estate);
                     raidParty.HeroInfo[j].Hero.AddBuff(embarkBuff);
                 }
     }

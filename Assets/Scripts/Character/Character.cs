@@ -38,7 +38,7 @@ public class Character
         AttributeType.HpHealAmount, AttributeType.HpHealPercent, AttributeType.MoveChance, AttributeType.DebuffChance,
         AttributeType.StressHealPercent, AttributeType.DmgReceivedPercent, AttributeType.HpHealReceivedPercent,
         AttributeType.StressDmgReceivedPercent, AttributeType.StressHealReceivedPercent, AttributeType.StunChance,
-        AttributeType.PoisonChance, AttributeType.BleedChance, AttributeType.ResolveCheckPercent, AttributeType.StressDmgPercent, 
+        AttributeType.PoisonChance, AttributeType.BleedChance, AttributeType.ResolveCheckPercent, AttributeType.StressDmgPercent,
         AttributeType.ScoutingChance, AttributeType.PartySurpriseChance, AttributeType.MonsterSurpirseChance,
         AttributeType.RemoveQuirkChance, AttributeType.FoodConsumption, AttributeType.StarvingDamagePercent,
     };
@@ -205,14 +205,14 @@ public class Character
         }
     }
     public virtual HealthbarModifier HealthbarModifier
-    { 
+    {
         get
         {
             return null;
         }
     }
     public virtual DeathClass DeathClass
-    { 
+    {
         get
         {
             return null;
@@ -540,7 +540,7 @@ public class Character
             monsterData.Attributes[AttributeType.HitPoints], true, AttributeCategory.CombatStat));
 
         for (int i = 0; i < SingleStats.Length; i++)
-            if(monsterData.Attributes.ContainsKey(SingleStats[i]))
+            if (monsterData.Attributes.ContainsKey(SingleStats[i]))
                 AddSingleAttribute(SingleStats[i],
                     new SingleAttribute(monsterData.Attributes[SingleStats[i]], AttributeCategory.CombatStat));
             else
@@ -628,12 +628,16 @@ public class Character
     {
         return buffInfo.Find(info => info.SourceType == BuffSourceType.Adventure && !info.Buff.IsPositive()) != null;
     }
+    public bool HasEventBuffs()
+    {
+        return buffInfo.Find(info => info.SourceType == BuffSourceType.Estate) != null;
+    }
     public void ApplyStunRecovery()
     {
         var recoveryBuff = DarkestDungeonManager.Data.Buffs["STUNRECOVERYBUFF"];
         int recoveryStackCount = 0;
 
-        for(int i = 0; i < buffInfo.Count; i++)
+        for (int i = 0; i < buffInfo.Count; i++)
         {
             if (buffInfo[i].Buff == recoveryBuff)
                 recoveryStackCount++;
@@ -641,7 +645,7 @@ public class Character
 
         recoveryStackCount++;
 
-        for(int i = 0; i < recoveryStackCount; i++)
+        for (int i = 0; i < recoveryStackCount; i++)
             AddBuff(new BuffInfo(recoveryBuff, BuffDurationType.Round, BuffSourceType.Adventure, 2));
     }
     public void RemoveConditionalBuffs()
@@ -675,7 +679,7 @@ public class Character
 
         var availableBuffs = buffInfo.FindAll(info => info.SourceType == BuffSourceType.DeathsDoor
             && info.Buff.AttributeType != AttributeType.DamageLow);
-        foreach(var buffEntry in availableBuffs)
+        foreach (var buffEntry in availableBuffs)
             toolTip += "\n" + buffEntry.Buff.ToolTip;
         return toolTip.TrimStart('\n');
     }
@@ -697,6 +701,30 @@ public class Character
             && info.Buff.AttributeType != AttributeType.DamageLow);
         foreach (var buffEntry in availableBuffs)
             toolTip += "\n" + buffEntry.Buff.ToolTip;
+        return toolTip.TrimStart('\n');
+    }
+    public string EventBuffTooltip()
+    {
+        string toolTip = "";
+
+        var availableBuffs = buffInfo.FindAll(info => info.SourceType == BuffSourceType.Estate &&
+            info.ModifierValue != 0 && (info.DurationType == BuffDurationType.QuestComplete ||
+            info.DurationType == BuffDurationType.IdleTownVisit || info.DurationType == BuffDurationType.Raid) ).
+            OrderBy(info => info.Buff.AttributeType).ThenBy(info => info.Buff.RuleType).ToList();
+        availableBuffs.RemoveAll(buff => buff.Buff.AttributeType == AttributeType.DamageLow);
+
+        for (int i = availableBuffs.Count - 1; i >= 0; i--)
+        {
+            var sameBuffs = availableBuffs.FindAll(info => info.Buff.AttributeType == availableBuffs[i].Buff.AttributeType
+                && info.Buff.RuleType == availableBuffs[i].Buff.RuleType && info.Buff.IsFalseRule == availableBuffs[i].Buff.IsFalseRule);
+            float modifierSum = sameBuffs.Sum(info => info.ModifierValue);
+            int maxRound = sameBuffs.Max(info => info.Duration);
+            string buffTooltip = availableBuffs[i].Buff.TooltipOverrided(modifierSum);
+            toolTip += "\n" + string.Format(LocalizationManager.GetString(
+                "tray_icon_tooltip_buff_duration_quest_end_format"), buffTooltip, maxRound);
+            availableBuffs.RemoveRange(availableBuffs.Count - sameBuffs.Count, sameBuffs.Count);
+            i -= sameBuffs.Count - 1;
+        }
         return toolTip.TrimStart('\n');
     }
     public string CombatBuffTooltip()

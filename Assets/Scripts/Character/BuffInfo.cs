@@ -35,6 +35,13 @@ public class BuffInfo
         SourceType = sourceType;
         Duration = duration;
     }
+    public BuffInfo(Buff buff, BuffSourceType sourceType)
+    {
+        Buff = buff;
+        DurationType = buff.DurationType;
+        SourceType = sourceType;
+        Duration = buff.DurationAmount;
+    }
     public BuffInfo(Buff buff, float overridenValue, BuffSourceType sourceType)
     {
         Buff = buff;

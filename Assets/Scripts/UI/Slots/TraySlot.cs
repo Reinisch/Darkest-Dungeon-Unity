@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Text;
 
-public enum TraySlotType { Afflicted, Virtued, DeathsDoor, DeathRecovery, Buff, Debuff, Bleed, Poison, Guard, Riposte, Tag, Trap }
+public enum TraySlotType { Afflicted, Virtued, DeathsDoor, DeathRecovery, Buff, Debuff, Bleed, Poison, Guard, Riposte, Tag, Trap, Event }
 
 public class TraySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
@@ -52,6 +52,9 @@ public class TraySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 break;
             case TraySlotType.Tag:
                 gameObject.SetActive(TrayPanel.TargetUnit.Character.GetStatusEffect(StatusType.Marked).IsApplied);
+                break;
+            case TraySlotType.Event:
+                gameObject.SetActive(TrayPanel.TargetUnit.Character.HasEventBuffs());
                 break;
             case TraySlotType.Trap:
                 gameObject.SetActive(false);
@@ -174,6 +177,11 @@ public class TraySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                     sb.Append("\n" + LocalizationManager.GetString("tray_icon_tooltip_tag_hero"));
                 else
                     sb.Append("\n" + LocalizationManager.GetString("tray_icon_tooltip_tag_monster"));
+                sb.Append("</color>");
+                break;
+            case TraySlotType.Event:
+                sb.AppendFormat("<color={0}>", DarkestDungeonManager.Data.HexColors["neutral"]);
+                sb.Append(TrayPanel.TargetUnit.Character.EventBuffTooltip());
                 sb.Append("</color>");
                 break;
             case TraySlotType.Trap:
