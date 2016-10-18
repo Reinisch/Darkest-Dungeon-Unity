@@ -4990,13 +4990,15 @@ public class RaidSceneManager : MonoBehaviour
             var bleedEffect = unitEventQueue[i].Character.GetStatusEffect(StatusType.Bleeding) as BleedingStatusEffect;
             if(bleedEffect.IsApplied)
             {
-                unitEventQueue[i].Character.Health.DecreaseValue(bleedEffect.CurrentTickDamage);
+                int damage = bleedEffect.CurrentTickDamage * 100;
+                unitEventQueue[i].Character.Health.DecreaseValue(damage);
                 unitEventQueue[i].OverlaySlot.UpdateOverlay();
                 executedBleed = true;
 
                 if (Mathf.RoundToInt(unitEventQueue[i].Character.Health.CurrentValue) != 0)
-                    RaidEvents.ShowPopupMessage(unitEventQueue[i], PopupMessageType.Damage, bleedEffect.CurrentTickDamage.ToString());
-                else
+                    RaidEvents.ShowPopupMessage(unitEventQueue[i], PopupMessageType.Damage, damage.ToString());
+                else if (unitEventQueue[i].Character.AtDeathsDoor)
+                {
                     if (PrepareDeath(unitEventQueue[i]))
                     {
                         if (partyController.MovementAllowed)
@@ -5009,6 +5011,16 @@ public class RaidSceneManager : MonoBehaviour
                     }
                     else
                         RaidEvents.ShowPopupMessage(unitEventQueue[i], PopupMessageType.DeathsDoor);
+                }
+                else
+                {
+                    (unitEventQueue[i].Character as Hero).ApplyDeathDoor();
+                    unitEventQueue[i].Character.ApplySingleBuffRule(Rules.GetIdleUnitRules(unitEventQueue[i]), BuffRule.DeathsDoor);
+                    unitEventQueue[i].SetHalo("deaths_door");
+                    unitEventQueue[i].OverlaySlot.UpdateOverlay();
+                    DarkestDungeonManager.Data.Effects["BarkStress"].ApplyIndependent(unitEventQueue[i]);
+                    RaidEvents.ShowPopupMessage(unitEventQueue[i], PopupMessageType.DeathsDoor);
+                }
             }
         }
 
@@ -5016,6 +5028,10 @@ public class RaidSceneManager : MonoBehaviour
         {
             yield return new WaitForSeconds(0.6f);
             timeWasted += 0.6f;
+
+            float coroutineTime = Time.time;
+            yield return StartCoroutine(ExecuteEffectEvents(false));
+            timeWasted += Time.time - coroutineTime;
         }
         #endregion
 
@@ -5034,7 +5050,8 @@ public class RaidSceneManager : MonoBehaviour
 
                 if (Mathf.RoundToInt(unitEventQueue[i].Character.Health.CurrentValue) != 0)
                     RaidEvents.ShowPopupMessage(unitEventQueue[i], PopupMessageType.Damage, poisonEffect.CurrentTickDamage.ToString());
-                else
+                else if (unitEventQueue[i].Character.AtDeathsDoor)
+                {
                     if (PrepareDeath(unitEventQueue[i]))
                     {
                         if (partyController.MovementAllowed)
@@ -5047,6 +5064,16 @@ public class RaidSceneManager : MonoBehaviour
                     }
                     else
                         RaidEvents.ShowPopupMessage(unitEventQueue[i], PopupMessageType.DeathsDoor);
+                }
+                else
+                {
+                    (unitEventQueue[i].Character as Hero).ApplyDeathDoor();
+                    unitEventQueue[i].Character.ApplySingleBuffRule(Rules.GetIdleUnitRules(unitEventQueue[i]), BuffRule.DeathsDoor);
+                    unitEventQueue[i].SetHalo("deaths_door");
+                    unitEventQueue[i].OverlaySlot.UpdateOverlay();
+                    DarkestDungeonManager.Data.Effects["BarkStress"].ApplyIndependent(unitEventQueue[i]);
+                    RaidEvents.ShowPopupMessage(unitEventQueue[i], PopupMessageType.DeathsDoor);
+                }
             }
         }
 
@@ -5054,6 +5081,10 @@ public class RaidSceneManager : MonoBehaviour
         {
             yield return new WaitForSeconds(0.6f);
             timeWasted += 0.6f;
+
+            float coroutineTime = Time.time;
+            yield return StartCoroutine(ExecuteEffectEvents(false));
+            timeWasted += Time.time - coroutineTime;
         }
         #endregion
 
