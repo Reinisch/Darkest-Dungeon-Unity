@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using FMODUnity;
 using System.Collections.Generic;
+using System.Linq;
 
 public class DarkestSoundManager : MonoBehaviour
 {
@@ -61,6 +62,9 @@ public class DarkestSoundManager : MonoBehaviour
         var possibleEvents = narrationEntry.AudioEvents.FindAll(audioEvent => audioEvent.IsPossible(place, tags));
         if (possibleEvents.Count == 0)
             return;
+
+        float maxPriority = possibleEvents.Max(audio => audio.Priority);
+        possibleEvents.RemoveAll(lowPriorityEvent => lowPriorityEvent.Priority < maxPriority);
 
         NarrationAudioEvent narrationEvent = id == "combat_start"?
             possibleEvents[0] : possibleEvents[Random.Range(0, possibleEvents.Count)];

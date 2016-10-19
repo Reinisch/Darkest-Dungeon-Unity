@@ -56,9 +56,17 @@ public class NarrationAudioEvent
         {
             if(CheckAllTags)
             {
-                for (int i = 0; i < tags.Length; i++)
-                    if (!Tags.Contains(tags[i]))
-                        return false;
+                for(int i = 0; i < Tags.Count; i++)
+                {
+                    for(int j = 0; j < tags.Length; j++)
+                    {
+                        if (tags[j] == Tags[i])
+                            break;
+
+                        if (j == tags.Length - 1)
+                            return false;
+                    }
+                }
             }
             else
             {

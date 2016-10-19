@@ -18,6 +18,7 @@ public class FormationUnitInfo
     public bool IsImmobilized { get; set; }
     public bool IsDead { get; set; }
     public bool CheckLoot { get; set; }
+    public bool OneShotted { get; set; } // Not saved !
 
     public int TotalInitiatives { get; set; }
     public int CurrentInitiative { get; set; }
@@ -55,6 +56,7 @@ public class FormationUnitInfo
         IsDead = false;
         MarkedForDeath = false;
         IsSurprised = false;
+        OneShotted = false;
         CheckLoot = checkLoot;
 
         SkillsUsedInBattle.Clear();
@@ -78,6 +80,7 @@ public class FormationUnitInfo
         MarkedForDeath = false;
         IsSurprised = false;
         CheckLoot = true;
+        OneShotted = false;
 
         SkillsUsedInBattle.Clear();
         SkillsUsedThisTurn.Clear();

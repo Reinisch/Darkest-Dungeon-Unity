@@ -7249,7 +7249,7 @@ public class RaidSceneManager : MonoBehaviour
         BattleGround.UnitDestroyed(targetUnit);
         Formations.monsters.DeleteUnitDelayed(targetUnit, 1.867f);
     }
-    bool PrepareDeath(FormationUnit targetUnit)
+    bool PrepareDeath(FormationUnit targetUnit, DeathFactor deathFactor = DeathFactor.AttackMonster, FormationUnit killer = null)
     {
         if (targetUnit.Character.IsMonster)
         {
@@ -7284,6 +7284,11 @@ public class RaidSceneManager : MonoBehaviour
                 FMODUnity.RuntimeManager.PlayOneShot("event:/general/char/death_enemy");
 
             FMODUnity.RuntimeManager.PlayOneShot("event:/char/enemy/" + monster.Data.TypeId + "_vo_death");
+
+            DarkestSoundManager.ExecuteNarration("kill_monster", NarrationPlace.Raid,
+                monster.Class, monster.Size > 1 ? "strong" : "weak",
+                targetUnit.CombatInfo.OneShotted ? "one_shot" : "not_one_shot",
+                (deathFactor == DeathFactor.BleedMonster || deathFactor == DeathFactor.PoisonMonster) ? "dot" : "not_dot");
 
             if (monster.Data.FullCaptor == null)
             {
