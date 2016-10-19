@@ -204,6 +204,9 @@ public class RaidHallSector : MonoBehaviour, IRaidArea
         isPartyInside = true;
         if (Area != null)
         {
+            if (Area.Type == AreaType.Curio)
+                DarkestSoundManager.ExecuteNarration("curio", NarrationPlace.Raid);
+
             if (Area.Knowledge == Knowledge.Hidden)
                 RaidSceneManager.TorchMeter.DecreaseTorch(6);
             else

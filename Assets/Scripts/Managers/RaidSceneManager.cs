@@ -1025,8 +1025,10 @@ public class RaidSceneManager : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         #endregion
 
-        #if UNITY_EDITOR
-        for(int barkLoops = 0; barkLoops < 2; barkLoops++)
+        DarkestSoundManager.ExecuteNarration("camp", NarrationPlace.Raid);
+
+#if UNITY_EDITOR
+        for (int barkLoops = 0; barkLoops < 2; barkLoops++)
         {
             for (int i = 0; i < HeroParty.Units.Count; i++)
             {
@@ -1035,7 +1037,7 @@ public class RaidSceneManager : MonoBehaviour
                     yield return null;
             }
         }
-        #endif
+#endif
 
         #region Meal Phase
         RaidEvents.LoadCampingMeal();
@@ -2625,7 +2627,7 @@ public class RaidSceneManager : MonoBehaviour
                 {
                     if (actionUnit.Character.AtDeathsDoor)
                     {
-                        if (PrepareDeath(actionUnit))
+                        if (PrepareDeath(actionUnit, DeathFactor.BleedMonster))
                         {
                             RaidEvents.ShowPopupMessage(actionUnit, PopupMessageType.DeathBlow);
                             yield return new WaitForSeconds(1.4f);
@@ -2641,7 +2643,7 @@ public class RaidSceneManager : MonoBehaviour
                     }
                     else
                     {
-                        if (PrepareDeath(actionUnit))
+                        if (PrepareDeath(actionUnit, DeathFactor.BleedMonster))
                         {
                             DeathDamage deathDamage = actionUnit.Character.DeathDamage;
                             if (actionUnit.Character is Hero)
@@ -2695,7 +2697,7 @@ public class RaidSceneManager : MonoBehaviour
                 {
                     if (actionUnit.Character.AtDeathsDoor)
                     {
-                        if (PrepareDeath(actionUnit))
+                        if (PrepareDeath(actionUnit, DeathFactor.PoisonMonster))
                         {
                             RaidEvents.ShowPopupMessage(actionUnit, PopupMessageType.DeathBlow);
                             yield return new WaitForSeconds(1.4f);
@@ -2711,7 +2713,7 @@ public class RaidSceneManager : MonoBehaviour
                     }
                     else
                     {
-                        if (PrepareDeath(actionUnit))
+                        if (PrepareDeath(actionUnit, DeathFactor.PoisonMonster))
                         {
                             DeathDamage deathDamage = actionUnit.Character.DeathDamage;
                             if (actionUnit.Character is Hero)
@@ -3257,12 +3259,14 @@ public class RaidSceneManager : MonoBehaviour
                     if (retreatFailed)
                     {
                         RaidEvents.ShowPopupMessage(actionUnit, PopupMessageType.RetreatFailed);
+                        DarkestSoundManager.ExecuteNarration("battle_retreat_fail", NarrationPlace.Raid);
                         yield return new WaitForSeconds(0.6f);
                         BattleGround.Round.HeroAction = HeroTurnAction.Pass;
                     }
                     else
                     {
                         FMODUnity.RuntimeManager.PlayOneShot("event:/general/combat/retreat");
+                        DarkestSoundManager.ExecuteNarration("battle_retreat", NarrationPlace.Raid);
 
                         #region Execute Hero Transformations
                         for (int i = 0; i < Formations.heroes.party.Units.Count; i++)
@@ -3381,7 +3385,7 @@ public class RaidSceneManager : MonoBehaviour
             {
                 if (actionUnit.Character.AtDeathsDoor)
                 {
-                    if (PrepareDeath(actionUnit))
+                    if (PrepareDeath(actionUnit, DeathFactor.BleedMonster))
                     {
                         RaidEvents.ShowPopupMessage(actionUnit, PopupMessageType.DeathBlow);
                         yield return new WaitForSeconds(1.4f);
@@ -3397,7 +3401,7 @@ public class RaidSceneManager : MonoBehaviour
                 }
                 else
                 {
-                    if(PrepareDeath(actionUnit))
+                    if(PrepareDeath(actionUnit, DeathFactor.BleedMonster))
                     {
                         DeathDamage deathDamage = actionUnit.Character.DeathDamage;
                         if (actionUnit.Character is Hero)
@@ -3451,7 +3455,7 @@ public class RaidSceneManager : MonoBehaviour
             {
                 if (actionUnit.Character.AtDeathsDoor)
                 {
-                    if (PrepareDeath(actionUnit))
+                    if (PrepareDeath(actionUnit, DeathFactor.PoisonMonster))
                     {
                         RaidEvents.ShowPopupMessage(actionUnit, PopupMessageType.DeathBlow);
                         yield return new WaitForSeconds(1.4f);
@@ -3467,7 +3471,7 @@ public class RaidSceneManager : MonoBehaviour
                 }
                 else
                 {
-                    if (PrepareDeath(actionUnit))
+                    if (PrepareDeath(actionUnit, DeathFactor.PoisonMonster))
                     {
                         DeathDamage deathDamage = actionUnit.Character.DeathDamage;
                         if (actionUnit.Character is Hero)
@@ -3865,6 +3869,8 @@ public class RaidSceneManager : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         dungeonCamera.Zoom(50, 0.05f);
         var skillResult = ExecuteSkillBase(actionUnit, brainDecision.TargetInfo);
+        if(skillResult.HasCritEffect && brainDecision.TargetInfo.Type == SkillTargetType.Enemy)
+            DarkestSoundManager.ExecuteNarration("crit_hero", NarrationPlace.Raid);
         yield return new WaitForSeconds(0.05f);
         DungeonCamera.blur.enabled = true;
         ExecuteSkillAnimationIntro(actionUnit, brainDecision.TargetInfo);
@@ -4333,6 +4339,8 @@ public class RaidSceneManager : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         dungeonCamera.Zoom(50, 0.05f);
         var skillResult = ExecuteSkillBase(actionUnit, brainDecision.TargetInfo);
+        if (skillResult.HasCritEffect && brainDecision.TargetInfo.Type == SkillTargetType.Enemy)
+            DarkestSoundManager.ExecuteNarration("crit_hero", NarrationPlace.Raid);
         yield return new WaitForSeconds(0.05f);
         DungeonCamera.blur.enabled = true;
         ExecuteSkillAnimationIntro(actionUnit, brainDecision.TargetInfo);
@@ -4433,6 +4441,8 @@ public class RaidSceneManager : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         dungeonCamera.Zoom(50, 0.05f);
         var skillResult = ExecuteSkillBase(actionUnit, targetInfo);
+        if (skillResult.HasCritEffect && targetInfo.Type == SkillTargetType.Enemy)
+            DarkestSoundManager.ExecuteNarration("crit_monster", NarrationPlace.Raid);
         yield return new WaitForSeconds(0.05f);
         DungeonCamera.blur.enabled = true;
         ExecuteSkillAnimationIntro(actionUnit, targetInfo);
@@ -4957,9 +4967,15 @@ public class RaidSceneManager : MonoBehaviour
             resolveHero.ApplySingleBuffRule(Rules, BuffRule.Virtued);
 
             if(isVirtue)
+            {
+                DarkestSoundManager.ExecuteNarration("virtue", NarrationPlace.Raid);
                 FMODUnity.RuntimeManager.PlayOneShot("event:/general/char/resolve_virtue");
+            }
             else
+            {
+                DarkestSoundManager.ExecuteNarration("afflicted", NarrationPlace.Raid);
                 FMODUnity.RuntimeManager.PlayOneShot("event:/general/char/resolve_afflict");
+            }
 
             Formations.HeroResolveCheckIntro(resolveUnit, isVirtue);
             Formations.partyBuffPositions.SetUnitTarget(resolveUnit, 0.05f, Vector2.zero);
@@ -5189,6 +5205,7 @@ public class RaidSceneManager : MonoBehaviour
                     RaidEvents.CampEvent.Hide();
 
                 FMODUnity.RuntimeManager.PlayOneShot("event:/general/combat/deaths_door");
+                DarkestSoundManager.ExecuteNarration("deaths_door", NarrationPlace.Raid);
 
                 foreach (var deathDoorUnit in deathDoorEnterQueue)
                 {
@@ -5365,6 +5382,8 @@ public class RaidSceneManager : MonoBehaviour
 
         if(RaidEvents.HungerEvent.ActionType == HungerResultType.Starve)
         {
+            DarkestSoundManager.ExecuteNarration("hunger_starve", NarrationPlace.Raid);
+
             #region Starving
             bool someOneStarved = false;
             FMODUnity.RuntimeManager.PlayOneShot("event:/general/status/bleed_dot");
@@ -5469,6 +5488,8 @@ public class RaidSceneManager : MonoBehaviour
         }
         else
         {
+            DarkestSoundManager.ExecuteNarration("loot", NarrationPlace.Raid);
+
             Inventory.SetPeacefulState(true);
             float announcementTimer = -1;
             while (true)
@@ -5878,7 +5899,6 @@ public class RaidSceneManager : MonoBehaviour
 
         #region Stop Soundtrack
         DarkestSoundManager.StopBattleSoundtrack();
-        FMODUnity.RuntimeManager.PlayOneShot("event:/general/combat/victory");
         DarkestSoundManager.ContinueDungeonSoundtrack(Raid.Quest.Dungeon);
         #endregion
 
@@ -5887,6 +5907,11 @@ public class RaidSceneManager : MonoBehaviour
         {
             StartCoroutine(RaidResultsEvent());
             yield break;
+        }
+        else
+        {
+            DarkestSoundManager.ExecuteNarration("victory", NarrationPlace.Raid);
+            FMODUnity.RuntimeManager.PlayOneShot("event:/general/combat/victory");
         }
         #endregion
 
@@ -7009,6 +7034,8 @@ public class RaidSceneManager : MonoBehaviour
 
             if (RandomSolver.CheckSuccess(disarmChance))
                 isDisarmed = true;
+            else
+                DarkestSoundManager.ExecuteNarration("trap", NarrationPlace.Raid);
         }
         dungeonCamera.TargetFOV = 50;
         yield return new WaitForSeconds(0.10f);
@@ -7184,6 +7211,7 @@ public class RaidSceneManager : MonoBehaviour
         float timeWasted = 0;
         if(handActivation)
         {
+            DarkestSoundManager.ExecuteNarration("obstacle_clear_no_item", NarrationPlace.Raid);
             FMODUnity.RuntimeManager.PlayOneShot("event:/props/obstacles/" + obstacle.StringId + "_by_hand");
             if (obstacle.TorchlightPenalty < 0)
                 TorchMeter.DecreaseTorch(Mathf.Abs(Mathf.RoundToInt(obstacle.TorchlightPenalty)));
@@ -7224,7 +7252,10 @@ public class RaidSceneManager : MonoBehaviour
             #endregion
         }
         else
+        {
+            DarkestSoundManager.ExecuteNarration("obstacle", NarrationPlace.Raid, Raid.Quest.Dungeon);
             FMODUnity.RuntimeManager.PlayOneShot("event:/props/obstacles/" + obstacle.StringId);
+        }
 
         if (raidObstacle.SkeletonAnimation.state.GetCurrent(0) != null)
             yield return new WaitForSeconds(raidObstacle.SkeletonAnimation.state.GetCurrent(0).EndTime - timeWasted);
@@ -7285,10 +7316,10 @@ public class RaidSceneManager : MonoBehaviour
 
             FMODUnity.RuntimeManager.PlayOneShot("event:/char/enemy/" + monster.Data.TypeId + "_vo_death");
 
-            DarkestSoundManager.ExecuteNarration("kill_monster", NarrationPlace.Raid,
-                monster.Class, monster.Size > 1 ? "strong" : "weak",
-                targetUnit.CombatInfo.OneShotted ? "one_shot" : "not_one_shot",
-                (deathFactor == DeathFactor.BleedMonster || deathFactor == DeathFactor.PoisonMonster) ? "dot" : "not_dot");
+            if(!monster.MonsterTypes.Contains(MonsterType.Corpse))
+                DarkestSoundManager.ExecuteNarration("kill_monster", NarrationPlace.Raid,
+                    monster.Class, monster.Size > 1 ? "strong" : "weak", monster.Size > 1 ? "big" : "small",
+                    (deathFactor == DeathFactor.BleedMonster || deathFactor == DeathFactor.PoisonMonster) ? "dot" : "one_shot");
 
             if (monster.Data.FullCaptor == null)
             {
@@ -7330,6 +7361,8 @@ public class RaidSceneManager : MonoBehaviour
                 targetUnit.ResetHalo();
                 targetUnit.CombatInfo.IsDead = true;
                 targetUnit.OverlaySlot.Hide();
+
+                DarkestSoundManager.ExecuteNarration("kill_hero", NarrationPlace.Raid);
                 return true;
             }
             else

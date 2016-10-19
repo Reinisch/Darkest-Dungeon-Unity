@@ -133,6 +133,11 @@ public class TorchMeter : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                         torchSwitch.state.SetAnimation(0, "extinguish", false);
 
                     CurrentRange = Ranges[i];
+                    if(CurrentRange.RangeType == TorchRangeType.Out)
+                        DarkestSoundManager.ExecuteNarration("torchlight_out", NarrationPlace.Raid);
+                    else if (CurrentRange.RangeType == TorchRangeType.Radiant && TorchAmount > 90)
+                        DarkestSoundManager.ExecuteNarration("torchlight_full", NarrationPlace.Raid);
+
                     ApplyBuffs();
                     torchFlame.state.SetAnimation(0, CurrentRange.AnimationId, true);
                     break;

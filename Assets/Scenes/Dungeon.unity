@@ -25882,7 +25882,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa7b848c585364a4eba2b37b7a6ecf38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingMode: 1
+  startingMode: 0
   startingItems:
   - hag_A
   dungeonCamera: {fileID: 447450558}
