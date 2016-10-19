@@ -261,6 +261,7 @@ public class RaidSceneManager : MonoBehaviour
             }
             else
             {
+
                 currentRaid = new RaidInfo();
                 currentRaid.Quest = DarkestDungeonManager.Instanse.RaidingManager.Quest;
                 if(currentRaid.Quest.IsPlotQuest && (currentRaid.Quest as PlotQuest).RaidMap != null)
@@ -268,6 +269,12 @@ public class RaidSceneManager : MonoBehaviour
                 else
                     currentRaid.Dungeon = DungeonGenerator.GenerateDungeon(currentRaid.Quest);
                 currentRaid.RaidParty = DarkestDungeonManager.RaidManager.RaidParty;
+
+                if (currentRaid.Quest.IsPlotQuest)
+                    DarkestSoundManager.ExecuteNarration("quest_start", NarrationPlace.Raid, currentRaid.Quest.Id);
+                else
+                    DarkestSoundManager.ExecuteNarration("quest_start", NarrationPlace.Raid, 
+                        currentRaid.Quest.Type, currentRaid.Quest.Dungeon);
             }
 
             UpdateExtraStackLimit();
@@ -1562,15 +1569,17 @@ public class RaidSceneManager : MonoBehaviour
     {
         RaidInterface.CanvasGroup.blocksRaycasts = false;
 
-        if(Raid.QuestCompleted == true || Raid.CheckQuestGoals())
-            DarkestDungeonManager.RaidManager.Status = RaidStatus.Success;
-        else if (Formations.heroes.party.Units.Count > 0)
+        if (Raid.QuestCompleted == true || Raid.CheckQuestGoals())
         {
-            DarkestDungeonManager.RaidManager.Status = RaidStatus.Abandon;
+            DarkestDungeonManager.RaidManager.Status = RaidStatus.Success;
         }
         else
-            DarkestDungeonManager.RaidManager.Status = RaidStatus.Defeat;
-
+        {
+            if (Formations.heroes.party.Units.Count > 0)
+                DarkestDungeonManager.RaidManager.Status = RaidStatus.Abandon;
+            else
+                DarkestDungeonManager.RaidManager.Status = RaidStatus.Defeat;
+        }
         ToolTipManager.Instanse.Hide();
         Formations.HideHeroOverlay();
         RoomView.DisableInteraction();
@@ -1584,6 +1593,17 @@ public class RaidSceneManager : MonoBehaviour
         resultWindow.DisableInteraction();
         DarkestDungeonManager.Instanse.screenFader.Appear(2);
         yield return new WaitForSeconds(0.5f);
+        if (DarkestDungeonManager.RaidManager.Status == RaidStatus.Success)
+        {
+            if (!currentRaid.Quest.IsPlotQuest)
+                DarkestSoundManager.ExecuteNarration("quest_end_completed", NarrationPlace.Raid,
+                    currentRaid.Quest.Type, currentRaid.Quest.Dungeon);
+        }
+        else
+        {
+            DarkestSoundManager.ExecuteNarration("quest_end_not_completed", NarrationPlace.Raid,
+                currentRaid.Quest.Type, currentRaid.Quest.Dungeon);
+        }
         resultWindow.EnableInteraction();
     }
     IEnumerator RaidResultsHeroTransition()
@@ -5745,6 +5765,15 @@ public class RaidSceneManager : MonoBehaviour
         #region Switch Soundtrack
         DarkestSoundManager.PauseDungeonSoundtrack();
         DarkestSoundManager.StartBattleSoundtrack(Raid.Dungeon.Name, SceneState == DungeonSceneState.Room);
+
+        if(areaView.Area.Type == AreaType.Boss || Raid.Quest.Id == "tutorial")
+        {
+            if (areaView.Area.BattleEncounter.Monsters.Count > 0)
+            {
+                DarkestSoundManager.ExecuteNarration("combat_start", NarrationPlace.Raid,
+                    areaView.Area.BattleEncounter.Monsters.Select(monster => monster.Class).ToArray());
+            }
+        }
         #endregion
 
         #region Battle Loop

@@ -39,7 +39,7 @@ public class DarkestSoundManager : MonoBehaviour
         else
         {
             CurrentNarration.getPlaybackState(out narrationState);
-            if(narrationState == FMOD.Studio.PLAYBACK_STATE.STOPPED)
+            if(narrationState == FMOD.Studio.PLAYBACK_STATE.STOPPED || narrationState == FMOD.Studio.PLAYBACK_STATE.STOPPING)
             {
                 CurrentNarration.release();
                 NarrationQueue.Remove(CurrentNarration);
@@ -58,11 +58,13 @@ public class DarkestSoundManager : MonoBehaviour
         if (!RandomSolver.CheckSuccess(narrationEntry.Chance))
             return;
 
-        var possibleEvents = narrationEntry.AudioEvents.FindAll(audioEvent => audioEvent.IsPossible(place));
+        var possibleEvents = narrationEntry.AudioEvents.FindAll(audioEvent => audioEvent.IsPossible(place, tags));
         if (possibleEvents.Count == 0)
             return;
 
-        NarrationAudioEvent narrationEvent = possibleEvents[Random.Range(0, possibleEvents.Count)];
+        NarrationAudioEvent narrationEvent = id == "combat_start"?
+            possibleEvents[0] : possibleEvents[Random.Range(0, possibleEvents.Count)];
+
         if (narrationEvent.QueueOnlyOnEmpty && NarrationQueue.Count > 0)
             return;
 
@@ -92,7 +94,7 @@ public class DarkestSoundManager : MonoBehaviour
 
                     DarkestDungeonManager.Campaign.NarrationRaidInfo[narrationEvent.AudioEvent]++;
                 }
-                break;
+                goto case NarrationPlace.Campaign;
             case NarrationPlace.Town:
                 if (narrationEvent.MaxTownVisitOccurrences > 0)
                 {
@@ -101,7 +103,7 @@ public class DarkestSoundManager : MonoBehaviour
 
                     DarkestDungeonManager.Campaign.NarrationTownInfo[narrationEvent.AudioEvent]++;
                 }
-                break;
+                goto case NarrationPlace.Campaign;
         }
     }
 
