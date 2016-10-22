@@ -531,7 +531,7 @@ public class EstateSceneManager : MonoBehaviour
     {
         DarkestDungeonManager.ScreenFader.onFadeEnded -= EmbarkTransitionFadeComplete;
         DarkestDungeonManager.ScreenFader.onAppearEnded -= EmbarkTransitionAppearComplete;
-        DarkestSoundManager.ExecuteNarration("enter_provision_select", NarrationPlace.Town);
+        DarkestSoundManager.ExecuteNarration("enter_quest_select", NarrationPlace.Town);
         transitionsEnabled = true;
     }
 

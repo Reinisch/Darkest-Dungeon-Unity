@@ -7212,6 +7212,8 @@ public class RaidSceneManager : MonoBehaviour
         {
             DarkestSoundManager.ExecuteNarration("ancestor_talk", NarrationPlace.Raid, "ancestor_talk_" + Raid.AncestorTalk);
             Raid.AncestorTalk++;
+
+            yield return new WaitForEndOfFrame();
             while (DarkestSoundManager.CurrentNarration != null)
                 yield return null;
         }

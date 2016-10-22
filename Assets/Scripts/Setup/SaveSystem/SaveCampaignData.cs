@@ -46,6 +46,10 @@ public class SaveCampaignData
 
     public List<SaveEventData> eventData;
     public EventModifiers eventModifers;
+
+    public Dictionary<string, int> townNarrations;
+    public Dictionary<string, int> raidNarrations;
+    public Dictionary<string, int> campaignNarrations;
     #endregion
     
     #region Raid
@@ -106,6 +110,10 @@ public class SaveCampaignData
         abbeyActivitySlots = new List<List<SaveActivitySlot>>();
         sanitariumActivitySlots = new List<List<SaveActivitySlot>>();
 
+        townNarrations = new Dictionary<string, int>();
+        raidNarrations = new Dictionary<string, int>();
+        campaignNarrations = new Dictionary<string, int>();
+
         HeroFormationData = new BattleFormationSaveData();
     }
     public SaveCampaignData(int newSaveId)
@@ -131,6 +139,10 @@ public class SaveCampaignData
         sanitariumActivitySlots = new List<List<SaveActivitySlot>>();
 
         HeroFormationData = new BattleFormationSaveData();
+
+        townNarrations = new Dictionary<string, int>();
+        raidNarrations = new Dictionary<string, int>();
+        campaignNarrations = new Dictionary<string, int>();
     }
     public SaveCampaignData(int newSaveId, string newEstateName)
     {
@@ -156,6 +168,10 @@ public class SaveCampaignData
         sanitariumActivitySlots = new List<List<SaveActivitySlot>>();
 
         HeroFormationData = new BattleFormationSaveData();
+
+        townNarrations = new Dictionary<string, int>();
+        raidNarrations = new Dictionary<string, int>();
+        campaignNarrations = new Dictionary<string, int>();
     }
 
     public void UpdateFromEstate()
@@ -280,6 +296,10 @@ public class SaveCampaignData
             if (!DarkestDungeonManager.Data.EventDatabase.Events[i].IsDefault)
                 eventData.Add(DarkestDungeonManager.Data.EventDatabase.Events[i].GetSaveData());
         eventModifers = campaign.EventModifiers;
+
+        townNarrations = campaign.NarrationCampaignInfo;
+        raidNarrations = campaign.NarrationRaidInfo;
+        campaignNarrations = campaign.NarrationCampaignInfo;
 
         InRaid = false;
         #endregion

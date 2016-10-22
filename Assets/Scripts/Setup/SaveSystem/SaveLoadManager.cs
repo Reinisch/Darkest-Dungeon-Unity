@@ -433,6 +433,27 @@ public static class SaveLoadManager
                         bw.Write(entry.Value);
                     }
                     #endregion
+
+                    #region Narration
+                    bw.Write(saveData.townNarrations.Count);
+                    foreach(var entry in saveData.townNarrations)
+                    {
+                        bw.Write(entry.Key);
+                        bw.Write(entry.Value);
+                    }
+                    bw.Write(saveData.raidNarrations.Count);
+                    foreach (var entry in saveData.raidNarrations)
+                    {
+                        bw.Write(entry.Key);
+                        bw.Write(entry.Value);
+                    }
+                    bw.Write(saveData.campaignNarrations.Count);
+                    foreach (var entry in saveData.campaignNarrations)
+                    {
+                        bw.Write(entry.Key);
+                        bw.Write(entry.Value);
+                    }
+                    #endregion
                     #endregion
 
                     #region Raid
@@ -999,6 +1020,20 @@ public static class SaveLoadManager
                     dictionaryCount = br.ReadInt32();
                     for (int i = 0; i < dictionaryCount; i++)
                         saveData.eventModifers.FreeUpgradeTags.Add(br.ReadString(), br.ReadInt32());
+                    #endregion
+
+                    #region Narration
+                    int narrationCount = br.ReadInt32();
+                    for (int i = 0; i < narrationCount; i++)
+                        saveData.townNarrations.Add(br.ReadString(), br.ReadInt32());
+
+                    narrationCount = br.ReadInt32();
+                    for (int i = 0; i < narrationCount; i++)
+                        saveData.raidNarrations.Add(br.ReadString(), br.ReadInt32());
+
+                    narrationCount = br.ReadInt32();
+                    for (int i = 0; i < narrationCount; i++)
+                        saveData.campaignNarrations.Add(br.ReadString(), br.ReadInt32());
                     #endregion
                     #endregion
 
