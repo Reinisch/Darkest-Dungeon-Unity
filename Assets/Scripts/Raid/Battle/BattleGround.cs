@@ -751,6 +751,9 @@ public class BattleGround : MonoBehaviour
             newUnit.Character.Health.ValueRatio = carryHp;
         newUnit.CombatInfo.PrepareForBattle(oldUnit.CombatInfo.CombatId, newUnit.Character as Monster, true);
 
+        DarkestSoundManager.ExecuteNarration("change_monster_class", NarrationPlace.Raid,
+            oldUnit.Character.Class, newUnit.Character.Class);
+
         if (!newUnit.RankSlot.Ranks.facingRight)
             newUnit.InstantFlip();
 

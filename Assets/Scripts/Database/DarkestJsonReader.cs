@@ -485,6 +485,7 @@ namespace DarkestJson
         public List<string> fail_effects;
         public float health;
         public float torchlight;
+        public bool ancestor_talk;
     }
     #endregion
 

@@ -24,6 +24,7 @@ public class BuildingSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         buildingDescription.enabled = false;
         currentState.state.ClearTracks();
         currentState.state.SetAnimation(0, "idle", false);
+        DarkestSoundManager.ExecuteNarration("enter_building", NarrationPlace.Town, building);
     }
 
     public void OnPointerEnter(PointerEventData eventData)

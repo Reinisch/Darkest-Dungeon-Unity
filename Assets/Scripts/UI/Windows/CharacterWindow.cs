@@ -116,6 +116,23 @@ public class CharacterWindow : MonoBehaviour
             UpdateTrinkets(false);
         }
     }
+    public void DismissButtonClicked()
+    {
+        if (CurrentHero == null || EstateSceneManager.Instanse == null)
+            return;
+
+        if (CurrentHero.Status != HeroStatus.Available)
+            return;
+
+        if (DarkestDungeonManager.Campaign.Heroes.FindAll(hero =>
+            hero.Class != "abomination" && hero.Status != HeroStatus.Missing).Count < 5)
+            return;
+
+        DarkestDungeonManager.Campaign.DismissHero(CurrentHero);
+        EstateSceneManager.Instanse.rosterPanel.DestroySlot(CurrentHero);
+        DarkestSoundManager.ExecuteNarration("dismiss_hero", NarrationPlace.Town);
+        WindowClosed();
+    }
     public void NextButtonClicked()
     {
         if (onNextButtonClick != null)

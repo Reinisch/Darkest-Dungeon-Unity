@@ -25884,7 +25884,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startingMode: 0
   startingItems:
-  - hag_A
+  - ancestor_small_D
   dungeonCamera: {fileID: 447450558}
   hallwayView: {fileID: 1199950669}
   roomView: {fileID: 970925681}

@@ -30,7 +30,7 @@ public class NarrationAudioEvent
                 if (MaxCampaignOccurrences > 0)
                 {
                     if (DarkestDungeonManager.Campaign.NarrationCampaignInfo.ContainsKey(AudioEvent))
-                        if (DarkestDungeonManager.Campaign.NarrationRaidInfo[AudioEvent] >= MaxCampaignOccurrences)
+                        if (DarkestDungeonManager.Campaign.NarrationCampaignInfo[AudioEvent] >= MaxCampaignOccurrences)
                             return false;
                 }
                 break;
@@ -46,7 +46,7 @@ public class NarrationAudioEvent
                 if (MaxTownVisitOccurrences > 0)
                 {
                     if (DarkestDungeonManager.Campaign.NarrationTownInfo.ContainsKey(AudioEvent))
-                        if (DarkestDungeonManager.Campaign.NarrationRaidInfo[AudioEvent] >= MaxTownVisitOccurrences)
+                        if (DarkestDungeonManager.Campaign.NarrationTownInfo[AudioEvent] >= MaxTownVisitOccurrences)
                             return false;
                 }
                 break;
@@ -58,6 +58,9 @@ public class NarrationAudioEvent
             {
                 for(int i = 0; i < Tags.Count; i++)
                 {
+                    if (tags.Length == 0)
+                        return false;
+
                     for(int j = 0; j < tags.Length; j++)
                     {
                         if (tags[j] == Tags[i])

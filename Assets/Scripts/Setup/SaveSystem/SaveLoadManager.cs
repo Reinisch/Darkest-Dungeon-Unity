@@ -612,6 +612,7 @@ public static class SaveLoadManager
                     bw.Write(saveData.CampingTimeLeft);
                     bw.Write(saveData.NightAmbushReduced);
                     bw.Write(saveData.HungerCooldown);
+                    bw.Write(saveData.AncestorTalk);
 
                     bw.Write(saveData.ExploredRoomCount);
                     bw.Write(saveData.CurrentLocation);
@@ -1269,6 +1270,7 @@ public static class SaveLoadManager
                     saveData.CampingTimeLeft = br.ReadInt32();
                     saveData.NightAmbushReduced = br.ReadSingle();
                     saveData.HungerCooldown = br.ReadInt32();
+                    saveData.AncestorTalk = br.ReadInt32();
 
                     saveData.ExploredRoomCount = br.ReadInt32();
                     saveData.CurrentLocation = br.ReadString();

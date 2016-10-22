@@ -25,6 +25,7 @@ public class RaidInfo
     public List<string> InvestigatedCurios { get; set; }
 
     public float ElapsedTime { get; set; }
+    public int AncestorTalk { get; set; }
 
     private int defaultHungerCooldown = 18;
 

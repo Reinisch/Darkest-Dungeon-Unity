@@ -9,6 +9,8 @@ enum EstateSceneState { EstateScreen, QuestScreen, ProvisionScreen }
 
 public class EstateSceneManager : MonoBehaviour
 {
+    public static EstateSceneManager Instanse { get; set; }
+
     public GameObject estateUI;
     public GameObject questUI;
     public GameObject provisionUI;
@@ -50,6 +52,16 @@ public class EstateSceneManager : MonoBehaviour
 
     void Awake()
     {
+        if (Instanse == null)
+        {
+            Instanse = this;
+        }
+        else
+        {
+            Destroy(Instanse.gameObject);
+            return;
+        }
+
         shopManager.partyInventory.Initialize();
         DarkestDungeonManager.SkipTransactions = false;
         (townManager.buildingWindows[8] as NomadWagonWindow).wagonInventory.onTrinketSell += realmInventoryWindow.AddTrinket;
@@ -83,7 +95,10 @@ public class EstateSceneManager : MonoBehaviour
     }
     void Start()
     {
-        if(DarkestDungeonManager.RaidManager.Status != RaidStatus.Preparation)
+        if (Instanse != this)
+            return;
+
+        if (DarkestDungeonManager.RaidManager.Status != RaidStatus.Preparation)
         {
             foreach (var heroInfo in DarkestDungeonManager.RaidManager.RaidParty.HeroInfo)
             {
@@ -111,6 +126,13 @@ public class EstateSceneManager : MonoBehaviour
                 DarkestDungeonManager.Campaign.CurrentLog().ReturnRecord = 
                     new PartyActivityRecord(PartyActionType.Result, DarkestDungeonManager.RaidManager);
             }
+
+            DarkestSoundManager.ExecuteNarration("town_visit_start", NarrationPlace.Town,
+                DarkestDungeonManager.RaidManager.Status == RaidStatus.Success ? "successes" : "fail",
+                DarkestDungeonManager.Campaign.TriggeredEvent != null ?
+                DarkestDungeonManager.Campaign.TriggeredEvent.Id : "not_triggered",
+                DarkestDungeonManager.Campaign.GuaranteedEvent != null ?
+                DarkestDungeonManager.Campaign.GuaranteedEvent.Id : "not_guaranteed");
         }
         else
         {
@@ -127,6 +149,10 @@ public class EstateSceneManager : MonoBehaviour
 
                 SceneManager.LoadScene("LoadingScreen", LoadSceneMode.Single);
                 return;
+            }
+            else
+            {
+                DarkestSoundManager.ExecuteNarration("town_visit_start", NarrationPlace.Town);
             }
         }
 
@@ -505,6 +531,7 @@ public class EstateSceneManager : MonoBehaviour
     {
         DarkestDungeonManager.ScreenFader.onFadeEnded -= EmbarkTransitionFadeComplete;
         DarkestDungeonManager.ScreenFader.onAppearEnded -= EmbarkTransitionAppearComplete;
+        DarkestSoundManager.ExecuteNarration("enter_provision_select", NarrationPlace.Town);
         transitionsEnabled = true;
     }
 
@@ -544,6 +571,7 @@ public class EstateSceneManager : MonoBehaviour
     {
         DarkestDungeonManager.ScreenFader.onFadeEnded -= ProvisionFadeComplete;
         DarkestDungeonManager.ScreenFader.onAppearEnded -= ProvisionAppearComplete;
+        DarkestSoundManager.ExecuteNarration("enter_provision_select", NarrationPlace.Town);
         transitionsEnabled = true;
     }
 

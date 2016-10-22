@@ -57,6 +57,9 @@ public class HeroRosterPanel : MonoBehaviour, IPointerEnterHandler, IPointerExit
         var newSlot = CreateSlot(recruitSlot.Hero);
         DarkestDungeonManager.Campaign.Heroes.Add(recruitSlot.Hero);
         var deathRecord = DarkestDungeonManager.Campaign.Estate.RecruitHero(recruitSlot.Hero);
+
+        DarkestSoundManager.ExecuteNarration("recruit_hero", NarrationPlace.Town, recruitSlot.Hero.Class);
+
         if (deathRecord != null && onHeroResurrection != null)
             onHeroResurrection(deathRecord);
 
@@ -67,7 +70,6 @@ public class HeroRosterPanel : MonoBehaviour, IPointerEnterHandler, IPointerExit
         UpdateCapacity();
         return newSlot;
     }
-
     public void HeroSlotBeginDragging(HeroSlot slot)
     {
         if (onHeroSlotBeginDragging != null)
@@ -77,6 +79,16 @@ public class HeroRosterPanel : MonoBehaviour, IPointerEnterHandler, IPointerExit
     {
         if (onHeroSlotEndDragging != null)
             onHeroSlotEndDragging(slot);
+    }
+    public void DestroySlot(Hero hero)
+    {
+        var targetSlot = HeroSlots.Find(slot => slot.Hero == hero);
+        if (targetSlot != null)
+        {
+            HeroSlots.Remove(targetSlot);
+            Destroy(targetSlot.gameObject);
+        }
+        UpdateCapacity();
     }
 
     public void UpdateCapacity()

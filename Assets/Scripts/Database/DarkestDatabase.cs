@@ -403,6 +403,7 @@ public class DarkestDatabase : MonoBehaviour
 
             obstacle.HealthPenalty = jsonObstacles[i].health;
             obstacle.TorchlightPenalty = jsonObstacles[i].torchlight;
+            obstacle.AncestorTalk = jsonObstacles[i].ancestor_talk;
             obstacles.Add(obstacle);
         }
 

@@ -4340,7 +4340,7 @@
                     "queue_while_audio_playing": false,
                     "audio_event": "/vo/town/recruit_vestal",
                     "chance": 1,
-                    "priority": 0,
+                    "priority": 1,
                     "max_raid_occurrences": 0,
                     "max_town_visit_occurrences": 1,
                     "max_campaign_occurrences": 1,

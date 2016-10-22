@@ -435,6 +435,11 @@ public class Estate
 
         if(!isFree)
             RemoveCurrency(upgrade.Cost);
+
+        if(DarkestDungeonManager.Data.UpgradeTrees.ContainsKey(treeId))
+            DarkestSoundManager.ExecuteNarration("upgrade_building", NarrationPlace.Town,
+                DarkestDungeonManager.Data.UpgradeTrees[treeId].Tags.ToArray());
+
         return true;
     }
 

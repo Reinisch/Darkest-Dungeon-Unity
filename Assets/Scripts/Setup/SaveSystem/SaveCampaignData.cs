@@ -59,6 +59,7 @@ public class SaveCampaignData
     public int CampingTimeLeft { get; set; }
     public float NightAmbushReduced { get; set; }
     public int HungerCooldown { get; set; }
+    public int AncestorTalk { get; set; }
 
     public int ExploredRoomCount { get; set; }
     public string CurrentLocation { get; set; }
@@ -299,6 +300,7 @@ public class SaveCampaignData
         CampingTimeLeft = RaidSceneManager.Raid.CampingTimeLeft;
         NightAmbushReduced = RaidSceneManager.Raid.NightAmbushReduced;
         HungerCooldown = RaidSceneManager.Raid.HungerCooldown;
+        AncestorTalk = RaidSceneManager.Raid.AncestorTalk;
 
         CurrentLocation = RaidSceneManager.Raid.CurrentLocation == null ?
             RaidSceneManager.Raid.Dungeon.StartingRoom.Id :

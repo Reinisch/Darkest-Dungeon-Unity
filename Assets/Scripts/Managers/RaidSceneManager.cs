@@ -288,12 +288,12 @@ public class RaidSceneManager : MonoBehaviour
     }
     void Start()
     {
+        if (Instanse != this)
+            return;
+
         CharacterWindow.onWindowClose += CharacterWindow_onWindowClose;
         CharacterWindow.onNextButtonClick += CharacterWindow_onNextButtonClick;
         CharacterWindow.onPreviousButtonClick += CharacterWindow_onPreviousButtonClick;
-
-        if (Instanse != this)
-            return;
         
         if (DarkestDungeonManager.SaveData.InRaid)
         {
@@ -4968,12 +4968,12 @@ public class RaidSceneManager : MonoBehaviour
 
             if(isVirtue)
             {
-                DarkestSoundManager.ExecuteNarration("virtue", NarrationPlace.Raid);
+                DarkestSoundManager.ExecuteNarration("virtue", NarrationPlace.Raid, resolveTrait.Id);
                 FMODUnity.RuntimeManager.PlayOneShot("event:/general/char/resolve_virtue");
             }
             else
             {
-                DarkestSoundManager.ExecuteNarration("afflicted", NarrationPlace.Raid);
+                DarkestSoundManager.ExecuteNarration("afflicted", NarrationPlace.Raid, resolveTrait.Id);
                 FMODUnity.RuntimeManager.PlayOneShot("event:/general/char/resolve_afflict");
             }
 
@@ -7208,6 +7208,14 @@ public class RaidSceneManager : MonoBehaviour
         RaidObstacle raidObstacle = sector.Prop as RaidObstacle;
         Obstacle obstacle = sector.Area.Prop as Obstacle;
 
+        if (obstacle.AncestorTalk)
+        {
+            DarkestSoundManager.ExecuteNarration("ancestor_talk", NarrationPlace.Raid, "ancestor_talk_" + Raid.AncestorTalk);
+            Raid.AncestorTalk++;
+            while (DarkestSoundManager.CurrentNarration != null)
+                yield return null;
+        }
+
         float timeWasted = 0;
         if(handActivation)
         {
@@ -7318,8 +7326,8 @@ public class RaidSceneManager : MonoBehaviour
 
             if(!monster.MonsterTypes.Contains(MonsterType.Corpse))
                 DarkestSoundManager.ExecuteNarration("kill_monster", NarrationPlace.Raid,
-                    monster.Class, monster.Size > 1 ? "strong" : "weak", monster.Size > 1 ? "big" : "small",
-                    (deathFactor == DeathFactor.BleedMonster || deathFactor == DeathFactor.PoisonMonster) ? "dot" : "one_shot");
+                monster.Class, monster.Size > 1 ? "strong" : "weak", monster.Size > 1 ? "big" : "small",
+                (deathFactor == DeathFactor.BleedMonster || deathFactor == DeathFactor.PoisonMonster) ? "dot" : "one_shot");
 
             if (monster.Data.FullCaptor == null)
             {
@@ -7447,7 +7455,7 @@ public class RaidSceneManager : MonoBehaviour
                         unitEventQueue.RemoveAll(item => item == targetUnit);
                         MonsterData replacementData = DarkestDungeonManager.Data.Monsters[monster.Data.DeathClass.CorpseClass];
                         GameObject unitObject = Resources.Load("Prefabs/Monsters/" + replacementData.TypeId) as GameObject;
-                        var finalUnit = BattleGround.ReplaceUnit(replacementData, targetUnit, unitObject, false, 1);
+                        var finalUnit = BattleGround.ReplaceUnit(replacementData, targetUnit, unitObject, false, 1);                     
 
                         for (int i = 0; i < deathClass.DeathChangeEffects.Count; i++)
                             for (int j = 0; j < deathClass.DeathChangeEffects[i].SubEffects.Count; j++)

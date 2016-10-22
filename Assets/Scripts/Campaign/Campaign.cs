@@ -134,6 +134,11 @@ public class Campaign
                     raidParty.HeroInfo[j].Hero.AddBuff(embarkBuff);
                 }
     }
+    public void DismissHero(Hero dismissedHero)
+    {
+        Heroes.Remove(dismissedHero);
+        Estate.ReturnRosterId(dismissedHero.RosterId);
+    }
 
     public Campaign()
     {
