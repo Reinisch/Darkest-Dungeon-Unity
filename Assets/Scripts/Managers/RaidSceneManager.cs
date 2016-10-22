@@ -7203,8 +7203,6 @@ public class RaidSceneManager : MonoBehaviour
         while (IsUnitEventInProgress)
             yield return null;
 
-        sector.CompleteArea();
-        yield return new WaitForEndOfFrame();
         RaidObstacle raidObstacle = sector.Prop as RaidObstacle;
         Obstacle obstacle = sector.Area.Prop as Obstacle;
 
@@ -7214,9 +7212,13 @@ public class RaidSceneManager : MonoBehaviour
             Raid.AncestorTalk++;
 
             yield return new WaitForEndOfFrame();
-            while (DarkestSoundManager.CurrentNarration != null)
+            yield return new WaitForEndOfFrame();
+            while (DarkestSoundManager.NarrationQueue.Count > 0 && DarkestSoundManager.CurrentNarration != null)
                 yield return null;
         }
+
+        sector.CompleteArea();
+        yield return new WaitForEndOfFrame();
 
         float timeWasted = 0;
         if(handActivation)

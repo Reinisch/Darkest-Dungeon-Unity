@@ -100,6 +100,8 @@ public class EstateSceneManager : MonoBehaviour
 
         if (DarkestDungeonManager.RaidManager.Status != RaidStatus.Preparation)
         {
+            DarkestDungeonManager.Campaign.NarrationRaidInfo.Clear();
+
             foreach (var heroInfo in DarkestDungeonManager.RaidManager.RaidParty.HeroInfo)
             {
                 if (heroInfo.IsAlive)
@@ -603,6 +605,7 @@ public class EstateSceneManager : MonoBehaviour
                 DarkestDungeonManager.Instanse.RaidingManager.Quest.Dungeon + "_0");
 
         DarkestDungeonManager.Campaign.CheckEmbarkBuffs(DarkestDungeonManager.RaidManager.RaidParty);
+        DarkestDungeonManager.Campaign.NarrationTownInfo.Clear();
 
         SceneManager.LoadScene("LoadingScreen", LoadSceneMode.Single);
     }
