@@ -116,7 +116,7 @@ public class SkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandl
             if (!currentHero.SelectedCombatSkills.Remove(Skill))
                 Debug.LogError("Deselected skill not found.");
             Deselect();
-            DarkestSoundManager.PlayOneShot("event:/ui/shared/button_click");
+            DarkestSoundManager.PlayOneShot("event:/ui/town/character_unequip");
         }
         else
         {
@@ -129,7 +129,7 @@ public class SkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandl
             {
                 currentHero.SelectedCombatSkills.Add(Skill);
                 Select();
-                DarkestSoundManager.PlayOneShot("event:/ui/shared/button_click");
+                DarkestSoundManager.PlayOneShot("event:/ui/town/character_equip");
             }
         }
     }

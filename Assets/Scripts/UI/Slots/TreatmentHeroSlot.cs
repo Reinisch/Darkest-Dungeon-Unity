@@ -203,6 +203,11 @@ public class TreatmentHeroSlot : MonoBehaviour, IPointerEnterHandler, IPointerEx
         if (TreatmentSlot.Status == ActivitySlotStatus.Caretaken)
             ToolTipManager.Instanse.Show(LocalizationManager.GetString("str_cant_place_hero_here"),
                 eventData, RectTransform, ToolTipStyle.FromBottom, ToolTipSize.Small);
+
+        if (TreatmentSlot.IsUnlocked)
+            DarkestSoundManager.PlayOneShot("event:/ui/town/button_mouse_over_3");
+        else
+            DarkestSoundManager.PlayOneShot("event:/ui/town/button_mouse_over_2");
     }
     public void OnPointerExit(PointerEventData eventData)
     {
@@ -213,7 +218,10 @@ public class TreatmentHeroSlot : MonoBehaviour, IPointerEnterHandler, IPointerEx
         if (eventData.pointerDrag.tag == "Roster Hero Slot")
         {
             if (TreatmentSlot == null || !TreatmentSlot.IsUnlocked)
+            {
+                DarkestSoundManager.PlayOneShot("event:/ui/town/button_invalid");
                 return;
+            }
 
             if (TreatmentSlot.Status == ActivitySlotStatus.Available)
             {
@@ -223,6 +231,7 @@ public class TreatmentHeroSlot : MonoBehaviour, IPointerEnterHandler, IPointerEx
                 if (onHeroDropped != null)
                     onHeroDropped(this);
                 UpdateSlot();
+                DarkestSoundManager.PlayOneShot("event:/ui/town/character_add");
             }
         }
     }

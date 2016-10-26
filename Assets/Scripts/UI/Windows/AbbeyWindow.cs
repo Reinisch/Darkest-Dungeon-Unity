@@ -41,11 +41,11 @@ public class AbbeyWindow : BuildingWindow
             if (DarkestDungeonManager.Campaign.Estate.BuyUpgrade(slot.Tree.Id, slot.UpgradeInfo, isFree))
             {
                 TownManager.EstateSceneManager.currencyPanel.UpdateCurrency();
-                UpdateUpgradeTrees();
+                UpdateUpgradeTrees(true);
             }
         }
-        else
-            DarkestSoundManager.PlayOneShot("event:/ui/town/button_invalid");
+        else if (status == UpgradeStatus.Locked)
+            DarkestSoundManager.PlayOneShot("event:/ui/town/button_click_locked");
     }
     void AbbeyWindow_onTreatmentButtonClick(TownHeroSlot slot)
     {
@@ -58,6 +58,7 @@ public class AbbeyWindow : BuildingWindow
                 TownManager.EstateSceneManager.currencyPanel.CurrencyDecreased("gold");
                 TownManager.GetHeroSlot(slot.ActivitySlot.Hero).SetStatus(HeroStatus.Abbey);
                 slot.SetStatus(ActivitySlotStatus.Paid);
+                DarkestSoundManager.PlayOneShot("event:/town/abbey_" + slot.activityName);
             }
         }
         else if (slot.ActivitySlot.Status == ActivitySlotStatus.Paid)
@@ -147,11 +148,14 @@ public class AbbeyWindow : BuildingWindow
             penanceSlots[i].UpdateSlot();
         }
     }
-    public void UpdateUpgradeTrees()
+    public void UpdateUpgradeTrees(bool afterPurchase = false)
     {
         Abbey.UpdateBuilding(DarkestDungeonManager.Campaign.Estate.TownPurchases);
         float ratio = DarkestDungeonManager.Campaign.Estate.GetBuildingUpgradeRatio(BuildingType.Abbey);
         upgradeWindow.upgradedValue.text = Mathf.RoundToInt(ratio * 100).ToString() + "%";
+
+        if (afterPurchase && Mathf.Approximately(ratio, 1))
+            DarkestSoundManager.PlayOneShot("event:/town/purchase_upgrade_last");
 
         foreach (var tree in upgradeWindow.upgradeTrees)
         {
@@ -205,6 +209,7 @@ public class AbbeyWindow : BuildingWindow
                 penanceSlots[i].SetStatus(ActivitySlotStatus.Available);
         }
         TownManager.BuildingWindowActive = false;
+        DarkestSoundManager.PlayOneShot("event:/ui/town/building_zoomout");
     }
 
     public void UpgradeSwitchClicked()

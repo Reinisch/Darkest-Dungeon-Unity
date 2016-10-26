@@ -60,19 +60,22 @@ public class NomadWagonWindow : BuildingWindow
             if (DarkestDungeonManager.Campaign.Estate.BuyUpgrade(slot.Tree.Id, slot.UpgradeInfo, isFree))
             {
                 TownManager.EstateSceneManager.currencyPanel.UpdateCurrency();
-                UpdateUpgradeTrees();
+                UpdateUpgradeTrees(true);
             }
         }
-        else
-            DarkestSoundManager.PlayOneShot("event:/ui/town/button_invalid");
+        else if (status == UpgradeStatus.Locked)
+            DarkestSoundManager.PlayOneShot("event:/ui/town/button_click_locked");
     }
 
-    public void UpdateUpgradeTrees()
+    public void UpdateUpgradeTrees(bool afterPurchase = false)
     {
         NomadWagon.UpdateBuilding(DarkestDungeonManager.Campaign.Estate.TownPurchases);
         float ratio = DarkestDungeonManager.Campaign.Estate.GetBuildingUpgradeRatio(BuildingType.NomadWagon);
         upgradeWindow.upgradedValue.text = Mathf.RoundToInt(ratio * 100).ToString() + "%";
         wagonInventory.UpdatePrices();
+
+        if (afterPurchase && Mathf.Approximately(ratio, 1))
+            DarkestSoundManager.PlayOneShot("event:/town/purchase_upgrade_last");
 
         foreach (var tree in upgradeWindow.upgradeTrees)
         {
@@ -107,6 +110,7 @@ public class NomadWagonWindow : BuildingWindow
         }
         gameObject.SetActive(false);
         TownManager.BuildingWindowActive = false;
+        DarkestSoundManager.PlayOneShot("event:/ui/town/building_zoomout");
     }
 
     public void UpgradeSwitchClicked()

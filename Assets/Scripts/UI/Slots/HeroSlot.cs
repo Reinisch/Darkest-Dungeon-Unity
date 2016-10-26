@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System;
 
-public class HeroSlot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDragHandler, IEndDragHandler, IDropHandler
+public class HeroSlot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDragHandler, IEndDragHandler, IDropHandler, IPointerEnterHandler
 {
     public Image portrait;
     public Image statusIcon;
@@ -246,5 +247,10 @@ public class HeroSlot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBegi
                 //recruitSlot.OnEndDrag(eventData);
             }
         }
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        DarkestSoundManager.PlayOneShot("event:/ui/town/button_mouse_over_3");
     }
 }

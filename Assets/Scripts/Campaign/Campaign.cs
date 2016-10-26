@@ -84,8 +84,17 @@ public class Campaign
 
             TriggeredEvent.EventTriggered(true);
             EventModifiers.IncludeEvent(TriggeredEvent);
+
+            if(TriggeredEvent.Id == "plot_quest_town_invasion_0")
+                DarkestSoundManager.PlayOneShot("event:/town/town_event_display_bandit_incursion");
+            else if (TriggeredEvent.Tone == TownEventTone.Bad)
+                DarkestSoundManager.PlayOneShot("event:/town/town_event_display_bad");
+            else if (TriggeredEvent.Tone == TownEventTone.Good)
+                DarkestSoundManager.PlayOneShot("event:/town/town_event_display_good");
+            else
+                DarkestSoundManager.PlayOneShot("event:/town/town_event_display_neutral");
         }
-        
+
         GenerateQuests();
         SearchMissingHeroes();
     }

@@ -87,6 +87,7 @@ public class SanitariumDiseaseWindow : MonoBehaviour
                     TownManager.EstateSceneManager.currencyPanel.CurrencyDecreased("gold");
                     TownManager.GetHeroSlot(SelectedSlot.TreatmentSlot.Hero).SetStatus(HeroStatus.Sanitarium);
                     SelectedSlot.PayoutSlot();
+                    DarkestSoundManager.PlayOneShot("event:/town/sanitarium_disease_treatment");
                     ResetWindow();
                 }
             }

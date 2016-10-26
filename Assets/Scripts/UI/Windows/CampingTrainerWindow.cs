@@ -53,11 +53,11 @@ public class CampingTrainerWindow : BuildingWindow
             if (DarkestDungeonManager.Campaign.Estate.BuyUpgrade(slot.Tree.Id, slot.UpgradeInfo, isFree))
             {
                 TownManager.EstateSceneManager.currencyPanel.UpdateCurrency();
-                UpdateUpgradeTrees();
+                UpdateUpgradeTrees(true);
             }
         }
-        else
-            DarkestSoundManager.PlayOneShot("event:/ui/town/button_invalid");
+        else if (status == UpgradeStatus.Locked)
+            DarkestSoundManager.PlayOneShot("event:/ui/town/button_click_locked");
     }
 
     public override void Initialize()
@@ -88,11 +88,14 @@ public class CampingTrainerWindow : BuildingWindow
         }
     }
 
-    public void UpdateUpgradeTrees()
+    public void UpdateUpgradeTrees(bool afterPurchase = false)
     {
         CampingTrainer.UpdateBuilding(DarkestDungeonManager.Campaign.Estate.TownPurchases);
         float ratio = DarkestDungeonManager.Campaign.Estate.GetBuildingUpgradeRatio(BuildingType.CampingTrainer);
         upgradeWindow.upgradedValue.text = Mathf.RoundToInt(ratio * 100).ToString() + "%";
+
+        if (afterPurchase && Mathf.Approximately(ratio, 1))
+            DarkestSoundManager.PlayOneShot("event:/town/purchase_upgrade_last");
 
         foreach (var tree in upgradeWindow.upgradeTrees)
         {

@@ -103,22 +103,30 @@ public class CampingSkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnt
     public virtual void OnPointerClick(PointerEventData eventData)
     {
         if (!Interactable || Locked)
+        {
+            DarkestSoundManager.PlayOneShot("event:/ui/town/button_invalid");
             return;
+        }
 
         if (Selected)
         {
             if (!currentHero.SelectedCampingSkills.Remove(Skill))
                 Debug.LogError("Deselected camping skill not found.");
             Deselect();
+            DarkestSoundManager.PlayOneShot("event:/ui/town/character_unequip");
         }
         else
         {
             if (currentHero.SelectedCampingSkills.Count == 4)
+            {
+                DarkestSoundManager.PlayOneShot("event:/ui/town/button_invalid");
                 return;
+            }
             else
             {
                 currentHero.SelectedCampingSkills.Add(Skill);
                 Select();
+                DarkestSoundManager.PlayOneShot("event:/ui/town/character_equip");
             }
         }
     }

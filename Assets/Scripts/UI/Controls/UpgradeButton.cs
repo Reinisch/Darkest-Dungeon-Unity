@@ -15,13 +15,14 @@ public class UpgradeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public void OnPointerEnter(PointerEventData eventData)
     {
         buildingIcon.material.SetFloat("_BrightnessAmount", 1.35f);
+        DarkestSoundManager.PlayOneShot("event:/ui/town/button_mouse_over");
     }
 
     public void SwitchUpgrades()
     {
         IsOpened = !IsOpened;
         iconAnimator.SetBool("IsOpened", IsOpened);
-        DarkestSoundManager.PlayOneShot("event:/ui/town/button_click");
+        DarkestSoundManager.PlayOneShot(IsOpened ? "event:/ui/town/page_open" : "event:/ui/town/page_close");
     }
 
     public void OnPointerExit(PointerEventData eventData)

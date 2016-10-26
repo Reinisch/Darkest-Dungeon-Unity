@@ -99,6 +99,7 @@ public class CharEquipmentPanel : MonoBehaviour, IInventory
         if (item.ItemType == "trinket")
         {
             CurrentHero.Equip((Trinket)item.ItemData, TrinketSlot.Right);
+            DarkestSoundManager.PlayOneShot("event:/ui/town/character_equip");
             PanelChanged();
         }
         else
@@ -112,6 +113,7 @@ public class CharEquipmentPanel : MonoBehaviour, IInventory
         if (item.ItemType == "trinket")
         {
             CurrentHero.Equip((Trinket)item.ItemData, TrinketSlot.Left);
+            DarkestSoundManager.PlayOneShot("event:/ui/town/character_equip");
             PanelChanged();
         }
         else

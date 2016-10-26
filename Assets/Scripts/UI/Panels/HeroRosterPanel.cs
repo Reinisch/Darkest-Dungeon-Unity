@@ -65,6 +65,10 @@ public class HeroRosterPanel : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
         if (deathRecord != null && onHeroResurrection != null)
             onHeroResurrection(deathRecord);
+        else
+        {
+            DarkestSoundManager.PlayOneShot("event:/town/stage_coach_purchase");
+        }
 
         if (heroSlot != null)
             newSlot.RectTransform.SetSiblingIndex(heroSlot.RectTransform.GetSiblingIndex());

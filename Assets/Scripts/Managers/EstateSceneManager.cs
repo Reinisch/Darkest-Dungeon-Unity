@@ -215,6 +215,7 @@ public class EstateSceneManager : MonoBehaviour
     {
         (townManager.buildingWindows[2] as GraveyardWindow).HeroResurrected(record);
         townEventWindow.eventRecruits.UpdateRecruitPanel(DarkestDungeonManager.Campaign.Estate.StageCoach.EventHeroes);
+        DarkestSoundManager.PlayOneShot("event:/town/graveyard_resurrect");
     }
 
     #region Quik Start Generation Options
@@ -390,6 +391,7 @@ public class EstateSceneManager : MonoBehaviour
         activityLogOpened = false;
         bottomPanel.ActivityLogAnimator.state.SetAnimation(0, "idle", false);
         activityLogWindow.gameObject.SetActive(activityLogOpened);
+        DarkestSoundManager.PlayOneShot("event:/ui/town/page_close");
     }
     public void MainMenuClose()
     {
@@ -400,17 +402,21 @@ public class EstateSceneManager : MonoBehaviour
     {
         bottomPanel.GlossaryAnimator.state.SetAnimation(0, "idle", false);
         glossaryWindow.gameObject.SetActive(false);
+        DarkestSoundManager.PlayOneShot("event:/ui/town/page_close");
     }
     public void TownEventClose()
     {
         bottomPanel.TownEventAnimator.state.SetAnimation(0, "idle", false);
         townEventWindow.gameObject.SetActive(false);
+        DarkestSoundManager.PlayOneShot("event:/ui/town/page_close");
     }
 
     public void CharacterWindowSwitch(Hero hero, bool interactable)
     {
         if (estateSceneState == EstateSceneState.ProvisionScreen)
             return;
+
+        DarkestSoundManager.PlayOneShot("event:/ui/town/page_open");
 
         if (characterWindowOpened)
             characterWindow.UpdateCharacterInfo(hero, interactable);
@@ -464,9 +470,15 @@ public class EstateSceneManager : MonoBehaviour
     {
         activityLogOpened = !activityLogOpened;
         if(activityLogOpened)
+        {
+            DarkestSoundManager.PlayOneShot("event:/ui/town/page_open");
             bottomPanel.ActivityLogAnimator.state.SetAnimation(0, "selected", false);
+        }
         else
+        {
+            DarkestSoundManager.PlayOneShot("event:/ui/town/page_close");
             bottomPanel.ActivityLogAnimator.state.SetAnimation(0, "idle", false);
+        }
         activityLogWindow.gameObject.SetActive(activityLogOpened);
         if (activityLogOpened)
         {
@@ -485,11 +497,13 @@ public class EstateSceneManager : MonoBehaviour
         {
             bottomPanel.GlossaryAnimator.state.SetAnimation(0, "idle", false);
             glossaryWindow.gameObject.SetActive(false);
+            DarkestSoundManager.PlayOneShot("event:/ui/town/page_close");
         }
         else
         {
             bottomPanel.GlossaryAnimator.state.SetAnimation(0, "selected", true);
             glossaryWindow.gameObject.SetActive(true);
+            DarkestSoundManager.PlayOneShot("event:/ui/town/page_open");
         }
     }
     public void TownEventClick()
@@ -501,11 +515,13 @@ public class EstateSceneManager : MonoBehaviour
         {
             bottomPanel.TownEventAnimator.state.SetAnimation(0, "idle", false);
             townEventWindow.gameObject.SetActive(false);
+            DarkestSoundManager.PlayOneShot("event:/ui/town/page_close");
         }
         else
         {
             bottomPanel.TownEventAnimator.state.SetAnimation(0, "selected", true);
             townEventWindow.gameObject.SetActive(true);
+            DarkestSoundManager.PlayOneShot("event:/ui/town/page_open");
         }
     }
 

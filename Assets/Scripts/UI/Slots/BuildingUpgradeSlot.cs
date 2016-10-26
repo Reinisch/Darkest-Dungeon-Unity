@@ -82,11 +82,17 @@ public class BuildingUpgradeSlot : MonoBehaviour, IPointerEnterHandler, IPointer
         }
 
         if (DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(Tree.Id, UpgradeInfo) == UpgradeStatus.Locked)
+        {
+            DarkestSoundManager.PlayOneShot("event:/ui/town/button_mouse_over_2");
             ToolTipManager.Instanse.Show(toolTip + "\n" + UpgradeInfo.PrerequisitesTooltip(),
                 eventData, rectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
+        }
         else
+        {
+            DarkestSoundManager.PlayOneShot("event:/ui/town/button_mouse_over");
             ToolTipManager.Instanse.Show(toolTip, eventData, rectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
-        
+        }
+
     }
 
     public void OnPointerExit(PointerEventData eventData)

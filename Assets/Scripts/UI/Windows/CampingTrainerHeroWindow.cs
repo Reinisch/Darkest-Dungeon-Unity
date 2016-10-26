@@ -26,6 +26,7 @@ public class CampingTrainerHeroWindow : MonoBehaviour
                 TownManager.EstateSceneManager.currencyPanel.UpdateCurrency();
                 DarkestDungeonManager.Campaign.Estate.ReskillCampingHero(slot.Hero);
                 UpdateHeroOverview();
+                DarkestSoundManager.PlayOneShot("event:/town/trainer_purchase_skill");
             }
         }
     }

@@ -31,5 +31,6 @@ public class StatueWindow : BuildingWindow
     {
         gameObject.SetActive(false);
         TownManager.BuildingWindowActive = false;
+        DarkestSoundManager.PlayOneShot("event:/ui/town/building_zoomout");
     }
 }

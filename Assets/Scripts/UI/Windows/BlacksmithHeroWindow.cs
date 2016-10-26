@@ -117,8 +117,14 @@ public class BlacksmithHeroWindow : MonoBehaviour
                 TownManager.EstateSceneManager.currencyPanel.UpdateCurrency();
                 DarkestDungeonManager.Campaign.Estate.ReequipHero(slot.Hero);
                 UpdateHeroOverview();
+                if(slot.Tree.Tags.Contains("weapon"))
+                    DarkestSoundManager.PlayOneShot("event:/town/blacksmith_purchase_weapon");
+                else
+                    DarkestSoundManager.PlayOneShot("event:/town/blacksmith_purchase_armor");
             }
         }
+        else if (status == UpgradeStatus.Locked)
+            DarkestSoundManager.PlayOneShot("event:/ui/town/button_click_locked");
     }
 
     public void Initialize(TownManager townManager)

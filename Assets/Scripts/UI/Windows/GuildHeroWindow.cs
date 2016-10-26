@@ -75,6 +75,8 @@ public class GuildHeroWindow : MonoBehaviour
                 UpdateHeroOverview();
             }
         }
+        else if (status == UpgradeStatus.Locked)
+            DarkestSoundManager.PlayOneShot("event:/ui/town/button_click_locked");
     }
     void GuildHeroWindow_onSkillClick(SkillPurchaseSlot slot)
     {
