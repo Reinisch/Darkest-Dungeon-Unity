@@ -80,6 +80,8 @@ public class SanitariumWindow : BuildingWindow
                 UpdateUpgradeTrees();
             }
         }
+        else
+            DarkestSoundManager.PlayOneShot("event:/ui/town/button_invalid");
     }
     void SanitariumWindow_onTreatmentButtonClick(TreatmentHeroSlot slot)
     {

@@ -185,6 +185,8 @@ public class EstateSceneManager : MonoBehaviour
             DarkestDungeonManager.Instanse.SaveGame();
             DarkestDungeonManager.RaidManager.Status = RaidStatus.Preparation;
         }
+
+        DarkestSoundManager.StartTownSoundtrack();
     }
     void OnDestroy()
     {
@@ -257,6 +259,11 @@ public class EstateSceneManager : MonoBehaviour
         "plot_kill_drowned_crew_3",
     };
     #endregion
+
+    public void OnSceneLeave()
+    {
+        DarkestSoundManager.StopTownSoundtrack();
+    }
 
     public void QuickStart()
     {
@@ -420,11 +427,15 @@ public class EstateSceneManager : MonoBehaviour
     {
         realmInventoryOpened = !realmInventoryOpened;
         if(realmInventoryOpened)
+        {
             bottomPanel.RealmInventoryAnimator.state.SetAnimation(0, "selected", true);
+            DarkestSoundManager.PlayOneShot("event:/ui/town/trinket_open");
+        }
         else
         {
             bottomPanel.RealmInventoryAnimator.state.ClearTracks();
             bottomPanel.RealmInventoryAnimator.state.SetAnimation(0, "idle", false);
+            DarkestSoundManager.PlayOneShot("event:/ui/town/trinket_close");
         }
 
         realmInventoryWindow.gameObject.SetActive(realmInventoryOpened);
@@ -506,7 +517,8 @@ public class EstateSceneManager : MonoBehaviour
             DarkestDungeonManager.ScreenFader.onFadeEnded += EmbarkTransitionFadeComplete;
             DarkestDungeonManager.ScreenFader.onAppearEnded += EmbarkTransitionAppearComplete;
             DarkestDungeonManager.ScreenFader.Fade();
-        }
+            DarkestSoundManager.PlayOneShot("event:/ui/town/embark_button");
+    }
     }
     void EmbarkTransitionFadeComplete()
     {
@@ -545,6 +557,7 @@ public class EstateSceneManager : MonoBehaviour
             DarkestDungeonManager.ScreenFader.onFadeEnded += ProvisionFadeComplete;
             DarkestDungeonManager.ScreenFader.onAppearEnded += ProvisionAppearComplete;
             DarkestDungeonManager.ScreenFader.Fade();
+            DarkestSoundManager.PlayOneShot("event:/ui/town/provision_button");
         }
     }
     void ProvisionFadeComplete()
@@ -584,7 +597,9 @@ public class EstateSceneManager : MonoBehaviour
             transitionsEnabled = false;
             DarkestDungeonManager.ScreenFader.onFadeEnded += FinalEmbarkFadeComplete;
             DarkestDungeonManager.ScreenFader.Fade();
-            DarkestDungeonManager.Instanse.RaidingManager.DeployFromPreparation(raidPreparationManager, shopManager);      
+            DarkestDungeonManager.Instanse.RaidingManager.DeployFromPreparation(raidPreparationManager, shopManager);
+            DarkestSoundManager.PlayOneShot("event:/ui/town/set_off_button");
+            OnSceneLeave();
         }
     }
     void FinalEmbarkFadeComplete()
@@ -618,6 +633,7 @@ public class EstateSceneManager : MonoBehaviour
             DarkestDungeonManager.ScreenFader.onFadeEnded += ReturnFadeComplete;
             DarkestDungeonManager.ScreenFader.onAppearEnded += ReturnAppearComplete;
             DarkestDungeonManager.ScreenFader.Fade();
+            DarkestSoundManager.PlayOneShot("event:/ui/town/button_click_back");
         }
     }
     void ReturnFadeComplete()

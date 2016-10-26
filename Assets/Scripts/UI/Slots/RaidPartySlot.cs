@@ -72,6 +72,8 @@ public class RaidPartySlot : MonoBehaviour, IDropHandler, IDragHandler, IBeginDr
         heroSlot.SetStatus(HeroStatus.Available);
         if (onDropOut != null)
             onDropOut(heroSlot);
+
+        DarkestSoundManager.PlayOneShot("event:/ui/town/character_remove");
     }
     public void ItemSwapped(HeroSlot heroSlot)
     {
@@ -131,6 +133,8 @@ public class RaidPartySlot : MonoBehaviour, IDropHandler, IDragHandler, IBeginDr
             return;
         }
 
+        DarkestSoundManager.PlayOneShot("event:/ui/town/character_add");
+
         if (SelectedHero == null)
         {
             if (droppedItem.PartySlot != null)
@@ -140,6 +144,7 @@ public class RaidPartySlot : MonoBehaviour, IDropHandler, IDragHandler, IBeginDr
             }
             else
                 ItemDroppedIn(droppedItem);
+
         }
         else
         {

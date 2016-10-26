@@ -43,7 +43,7 @@ public class SkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandl
         lockedIcon.enabled = false;
         levelLabel.text = (Skill.Level + 1).ToString();
     }
-
+    
     public void Select()
     {
         Selected = true;
@@ -106,22 +106,30 @@ public class SkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandl
     public virtual void OnPointerClick(PointerEventData eventData)
     {
         if (!Interactable || Locked)
+        {
+            DarkestSoundManager.PlayOneShot("event:/ui/town/button_invalid");
             return;
+        }
 
         if (Selected)
         {
             if (!currentHero.SelectedCombatSkills.Remove(Skill))
                 Debug.LogError("Deselected skill not found.");
-            Deselect();           
+            Deselect();
+            DarkestSoundManager.PlayOneShot("event:/ui/shared/button_click");
         }
         else
         {
             if (currentHero.SelectedCombatSkills.Count == 4)
+            {
+                DarkestSoundManager.PlayOneShot("event:/ui/town/button_invalid");
                 return;
+            }
             else
             {
                 currentHero.SelectedCombatSkills.Add(Skill);
                 Select();
+                DarkestSoundManager.PlayOneShot("event:/ui/shared/button_click");
             }
         }
     }

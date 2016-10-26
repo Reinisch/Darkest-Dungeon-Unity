@@ -67,6 +67,8 @@ public class RaidPartyPanel : MonoBehaviour
     {
         if (onPartyAssembled != null)
             onPartyAssembled();
+
+        DarkestSoundManager.PlayOneShot("event:/ui/town/party_comp");
     }
     void PartyDisassembled()
     {

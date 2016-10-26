@@ -20,6 +20,9 @@ public class RaidPartyCamera : MonoBehaviour
     public float SmoothTimeFOV { get; set; }
     float velocityFOV = 0;
 
+    float frustumDistanceTarget = 0;
+    float frustumTargetWidth = 252.2945f;
+
     public Camera Camera { get; set; }
 
     public Stopwatch StopWatch { get; set; }
@@ -53,27 +56,32 @@ public class RaidPartyCamera : MonoBehaviour
         SmoothTimeFOV = 0.1f;
         StandardFOV = 60;
         TargetFOV = 60;
-    }
 
-    void OnPostRender()
-    {
-        /*double delta = StopWatch.Elapsed.TotalSeconds;
-        double direction = Input.GetAxis("Horizontal");
-        double advancment = Mathf.Abs((float)direction) > 0.1f ? direction * 100f * delta : 0;
-        controller.RectTransform.position += new Vector3((float)advancment, 0, 0);
-        StopWatch.Reset();
-        StopWatch.Start();*/
+        Vector3 defaultRoomCameraPosition = new Vector3(-1069.303f, 0, -300);
+        frustumDistanceTarget = Vector3.Distance(defaultRoomCameraPosition,
+            RaidSceneManager.RoomView.raidRoom.RectTransform.position);
     }
 
     void LateUpdate()
     {
-        if (Camera.fieldOfView != TargetFOV)
+        if (!Mathf.Approximately(Camera.fieldOfView, TargetFOV))
         {
             Camera.fieldOfView = Mathf.SmoothDamp(Camera.fieldOfView, TargetFOV, ref velocityFOV, SmoothTimeFOV);
             blurCamera.fieldOfView = Camera.fieldOfView;
+            return;
         }
 
-        if(mode == CameraMode.Static)
+        var frustumHeight = 2.0f * frustumDistanceTarget * Mathf.Tan(Camera.fieldOfView * 0.5f * Mathf.Deg2Rad);
+        var frustumWidth = frustumHeight * Camera.aspect;
+
+        if (!Mathf.Approximately(frustumWidth, frustumTargetWidth))
+        {
+            // change field of view to fit in default room/corridor view in every aspect ratio
+            StandardFOV = 2.0f * Mathf.Atan(frustumTargetWidth / Camera.aspect * 0.5f / frustumDistanceTarget) * Mathf.Rad2Deg;
+            TargetFOV = StandardFOV;
+        }
+
+        if (mode == CameraMode.Static)
         {
             return;
         }
@@ -83,6 +91,8 @@ public class RaidPartyCamera : MonoBehaviour
             Vector3 targetPosition = new Vector3(target.position.x, transform.position.y, transform.position.z);
             transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
         }
+
+        
     }
 
     public void SetCampingLight()

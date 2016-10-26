@@ -134,6 +134,7 @@ public class CharEquipmentPanel : MonoBehaviour, IInventory
         if (item.ItemType == "trinket")
         {
             CurrentHero.Equip((Trinket)item.ItemData, TrinketSlot.Right);
+            DarkestSoundManager.PlayOneShot("event:/ui/town/character_equip");
         }
         else
         {
@@ -146,6 +147,7 @@ public class CharEquipmentPanel : MonoBehaviour, IInventory
         if (item.ItemType == "trinket")
         {
             CurrentHero.Equip((Trinket)item.ItemData, TrinketSlot.Left);
+            DarkestSoundManager.PlayOneShot("event:/ui/town/character_equip");
         }
         else
         {
@@ -158,6 +160,7 @@ public class CharEquipmentPanel : MonoBehaviour, IInventory
         if (item.ItemType == "trinket")
         {
             CurrentHero.Unequip(TrinketSlot.Right);
+            DarkestSoundManager.PlayOneShot("event:/ui/town/character_unequip");
             PanelChanged();
         }
         else
@@ -171,6 +174,7 @@ public class CharEquipmentPanel : MonoBehaviour, IInventory
         if (item.ItemType == "trinket")
         {
             CurrentHero.Unequip(TrinketSlot.Left);
+            DarkestSoundManager.PlayOneShot("event:/ui/town/character_unequip");
             PanelChanged();
         }
         else

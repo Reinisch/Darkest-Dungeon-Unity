@@ -44,6 +44,8 @@ public class TavernWindow : BuildingWindow
                 UpdateUpgradeTrees();
             }
         }
+        else
+            DarkestSoundManager.PlayOneShot("event:/ui/town/button_invalid");
     }
     void TavernWindow_onTreatmentButtonClick(TownHeroSlot slot)
     {

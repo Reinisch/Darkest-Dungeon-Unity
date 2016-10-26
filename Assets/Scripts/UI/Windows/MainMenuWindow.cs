@@ -40,6 +40,8 @@ public class MainMenuWindow : MonoBehaviour
         {
             DarkestDungeonManager.SaveData.UpdateFromEstate();
             DarkestDungeonManager.Instanse.SaveGame();
+
+            EstateSceneManager.Instanse.OnSceneLeave();
         }
         else if (SceneManager.GetActiveScene().name == "Dungeon")
         {

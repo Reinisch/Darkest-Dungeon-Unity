@@ -52,7 +52,10 @@ public class HeroRosterPanel : MonoBehaviour, IPointerEnterHandler, IPointerExit
     public HeroSlot CreateSlot(RecruitSlot recruitSlot, HeroSlot heroSlot)
     {
         if (DarkestDungeonManager.Campaign.Heroes.Count >= DarkestDungeonManager.Campaign.Estate.StageCoach.RosterSlots)
+        {
+            DarkestSoundManager.PlayOneShot("event:/ui/town/character_add_full");
             return null;
+        }
 
         var newSlot = CreateSlot(recruitSlot.Hero);
         DarkestDungeonManager.Campaign.Heroes.Add(recruitSlot.Hero);

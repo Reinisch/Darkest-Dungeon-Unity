@@ -56,6 +56,8 @@ public class GuildWindow : BuildingWindow
                 UpdateUpgradeTrees();
             }
         }
+        else
+            DarkestSoundManager.PlayOneShot("event:/ui/town/button_invalid");
     }
 
     public override void Initialize()

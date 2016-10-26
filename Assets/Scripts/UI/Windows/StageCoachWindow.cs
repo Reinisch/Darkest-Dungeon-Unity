@@ -62,6 +62,8 @@ public class StageCoachWindow : BuildingWindow
                 UpdateUpgradeTrees();
             }
         }
+        else
+            DarkestSoundManager.PlayOneShot("event:/ui/town/button_invalid");
     }
 
     public void UpdateUpgradeTrees()

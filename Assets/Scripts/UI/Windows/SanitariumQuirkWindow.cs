@@ -31,11 +31,15 @@ public class SanitariumQuirkWindow : MonoBehaviour
 
     void SanitariumQuirkWindow_onPositiveDeselect(QuirkTreatmentSlot slot)
     {
+        DarkestSoundManager.PlayOneShot("event:/ui/town/button_click");
+
         SelectedSlot.TreatmentSlot.TargetPositiveQuirk = null;
         RecalculateCost();
     }
     void SanitariumQuirkWindow_onNegativeDeselect(QuirkTreatmentSlot slot)
     {
+        DarkestSoundManager.PlayOneShot("event:/ui/town/button_click");
+
         SelectedSlot.TreatmentSlot.TargetNegativeQuirk = null;
         RecalculateCost();
     }
@@ -46,6 +50,7 @@ public class SanitariumQuirkWindow : MonoBehaviour
             slot.Deselect();
             return;
         }
+        DarkestSoundManager.PlayOneShot("event:/ui/town/button_click");
 
         for (int i = 0; i < positiveSlots.Count; i++)
         {
@@ -57,6 +62,8 @@ public class SanitariumQuirkWindow : MonoBehaviour
     }
     void SanitariumQuirkWindow_onNegativeSelect(QuirkTreatmentSlot slot)
     {
+        DarkestSoundManager.PlayOneShot("event:/ui/town/button_click");
+
         for (int i = 0; i < negativeSlots.Count; i++)
         {
             if (negativeSlots[i] != slot && negativeSlots[i].Selected)

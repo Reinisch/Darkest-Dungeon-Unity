@@ -243,6 +243,8 @@ public class RealmInventoryWindow : MonoBehaviour, IInventory
     }
     public void WindowClosed()
     {
+        DarkestSoundManager.PlayOneShot("event:/ui/town/trinket_close");
+        
         if (onWindowClose != null)
             onWindowClose();
     }

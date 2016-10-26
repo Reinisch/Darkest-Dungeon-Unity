@@ -138,6 +138,7 @@ public class Campaign
     {
         Heroes.Remove(dismissedHero);
         Estate.ReturnRosterId(dismissedHero.RosterId);
+        DarkestSoundManager.PlayOneShot("event:/ui/town/let_go");
     }
 
     public Campaign()

@@ -21,6 +21,7 @@ public class UpgradeButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     {
         IsOpened = !IsOpened;
         iconAnimator.SetBool("IsOpened", IsOpened);
+        DarkestSoundManager.PlayOneShot("event:/ui/town/button_click");
     }
 
     public void OnPointerExit(PointerEventData eventData)

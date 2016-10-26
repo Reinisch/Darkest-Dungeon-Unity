@@ -12,6 +12,8 @@ public class DarkestSoundManager : MonoBehaviour
     public static FMOD.Studio.EventInstance BattleInstanse { get; private set; }
     public static FMOD.Studio.EventInstance CampingInstanse { get; private set; }
     public static FMOD.Studio.EventInstance CampingMusicInstanse { get; private set; }
+    public static FMOD.Studio.EventInstance TownInstanse { get; private set; }
+    public static FMOD.Studio.EventInstance TownMusicInstanse { get; private set; }
     public static FMOD.Studio.EventInstance TitleMusicInstanse { get; private set; }
 
     public static List<FMOD.Studio.EventInstance> NarrationQueue { get; private set; }
@@ -211,6 +213,31 @@ public class DarkestSoundManager : MonoBehaviour
         {
             CampingMusicInstanse.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             CampingMusicInstanse.release();
+        }
+    }
+
+    public static void StartTownSoundtrack()
+    {
+        StopTownSoundtrack();
+
+        TownInstanse = RuntimeManager.CreateInstance("event:/ambience/town/general");
+        if (TownInstanse != null)
+            TownInstanse.start();
+        TownMusicInstanse = RuntimeManager.CreateInstance("event:/music/mus_town");
+        if (TownMusicInstanse != null)
+            TownMusicInstanse.start();
+    }
+    public static void StopTownSoundtrack()
+    {
+        if (TownInstanse != null)
+        {
+            TownInstanse.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            TownInstanse.release();
+        }
+        if (TownMusicInstanse != null)
+        {
+            TownMusicInstanse.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            TownMusicInstanse.release();
         }
     }
 }

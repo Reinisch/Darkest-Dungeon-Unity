@@ -23,7 +23,6 @@ public class CampingTrainerHeroWindow : MonoBehaviour
 
             if (DarkestDungeonManager.Campaign.Estate.BuyUpgrade(slot.Skill, slot.Hero, discount))
             {
-                TownManager.EstateSceneManager.currencyPanel.CurrencyDecreased("gold");
                 TownManager.EstateSceneManager.currencyPanel.UpdateCurrency();
                 DarkestDungeonManager.Campaign.Estate.ReskillCampingHero(slot.Hero);
                 UpdateHeroOverview();

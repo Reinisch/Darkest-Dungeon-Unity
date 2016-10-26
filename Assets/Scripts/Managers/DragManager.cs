@@ -77,6 +77,8 @@ public class DragManager : MonoBehaviour
 
     public void StartDragging(HeroSlot heroSlot, PointerEventData eventData, bool fromRaidPanel = false)
     {
+        DarkestSoundManager.PlayOneShot("event:/ui/town/character_pickup");
+
         UpdateHeroItemPosition(eventData);
         LoadHeroItem(heroSlot);
 

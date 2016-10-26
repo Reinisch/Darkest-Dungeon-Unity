@@ -56,6 +56,8 @@ public class QuestSlot : MonoBehaviour
 
     public void QuestButtonClicked()
     {
+        DarkestSoundManager.PlayOneShot("event:/ui/town/dungeon_select");
+
         if (onQuestSelected != null)
             onQuestSelected(this);
     }

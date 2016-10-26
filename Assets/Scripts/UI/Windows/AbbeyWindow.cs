@@ -44,6 +44,8 @@ public class AbbeyWindow : BuildingWindow
                 UpdateUpgradeTrees();
             }
         }
+        else
+            DarkestSoundManager.PlayOneShot("event:/ui/town/button_invalid");
     }
     void AbbeyWindow_onTreatmentButtonClick(TownHeroSlot slot)
     {
