@@ -277,7 +277,7 @@ public class EstateSceneManager : MonoBehaviour
                 DarkestDungeonManager.Instanse.RaidingManager.Quest.Dungeon + "_0");
 
         DarkestDungeonManager.Campaign.CheckEmbarkBuffs(DarkestDungeonManager.RaidManager.RaidParty);
-
+        OnSceneLeave();
         SceneManager.LoadScene("LoadingScreen", LoadSceneMode.Single);
     }
     public void QuickProgress()

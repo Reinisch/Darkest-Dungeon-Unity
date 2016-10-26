@@ -74,7 +74,7 @@ public class RaidPartyCamera : MonoBehaviour
         var frustumHeight = 2.0f * frustumDistanceTarget * Mathf.Tan(Camera.fieldOfView * 0.5f * Mathf.Deg2Rad);
         var frustumWidth = frustumHeight * Camera.aspect;
 
-        if (!Mathf.Approximately(frustumWidth, frustumTargetWidth))
+        if (StandardFOV == TargetFOV && !Mathf.Approximately(frustumWidth, frustumTargetWidth))
         {
             // change field of view to fit in default room/corridor view in every aspect ratio
             StandardFOV = 2.0f * Mathf.Atan(frustumTargetWidth / Camera.aspect * 0.5f / frustumDistanceTarget) * Mathf.Rad2Deg;
@@ -91,8 +91,6 @@ public class RaidPartyCamera : MonoBehaviour
             Vector3 targetPosition = new Vector3(target.position.x, transform.position.y, transform.position.z);
             transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
         }
-
-        
     }
 
     public void SetCampingLight()

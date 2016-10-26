@@ -55,7 +55,6 @@ public class MainMenuWindow : MonoBehaviour
         SceneManager.LoadScene("CampaignSelection");
 
         WindowClosed();
-        Destroy(DarkestDungeonManager.Instanse.gameObject);
     }
 
     public void QuitGame()

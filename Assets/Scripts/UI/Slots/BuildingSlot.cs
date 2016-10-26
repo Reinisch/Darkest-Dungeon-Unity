@@ -36,6 +36,7 @@ public class BuildingSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             buildingDescription.enabled = true;
             currentState.state.ClearTracks();
             currentState.state.SetAnimation(0, "active", false);
+            DarkestSoundManager.PlayOneShot("event:/ui/town/button_mouse_over");
         }
     }
 

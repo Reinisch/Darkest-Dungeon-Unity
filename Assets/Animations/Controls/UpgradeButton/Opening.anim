@@ -81,6 +81,51 @@ AnimationClip:
     path: UpgradeExpander
     classID: 224
     script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - time: 0
+        value: 0.0000102720005
+        inSlope: -0.00043636837
+        outSlope: -0.00043636837
+        tangentMode: 10
+      - time: 0.16666667
+        value: -0.00006245606
+        inSlope: -0.00043636837
+        outSlope: -0.00043636837
+        tangentMode: 10
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_AnchoredPosition.x
+    path: UpgradePulse
+    classID: 224
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - time: 0
+        value: -46.299988
+        inSlope: -25.80011
+        outSlope: -25.80011
+        tangentMode: 10
+      - time: 0.16666667
+        value: -50.600006
+        inSlope: -0.000045776367
+        outSlope: -0.000045776367
+        tangentMode: 10
+      - time: 0.33333334
+        value: -46.300003
+        inSlope: 25.800018
+        outSlope: 25.800018
+        tangentMode: 10
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_AnchoredPosition.y
+    path: UpgradePulse
+    classID: 224
+    script: {fileID: 0}
   m_PPtrCurves:
   - curve:
     - time: 0
@@ -103,6 +148,18 @@ AnimationClip:
       customType: 0
       isPPtrCurve: 0
     - path: 1205693864
+      attribute: 538195251
+      script: {fileID: 0}
+      classID: 224
+      customType: 0
+      isPPtrCurve: 0
+    - path: 3946121507
+      attribute: 1460864421
+      script: {fileID: 0}
+      classID: 224
+      customType: 0
+      isPPtrCurve: 0
+    - path: 3946121507
       attribute: 538195251
       script: {fileID: 0}
       classID: 224
@@ -206,6 +263,51 @@ AnimationClip:
       m_RotationOrder: 4
     attribute: m_AnchoredPosition.y
     path: UpgradeExpander
+    classID: 224
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - time: 0
+        value: 0.0000102720005
+        inSlope: -0.00043636837
+        outSlope: -0.00043636837
+        tangentMode: 10
+      - time: 0.16666667
+        value: -0.00006245606
+        inSlope: -0.00043636837
+        outSlope: -0.00043636837
+        tangentMode: 10
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_AnchoredPosition.x
+    path: UpgradePulse
+    classID: 224
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - time: 0
+        value: -46.299988
+        inSlope: -25.80011
+        outSlope: -25.80011
+        tangentMode: 10
+      - time: 0.16666667
+        value: -50.600006
+        inSlope: -0.000045776367
+        outSlope: -0.000045776367
+        tangentMode: 10
+      - time: 0.33333334
+        value: -46.300003
+        inSlope: 25.800018
+        outSlope: 25.800018
+        tangentMode: 10
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_AnchoredPosition.y
+    path: UpgradePulse
     classID: 224
     script: {fileID: 0}
   m_EulerEditorCurves: []
