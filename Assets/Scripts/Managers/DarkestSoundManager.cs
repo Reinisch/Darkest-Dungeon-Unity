@@ -76,13 +76,19 @@ public class DarkestSoundManager : MonoBehaviour
             return;
 
         if (id == "town_visit_start")
+        {
             for (int i = 0; i < 3; i++)
             {
                 if (RandomSolver.CheckSuccess(narrationEvent.Chance))
                     break;
                 else
                     narrationEvent = possibleEvents[Random.Range(0, possibleEvents.Count)];
+
+                if (i == 2)
+                    return;
             }
+        }
+            
         else if (!RandomSolver.CheckSuccess(narrationEvent.Chance))
             return;
 
