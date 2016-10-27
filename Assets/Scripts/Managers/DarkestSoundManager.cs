@@ -75,7 +75,15 @@ public class DarkestSoundManager : MonoBehaviour
         if (narrationEvent.QueueOnlyOnEmpty && NarrationQueue.Count > 0)
             return;
 
-        if (!RandomSolver.CheckSuccess(narrationEvent.Chance))
+        if (id == "town_visit_start")
+            for (int i = 0; i < 3; i++)
+            {
+                if (RandomSolver.CheckSuccess(narrationEvent.Chance))
+                    break;
+                else
+                    narrationEvent = possibleEvents[Random.Range(0, possibleEvents.Count)];
+            }
+        else if (!RandomSolver.CheckSuccess(narrationEvent.Chance))
             return;
 
         var narrationInstanse = RuntimeManager.CreateInstance("event:" + narrationEvent.AudioEvent);
@@ -111,6 +119,16 @@ public class DarkestSoundManager : MonoBehaviour
                     DarkestDungeonManager.Campaign.NarrationTownInfo[narrationEvent.AudioEvent]++;
                 }
                 goto case NarrationPlace.Campaign;
+        }
+    }
+    public static void SilenceNarrator()
+    {
+        if(CurrentNarration != null)
+        {
+            CurrentNarration.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            CurrentNarration.release();
+            CurrentNarration = null;
+            NarrationQueue.Clear();
         }
     }
 

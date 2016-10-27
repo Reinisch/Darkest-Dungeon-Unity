@@ -51,6 +51,7 @@ public class MainMenuWindow : MonoBehaviour
             }
             RaidSceneManager.Instanse.OnSceneLeave();
         }
+        DarkestSoundManager.SilenceNarrator();
         SceneManager.LoadScene("CampaignSelection");
         WindowClosed();
     }
@@ -72,6 +73,7 @@ public class MainMenuWindow : MonoBehaviour
             }
             RaidSceneManager.Instanse.OnSceneLeave();
         }
+        DarkestSoundManager.SilenceNarrator();
         Application.Quit();
     }
 }

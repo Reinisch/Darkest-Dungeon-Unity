@@ -41,7 +41,7 @@ public class NarrationAudioEvent
                         if (DarkestDungeonManager.Campaign.NarrationRaidInfo[AudioEvent] >= MaxRaidOccurrences)
                             return false;
                 }
-                break;
+                goto case NarrationPlace.Campaign;
             case NarrationPlace.Town:
                 if (MaxTownVisitOccurrences > 0)
                 {
@@ -49,10 +49,10 @@ public class NarrationAudioEvent
                         if (DarkestDungeonManager.Campaign.NarrationTownInfo[AudioEvent] >= MaxTownVisitOccurrences)
                             return false;
                 }
-                break;
+                goto case NarrationPlace.Campaign;
         }
 
-        if(Tags.Count > 0)
+        if (Tags.Count > 0)
         {
             if(CheckAllTags)
             {

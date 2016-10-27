@@ -220,6 +220,10 @@ public class Campaign
             if(targetEvent != null)
                 targetEvent.UpdateFromSave(saveEventEntry);
         }
+
+        NarrationCampaignInfo = saveData.campaignNarrations;
+        NarrationRaidInfo = saveData.raidNarrations;
+        NarrationTownInfo = saveData.townNarrations;
     }
 
     public WeekActivityLog CurrentLog()
