@@ -486,6 +486,7 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public void OnPointerEnter(PointerEventData eventData)
     {
         Highlighted = true;
+        DarkestSoundManager.PlayOneShot("event:/ui/town/button_mouse_over");
 
         SetActive(!Deactivated);
 

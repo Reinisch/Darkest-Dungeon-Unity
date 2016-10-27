@@ -61,7 +61,7 @@ public class NomadWagon : Building
 
     public void RestockTrinkets()
     {
-        Trinkets = new List<Trinket>();
+        Trinkets.Clear();
         var trinketList = DarkestDungeonManager.Data.Items["trinket"].Values.Cast<Trinket>().ToList();
         for(int i = 0; i < TrinketSlots; i++)
         {
@@ -82,6 +82,8 @@ public class NomadWagon : Building
 
     public void InitializeBuilding(Dictionary<string, UpgradePurchases> purchases)
     {
+        Trinkets.Clear();
+
         Reset();
 
         for (int i = DiscountUpgrades.Count - 1; i >= 0; i--)

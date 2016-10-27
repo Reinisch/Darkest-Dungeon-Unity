@@ -79,7 +79,10 @@ public class RewardSlot : BaseSlot, IPointerEnterHandler, IPointerExitHandler
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (Item != null)
+        {
+            DarkestSoundManager.PlayOneShot("event:/ui/town/button_mouse_over");
             ToolTipManager.Instanse.Show(Item.ToolTip, eventData, RectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
+        }
     }
     public void OnPointerExit(PointerEventData eventData)
     {

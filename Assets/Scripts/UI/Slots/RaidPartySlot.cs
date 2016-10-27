@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System;
 
 public delegate void RaidPartySlotEvent(HeroSlot heroSlot);
 public delegate bool RaidPartySlotCheck(HeroSlot heroSlot);
 
-public class RaidPartySlot : MonoBehaviour, IDropHandler, IDragHandler, IBeginDragHandler, IEndDragHandler
+public class RaidPartySlot : MonoBehaviour, IDropHandler, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerEnterHandler
 {
     public Image slotFrame;
     public Image heroFrame;
@@ -159,5 +160,11 @@ public class RaidPartySlot : MonoBehaviour, IDropHandler, IDragHandler, IBeginDr
                 ItemDroppedIn(droppedItem);
             }
         }
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if(SelectedHero != null)
+            DarkestSoundManager.PlayOneShot("event:/ui/town/button_mouse_over");
     }
 }

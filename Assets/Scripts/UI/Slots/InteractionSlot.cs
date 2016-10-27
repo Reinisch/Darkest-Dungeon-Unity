@@ -49,7 +49,10 @@ public class InteractionSlot : BaseSlot, IDropHandler, IPointerEnterHandler, IPo
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (Item != null)
+        {
+            DarkestSoundManager.PlayOneShot("event:/ui/town/button_mouse_over");
             ToolTipManager.Instanse.Show(Item.ToolTip(), eventData, rectTransform, ToolTipStyle.FromBottom, ToolTipSize.Normal);
+        }
     }
     public void OnPointerExit(PointerEventData eventData)
     {

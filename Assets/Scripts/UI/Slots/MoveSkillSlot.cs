@@ -111,6 +111,7 @@ public class MoveSkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
     public virtual void OnPointerEnter(PointerEventData eventData)
     {
         Highlighted = true;
+
         if (!Available)
             skillIcon.material = DarkestDungeonManager.GrayMaterial;
         else

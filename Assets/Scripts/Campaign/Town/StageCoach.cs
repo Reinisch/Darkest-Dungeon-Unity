@@ -309,6 +309,10 @@ public class StageCoach : Building
 
     public void InitializeBuilding(Dictionary<string, UpgradePurchases> purchases)
     {
+        Heroes.Clear();
+        EventHeroes.Clear();
+        GraveIndexes.Clear();
+
         Reset();
 
         for (int i = RosterSlotUpgrades.Count - 1; i >= 0; i--)

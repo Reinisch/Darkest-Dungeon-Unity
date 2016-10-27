@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.SceneManagement;
 
-enum EstateSceneState { EstateScreen, QuestScreen, ProvisionScreen }
+public enum EstateSceneState { EstateScreen, QuestScreen, ProvisionScreen }
 
 public class EstateSceneManager : MonoBehaviour
 {
@@ -39,7 +39,8 @@ public class EstateSceneManager : MonoBehaviour
     bool activityLogOpened = false;
     bool characterWindowOpened = false;
     bool transitionsEnabled = true;
-    EstateSceneState estateSceneState;
+
+    public EstateSceneState EstateSceneState { get; set; }
 
     public bool AnyWindowsOpened
     {
@@ -264,6 +265,14 @@ public class EstateSceneManager : MonoBehaviour
     public void OnSceneLeave()
     {
         DarkestSoundManager.StopTownSoundtrack();
+
+        if(raidPartyPanel.PartySlots != null)
+            foreach (var slot in raidPartyPanel.PartySlots)
+                if (slot.SelectedHero != null)
+                    slot.SelectedHero.SetStatus(HeroStatus.Available);
+
+        if(EstateSceneState == EstateSceneState.ProvisionScreen)
+            shopManager.SellOutEverything();
     }
 
     public void QuickStart()
@@ -413,7 +422,7 @@ public class EstateSceneManager : MonoBehaviour
 
     public void CharacterWindowSwitch(Hero hero, bool interactable)
     {
-        if (estateSceneState == EstateSceneState.ProvisionScreen)
+        if (EstateSceneState == EstateSceneState.ProvisionScreen)
             return;
 
         DarkestSoundManager.PlayOneShot("event:/ui/town/page_open");
@@ -554,7 +563,7 @@ public class EstateSceneManager : MonoBehaviour
         raidPreparationManager.UpdateUI();
 
         ToolTipManager.Instanse.Hide();
-        estateSceneState = EstateSceneState.QuestScreen;
+        EstateSceneState = EstateSceneState.QuestScreen;
         DarkestDungeonManager.ScreenFader.Appear();
     }
     void EmbarkTransitionAppearComplete()
@@ -595,7 +604,7 @@ public class EstateSceneManager : MonoBehaviour
         shopManager.LoadInitialSetup(raidPreparationManager.SelectedQuestSlot.Quest, raidPreparationManager.raidPartyPanel);
         shopManager.ActivateShopBehaviour();
 
-        estateSceneState = EstateSceneState.ProvisionScreen;
+        EstateSceneState = EstateSceneState.ProvisionScreen;
         DarkestDungeonManager.ScreenFader.Appear();
     }
     void ProvisionAppearComplete()
@@ -654,7 +663,7 @@ public class EstateSceneManager : MonoBehaviour
     }
     void ReturnFadeComplete()
     {
-        switch (estateSceneState)
+        switch (EstateSceneState)
         {
             case EstateSceneState.QuestScreen:
                 estateUI.SetActive(true);
@@ -686,13 +695,13 @@ public class EstateSceneManager : MonoBehaviour
     }
     void ReturnAppearComplete()
     {
-        switch (estateSceneState)
+        switch (EstateSceneState)
         {
             case EstateSceneState.QuestScreen:
-                estateSceneState = EstateSceneState.EstateScreen;
+                EstateSceneState = EstateSceneState.EstateScreen;
                 break;
             case EstateSceneState.ProvisionScreen:
-                estateSceneState = EstateSceneState.QuestScreen;
+                EstateSceneState = EstateSceneState.QuestScreen;
                 break;
         }
         DarkestDungeonManager.ScreenFader.onFadeEnded -= ReturnFadeComplete;

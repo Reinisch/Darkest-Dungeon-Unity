@@ -134,6 +134,7 @@ public class CampingSkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnt
     public virtual void OnPointerEnter(PointerEventData eventData)
     {
         Highlighted = true;
+
         if (!Available || Locked)
             skillIcon.material = DarkestDungeonManager.GrayHighlightMaterial;
         else

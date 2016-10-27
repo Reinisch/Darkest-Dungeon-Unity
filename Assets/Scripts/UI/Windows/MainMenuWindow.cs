@@ -38,10 +38,9 @@ public class MainMenuWindow : MonoBehaviour
     {
         if(SceneManager.GetActiveScene().name == "EstateManagement")
         {
+            EstateSceneManager.Instanse.OnSceneLeave();
             DarkestDungeonManager.SaveData.UpdateFromEstate();
             DarkestDungeonManager.Instanse.SaveGame();
-
-            EstateSceneManager.Instanse.OnSceneLeave();
         }
         else if (SceneManager.GetActiveScene().name == "Dungeon")
         {
@@ -53,7 +52,6 @@ public class MainMenuWindow : MonoBehaviour
             RaidSceneManager.Instanse.OnSceneLeave();
         }
         SceneManager.LoadScene("CampaignSelection");
-
         WindowClosed();
     }
 
@@ -61,6 +59,7 @@ public class MainMenuWindow : MonoBehaviour
     {
         if (SceneManager.GetActiveScene().name == "EstateManagement")
         {
+            EstateSceneManager.Instanse.OnSceneLeave();
             DarkestDungeonManager.SaveData.UpdateFromEstate();
             DarkestDungeonManager.Instanse.SaveGame();
         }
