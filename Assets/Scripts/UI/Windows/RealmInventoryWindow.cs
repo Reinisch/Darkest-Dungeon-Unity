@@ -7,7 +7,6 @@ public class RealmInventoryWindow : MonoBehaviour, IInventory
     public Button closeButton;
     public RectTransform trinketBox;
     public InventoryRow rowTemplate;
-    public Text capacity;
 
     public RealmInventory RealmInventory
     {
@@ -239,7 +238,6 @@ public class RealmInventoryWindow : MonoBehaviour, IInventory
     }
     public void UpdateWindow()
     {
-        capacity.text = CurrentCapacity.ToString();
     }
     public void WindowClosed()
     {
