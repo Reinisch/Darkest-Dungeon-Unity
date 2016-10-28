@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Linq;
 
 public class RealmInventoryWindow : MonoBehaviour, IInventory
 {
@@ -161,6 +162,106 @@ public class RealmInventoryWindow : MonoBehaviour, IInventory
         }
         UpdateWindow();
     }
+    public void UnequipAllHeroes()
+    {
+        DarkestSoundManager.PlayOneShot("event:/ui/town/sort_by");
+        bool hasUnequipped = false;
+
+        for (int i = 0; i < DarkestDungeonManager.Campaign.Heroes.Count; i++)
+        {
+            var hero = DarkestDungeonManager.Campaign.Heroes[i];
+
+            if (!(hero.Status == HeroStatus.Available || hero.Status == HeroStatus.RaidParty))
+                continue;
+
+            if(hero.LeftTrinket != null)
+            {
+                AddTrinket(hero.LeftTrinket);
+                hero.Unequip(TrinketSlot.Left);
+                hasUnequipped = true;
+            }
+            if(hero.RightTrinket != null)
+            {
+                AddTrinket(hero.RightTrinket);
+                hero.Unequip(TrinketSlot.Right);
+                hasUnequipped = true;
+            }
+
+            if (EstateSceneManager.Instanse.characterWindow.IsOpened)
+                EstateSceneManager.Instanse.characterWindow.UpdateCharacterInfo();
+        }
+
+        if (hasUnequipped)
+            DarkestSoundManager.PlayOneShot("event:/ui/dungeon/trink_unequip");
+    }
+    public void SortByName()
+    {
+        DarkestSoundManager.PlayOneShot("event:/ui/town/sort_by");
+
+        RealmInventory.Trinkets.Sort((x, y) =>
+            LocalizationManager.GetString(ToolTipManager.GetConcat("str_inventory_title_trinket", x.Id)).
+            CompareTo(LocalizationManager.GetString(ToolTipManager.GetConcat("str_inventory_title_trinket", y.Id))));
+
+        int trinketCount = RealmInventory.Trinkets.Count;
+        int trinketsLoaded = Mathf.Min(trinketCount, InventorySlots.Count);
+
+        for(int i = 0; i < trinketsLoaded; i++)
+            InventorySlots[i].CreateItem(RealmInventory.Trinkets[i]);
+
+        for (int i = trinketsLoaded; i < InventorySlots.Count; i++)
+            InventorySlots[i].DeleteItem();
+    }
+    public void SortByRarity()
+    {
+        DarkestSoundManager.PlayOneShot("event:/ui/town/sort_by");
+
+        RealmInventory.Trinkets.Sort((x, y) =>
+        {
+            int result = x.Rarity.CompareTo(y.Rarity);
+            return result == 0 ? x.Id.CompareTo(y.Id) : result;
+        });
+        
+        int trinketCount = RealmInventory.Trinkets.Count;
+        int trinketsLoaded = Mathf.Min(trinketCount, InventorySlots.Count);
+
+        for (int i = 0; i < trinketsLoaded; i++)
+            InventorySlots[i].CreateItem(RealmInventory.Trinkets[i]);
+
+        for (int i = trinketsLoaded; i < InventorySlots.Count; i++)
+            InventorySlots[i].DeleteItem();
+    }
+    public void SortByRestriction()
+    {
+        DarkestSoundManager.PlayOneShot("event:/ui/town/sort_by");
+
+        RealmInventory.Trinkets.Sort((x, y) => 
+        {
+            if (x.ClassRequirements.Count > 0)
+            {
+                if (y.ClassRequirements.Count > 0)
+                {
+                    int result = x.ClassRequirements[0].CompareTo(y.ClassRequirements[0]);
+                    return result == 0 ? x.Id.CompareTo(y.Id) : result;
+                }
+                else
+                    return -1;
+            }
+            else if (y.ClassRequirements.Count > 0)
+                return 1;
+            else
+                return x.Id.CompareTo(y.Id);
+        });
+
+        int trinketCount = RealmInventory.Trinkets.Count;
+        int trinketsLoaded = Mathf.Min(trinketCount, InventorySlots.Count);
+
+        for (int i = 0; i < trinketsLoaded; i++)
+            InventorySlots[i].CreateItem(RealmInventory.Trinkets[i]);
+
+        for (int i = trinketsLoaded; i < InventorySlots.Count; i++)
+            InventorySlots[i].DeleteItem();
+    }
+
     public void AddTrinket(Trinket trinket)
     {
         if(CurrentCapacity < MaxCapacity)

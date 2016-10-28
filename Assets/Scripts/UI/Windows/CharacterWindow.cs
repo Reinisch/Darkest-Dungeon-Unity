@@ -55,7 +55,7 @@ public class CharacterWindow : MonoBehaviour
             NextButtonClicked();
     }
 
-    void UpdateAttributes()
+    public void UpdateAttributes()
     {
         charStatsPanel.UpdateStats(CurrentHero);
         quirksPanel.UpdateQuirksPanel(CurrentHero);
@@ -64,7 +64,7 @@ public class CharacterWindow : MonoBehaviour
 
         stressPanel.UpdateStress(CurrentHero.GetPairedAttribute(AttributeType.Stress).ValueRatio);
     }
-    void UpdateClassInfo(bool interactable)
+    public void UpdateClassInfo(bool interactable)
     {
         heroName.text = CurrentHero.HeroName;
         heroClassName.text = LocalizationManager.GetString("hero_class_name_" + CurrentHero.ClassStringId);
@@ -79,7 +79,7 @@ public class CharacterWindow : MonoBehaviour
         charCampingSkillPanel.UpdateCampingSkillPanel(CurrentHero, interactable);
         displayPanel.UpdateDisplay(CurrentHero);
     }
-    void UpdateTrinkets(bool interactable)
+    public void UpdateTrinkets(bool interactable)
     {
         if (interactable)
             charEquipmentPanel.SetActive();
@@ -89,10 +89,17 @@ public class CharacterWindow : MonoBehaviour
         charEquipmentPanel.UpdateEquipmentPanel(CurrentHero, interactable);
     }
 
-    public void UpdateCharacterInfo(Hero updateHero, bool interactionAllowed)
+    public void UpdateCharacterInfo()
+    {
+        if (CurrentHero == null)
+            return;
+
+        UpdateCharacterInfo(CurrentHero, interactable, true);
+    }
+    public void UpdateCharacterInfo(Hero updateHero, bool interactionAllowed, bool forced = false)
     {
         interactable = interactionAllowed;
-        if (CurrentHero == null || CurrentHero.RosterId != updateHero.RosterId)
+        if (CurrentHero == null || CurrentHero.RosterId != updateHero.RosterId || forced)
         {
             CurrentHero = updateHero;
             UpdateClassInfo(interactable);
