@@ -102,8 +102,15 @@ public class HeroRosterPanel : MonoBehaviour, IPointerEnterHandler, IPointerExit
     {
         DarkestSoundManager.PlayOneShot("event:/ui/town/sort_by");
 
-        DarkestDungeonManager.Campaign.Heroes.Sort((x, y) => x.Status.CompareTo(y.Status));
-        HeroSlots.Sort((x, y) => x.Hero.Status.CompareTo(y.Hero.Status));
+        System.Comparison<Hero> sorting = (x, y) =>
+        {
+            int result = x.Status.CompareTo(y.Status);
+            return result == 0 ? x.Name.CompareTo(y.Name) : result;
+        };
+
+        DarkestDungeonManager.Campaign.Heroes.Sort(sorting);
+        HeroSlots.Sort((x, y) => sorting(x.Hero, y.Hero));
+
         for (int i = 0; i < HeroSlots.Count; i++)
             HeroSlots[i].RectTransform.SetSiblingIndex(i);
     }
@@ -111,8 +118,15 @@ public class HeroRosterPanel : MonoBehaviour, IPointerEnterHandler, IPointerExit
     {
         DarkestSoundManager.PlayOneShot("event:/ui/town/sort_by");
 
-        DarkestDungeonManager.Campaign.Heroes.Sort((x, y) => x.Class.CompareTo(y.Class));
-        HeroSlots.Sort((x, y) => x.Hero.Class.CompareTo(y.Hero.Class));
+        System.Comparison<Hero> sorting = (x, y) =>
+        {
+            int result = x.Class.CompareTo(y.Class);
+            return result == 0 ? x.Name.CompareTo(y.Name) : result;
+        };
+
+        DarkestDungeonManager.Campaign.Heroes.Sort(sorting);
+        HeroSlots.Sort((x, y) => sorting(x.Hero, y.Hero));
+
         for (int i = 0; i < HeroSlots.Count; i++)
             HeroSlots[i].RectTransform.SetSiblingIndex(i);
     }
@@ -120,8 +134,15 @@ public class HeroRosterPanel : MonoBehaviour, IPointerEnterHandler, IPointerExit
     {
         DarkestSoundManager.PlayOneShot("event:/ui/town/sort_by");
 
-        DarkestDungeonManager.Campaign.Heroes.Sort((x, y) => x.Stress.CurrentValue.CompareTo(y.Stress.CurrentValue));
-        HeroSlots.Sort((x, y) => x.Hero.Stress.CurrentValue.CompareTo(y.Hero.Stress.CurrentValue));
+        System.Comparison<Hero> sorting = (x, y) =>
+        {
+            int result = x.Stress.CurrentValue.CompareTo(y.Stress.CurrentValue);
+            return result == 0 ? x.Name.CompareTo(y.Name) : result;
+        };
+
+        DarkestDungeonManager.Campaign.Heroes.Sort(sorting);
+        HeroSlots.Sort((x, y) => sorting(x.Hero, y.Hero));
+
         for (int i = 0; i < HeroSlots.Count; i++)
             HeroSlots[i].RectTransform.SetSiblingIndex(i);
     }
@@ -129,8 +150,15 @@ public class HeroRosterPanel : MonoBehaviour, IPointerEnterHandler, IPointerExit
     {
         DarkestSoundManager.PlayOneShot("event:/ui/town/sort_by");
 
-        DarkestDungeonManager.Campaign.Heroes.Sort((x, y) => x.Resolve.Level.CompareTo(y.Resolve.Level));
-        HeroSlots.Sort((x, y) => x.Hero.Resolve.Level.CompareTo(y.Hero.Resolve.Level));
+        System.Comparison<Hero> sorting = (x, y) =>
+        {
+            int result = -x.Resolve.Level.CompareTo(y.Resolve.Level);
+            return result == 0 ? x.Name.CompareTo(y.Name) : result;
+        };
+
+        DarkestDungeonManager.Campaign.Heroes.Sort(sorting);
+        HeroSlots.Sort((x, y) => sorting(x.Hero, y.Hero));
+
         for (int i = 0; i < HeroSlots.Count; i++)
             HeroSlots[i].RectTransform.SetSiblingIndex(i);
     }
