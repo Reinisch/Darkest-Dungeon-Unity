@@ -21,7 +21,7 @@ public class WagonSlot : BaseSlot, IPointerEnterHandler, IPointerExitHandler
     {
         Trinket = newTrinket;
         itemIcon.sprite = DarkestDungeonManager.Data.Sprites["inv_trinket+" + Trinket.Id];
-        rarityIcon.sprite = rarityIcon.sprite = DarkestDungeonManager.Data.Sprites["rarity_" + newTrinket.Rarity];
+        rarityIcon.sprite = rarityIcon.sprite = DarkestDungeonManager.Data.Sprites["rarity_" + newTrinket.RarityId];
         Cost = Mathf.RoundToInt(Trinket.PurchasePrice * (1 - discount));
         costText.text = Cost.ToString();
     }

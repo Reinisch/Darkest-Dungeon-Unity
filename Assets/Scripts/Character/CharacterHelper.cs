@@ -586,4 +586,38 @@ public static class CharacterHelper
                 return "block_move";
         }
     }
+    public static Rarity StringToRarity(string rarityString)
+    {
+        switch(rarityString)
+        {
+            case "darkest_dungeon":
+                return Rarity.DarkestDungeon;
+            case "ancestral_shambler":
+                return Rarity.AncestralShambler;
+            case "ancestral":
+                return Rarity.Ancestral;
+            case "collector":
+                return Rarity.Collector;
+            case "madman":
+                return Rarity.Madman;
+            case "very_rare":
+                return Rarity.VeryRare;
+            case "rare":
+                return Rarity.Rare;
+            case "uncommon":
+                return Rarity.Uncommon;
+            case "common":
+                return Rarity.Common;
+            case "very_common":
+                return Rarity.VeryCommon;
+            case "trophy":
+                return Rarity.Trophy;
+            case "kickstarter":
+                return Rarity.KickStarter;
+            default:
+                Debug.LogError("Unknown rarity: " + rarityString);
+                return Rarity.Common;
+        }
+        
+    }
 }

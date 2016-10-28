@@ -2,12 +2,31 @@
 using System.Text;
 
 public enum TrinketSlot : byte { Left = 0, Right }
+public enum Rarity : int
+{
+    Trophy, DarkestDungeon, AncestralShambler, Ancestral, Collector, Madman,
+    VeryRare, Rare, Uncommon, Common, VeryCommon, KickStarter,
+}
 
 public class Trinket : ItemData
 {
+    private string rarityId;
+
     public List<Buff> Buffs { get; set; }
     public List<string> ClassRequirements { get; set; }
-    public string Rarity { get; set; }
+    public string RarityId
+    {
+        get
+        {
+            return rarityId;
+        }
+        set
+        {
+            rarityId = value;
+            Rarity = CharacterHelper.StringToRarity(value);
+        }
+    }
+    public Rarity Rarity { get; set; }
     public int EquipLimit { get; set; }
     public string OriginDungeon { get; set; }
 
@@ -21,12 +40,12 @@ public class Trinket : ItemData
     {
         StringBuilder sb = ToolTipManager.TipBody;
         sb.AppendFormat("<color={0}>", DarkestDungeonManager.Data.HexColors["equipment_tooltip_title"]);
-        if(Rarity == "kickstarter")
+        if(RarityId == "kickstarter")
             sb.Append(LocalizationManager.GetString(ToolTipManager.GetConcat("str_inventory_title_trinket", Id)));
         else
             sb.Append(LocalizationManager.GetString(ToolTipManager.GetConcat("str_inventory_title_trinket", Id)));
-        sb.AppendFormat("</color>\n<color={0}>", DarkestDungeonManager.Data.HexColors[Rarity]);
-        sb.Append(LocalizationManager.GetString(ToolTipManager.GetConcat("trinket_rarity_", Rarity)));
+        sb.AppendFormat("</color>\n<color={0}>", DarkestDungeonManager.Data.HexColors[RarityId]);
+        sb.Append(LocalizationManager.GetString(ToolTipManager.GetConcat("trinket_rarity_", RarityId)));
         sb.Append("</color>");
         #region Requirements
         if (ClassRequirements.Count > 0)

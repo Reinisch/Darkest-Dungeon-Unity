@@ -66,7 +66,7 @@ public class NomadWagon : Building
         for(int i = 0; i < TrinketSlots; i++)
         {
             var rarity = RandomSolver.ChooseByRandom<GeneratedRarity>(RarityTable).RarityId;
-            var rarityList = trinketList.FindAll(item => item.Rarity == rarity);
+            var rarityList = trinketList.FindAll(item => item.RarityId == rarity);
             Trinkets.Add(rarityList[UnityEngine.Random.Range(0, rarityList.Count)]);
         }
         Trinkets.Sort((x, y) => y.PurchasePrice.CompareTo(x.PurchasePrice));
@@ -76,7 +76,7 @@ public class NomadWagon : Building
     {
         var trinketList = DarkestDungeonManager.Data.Items["trinket"].Values.Cast<Trinket>().ToList();
         var rarity = RandomSolver.ChooseByRandom<GeneratedRarity>(RarityTable).RarityId;
-        var rarityList = trinketList.FindAll(item => item.Rarity == rarity);
+        var rarityList = trinketList.FindAll(item => item.RarityId == rarity);
         return rarityList[UnityEngine.Random.Range(0, rarityList.Count)];
     }
 

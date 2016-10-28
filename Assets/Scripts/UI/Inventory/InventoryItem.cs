@@ -115,7 +115,7 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         ItemData = trinket;
 
         itemIcon.sprite = DarkestDungeonManager.Data.Sprites["inv_" + Item.Type + "+" + Item.Id];
-        rarityIcon.sprite = DarkestDungeonManager.Data.Sprites["rarity_" + trinket.Rarity];
+        rarityIcon.sprite = DarkestDungeonManager.Data.Sprites["rarity_" + trinket.RarityId];
 
         UpdateAmount();
 

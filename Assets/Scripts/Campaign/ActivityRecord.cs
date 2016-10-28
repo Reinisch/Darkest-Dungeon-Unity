@@ -250,8 +250,8 @@ public class ActorActivityRecord : ActivityRecord
                         sb.AppendFormat("\n" + LocalizationManager.GetString("str_bar_remove_trinket_story"),
                                     DarkestDungeonManager.Data.HexColors["notable"], Actor,
                                     LocalizationManager.GetString("town_name_tavern"),
-                                    DarkestDungeonManager.Data.HexColors[trinket.Rarity],
-                                    trinket.Rarity == "kickstarter" ?
+                                    DarkestDungeonManager.Data.HexColors[trinket.RarityId],
+                                    trinket.RarityId == "kickstarter" ?
                                     LocalizationManager.GetString(ToolTipManager.GetConcat("str_inventory_title_trinket", EffectInfo)) :
                                     LocalizationManager.GetString(ToolTipManager.GetConcat("str_inventory_title_trinket", EffectInfo)));
                         break;
@@ -363,8 +363,8 @@ public class ActorActivityRecord : ActivityRecord
                         sb.AppendFormat("\n" + LocalizationManager.GetString("str_gambling_remove_trinket_story"),
                                     DarkestDungeonManager.Data.HexColors["notable"], Actor,
                                     LocalizationManager.GetString("town_name_tavern"),
-                                    DarkestDungeonManager.Data.HexColors[trinket.Rarity],
-                                    trinket.Rarity == "kickstarter" ?
+                                    DarkestDungeonManager.Data.HexColors[trinket.RarityId],
+                                    trinket.RarityId == "kickstarter" ?
                                     LocalizationManager.GetString(ToolTipManager.GetConcat("str_inventory_title_trinket", EffectInfo)) :
                                     LocalizationManager.GetString(ToolTipManager.GetConcat("str_inventory_title_trinket", EffectInfo)));
                         break;
@@ -376,8 +376,8 @@ public class ActorActivityRecord : ActivityRecord
                         sb.AppendFormat("\n" + LocalizationManager.GetString("str_gambling_add_trinket_story"),
                                     DarkestDungeonManager.Data.HexColors["notable"], Actor,
                                     LocalizationManager.GetString("town_name_tavern"),
-                                    DarkestDungeonManager.Data.HexColors[addTrinket.Rarity],
-                                    addTrinket.Rarity == "kickstarter" ?
+                                    DarkestDungeonManager.Data.HexColors[addTrinket.RarityId],
+                                    addTrinket.RarityId == "kickstarter" ?
                                     LocalizationManager.GetString(ToolTipManager.GetConcat("str_inventory_title_trinket", EffectInfo)) :
                                     LocalizationManager.GetString(ToolTipManager.GetConcat("str_inventory_title_trinket", EffectInfo)));
                         break;

@@ -383,7 +383,7 @@ public class DarkestDatabase : MonoBehaviour
             }
             trinket.ClassRequirements = jsonTrinkets[i].hero_class_requirements;
             trinket.PurchasePrice = jsonTrinkets[i].price;
-            trinket.Rarity = jsonTrinkets[i].rarity;
+            trinket.RarityId = jsonTrinkets[i].rarity;
             trinkets.Add(trinket);
         }
         return trinkets;
@@ -1446,7 +1446,7 @@ public class DarkestDatabase : MonoBehaviour
                     {
                         bw.Write(trinkets[i].ClassRequirements[j]);
                     }
-                    bw.Write(trinkets[i].Rarity);
+                    bw.Write(trinkets[i].RarityId);
                     bw.Write(trinkets[i].PurchasePrice);
                     bw.Write(trinkets[i].EquipLimit);
                     bw.Write(trinkets[i].OriginDungeon);
@@ -1509,7 +1509,7 @@ public class DarkestDatabase : MonoBehaviour
                     {
                         trinket.ClassRequirements.Add(br.ReadString());
                     }
-                    trinket.Rarity = br.ReadString();
+                    trinket.RarityId = br.ReadString();
                     trinket.PurchasePrice = br.ReadInt32();
                     trinket.EquipLimit = br.ReadInt32();
                     trinket.OriginDungeon = br.ReadString();

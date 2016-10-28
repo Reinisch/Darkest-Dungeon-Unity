@@ -42,7 +42,7 @@ public static class RaidSolver
                 case LootType.Trinket:
                     LootEntryTrinket trinketEntry = entry as LootEntryTrinket;
                     var trinketList = DarkestDungeonManager.Data.Items["trinket"].Values.ToList().
-                        FindAll(trinket => ((Trinket)trinket).Rarity == trinketEntry.Rarity);
+                        FindAll(trinket => ((Trinket)trinket).RarityId == trinketEntry.Rarity);
 
                     Trinket trinketItem = (Trinket)trinketList[Random.Range(0, trinketList.Count)];
                     ItemDefinition trinketDef = new ItemDefinition();
@@ -89,7 +89,7 @@ public static class RaidSolver
                     case LootType.Trinket:
                         LootEntryTrinket trinketEntry = entry as LootEntryTrinket;
                         var trinketList = DarkestDungeonManager.Data.Items["trinket"].Values.ToList().
-                            FindAll(trinket => ((Trinket)trinket).Rarity == trinketEntry.Rarity);
+                            FindAll(trinket => ((Trinket)trinket).RarityId == trinketEntry.Rarity);
 
                         Trinket trinketItem = (Trinket)trinketList[Random.Range(0, trinketList.Count)];
                         ItemDefinition trinketDef = new ItemDefinition();
@@ -135,7 +135,7 @@ public static class RaidSolver
                 case LootType.Trinket:
                     LootEntryTrinket trinketEntry = entry as LootEntryTrinket;
                     var trinketList = DarkestDungeonManager.Data.Items["trinket"].Values.ToList().
-                        FindAll(trinket => ((Trinket)trinket).Rarity == trinketEntry.Rarity);
+                        FindAll(trinket => ((Trinket)trinket).RarityId == trinketEntry.Rarity);
 
                     Trinket trinketItem = (Trinket)trinketList[Random.Range(0, trinketList.Count)];
                     ItemDefinition trinketDef = new ItemDefinition();

@@ -32,7 +32,7 @@ public class RewardSlot : BaseSlot, IPointerEnterHandler, IPointerExitHandler
             rarityFrame.enabled = true;
             itemFrame.sprite = DarkestDungeonManager.Data.Sprites["inv_" + item.Type + "+" + item.Id];
             Trinket trinket = DarkestDungeonManager.Data.Items[item.Type][item.Id] as Trinket;
-            rarityFrame.sprite = DarkestDungeonManager.Data.Sprites["rarity_" + trinket.Rarity];
+            rarityFrame.sprite = DarkestDungeonManager.Data.Sprites["rarity_" + trinket.RarityId];
             if (item.Amount > 1)
                 amountText.text = Item.Amount.ToString();
             else
@@ -66,7 +66,7 @@ public class RewardSlot : BaseSlot, IPointerEnterHandler, IPointerExitHandler
             rarityFrame.enabled = true;
             itemFrame.sprite = DarkestDungeonManager.Data.Sprites["inv_" + item.Type + "+" + item.Id];
             Trinket trinket = DarkestDungeonManager.Data.Items[item.Type][item.Id] as Trinket;
-            rarityFrame.sprite = DarkestDungeonManager.Data.Sprites["rarity_" + trinket.Rarity];
+            rarityFrame.sprite = DarkestDungeonManager.Data.Sprites["rarity_" + trinket.RarityId];
         }
         else
         {

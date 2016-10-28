@@ -241,7 +241,7 @@ public static class QuestGenerator
                     var plotQuest = quest as PlotQuest;
                     if(plotQuest.PlotTrinket != null)
                     {
-                        var rarityTrinketList = trinketList.FindAll(item => item.Rarity == plotQuest.PlotTrinket.Rarity);
+                        var rarityTrinketList = trinketList.FindAll(item => item.RarityId == plotQuest.PlotTrinket.Rarity);
                         ItemDefinition trinket = new ItemDefinition();
                         trinket.Type = "trinket";
                         trinket.Amount = 1;
@@ -272,7 +272,7 @@ public static class QuestGenerator
                 {
                     if(trinketInfo.Value[quest.Difficulty][quest.Length] == 1)
                     {
-                        var rarityTrinketList = trinketList.FindAll(item => item.Rarity == trinketInfo.Key);
+                        var rarityTrinketList = trinketList.FindAll(item => item.RarityId == trinketInfo.Key);
                         ItemDefinition trinket = new ItemDefinition();
                         trinket.Type = "trinket";
                         trinket.Amount = 1;
