@@ -2,7 +2,7 @@
 using UnityEngine.EventSystems;
 using System.Text;
 
-public enum ToolTipStyle { FromBottom, FromRight, FromTop }
+public enum ToolTipStyle { FromBottom, FromRight, FromTop, FromLeft, FromTopLeft }
 public enum ToolTipSize { Small, Normal }
 
 public class ToolTipManager : MonoBehaviour
@@ -106,6 +106,24 @@ public class ToolTipManager : MonoBehaviour
                     currentTooltip.layoutGroup.childAlignment = TextAnchor.LowerCenter;
                     currentTooltip.RectTransform.position = (cornersTop[1] + cornersTop[2]) / 2;
                     currentTooltip.RectTransform.anchoredPosition += new Vector2(0, -8);
+                    break;
+                case ToolTipStyle.FromLeft:
+                    Vector3[] cornersLeft = new Vector3[4];
+                    senderRect.GetWorldCorners(cornersLeft);
+                    currentTooltip.RectTransform.pivot = new Vector2(1, 1);
+                    currentTooltip.layoutGroup.childAlignment = TextAnchor.UpperRight;
+
+                    currentTooltip.RectTransform.position = cornersLeft[1];
+                    currentTooltip.RectTransform.anchoredPosition += new Vector2(5, 13);
+                    break;
+                case ToolTipStyle.FromTopLeft:
+                    Vector3[] cornersTopLeft = new Vector3[4];
+                    senderRect.GetWorldCorners(cornersTopLeft);
+                    currentTooltip.RectTransform.pivot = new Vector2(1, 0);
+                    currentTooltip.layoutGroup.childAlignment = TextAnchor.LowerRight;
+
+                    currentTooltip.RectTransform.position = cornersTopLeft[1];
+                    currentTooltip.RectTransform.anchoredPosition += new Vector2(12, -10);
                     break;
             }
 
