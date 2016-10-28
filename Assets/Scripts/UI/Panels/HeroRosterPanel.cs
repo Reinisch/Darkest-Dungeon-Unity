@@ -98,6 +98,43 @@ public class HeroRosterPanel : MonoBehaviour, IPointerEnterHandler, IPointerExit
         UpdateCapacity();
     }
 
+    public void SortByBuilding()
+    {
+        DarkestSoundManager.PlayOneShot("event:/ui/town/sort_by");
+
+        DarkestDungeonManager.Campaign.Heroes.Sort((x, y) => x.Status.CompareTo(y.Status));
+        HeroSlots.Sort((x, y) => x.Hero.Status.CompareTo(y.Hero.Status));
+        for (int i = 0; i < HeroSlots.Count; i++)
+            HeroSlots[i].RectTransform.SetSiblingIndex(i);
+    }
+    public void SortByClass()
+    {
+        DarkestSoundManager.PlayOneShot("event:/ui/town/sort_by");
+
+        DarkestDungeonManager.Campaign.Heroes.Sort((x, y) => x.Class.CompareTo(y.Class));
+        HeroSlots.Sort((x, y) => x.Hero.Class.CompareTo(y.Hero.Class));
+        for (int i = 0; i < HeroSlots.Count; i++)
+            HeroSlots[i].RectTransform.SetSiblingIndex(i);
+    }
+    public void SortByStress()
+    {
+        DarkestSoundManager.PlayOneShot("event:/ui/town/sort_by");
+
+        DarkestDungeonManager.Campaign.Heroes.Sort((x, y) => x.Stress.CurrentValue.CompareTo(y.Stress.CurrentValue));
+        HeroSlots.Sort((x, y) => x.Hero.Stress.CurrentValue.CompareTo(y.Hero.Stress.CurrentValue));
+        for (int i = 0; i < HeroSlots.Count; i++)
+            HeroSlots[i].RectTransform.SetSiblingIndex(i);
+    }
+    public void SortByLevel()
+    {
+        DarkestSoundManager.PlayOneShot("event:/ui/town/sort_by");
+
+        DarkestDungeonManager.Campaign.Heroes.Sort((x, y) => x.Resolve.Level.CompareTo(y.Resolve.Level));
+        HeroSlots.Sort((x, y) => x.Hero.Resolve.Level.CompareTo(y.Hero.Resolve.Level));
+        for (int i = 0; i < HeroSlots.Count; i++)
+            HeroSlots[i].RectTransform.SetSiblingIndex(i);
+    }
+
     public void UpdateCapacity()
     {
         if (DarkestDungeonManager.Campaign.Heroes.Count >= DarkestDungeonManager.Campaign.Estate.StageCoach.RosterSlots)

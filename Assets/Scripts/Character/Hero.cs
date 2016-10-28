@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-public enum HeroStatus { Available, Tavern, Sanitarium, Abbey, RaidParty, Missing }
+public enum HeroStatus { Available = 10, RaidParty, Missing = 0, Tavern, Sanitarium, Abbey }
 
 public class Hero : Character
 {
