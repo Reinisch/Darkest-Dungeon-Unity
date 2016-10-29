@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 
 public delegate void ShopSellEvent(InventorySlot slot);
@@ -6,6 +7,9 @@ public delegate void ShopSellEvent(InventorySlot slot);
 public class ShopInventory : MonoBehaviour
 {
     public EstateCurrencyPanel currencyPanel;
+    public Text raidLocation;
+    public Text raidLongetivity;
+    public Text raidDifficulty;
 
     public List<ShopSlot> ShopSlots { get; set; }
 
@@ -35,6 +39,14 @@ public class ShopInventory : MonoBehaviour
 
     public void UpdateShop(Quest currentQuest)
     {
+        raidLocation.text = LocalizationManager.GetString("dungeon_name_" + currentQuest.Dungeon);
+        raidLongetivity.text = LocalizationManager.GetString("town_quest_length_" + currentQuest.Length.ToString()) + " | ";
+        raidDifficulty.text = LocalizationManager.GetString("town_quest_difficulty_" + currentQuest.Difficulty.ToString());
+        Color difficultyColor;
+        if (ColorUtility.TryParseHtmlString(DarkestDungeonManager.Data.HexColors["town_quest_difficulty_" +
+            currentQuest.Difficulty.ToString()], out difficultyColor))
+            raidDifficulty.color = difficultyColor;
+
         int slotsFilled = 0;
         List<ItemDefinition> shopItems = DarkestDungeonManager.Data.Provision.ShopLengthInventories[currentQuest.Length];
         for (int i = 0; i < shopItems.Count; i++)

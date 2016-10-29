@@ -2069,6 +2069,7 @@ public class DarkestDatabase : MonoBehaviour
         HexColors.Add("town_quest_difficulty_1", "#" + ColorUtility.ToHtmlStringRGBA(ModColor(169, 217, 102, 255)));
         HexColors.Add("town_quest_difficulty_3", "#" + ColorUtility.ToHtmlStringRGBA(ModColor(233, 170, 98, 255)));
         HexColors.Add("town_quest_difficulty_5", "#" + ColorUtility.ToHtmlStringRGBA(ModColor(255, 87, 49, 255)));
+        HexColors.Add("town_quest_difficulty_6", HexColors["harmful"]);
 
         HexColors.Add("equipment_level_0", "#" + ColorUtility.ToHtmlStringRGBA(ModColor(215, 213, 205, 255)));
         HexColors.Add("equipment_level_1", "#" + ColorUtility.ToHtmlStringRGBA(ModColor(215, 213, 205, 255)));
