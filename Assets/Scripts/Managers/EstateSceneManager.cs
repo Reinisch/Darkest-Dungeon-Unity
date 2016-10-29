@@ -572,6 +572,7 @@ public class EstateSceneManager : MonoBehaviour
         DarkestDungeonManager.ScreenFader.onAppearEnded -= EmbarkTransitionAppearComplete;
         DarkestSoundManager.ExecuteNarration("enter_quest_select", NarrationPlace.Town);
         transitionsEnabled = true;
+        raidPartyPanel.CheckComposition();
     }
 
     public void ProvisionClick()
@@ -702,6 +703,7 @@ public class EstateSceneManager : MonoBehaviour
                 break;
             case EstateSceneState.ProvisionScreen:
                 EstateSceneState = EstateSceneState.QuestScreen;
+                raidPartyPanel.CheckComposition();
                 break;
         }
         DarkestDungeonManager.ScreenFader.onFadeEnded -= ReturnFadeComplete;

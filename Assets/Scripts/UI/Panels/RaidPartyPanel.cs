@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using System.Linq;
 using System.Collections.Generic;
 
 public delegate void RaidPartyEvent();
@@ -12,6 +13,7 @@ public class RaidPartyPanel : MonoBehaviour
     public HeroDiscardPanel heroDiscardPanel;
     public Image eventOverlay;
     public List<Sprite> availableOverlays;
+    public PartyCompositionPanel compositionPanel;
 
     public bool IsPartyPrepared { get { return partyMembersPrepared == 4; } }
     public List<RaidPartySlot> PartySlots { get; private set; }
@@ -68,12 +70,14 @@ public class RaidPartyPanel : MonoBehaviour
         if (onPartyAssembled != null)
             onPartyAssembled();
 
-        DarkestSoundManager.PlayOneShot("event:/ui/town/party_comp");
+        CheckComposition();
     }
     void PartyDisassembled()
     {
         if (onPartyDisassembled != null)
             onPartyDisassembled();
+
+        CheckComposition();
     }
 
     void RaidPartyPanel_onDropOut(HeroSlot heroSlot)
@@ -107,6 +111,11 @@ public class RaidPartyPanel : MonoBehaviour
         heroDiscardPanel.gameObject.SetActive(false);
     }
 
+    public void CheckComposition()
+    {
+        compositionPanel.UpdateComposition(PartySlots.Select(slot =>
+            slot.SelectedHero == null ? null : slot.SelectedHero.Hero.Class).ToList());
+    }
     public void CheckUniqueEventOverlay()
     {
         if (DarkestDungeonManager.Campaign.TriggeredEvent != null)

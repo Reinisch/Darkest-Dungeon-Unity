@@ -124,6 +124,7 @@ public class DarkestDatabase : MonoBehaviour
         LoadMonsters();
         LoadJsonTownEvents();
         LoadNarration();
+        LoadPartyNames();
 
         GC.Collect();
     }
