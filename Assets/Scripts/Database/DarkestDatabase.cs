@@ -30,6 +30,7 @@ public class DarkestDatabase : MonoBehaviour
     const string jsonTrapDatabasePath = "Data/Curios/Traps";
     const string jsonObstacleDatabasePath = "Data/Curios/Obstacles";
     const string jsonCampaignGenerationPath = "Data/Mechanics/Campaign";
+    const string jsonExchangePath = "Data/Mechanics/HeirloomExchange";
     const string jsonProvisionPath = "Data/Mechanics/Provision";
     const string jsonBuffDatabasePath = "Data/JsonBuffs";
     const string jsonNarrationDataPath = "Data/Narration";
@@ -84,6 +85,7 @@ public class DarkestDatabase : MonoBehaviour
 
     public Dictionary<string, NarrationEntry> Narration { get; private set; }
     public List<PartyNameEntry> PartyNames { get; private set; }
+    public List<HeirloomExchange> HeirloomExchanges { get; private set; }
 
     public bool ItemExists(ItemDefinition itemDefinition)
     {
@@ -125,6 +127,7 @@ public class DarkestDatabase : MonoBehaviour
         LoadJsonTownEvents();
         LoadNarration();
         LoadPartyNames();
+        LoadHeirloomExchanges();
 
         GC.Collect();
     }
@@ -1522,6 +1525,22 @@ public class DarkestDatabase : MonoBehaviour
         }
     }
 
+    public void LoadHeirloomExchanges()
+    {
+        TextAsset jsonText = Resources.Load<TextAsset>(jsonExchangePath);
+        var jsonExchange = JsonDarkestDeserializer.GetJsonObject<JsonHeirloomExchange>(jsonText.text);
+        HeirloomExchanges = new List<HeirloomExchange>();
+
+        for (int i = 0; i < jsonExchange.markets[0].exchange_rates.Count; i++)
+        {
+            var newHeirloomExchange = new HeirloomExchange();
+            newHeirloomExchange.FromType = jsonExchange.markets[0].exchange_rates[i].exchange_from_type;
+            newHeirloomExchange.FromAmount = jsonExchange.markets[0].exchange_rates[i].exchange_from_amount;
+            newHeirloomExchange.ToType = jsonExchange.markets[0].exchange_rates[i].exchange_to_type;
+            newHeirloomExchange.ToAmount = jsonExchange.markets[0].exchange_rates[i].exchange_to_amount;
+            HeirloomExchanges.Add(newHeirloomExchange);
+        }
+    }
     public void LoadPartyNames()
     {
         TextAsset jsonText = Resources.Load<TextAsset>(jsonPartyNameDataPath);

@@ -3,6 +3,25 @@ using Newtonsoft.Json;
 
 namespace DarkestJson
 {
+    #region Heirloom Trading
+    public class JsonHeirloomExchange
+    {
+        public List<JsonHeirLoomMarket> markets;
+    }
+    public class JsonHeirLoomMarket
+    {
+        public string id;
+        public List<JsonHeirloomExchangeEntry> exchange_rates;
+    }
+    public class JsonHeirloomExchangeEntry
+    {
+        public string exchange_from_type;
+        public int exchange_from_amount;
+        public string exchange_to_type;
+        public int exchange_to_amount;
+    }
+    #endregion
+
     #region Party Names
     public class JsonPartyNameDictionary
     {
@@ -844,6 +863,16 @@ namespace DarkestJson
 
     public static class JsonDarkestDeserializer
     {
+        public static JsonClass GetJsonObject<JsonClass>(string jsonString)
+        {
+            return JsonConvert.DeserializeObject<JsonClass>(jsonString);
+        }
+
+        public static JsonHeirloomExchange GetJsonHeirloomExchange(string exchangeString)
+        {
+            return JsonConvert.DeserializeObject<JsonHeirloomExchange>(exchangeString);
+        }
+
         public static JsonPartyNameDictionary GetJsonPartyNames(string partyString)
         {
             return JsonConvert.DeserializeObject<JsonPartyNameDictionary>(partyString);
