@@ -44,6 +44,8 @@ public class RaidPartyCamera : MonoBehaviour
         }
     }
 
+    bool zooming = false;
+
     void Awake()
     {
         Camera = GetComponent<Camera>();
@@ -68,17 +70,23 @@ public class RaidPartyCamera : MonoBehaviour
         {
             Camera.fieldOfView = Mathf.SmoothDamp(Camera.fieldOfView, TargetFOV, ref velocityFOV, SmoothTimeFOV);
             blurCamera.fieldOfView = Camera.fieldOfView;
-            return;
         }
-
-        var frustumHeight = 2.0f * frustumDistanceTarget * Mathf.Tan(Camera.fieldOfView * 0.5f * Mathf.Deg2Rad);
-        var frustumWidth = frustumHeight * Camera.aspect;
-
-        if (StandardFOV == TargetFOV && !Mathf.Approximately(frustumWidth, frustumTargetWidth))
+        else if (zooming)
         {
-            // change field of view to fit in default room/corridor view in every aspect ratio
-            StandardFOV = 2.0f * Mathf.Atan(frustumTargetWidth / Camera.aspect * 0.5f / frustumDistanceTarget) * Mathf.Rad2Deg;
-            TargetFOV = StandardFOV;
+            if (Mathf.Approximately(TargetFOV, StandardFOV))
+                zooming = false;
+        }
+        else
+        {
+            var frustumHeight = 2.0f * frustumDistanceTarget * Mathf.Tan(Camera.fieldOfView * 0.5f * Mathf.Deg2Rad);
+            var frustumWidth = frustumHeight * Camera.aspect;
+
+            if (StandardFOV == TargetFOV && !zooming && !Mathf.Approximately(Mathf.Round(frustumWidth), Mathf.Round(frustumTargetWidth)))
+            {
+                // change field of view to fit in default room/corridor view in every aspect ratio
+                StandardFOV = 2.0f * Mathf.Atan(frustumTargetWidth / Camera.aspect * 0.5f / frustumDistanceTarget) * Mathf.Rad2Deg;
+                TargetFOV = StandardFOV;
+            }
         }
 
         if (mode == CameraMode.Static)
@@ -110,6 +118,7 @@ public class RaidPartyCamera : MonoBehaviour
     }
     public void Zoom(float targetFOV, float time)
     {
+        zooming = true;
         TargetFOV = targetFOV;
         SmoothTimeFOV = time;
     }
