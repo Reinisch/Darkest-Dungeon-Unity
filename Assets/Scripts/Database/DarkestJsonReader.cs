@@ -3,6 +3,18 @@ using Newtonsoft.Json;
 
 namespace DarkestJson
 {
+    #region Party Names
+    public class JsonPartyNameDictionary
+    {
+        public List<JsonPartyNameEntry> party_names;
+    }
+    public class JsonPartyNameEntry
+    {
+        public string id;
+        public List<string> required_hero_class;
+    }
+    #endregion
+
     #region Narration
     public class JsonNarration
     {
@@ -832,6 +844,11 @@ namespace DarkestJson
 
     public static class JsonDarkestDeserializer
     {
+        public static JsonPartyNameDictionary GetJsonPartyNames(string partyString)
+        {
+            return JsonConvert.DeserializeObject<JsonPartyNameDictionary>(partyString);
+        }
+
         public static JsonNarration GetJsonNarration(string narrationString)
         {
             return JsonConvert.DeserializeObject<JsonNarration>(narrationString);

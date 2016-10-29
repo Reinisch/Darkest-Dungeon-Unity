@@ -33,6 +33,7 @@ public class DarkestDatabase : MonoBehaviour
     const string jsonProvisionPath = "Data/Mechanics/Provision";
     const string jsonBuffDatabasePath = "Data/JsonBuffs";
     const string jsonNarrationDataPath = "Data/Narration";
+    const string jsonPartyNameDataPath = "Data/PartyNames";
     const string jsonTraitDatabasePath = "Data/JsonTraits";
     const string jsonCampingPath = "Data/JsonCamping";
     const string jsonAIDatabasePath = "Data/JsonAI";
@@ -82,6 +83,7 @@ public class DarkestDatabase : MonoBehaviour
     public Dictionary<Knowledge, Sprite> MapHallKnowledgeSet { get; private set; }
 
     public Dictionary<string, NarrationEntry> Narration { get; private set; }
+    public List<PartyNameEntry> PartyNames { get; private set; }
 
     public bool ItemExists(ItemDefinition itemDefinition)
     {
@@ -1519,6 +1521,19 @@ public class DarkestDatabase : MonoBehaviour
         }
     }
 
+    public void LoadPartyNames()
+    {
+        TextAsset jsonText = Resources.Load<TextAsset>(jsonPartyNameDataPath);
+        var jsonPartyNames = JsonDarkestDeserializer.GetJsonPartyNames(jsonText.text);
+        PartyNames = new List<PartyNameEntry>();
+        for(int i = 0; i < jsonPartyNames.party_names.Count; i++)
+        {
+            var newPartyComp = new PartyNameEntry();
+            newPartyComp.Id = jsonPartyNames.party_names[i].id;
+            newPartyComp.ClassIds = jsonPartyNames.party_names[i].required_hero_class;
+            PartyNames.Add(newPartyComp);
+        }
+    }
     public void LoadNarration()
     {
         TextAsset jsonText = Resources.Load<TextAsset>(jsonNarrationDataPath);
