@@ -15,13 +15,15 @@ public class HeirloomExchangePanel : MonoBehaviour
     public Button incAmountButton;
     public Button decAmountButton;
 
+    public Animator exchangeAnimator;
+
     public List<Image> toHeirloomArrows;
     public List<ExchangeEntry> exchangeEntries;
 
     public string CurrentHeirloom { get; set; }
     public int CurrentAmount { get; set; }
 
-    private int typeCount = 4;
+    private int typeCount = 3;
 
     void UpdateExchangeArrows(int exchangeIndex)
     {
@@ -46,10 +48,18 @@ public class HeirloomExchangePanel : MonoBehaviour
             exchangeEntries[i].ExchangeIndex = i;
         }
 
+        InitializeExchanges();
+    }
+
+    public void InitializeExchanges()
+    {
         CurrentHeirloom = "bust";
         fromHeirloom.sprite = DarkestDungeonManager.Data.Sprites[CurrentHeirloom];
-
         UpdateExchanges(true);
+    }
+    public void ExchangeSwitched()
+    {
+        exchangeAnimator.SetBool("IsOpened", !exchangeAnimator.GetBool("IsOpened"));
     }
 
     public void UpTypeButtonClicked()
@@ -65,8 +75,8 @@ public class HeirloomExchangePanel : MonoBehaviour
     public void DownTypeButtonClicked()
     {
         int currentIndex = DarkestDungeonManager.Data.HeirloomExchanges.FindIndex(entry => entry.FromType == CurrentHeirloom);
-        int nextIndex = (currentIndex - typeCount)
-            % DarkestDungeonManager.Data.HeirloomExchanges.Count;
+        int nextIndex = currentIndex - typeCount;
+
         if (nextIndex < 0)
             nextIndex = DarkestDungeonManager.Data.HeirloomExchanges.Count - 1;
 
