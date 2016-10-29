@@ -98,6 +98,8 @@ public class NomadWagonWindow : BuildingWindow
         {
             gameObject.SetActive(true);
             TownManager.BuildingWindowActive = true;
+            DarkestSoundManager.ExecuteNarration("enter_building", NarrationPlace.Town, "nomad_wagon");
+            DarkestSoundManager.PlayOneShot("event:/town/enter_nomad_wagon");
         }
     }
 

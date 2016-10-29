@@ -50,6 +50,8 @@ public class GraveyardWindow : BuildingWindow
         {
             gameObject.SetActive(true);
             TownManager.BuildingWindowActive = true;
+            DarkestSoundManager.ExecuteNarration("enter_building", NarrationPlace.Town, "graveyard");
+            DarkestSoundManager.PlayOneShot("event:/town/enter_graveyard");
         }
     }
 

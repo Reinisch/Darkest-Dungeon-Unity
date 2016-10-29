@@ -183,6 +183,8 @@ public class AbbeyWindow : BuildingWindow
     {
         if (!TownManager.AnyWindowsOpened)
         {
+            DarkestSoundManager.ExecuteNarration("enter_building", NarrationPlace.Town, "abbey");
+            DarkestSoundManager.PlayOneShot("event:/town/enter_abbey");
             gameObject.SetActive(true);
             TownManager.BuildingWindowActive = true;
             TownManager.EstateSceneManager.rosterPanel.onHeroSlotBeginDragging += rosterPanel_onHeroSlotBeginDragging;

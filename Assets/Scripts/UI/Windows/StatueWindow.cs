@@ -24,6 +24,8 @@ public class StatueWindow : BuildingWindow
         {
             gameObject.SetActive(true);
             TownManager.BuildingWindowActive = true;
+            DarkestSoundManager.ExecuteNarration("enter_building", NarrationPlace.Town, "statue");
+            DarkestSoundManager.PlayOneShot("event:/town/enter_statue");
         }
     }
 

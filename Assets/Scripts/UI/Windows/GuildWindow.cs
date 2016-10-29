@@ -122,6 +122,8 @@ public class GuildWindow : BuildingWindow
         {
             gameObject.SetActive(true);
             TownManager.BuildingWindowActive = true;
+            DarkestSoundManager.ExecuteNarration("enter_building", NarrationPlace.Town, "guild");
+            DarkestSoundManager.PlayOneShot("event:/town/enter_guild");
         }
     }
 

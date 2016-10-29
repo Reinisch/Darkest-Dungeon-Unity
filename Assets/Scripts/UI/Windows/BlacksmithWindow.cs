@@ -123,6 +123,8 @@ public class BlacksmithWindow : BuildingWindow
         {
             gameObject.SetActive(true);
             TownManager.BuildingWindowActive = true;
+            DarkestSoundManager.ExecuteNarration("enter_building", NarrationPlace.Town, "blacksmith");
+            DarkestSoundManager.PlayOneShot("event:/town/enter_blacksmith");
         }
     }
 

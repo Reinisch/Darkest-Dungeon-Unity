@@ -119,6 +119,8 @@ public class CampingTrainerWindow : BuildingWindow
         {
             gameObject.SetActive(true);
             TownManager.BuildingWindowActive = true;
+            DarkestSoundManager.ExecuteNarration("enter_building", NarrationPlace.Town, "camping_trainer");
+            DarkestSoundManager.PlayOneShot("event:/town/enter_camping_trainer");
         }
     }
 

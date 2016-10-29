@@ -186,6 +186,8 @@ public class TavernWindow : BuildingWindow
             TownManager.BuildingWindowActive = true;
             TownManager.EstateSceneManager.rosterPanel.onHeroSlotBeginDragging += rosterPanel_onHeroSlotBeginDragging;
             TownManager.EstateSceneManager.rosterPanel.onHeroSlotEndDragging += rosterPanel_onHeroSlotEndDragging;
+            DarkestSoundManager.ExecuteNarration("enter_building", NarrationPlace.Town, "tavern");
+            DarkestSoundManager.PlayOneShot("event:/town/enter_tavern");
         }
     }
 

@@ -237,6 +237,8 @@ public class SanitariumWindow : BuildingWindow
             TownManager.BuildingWindowActive = true;
             TownManager.EstateSceneManager.rosterPanel.onHeroSlotBeginDragging += rosterPanel_onHeroSlotBeginDragging;
             TownManager.EstateSceneManager.rosterPanel.onHeroSlotEndDragging += rosterPanel_onHeroSlotEndDragging;
+            DarkestSoundManager.ExecuteNarration("enter_building", NarrationPlace.Town, "sanitarium");
+            DarkestSoundManager.PlayOneShot("event:/town/enter_sanitarium");
         }
     }
     public override void WindowClosed()
