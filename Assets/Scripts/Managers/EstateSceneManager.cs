@@ -279,17 +279,20 @@ public class EstateSceneManager : MonoBehaviour
                 openedWindow.UpdateUpgradeTrees(true);
         }
     }
-    public void OnSceneLeave()
+    public void OnSceneLeave(bool embarking = false)
     {
         DarkestSoundManager.StopTownSoundtrack();
 
-        if(raidPartyPanel.PartySlots != null)
-            foreach (var slot in raidPartyPanel.PartySlots)
-                if (slot.SelectedHero != null)
-                    slot.SelectedHero.SetStatus(HeroStatus.Available);
+        if(!embarking)
+        {
+            if (raidPartyPanel.PartySlots != null)
+                foreach (var slot in raidPartyPanel.PartySlots)
+                    if (slot.SelectedHero != null)
+                        slot.SelectedHero.SetStatus(HeroStatus.Available);
 
-        if(EstateSceneState == EstateSceneState.ProvisionScreen)
-            shopManager.SellOutEverything();
+            if (EstateSceneState == EstateSceneState.ProvisionScreen)
+                shopManager.SellOutEverything();
+        }
     }
 
     public void QuickStart()
@@ -642,7 +645,7 @@ public class EstateSceneManager : MonoBehaviour
             DarkestDungeonManager.ScreenFader.Fade();
             DarkestDungeonManager.Instanse.RaidingManager.DeployFromPreparation(raidPreparationManager, shopManager);
             DarkestSoundManager.PlayOneShot("event:/ui/town/set_off_button");
-            OnSceneLeave();
+            OnSceneLeave(true);
         }
     }
     void FinalEmbarkFadeComplete()
