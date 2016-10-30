@@ -29,6 +29,7 @@ public class EstateSceneManager : MonoBehaviour
     public EstateBottomPanel bottomPanel;
     public EstateTopPanel topPanel;
     public RaidPartyPanel raidPartyPanel;
+    public HeirloomExchangePanel exchangePanel;
 
     public RaidPreparationManager raidPreparationManager;
     public ShopManager shopManager;
@@ -90,6 +91,9 @@ public class EstateSceneManager : MonoBehaviour
 
         raidPartyPanel.onPartyAssembled += EnableEmbarkToProvision;
         raidPartyPanel.onPartyDisassembled += DisableEmbarkToProvision;
+
+        currencyPanel.onCurrencyIncreased += exchangePanel.CurrencyUpdated;
+        currencyPanel.onCurrencyDecreased += exchangePanel.CurrencyUpdated;
 
         DarkestDungeonManager.Instanse.UpdateSceneOverlay(GameObject.FindGameObjectWithTag("Main UI Camera").GetComponent<Camera>());
         DarkestDungeonManager.Instanse.mainMenu.uiCanvasGroup = GameObject.Find("UI_Shared").GetComponent<CanvasGroup>();
@@ -192,6 +196,9 @@ public class EstateSceneManager : MonoBehaviour
     void OnDestroy()
     {
         DarkestDungeonManager.MainMenu.onWindowClose -= MainMenuClose;
+
+        currencyPanel.onCurrencyIncreased -= exchangePanel.CurrencyUpdated;
+        currencyPanel.onCurrencyDecreased -= exchangePanel.CurrencyUpdated;
     }
 
     IEnumerator LoadEstateEvent()
@@ -212,6 +219,7 @@ public class EstateSceneManager : MonoBehaviour
     {
         bottomPanel.provisionButton.interactable = false;
     }
+    
     void RosterPanel_onHeroResurrection(DeathRecord record)
     {
         (townManager.buildingWindows[2] as GraveyardWindow).HeroResurrected(record);
@@ -262,6 +270,15 @@ public class EstateSceneManager : MonoBehaviour
     };
     #endregion
 
+    public void OnHeirloomExchange()
+    {
+        if (townManager.BuildingWindowActive)
+        {
+            BuildingWindow openedWindow = townManager.buildingWindows.Find(window => window.gameObject.activeSelf);
+            if (openedWindow != null)
+                openedWindow.UpdateUpgradeTrees(true);
+        }
+    }
     public void OnSceneLeave()
     {
         DarkestSoundManager.StopTownSoundtrack();

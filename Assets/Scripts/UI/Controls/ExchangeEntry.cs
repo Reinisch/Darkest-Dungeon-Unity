@@ -25,6 +25,7 @@ public class ExchangeEntry : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             DarkestDungeonManager.Campaign.Estate.Currencies[CurrentExchange.FromType].amount -= fromAmount;
             DarkestDungeonManager.Campaign.Estate.Currencies[CurrentExchange.ToType].amount += CurrentAmount;
             DarkestSoundManager.PlayOneShot("event:/ui/town/heirloom_exchange_confirm");
+            EstateSceneManager.Instanse.OnHeirloomExchange();
             EstateSceneManager.Instanse.currencyPanel.UpdateCurrency();
         }
     }

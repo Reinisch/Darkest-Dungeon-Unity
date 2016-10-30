@@ -8,17 +8,22 @@ public class StatueWindow : BuildingWindow
     public override TownManager TownManager { get; set; }
     public Statue Statue { get; private set; }
 
-    public override void Initialize()
-    {
-        Statue = DarkestDungeonManager.Campaign.Estate.Statue;
-    }
-
     void Update()
     {
         scrollBar.size = 0;
     }
 
-    public void WindowOpened()
+    public override void Initialize()
+    {
+        Statue = DarkestDungeonManager.Campaign.Estate.Statue;
+    }
+
+    public override void UpdateUpgradeTrees(bool afterPurchase = false)
+    {
+
+    }
+
+    public override void WindowOpened()
     {
         if (!TownManager.AnyWindowsOpened)
         {

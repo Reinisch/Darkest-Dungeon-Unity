@@ -170,7 +170,7 @@ public class SanitariumWindow : BuildingWindow
         }
     }
 
-    public void UpdateUpgradeTrees(bool afterPurchase = false)
+    public override void UpdateUpgradeTrees(bool afterPurchase = false)
     {
         Sanitarium.UpdateBuilding(DarkestDungeonManager.Campaign.Estate.TownPurchases);
         float ratio = DarkestDungeonManager.Campaign.Estate.GetBuildingUpgradeRatio(BuildingType.Sanitarium);
@@ -229,7 +229,7 @@ public class SanitariumWindow : BuildingWindow
             upgradeWindow.gameObject.SetActive(true);
         }
     }
-    public void WindowOpened()
+    public override void WindowOpened()
     {
         if (!TownManager.AnyWindowsOpened)
         {

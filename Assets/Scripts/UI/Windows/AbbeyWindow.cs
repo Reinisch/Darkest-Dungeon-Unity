@@ -148,7 +148,7 @@ public class AbbeyWindow : BuildingWindow
             penanceSlots[i].UpdateSlot();
         }
     }
-    public void UpdateUpgradeTrees(bool afterPurchase = false)
+    public override void UpdateUpgradeTrees(bool afterPurchase = false)
     {
         Abbey.UpdateBuilding(DarkestDungeonManager.Campaign.Estate.TownPurchases);
         float ratio = DarkestDungeonManager.Campaign.Estate.GetBuildingUpgradeRatio(BuildingType.Abbey);
@@ -179,7 +179,7 @@ public class AbbeyWindow : BuildingWindow
         }
     }
 
-    public void WindowOpened()
+    public override void WindowOpened()
     {
         if (!TownManager.AnyWindowsOpened)
         {

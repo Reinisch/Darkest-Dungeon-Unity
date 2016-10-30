@@ -66,7 +66,7 @@ public class StageCoachWindow : BuildingWindow
             DarkestSoundManager.PlayOneShot("event:/ui/town/button_click_locked");
     }
 
-    public void UpdateUpgradeTrees(bool afterPurchase = false)
+    public override void UpdateUpgradeTrees(bool afterPurchase = false)
     {
         StageCoach.UpdateBuilding(DarkestDungeonManager.Campaign.Estate.TownPurchases);
         float ratio = DarkestDungeonManager.Campaign.Estate.GetBuildingUpgradeRatio(BuildingType.StageCoach);
@@ -91,7 +91,7 @@ public class StageCoachWindow : BuildingWindow
         rosterPanel.UpdateCapacity();
     }
 
-    public void WindowOpened()
+    public override void WindowOpened()
     {
         if (!TownManager.AnyWindowsOpened)
         {

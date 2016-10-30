@@ -92,7 +92,7 @@ public class BlacksmithWindow : BuildingWindow
         }
     }
 
-    public void UpdateUpgradeTrees(bool afterPurchase = false)
+    public override void UpdateUpgradeTrees(bool afterPurchase = false)
     {
         Blacksmith.UpdateBuilding(DarkestDungeonManager.Campaign.Estate.TownPurchases);
         float ratio = DarkestDungeonManager.Campaign.Estate.GetBuildingUpgradeRatio(BuildingType.Blacksmith);
@@ -117,7 +117,7 @@ public class BlacksmithWindow : BuildingWindow
         heroOverview.UpdateHeroOverview();
     }
 
-    public void WindowOpened()
+    public override void WindowOpened()
     {
         if (!TownManager.AnyWindowsOpened)
         {

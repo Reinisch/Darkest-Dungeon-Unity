@@ -91,7 +91,7 @@ public class GuildWindow : BuildingWindow
         }
     }
 
-    public void UpdateUpgradeTrees(bool afterPurchase = false)
+    public override void UpdateUpgradeTrees(bool afterPurchase = false)
     {
         Guild.UpdateBuilding(DarkestDungeonManager.Campaign.Estate.TownPurchases);
         float ratio = DarkestDungeonManager.Campaign.Estate.GetBuildingUpgradeRatio(BuildingType.Guild);
@@ -116,7 +116,7 @@ public class GuildWindow : BuildingWindow
         heroOverview.UpdateHeroOverview();
     }
 
-    public void WindowOpened()
+    public override void WindowOpened()
     {
         if (!TownManager.AnyWindowsOpened)
         {

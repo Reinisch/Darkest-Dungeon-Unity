@@ -44,7 +44,11 @@ public class GraveyardWindow : BuildingWindow
         scrollBar.size = 0;
     }
 
-    public void WindowOpened()
+    public override void UpdateUpgradeTrees(bool afterPurchase = false)
+    {
+
+    }
+    public override void WindowOpened()
     {
         if (!TownManager.AnyWindowsOpened)
         {
@@ -54,7 +58,6 @@ public class GraveyardWindow : BuildingWindow
             DarkestSoundManager.PlayOneShot("event:/town/enter_graveyard");
         }
     }
-
     public override void WindowClosed()
     {
         gameObject.SetActive(false);

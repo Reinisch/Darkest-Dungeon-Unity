@@ -22,6 +22,13 @@ public class HeirloomExchangePanel : MonoBehaviour
 
     public string CurrentHeirloom { get; set; }
     public int CurrentAmount { get; set; }
+    public bool IsOpened
+    {
+        get
+        {
+            return exchangeAnimator.GetBool("IsOpened");
+        }
+    }
 
     private int typeCount = 3;
 
@@ -49,6 +56,12 @@ public class HeirloomExchangePanel : MonoBehaviour
         }
 
         InitializeExchanges();
+    }
+
+    public void CurrencyUpdated(string currency)
+    {
+        if(exchangeAnimator.GetBool("IsOpened") && currency != "gold")
+            UpdateExchanges();
     }
 
     public void InitializeExchanges()

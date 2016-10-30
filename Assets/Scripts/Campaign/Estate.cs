@@ -437,9 +437,13 @@ public class Estate
         }
 
         if(!isFree)
+        {
             RemoveCurrency(upgrade.Cost);
+            if (upgrade.Cost.Find(cost => cost.Type != "gold" && cost.Amount > 0) != null)
+                EstateSceneManager.Instanse.currencyPanel.CurrencyDecreased("heirloom");
+        }
 
-        if(DarkestDungeonManager.Data.UpgradeTrees.ContainsKey(treeId))
+        if (DarkestDungeonManager.Data.UpgradeTrees.ContainsKey(treeId))
             DarkestSoundManager.ExecuteNarration("upgrade_building", NarrationPlace.Town,
                 DarkestDungeonManager.Data.UpgradeTrees[treeId].Tags.ToArray());
 
@@ -484,6 +488,7 @@ public class Estate
         {
             Currencies[cost.Type].amount -= cost.Amount;
         }
+            
         return true;
     }
     public bool RemoveCurrency(IEnumerable<CurrencyCost> currencies, float discount)
