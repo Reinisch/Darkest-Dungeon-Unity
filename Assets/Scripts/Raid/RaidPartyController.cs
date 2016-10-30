@@ -16,6 +16,8 @@ public class RaidPartyController : MonoBehaviour
     public bool MovementAllowed { get; set; }
     public bool ForwardMovementAllowed { get; set; }
 
+    public Direction PointerMovementDirection { get; set; }
+
     bool moving = false;
 
     void CheckSmoothStop()
@@ -56,6 +58,7 @@ public class RaidPartyController : MonoBehaviour
 
     void Awake()
     {
+        PointerMovementDirection = Direction.Bot;
         MovementAllowed = true;
         ForwardMovementAllowed = true;
         RigidBody = GetComponent<Rigidbody2D>();
@@ -70,7 +73,9 @@ public class RaidPartyController : MonoBehaviour
         if (MovementAllowed && !DarkestDungeonManager.GamePaused && !RaidSceneManager.AnyWindowOpened)
         {
             double delta = Mathf.Clamp(Time.deltaTime, 0, 0.1f);
-            double direction = Input.GetAxis("Horizontal");
+            double direction = PointerMovementDirection == Direction.Bot ? Input.GetAxis("Horizontal") :
+                PointerMovementDirection == Direction.Left ? -1 :
+                PointerMovementDirection == Direction.Right ? 1 : 0;
             double advancment = 0;
 
             if (direction < 0 && heroParty.LastUnit != null && Passage.leftWall.position.x >= heroParty.LastUnit.RectTransform.position.x)
