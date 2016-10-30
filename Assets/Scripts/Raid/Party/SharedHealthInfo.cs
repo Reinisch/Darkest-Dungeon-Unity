@@ -6,6 +6,7 @@ public class SharedHealthInfo : MonoBehaviour
 {
     public Animator healthAnimator;
     public HealthBar healthBar;
+    public RectTransform rectTransform;
 
     public bool IsActive { get; private set; }
     public string SharedId { get; private set; }
@@ -16,6 +17,14 @@ public class SharedHealthInfo : MonoBehaviour
     {
         Health = new PairedAttribute(AttributeCategory.CombatStat);
         SharedUnits = new List<FormationUnit>();
+    }
+    void LateUpdate()
+    {
+        if (SharedUnits.Count == 0 || SharedUnits[0] == null)
+            return;
+
+        Vector3 screenPoint = RaidSceneManager.DungeonPositionToScreen(SharedUnits[0].RectTransform.position);
+        rectTransform.position = new Vector3(rectTransform.position.x, screenPoint.y, rectTransform.position.z);
     }
 
     public void Show()

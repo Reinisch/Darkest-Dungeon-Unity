@@ -13914,10 +13914,10 @@ RectTransform:
   - {fileID: 581063441}
   m_Father: {fileID: 1655935848}
   m_RootOrder: 0
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 1383.09, y: -1664.9999}
-  m_SizeDelta: {x: 635, y: 395}
+  m_SizeDelta: {x: 635, y: 400}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!95 &476350201
 Animator:
@@ -13996,6 +13996,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAnimator: {fileID: 476350201}
   healthBar: {fileID: 581063443}
+  rectTransform: {fileID: 476350200}
 --- !u!1 &477759623
 GameObject:
   m_ObjectHideFlags: 0
@@ -15717,9 +15718,9 @@ RectTransform:
   - {fileID: 2105715509}
   m_Father: {fileID: 273657527}
   m_RootOrder: 0
-  m_AnchorMin: {x: 0.5, y: 0.8775}
-  m_AnchorMax: {x: 0.5, y: 0.8775}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -132}
   m_SizeDelta: {x: 0, y: 1}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &519236300
@@ -25884,7 +25885,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startingMode: 0
   startingItems:
-  - ancestor_small_D
+  - formless_melee_A
+  - formless_guard_A
+  - formless_weak_A
+  - formless_ranged_A
   dungeonCamera: {fileID: 447450558}
   hallwayView: {fileID: 1199950669}
   roomView: {fileID: 970925681}
@@ -45063,10 +45067,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1538781354}
   m_RootOrder: 0
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000015258789, y: 0}
-  m_SizeDelta: {x: -0.000030517578, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1920, y: 360}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1436659790
 MonoBehaviour:
