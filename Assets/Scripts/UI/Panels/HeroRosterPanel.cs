@@ -104,7 +104,7 @@ public class HeroRosterPanel : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
         System.Comparison<Hero> sorting = (x, y) =>
         {
-            int result = x.Status.CompareTo(y.Status);
+            int result = -x.Status.CompareTo(y.Status);
             return result == 0 ? x.Name.CompareTo(y.Name) : result;
         };
 

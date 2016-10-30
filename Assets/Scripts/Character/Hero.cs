@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-public enum HeroStatus { Available = 10, RaidParty, Missing = 0, Tavern, Sanitarium, Abbey }
+public enum HeroStatus { Available = 0, RaidParty, Missing = 10, Tavern, Sanitarium, Abbey }
 
 public class Hero : Character
 {
@@ -570,6 +570,7 @@ public class Hero : Character
         RosterId = rosterId;
         HeroName = generatedName;
         ClassStringId = classId;
+        Status = HeroStatus.Available;
         Resolve = new Resolve(0, 0);
         HeroClass = DarkestDungeonManager.Data.HeroClasses[classId];
         ClassIndexId = HeroClass.IndexId;
@@ -673,6 +674,7 @@ public class Hero : Character
         RosterId = rosterId;
         HeroName = generatedName;
         ClassStringId = classId;
+        Status = HeroStatus.Available;
         Resolve = new Resolve(expUpgrade.Level, 0);
         HeroClass = DarkestDungeonManager.Data.HeroClasses[classId];
         ClassIndexId = HeroClass.IndexId;
@@ -780,6 +782,7 @@ public class Hero : Character
         RosterId = rosterId;
         HeroName = deathRecord.HeroName;
         ClassStringId = classId;
+        Status = HeroStatus.Available;
         Resolve = new Resolve(deathRecord.ResolveLevel, 0);
         HeroClass = DarkestDungeonManager.Data.HeroClasses[classId];
         ClassIndexId = HeroClass.IndexId;

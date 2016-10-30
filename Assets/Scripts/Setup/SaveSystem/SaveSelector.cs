@@ -48,10 +48,6 @@ public class SaveSelector : MonoBehaviour
                 {
                     selectedSaveSlot.RefocusInput();
                 }
-                if (Input.GetKeyUp(KeyCode.Return))
-                {
-                    selectedSaveSlot.SaveNamingCompleted();
-                }
             }
             else if (Input.GetKeyUp(KeyCode.Escape))
             {

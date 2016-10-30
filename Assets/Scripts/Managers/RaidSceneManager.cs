@@ -520,7 +520,6 @@ public class RaidSceneManager : MonoBehaviour
 
     public void OnSceneLeave()
     {
-        DarkestDungeonManager.ScreenFader.Fade(1);
         DarkestSoundManager.StopDungeonSoundtrack();
         DarkestSoundManager.StopCampingSoundtrack();
         DarkestSoundManager.StopBattleSoundtrack();
