@@ -54,6 +54,11 @@ public class FormationOverlaySlot : MonoBehaviour, IPointerClickHandler, IPointe
 
     private int baseWidth = 140;
 
+#if UNITY_ANDROID || UNITY_IOS
+    float doubleTapTimer = 0f;
+    float doubleTapTime = 0.2f;
+#endif
+
     void Awake()
     {
         RectTransform = GetComponent<RectTransform>();
@@ -61,6 +66,13 @@ public class FormationOverlaySlot : MonoBehaviour, IPointerClickHandler, IPointe
         SelectorAnimator = RectTransform.Find("SelectionFrame").GetComponent<Animator>();
         gameObject.SetActive(false);
     }
+#if UNITY_ANDROID || UNITY_IOS
+    void Update()
+    {
+        if (doubleTapTimer > 0)
+            doubleTapTimer -= Time.deltaTime;
+    }
+#endif
     void LateUpdate()
     {
         Vector3 screenPoint = RaidSceneManager.DungeonPositionToScreen(TargetUnit.RectTransform.position);
@@ -248,11 +260,21 @@ public class FormationOverlaySlot : MonoBehaviour, IPointerClickHandler, IPointe
     }
     public void OnPointerClick(PointerEventData eventData)
     {
+#if UNITY_ANDROID || UNITY_IOS
+        if (doubleTapTimer > 0)
+        {
+            if (TargetUnit != null && TargetUnit.Character.IsMonster == false)
+                RaidSceneManager.Instanse.HeroCharacterWindowOpened(this);
+        }
+        else
+            doubleTapTimer = doubleTapTime;
+#else
         if (eventData.button == PointerEventData.InputButton.Right)
         {
             if (TargetUnit != null && TargetUnit.Character.IsMonster == false)
                 RaidSceneManager.Instanse.HeroCharacterWindowOpened(this);
         }
+#endif
 
         if (TargetUnit.IsTargetable)
         {

@@ -1300,7 +1300,7 @@ RectTransform:
   - {fileID: 1451599729}
   - {fileID: 1827917169}
   m_Father: {fileID: 273657527}
-  m_RootOrder: 7
+  m_RootOrder: 5
   m_AnchorMin: {x: 0.5, y: 0.85}
   m_AnchorMax: {x: 0.5, y: 0.85}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -3212,7 +3212,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
-  m_Father: {fileID: 273657527}
+  m_Father: {fileID: 1949754334}
   m_RootOrder: 1
   m_AnchorMin: {x: 0.8, y: 0.33}
   m_AnchorMax: {x: 1, y: 0.75}
@@ -8043,7 +8043,7 @@ RectTransform:
   - {fileID: 1858473148}
   - {fileID: 1203489682}
   m_Father: {fileID: 273657527}
-  m_RootOrder: 5
+  m_RootOrder: 3
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 541.0001, y: 153}
@@ -8350,8 +8350,6 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
-  - {fileID: 1760788011}
-  - {fileID: 94052874}
   - {fileID: 519236299}
   - {fileID: 1488304799}
   - {fileID: 1804159416}
@@ -15800,7 +15798,7 @@ RectTransform:
   m_Children:
   - {fileID: 2105715509}
   m_Father: {fileID: 273657527}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -132}
@@ -23381,7 +23379,7 @@ RectTransform:
   m_Children:
   - {fileID: 1949284421}
   m_Father: {fileID: 273657527}
-  m_RootOrder: 6
+  m_RootOrder: 4
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: -386.79938, y: -60}
@@ -47578,7 +47576,7 @@ RectTransform:
   - {fileID: 1126264589}
   - {fileID: 1858767031}
   m_Father: {fileID: 273657527}
-  m_RootOrder: 3
+  m_RootOrder: 1
   m_AnchorMin: {x: 0.782, y: 0.5}
   m_AnchorMax: {x: 0.782, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 153.00002}
@@ -51851,7 +51849,7 @@ RectTransform:
   - {fileID: 1121589243}
   - {fileID: 1466029001}
   m_Father: {fileID: 1949754334}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 1000}
@@ -54718,7 +54716,7 @@ RectTransform:
   - {fileID: 505436208}
   - {fileID: 215477129}
   m_Father: {fileID: 1949754334}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 1000}
@@ -54880,12 +54878,12 @@ RectTransform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1760788010}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
-  m_Father: {fileID: 273657527}
+  m_Father: {fileID: 1949754334}
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0.33}
   m_AnchorMax: {x: 0.2, y: 0.75}
@@ -55918,7 +55916,7 @@ RectTransform:
   m_Children:
   - {fileID: 206316469}
   m_Father: {fileID: 273657527}
-  m_RootOrder: 4
+  m_RootOrder: 2
   m_AnchorMin: {x: 0.725, y: 0.8}
   m_AnchorMax: {x: 0.725, y: 0.8}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -57179,7 +57177,7 @@ RectTransform:
   - {fileID: 917279789}
   - {fileID: 1863891586}
   m_Father: {fileID: 273657527}
-  m_RootOrder: 8
+  m_RootOrder: 6
   m_AnchorMin: {x: 0.5, y: 0.85}
   m_AnchorMax: {x: 0.5, y: 0.85}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -57466,7 +57464,7 @@ RectTransform:
   - {fileID: 873155488}
   - {fileID: 1114539957}
   m_Father: {fileID: 273657527}
-  m_RootOrder: 9
+  m_RootOrder: 7
   m_AnchorMin: {x: 0.7, y: 0.625}
   m_AnchorMax: {x: 0.7, y: 0.625}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -58892,7 +58890,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 273657527}
-  m_RootOrder: 10
+  m_RootOrder: 8
   m_AnchorMin: {x: 0.5, y: 0.7}
   m_AnchorMax: {x: 0.5, y: 0.7}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -61624,6 +61622,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
+  - {fileID: 1760788011}
+  - {fileID: 94052874}
   - {fileID: 1758268846}
   - {fileID: 1655935848}
   m_Father: {fileID: 834365487}

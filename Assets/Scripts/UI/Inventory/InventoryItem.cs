@@ -85,7 +85,16 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     bool isDragged;
     bool isEmpty;
     bool isUnavailable;
+#if UNITY_ANDROID || UNITY_IOS
+    float doubleTapTimer = 0f;
+    float doubleTapTime = 0.2f;
 
+    void Update()
+    {
+        if (doubleTapTimer > 0)
+            doubleTapTimer -= Time.deltaTime;
+    }
+#endif
     void LoadItem()
     {
         ItemData = DarkestDungeonManager.Data.Items[Item.Type][Item.Id];
@@ -672,6 +681,7 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         if (eventData.dragging || isEmpty || isDragged)
             return;
 
+#if !(UNITY_ANDROID || UNITY_IOS)
         if (eventData.button == PointerEventData.InputButton.Left)
         {
             if(Input.GetKey(KeyCode.LeftShift) && 
@@ -684,11 +694,18 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             Slot.SlotActivated();
             return;
         }
-
+#endif
         if (!RaidSceneManager.Instanse || Deactivated)
             return;
 
+#if UNITY_ANDROID || UNITY_IOS
+        if (doubleTapTimer > 0)
+            RaidSceneManager.Instanse.HeroItemActivated(Slot);
+        else
+            doubleTapTimer = doubleTapTime;
+#else
         if (eventData.button == PointerEventData.InputButton.Right)
             RaidSceneManager.Instanse.HeroItemActivated(Slot);
+#endif
     }
 }

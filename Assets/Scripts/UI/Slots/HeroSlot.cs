@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System;
 
 public class HeroSlot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDragHandler, IEndDragHandler, IDropHandler, IPointerEnterHandler
 {
@@ -33,11 +32,21 @@ public class HeroSlot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBegi
 
     public RectTransform RectTransform { get; set; }
     public HeroRosterPanel HeroRoster { get; set; }
+#if UNITY_ANDROID || UNITY_IOS
+    float doubleTapTimer = 0f;
+    float doubleTapTime = 0.2f;
 
+    void Update()
+    {
+        if (doubleTapTimer > 0)
+            doubleTapTimer -= Time.deltaTime;
+    }
+#endif
     void Awake()
     {
         RectTransform = GetComponent<RectTransform>();
     }
+    
 
     public void CopyToDragItem(DragItemHolder heroHolder)
     {
@@ -114,8 +123,15 @@ public class HeroSlot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBegi
         if (eventData.dragging)
             return;
 
+#if UNITY_ANDROID || UNITY_IOS
+        if (doubleTapTimer > 0)
+            HeroRoster.HeroSlotClicked(this);
+        else
+            doubleTapTimer = doubleTapTime;
+#else
         if (eventData.button == PointerEventData.InputButton.Right)
             HeroRoster.HeroSlotClicked(this);
+#endif
     }
     public void OnDrag(PointerEventData eventData)
     {
@@ -241,10 +257,6 @@ public class HeroSlot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBegi
             {
                 recruitSlot.OnEndDrag(eventData);
                 recruitSlot.RemoveSlot();
-            }
-            else
-            {
-                //recruitSlot.OnEndDrag(eventData);
             }
         }
     }
