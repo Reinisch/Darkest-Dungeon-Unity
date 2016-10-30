@@ -1,9 +1,9 @@
-# Darkest Dungeon in Unity
+![alt link](http://www.darkestdungeon.com/wp-content/uploads/Logo_n.png)
+Darkest Dungeon port in Unity engine.  
+Almost completely identical to the original game.  
 All audio and graphic assets are ignored!  
-Darkest Dungeon clone in Unity engine.  
-Almost completely identical to the original game.
-## Project status:
-Implemented:
+## Project status
+**Implemented:**
 - [X] Estate management
 - [X] All heroes/monsters
 - [X] All combat effects/statuses
@@ -13,14 +13,20 @@ Implemented:
 - [X] All plot quest maps
 - [X] Narration
 
-Not implemented:
+**Not implemented:**
 - [ ] Some minor animations and effects
 - [ ] Tutorial
 - [ ] Menu options
 
-Probably next:
+**Probably next:**
 - [ ] Better UI for Android/iOS
 - [ ] Simple Multiplayer
+
+## References
+- [**Darkest Dungeon**](http://www.darkestdungeon.com/) - original game by [**Red Hook Studios**.](http://www.darkestdungeon.com/press/index.php)
+- [**FMOD/UnityIntegration**](https://github.com/fmod/UnityIntegration) - plugins for FMOD Studio integration in Unity.
+- [**JamesNK/Newtonsoft.Json**](https://github.com/JamesNK/Newtonsoft.Json) - parsing darkest dungeon JSON-format data using C#.
+- [**EsotericSoftware/Spine-Runtimes**](https://github.com/EsotericSoftware/spine-runtimes) - runtimes which are needed to use [**Spine**](https://esotericsoftware.com) 2D skeletal animations for some dungeon/estate ui elements, and for heroes and monsters with Free-Form Deformation.
 
 ## Links
 - [**Darkest Dungeon Maps**](https://docs.google.com/spreadsheets/d/1TeJAknTPJ33RliBHDGM9YMDSwxd2I7dLIEHF7ra3vHw/edit?usp=sharing)
