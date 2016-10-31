@@ -65,7 +65,7 @@ public class TorchMeter : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public int TorchAmount { get; private set; }
     public int MaxAmount { get; private set; }
     public TorchlightModifier Modifier { get; private set; }
-
+    
     public bool IsActive { get; set; }
 
     private const int baseLength = 450;
@@ -74,6 +74,10 @@ public class TorchMeter : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     private int lastValue = 0;
 
     private float velocity = 0;
+#if UNITY_ANDROID || UNITY_IOS || UNITY_EDITOR
+    float doubleTapTimer = 0f;
+    float doubleTapTime = 0.2f;
+#endif
 
     public void Show()
     {
@@ -92,6 +96,10 @@ public class TorchMeter : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     void Update()
     {
+#if UNITY_ANDROID || UNITY_IOS || UNITY_EDITOR
+        if (doubleTapTimer > 0)
+            doubleTapTimer -= Time.deltaTime;
+#endif
         if (Input.GetKeyUp(KeyCode.G))
         {
             if (torchAnimator.GetBool("IsActive"))
@@ -394,7 +402,18 @@ public class TorchMeter : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         if (!torchAnimator.GetBool("IsActive"))
             return;
 
-        if(Input.GetKey(KeyCode.LeftShift))
+#if UNITY_ANDROID || UNITY_IOS || UNITY_EDITOR
+        if (doubleTapTimer > 0)
+        {
+            DecreaseTorch(10);
+
+            if (ToolTipManager.Instanse.toolTip.isActiveAndEnabled)
+                OnPointerEnter(eventData);
+        }
+        else
+            doubleTapTimer = doubleTapTime;
+#else
+        if (Input.GetKey(KeyCode.LeftShift))
         {
             if (Input.GetKey(KeyCode.LeftControl))
                 DecreaseTorch(100);
@@ -404,5 +423,6 @@ public class TorchMeter : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             if (ToolTipManager.Instanse.toolTip.isActiveAndEnabled)
                 OnPointerEnter(eventData);
         }
+#endif
     }
 }
