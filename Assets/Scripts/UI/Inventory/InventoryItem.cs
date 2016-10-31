@@ -684,11 +684,22 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 #if !(UNITY_ANDROID || UNITY_IOS)
         if (eventData.button == PointerEventData.InputButton.Left)
         {
-            if(Input.GetKey(KeyCode.LeftShift) && 
-                (Slot.Inventory.State == InventoryState.Peaceful || Slot.Inventory.State == InventoryState.PeacefulLooting))
+            if(Input.GetKey(KeyCode.LeftShift))
             {
+                if (Slot.Inventory.Configuration == InventoryConfiguration.TrinketInventory)
+                {
+                    if (!EstateSceneManager.Instanse || Deactivated)
+                        return;
+
+                    DarkestDungeonManager.Campaign.Estate.AddGold(Mathf.RoundToInt(ItemData.PurchasePrice * 0.15f));
+                    EstateSceneManager.Instanse.currencyPanel.CurrencyIncreased("gold");
+                    EstateSceneManager.Instanse.currencyPanel.UpdateCurrency();
+                    Delete();
+                }
+
                 if(Slot.Inventory.Configuration == InventoryConfiguration.RaidInventory && Item.Type != "quest_item")
-                    RemoveItems(1);
+                    if (Slot.Inventory.State == InventoryState.Peaceful || Slot.Inventory.State == InventoryState.PeacefulLooting)
+                        RemoveItems(1);
                 return;
             }
             Slot.SlotActivated();
