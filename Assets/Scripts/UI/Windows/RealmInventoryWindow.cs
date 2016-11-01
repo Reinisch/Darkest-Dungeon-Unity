@@ -8,6 +8,7 @@ public class RealmInventoryWindow : MonoBehaviour, IInventory
     public Button closeButton;
     public RectTransform trinketBox;
     public InventoryRow rowTemplate;
+    public Text capacityLabel;
 
     public RealmInventory RealmInventory
     {
@@ -290,11 +291,13 @@ public class RealmInventoryWindow : MonoBehaviour, IInventory
     void RealmInventoryWindow_onDropOut(InventorySlot slot, InventoryItem itemDrop)
     {
         CurrentCapacity--;
+        DarkestDungeonManager.Campaign.RealmInventory.Trinkets.Remove(itemDrop.ItemData as Trinket);
         UpdateWindow();
     }
     void RealmInventoryWindow_onDropIn(InventorySlot slot, InventoryItem itemDrop)
     {
         CurrentCapacity++;
+        DarkestDungeonManager.Campaign.RealmInventory.Trinkets.Add(itemDrop.ItemData as Trinket);
         if(CurrentCapacity == MaxCapacity)
             AddRow();
         UpdateWindow();
@@ -339,6 +342,7 @@ public class RealmInventoryWindow : MonoBehaviour, IInventory
     }
     public void UpdateWindow()
     {
+        //Debug.Log("Capacity: " + CurrentCapacity + " Trinket count: " + DarkestDungeonManager.Campaign.RealmInventory.Trinkets.Count);
     }
     public void WindowClosed()
     {

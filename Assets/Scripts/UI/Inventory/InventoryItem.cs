@@ -691,6 +691,7 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                     if (!EstateSceneManager.Instanse || Deactivated)
                         return;
 
+                    Slot.ItemDroppedOut(Slot, this);
                     DarkestDungeonManager.Campaign.Estate.AddGold(Mathf.RoundToInt(ItemData.PurchasePrice * 0.15f));
                     EstateSceneManager.Instanse.currencyPanel.CurrencyIncreased("gold");
                     EstateSceneManager.Instanse.currencyPanel.UpdateCurrency();
