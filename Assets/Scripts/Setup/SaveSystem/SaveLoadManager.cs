@@ -2864,6 +2864,13 @@ public static class SaveLoadManager
             "plot_darkest_dungeon_1", "plot_darkest_dungeon_2",
             "plot_darkest_dungeon_3", "plot_kill_brigand_cannon_1",
             "plot_kill_brigand_cannon_2", "plot_kill_brigand_cannon_3",
+            "plot_kill_drowned_crew_1", "plot_kill_drowned_crew_2", "plot_kill_drowned_crew_3",
+            "plot_kill_formless_flesh_1", "plot_kill_formless_flesh_2", "plot_kill_formless_flesh_3",
+            "plot_kill_hag_1", "plot_kill_hag_2", "plot_kill_hag_3",
+            "plot_kill_necromancer_1", "plot_kill_necromancer_2", "plot_kill_necromancer_3",
+            "plot_kill_prophet_1", "plot_kill_prophet_2", "plot_kill_prophet_3",
+            "plot_kill_siren_1", "plot_kill_siren_2", "plot_kill_siren_3",
+            "plot_kill_swine_prince_1", "plot_kill_swine_prince_2", "plot_kill_swine_prince_3",
         };
         #endregion
 
