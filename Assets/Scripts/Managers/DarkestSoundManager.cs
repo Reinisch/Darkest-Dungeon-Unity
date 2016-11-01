@@ -15,10 +15,11 @@ public class DarkestSoundManager : MonoBehaviour
     public static FMOD.Studio.EventInstance TownInstanse { get; private set; }
     public static FMOD.Studio.EventInstance TownMusicInstanse { get; private set; }
     public static FMOD.Studio.EventInstance TitleMusicInstanse { get; private set; }
+    public static FMOD.Studio.EventInstance StatueAudioInstanse { get; private set; }
 
     public static List<FMOD.Studio.EventInstance> NarrationQueue { get; private set; }
     public static FMOD.Studio.EventInstance CurrentNarration { get; private set; }
-    private FMOD.Studio.PLAYBACK_STATE narrationState;
+    private static FMOD.Studio.PLAYBACK_STATE narrationState;
 
     void Awake()
     {
@@ -31,9 +32,9 @@ public class DarkestSoundManager : MonoBehaviour
     }
     void Update()
     {
-        if(CurrentNarration == null)
+        if (CurrentNarration == null)
         {
-            if(NarrationQueue.Count > 0)
+            if (NarrationQueue.Count > 0)
             {
                 CurrentNarration = NarrationQueue[0];
                 CurrentNarration.start();
@@ -42,7 +43,7 @@ public class DarkestSoundManager : MonoBehaviour
         else
         {
             CurrentNarration.getPlaybackState(out narrationState);
-            if(narrationState == FMOD.Studio.PLAYBACK_STATE.STOPPED || narrationState == FMOD.Studio.PLAYBACK_STATE.STOPPING)
+            if (narrationState == FMOD.Studio.PLAYBACK_STATE.STOPPED || narrationState == FMOD.Studio.PLAYBACK_STATE.STOPPING)
             {
                 CurrentNarration.release();
                 NarrationQueue.Remove(CurrentNarration);
@@ -69,7 +70,7 @@ public class DarkestSoundManager : MonoBehaviour
         float maxPriority = possibleEvents.Max(audio => audio.Priority);
         possibleEvents.RemoveAll(lowPriorityEvent => lowPriorityEvent.Priority < maxPriority);
 
-        NarrationAudioEvent narrationEvent = id == "combat_start"?
+        NarrationAudioEvent narrationEvent = id == "combat_start" ?
             possibleEvents[0] : possibleEvents[Random.Range(0, possibleEvents.Count)];
 
         if (narrationEvent.QueueOnlyOnEmpty && NarrationQueue.Count > 0)
@@ -88,7 +89,7 @@ public class DarkestSoundManager : MonoBehaviour
                     return;
             }
         }
-            
+
         else if (!RandomSolver.CheckSuccess(narrationEvent.Chance))
             return;
 
@@ -96,10 +97,10 @@ public class DarkestSoundManager : MonoBehaviour
         if (narrationInstanse != null)
             NarrationQueue.Add(narrationInstanse);
 
-        switch(place)
+        switch (place)
         {
             case NarrationPlace.Campaign:
-                if(narrationEvent.MaxCampaignOccurrences > 0)
+                if (narrationEvent.MaxCampaignOccurrences > 0)
                 {
                     if (!DarkestDungeonManager.Campaign.NarrationCampaignInfo.ContainsKey(narrationEvent.AudioEvent))
                         DarkestDungeonManager.Campaign.NarrationCampaignInfo.Add(narrationEvent.AudioEvent, 0);
@@ -127,9 +128,18 @@ public class DarkestSoundManager : MonoBehaviour
                 goto case NarrationPlace.Campaign;
         }
     }
+    public static void PlayStatueAudioEntry(string id)
+    {
+        if (CurrentNarration != null && NarrationQueue.Count > 0)
+            return;
+
+        var narrationInstanse = RuntimeManager.CreateInstance(id);
+        if (narrationInstanse != null)
+            NarrationQueue.Add(narrationInstanse);
+    }
     public static void SilenceNarrator()
     {
-        if(CurrentNarration != null)
+        if (CurrentNarration != null)
         {
             CurrentNarration.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             CurrentNarration.release();
@@ -142,7 +152,6 @@ public class DarkestSoundManager : MonoBehaviour
     {
         RuntimeManager.PlayOneShot(eventId);
     }
-
     public static void PlayTitleMusic(bool isIntro)
     {
         StopTitleMusic();

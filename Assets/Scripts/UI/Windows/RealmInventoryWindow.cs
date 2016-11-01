@@ -8,7 +8,6 @@ public class RealmInventoryWindow : MonoBehaviour, IInventory
     public Button closeButton;
     public RectTransform trinketBox;
     public InventoryRow rowTemplate;
-    public Text capacityLabel;
 
     public RealmInventory RealmInventory
     {

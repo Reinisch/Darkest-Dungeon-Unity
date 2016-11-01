@@ -2862,7 +2862,8 @@ public static class SaveLoadManager
         {
             "leper", "crusader", "plot_tutorial_crypts",
             "plot_darkest_dungeon_1", "plot_darkest_dungeon_2",
-            "plot_darkest_dungeon_3",
+            "plot_darkest_dungeon_3", "plot_kill_brigand_cannon_1",
+            "plot_kill_brigand_cannon_2", "plot_kill_brigand_cannon_3",
         };
         #endregion
 
