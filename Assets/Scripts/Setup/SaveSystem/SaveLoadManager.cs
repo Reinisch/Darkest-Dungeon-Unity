@@ -1370,6 +1370,7 @@ public static class SaveLoadManager
         }
         catch (System.Exception ex)
         {
+            Debug.LogError("Error in slot " + slotId + "!");
             Debug.Log(ex.Message);
             return null;
         }
