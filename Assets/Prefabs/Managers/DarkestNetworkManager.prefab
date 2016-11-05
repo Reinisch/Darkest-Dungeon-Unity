@@ -51,3 +51,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36aa9b8af27521e46b58325a339a52ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  launcherPanel: {fileID: 0}
+  LogLevel: 1
+  MaxPlayersPerRoom: 2

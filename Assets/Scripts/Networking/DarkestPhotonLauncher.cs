@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class DarkestNetworkManager : Photon.PunBehaviour
+public class DarkestPhotonLauncher : Photon.PunBehaviour
 {
     #region Public Static Variables
 
     /// <summary>
     /// Singletone instance for network manager.
     /// </summary>
-    public static DarkestNetworkManager Instanse { get; private set; }
+    public static DarkestPhotonLauncher Instanse { get; private set; }
 
     #endregion
 
@@ -28,6 +28,11 @@ public class DarkestNetworkManager : Photon.PunBehaviour
     #endregion
 
     #region Public Variables
+
+    /// <summary>
+    /// Reference to network selector UI.
+    /// </summary>
+    public RoomSelector launcherPanel;
 
     /// <summary>
     /// The PUN log level.
@@ -72,6 +77,8 @@ public class DarkestNetworkManager : Photon.PunBehaviour
     /// </summary>
     void Start()
     {
+        launcherPanel.progressLabel.enabled = false;
+        launcherPanel.progressPanel.enabled = true;
     }
 
     #endregion
@@ -102,6 +109,8 @@ public class DarkestNetworkManager : Photon.PunBehaviour
 
     public override void OnDisconnectedFromPhoton()
     {
+        launcherPanel.progressLabel.enabled = false;
+        launcherPanel.progressPanel.enabled = true;
         Debug.LogWarning("Darkest Photon Network: OnDisconnectedFromPhoton() was called!");
     }
 
@@ -116,6 +125,9 @@ public class DarkestNetworkManager : Photon.PunBehaviour
     /// </summary>
     public void Connect()
     {
+        launcherPanel.progressLabel.enabled = true;
+        launcherPanel.progressPanel.enabled = true;
+
         // We check if we are connected or not, we join if we are , else we initiate the connection to the server.
         if (PhotonNetwork.connected)
         {

@@ -15,6 +15,15 @@ public class RoomSelector : MonoBehaviour
     public RectTransform sceneryRect;
     public RectTransform rect;
 
+    #region Multiplayer Launcher UI
+
+    public Button playButton;
+    public InputField nicknameField;
+    public Image progressPanel;
+    public Text progressLabel;
+
+    #endregion
+
     bool isSelecting = false;
 
     MultiplayerRoomSlot selectedRoomSlot;
@@ -180,6 +189,6 @@ public class RoomSelector : MonoBehaviour
 
     public void PlayButtonClicked()
     {
-        DarkestNetworkManager.Instanse.Connect();
+        DarkestPhotonLauncher.Instanse.Connect();
     }
 }
