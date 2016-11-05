@@ -112,6 +112,9 @@ public class BattleFormation : MonoBehaviour
 
     public void UpdateBuffRule(BuffRule rule)
     {
+        if (party == null || party.Units == null)
+            return;
+
         for (int i = 0; i < party.Units.Count; i++)
             party.Units[i].Character.ApplySingleBuffRule(RaidSceneManager.Rules.GetIdleUnitRules(party.Units[i]), rule);
     }

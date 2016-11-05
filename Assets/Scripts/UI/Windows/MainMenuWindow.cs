@@ -36,7 +36,14 @@ public class MainMenuWindow : MonoBehaviour
 
     public void ReturnToCampaignSelection()
     {
-        if(SceneManager.GetActiveScene().name == "EstateManagement")
+        if(SceneManager.GetActiveScene().name == "DungeonMultiplayer")
+        {
+            RaidSceneManager.Instanse.OnSceneLeave();
+            PhotonGameManager.Instanse.LeaveRoom();
+            WindowClosed();
+            return;
+        }
+        else if(SceneManager.GetActiveScene().name == "EstateManagement")
         {
             EstateSceneManager.Instanse.OnSceneLeave();
             DarkestDungeonManager.SaveData.UpdateFromEstate();
@@ -58,7 +65,14 @@ public class MainMenuWindow : MonoBehaviour
 
     public void QuitGame()
     {
-        if (SceneManager.GetActiveScene().name == "EstateManagement")
+        if (SceneManager.GetActiveScene().name == "DungeonMultiplayer")
+        {
+            RaidSceneManager.Instanse.OnSceneLeave();
+            PhotonGameManager.Instanse.LeaveRoom();
+            WindowClosed();
+            return;
+        }
+        else if (SceneManager.GetActiveScene().name == "EstateManagement")
         {
             EstateSceneManager.Instanse.OnSceneLeave();
             DarkestDungeonManager.SaveData.UpdateFromEstate();

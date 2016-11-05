@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class DarkestPhotonLauncher : Photon.PunBehaviour
 {
@@ -24,6 +25,17 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
             return "1";
         }
     }
+
+    #endregion
+
+    #region Private Variables
+
+    /// <summary>
+    /// Keep track of the current process. Since connection is asynchronous and is based on several callbacks from Photon, 
+    /// we need to keep track of this to properly adjust the behavior when we receive call back by Photon.
+    /// Typically this is used for the OnConnectedToMaster() callback.
+    /// </summary>
+    bool isConnecting;
 
     #endregion
 
@@ -57,7 +69,6 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
         if (Instanse == null)
         {
             Instanse = this;
-            DontDestroyOnLoad(gameObject);
 
             // Force log level
             PhotonNetwork.logLevel = LogLevel;
@@ -88,9 +99,15 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
     public override void OnConnectedToMaster()
     {
         Debug.Log("Darkest Photon Network: OnConnectedToMaster() was called!");
-        // #Critical: The first we try to do is to join a potential existing room.
-        // If there is, good, else, we'll be called back with OnPhotonRandomJoinFailed() 
-        PhotonNetwork.JoinRandomRoom();
+        // we don't want to do anything if we are not attempting to join a room. 
+        // this case where isConnecting is false is typically when you lost or quit the game, when this level is loaded, OnConnectedToMaster will be called, in that case
+        // we don't want to do anything.
+        if(isConnecting)
+        {
+            // #Critical: The first we try to do is to join a potential existing room.
+            // If there is, good, else, we'll be called back with OnPhotonRandomJoinFailed() 
+            PhotonNetwork.JoinRandomRoom();
+        }
     }
 
     public override void OnPhotonRandomJoinFailed(object[] codeAndMsg)
@@ -105,6 +122,8 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
     public override void OnJoinedRoom()
     {
         Debug.Log("Darkest Photon Network: OnJoinedRoom() was called!");
+
+        launcherPanel.FadeToLoadingScreen();
     }
 
     public override void OnDisconnectedFromPhoton()
@@ -127,6 +146,9 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
     {
         launcherPanel.progressLabel.enabled = true;
         launcherPanel.progressPanel.enabled = true;
+        // keep track of the will to join a room, because when we come back from the game
+        // we will get a callback that we are connected, so we need to know what to do then
+        isConnecting = true;
 
         // We check if we are connected or not, we join if we are , else we initiate the connection to the server.
         if (PhotonNetwork.connected)

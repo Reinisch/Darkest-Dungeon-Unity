@@ -196,35 +196,35 @@ public class RaidSceneManager : MonoBehaviour
     }
     public static RaidRuleInfo Rules { get; set; }
 
-    private RaidInfo currentRaid;
-    private IEnumerator currentEvent;
-    private IEnumerator itemUsageEvent;
-    private IEnumerator effectEvent;
-    private DungeonSceneState sceneState;
-    private int scoutingCounter = 0;
-    private int roundAdvanceCounter = 0;
+    protected RaidInfo currentRaid;
+    protected IEnumerator currentEvent;
+    protected IEnumerator itemUsageEvent;
+    protected IEnumerator effectEvent;
+    protected DungeonSceneState sceneState;
+    protected int scoutingCounter = 0;
+    protected int roundAdvanceCounter = 0;
 
-    private List<FormationUnit> unitEventQueue = new List<FormationUnit>(8); 
-    private List<FormationUnit> resolveCheckQueue = new List<FormationUnit>(4);
-    private List<FormationUnit> heartAttackCheckQueue = new List<FormationUnit>(4);
-    private List<FormationUnit> deathDoorEnterQueue = new List<FormationUnit>(4);
-    private List<FormationUnit> bleedDeaths = new List<FormationUnit>(4);
-    private List<FormationUnit> poisonDeaths = new List<FormationUnit>(4);
-    private List<FormationUnit> tempList = new List<FormationUnit>(4);
-    private List<CampEffect> campEffects = new List<CampEffect>(10);
-    private List<CampEffect> chosenEffects = new List<CampEffect>(2);
-    private Dictionary<DungeonRoom, int> currentScoutedRooms = new Dictionary<DungeonRoom, int>();
-    
-    private WaitForSeconds waitForZeroThree = new WaitForSeconds(0.3f);
-    private WaitForSeconds waitForOneTwo = new WaitForSeconds(1.2f);
+    protected List<FormationUnit> unitEventQueue = new List<FormationUnit>(8);
+    protected List<FormationUnit> resolveCheckQueue = new List<FormationUnit>(4);
+    protected List<FormationUnit> heartAttackCheckQueue = new List<FormationUnit>(4);
+    protected List<FormationUnit> deathDoorEnterQueue = new List<FormationUnit>(4);
+    protected List<FormationUnit> bleedDeaths = new List<FormationUnit>(4);
+    protected List<FormationUnit> poisonDeaths = new List<FormationUnit>(4);
+    protected List<FormationUnit> tempList = new List<FormationUnit>(4);
+    protected List<CampEffect> campEffects = new List<CampEffect>(10);
+    protected List<CampEffect> chosenEffects = new List<CampEffect>(2);
+    protected Dictionary<DungeonRoom, int> currentScoutedRooms = new Dictionary<DungeonRoom, int>();
+
+    protected WaitForSeconds waitForZeroThree = new WaitForSeconds(0.3f);
+    protected WaitForSeconds waitForOneTwo = new WaitForSeconds(1.2f);
     #endregion
 
-    private void CharacterWindow_onWindowClose()
+    protected void CharacterWindow_onWindowClose()
     {
         if(BattleGround.BattleStatus != BattleStatus.Fighting)
             RaidPanel.UpdateSelection();
     }
-    private void CharacterWindow_onNextButtonClick()
+    protected void CharacterWindow_onNextButtonClick()
     {
         var formationUnit = HeroParty.Units.Find(unit => unit.Character == CharacterWindow.CurrentHero);
         if (formationUnit == null || HeroParty.Units.Count < 2)
@@ -236,7 +236,7 @@ public class RaidSceneManager : MonoBehaviour
         else
             HeroCharacterWindowOpened(HeroParty.Units[unitIndex].OverlaySlot);
     }
-    private void CharacterWindow_onPreviousButtonClick()
+    protected void CharacterWindow_onPreviousButtonClick()
     {
         var formationUnit = HeroParty.Units.Find(unit => unit.Character == CharacterWindow.CurrentHero);
         if (formationUnit == null || HeroParty.Units.Count < 2)
@@ -249,7 +249,7 @@ public class RaidSceneManager : MonoBehaviour
             HeroCharacterWindowOpened(HeroParty.Units[unitIndex].OverlaySlot);
     }
 
-    void Awake()
+    protected virtual void Awake()
     {
         if (Instanse == null)
         {
@@ -291,7 +291,7 @@ public class RaidSceneManager : MonoBehaviour
         else
             Destroy(Instanse.gameObject);
     }
-    void Start()
+    protected virtual void Start()
     {
         if (Instanse != this)
             return;
@@ -385,7 +385,7 @@ public class RaidSceneManager : MonoBehaviour
             StartCoroutine(currentEvent);
         }
     }
-    void Update()
+    protected virtual void Update()
     {
         if (Input.GetKeyUp(KeyCode.Escape))
             OnEscapePressed();
@@ -486,6 +486,7 @@ public class RaidSceneManager : MonoBehaviour
             }
         }
     }
+
     void UpdateExtraStackLimit()
     {
         ResetExtraStackLimit();
@@ -532,7 +533,7 @@ public class RaidSceneManager : MonoBehaviour
         DarkestSoundManager.StopBattleSoundtrack();
         ResetExtraStackLimit();
     }
-    IEnumerator ExecuteCampEffect(CampEffect currentEffect, FormationUnit target, bool skipNotification)
+    protected virtual IEnumerator ExecuteCampEffect(CampEffect currentEffect, FormationUnit target, bool skipNotification)
     {
         switch (currentEffect.Type)
         {
@@ -639,7 +640,7 @@ public class RaidSceneManager : MonoBehaviour
                 break;
         }
     }
-    IEnumerator HallwayLoadingEvent(HallSector hallSector, HallTransitionType transitionType, Direction direction, DungeonRoom fromRoom = null)
+    protected virtual IEnumerator HallwayLoadingEvent(HallSector hallSector, HallTransitionType transitionType, Direction direction, DungeonRoom fromRoom = null)
     {
 #region Set restrictions
         QuestPanel.DisableRetreat(false);
@@ -767,7 +768,7 @@ public class RaidSceneManager : MonoBehaviour
         currentEvent = null;
 #endregion
     }
-    IEnumerator RoomLoadingEvent(DungeonRoom room, RoomTransitionType transitionType, RaidHallSector fromRaidSector = null)
+    protected virtual IEnumerator RoomLoadingEvent(DungeonRoom room, RoomTransitionType transitionType, RaidHallSector fromRaidSector = null)
     {
 #region Set restrictions
         QuestPanel.DisableRetreat(false);
@@ -990,7 +991,7 @@ public class RaidSceneManager : MonoBehaviour
         currentEvent = null;
 #endregion
     }
-    IEnumerator CampingEvent(DungeonRoom room)
+    protected virtual IEnumerator CampingEvent(DungeonRoom room)
     {
         if (SceneState != DungeonSceneState.Room)
             yield break;
@@ -1571,7 +1572,7 @@ public class RaidSceneManager : MonoBehaviour
         yield break;
 #endregion
     }
-    IEnumerator RaidResultsEvent()
+    protected virtual IEnumerator RaidResultsEvent()
     {
         RaidInterface.CanvasGroup.blocksRaycasts = false;
 
@@ -1612,7 +1613,7 @@ public class RaidSceneManager : MonoBehaviour
         }
         resultWindow.EnableInteraction();
     }
-    IEnumerator RaidResultsHeroTransition()
+    protected virtual IEnumerator RaidResultsHeroTransition()
     {
         DarkestDungeonManager.ScreenFader.Fade(1);
         yield return new WaitForSeconds(1f);
@@ -1621,7 +1622,7 @@ public class RaidSceneManager : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         resultWindow.EnableInteraction();
     }
-    IEnumerator RaidResultsTownTransition()
+    protected virtual IEnumerator RaidResultsTownTransition()
     {
         DarkestDungeonManager.Instanse.screenFader.Fade(1);
         DarkestSoundManager.StopDungeonSoundtrack();
@@ -1706,7 +1707,7 @@ public class RaidSceneManager : MonoBehaviour
 #endregion
 
 #region Player Actions
-    public void NextRaidResultButtonClicked()
+    public virtual void NextRaidResultButtonClicked()
     {
         if (resultWindow.State == ResultWindowState.Items)
         {
@@ -1719,7 +1720,7 @@ public class RaidSceneManager : MonoBehaviour
             StartCoroutine(RaidResultsTownTransition());
         }
     }
-    public void AbandonButtonClicked()
+    public virtual void AbandonButtonClicked()
     {
         if (BattleGround.BattleStatus == BattleStatus.Fighting)
         {
@@ -1733,7 +1734,7 @@ public class RaidSceneManager : MonoBehaviour
             StartCoroutine(RaidResultsEvent());
         }
     }
-    public void ReturnToEstateClicked()
+    public virtual void ReturnToEstateClicked()
     {
         StartCoroutine(RaidResultsEvent());
     }
@@ -1762,7 +1763,7 @@ public class RaidSceneManager : MonoBehaviour
         Formations.UnlockSelections();
         Formations.heroes.overlay.ResetSelectionsExcept(RaidPanel.SelectedUnit);
     }
-    public void HeroSkillSelected(BattleSkillSlot skillSlot)
+    public virtual void HeroSkillSelected(BattleSkillSlot skillSlot)
     {
         if (skillSlot.Skill.TargetRanks.IsSelfFormation || skillSlot.Skill.TargetRanks.IsSelfTarget)
         {
@@ -1834,7 +1835,7 @@ public class RaidSceneManager : MonoBehaviour
             tempList.Clear();
         }
     }
-    public void HeroMoveSelected(MoveSkillSlot skillSlot)
+    public virtual void HeroMoveSelected(MoveSkillSlot skillSlot)
     {
         if (BattleGround.BattleStatus == BattleStatus.Fighting)
         {
@@ -1879,7 +1880,7 @@ public class RaidSceneManager : MonoBehaviour
             }
         }
     }
-    public void HeroMoveDeselected(MoveSkillSlot skillSlot)
+    public virtual void HeroMoveDeselected(MoveSkillSlot skillSlot)
     {
         if (BattleGround.BattleStatus == BattleStatus.Peace)
         {
@@ -1939,11 +1940,11 @@ public class RaidSceneManager : MonoBehaviour
             RaidPanel.bannerPanel.skillPanel.moveSlot.Deselect();
         }
     }
-    public void HeroPassButtonClicked()
+    public virtual void HeroPassButtonClicked()
     {
         BattleGround.Round.HeroActionSelected(HeroTurnAction.Pass, BattleGround.Round.SelectedUnit);
     }
-    public void HeroCharacterWindowOpened(FormationOverlaySlot overlaySlot)
+    public virtual void HeroCharacterWindowOpened(FormationOverlaySlot overlaySlot)
     {
         if(BattleGround.BattleStatus == BattleStatus.Fighting)
         {
@@ -1981,10 +1982,10 @@ public class RaidSceneManager : MonoBehaviour
             }
         }
     }
-#endregion
+    #endregion
 
-#region Battle and Hero Events
-    IEnumerator BattleRound(bool fromBattleSave = false)
+    #region Battle and Hero Events
+    protected virtual IEnumerator BattleRound(bool fromBattleSave = false)
     {
         if (fromBattleSave == false)
         {
@@ -2601,7 +2602,7 @@ public class RaidSceneManager : MonoBehaviour
 
         yield break;
     }
-    IEnumerator HeroTurn(FormationUnit actionUnit, bool fromBattleSave = false)
+    protected virtual IEnumerator HeroTurn(FormationUnit actionUnit, bool fromBattleSave = false)
     {
         if(fromBattleSave == false)
         {
@@ -3359,7 +3360,7 @@ public class RaidSceneManager : MonoBehaviour
 
         BattleGround.Round.PostHeroTurn();
     }
-    IEnumerator MonsterTurn(FormationUnit actionUnit)
+    protected virtual IEnumerator MonsterTurn(FormationUnit actionUnit)
     {
         FMODUnity.RuntimeManager.PlayOneShot("event:/general/char/enemy_turn");
         Formations.ResetSelections();
@@ -3547,7 +3548,7 @@ public class RaidSceneManager : MonoBehaviour
         if(BattleGround.Round.HeroAction != HeroTurnAction.Retreat)
             BattleGround.Round.PostMonsterTurn();
     }
-    IEnumerator MonsterOverriddenTurn(FormationUnit actionUnit, string combatSkillOverride)
+    protected virtual IEnumerator MonsterOverriddenTurn(FormationUnit actionUnit, string combatSkillOverride)
     {
         FMODUnity.RuntimeManager.PlayOneShot("event:/general/char/enemy_turn");
         Formations.ResetSelections();
@@ -3559,7 +3560,7 @@ public class RaidSceneManager : MonoBehaviour
         yield return StartCoroutine(ExecuteMonsterOverridenSkill(actionUnit, combatSkillOverride));
     }
 
-    void ExecuteSkillInstants(FormationUnit performer, SkillTargetInfo targetInfo, SkillResult skillResult)
+    protected virtual void ExecuteSkillInstants(FormationUnit performer, SkillTargetInfo targetInfo, SkillResult skillResult)
     {
         foreach (var skillEntry in skillResult.SkillEntries)
         {
@@ -3641,7 +3642,7 @@ public class RaidSceneManager : MonoBehaviour
 
         performer.OverlaySlot.UpdateOverlay();
     }
-    void ExecuteSlidingSetup(FormationUnit performer, SkillTargetInfo targetInfo)
+    protected virtual void ExecuteSlidingSetup(FormationUnit performer, SkillTargetInfo targetInfo)
     {
         if(performer.Team == Team.Monsters)
         {
@@ -3676,7 +3677,7 @@ public class RaidSceneManager : MonoBehaviour
                 Formations.partyBuffPositions.SetSpacing(120, 1f);
         }
     }
-    void ExecuteSkillAnimationIntro(FormationUnit performer, SkillTargetInfo targetInfo)
+    protected virtual void ExecuteSkillAnimationIntro(FormationUnit performer, SkillTargetInfo targetInfo)
     {
         if (targetInfo.Skill.ValidModes.Count > 1 && targetInfo.Mode != null)
             Formations.UnitSkillIntroOverriden(performer, targetInfo.SkillArtInfo, targetInfo.Mode.Id);
@@ -3742,7 +3743,7 @@ public class RaidSceneManager : MonoBehaviour
             Formations.partyBuffPositions.SetUnitTargets(performer, 0.01f, Vector2.zero);
         }
     }
-    void ExecuteGuardRedirection(FormationUnit performer, SkillTargetInfo targetInfo)
+    protected virtual void ExecuteGuardRedirection(FormationUnit performer, SkillTargetInfo targetInfo)
     {
         if (targetInfo.Type == SkillTargetType.Enemy)
             for (int i = targetInfo.Targets.Count - 1; i >= 0; i--)
@@ -3755,7 +3756,7 @@ public class RaidSceneManager : MonoBehaviour
                 }
             }
     }
-    void SetBrainDecisionMarkings(FormationUnit performer, MonsterBrainDecision brainDecision)
+    protected virtual void SetBrainDecisionMarkings(FormationUnit performer, MonsterBrainDecision brainDecision)
     {
         if (brainDecision.TargetInfo.Targets.Contains(performer))
             performer.SetFriendlyPerformerStatus(false);
@@ -3778,7 +3779,7 @@ public class RaidSceneManager : MonoBehaviour
                     target.SetEnemyTargetStatus(false, false);
         }
     }
-    SkillResult ExecuteSkillBase(FormationUnit performer, SkillTargetInfo targetInfo)
+    protected virtual SkillResult ExecuteSkillBase(FormationUnit performer, SkillTargetInfo targetInfo)
     {
         BattleSolver.SkillResult.Reset();
         BattleGround.LastDamaged.Clear();
@@ -3820,8 +3821,8 @@ public class RaidSceneManager : MonoBehaviour
 
         return skillResult;
     }
-    
-    IEnumerator ExecuteMonsterSkill(FormationUnit actionUnit)
+
+    protected virtual IEnumerator ExecuteMonsterSkill(FormationUnit actionUnit)
     {
         RaidEvents.MonsterTooltip.IsDisabled = true;
         RaidEvents.MonsterTooltip.Hide();
@@ -4298,7 +4299,7 @@ public class RaidSceneManager : MonoBehaviour
         }
 #endregion
     }
-    IEnumerator ExecuteMonsterOverridenSkill(FormationUnit actionUnit, string combatSkillOverride)
+    protected virtual IEnumerator ExecuteMonsterOverridenSkill(FormationUnit actionUnit, string combatSkillOverride)
     {
         RaidEvents.MonsterTooltip.IsDisabled = true;
         RaidEvents.MonsterTooltip.Hide();
@@ -4435,7 +4436,7 @@ public class RaidSceneManager : MonoBehaviour
         BattleSolver.RemoveConditions(actionUnit);
         RaidEvents.MonsterTooltip.IsDisabled = false;
     }
-    IEnumerator ExecuteHeroSkill(FormationUnit actionUnit, SkillTargetInfo targetInfo, CombatSkill skill)
+    protected virtual IEnumerator ExecuteHeroSkill(FormationUnit actionUnit, SkillTargetInfo targetInfo, CombatSkill skill)
     {
         RaidEvents.MonsterTooltip.IsDisabled = true;
         RaidEvents.MonsterTooltip.Hide();
@@ -4725,7 +4726,7 @@ public class RaidSceneManager : MonoBehaviour
         }
 #endregion
     }
-    IEnumerator ExecuteHeroItemUsage(FormationUnit actionUnit, InventorySlot slot)
+    protected virtual IEnumerator ExecuteHeroItemUsage(FormationUnit actionUnit, InventorySlot slot)
     {
         if (actionUnit == null || slot.HasItem == false)
         {
@@ -4923,7 +4924,7 @@ public class RaidSceneManager : MonoBehaviour
         yield break;
     }
 
-    IEnumerator ExecuteResolveChecks()
+    protected virtual IEnumerator ExecuteResolveChecks()
     {
         while(resolveCheckQueue.Count > 0)
         {
@@ -5006,7 +5007,7 @@ public class RaidSceneManager : MonoBehaviour
         }
         yield break;
     }
-    IEnumerator ExecuteRoundAdvance()
+    protected virtual IEnumerator ExecuteRoundAdvance()
     {
         roundAdvanceCounter++;
 
@@ -5188,7 +5189,7 @@ public class RaidSceneManager : MonoBehaviour
 
         roundAdvanceCounter--;
     }
-    IEnumerator ExecuteEffectEvents(bool includeMonsters)
+    protected virtual IEnumerator ExecuteEffectEvents(bool includeMonsters)
     {
         effectEvent = ExecuteEffectEvents(includeMonsters);
 
@@ -5346,7 +5347,7 @@ public class RaidSceneManager : MonoBehaviour
                 Rules.GetIdleUnitRules(BattleGround.HeroParty.Units[i]));
         effectEvent = null;
     }
-    IEnumerator ExecuteRandomDialog(FormationUnit unit, string dialogId)
+    protected virtual IEnumerator ExecuteRandomDialog(FormationUnit unit, string dialogId)
     {
         if (RandomSolver.CheckSuccess(DarkestDungeonManager.RandomBarkChance))
         {
@@ -5530,7 +5531,7 @@ public class RaidSceneManager : MonoBehaviour
         if (!Raid.QuestCompleted && Raid.CheckQuestGoals())
             yield return StartCoroutine(CompletionCrestEvent());
     }
-    IEnumerator LoadEncounterEvent(IRaidArea areaView)
+    protected virtual IEnumerator LoadEncounterEvent(IRaidArea areaView)
     {
 #region Set Combat States and Restrictions
         QuestPanel.UpdateEncounterRetreat();
@@ -5765,7 +5766,7 @@ public class RaidSceneManager : MonoBehaviour
         DarkestDungeonManager.Instanse.SaveGame();
         currentEvent = null;
     }
-    IEnumerator EncounterEvent(IRaidArea areaView, bool campfireAmbush = false)
+    protected virtual IEnumerator EncounterEvent(IRaidArea areaView, bool campfireAmbush = false)
     {
 #region Set Combat States and Restrictions
         QuestPanel.UpdateEncounterRetreat();
@@ -7288,7 +7289,7 @@ public class RaidSceneManager : MonoBehaviour
         DarkestDungeonManager.Instanse.SaveGame();
     }
 
-    public void SummonPurging(FormationUnit targetUnit)
+    public virtual void SummonPurging(FormationUnit targetUnit)
     {
         targetUnit.SetSortingOrder(4);
         PrepareDeath(targetUnit);
@@ -7296,7 +7297,7 @@ public class RaidSceneManager : MonoBehaviour
         BattleGround.UnitDestroyed(targetUnit);
         Formations.monsters.DeleteUnitDelayed(targetUnit, 1.867f);
     }
-    bool PrepareDeath(FormationUnit targetUnit, DeathFactor deathFactor = DeathFactor.AttackMonster, FormationUnit killer = null)
+    protected virtual bool PrepareDeath(FormationUnit targetUnit, DeathFactor deathFactor = DeathFactor.AttackMonster, FormationUnit killer = null)
     {
         if (targetUnit.Character.IsMonster)
         {
@@ -7388,7 +7389,7 @@ public class RaidSceneManager : MonoBehaviour
             }
         }
     }
-    void ExecuteDeath(FormationUnit targetUnit)
+    protected virtual void ExecuteDeath(FormationUnit targetUnit)
     {
         if (targetUnit.CombatInfo.IsDead)
         {
@@ -7541,12 +7542,12 @@ public class RaidSceneManager : MonoBehaviour
         }
     }
 
-    public void AddResolveCheck(FormationUnit unit)
+    public virtual void AddResolveCheck(FormationUnit unit)
     {
         if (!resolveCheckQueue.Contains(unit))
             resolveCheckQueue.Add(unit);
     }
-    public void AddHeartAttackCheck(FormationUnit unit)
+    public virtual void AddHeartAttackCheck(FormationUnit unit)
     {
         if (!heartAttackCheckQueue.Contains(unit))
             heartAttackCheckQueue.Add(unit);

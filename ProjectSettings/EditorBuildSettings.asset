@@ -15,3 +15,5 @@ EditorBuildSettings:
     path: Assets/Scenes/EstateManagement.unity
   - enabled: 1
     path: Assets/Scenes/Dungeon.unity
+  - enabled: 1
+    path: Assets/Scenes/DungeonMultiplayer.unity
