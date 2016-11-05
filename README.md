@@ -27,20 +27,21 @@ All audio and graphic assets are ignored!
 - [**FMOD/UnityIntegration**](https://github.com/fmod/UnityIntegration) - plugins for FMOD Studio integration in Unity.
 - [**JamesNK/Newtonsoft.Json**](https://github.com/JamesNK/Newtonsoft.Json) - parsing darkest dungeon JSON-format data using C#.
 - [**EsotericSoftware/Spine-Runtimes**](https://github.com/EsotericSoftware/spine-runtimes) - runtimes which are needed to use [**Spine**](https://esotericsoftware.com) 2D skeletal animations for some dungeon/estate ui elements, and for heroes and monsters with Free-Form Deformation.
+- [**Photon Networking**](https://www.photonengine.com) - popular networking engine and multiplayer platform for Unity.
 
 ## Requirements
-- __**Windows**__ :
+- __**Windows**__ :  
  * OS: Windows 7+
- * Memory: 400 MB RAM 
+ * Memory: 400 MB RAM
  * Graphics: Intel HD Graphics 4000+
  * Storage: 850 MB available space
-- __**Android**__ :
+- __**Android**__ :  
  * OS: Android 4.3+
  * Memory: 300 MB RAM
  * Graphics: OpenGL ES 3 (ETC2 textures)
- * Storage: 700 MB available space
- 
- Should work on all resolutions, 16:9 recommended.
+ * Storage: 700 MB available space  
+
+Should work on all resolutions, 16:9 recommended.
  
 ## Links
 - [**Darkest Dungeon Maps**](https://docs.google.com/spreadsheets/d/1TeJAknTPJ33RliBHDGM9YMDSwxd2I7dLIEHF7ra3vHw/edit?usp=sharing)
