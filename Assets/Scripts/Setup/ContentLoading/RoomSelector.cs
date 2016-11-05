@@ -177,4 +177,9 @@ public class RoomSelector : MonoBehaviour
             StartCoroutine(slideBackCoroutine);
         }
     }
+
+    public void PlayButtonClicked()
+    {
+        DarkestNetworkManager.Instanse.Connect();
+    }
 }

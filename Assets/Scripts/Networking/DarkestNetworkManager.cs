@@ -72,7 +72,6 @@ public class DarkestNetworkManager : Photon.PunBehaviour
     /// </summary>
     void Start()
     {
-        Connect();
     }
 
     #endregion
