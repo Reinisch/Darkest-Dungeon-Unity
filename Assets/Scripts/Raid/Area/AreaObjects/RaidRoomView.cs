@@ -25,7 +25,7 @@ public class RaidRoomView : MonoBehaviour
         canvasGroup.blocksRaycasts = false;
     }
 
-    public void LoadRoom(Room room, HallSector fromSector, bool savedBattle = false)
+    public void LoadRoom(DungeonRoom room, HallSector fromSector, bool savedBattle = false)
     {
         raidRoom.LoadRoom(room, savedBattle);
         LastHallway = fromSector == null ? null : fromSector.Hallway;

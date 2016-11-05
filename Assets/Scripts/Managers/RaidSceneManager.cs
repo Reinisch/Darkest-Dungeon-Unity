@@ -213,7 +213,7 @@ public class RaidSceneManager : MonoBehaviour
     private List<FormationUnit> tempList = new List<FormationUnit>(4);
     private List<CampEffect> campEffects = new List<CampEffect>(10);
     private List<CampEffect> chosenEffects = new List<CampEffect>(2);
-    private Dictionary<Room, int> currentScoutedRooms = new Dictionary<Room, int>();
+    private Dictionary<DungeonRoom, int> currentScoutedRooms = new Dictionary<DungeonRoom, int>();
     
     private WaitForSeconds waitForZeroThree = new WaitForSeconds(0.3f);
     private WaitForSeconds waitForOneTwo = new WaitForSeconds(1.2f);
@@ -324,8 +324,8 @@ public class RaidSceneManager : MonoBehaviour
             Formations.Initialize(DarkestDungeonManager.SaveData.HeroFormationData);
             DarkestSoundManager.StartDungeonSoundtrack(currentRaid.Dungeon.Name);
 
-            if (currentRaid.CurrentLocation is Room)
-                currentEvent = RoomLoadingEvent(currentRaid.CurrentLocation as Room, 
+            if (currentRaid.CurrentLocation is DungeonRoom)
+                currentEvent = RoomLoadingEvent(currentRaid.CurrentLocation as DungeonRoom, 
                     DarkestDungeonManager.SaveData.inBattle ? RoomTransitionType.CombatLoad : RoomTransitionType.PeacefulLoad);
             else
                 currentEvent = HallwayLoadingEvent(currentRaid.CurrentLocation as HallSector,
@@ -446,41 +446,41 @@ public class RaidSceneManager : MonoBehaviour
         {
             if(Input.GetKeyDown(KeyCode.UpArrow))
             {
-                Door door = (roomView.raidRoom.Area as Room).Doors.Find(item => item.Direction == Direction.Top);
+                Door door = (roomView.raidRoom.Area as DungeonRoom).Doors.Find(item => item.Direction == Direction.Top);
                 if (door != null)
                 {
                     currentEvent = HallwayLoadingEvent(currentRaid.Dungeon.Hallways[door.TargetArea].Halls[0],
-                        HallTransitionType.FromRoom, Direction.Top, roomView.raidRoom.Area as Room);
+                        HallTransitionType.FromRoom, Direction.Top, roomView.raidRoom.Area as DungeonRoom);
                     StartCoroutine(currentEvent);
                 }
             }
             else if (Input.GetKeyDown(KeyCode.DownArrow))
             {
-                Door door = (roomView.raidRoom.Area as Room).Doors.Find(item => item.Direction == Direction.Bot);
+                Door door = (roomView.raidRoom.Area as DungeonRoom).Doors.Find(item => item.Direction == Direction.Bot);
                 if (door != null)
                 {
                     currentEvent = HallwayLoadingEvent(currentRaid.Dungeon.Hallways[door.TargetArea].Halls[0],
-                        HallTransitionType.FromRoom, Direction.Bot, roomView.raidRoom.Area as Room);
+                        HallTransitionType.FromRoom, Direction.Bot, roomView.raidRoom.Area as DungeonRoom);
                     StartCoroutine(currentEvent);
                 }
             }
             else if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
-                Door door = (roomView.raidRoom.Area as Room).Doors.Find(item => item.Direction == Direction.Left);
+                Door door = (roomView.raidRoom.Area as DungeonRoom).Doors.Find(item => item.Direction == Direction.Left);
                 if (door != null)
                 {
                     currentEvent = HallwayLoadingEvent(currentRaid.Dungeon.Hallways[door.TargetArea].Halls[0],
-                        HallTransitionType.FromRoom, Direction.Left, roomView.raidRoom.Area as Room);
+                        HallTransitionType.FromRoom, Direction.Left, roomView.raidRoom.Area as DungeonRoom);
                     StartCoroutine(currentEvent);
                 }
             }
             else if (Input.GetKeyDown(KeyCode.RightArrow))
             {
-                Door door = (roomView.raidRoom.Area as Room).Doors.Find(item => item.Direction == Direction.Right);
+                Door door = (roomView.raidRoom.Area as DungeonRoom).Doors.Find(item => item.Direction == Direction.Right);
                 if (door != null)
                 {
                     currentEvent = HallwayLoadingEvent(currentRaid.Dungeon.Hallways[door.TargetArea].Halls[0],
-                        HallTransitionType.FromRoom, Direction.Right, roomView.raidRoom.Area as Room);
+                        HallTransitionType.FromRoom, Direction.Right, roomView.raidRoom.Area as DungeonRoom);
                     StartCoroutine(currentEvent);
                 }
             }
@@ -639,7 +639,7 @@ public class RaidSceneManager : MonoBehaviour
                 break;
         }
     }
-    IEnumerator HallwayLoadingEvent(HallSector hallSector, HallTransitionType transitionType, Direction direction, Room fromRoom = null)
+    IEnumerator HallwayLoadingEvent(HallSector hallSector, HallTransitionType transitionType, Direction direction, DungeonRoom fromRoom = null)
     {
 #region Set restrictions
         QuestPanel.DisableRetreat(false);
@@ -692,13 +692,13 @@ public class RaidSceneManager : MonoBehaviour
 
             if(transitionType == HallTransitionType.CombatLoad || transitionType == HallTransitionType.PeacefulLoad)
             {
-                if (Raid.CurrentLocation is Room)
+                if (Raid.CurrentLocation is DungeonRoom)
                 {
-                    MapPanel.SetCurrentIndicator(Raid.CurrentLocation as Room);
+                    MapPanel.SetCurrentIndicator(Raid.CurrentLocation as DungeonRoom);
                 }
                 else
                 {
-                    MapPanel.SetCurrentIndicator(Raid.LastRoom as Room);
+                    MapPanel.SetCurrentIndicator(Raid.LastRoom as DungeonRoom);
                     if ((Raid.CurrentLocation as HallSector).Type != AreaType.Door)
                         MapPanel.SetCurrentIndicator(Raid.CurrentLocation as HallSector);
                 }
@@ -767,7 +767,7 @@ public class RaidSceneManager : MonoBehaviour
         currentEvent = null;
 #endregion
     }
-    IEnumerator RoomLoadingEvent(Room room, RoomTransitionType transitionType, RaidHallSector fromRaidSector = null)
+    IEnumerator RoomLoadingEvent(DungeonRoom room, RoomTransitionType transitionType, RaidHallSector fromRaidSector = null)
     {
 #region Set restrictions
         QuestPanel.DisableRetreat(false);
@@ -990,7 +990,7 @@ public class RaidSceneManager : MonoBehaviour
         currentEvent = null;
 #endregion
     }
-    IEnumerator CampingEvent(Room room)
+    IEnumerator CampingEvent(DungeonRoom room)
     {
         if (SceneState != DungeonSceneState.Room)
             yield break;
@@ -1002,7 +1002,7 @@ public class RaidSceneManager : MonoBehaviour
         Inventory.SetDeactivated();
         RaidPanel.SetDisabledState();
         RaidPanel.heroPanel.equipmentPanel.SetDisabled();
-        MapPanel.HideAvailableRooms(RoomView.raidRoom.Area as Room);
+        MapPanel.HideAvailableRooms(RoomView.raidRoom.Area as DungeonRoom);
 
         DarkestDungeonManager.Instanse.screenFader.Fade(1);
         TorchMeter.Hide();
@@ -1559,7 +1559,7 @@ public class RaidSceneManager : MonoBehaviour
         EnablePartyMovement();
         RaidPanel.SelectedUnit.SetPerformerStatus();
 
-        MapPanel.ShowAvailableRooms(RoomView.raidRoom.Area as Room);
+        MapPanel.ShowAvailableRooms(RoomView.raidRoom.Area as DungeonRoom);
         Formations.UnlockSelections();
         EnableEnviroment();
         RaidPanel.SwitchBlocked = false;
@@ -1962,12 +1962,12 @@ public class RaidSceneManager : MonoBehaviour
                 CharacterWindow.UpdateRaidCharacterInfo(overlaySlot.TargetUnit.Character as Hero, false);
         }
     }
-    public void TargetRoomSelected(Room room)
+    public void TargetRoomSelected(DungeonRoom room)
     {
         if (sceneState == DungeonSceneState.Room && currentEvent == null)
         {
             Door door = null;
-            var currentRoom = roomView.raidRoom.Area as Room;
+            var currentRoom = roomView.raidRoom.Area as DungeonRoom;
             for(int i = 0; i < currentRoom.Doors.Count; i++)
                 for(int j = 0; j < room.Doors.Count; j++)
                     if(currentRoom.Doors[i].TargetArea == room.Doors[j].TargetArea)
@@ -1976,7 +1976,7 @@ public class RaidSceneManager : MonoBehaviour
             if (door != null)
             {
                 currentEvent = HallwayLoadingEvent(currentRaid.Dungeon.Hallways[door.TargetArea].Halls[0],
-                    HallTransitionType.FromRoom, door.Direction, roomView.raidRoom.Area as Room);
+                    HallTransitionType.FromRoom, door.Direction, roomView.raidRoom.Area as DungeonRoom);
                 StartCoroutine(currentEvent);
             }
         }
@@ -3334,7 +3334,7 @@ public class RaidSceneManager : MonoBehaviour
                         }
                         else if (SceneState == DungeonSceneState.Room)
                         {
-                            var currentRoom = Raid.CurrentLocation as Room;
+                            var currentRoom = Raid.CurrentLocation as DungeonRoom;
                             var targetDoor = currentRoom.Doors.Find(door => door.TargetArea == Raid.LastSector.Hallway.Id);
                             var direction = currentRoom.OppositeDirection(targetDoor.Direction);
                             currentEvent = HallwayLoadingEvent(Raid.LastSector, HallTransitionType.Retreat, direction, currentRoom);
@@ -4760,7 +4760,7 @@ public class RaidSceneManager : MonoBehaviour
                         {
                             Inventory.DiscardSingleItem(slot);
                             FMODUnity.RuntimeManager.PlayOneShot("event:/general/items/discard");
-                            currentEvent = CampingEvent(RoomView.raidRoom.Area as Room);
+                            currentEvent = CampingEvent(RoomView.raidRoom.Area as DungeonRoom);
                             StartCoroutine(currentEvent);
                         }
                         break;
@@ -5738,11 +5738,11 @@ public class RaidSceneManager : MonoBehaviour
 #region Scouting and Room Updates
         if (sceneState == DungeonSceneState.Room && Raid.Quest.IsScoutingEnabled)
         {
-            Room room = RoomView.raidRoom.Area as Room;
+            DungeonRoom room = RoomView.raidRoom.Area as DungeonRoom;
             yield return StartCoroutine(ScoutingEvent(room));
         }
         if (sceneState == DungeonSceneState.Room)
-            MapPanel.ShowAvailableRooms(RoomView.raidRoom.Area as Room);
+            MapPanel.ShowAvailableRooms(RoomView.raidRoom.Area as DungeonRoom);
 #endregion
 
 #region Complete Area Info
@@ -6045,11 +6045,11 @@ public class RaidSceneManager : MonoBehaviour
 #region Scouting and Room Updates
         if (sceneState == DungeonSceneState.Room && Raid.Quest.IsScoutingEnabled)
         {
-            Room room = RoomView.raidRoom.Area as Room;
+            DungeonRoom room = RoomView.raidRoom.Area as DungeonRoom;
             yield return StartCoroutine(ScoutingEvent(room));
         }
         if (sceneState == DungeonSceneState.Room)
-            MapPanel.ShowAvailableRooms(RoomView.raidRoom.Area as Room);
+            MapPanel.ShowAvailableRooms(RoomView.raidRoom.Area as DungeonRoom);
 #endregion
 
 #region Complete Area Info
@@ -6337,7 +6337,7 @@ public class RaidSceneManager : MonoBehaviour
         }
         scoutingCounter--;
     }
-    IEnumerator ScoutingEvent(Room room)
+    IEnumerator ScoutingEvent(DungeonRoom room)
     {
         currentScoutedRooms.Clear();
 
@@ -6412,7 +6412,7 @@ public class RaidSceneManager : MonoBehaviour
                 else
                 {
                     scoutingCounter = 0;
-                    var room = area as Room;
+                    var room = area as DungeonRoom;
 
                     for (int i = 0; i < room.Doors.Count; i++)
                     {

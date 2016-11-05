@@ -14,8 +14,8 @@ public class Hallway
         }
     }
 
-    public Room RoomA { get; set; }
-    public Room RoomB { get; set; }
+    public DungeonRoom RoomA { get; set; }
+    public DungeonRoom RoomB { get; set; }
 
     public Direction DirectionFromA
     {
@@ -46,15 +46,15 @@ public class Hallway
         Halls = new List<HallSector>();
     }
 
-    public bool Connects(Room room)
+    public bool Connects(DungeonRoom room)
     {
         return RoomA == room || RoomB == room;
     }
-    public bool Connects(Room roomOne, Room roomTwo)
+    public bool Connects(DungeonRoom roomOne, DungeonRoom roomTwo)
     {
         return (RoomA == roomOne && RoomB == roomTwo) || (RoomB == roomOne && RoomA == roomTwo);
     }
-    public Room OppositeRoom(Room room)
+    public DungeonRoom OppositeRoom(DungeonRoom room)
     {
         if (RoomA.Id == room.Id)
             return RoomB;

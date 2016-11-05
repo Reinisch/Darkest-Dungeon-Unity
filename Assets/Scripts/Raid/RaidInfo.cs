@@ -17,7 +17,7 @@ public class RaidInfo
 
     public int ExploredRoomCount { get; set; }
     public Area CurrentLocation { get; set; }
-    public Room LastRoom { get; set; }
+    public DungeonRoom LastRoom { get; set; }
     public HallSector PreviousLastSector { get; set; }
     public HallSector LastSector { get; set; }
 

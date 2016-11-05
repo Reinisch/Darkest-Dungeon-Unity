@@ -1,7 +1,7 @@
 fileFormatVersion: 2
-guid: 161afcf57b3502c41aae98e98e9cb9a6
-timeCreated: 1445193186
-licenseType: Free
+guid: 5ccd613760bba654690c9b79488bf647
+timeCreated: 1477388387
+licenseType: Store
 PluginImporter:
   serializedVersion: 1
   iconMap: {}
@@ -13,7 +13,7 @@ PluginImporter:
       settings:
         CPU: AnyCPU
     Any:
-      enabled: 1
+      enabled: 0
       settings: {}
     Editor:
       enabled: 0
@@ -37,16 +37,6 @@ PluginImporter:
       enabled: 0
       settings:
         CPU: AnyCPU
-    SamsungTV:
-      enabled: 0
-      settings:
-        STV_MODEL: STANDARD_13
-    WP8:
-      enabled: 0
-      settings:
-        CPU: AnyCPU
-        DontProcess: False
-        PlaceholderPath: 
     Win:
       enabled: 0
       settings:
@@ -62,11 +52,10 @@ PluginImporter:
         DontProcess: False
         PlaceholderPath: 
         SDK: AnySDK
-    iOS:
-      enabled: 0
-      settings:
-        CompileFlags: 
-        FrameworkDependencies: 
+        ScriptingBackend: AnyScriptingBackend
+    XboxOne:
+      enabled: 1
+      settings: {}
   userData: 
   assetBundleName: 
   assetBundleVariant: 

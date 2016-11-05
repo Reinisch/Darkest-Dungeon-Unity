@@ -19,7 +19,7 @@ public class Dungeon
     public int HallwayCurios { get; set; }
     public int HallwayHunger { get; set; }
 
-    public Room StartingRoom
+    public DungeonRoom StartingRoom
     {
         get
         {
@@ -27,7 +27,7 @@ public class Dungeon
         }
     }
 
-    public Dictionary<string, Room> Rooms { get; set; }
+    public Dictionary<string, DungeonRoom> Rooms { get; set; }
     public Dictionary<string, Hallway> Hallways { get; set; }
 
     public DungeonBattleMash SharedMash { get; set; }
@@ -37,7 +37,7 @@ public class Dungeon
 
     public Dungeon()
     {
-        Rooms = new Dictionary<string, Room>();
+        Rooms = new Dictionary<string, DungeonRoom>();
         Hallways = new Dictionary<string, Hallway>();
         SharedMashExecutionIds = new List<int>();
     }

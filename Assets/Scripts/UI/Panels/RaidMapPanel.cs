@@ -41,7 +41,7 @@ public class RaidMapPanel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public RaidMapRoomSlot LastCurrentRoom { get; set; }
     public RaidMapHallSectorSlot LastHallwaySector { get; set; }
 
-    Vector2 GetGridOffset(Room room)
+    Vector2 GetGridOffset(DungeonRoom room)
     {
         return new Vector2(baseHallSize * room.GridX, baseHallSize * room.GridY);
     }
@@ -111,7 +111,7 @@ public class RaidMapPanel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             scoutRadar.transform.position = LastHallwaySector.rectTransform.position;
         }
     }
-    public void ShowAvailableRooms(Room room)
+    public void ShowAvailableRooms(DungeonRoom room)
     {
         foreach(var door in room.Doors)
         {
@@ -119,7 +119,7 @@ public class RaidMapPanel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             RoomSlots[hallway.OppositeRoom(room).Id].SetMovable(true);
         }
     }
-    public void HideAvailableRooms(Room room)
+    public void HideAvailableRooms(DungeonRoom room)
     {
         foreach (var door in room.Doors)
         {
@@ -128,7 +128,7 @@ public class RaidMapPanel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         }
     }
 
-    public void SetCurrentIndicator(Room room)
+    public void SetCurrentIndicator(DungeonRoom room)
     {
         if (LastHallwaySector != null)
         {
@@ -158,18 +158,18 @@ public class RaidMapPanel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         if(LastHallwaySector != null)
             LastHallwaySector.SetIndicator(hallIndicator);
     }
-    public void SetMovingRoom(Room room)
+    public void SetMovingRoom(DungeonRoom room)
     {
         RoomSlots[room.Id].MarkRoom();
     }
 
-    public void OnHallwayEnter(Hallway hallway, Room fromRoom, Room targetRoom)
+    public void OnHallwayEnter(Hallway hallway, DungeonRoom fromRoom, DungeonRoom targetRoom)
     {
         UpdateArea(fromRoom);
         HideAvailableRooms(fromRoom);
         SetMovingRoom(targetRoom);
     }
-    public void OnRoomEnter(Room room, Hallway fromHallway)
+    public void OnRoomEnter(DungeonRoom room, Hallway fromHallway)
     {
         UpdateArea(room);
         SetCurrentIndicator(room);
@@ -217,7 +217,7 @@ public class RaidMapPanel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void UpdateArea(Area area)
     {
-        if(area is Room)
+        if(area is DungeonRoom)
         {
             RoomSlots[area.Id].UpdateRoom();
             if (RaidSceneManager.SceneState == DungeonSceneState.Hall)

@@ -17,8 +17,8 @@ public class RaidHallwayView : MonoBehaviour
 
     public Hallway Hallway { get; set; }
     public RaidHallSector CurrentSector { get; set; }
-    public Room StartingRoom { get; set; }
-    public Room TargetRoom { get; set; }
+    public DungeonRoom StartingRoom { get; set; }
+    public DungeonRoom TargetRoom { get; set; }
 
     public void SetActive(bool active)
     {
@@ -36,7 +36,7 @@ public class RaidHallwayView : MonoBehaviour
         canvasGroup.blocksRaycasts = false;
     }
 
-    public void LoadHallway(Hallway hallway, Direction direction, Room fromRoom, bool loadBattleSave = false)
+    public void LoadHallway(Hallway hallway, Direction direction, DungeonRoom fromRoom, bool loadBattleSave = false)
     {
         Hallway = hallway;
 

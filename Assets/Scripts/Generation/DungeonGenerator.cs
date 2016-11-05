@@ -356,12 +356,12 @@ public static class DungeonGenerator
         }
         return existingHalls;
     }
-    static Dictionary<string, Room> GetFinalRooms(List<GenRoom> rooms, DungeonGenerationData genData)
+    static Dictionary<string, DungeonRoom> GetFinalRooms(List<GenRoom> rooms, DungeonGenerationData genData)
     {
-        Dictionary<string, Room> finalAreas = new Dictionary<string, Room>();
+        Dictionary<string, DungeonRoom> finalAreas = new Dictionary<string, DungeonRoom>();
         foreach (var genRoom in rooms)
         {
-            Room room = new Room(genRoom.Id, 1 + (genRoom.gridX - 1) * 7, 1 + (genRoom.gridY - 1) * 7);
+            DungeonRoom room = new DungeonRoom(genRoom.Id, 1 + (genRoom.gridX - 1) * 7, 1 + (genRoom.gridY - 1) * 7);
 
             if(genRoom.left != null && genRoom.left.Exists)
                 room.Doors.Add(new Door(genRoom.Id, genRoom.left.Id, Direction.Left));
@@ -430,7 +430,7 @@ public static class DungeonGenerator
     static void MarkEntrance(Dungeon dungeon)
     {
         int minConnections = 5;
-        Room entranceRoom = null;
+        DungeonRoom entranceRoom = null;
         foreach (var room in dungeon.Rooms.Values)
         {
             if(room.Connections < minConnections)
@@ -449,7 +449,7 @@ public static class DungeonGenerator
         }
         if(entranceRoom == null)
         {
-            List<Room> rooms = Enumerable.ToList(dungeon.Rooms.Values);
+            List<DungeonRoom> rooms = Enumerable.ToList(dungeon.Rooms.Values);
             entranceRoom = rooms[Random.Range(0, rooms.Count)];
         }
 
@@ -458,7 +458,7 @@ public static class DungeonGenerator
     }
     static void PopulateRooms(Dungeon dungeon, DungeonGenerationData genData)
     {
-        List<Room> rooms = Enumerable.ToList(dungeon.Rooms.Values).FindAll(item => item.Type == AreaType.Empty);
+        List<DungeonRoom> rooms = Enumerable.ToList(dungeon.Rooms.Values).FindAll(item => item.Type == AreaType.Empty);
 
         dungeon.TotalRoomBattles = Random.Range(genData.TotalRoomBattleMin, genData.TotalRoomBattleMax + 1);
         int currentBattles = 0;

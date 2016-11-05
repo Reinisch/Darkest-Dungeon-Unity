@@ -19,7 +19,7 @@ public class RaidRoom : MonoBehaviour, IRaidArea
         RectTransform = GetComponent<RectTransform>();
     }
 
-    public void LoadRoom(Room room, bool savedBattle)
+    public void LoadRoom(DungeonRoom room, bool savedBattle)
     {
         Area = room;
 

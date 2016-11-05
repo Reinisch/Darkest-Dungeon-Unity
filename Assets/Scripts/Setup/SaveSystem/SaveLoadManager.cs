@@ -1114,7 +1114,7 @@ public static class SaveLoadManager
                     int roomCount = br.ReadInt32();
                     for (int i = 0; i < roomCount; i++)
                     {
-                        var room = new Room(br.ReadString(), br.ReadInt32(), br.ReadInt32());
+                        var room = new DungeonRoom(br.ReadString(), br.ReadInt32(), br.ReadInt32());
                         int doorCount = br.ReadInt32();
                         for (int j = 0; j < doorCount; j++)
                         {
@@ -1512,7 +1512,7 @@ public static class SaveLoadManager
                 int roomCount = br.ReadInt32();
                 for (int i = 0; i < roomCount; i++)
                 {
-                    var room = new Room(br.ReadString(), br.ReadInt32(), br.ReadInt32());
+                    var room = new DungeonRoom(br.ReadString(), br.ReadInt32(), br.ReadInt32());
                     int doorCount = br.ReadInt32();
                     for (int j = 0; j < doorCount; j++)
                     {
@@ -1678,7 +1678,7 @@ public static class SaveLoadManager
             int roomCount = br.ReadInt32();
             for (int i = 0; i < roomCount; i++)
             {
-                var room = new Room(br.ReadString(), br.ReadInt32(), br.ReadInt32());
+                var room = new DungeonRoom(br.ReadString(), br.ReadInt32(), br.ReadInt32());
                 int doorCount = br.ReadInt32();
                 for (int j = 0; j < doorCount; j++)
                 {
@@ -2085,7 +2085,7 @@ public static class SaveLoadManager
         saveData.Dungeon.GridSizeY = 1;
         saveData.Dungeon.StartingRoomId = "room1_1";
 
-        Room room = new Room("room1_1", 1, 1)
+        DungeonRoom room = new DungeonRoom("room1_1", 1, 1)
         {
             Knowledge = Knowledge.Completed,
             Type = AreaType.Entrance,
@@ -2097,7 +2097,7 @@ public static class SaveLoadManager
         };
         saveData.Dungeon.Rooms.Add(room.Id, room);
 
-        room = new Room("room2_1", 8, 1)
+        room = new DungeonRoom("room2_1", 8, 1)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.BattleTresure,
@@ -3264,7 +3264,7 @@ public static class SaveLoadManager
 
         #region Rooms
         #region Entry 1/7
-        Room room = new Room("entry", 1, 7)
+        DungeonRoom room = new DungeonRoom("entry", 1, 7)
         {
             Knowledge = Knowledge.Completed,
             Type = AreaType.Entrance,
@@ -3277,7 +3277,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 2 Mid 14/7
-        room = new Room("room2_mid", 14, 7)
+        room = new DungeonRoom("room2_mid", 14, 7)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Battle,
@@ -3290,7 +3290,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 3 Top 18/11
-        room = new Room("room3_top", 18, 11)
+        room = new DungeonRoom("room3_top", 18, 11)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -3301,7 +3301,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 3 Bot 18/3
-        room = new Room("room3_bot", 18, 3)
+        room = new DungeonRoom("room3_bot", 18, 3)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -3312,7 +3312,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 4 Mid 22/7
-        room = new Room("room4_mid", 22, 7)
+        room = new DungeonRoom("room4_mid", 22, 7)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -3323,7 +3323,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 5 Mid 28/7
-        room = new Room("room5_mid", 28, 7)
+        room = new DungeonRoom("room5_mid", 28, 7)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -3334,7 +3334,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 5 Top 28/13
-        room = new Room("room5_top", 28, 13)
+        room = new DungeonRoom("room5_top", 28, 13)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Battle,
@@ -3347,7 +3347,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 5 Bot 28/1
-        room = new Room("room5_bot", 28, 1)
+        room = new DungeonRoom("room5_bot", 28, 1)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -3358,7 +3358,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 6 Mid 34/7
-        room = new Room("room6_mid", 34, 7)
+        room = new DungeonRoom("room6_mid", 34, 7)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.BattleTresure,
@@ -3372,7 +3372,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 6 Top 34/13
-        room = new Room("room6_top", 34, 13)
+        room = new DungeonRoom("room6_top", 34, 13)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -3383,7 +3383,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 6 Bot 34/1
-        room = new Room("room6_bot", 34, 1)
+        room = new DungeonRoom("room6_bot", 34, 1)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -3394,7 +3394,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 7 Mid 40/7
-        room = new Room("room7_mid", 40, 7)
+        room = new DungeonRoom("room7_mid", 40, 7)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Battle,
@@ -3407,7 +3407,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 7 Top 40/13
-        room = new Room("room7_top", 40, 13)
+        room = new DungeonRoom("room7_top", 40, 13)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -3418,7 +3418,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 7 Bot 40/1
-        room = new Room("room7_bot", 40, 1)
+        room = new DungeonRoom("room7_bot", 40, 1)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -3429,7 +3429,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 8 Mid 49/7
-        room = new Room("room8_mid", 49, 7)
+        room = new DungeonRoom("room8_mid", 49, 7)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Boss,
@@ -4440,7 +4440,7 @@ public static class SaveLoadManager
 
         #region Rooms
         #region Room (1,2) 1/11
-        Room room = new Room("room:1/11", 1, 11)
+        DungeonRoom room = new DungeonRoom("room:1/11", 1, 11)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -4453,7 +4453,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room (2,2) 5/7
-        room = new Room("room:5/7", 5, 7)
+        room = new DungeonRoom("room:5/7", 5, 7)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Battle,
@@ -4467,7 +4467,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room (2,1) 5/1 Boss Beacon
-        room = new Room("room:5/1", 5, 1)
+        room = new DungeonRoom("room:5/1", 5, 1)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Boss,
@@ -4481,7 +4481,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room (3,3) 9/11
-        room = new Room("room:9/11", 9, 11)
+        room = new DungeonRoom("room:9/11", 9, 11)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -4494,7 +4494,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room (2,4) 5/15
-        room = new Room("room:5/15", 5, 15)
+        room = new DungeonRoom("room:5/15", 5, 15)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -4507,7 +4507,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room (2,5) 5/22
-        room = new Room("room:5/22", 5, 22)
+        room = new DungeonRoom("room:5/22", 5, 22)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Battle,
@@ -4521,7 +4521,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room (5,3) 16/11 Entry
-        room = new Room("room:16/11", 16, 11)
+        room = new DungeonRoom("room:16/11", 16, 11)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Entrance,
@@ -4534,7 +4534,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room (5,4) 16/18
-        room = new Room("room:16/18", 16, 18)
+        room = new DungeonRoom("room:16/18", 16, 18)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -4547,7 +4547,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room (4,5) 12/22
-        room = new Room("room:12/22", 12, 22)
+        room = new DungeonRoom("room:12/22", 12, 22)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -4560,7 +4560,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room (6,5) 20/22
-        room = new Room("room:20/22", 20, 22)
+        room = new DungeonRoom("room:20/22", 20, 22)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -4573,7 +4573,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room (5,6) 16/26
-        room = new Room("room:16/26", 16, 26)
+        room = new DungeonRoom("room:16/26", 16, 26)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Battle,
@@ -4587,7 +4587,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room (5,7) 16/32 Boss Beacon
-        room = new Room("room:16/32", 16, 32)
+        room = new DungeonRoom("room:16/32", 16, 32)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Boss,
@@ -4601,7 +4601,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room (7,3) 23/11
-        room = new Room("room:23/11", 23, 11)
+        room = new DungeonRoom("room:23/11", 23, 11)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -4614,7 +4614,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room (9,3) 31/11
-        room = new Room("room:31/11", 31, 11)
+        room = new DungeonRoom("room:31/11", 31, 11)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -4627,7 +4627,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room (8,1) 27/1 Boss Beacon
-        room = new Room("room:27/1", 27, 1)
+        room = new DungeonRoom("room:27/1", 27, 1)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Boss,
@@ -4641,7 +4641,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room (8,2) 27/7
-        room = new Room("room:27/7", 27, 7)
+        room = new DungeonRoom("room:27/7", 27, 7)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -4653,7 +4653,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room (8,4) 27/15
-        room = new Room("room:27/15", 27, 15)
+        room = new DungeonRoom("room:27/15", 27, 15)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -4665,7 +4665,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room (8,5) 27/22
-        room = new Room("room:27/22", 27, 22)
+        room = new DungeonRoom("room:27/22", 27, 22)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.BattleTresure,
@@ -5883,7 +5883,7 @@ public static class SaveLoadManager
         #region Rooms
         // Top 26-29
         #region Room 2/29
-        Room room = new Room("room:2/29", 2, 29)
+        DungeonRoom room = new DungeonRoom("room:2/29", 2, 29)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Entrance,
@@ -5894,7 +5894,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 11/29
-        room = new Room("room:11/29", 11, 29)
+        room = new DungeonRoom("room:11/29", 11, 29)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -5905,7 +5905,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 31/29
-        room = new Room("room:31/29", 31, 29)
+        room = new DungeonRoom("room:31/29", 31, 29)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -5917,7 +5917,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 37/29
-        room = new Room("room:37/29", 37, 29)
+        room = new DungeonRoom("room:37/29", 37, 29)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.BattleTresure,
@@ -5931,7 +5931,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 17/28
-        room = new Room("room:17/28", 17, 28)
+        room = new DungeonRoom("room:17/28", 17, 28)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Battle,
@@ -5945,7 +5945,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 43/26
-        room = new Room("room:43/26", 43, 26)
+        room = new DungeonRoom("room:43/26", 43, 26)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Battle,
@@ -5958,7 +5958,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 21/26
-        room = new Room("room:21/26", 21, 26)
+        room = new DungeonRoom("room:21/26", 21, 26)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Battle,
@@ -5973,7 +5973,7 @@ public static class SaveLoadManager
         #endregion
         // Top 20-25
         #region Room 10/23
-        room = new Room("room:10/23", 10, 23)
+        room = new DungeonRoom("room:10/23", 10, 23)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -5984,7 +5984,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 18/22
-        room = new Room("room:18/22", 18, 22)
+        room = new DungeonRoom("room:18/22", 18, 22)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -5995,7 +5995,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 24/23
-        room = new Room("room:24/23", 24, 23)
+        room = new DungeonRoom("room:24/23", 24, 23)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Battle,
@@ -6008,7 +6008,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 30/24
-        room = new Room("room:30/24", 30, 24)
+        room = new DungeonRoom("room:30/24", 30, 24)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -6019,7 +6019,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 35/21
-        room = new Room("room:35/21", 35, 21)
+        room = new DungeonRoom("room:35/21", 35, 21)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Battle,
@@ -6032,7 +6032,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 40/23
-        room = new Room("room:40/23", 40, 23)
+        room = new DungeonRoom("room:40/23", 40, 23)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -6044,7 +6044,7 @@ public static class SaveLoadManager
         #endregion
         // Mid 15-19
         #region Room 5/17
-        room = new Room("room:5/17", 5, 17)
+        room = new DungeonRoom("room:5/17", 5, 17)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Battle,
@@ -6057,7 +6057,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 11/17
-        room = new Room("room:11/17", 11, 17)
+        room = new DungeonRoom("room:11/17", 11, 17)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -6068,7 +6068,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 18/16
-        room = new Room("room:18/16", 18, 16)
+        room = new DungeonRoom("room:18/16", 18, 16)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Battle,
@@ -6081,7 +6081,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 24/17
-        room = new Room("room:24/17", 24, 17)
+        room = new DungeonRoom("room:24/17", 24, 17)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -6092,7 +6092,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 30/18
-        room = new Room("room:30/18", 30, 18)
+        room = new DungeonRoom("room:30/18", 30, 18)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -6103,7 +6103,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 41/17
-        room = new Room("room:41/17", 41, 17)
+        room = new DungeonRoom("room:41/17", 41, 17)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Battle,
@@ -6117,7 +6117,7 @@ public static class SaveLoadManager
         #endregion
         // Bot 8-14
         #region Room 12/11
-        room = new Room("room:12/11", 12, 11)
+        room = new DungeonRoom("room:12/11", 12, 11)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Battle,
@@ -6130,7 +6130,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 19/10
-        room = new Room("room:19/10", 19, 10)
+        room = new DungeonRoom("room:19/10", 19, 10)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -6141,7 +6141,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion 
         #region Room 26/10 Boss Teleport
-        room = new Room("room:26/10", 26, 10)
+        room = new DungeonRoom("room:26/10", 26, 10)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.BattleCurio,
@@ -6155,7 +6155,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 32/12
-        room = new Room("room:32/12", 32, 12)
+        room = new DungeonRoom("room:32/12", 32, 12)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -6166,7 +6166,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 38/13
-        room = new Room("room:38/13", 38, 13)
+        room = new DungeonRoom("room:38/13", 38, 13)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -6177,7 +6177,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 44/13
-        room = new Room("room:44/13", 44, 13)
+        room = new DungeonRoom("room:44/13", 44, 13)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Battle,
@@ -6191,7 +6191,7 @@ public static class SaveLoadManager
         #endregion
         // Bot 1-7
         #region Room 16/1
-        room = new Room("room:16/1", 16, 1)
+        room = new DungeonRoom("room:16/1", 16, 1)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Battle,
@@ -6204,7 +6204,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 19/4
-        room = new Room("room:19/4", 19, 4)
+        room = new DungeonRoom("room:19/4", 19, 4)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -6215,7 +6215,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 25/4
-        room = new Room("room:25/4", 25, 4)
+        room = new DungeonRoom("room:25/4", 25, 4)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -6226,7 +6226,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 32/6
-        room = new Room("room:32/6", 32, 6)
+        room = new DungeonRoom("room:32/6", 32, 6)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -6237,7 +6237,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 35/3
-        room = new Room("room:35/3", 35, 3)
+        room = new DungeonRoom("room:35/3", 35, 3)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Battle,
@@ -6250,7 +6250,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 38/6
-        room = new Room("room:38/6", 38, 6)
+        room = new DungeonRoom("room:38/6", 38, 6)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Battle,
@@ -8226,7 +8226,7 @@ public static class SaveLoadManager
 
         #region Rooms
         #region Room 2/4
-        Room room = new Room("room:2/4", 2, 4)
+        DungeonRoom room = new DungeonRoom("room:2/4", 2, 4)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Entrance,
@@ -8237,7 +8237,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 21/4
-        room = new Room("room:21/4", 21, 4)
+        room = new DungeonRoom("room:21/4", 21, 4)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Boss,
@@ -8753,7 +8753,7 @@ public static class SaveLoadManager
         saveData.Dungeon.GridSizeY = 1;
         saveData.Dungeon.StartingRoomId = "room1_1";
 
-        Room room = new Room("room1_1", 1, 1)
+        DungeonRoom room = new DungeonRoom("room1_1", 1, 1)
         {
             Knowledge = Knowledge.Completed,
             Type = AreaType.Entrance,
@@ -8765,7 +8765,7 @@ public static class SaveLoadManager
         };
         saveData.Dungeon.Rooms.Add(room.Id, room);
 
-        room = new Room("room2_1", 8, 1)
+        room = new DungeonRoom("room2_1", 8, 1)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.BattleTresure,
@@ -9126,7 +9126,7 @@ public static class SaveLoadManager
 
         #region Rooms
         #region Room 17/13 Entrance
-        Room room = new Room("room:17/13", 17, 13)
+        DungeonRoom room = new DungeonRoom("room:17/13", 17, 13)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Entrance,
@@ -9137,7 +9137,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 17/23 Vvulf
-        room = new Room("room:17/23", 17, 23)
+        room = new DungeonRoom("room:17/23", 17, 23)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Boss,
@@ -9150,7 +9150,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 12/18
-        room = new Room("room:12/18", 12, 18)
+        room = new DungeonRoom("room:12/18", 12, 18)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Battle,
@@ -9163,7 +9163,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 22/18
-        room = new Room("room:22/18", 22, 18)
+        room = new DungeonRoom("room:22/18", 22, 18)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Battle,
@@ -9176,7 +9176,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 7/18
-        room = new Room("room:7/18", 7, 18)
+        room = new DungeonRoom("room:7/18", 7, 18)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.BattleCurio,
@@ -9190,7 +9190,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 27/18
-        room = new Room("room:27/18", 27, 18)
+        room = new DungeonRoom("room:27/18", 27, 18)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.BattleCurio,
@@ -9204,7 +9204,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 17/18
-        room = new Room("room:17/18", 17, 18)
+        room = new DungeonRoom("room:17/18", 17, 18)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.BattleCurio,
@@ -9858,7 +9858,7 @@ public static class SaveLoadManager
 
         #region Rooms
         #region Room 14/4 Entrance
-        Room room = new Room("room:14/4", 14, 4)
+        DungeonRoom room = new DungeonRoom("room:14/4", 14, 4)
         {
             Knowledge = Knowledge.Scouted,
             Type = AreaType.Entrance,
@@ -9869,7 +9869,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 14/11
-        room = new Room("room:14/11", 14, 11)
+        room = new DungeonRoom("room:14/11", 14, 11)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.BattleTresure,
@@ -9883,7 +9883,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 14/18
-        room = new Room("room:14/18", 14, 18)
+        room = new DungeonRoom("room:14/18", 14, 18)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -9894,7 +9894,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 14/25
-        room = new Room("room:14/25", 14, 25)
+        room = new DungeonRoom("room:14/25", 14, 25)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.BattleTresure,
@@ -9908,7 +9908,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 21/25
-        room = new Room("room:21/25", 21, 25)
+        room = new DungeonRoom("room:21/25", 21, 25)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -9919,7 +9919,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 28/25
-        room = new Room("room:28/25", 28, 25)
+        room = new DungeonRoom("room:28/25", 28, 25)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.Empty,
@@ -9930,7 +9930,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 28/18
-        room = new Room("room:28/18", 28, 18)
+        room = new DungeonRoom("room:28/18", 28, 18)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.BattleTresure,
@@ -9944,7 +9944,7 @@ public static class SaveLoadManager
         saveData.Dungeon.Rooms.Add(room.Id, room);
         #endregion
         #region Room 21/18
-        room = new Room("room:21/18", 21, 18)
+        room = new DungeonRoom("room:21/18", 21, 18)
         {
             Knowledge = Knowledge.Hidden,
             Type = AreaType.BattleCurio,

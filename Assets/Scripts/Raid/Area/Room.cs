@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Room : Area
+public class DungeonRoom : Area
 {
     public int Connections
     {
@@ -15,7 +15,7 @@ public class Room : Area
     public int GridY { get; set; }
     public List<Door> Doors { get; set; }
 
-    public Room(string id, int gridX, int gridY)
+    public DungeonRoom(string id, int gridX, int gridY)
     {
         Id = id;
 
@@ -31,3 +31,4 @@ public class Room : Area
         Doors = new List<Door>();
     }
 }
+

@@ -13,7 +13,7 @@ public class RaidMapRoomSlot : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     private RectTransform slotRect;
 
-    public Room Room { get; set; }
+    public DungeonRoom Room { get; set; }
     public bool HasRoom { get; set; }
     public bool MarkedForMove { get; set; }
 
@@ -27,7 +27,7 @@ public class RaidMapRoomSlot : MonoBehaviour, IPointerEnterHandler, IPointerExit
         }
     }
 
-    public void SetRoom(Room room)
+    public void SetRoom(DungeonRoom room)
     {
         Room = room;
         HasRoom = true;
