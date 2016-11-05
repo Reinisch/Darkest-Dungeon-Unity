@@ -1,54 +1,41 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
-public class SaveSelector : MonoBehaviour
+public class RoomSelector : MonoBehaviour
 {
-    SaveSlot[] saveSlots;
-    SaveSlot selectedSaveSlot;
+    public List<MultiplayerRoomSlot> roomSlots;
     public Button startCampaignButton;
     public Button returnButton;
 
-    RectTransform sceneryRect;
-    RectTransform rect;
-    Transform saveFrame;
+    public RectTransform saveFrame;
+
+    public RectTransform sceneryRect;
+    public RectTransform rect;
+
     bool isSelecting = false;
-    const int slotNumber = 3;
+
+    MultiplayerRoomSlot selectedRoomSlot;
 
     IEnumerator sliderCoroutine;
     IEnumerator slideBackCoroutine;
     IEnumerator fadeCoroutine;
 
-    void Awake()
-    {
-        saveFrame = transform.FindChild("SaveFrame");
-        saveSlots = saveFrame.GetComponentsInChildren<SaveSlot>();
-        for (int i = 0; i < slotNumber; i++)
-            saveSlots[i].SaveSelector = this;
-
-        startCampaignButton = saveFrame.GetComponentInParent<Button>();
-        sceneryRect = startCampaignButton.transform.parent.GetComponent<RectTransform>();
-        rect = saveFrame.GetComponent<RectTransform>();
-    }
-	void Start()
+    void Start()
     {
         saveFrame.gameObject.SetActive(false);
-        if(SaveLoadManager.ReadSave(1) == null && SaveLoadManager.ReadSave(2) == null)
-        {
-            SaveLoadManager.WriteStartingSave(new SaveCampaignData(1, "Darkest"));
-            SaveLoadManager.WriteTestingSave(new SaveCampaignData(2, "Middle"));
-        }
     }
-	void Update()
+    void Update()
     {
         if (isSelecting == true)
         {
-            if (selectedSaveSlot != null)
+            if (selectedRoomSlot != null)
             {
-                if(Input.GetMouseButtonDown(0))
+                if (Input.GetMouseButtonDown(0))
                 {
-                    selectedSaveSlot.RefocusInput();
+                    selectedRoomSlot.RefocusInput();
                 }
             }
             else if (Input.GetKeyUp(KeyCode.Escape))
@@ -58,7 +45,7 @@ public class SaveSelector : MonoBehaviour
                 StartCoroutine(slideBackCoroutine);
             }
         }
-	}
+    }
 
     IEnumerator SceneSlider()
     {
@@ -80,10 +67,8 @@ public class SaveSelector : MonoBehaviour
         }
         isSelecting = true;
 
-        for (int i = 0; i < slotNumber; i++)
-        {
-            saveSlots[i].LoadSaveFrame();
-        }
+        for (int i = 0; i < roomSlots.Count; i++)
+            roomSlots[i].LoadSaveFrame();
 
         yield break;
     }
@@ -91,6 +76,7 @@ public class SaveSelector : MonoBehaviour
     {
         saveFrame.gameObject.SetActive(false);
         returnButton.gameObject.SetActive(false);
+
         while (true)
         {
             if (sceneryRect.offsetMax.y <= 0 || sceneryRect.offsetMin.y <= 0)
@@ -116,7 +102,7 @@ public class SaveSelector : MonoBehaviour
     {
         float titleVolume = 0;
 
-        if(DarkestSoundManager.TitleMusicInstanse != null)
+        if (DarkestSoundManager.TitleMusicInstanse != null)
         {
             DarkestSoundManager.TitleMusicInstanse.getVolume(out titleVolume);
 
@@ -151,40 +137,40 @@ public class SaveSelector : MonoBehaviour
 
     public void FadeToLoadingScreen()
     {
-        for (int i = 0; i < slotNumber; i++)
-            saveSlots[i].DisableInteraction();
+        for (int i = 0; i < roomSlots.Count; i++)
+            roomSlots[i].DisableInteraction();
         fadeCoroutine = SceneFade(1, 2500);
-        StartCoroutine(fadeCoroutine); 
+        StartCoroutine(fadeCoroutine);
     }
 
     public void SaveSelectionStart()
     {
-        CampaignSelectionManager.OnSelectionStart(CampaignSelection.Singleplayer);
+        CampaignSelectionManager.OnSelectionStart(CampaignSelection.Multiplayer);
         saveFrame.gameObject.SetActive(true);
 
         sliderCoroutine = SceneSlider();
         StartCoroutine(sliderCoroutine);
     }
 
-    public void SaveNamingStart(SaveSlot namingSaveSlot)
+    public void SaveNamingStart(MultiplayerRoomSlot namingSaveSlot)
     {
         DarkestSoundManager.PlayOneShot("event:/general/title_screen/letter_open");
-        
-        selectedSaveSlot = namingSaveSlot;
-        for (int i = 0; i < slotNumber; i++)
-            saveSlots[i].DisableInteraction();
+
+        selectedRoomSlot = namingSaveSlot;
+        for (int i = 0; i < roomSlots.Count; i++)
+            roomSlots[i].DisableInteraction();
     }
 
-    public void SaveNamingCompleted()
+    public void RoomNamingCompleted()
     {
-        selectedSaveSlot = null;
-        for (int i = 0; i < slotNumber; i++)
-            saveSlots[i].EnableInteraction();
+        selectedRoomSlot = null;
+        for (int i = 0; i < roomSlots.Count; i++)
+            roomSlots[i].EnableInteraction();
     }
 
     public void ReturnButtonClicked()
     {
-        if (isSelecting)
+        if(isSelecting)
         {
             isSelecting = false;
             slideBackCoroutine = SliderBack();
