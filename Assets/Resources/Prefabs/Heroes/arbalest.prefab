@@ -1666,9 +1666,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40863d95aa4e95549b8f7635e58e8537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  follower: {fileID: 0}
-  skeletonAnimation: {fileID: 0}
-  currentTransform: {fileID: 0}
+  follower: {fileID: 11435324}
+  skeletonAnimation: {fileID: 11455288}
+  currentTransform: {fileID: 469598}
 --- !u!114 &11406682
 MonoBehaviour:
   m_ObjectHideFlags: 1

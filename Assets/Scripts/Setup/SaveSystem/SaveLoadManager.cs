@@ -2243,7 +2243,7 @@ public static class SaveLoadManager
             {
                 rosterId = 1,
                 name = "Reynald",
-                heroClass = "plague_doctor",
+                heroClass = "arbalest",
                 resolveLevel = 6,
                 resolveXP = 94,
                 stressLevel = 30,
