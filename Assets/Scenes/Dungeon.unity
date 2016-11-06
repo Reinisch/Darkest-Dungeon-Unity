@@ -26171,10 +26171,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startingMode: 0
   startingItems:
-  - formless_melee_A
-  - formless_guard_A
-  - formless_weak_A
-  - formless_ranged_A
+  - cultist_shrouded_D
+  - cultist_shrouded_D
+  - cultist_shrouded_D
+  - cultist_shrouded_D
   dungeonCamera: {fileID: 447450558}
   hallwayView: {fileID: 1199950669}
   roomView: {fileID: 970925681}

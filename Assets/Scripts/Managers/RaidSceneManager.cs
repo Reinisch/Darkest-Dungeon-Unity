@@ -5073,6 +5073,7 @@ public class RaidSceneManager : MonoBehaviour
 
             float coroutineTime = Time.time;
             yield return StartCoroutine(ExecuteEffectEvents(false));
+            unitEventQueue.AddRange(Formations.heroes.party.Units);
             timeWasted += Time.time - coroutineTime;
         }
 #endregion
@@ -5127,6 +5128,7 @@ public class RaidSceneManager : MonoBehaviour
 
             float coroutineTime = Time.time;
             yield return StartCoroutine(ExecuteEffectEvents(false));
+            unitEventQueue.AddRange(Formations.heroes.party.Units);
             timeWasted += Time.time - coroutineTime;
         }
 #endregion
@@ -5153,8 +5155,9 @@ public class RaidSceneManager : MonoBehaviour
                 ExecuteDeath(poisonDeaths[i]);
             poisonDeaths.Clear();
         }
-#endregion
+        #endregion
 
+        yield return StartCoroutine(ExecuteEffectEvents(false));
         unitEventQueue.Clear();
 
 #region Comment on Movement
@@ -5263,7 +5266,7 @@ public class RaidSceneManager : MonoBehaviour
             do
             {
                 executedEvent = false;
-
+                unitEventQueue.Clear();
                 unitEventQueue.AddRange(BattleGround.HeroParty.Units);
                 if (includeMonsters)
                     unitEventQueue.AddRange(BattleGround.MonsterParty.Units);
