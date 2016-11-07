@@ -16,9 +16,7 @@ public class PhotonGameManager : Photon.PunBehaviour
 
     #endregion
 
-
     #region Private Methods
-
 
     void LoadArena()
     {
@@ -31,9 +29,7 @@ public class PhotonGameManager : Photon.PunBehaviour
         PhotonNetwork.LoadLevel("DungeonMultiplayer");
     }
 
-
     #endregion
-
 
     #region MonoBehavior callbacks
 
@@ -52,7 +48,6 @@ public class PhotonGameManager : Photon.PunBehaviour
 
     #endregion
 
-
     #region Photon Messages
 
     /// <summary>
@@ -61,6 +56,8 @@ public class PhotonGameManager : Photon.PunBehaviour
     public override void OnLeftRoom()
     {
         SceneManager.LoadScene("CampaignSelection");
+        RaidSceneManager.Instanse.OnSceneLeave();
+        DarkestDungeonManager.ScreenFader.Appear(1);
     }
 
     public override void OnPhotonPlayerConnected(PhotonPlayer other)

@@ -6562,7 +6562,7 @@ public class RaidSceneManager : MonoBehaviour
         yield break;
     }
 
-    IEnumerator CompletionCrestEvent()
+    protected virtual IEnumerator CompletionCrestEvent()
     {
         Raid.QuestCompleted = true;
         completionWindow.Appear();

@@ -6,9 +6,18 @@ public class RaidParty
 
     public List<RaidHeroInfo> HeroInfo { get; set; }
 
-    public RaidParty()
+    public RaidParty(PhotonPlayer photonPlayer)
     {
+        List<Hero> MultiplayerHeroes = new List<Hero>()
+        {
+            new Hero("abomination", "Abom #4"),
+            new Hero("abomination", "Abom #3"),
+            new Hero("abomination", "Abom #2"),
+            new Hero("abomination", "Abom #1"),
+        };
         HeroInfo = new List<RaidHeroInfo>();
+        foreach (var hero in MultiplayerHeroes)
+            HeroInfo.Add(new RaidHeroInfo(hero));
     }
 
     public RaidParty(RaidPartySaveData saveData)

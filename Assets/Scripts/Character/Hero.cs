@@ -564,6 +564,85 @@ public class Hero : Character
         }
     }
 
+    public Hero(string classId, string generatedName)
+        : base(DarkestDungeonManager.Data.HeroClasses[classId])
+    {
+        HeroName = generatedName;
+        ClassStringId = classId;
+        Status = HeroStatus.Available;
+        Resolve = new Resolve(0, 0);
+        HeroClass = DarkestDungeonManager.Data.HeroClasses[classId];
+        ClassIndexId = HeroClass.IndexId;
+        AddPairedAttribute(AttributeType.Stress, new PairedAttribute(10, 200, true, AttributeCategory.CombatStat));
+
+        #region Equipment Generation
+        Equipment weapon = HeroClass.Weapons.Find(wep => wep.UpgradeLevel == 1);
+        Equip(weapon, HeroEquipmentSlot.Weapon);
+        Equipment armor = HeroClass.Armors.Find(arm => arm.UpgradeLevel == 1);
+        Equip(armor, HeroEquipmentSlot.Armor);
+        #endregion
+
+        quirkData = new List<QuirkInfo>();
+
+        #region Combat Generation
+        var availableSkills = new List<CombatSkill>(HeroClass.CombatSkills);
+        int skillsRequired = Mathf.Clamp(HeroClass.Generation.NumberOfRandomCombatSkills, 0, HeroClass.CombatSkills.Count);
+        CurrentCombatSkills = new CombatSkill[HeroClass.CombatSkills.Count];
+
+        foreach (var guaranteedSkill in availableSkills.FindAll(skill => skill.IsGenerationGuaranteed))
+        {
+            CurrentCombatSkills[HeroClass.CombatSkills.IndexOf(guaranteedSkill)] = guaranteedSkill;
+            availableSkills.Remove(guaranteedSkill);
+            skillsRequired--;
+        }
+
+        for (int i = skillsRequired; i > 0; i--)
+        {
+            int generatedIndex = Random.Range(0, availableSkills.Count);
+            CurrentCombatSkills[HeroClass.CombatSkills.IndexOf(availableSkills[generatedIndex])] = availableSkills[generatedIndex];
+            availableSkills.RemoveAt(generatedIndex);
+        }
+
+        SelectedCombatSkills = new List<CombatSkill>();
+        var selectionList = new List<CombatSkill>(CurrentCombatSkills);
+        selectionList.RemoveAll(skill => skill == null);
+        int selectedSkills = Mathf.Clamp(HeroClass.NumberOfSelectedCombatSkills, 0, selectionList.Count);
+        for (int i = 0; i < selectedSkills; i++)
+        {
+            int selectedItem = Random.Range(0, selectionList.Count);
+            SelectedCombatSkills.Add(selectionList[selectedItem]);
+            selectionList.RemoveAt(selectedItem);
+        }
+        #endregion
+
+        #region Camping Generation
+        CurrentCampingSkills = new CampingSkill[HeroClass.CampingSkills.Count];
+
+        var availableGeneralSkills = HeroClass.CampingSkills.FindAll(skill => skill.Classes.Count > 4);
+        int generalSkillsRequired = HeroClass.Generation.NumberOfSharedCampingSkills;
+        foreach (var skill in availableGeneralSkills.OrderBy(x => Random.value)
+            .Take(Mathf.Min(generalSkillsRequired, availableGeneralSkills.Count)))
+        {
+            int skillIndex = HeroClass.CampingSkills.IndexOf(skill);
+            CurrentCampingSkills[skillIndex] = skill;
+        }
+        var availableSpecificSkills = HeroClass.CampingSkills.FindAll(skill => skill.Classes.Count <= 4);
+        int specificSkillsRequired = HeroClass.Generation.NumberOfSpecificCampingSkills;
+
+        foreach (var skill in availableSpecificSkills.OrderBy(x => Random.value)
+            .Take(Mathf.Min(specificSkillsRequired, availableSpecificSkills.Count)))
+        {
+            int skillIndex = HeroClass.CampingSkills.IndexOf(skill);
+            CurrentCampingSkills[skillIndex] = skill;
+        }
+
+        var availableGeneratedSkills = new List<CampingSkill>(CurrentCampingSkills);
+        availableGeneratedSkills.RemoveAll(skill => skill == null);
+
+        SelectedCampingSkills = availableGeneratedSkills.OrderBy(x => Random.value)
+            .Take(Mathf.Min(4, availableGeneratedSkills.Count)).ToList();
+        #endregion
+    }
     public Hero(int rosterId, string classId, string generatedName)
         :base(DarkestDungeonManager.Data.HeroClasses[classId])
     {
