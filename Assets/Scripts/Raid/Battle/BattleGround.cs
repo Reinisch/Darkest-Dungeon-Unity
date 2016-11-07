@@ -416,7 +416,6 @@ public class BattleGround : MonoBehaviour
         MonsterFormation.LoadParty(new RaidParty(invader));
         for (int i = 0; i < MonsterParty.Units.Count; i++)
         {
-            var enemyHero = MonsterParty.Units[i].Character as Hero;
             MonsterParty.Units[i].CombatInfo.PrepareForBattle(PickId());
             RaidSceneManager.TorchMeter.ApplyBuffsForUnit(MonsterParty.Units[i]);
         }

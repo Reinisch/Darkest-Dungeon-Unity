@@ -65,6 +65,15 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
             DarkestDungeonManager.SaveData = SaveLoadManager.ReadSave(4);
             DarkestDungeonManager.Instanse.LoadSave();
 
+            // just testing
+            int sessionSeed = 0;
+            foreach(var player in PhotonNetwork.playerList)
+            {
+                Random.InitState(player.ID + player.ToString().GetHashCode());
+                sessionSeed += Random.Range(0, (int)Mathf.Pow(2, 16));
+            }
+            Random.InitState(sessionSeed);
+
             RaidEvents.Initialize();
             currentRaid = new RaidInfo();
             currentRaid.Quest = MultiplayerQuest;

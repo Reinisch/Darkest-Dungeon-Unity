@@ -4377,7 +4377,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   launcherPanel: {fileID: 1105366342}
-  LogLevel: 1
+  LogLevel: 0
   MaxPlayersPerRoom: 2
 --- !u!1 &1353514356
 GameObject:

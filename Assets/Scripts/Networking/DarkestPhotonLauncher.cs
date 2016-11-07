@@ -77,7 +77,7 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
             PhotonNetwork.autoJoinLobby = false;
 
             // Auto sync loaded level with master client
-            PhotonNetwork.automaticallySyncScene = true;
+            PhotonNetwork.automaticallySyncScene = false;
         }
         else
             Destroy(gameObject);

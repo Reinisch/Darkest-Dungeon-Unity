@@ -14,8 +14,6 @@ public interface ISingleProportion
 
 public static class RandomSolver 
 {
-    static System.Random random = new System.Random();
-
     public static T ChooseByRandom<T>(IEnumerable<T> collection)
         where T : IProportionValue
     {
@@ -64,6 +62,9 @@ public static class RandomSolver
     }
     public static bool CheckSuccess(float chance)
     {
-        return random.NextDouble() < chance;
+        if (chance >= 1)
+            return true;
+
+        return Random.value < chance;
     }
 }

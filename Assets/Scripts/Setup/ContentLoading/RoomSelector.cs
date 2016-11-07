@@ -140,13 +140,8 @@ public class RoomSelector : MonoBehaviour
             sceneryRect.offsetMin = offsetMin;
             yield return 0;
         }
-        if (PhotonNetwork.room.playerCount == 1)
-        {
-            Debug.Log("We load the 'Room for 1' ");
 
-            // Load the Room Level. 
-            PhotonNetwork.LoadLevel("DungeonMultiplayer");
-        }
+        PhotonNetwork.LoadLevel("DungeonMultiplayer");
         yield break;
     }
 
