@@ -411,6 +411,23 @@ public class BattleGround : MonoBehaviour
         }
         Round.StartBattle(this);
     }
+    public void SpawnMultiplayerEncounter(PhotonPlayer invader)
+    {
+        MonsterFormation.LoadParty(new RaidParty(invader));
+        for (int i = 0; i < MonsterParty.Units.Count; i++)
+        {
+            var enemyHero = MonsterParty.Units[i].Character as Hero;
+            MonsterParty.Units[i].CombatInfo.PrepareForBattle(PickId());
+            RaidSceneManager.TorchMeter.ApplyBuffsForUnit(MonsterParty.Units[i]);
+        }
+        
+        MonsterFormation.overlay.UpdateOverlay();
+
+        SurpriseStatus = SurpriseStatus.Nothing;
+        
+        Round.StartBattle(this);
+    }
+
     public void LoadEncounter(BattleFormationSaveData encounterSaveData)
     {
         MonsterFormation.LoadParty(encounterSaveData, false);

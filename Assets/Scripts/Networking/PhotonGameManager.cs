@@ -57,7 +57,6 @@ public class PhotonGameManager : Photon.PunBehaviour
     {
         SceneManager.LoadScene("CampaignSelection");
         RaidSceneManager.Instanse.OnSceneLeave();
-        DarkestDungeonManager.ScreenFader.Appear(1);
     }
 
     public override void OnPhotonPlayerConnected(PhotonPlayer other)

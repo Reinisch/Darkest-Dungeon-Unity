@@ -33,4 +33,9 @@ public class CampaignSelectionManager : MonoBehaviour
         else
             Destroy(gameObject);
     }
+
+    void Start()
+    {
+        DarkestDungeonManager.ScreenFader.Appear(1);
+    }
 }
