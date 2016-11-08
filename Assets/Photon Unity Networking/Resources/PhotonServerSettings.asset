@@ -44,4 +44,5 @@ MonoBehaviour:
   - HeroMoveDeselected
   - HeroMoveSelected
   - HeroSkillSelected
+  - PlayerLoaded
   DisableAutoOpenWizard: 1

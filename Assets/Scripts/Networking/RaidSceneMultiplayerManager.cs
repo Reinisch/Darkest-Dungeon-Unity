@@ -110,6 +110,8 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         TorchMeter.Initialize(100);
         Formations.Initialize();
 
+        PhotonGameManager.PlayersPreparedCount = 0;
+
         if (PhotonNetwork.room.playerCount < 2)
         {
             Raid.Dungeon.StartingRoom.BattleEncounter.Cleared = true;
@@ -355,6 +357,8 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         yield return new WaitForSeconds(1.8f);
         RaidEvents.HideBattleAnnouncment();
         yield return new WaitForSeconds(1f);
+
+        yield return StartCoroutine(PhotonGameManager.PreparationCheck());
 
         RaidEvents.roundIndicator.Appear();
         yield return StartCoroutine(BattleRound());
@@ -1138,6 +1142,8 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
     }
     protected override IEnumerator HeroTurn(FormationUnit actionUnit, bool fromBattleSave = false)
     {
+        yield return StartCoroutine(PhotonGameManager.PreparationCheck());
+
         FMODUnity.RuntimeManager.PlayOneShot("event:/general/char/ally_turn");
         RaidPanel.SetDisabledState();
         Formations.ResetSelections();
@@ -1739,6 +1745,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                             yield return new WaitForEndOfFrame();
                             actionUnit.OverlaySlot.UnitSelected();
                             usedSkill = null;
+                            yield return StartCoroutine(PhotonGameManager.PreparationCheck());
                             continue;
                         }
                     }

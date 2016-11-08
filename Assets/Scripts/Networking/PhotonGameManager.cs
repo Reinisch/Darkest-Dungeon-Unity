@@ -15,6 +15,10 @@ public class PhotonGameManager : Photon.PunBehaviour
     /// </summary>
     public static PhotonGameManager Instanse { get; private set; }
 
+    /// <summary>
+    /// Number of players who are combat ready
+    /// </summary>
+    public static int PlayersPreparedCount { get; set; }
     #endregion
 
     #region Private Methods
@@ -94,6 +98,21 @@ public class PhotonGameManager : Photon.PunBehaviour
 
     #region Public Methods
 
+    public static void PreparationCheckPassed()
+    {
+        PlayersPreparedCount = 0;
+    }
+
+    public static IEnumerator PreparationCheck()
+    {
+        Instanse.photonView.RPC("PlayerLoaded", PhotonTargets.All);
+
+        while (PlayersPreparedCount < PhotonNetwork.room.playerCount)
+            yield return null;
+        PreparationCheckPassed();
+        yield break;
+    }
+
     public void LeaveRoom()
     {
         PhotonNetwork.LeaveRoom();
@@ -102,6 +121,12 @@ public class PhotonGameManager : Photon.PunBehaviour
     #endregion
 
     #region Remote Calls
+
+    [PunRPC]
+    public void PlayerLoaded()
+    {
+        PlayersPreparedCount++;
+    }
 
     [PunRPC]
     public void HeroPassButtonClicked()
