@@ -55,8 +55,9 @@ public class PhotonGameManager : Photon.PunBehaviour
     /// </summary>
     public override void OnLeftRoom()
     {
-        SceneManager.LoadScene("CampaignSelection");
+        //SceneManager.LoadScene("CampaignSelection");
         RaidSceneManager.Instanse.OnSceneLeave();
+        PhotonNetwork.LoadLevel("CampaignSelection");
     }
 
     public override void OnPhotonPlayerConnected(PhotonPlayer other)

@@ -38,9 +38,8 @@ public class MainMenuWindow : MonoBehaviour
     {
         if(SceneManager.GetActiveScene().name == "DungeonMultiplayer")
         {
-            RaidSceneManager.Instanse.OnSceneLeave();
-            PhotonGameManager.Instanse.LeaveRoom();
             WindowClosed();
+            RaidSceneManager.Instanse.AbandonButtonClicked();
             return;
         }
         else if(SceneManager.GetActiveScene().name == "EstateManagement")

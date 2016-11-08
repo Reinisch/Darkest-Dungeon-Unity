@@ -80,6 +80,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
             currentRaid.Dungeon = MultiplayerDungeon;
             currentRaid.RaidParty = new RaidParty(PhotonNetwork.player);
 
+            DarkestDungeonManager.ScreenFader.StartFaded();
             DarkestDungeonManager.Data.LoadDungeon(currentRaid.Quest.Dungeon, currentRaid.Quest.Id);
             Rules = new RaidRuleInfo(currentRaid.Quest.Dungeon, BattleGround, TorchMeter);
 
@@ -107,8 +108,14 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         QuestPanel.UpdateQuest(currentRaid.Quest);
         DarkestSoundManager.StartDungeonSoundtrack(currentRaid.Dungeon.Name);
         TorchMeter.Initialize(100);
-
         Formations.Initialize();
+
+        if (PhotonNetwork.room.playerCount < 2)
+        {
+            Raid.Dungeon.StartingRoom.BattleEncounter.Cleared = true;
+            Raid.QuestCompleted = true;
+            QuestPanel.CompleteQuest();
+        }
 
         currentEvent = RoomLoadingEvent(currentRaid.Dungeon.StartingRoom, RoomTransitionType.Entrance);
         StartCoroutine(currentEvent);
@@ -175,8 +182,10 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         }
         #endregion
 
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForSeconds(0.5f);
         #region Show dungeon
-        DarkestDungeonManager.Instanse.screenFader.Appear(2);
+        DarkestDungeonManager.ScreenFader.Appear(2f);
         #region Check for teleport actions
         if (transitionType == RoomTransitionType.Teleport && !room.HasActiveBattle)
         {
@@ -235,28 +244,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         Formations.ShowHeroOverlay();
         #endregion
 
-        #region Apply retreat effects
-        if (transitionType == RoomTransitionType.Retreat)
-        {
-            for (int i = 0; i < HeroParty.Units.Count; i++)
-                DarkestDungeonManager.Data.Effects["Stress 2"].ApplyIndependent(HeroParty.Units[i]);
-
-            for (int i = 0; i < HeroParty.Units.Count; i++)
-                yield return StartCoroutine(ExecuteRandomDialog(HeroParty.Units[i], "str_bark_increasingstress"));
-
-            yield return StartCoroutine(ExecuteEffectEvents(false));
-            yield return new WaitForSeconds(0.3f);
-
-            if (HeroParty.Units.Count == 0)
-            {
-                StartCoroutine(RaidResultsEvent());
-                yield break;
-            }
-        }
-        EnablePartyMovement();
-        #endregion
-
-        #region Battle encounter and scouting
+        #region Battle encounter
         if (room.HasActiveBattle)
         {
             DisablePartyMovement();
@@ -559,5 +547,10 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         QuestPanel.CompleteQuest();
         DungeonCamera.blur.enabled = false;
         yield return new WaitForSeconds(1f);
+    }
+
+    public override void AbandonButtonClicked()
+    {
+        StartCoroutine(RaidResultsEvent());
     }
 }

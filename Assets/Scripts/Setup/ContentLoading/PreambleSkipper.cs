@@ -8,6 +8,7 @@ public class PreambleSkipper : MonoBehaviour
     bool isSliding = false;
 
     float waitForPreable = 3f;
+    float appearDelay = 1f;
 
     void Awake()
     {
@@ -21,6 +22,12 @@ public class PreambleSkipper : MonoBehaviour
 
     void Update()
     {
+        if (appearDelay > 0)
+        {
+            appearDelay -= Time.deltaTime;
+            if(appearDelay <= 0)
+                DarkestDungeonManager.ScreenFader.Appear(1);
+        }
         if (waitForPreable > 0)
         {
             waitForPreable -= Time.deltaTime;
