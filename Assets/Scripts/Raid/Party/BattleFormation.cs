@@ -70,6 +70,22 @@ public class BattleFormation : MonoBehaviour
         party.Units[0].OverlaySlot.UnitSelected();
     }
 
+    public void LoadParty(RaidParty heroParty, PhotonPlayer player)
+    {
+        party.CreateFormation(heroParty, player);
+        ranks.DistributeParty(party);
+        overlay.LockOnUnits(party);
+        overlay.UpdateOverlay();
+
+        foreach (var unit in party.Units)
+        {
+            unit.OverlaySlot.onHeroSelected += UpdateHero;
+            unit.Formation = this;
+        }
+
+        party.Units.Sort((x, y) => { if (x.Rank == y.Rank) return 0; if (x.Rank > y.Rank) return 1; else return -1; });
+    }
+
     public void LoadParty(BattleEncounter encounter)
     {
         party.CreateFormation(encounter);

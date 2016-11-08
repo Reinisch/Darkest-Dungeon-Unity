@@ -82,6 +82,28 @@ public class FormationParty : MonoBehaviour
             }
         }
     }
+    public void CreateFormation(RaidParty party, PhotonPlayer player)
+    {
+        Units = new List<FormationUnit>();
+
+        for (int i = 0; i < party.HeroInfo.Count; i++)
+        {
+            if (party.HeroInfo[i].IsAlive)
+            {
+                FormationUnit unit = Instantiate((Resources.Load("Prefabs/Heroes/"
+                    + party.HeroInfo[i].Hero.ClassStringId) as GameObject)).GetComponent<FormationUnit>();
+
+                unit.transform.SetParent(transform, false);
+                unit.Party = this;
+                unit.Initialize(party.HeroInfo[i].Hero, 4 - i, player.isMasterClient ? Team.Heroes : Team.Monsters);
+                Units.Add(unit);
+                unit.ResetAnimations();
+
+                if (party.HeroInfo[i].Hero.HeroClass.Modes.Count > 0)
+                    party.HeroInfo[i].Hero.CurrentMode = party.HeroInfo[i].Hero.HeroClass.Modes.Find(mode => mode.IsRaidDefault);
+            }
+        }
+    }
     public void CreateFormation(BattleEncounter encounter)
     {
         Units = new List<FormationUnit>();

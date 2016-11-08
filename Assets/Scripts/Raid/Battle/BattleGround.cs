@@ -413,7 +413,7 @@ public class BattleGround : MonoBehaviour
     }
     public void SpawnMultiplayerEncounter(PhotonPlayer invader)
     {
-        MonsterFormation.LoadParty(new RaidParty(invader));
+        MonsterFormation.LoadParty(new RaidParty(invader), invader);
         for (int i = 0; i < MonsterParty.Units.Count; i++)
         {
             MonsterParty.Units[i].CombatInfo.PrepareForBattle(PickId());

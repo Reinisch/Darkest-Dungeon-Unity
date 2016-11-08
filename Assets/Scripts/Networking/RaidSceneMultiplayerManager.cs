@@ -78,7 +78,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
             currentRaid = new RaidInfo();
             currentRaid.Quest = MultiplayerQuest;
             currentRaid.Dungeon = MultiplayerDungeon;
-            currentRaid.RaidParty = new RaidParty(PhotonNetwork.player);
+            currentRaid.RaidParty = new RaidParty(PhotonNetwork.masterClient);
 
             DarkestDungeonManager.ScreenFader.StartFaded();
             DarkestDungeonManager.Data.LoadDungeon(currentRaid.Quest.Dungeon, currentRaid.Quest.Id);
@@ -805,211 +805,181 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
 
         while (BattleGround.Round.OrderedUnits.Count != 0)
         {
-            if (fromBattleSave == false)
+            #region Captor Activations
+            for (int i = BattleGround.Captures.Count - 1; i >= 0; i--)
             {
-                #region Captor Activations
-                for (int i = BattleGround.Captures.Count - 1; i >= 0; i--)
+                #region Damage Dealing
+                if (BattleGround.Captures[i].Component.PerTurnDamagePercent != 0)
                 {
-                    #region Damage Dealing
-                    if (BattleGround.Captures[i].Component.PerTurnDamagePercent != 0)
-                    {
-                        var captorMonster = BattleGround.Captures[i].CaptorUnit.Character as Monster;
-                        int healthDamage = Mathf.RoundToInt(BattleGround.Captures[i].PrisonerUnit.Character.Health.ModifiedValue
-                            * BattleGround.Captures[i].Component.PerTurnDamagePercent);
-                        BattleGround.Captures[i].PrisonerUnit.Character.Health.DecreaseValue(healthDamage);
-                        FMODUnity.RuntimeManager.PlayOneShot("event:/char/enemy/" + captorMonster.Data.TypeId + "_captor_full_action");
+                    var captorMonster = BattleGround.Captures[i].CaptorUnit.Character as Monster;
+                    int healthDamage = Mathf.RoundToInt(BattleGround.Captures[i].PrisonerUnit.Character.Health.ModifiedValue
+                        * BattleGround.Captures[i].Component.PerTurnDamagePercent);
+                    BattleGround.Captures[i].PrisonerUnit.Character.Health.DecreaseValue(healthDamage);
+                    FMODUnity.RuntimeManager.PlayOneShot("event:/char/enemy/" + captorMonster.Data.TypeId + "_captor_full_action");
 
-                        if (Mathf.RoundToInt(BattleGround.Captures[i].PrisonerUnit.Character.Health.CurrentValue) != 0)
+                    if (Mathf.RoundToInt(BattleGround.Captures[i].PrisonerUnit.Character.Health.CurrentValue) != 0)
+                    {
+                        RaidEvents.ShowPopupMessage(BattleGround.Captures[i].CaptorUnit, PopupMessageType.Damage, healthDamage.ToString());
+                        yield return new WaitForSeconds(0.4f);
+                        if (RandomSolver.CheckSuccess(0.33f))
                         {
-                            RaidEvents.ShowPopupMessage(BattleGround.Captures[i].CaptorUnit, PopupMessageType.Damage, healthDamage.ToString());
-                            yield return new WaitForSeconds(0.4f);
-                            if (RandomSolver.CheckSuccess(0.33f))
-                            {
-                                BattleGround.Captures[i].CaptorUnit.OverlaySlot.StartDialog(
-                                    LocalizationManager.GetString("str_prisoner_damage_cauldron_full"));
-                                while (BattleGround.Captures[i].CaptorUnit.OverlaySlot.IsDoingDialog)
-                                    yield return null;
-                            }
+                            BattleGround.Captures[i].CaptorUnit.OverlaySlot.StartDialog(
+                                LocalizationManager.GetString("str_prisoner_damage_cauldron_full"));
+                            while (BattleGround.Captures[i].CaptorUnit.OverlaySlot.IsDoingDialog)
+                                yield return null;
+                        }
+                    }
+                    else
+                    {
+                        if (PrepareDeath(BattleGround.Captures[i].PrisonerUnit))
+                        {
+                            RaidEvents.ShowPopupMessage(BattleGround.Captures[i].PrisonerUnit, PopupMessageType.DeathBlow);
+                            yield return new WaitForSeconds(1.4f);
+                            BattleGround.Round.PostHeroTurn();
+                            ExecuteDeath(BattleGround.Captures[i].PrisonerUnit);
+                            yield break;
                         }
                         else
                         {
-                            if (PrepareDeath(BattleGround.Captures[i].PrisonerUnit))
+                            if (BattleGround.Captures[i].Component.ReleasePrisonerAtDeathDoor)
                             {
-                                RaidEvents.ShowPopupMessage(BattleGround.Captures[i].PrisonerUnit, PopupMessageType.DeathBlow);
-                                yield return new WaitForSeconds(1.4f);
-                                BattleGround.Round.PostHeroTurn();
-                                ExecuteDeath(BattleGround.Captures[i].PrisonerUnit);
-                                yield break;
-                            }
-                            else
-                            {
-                                if (BattleGround.Captures[i].Component.ReleasePrisonerAtDeathDoor)
-                                {
-                                    RaidEvents.ShowPopupMessage(BattleGround.Captures[i].CaptorUnit,
-                                        PopupMessageType.Damage, healthDamage.ToString());
-                                    yield return new WaitForSeconds(0.4f);
-                                    Formations.HideUnitOverlay();
-                                    yield return new WaitForSeconds(0.2f);
-                                    dungeonCamera.Zoom(50, 0.05f);
-                                    FMODUnity.RuntimeManager.PlayOneShot("event:/char/enemy/" + captorMonster.Data.TypeId + "_vo_death");
-                                    yield return new WaitForSeconds(0.05f);
-                                    DungeonCamera.blur.enabled = true;
-                                    Formations.UnitSkillIntro(BattleGround.Captures[i].CaptorUnit, "release");
-                                    yield return new WaitForSeconds(0.05f);
-                                    Formations.partyBuffPositions.SetUnitTargets(BattleGround.Captures[i].CaptorUnit, 0.05f, Vector2.zero);
-                                    yield return new WaitForSeconds(1.2f);
-                                    dungeonCamera.Zoom(dungeonCamera.StandardFOV, 0.1f);
-                                    DungeonCamera.blur.enabled = false;
-                                    Formations.UnitSkillOutro(BattleGround.Captures[i].CaptorUnit, "release");
-                                    var captureRelease = BattleGround.Captures[i];
-                                    BattleGround.ReleaseUnit(captureRelease);
-                                    MonsterData emptyCaptorData = DarkestDungeonManager.Data.Monsters[(captureRelease.CaptorUnit.
-                                        Character as Monster).Data.FullCaptor.EmptyMonsterClass];
-                                    GameObject unitObject = Resources.Load("Prefabs/Monsters/" + emptyCaptorData.TypeId) as GameObject;
-                                    RaidSceneManager.BattleGround.ReplaceUnit(emptyCaptorData, captureRelease.CaptorUnit, unitObject);
-                                    yield return new WaitForSeconds(0.175f);
-                                    Formations.ShowUnitOverlay();
-                                    Formations.ResetSelections();
-                                    yield return new WaitForSeconds(0.075f);
-                                    yield return StartCoroutine(ExecuteEffectEvents(true));
-                                }
+                                RaidEvents.ShowPopupMessage(BattleGround.Captures[i].CaptorUnit,
+                                    PopupMessageType.Damage, healthDamage.ToString());
+                                yield return new WaitForSeconds(0.4f);
+                                Formations.HideUnitOverlay();
+                                yield return new WaitForSeconds(0.2f);
+                                dungeonCamera.Zoom(50, 0.05f);
+                                FMODUnity.RuntimeManager.PlayOneShot("event:/char/enemy/" + captorMonster.Data.TypeId + "_vo_death");
+                                yield return new WaitForSeconds(0.05f);
+                                DungeonCamera.blur.enabled = true;
+                                Formations.UnitSkillIntro(BattleGround.Captures[i].CaptorUnit, "release");
+                                yield return new WaitForSeconds(0.05f);
+                                Formations.partyBuffPositions.SetUnitTargets(BattleGround.Captures[i].CaptorUnit, 0.05f, Vector2.zero);
+                                yield return new WaitForSeconds(1.2f);
+                                dungeonCamera.Zoom(dungeonCamera.StandardFOV, 0.1f);
+                                DungeonCamera.blur.enabled = false;
+                                Formations.UnitSkillOutro(BattleGround.Captures[i].CaptorUnit, "release");
+                                var captureRelease = BattleGround.Captures[i];
+                                BattleGround.ReleaseUnit(captureRelease);
+                                MonsterData emptyCaptorData = DarkestDungeonManager.Data.Monsters[(captureRelease.CaptorUnit.
+                                    Character as Monster).Data.FullCaptor.EmptyMonsterClass];
+                                GameObject unitObject = Resources.Load("Prefabs/Monsters/" + emptyCaptorData.TypeId) as GameObject;
+                                RaidSceneManager.BattleGround.ReplaceUnit(emptyCaptorData, captureRelease.CaptorUnit, unitObject);
+                                yield return new WaitForSeconds(0.175f);
+                                Formations.ShowUnitOverlay();
+                                Formations.ResetSelections();
+                                yield return new WaitForSeconds(0.075f);
+                                yield return StartCoroutine(ExecuteEffectEvents(true));
                             }
                         }
                     }
-                    #endregion
-                }
-                for (int i = BattleGround.Captures.Count - 1; i >= 0; i--)
-                {
-                    #region Stress Dealing
-                    if (BattleGround.Captures[i].Component.PerTurnStress != 0)
-                    {
-                        if (RandomSolver.CheckSuccess(0.33f))
-                        {
-                            BattleGround.Captures[i].PrisonerUnit.OverlaySlot.StartDialog(
-                                LocalizationManager.GetString("str_prisoner_damage_drowned_anchored"));
-                            while (BattleGround.Captures[i].PrisonerUnit.OverlaySlot.IsDoingDialog)
-                                yield return null;
-                        }
-
-                        float initialDamage = BattleGround.Captures[i].Component.PerTurnStress;
-
-                        int damage = Mathf.RoundToInt(initialDamage * (1 +
-                                BattleGround.Captures[i].PrisonerUnit.Character[AttributeType.StressDmgReceivedPercent].ModifiedValue));
-                        if (damage < 1) damage = 1;
-
-                        BattleGround.Captures[i].PrisonerUnit.Character.Stress.IncreaseValue(damage);
-                        if (BattleGround.Captures[i].PrisonerUnit.Character.IsOverstressed)
-                        {
-                            if (BattleGround.Captures[i].PrisonerUnit.Character.IsVirtued)
-                                BattleGround.Captures[i].PrisonerUnit.Character.Stress.CurrentValue =
-                                    Mathf.Clamp(BattleGround.Captures[i].PrisonerUnit.Character.Stress.CurrentValue, 0, 100);
-                            else if (!BattleGround.Captures[i].PrisonerUnit.Character.IsAfflicted &&
-                                BattleGround.Captures[i].PrisonerUnit.Character.IsOverstressed)
-                                AddResolveCheck(BattleGround.Captures[i].PrisonerUnit);
-
-                            if (BattleGround.Captures[i].PrisonerUnit.Character.Stress.CurrentValue == 200)
-                                AddHeartAttackCheck(BattleGround.Captures[i].PrisonerUnit);
-                        }
-                        BattleGround.Captures[i].PrisonerUnit.OverlaySlot.UpdateOverlay();
-
-                        RaidEvents.ShowPopupMessage(BattleGround.Captures[i].PrisonerUnit,
-                            PopupMessageType.Stress, damage.ToString());
-                        BattleGround.Captures[i].PrisonerUnit.SetHalo("afflicted");
-
-                        yield return new WaitForSeconds(1.2f);
-                        if (BattleGround.Captures[i].PrisonerUnit.Character.ReadyForAfflictionCheck
-                            && BattleGround.Captures[i].Component.ReleaseOnPrisonerAffliction)
-                        {
-                            var captureRelease = BattleGround.Captures[i];
-                            BattleGround.ReleaseUnit(BattleGround.Captures[i]);
-                            captureRelease.CaptorUnit.SetReleaseAnimation(true);
-                            yield return new WaitForSeconds(0.667f);
-
-                            MonsterData emptyCaptorData = DarkestDungeonManager.Data.Monsters[captureRelease.Component.EmptyMonsterClass];
-                            GameObject unitObject = Resources.Load("Prefabs/Monsters/" + emptyCaptorData.TypeId) as GameObject;
-                            BattleGround.ReplaceUnit(emptyCaptorData, captureRelease.CaptorUnit, unitObject);
-                        }
-
-                        yield return new WaitForSeconds(0.075f);
-                        yield return StartCoroutine(ExecuteEffectEvents(true));
-                    }
-                    #endregion
-                }
-                #endregion
-
-                #region Companion Activations
-                for (int i = BattleGround.Companions.Count - 1; i >= 0; i--)
-                {
-                    #region Healing
-                    if (!Mathf.Approximately(BattleGround.Companions[i].CompanionComponent.HealPerTurn, 0))
-                    {
-                        int health = Mathf.RoundToInt(BattleGround.Companions[i].TargetUnit.Character.Health.ModifiedValue
-                            * BattleGround.Companions[i].CompanionComponent.HealPerTurn);
-                        BattleGround.Companions[i].TargetUnit.Character.Health.IncreaseValue(health);
-                        FMODUnity.RuntimeManager.PlayOneShot("event:/general/status/heal_enemy");
-                        BattleGround.Companions[i].TargetUnit.OverlaySlot.UpdateOverlay();
-                        RaidEvents.ShowPopupMessage(BattleGround.Companions[i].TargetUnit, PopupMessageType.Heal, health.ToString());
-                        yield return new WaitForSeconds(0.4f);
-                    }
-                    #endregion
-                }
-                #endregion
-
-                #region Life Link Activations
-                for (int i = BattleGround.MonsterParty.Units.Count - 1; i >= 0; i--)
-                {
-                    if (BattleGround.MonsterParty.Units[i].Character.IsMonster)
-                    {
-                        var monster = BattleGround.MonsterParty.Units[i].Character as Monster;
-                        if (monster.Data.LifeLink != null &&
-                            !BattleGround.IsLifeLinked(BattleGround.MonsterParty.Units[i], monster.Data.LifeLink))
-                        {
-                            PrepareDeath(BattleGround.MonsterParty.Units[i]);
-                            yield return new WaitForSeconds(1.2f);
-                            ExecuteDeath(BattleGround.MonsterParty.Units[i]);
-                            yield return new WaitForSeconds(0.3f);
-                        }
-                    }
-                }
-                if (BattleGround.IsBattleEnded())
-                    break;
-                #endregion
-
-                #region Next Unit Turn Action
-                FormationUnit unit = BattleGround.Round.OrderedUnits[0];
-                if (unit.Team == Team.Heroes)
-                {
-                    yield return StartCoroutine(HeroTurn(unit));
-
-                    if (BattleGround.Round.HeroAction == HeroTurnAction.Retreat)
-                        yield break;
-                }
-                else if (unit.Team == Team.Monsters)
-                {
-                    yield return StartCoroutine(MonsterTurn(unit));
-
-                    if (BattleGround.Round.HeroAction == HeroTurnAction.Retreat)
-                        yield break;
                 }
                 #endregion
             }
-            else
+            for (int i = BattleGround.Captures.Count - 1; i >= 0; i--)
             {
-                fromBattleSave = false;
+                #region Stress Dealing
+                if (BattleGround.Captures[i].Component.PerTurnStress != 0)
+                {
+                    if (RandomSolver.CheckSuccess(0.33f))
+                    {
+                        BattleGround.Captures[i].PrisonerUnit.OverlaySlot.StartDialog(
+                            LocalizationManager.GetString("str_prisoner_damage_drowned_anchored"));
+                        while (BattleGround.Captures[i].PrisonerUnit.OverlaySlot.IsDoingDialog)
+                            yield return null;
+                    }
 
-                if (BattleGround.Round.SelectedUnit.Team == Team.Heroes)
-                {
-                    yield return StartCoroutine(HeroTurn(BattleGround.Round.SelectedUnit, true));
-                    if (BattleGround.Round.HeroAction == HeroTurnAction.Retreat)
-                        yield break;
+                    float initialDamage = BattleGround.Captures[i].Component.PerTurnStress;
+
+                    int damage = Mathf.RoundToInt(initialDamage * (1 +
+                            BattleGround.Captures[i].PrisonerUnit.Character[AttributeType.StressDmgReceivedPercent].ModifiedValue));
+                    if (damage < 1) damage = 1;
+
+                    BattleGround.Captures[i].PrisonerUnit.Character.Stress.IncreaseValue(damage);
+                    if (BattleGround.Captures[i].PrisonerUnit.Character.IsOverstressed)
+                    {
+                        if (BattleGround.Captures[i].PrisonerUnit.Character.IsVirtued)
+                            BattleGround.Captures[i].PrisonerUnit.Character.Stress.CurrentValue =
+                                Mathf.Clamp(BattleGround.Captures[i].PrisonerUnit.Character.Stress.CurrentValue, 0, 100);
+                        else if (!BattleGround.Captures[i].PrisonerUnit.Character.IsAfflicted &&
+                            BattleGround.Captures[i].PrisonerUnit.Character.IsOverstressed)
+                            AddResolveCheck(BattleGround.Captures[i].PrisonerUnit);
+
+                        if (BattleGround.Captures[i].PrisonerUnit.Character.Stress.CurrentValue == 200)
+                            AddHeartAttackCheck(BattleGround.Captures[i].PrisonerUnit);
+                    }
+                    BattleGround.Captures[i].PrisonerUnit.OverlaySlot.UpdateOverlay();
+
+                    RaidEvents.ShowPopupMessage(BattleGround.Captures[i].PrisonerUnit,
+                        PopupMessageType.Stress, damage.ToString());
+                    BattleGround.Captures[i].PrisonerUnit.SetHalo("afflicted");
+
+                    yield return new WaitForSeconds(1.2f);
+                    if (BattleGround.Captures[i].PrisonerUnit.Character.ReadyForAfflictionCheck
+                        && BattleGround.Captures[i].Component.ReleaseOnPrisonerAffliction)
+                    {
+                        var captureRelease = BattleGround.Captures[i];
+                        BattleGround.ReleaseUnit(BattleGround.Captures[i]);
+                        captureRelease.CaptorUnit.SetReleaseAnimation(true);
+                        yield return new WaitForSeconds(0.667f);
+
+                        MonsterData emptyCaptorData = DarkestDungeonManager.Data.Monsters[captureRelease.Component.EmptyMonsterClass];
+                        GameObject unitObject = Resources.Load("Prefabs/Monsters/" + emptyCaptorData.TypeId) as GameObject;
+                        BattleGround.ReplaceUnit(emptyCaptorData, captureRelease.CaptorUnit, unitObject);
+                    }
+
+                    yield return new WaitForSeconds(0.075f);
+                    yield return StartCoroutine(ExecuteEffectEvents(true));
                 }
-                else if (BattleGround.Round.SelectedUnit.Team == Team.Monsters)
+                #endregion
+            }
+            #endregion
+
+            #region Companion Activations
+            for (int i = BattleGround.Companions.Count - 1; i >= 0; i--)
+            {
+                #region Healing
+                if (!Mathf.Approximately(BattleGround.Companions[i].CompanionComponent.HealPerTurn, 0))
                 {
-                    yield return StartCoroutine(MonsterTurn(BattleGround.Round.SelectedUnit));
-                    if (BattleGround.Round.HeroAction == HeroTurnAction.Retreat)
-                        yield break;
+                    int health = Mathf.RoundToInt(BattleGround.Companions[i].TargetUnit.Character.Health.ModifiedValue
+                        * BattleGround.Companions[i].CompanionComponent.HealPerTurn);
+                    BattleGround.Companions[i].TargetUnit.Character.Health.IncreaseValue(health);
+                    FMODUnity.RuntimeManager.PlayOneShot("event:/general/status/heal_enemy");
+                    BattleGround.Companions[i].TargetUnit.OverlaySlot.UpdateOverlay();
+                    RaidEvents.ShowPopupMessage(BattleGround.Companions[i].TargetUnit, PopupMessageType.Heal, health.ToString());
+                    yield return new WaitForSeconds(0.4f);
+                }
+                #endregion
+            }
+            #endregion
+
+            #region Life Link Activations
+            for (int i = BattleGround.MonsterParty.Units.Count - 1; i >= 0; i--)
+            {
+                if (BattleGround.MonsterParty.Units[i].Character.IsMonster)
+                {
+                    var monster = BattleGround.MonsterParty.Units[i].Character as Monster;
+                    if (monster.Data.LifeLink != null &&
+                        !BattleGround.IsLifeLinked(BattleGround.MonsterParty.Units[i], monster.Data.LifeLink))
+                    {
+                        PrepareDeath(BattleGround.MonsterParty.Units[i]);
+                        yield return new WaitForSeconds(1.2f);
+                        ExecuteDeath(BattleGround.MonsterParty.Units[i]);
+                        yield return new WaitForSeconds(0.3f);
+                    }
                 }
             }
+            if (BattleGround.IsBattleEnded())
+                break;
+            #endregion
+
+            #region Next Unit Turn Action
+            FormationUnit unit = BattleGround.Round.OrderedUnits[0];
+            yield return StartCoroutine(HeroTurn(unit));
+
+            if (BattleGround.Round.HeroAction == HeroTurnAction.Retreat)
+                yield break;
+            #endregion
 
             if (BattleGround.IsBattleEnded())
                 break;
@@ -2161,20 +2131,32 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         BattleSkillSlot skillSlot = RaidPanel.bannerPanel.skillPanel.skillSlots[skillSlotIndex];
         RaidPanel.bannerPanel.skillPanel.SelectedSkill = skillSlot.Skill;
 
+        BattleFormation allies, enemies;
+        if (BattleGround.Round.SelectedUnit.Team == Team.Heroes)
+        {
+            allies = BattleGround.HeroFormation;
+            enemies = BattleGround.MonsterFormation;
+        }
+        else
+        {
+            allies = BattleGround.MonsterFormation;
+            enemies = BattleGround.HeroFormation;
+        }
+
         if (skillSlot.Skill.TargetRanks.IsSelfFormation || skillSlot.Skill.TargetRanks.IsSelfTarget)
         {
-            Formations.monsters.overlay.ResetSelections();
+            enemies.overlay.ResetSelections();
 
             if (skillSlot.Skill.TargetRanks.IsSelfTarget)
             {
                 BattleGround.Round.SelectedUnit.SetFriendlyPerformerStatus(true);
-                Formations.heroes.overlay.ResetSelectionsExcept(BattleGround.Round.SelectedUnit);
+                allies.overlay.ResetSelectionsExcept(BattleGround.Round.SelectedUnit);
             }
             else
             {
-                for (int i = 0; i < Formations.heroes.party.Units.Count; i++)
+                for (int i = 0; i < allies.party.Units.Count; i++)
                 {
-                    if (Formations.heroes.party.Units[i] == BattleGround.Round.SelectedUnit)
+                    if (allies.party.Units[i] == BattleGround.Round.SelectedUnit)
                     {
                         if (skillSlot.Skill.IsSelfValid)
                         {
@@ -2193,36 +2175,40 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                     else
                     {
                         if (skillSlot.Skill.Heal != null && BattleGround.Round.SelectedUnit.CombatInfo.
-                            BlockedHealUnitIds.Contains(Formations.heroes.party.Units[i].CombatInfo.CombatId))
-                            Formations.heroes.party.Units[i].SetDeactivatedStatus();
+                            BlockedHealUnitIds.Contains(allies.party.Units[i].CombatInfo.CombatId))
+                            allies.party.Units[i].SetDeactivatedStatus();
                         else if (skillSlot.Skill.IsBuffSkill && BattleGround.Round.SelectedUnit.CombatInfo.
-                            BlockedBuffUnitIds.Contains(Formations.heroes.party.Units[i].CombatInfo.CombatId))
-                            Formations.heroes.party.Units[i].SetDeactivatedStatus();
-                        else if (skillSlot.Skill.TargetRanks.IsTargetableUnit(Formations.heroes.party.Units[i]))
-                            Formations.heroes.party.Units[i].SetFriendlyTargetStatus(true);
+                            BlockedBuffUnitIds.Contains(allies.party.Units[i].CombatInfo.CombatId))
+                            allies.party.Units[i].SetDeactivatedStatus();
+                        else if (skillSlot.Skill.TargetRanks.IsTargetableUnit(allies.party.Units[i]))
+                            allies.party.Units[i].SetFriendlyTargetStatus(true);
                         else
-                            Formations.heroes.party.Units[i].SetDeactivatedStatus();
+                            allies.party.Units[i].SetDeactivatedStatus();
                     }
                 }
             }
         }
         else
         {
-            Formations.heroes.overlay.ResetSelectionsExcept(BattleGround.Round.SelectedUnit);
+            allies.overlay.ResetSelectionsExcept(BattleGround.Round.SelectedUnit);
             tempList.Clear();
 
-            for (int i = 0; i < Formations.monsters.party.Units.Count; i++)
+            for (int i = 0; i < enemies.party.Units.Count; i++)
             {
-                if (skillSlot.Skill.TargetRanks.IsTargetableUnit(Formations.monsters.party.Units[i]))
-                    tempList.Add(Formations.monsters.party.Units[i]);
+                if (skillSlot.Skill.TargetRanks.IsTargetableUnit(enemies.party.Units[i]))
+                    tempList.Add(enemies.party.Units[i]);
                 else
-                    Formations.monsters.party.Units[i].SetDeactivatedStatus();
+                    enemies.party.Units[i].SetDeactivatedStatus();
             }
 
             if (skillSlot.Skill.TargetRanks.IsMultitarget && tempList.Count > 0)
             {
-                for (int i = 0; i < tempList.Count; i++)
-                    tempList[i].SetEnemyTargetStatus(true, i != tempList.Count - 1);
+                if (BattleGround.Round.SelectedUnit.Team == Team.Heroes)
+                    for (int i = 0; i < tempList.Count; i++)
+                        tempList[i].SetEnemyTargetStatus(true, i != tempList.Count - 1);
+                else
+                    for (int i = 0; i < tempList.Count; i++)
+                        tempList[i].SetEnemyTargetStatus(true, i != 0);
             }
             else
                 foreach (var target in tempList)
