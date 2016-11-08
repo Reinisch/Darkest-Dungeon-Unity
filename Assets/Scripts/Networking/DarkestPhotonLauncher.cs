@@ -35,7 +35,7 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
     /// we need to keep track of this to properly adjust the behavior when we receive call back by Photon.
     /// Typically this is used for the OnConnectedToMaster() callback.
     /// </summary>
-    bool isConnecting;
+    bool isRandomConnecting;
 
     #endregion
 
@@ -74,7 +74,7 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
             PhotonNetwork.logLevel = LogLevel;
 
             // We don't join the lobby, not need to join a lobby to get the list of rooms
-            PhotonNetwork.autoJoinLobby = false;
+            PhotonNetwork.autoJoinLobby = true;
 
             // Auto sync loaded level with master client
             PhotonNetwork.automaticallySyncScene = false;
@@ -102,7 +102,7 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
         // we don't want to do anything if we are not attempting to join a room. 
         // this case where isConnecting is false is typically when you lost or quit the game, when this level is loaded, OnConnectedToMaster will be called, in that case
         // we don't want to do anything.
-        if(isConnecting)
+        if(isRandomConnecting)
         {
             // #Critical: The first we try to do is to join a potential existing room.
             // If there is, good, else, we'll be called back with OnPhotonRandomJoinFailed() 
@@ -117,6 +117,16 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
         // #Critical: we failed to join a random room,
         // Maybe none exists or they are all full. No worries, we create a new room.
         PhotonNetwork.CreateRoom(null, new RoomOptions() { MaxPlayers = MaxPlayersPerRoom }, null);
+    }
+
+    public override void OnPhotonJoinRoomFailed(object[] codeAndMsg)
+    {
+        Debug.Log("Darkest Photon Network: OnPhotonJoinFailed() was called!");
+
+        // #Critical: we failed to join aroom,
+        launcherPanel.progressLabel.enabled = true;
+        launcherPanel.progressPanel.enabled = true;
+        launcherPanel.progressLabel.text = "Room no longer available!";
     }
 
     public override void OnJoinedRoom()
@@ -142,13 +152,13 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
     /// - If already connected, we attempt joining a random room
     /// - If not yet connected, Connect this application instance to Photon Cloud Network
     /// </summary>
-    public void Connect()
+    public void RandomConnect()
     {
         launcherPanel.progressLabel.enabled = true;
         launcherPanel.progressPanel.enabled = true;
         // keep track of the will to join a room, because when we come back from the game
         // we will get a callback that we are connected, so we need to know what to do then
-        isConnecting = true;
+        isRandomConnecting = true;
 
         // We check if we are connected or not, we join if we are , else we initiate the connection to the server.
         if (PhotonNetwork.connected)
@@ -162,6 +172,44 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
             // #Critical, we must first and foremost connect to Photon Online Server.
             PhotonNetwork.ConnectUsingSettings(GameVersion);
         }
+    }
+
+    /// <summary>
+    /// Start the connection process. 
+    /// - If already connected, we attempt joining target room
+    /// - If not yet connected, Connect this application instance to Photon Cloud Network
+    /// </summary>
+    public void Connect(RoomInfo targetRoom)
+    {
+        launcherPanel.progressLabel.enabled = true;
+        launcherPanel.progressPanel.enabled = true;
+        // keep track of the will to join a room, because when we come back from the game
+        // we will get a callback that we are connected, so we need to know what to do then
+        isRandomConnecting = true;
+
+        // We check if we are connected or not, we join if we are , else we initiate the connection to the server.
+        if (PhotonNetwork.connected)
+        {
+            // #Critical: We need at this point to attempt joining a Random Room.
+            // If it fails, we'll get notified in OnPhotonRandomJoinFailed() and we'll create one.
+            PhotonNetwork.JoinRoom(targetRoom.name);
+        }
+        else
+        {
+            // #Critical, we must first and foremost connect to Photon Online Server.
+            PhotonNetwork.ConnectUsingSettings(GameVersion);
+        }
+    }
+
+    public void ConnectToMaster()
+    {
+        if (!PhotonNetwork.connected)
+            PhotonNetwork.ConnectUsingSettings(GameVersion);
+    }
+
+    public bool CreateNamedRoom(string roomName)
+    {
+        return PhotonNetwork.CreateRoom(roomName, new RoomOptions() { MaxPlayers = MaxPlayersPerRoom }, null);
     }
 
     #endregion

@@ -24,6 +24,18 @@ public class RoomSelector : MonoBehaviour
 
     #endregion
 
+    static List<string> roomNameTemplates = new List<string>()
+    {
+        "Lepoundmaster", "Lepersader", "Leprusader", "Cruleper",
+        "Crusoundmaster", "Crusaster", "Lepster", "Jesleper",
+        "Jesteper", "Jesterer", "Jesterper", "Jesteraster",
+        "Hourusader", "Manatahunter", "Mancultist", "Moccultist",
+        "Manataltist", "Manatarmist" ,"Manatartist", "Bountester",
+        "Occulatarms", "Occulthunter", "Occultiser", "Vestalhunter",
+        "Gravestal", "Graverosader", "Abomirobber", "Abominestal",
+        "Abomisader", "Grabomination", "Vestalnation", "Arbalestal",
+    };
+
     bool isSelecting = false;
 
     MultiplayerRoomSlot selectedRoomSlot;
@@ -32,6 +44,11 @@ public class RoomSelector : MonoBehaviour
     IEnumerator slideBackCoroutine;
     IEnumerator fadeCoroutine;
 
+    void Awake()
+    {
+        for (int i = 0; i < roomSlots.Count; i++)
+            roomSlots[i].RoomSelector = this;
+    }
     void Start()
     {
         saveFrame.gameObject.SetActive(false);
@@ -59,6 +76,8 @@ public class RoomSelector : MonoBehaviour
     IEnumerator SceneSlider()
     {
         DarkestSoundManager.PlayOneShot("event:/general/title_screen/campaign_button");
+        if (!PhotonNetwork.insideLobby)
+            DarkestPhotonLauncher.Instanse.ConnectToMaster();
 
         while (true)
         {
@@ -67,17 +86,16 @@ public class RoomSelector : MonoBehaviour
                 break;
 
             Vector2 offsetMax = sceneryRect.offsetMax;
-            offsetMax.y += Time.deltaTime * 1200;
+            offsetMax.y += Time.deltaTime * 600;
             sceneryRect.offsetMax = offsetMax;
             Vector2 offsetMin = sceneryRect.offsetMin;
-            offsetMin.y += Time.deltaTime * 1200;
+            offsetMin.y += Time.deltaTime * 600;
             sceneryRect.offsetMin = offsetMin;
             yield return 0;
         }
         isSelecting = true;
 
-        for (int i = 0; i < roomSlots.Count; i++)
-            roomSlots[i].LoadSaveFrame();
+        RefreshRoomList();
 
         yield break;
     }
@@ -145,10 +163,29 @@ public class RoomSelector : MonoBehaviour
         yield break;
     }
 
+    public void RefreshRoomList()
+    {
+        if (PhotonNetwork.insideLobby)
+        {
+            var roomList = PhotonNetwork.GetRoomList();
+            int roomsUpdated = Mathf.Min(roomSlots.Count, roomList.Length);
+
+            for (int i = 0; i < roomsUpdated; i++)
+                roomSlots[i].LoadSaveFrame(roomList[i]);
+
+            for (int i = roomsUpdated; i < roomSlots.Count; i++)
+                roomSlots[i].LoadSaveFrame(null);
+        }
+        else
+        {
+            for (int i = 0; i < roomSlots.Count; i++)
+                roomSlots[i].LoadSaveFrame(null);
+        }
+    }
+
     public void FadeToLoadingScreen()
     {
-        for (int i = 0; i < roomSlots.Count; i++)
-            roomSlots[i].DisableInteraction();
+        DisableInteraction();
         fadeCoroutine = SceneFade(1, 2500);
         StartCoroutine(fadeCoroutine);
     }
@@ -165,10 +202,9 @@ public class RoomSelector : MonoBehaviour
     public void SaveNamingStart(MultiplayerRoomSlot namingSaveSlot)
     {
         DarkestSoundManager.PlayOneShot("event:/general/title_screen/letter_open");
-
-        selectedRoomSlot = namingSaveSlot;
-        for (int i = 0; i < roomSlots.Count; i++)
-            roomSlots[i].DisableInteraction();
+        namingSaveSlot.titleInput.text = roomNameTemplates[Random.Range(0, roomNameTemplates.Count)];
+        namingSaveSlot.titleInput.text += "#" + Random.Range(1, 1000).ToString().PadLeft(3, '0');
+        DisableInteraction();
     }
 
     public void RoomNamingCompleted()
@@ -176,6 +212,9 @@ public class RoomSelector : MonoBehaviour
         selectedRoomSlot = null;
         for (int i = 0; i < roomSlots.Count; i++)
             roomSlots[i].EnableInteraction();
+        playButton.interactable = true;
+        nicknameField.interactable = true;
+        returnButton.interactable = true;
     }
 
     public void ReturnButtonClicked()
@@ -188,8 +227,17 @@ public class RoomSelector : MonoBehaviour
         }
     }
 
+    public void DisableInteraction()
+    {
+        for (int i = 0; i < roomSlots.Count; i++)
+            roomSlots[i].DisableInteraction();
+        playButton.interactable = false;
+        nicknameField.interactable = false;
+        returnButton.interactable = false;
+    }
+
     public void PlayButtonClicked()
     {
-        DarkestPhotonLauncher.Instanse.Connect();
+        DarkestPhotonLauncher.Instanse.RandomConnect();
     }
 }

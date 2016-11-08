@@ -24,8 +24,12 @@ public class MultiplayerRoomSlot : MonoBehaviour
 
     public RoomSelector RoomSelector { get; set; }
 
-    void FillEmptySave()
+    RoomInfo photonRoom;
+
+    void FillEmptyRoom()
     {
+        photonRoom = null;
+
         Color color;
         ColorUtility.TryParseHtmlString("#323232FF", out color);
         title.color = color;
@@ -37,42 +41,61 @@ public class MultiplayerRoomSlot : MonoBehaviour
     }
     void FillPopulatedSave()
     {
+        if (photonRoom == null)
+            FillEmptyRoom();
+
         Color color;
         ColorUtility.TryParseHtmlString("#FFDB77FF", out color);
         title.color = color;
-        title.text = "";
-        location.text = String.Format("In: {0}", "Ruins");
-        currentWeek.text = String.Format("Round {0}", "10");
+        title.text = photonRoom.name;
+        location.text = String.Format("Players");
+        currentWeek.text = photonRoom.playerCount + "/" + photonRoom.maxPlayers;
         saveEnvelopeAnimator.SetBool("Opened", true);
         nukeFrame.gameObject.SetActive(true);
     }
 
-    public void LoadSaveFrame()
+    public void LoadSaveFrame(RoomInfo listedRoom)
     {
-        FillEmptySave();
+        photonRoom = listedRoom;
+
+        if (listedRoom == null)
+            FillEmptyRoom();
+        else
+            FillPopulatedSave();
     }
     public void RoomButtonClick()
     {
-        title.color = Color.white;
-        titleInput.interactable = true;
-        titleInput.enabled = true;
-        titleInput.Select();
+        if(photonRoom == null)
+        {
+            title.color = Color.white;
+            titleInput.interactable = true;
+            titleInput.enabled = true;
+            titleInput.Select();
+            RoomSelector.SaveNamingStart(this);
+        }
+        else
+        {
+            DarkestPhotonLauncher.Instanse.Connect(photonRoom);
+        }
     }
     public void NukeButtonClick()
     {
         DarkestSoundManager.PlayOneShot("event:/ui/town/button_click");
-        FillEmptySave();
+        FillEmptyRoom();
     }
 
     public void SaveNamingCompleted()
     {
         if (titleInput.text.Length == 0)
         {
-            FillEmptySave();
+            FillEmptyRoom();
             return;
         }
         DarkestSoundManager.PlayOneShot("event:/ui/town/button_click");
         RoomSelector.RoomNamingCompleted();
+
+        if (!DarkestPhotonLauncher.Instanse.CreateNamedRoom(titleInput.text))
+            FillEmptyRoom();
     }
 
     public void RefocusInput()
