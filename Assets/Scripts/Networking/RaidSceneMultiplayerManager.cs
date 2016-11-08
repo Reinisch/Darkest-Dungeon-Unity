@@ -1150,6 +1150,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         yield return new WaitForEndOfFrame();
         BattleGround.Round.PreHeroTurn(actionUnit);
         yield return new WaitForEndOfFrame();
+
         actionUnit.OverlaySlot.UnitSelected();
 
         #region Status Effect and Buffs
@@ -1619,8 +1620,17 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         {
             Formations.ShowUnitOverlay();
             BattleGround.Round.OnHeroTurn();
-            RaidPanel.SetCombatState();
-            Inventory.SetCombatState();
+
+            if ((actionUnit.Team == Team.Heroes && PhotonNetwork.isMasterClient) || (actionUnit.Team == Team.Monsters && !PhotonNetwork.isMasterClient))
+            {
+                RaidPanel.SetCombatState();
+                Inventory.SetCombatState();
+            }
+            else
+            {
+                RaidPanel.SetDisabledState();
+                Inventory.SetDeactivated();
+            }
 
             #region Hero Action
             QuestPanel.UpdateCombatRetreat(true);
