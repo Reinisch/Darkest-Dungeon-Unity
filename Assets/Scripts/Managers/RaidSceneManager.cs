@@ -1907,7 +1907,7 @@ public class RaidSceneManager : MonoBehaviour
         itemUsageEvent = ExecuteHeroItemUsage(RaidSceneManager.RaidPanel.SelectedUnit, slot);
         StartCoroutine(itemUsageEvent);
     }
-    public void HeroSkillTargetSelected(FormationOverlaySlot overlaySlot)
+    public virtual void HeroSkillTargetSelected(FormationOverlaySlot overlaySlot)
     {
         var primaryTarget = overlaySlot.TargetUnit;
 

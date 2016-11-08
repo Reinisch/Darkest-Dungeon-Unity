@@ -32,7 +32,7 @@ public class RaidCombatSkillsPanel : MonoBehaviour
             skillSlots[i].Deselect();
         }
     }
-    void SkillPanel_onSkillSelected(BattleSkillSlot slot)
+    public void SkillPanel_onSkillSelected(BattleSkillSlot slot)
     {
         SelectedSkill = slot.Skill;
         for (int i = 0; i < skillSlots.Count; i++)

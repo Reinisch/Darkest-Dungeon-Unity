@@ -38,4 +38,10 @@ MonoBehaviour:
   - RequestForPickupItems
   - RequestForPickupTimes
   - TaggedPlayer
+  - HeroPassButtonClicked
+  - HeroMoveButtonClicked
+  - HeroSkillButtonClicked
+  - HeroMoveDeselected
+  - HeroMoveSelected
+  - HeroSkillSelected
   DisableAutoOpenWizard: 1

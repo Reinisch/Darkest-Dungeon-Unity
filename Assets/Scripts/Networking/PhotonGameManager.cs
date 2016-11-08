@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 public class PhotonGameManager : Photon.PunBehaviour
 {
@@ -64,11 +65,11 @@ public class PhotonGameManager : Photon.PunBehaviour
     {
         Debug.Log("OnPhotonPlayerConnected() " + other.name); // not seen if you're the player connecting
 
+        RaidSceneManager.Instanse.OnSceneLeave();
 
         if (PhotonNetwork.isMasterClient)
         {
             Debug.Log("OnPhotonPlayerConnected isMasterClient " + PhotonNetwork.isMasterClient); // called before OnPhotonPlayerDisconnected
-
 
             LoadArena();
         }
@@ -79,10 +80,11 @@ public class PhotonGameManager : Photon.PunBehaviour
         Debug.Log("OnPhotonPlayerDisconnected() " + other.name); // seen when other disconnects
 
 
+        RaidSceneManager.Instanse.OnSceneLeave();
+
         if (PhotonNetwork.isMasterClient)
         {
             Debug.Log("OnPhotonPlayerConnected isMasterClient " + PhotonNetwork.isMasterClient); // called before OnPhotonPlayerDisconnected
-
 
             LoadArena();
         }
@@ -95,6 +97,61 @@ public class PhotonGameManager : Photon.PunBehaviour
     public void LeaveRoom()
     {
         PhotonNetwork.LeaveRoom();
+    }
+
+    #endregion
+
+    #region Remote Calls
+
+    [PunRPC]
+    public void HeroPassButtonClicked()
+    {
+        if (RaidSceneManager.BattleGround.Round.HeroAction != HeroTurnAction.Waiting)
+            return;
+
+        RaidSceneManager.BattleGround.Round.HeroActionSelected(HeroTurnAction.Pass,
+            RaidSceneManager.BattleGround.Round.SelectedUnit);
+    }
+
+    [PunRPC]
+    public void HeroMoveButtonClicked(int primaryTargetId)
+    {
+        if (RaidSceneManager.BattleGround.Round.HeroAction != HeroTurnAction.Waiting)
+            return;
+
+        RaidSceneManager.BattleGround.Round.HeroActionSelected(HeroTurnAction.Move,
+            RaidSceneManager.BattleGround.FindById(primaryTargetId));
+    }
+
+    [PunRPC]
+    public void HeroSkillButtonClicked(int primaryTargetId)
+    {
+        if (RaidSceneManager.BattleGround.Round.HeroAction != HeroTurnAction.Waiting)
+            return;
+
+        RaidSceneManager.BattleGround.Round.HeroActionSelected(HeroTurnAction.Skill,
+            RaidSceneManager.BattleGround.FindById(primaryTargetId));
+    }
+
+    [PunRPC]
+    public void HeroSkillSelected(int skillSlotIndex)
+    {
+        RaidSceneMultiplayerManager multiManager = RaidSceneManager.Instanse as RaidSceneMultiplayerManager;
+        multiManager.HeroSkillSelected(skillSlotIndex);
+    }
+
+    [PunRPC]
+    public void HeroMoveSelected()
+    {
+        RaidSceneMultiplayerManager multiManager = RaidSceneManager.Instanse as RaidSceneMultiplayerManager;
+        multiManager.HeroMoveSelected();
+    }
+
+    [PunRPC]
+    public void HeroMoveDeselected()
+    {
+        RaidSceneMultiplayerManager multiManager = RaidSceneManager.Instanse as RaidSceneMultiplayerManager;
+        multiManager.HeroMoveDeselected();
     }
 
     #endregion

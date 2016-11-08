@@ -191,7 +191,7 @@ public class BattleGround : MonoBehaviour
     {
         CombatIds = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8 };
     }
-    private FormationUnit FindById(int id)
+    public FormationUnit FindById(int id)
     {
         var unitFound = HeroParty.Units.Find(unit => unit.CombatInfo.CombatId == id);
         if (unitFound != null)
