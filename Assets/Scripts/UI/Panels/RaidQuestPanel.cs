@@ -35,6 +35,18 @@ public class RaidQuestPanel : MonoBehaviour
         }
     }
 
+    public void UpdateQuest(Quest quest, PhotonPlayer player, bool completed = false)
+    {
+        if (completed)
+        {
+            CompleteQuest();
+            return;
+        }
+
+        questTitle.text = player.name;
+        questGoal.text = "Defeat the opponent!";
+    }
+
     public void CompleteQuest()
     {
         completionSeal.gameObject.SetActive(true);

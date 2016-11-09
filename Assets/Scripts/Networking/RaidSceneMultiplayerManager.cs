@@ -105,7 +105,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         RaidPanel.bannerPanel.skillPanel.SetMode(SkillPanelMode.Combat);
         RaidPanel.bannerPanel.SetPeacefulState();
         MapPanel.LoadDungeon(currentRaid.Dungeon);
-        QuestPanel.UpdateQuest(currentRaid.Quest);
+        QuestPanel.UpdateQuest(currentRaid.Quest, PhotonNetwork.player);
         DarkestSoundManager.StartDungeonSoundtrack(currentRaid.Dungeon.Name);
         TorchMeter.Initialize(100);
         Formations.Initialize();
@@ -236,6 +236,9 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         else
             yield return new WaitForSeconds(0.5f);
         #endregion
+
+        if (PhotonNetwork.room.playerCount < 2)
+            RaidEvents.ShowAnnouncment("Waiting for opponent to join...");
 
         RaidPanel.SwitchBlocked = false;
         if (fromRaidSector == null)
@@ -1152,6 +1155,16 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         yield return new WaitForEndOfFrame();
 
         actionUnit.OverlaySlot.UnitSelected();
+
+        if (actionUnit.Team == Team.Heroes)
+            RaidEvents.ShowAnnouncment("Next turn: " + PhotonNetwork.masterClient.name);
+        else if (PhotonNetwork.isMasterClient && PhotonNetwork.otherPlayers.Length > 0)
+            RaidEvents.ShowAnnouncment("Next turn: " + PhotonNetwork.otherPlayers[0].name);
+        else if (!PhotonNetwork.isMasterClient)
+            RaidEvents.ShowAnnouncment("Next turn: " + PhotonNetwork.player.name);
+
+        yield return new WaitForSeconds(1.5f);
+        RaidEvents.HideAnnouncment();
 
         #region Status Effect and Buffs
         if (actionUnit.Character.GetStatusEffect(StatusType.Bleeding).IsApplied)
