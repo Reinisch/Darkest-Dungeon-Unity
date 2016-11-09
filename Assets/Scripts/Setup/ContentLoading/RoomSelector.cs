@@ -46,6 +46,8 @@ public class RoomSelector : MonoBehaviour
 
     void Awake()
     {
+        Random.InitState(GetInstanceID());
+
         for (int i = 0; i < roomSlots.Count; i++)
             roomSlots[i].RoomSelector = this;
     }
@@ -163,6 +165,12 @@ public class RoomSelector : MonoBehaviour
         yield break;
     }
 
+    public string GenerateRoomName()
+    {
+        return roomNameTemplates[Random.Range(0, roomNameTemplates.Count)]
+            + "#" + Random.Range(1, 1000).ToString().PadLeft(3, '0');
+    }
+
     public void RefreshRoomList()
     {
         if (PhotonNetwork.insideLobby)
@@ -202,19 +210,14 @@ public class RoomSelector : MonoBehaviour
     public void SaveNamingStart(MultiplayerRoomSlot namingSaveSlot)
     {
         DarkestSoundManager.PlayOneShot("event:/general/title_screen/letter_open");
-        namingSaveSlot.titleInput.text = roomNameTemplates[Random.Range(0, roomNameTemplates.Count)];
-        namingSaveSlot.titleInput.text += "#" + Random.Range(1, 1000).ToString().PadLeft(3, '0');
+        namingSaveSlot.titleInput.text = GenerateRoomName();
+        selectedRoomSlot = namingSaveSlot;
         DisableInteraction();
     }
 
     public void RoomNamingCompleted()
     {
         selectedRoomSlot = null;
-        for (int i = 0; i < roomSlots.Count; i++)
-            roomSlots[i].EnableInteraction();
-        playButton.interactable = true;
-        nicknameField.interactable = true;
-        returnButton.interactable = true;
     }
 
     public void ReturnButtonClicked()
@@ -234,6 +237,15 @@ public class RoomSelector : MonoBehaviour
         playButton.interactable = false;
         nicknameField.interactable = false;
         returnButton.interactable = false;
+    }
+
+    public void EnableInteraction()
+    {
+        for (int i = 0; i < roomSlots.Count; i++)
+            roomSlots[i].EnableInteraction();
+        playButton.interactable = true;
+        nicknameField.interactable = true;
+        returnButton.interactable = true;
     }
 
     public void PlayButtonClicked()

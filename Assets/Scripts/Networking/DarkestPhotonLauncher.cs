@@ -116,7 +116,19 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
 
         // #Critical: we failed to join a random room,
         // Maybe none exists or they are all full. No worries, we create a new room.
-        PhotonNetwork.CreateRoom(null, new RoomOptions() { MaxPlayers = MaxPlayersPerRoom }, null);
+        bool success = PhotonNetwork.CreateRoom(CampaignSelectionManager.Instanse.roomSelector.GenerateRoomName(),
+            new RoomOptions() { MaxPlayers = MaxPlayersPerRoom }, null);
+
+        CampaignSelectionManager.Instanse.roomSelector.DisableInteraction(); 
+    }
+
+    public override void OnPhotonCreateRoomFailed(object[] codeAndMsg)
+    {
+        launcherPanel.progressLabel.enabled = true;
+        launcherPanel.progressPanel.enabled = true;
+        launcherPanel.progressLabel.text = "Can't create room now!";
+
+        CampaignSelectionManager.Instanse.roomSelector.EnableInteraction();
     }
 
     public override void OnPhotonJoinRoomFailed(object[] codeAndMsg)
@@ -127,6 +139,8 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
         launcherPanel.progressLabel.enabled = true;
         launcherPanel.progressPanel.enabled = true;
         launcherPanel.progressLabel.text = "Room no longer available!";
+
+        CampaignSelectionManager.Instanse.roomSelector.EnableInteraction();
     }
 
     public override void OnJoinedRoom()
@@ -141,6 +155,8 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
         launcherPanel.progressLabel.enabled = false;
         launcherPanel.progressPanel.enabled = true;
         Debug.LogWarning("Darkest Photon Network: OnDisconnectedFromPhoton() was called!");
+
+        CampaignSelectionManager.Instanse.roomSelector.EnableInteraction();
     }
 
     #endregion
@@ -154,6 +170,8 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
     /// </summary>
     public void RandomConnect()
     {
+        CampaignSelectionManager.Instanse.roomSelector.DisableInteraction();
+
         launcherPanel.progressLabel.enabled = true;
         launcherPanel.progressPanel.enabled = true;
         // keep track of the will to join a room, because when we come back from the game
@@ -181,6 +199,8 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
     /// </summary>
     public void Connect(RoomInfo targetRoom)
     {
+        CampaignSelectionManager.Instanse.roomSelector.DisableInteraction();
+
         launcherPanel.progressLabel.enabled = true;
         launcherPanel.progressPanel.enabled = true;
         // keep track of the will to join a room, because when we come back from the game

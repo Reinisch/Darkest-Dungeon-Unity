@@ -11,6 +11,7 @@ using System;
 public class MultiplayerRoomSlot : MonoBehaviour
 {
     public Button saveSlotButton;
+    public Image roomFrame;
 
     public Text title;
     public InputField titleInput;
@@ -67,11 +68,12 @@ public class MultiplayerRoomSlot : MonoBehaviour
     {
         if(photonRoom == null)
         {
+            RoomSelector.SaveNamingStart(this);
+            roomFrame.material = DarkestDungeonManager.HighlightMaterial;
             title.color = Color.white;
             titleInput.interactable = true;
             titleInput.enabled = true;
             titleInput.Select();
-            RoomSelector.SaveNamingStart(this);
         }
         else
         {
@@ -86,6 +88,8 @@ public class MultiplayerRoomSlot : MonoBehaviour
 
     public void SaveNamingCompleted()
     {
+        roomFrame.material = roomFrame.defaultMaterial;
+
         if (titleInput.text.Length == 0)
         {
             FillEmptyRoom();
@@ -107,12 +111,14 @@ public class MultiplayerRoomSlot : MonoBehaviour
     public void EnableInteraction()
     {
         saveSlotButton.interactable = true;
+        titleInput.interactable = true;
         if (nukeFrame.gameObject.activeSelf)
             nukeSaveButton.interactable = true;
     }
     public void DisableInteraction()
     {
         saveSlotButton.interactable = false;
+        titleInput.interactable = false;
         if (nukeFrame.gameObject.activeSelf)
             nukeSaveButton.interactable = false;
     }
