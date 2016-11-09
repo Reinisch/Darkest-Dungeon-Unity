@@ -9,6 +9,7 @@ public class RoomSelector : MonoBehaviour
     public List<MultiplayerRoomSlot> roomSlots;
     public Button startCampaignButton;
     public Button returnButton;
+    public Button refreshButton;
 
     public RectTransform saveFrame;
 
@@ -237,6 +238,7 @@ public class RoomSelector : MonoBehaviour
         playButton.interactable = false;
         nicknameField.interactable = false;
         returnButton.interactable = false;
+        refreshButton.interactable = false;
     }
 
     public void EnableInteraction()
@@ -246,6 +248,7 @@ public class RoomSelector : MonoBehaviour
         playButton.interactable = true;
         nicknameField.interactable = true;
         returnButton.interactable = true;
+        refreshButton.interactable = true;
     }
 
     public void PlayButtonClicked()
