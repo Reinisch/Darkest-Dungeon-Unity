@@ -2240,8 +2240,8 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                     if (Formations.heroes.party.Units.Count > 0)
                         Formations.heroes.party.Units[0].OverlaySlot.UnitSelected();
                 }
-                for (int i = 0; i < BattleGround.HeroParty.Units.Count; i++)
-                    DarkestDungeonManager.Data.Effects["Stress 2"].ApplyIndependent(BattleGround.HeroParty.Units[i]);
+                for (int i = 0; i < targetUnit.Party.Units.Count; i++)
+                    DarkestDungeonManager.Data.Effects["Stress 3"].ApplyIndependent(targetUnit.Party.Units[i]);
             }
         }
     }

@@ -427,7 +427,7 @@ public static class BattleSolver
 
                     ApplyEffects(performerUnit, targetUnit, skill);
                     if (targetUnit.Character.IsMonster == false)
-                        DarkestDungeonManager.Data.Effects["BarkStress"].ApplyIndependent(targetUnit);
+                        DarkestDungeonManager.Data.Effects["Stress 2"].ApplyIndependent(targetUnit);
                     RemoveConditions(performerUnit, targetUnit);
                     return;
                 }
