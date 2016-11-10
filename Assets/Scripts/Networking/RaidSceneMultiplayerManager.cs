@@ -403,114 +403,42 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         #endregion
 
         #region Check Game Over
-        yield return new WaitForSeconds(1f);
-        
-        if (Formations.heroes.party.Units.Count == 0)
+        yield return new WaitForSeconds(0.5f);
+       
+        if (HeroParty.Units.Count == 0)
         {
-            StartCoroutine(RaidResultsEvent());
-            yield break;
-        }
-        else
-        {
-            DarkestSoundManager.ExecuteNarration("victory", NarrationPlace.Raid);
-            FMODUnity.RuntimeManager.PlayOneShot("event:/general/combat/victory");
-        }
-        #endregion
-
-        #region Destroy Remains
-        Formations.HideMonsterOverlay();
-
-        if (BattleGround.MonsterParty.Units.Count > 0)
-        {
-            foreach (var unit in BattleGround.MonsterParty.Units)
+            if (PhotonNetwork.isMasterClient)
             {
-                if (unit.Character.IsMonster)
-                {
-                    Monster monster = unit.Character as Monster;
-
-                    if (monster.Types.Contains(MonsterType.Corpse))
-                        unit.SetCorpseKillAnimation(true);
-                    else
-                        unit.SetDeathAnimation(true);
-
-                    BattleGround.UnitDestroyed(unit);
-                    GameObject deathFx = Instantiate(Resources.Load("Prefabs/Effects/" +
-                        monster.CommonEffects.DeathEffect) as GameObject);
-                    AnimatedEffect effect = deathFx.GetComponent<AnimatedEffect>();
-                    effect.BindToTarget(unit, unit.SkeletonAnimations[1], "fxdeath");
-
-                }
+                RaidEvents.ShowAnnouncment("Player " + PhotonNetwork.otherPlayers[0].name + " is victorious!");
+                FMODUnity.RuntimeManager.PlayOneShot("event:/general/combat/retreat");
             }
-            yield return new WaitForSeconds(1f);
+            else
+            {
+                RaidEvents.ShowAnnouncment("Player " + PhotonNetwork.player.name + " is victorious!");
+                DarkestSoundManager.ExecuteNarration("victory", NarrationPlace.Raid);
+                FMODUnity.RuntimeManager.PlayOneShot("event:/general/combat/victory");
+            }
         }
-        RaidEvents.MonsterTooltip.Hide();
-        RaidEvents.roundIndicator.Disappear();
-        yield return new WaitForSeconds(0.4f);
-        #endregion
-
-        RaidEvents.roundIndicator.End();
-        BattleGround.FinishBattle();
-        #endregion
-
-        #region Reset Hero Statuses
-        foreach (var hero in Formations.heroes.party.Units)
-        {
-            hero.ResetHalo();
-            hero.Character.GetStatusEffect(StatusType.Stun).ResetStatus();
-            hero.Character.GetStatusEffect(StatusType.Guard).ResetStatus();
-            hero.Character.GetStatusEffect(StatusType.Guarded).ResetStatus();
-            hero.Character.UpdateDurations(BuffDurationType.Combat);
-            hero.OverlaySlot.UpdateOverlay();
-        }
-        #endregion
-
-        #region Reset Animation and Selection
-        RaidPanel.SelectedUnit.SetPerformerStatus();
-        foreach (var hero in Formations.heroes.party.Units)
-            hero.SetCombatAnimation(false);
-        RaidEvents.MonsterTooltip.Hide();
-        #endregion
-
-        #region Check Quest Completion
-        areaView.Area.BattleEncounter.Cleared = true;
-
-        if (!Raid.QuestCompleted && Raid.CheckQuestGoals())
-            yield return StartCoroutine(CompletionCrestEvent());
-        #endregion
-
-        #region Remove Combat States and Restrictions
-        QuestPanel.SetPeacefulState();
-        Formations.UnlockSelections();
-        Formations.ShowHeroOverlay();
-        RaidPanel.SetPeacefulState();
-        EnablePartyMovement();
-        EnableEnviroment();
-        #endregion
-
-        #region Room Updates
-        if (sceneState == DungeonSceneState.Room)
-            MapPanel.ShowAvailableRooms(RoomView.raidRoom.Area as DungeonRoom);
-        #endregion
-
-        #region Complete Area Info
-        if (areaView is RaidHallSector)
-            areaView.CompleteArea();
         else
         {
-            if (areaView.Area.Type == AreaType.Battle)
-                areaView.Area.Knowledge = Knowledge.Completed;
-
-            MapPanel.UpdateArea(areaView.Area);
+            if (PhotonNetwork.isMasterClient)
+            {
+                RaidEvents.ShowAnnouncment("Player " + PhotonNetwork.player.name + " is victorious!");
+                DarkestSoundManager.ExecuteNarration("victory", NarrationPlace.Raid);
+                FMODUnity.RuntimeManager.PlayOneShot("event:/general/combat/victory");
+            }
+            else
+            {
+                RaidEvents.ShowAnnouncment("Player " + PhotonNetwork.masterClient.name + " is victorious!");
+                FMODUnity.RuntimeManager.PlayOneShot("event:/general/combat/retreat");
+            }
         }
+        yield return new WaitForSeconds(1.5f);
+        StartCoroutine(RaidResultsEvent());
+        yield break;
         #endregion
 
-        QuestPanel.EnableRetreat();
-        BattleGround.LeaveBattleGround();
-        Inventory.SetPeacefulState(false);
-        RaidPanel.heroPanel.equipmentPanel.SetActive();
-        DarkestDungeonManager.SaveData.UpdateFromRaid();
-        DarkestDungeonManager.Instanse.SaveGame();
-        currentEvent = null;
+        #endregion
     }
 
     protected override IEnumerator RaidResultsEvent()
