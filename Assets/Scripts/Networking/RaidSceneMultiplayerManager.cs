@@ -2597,47 +2597,60 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
     public void HeroMoveSelected()
     {
         MoveSkillSlot skillSlot = RaidPanel.bannerPanel.skillPanel.moveSlot;
+        RaidPanel.bannerPanel.skillPanel.SelectedSkill = skillSlot.Skill;
+
+        BattleFormation allies, enemies;
+        if (BattleGround.Round.SelectedUnit.Team == Team.Heroes)
+        {
+            allies = BattleGround.HeroFormation;
+            enemies = BattleGround.MonsterFormation;
+        }
+        else
+        {
+            allies = BattleGround.MonsterFormation;
+            enemies = BattleGround.HeroFormation;
+        }
 
         if (BattleGround.BattleStatus == BattleStatus.Fighting)
         {
-            Formations.monsters.overlay.ResetSelections();
-            for (int i = 0; i < Formations.heroes.party.Units.Count; i++)
+            enemies.overlay.ResetSelections();
+            for (int i = 0; i < allies.party.Units.Count; i++)
             {
-                if (Formations.heroes.party.Units[i] == BattleGround.Round.SelectedUnit)
+                if (allies.party.Units[i] == BattleGround.Round.SelectedUnit)
                     BattleGround.Round.SelectedUnit.SetPerformerStatus();
                 else
                 {
-                    int distance = BattleGround.Round.SelectedUnit.Rank - Formations.heroes.party.Units[i].Rank;
+                    int distance = BattleGround.Round.SelectedUnit.Rank - allies.party.Units[i].Rank;
                     if (BattleGround.Round.SelectedUnit.CombatInfo.BlockedMoveUnitIds.
-                        Contains(Formations.heroes.party.Units[i].CombatInfo.CombatId))
+                        Contains(allies.party.Units[i].CombatInfo.CombatId))
                     {
-                        Formations.heroes.party.Units[i].SetDeactivatedStatus();
+                        allies.party.Units[i].SetDeactivatedStatus();
                     }
                     else if (distance < 0)
                     {
-                        if (skillSlot.Skill.MoveBackward >= -distance && !Formations.heroes.party.Units[i].CombatInfo.IsImmobilized)
-                            Formations.heroes.party.Units[i].SetMoveTargetStatus(true);
+                        if (skillSlot.Skill.MoveBackward >= -distance && !allies.party.Units[i].CombatInfo.IsImmobilized)
+                            allies.party.Units[i].SetMoveTargetStatus(true);
                         else
-                            Formations.heroes.party.Units[i].SetDeactivatedStatus();
+                            allies.party.Units[i].SetDeactivatedStatus();
                     }
                     else
                     {
-                        if (skillSlot.Skill.MoveForward >= distance && !Formations.heroes.party.Units[i].CombatInfo.IsImmobilized)
-                            Formations.heroes.party.Units[i].SetMoveTargetStatus(true);
+                        if (skillSlot.Skill.MoveForward >= distance && !allies.party.Units[i].CombatInfo.IsImmobilized)
+                            allies.party.Units[i].SetMoveTargetStatus(true);
                         else
-                            Formations.heroes.party.Units[i].SetDeactivatedStatus();
+                            allies.party.Units[i].SetDeactivatedStatus();
                     }
                 }
             }
         }
         else
         {
-            for (int i = 0; i < Formations.heroes.party.Units.Count; i++)
+            for (int i = 0; i < allies.party.Units.Count; i++)
             {
-                if (Formations.heroes.party.Units[i] == RaidPanel.SelectedUnit)
+                if (allies.party.Units[i] == RaidPanel.SelectedUnit)
                     RaidPanel.SelectedUnit.SetPerformerStatus();
                 else
-                    Formations.heroes.party.Units[i].SetMoveTargetStatus(true);
+                    allies.party.Units[i].SetMoveTargetStatus(true);
             }
         }
     }
