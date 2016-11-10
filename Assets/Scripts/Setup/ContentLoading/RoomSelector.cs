@@ -219,6 +219,7 @@ public class RoomSelector : MonoBehaviour
     public void RoomNamingCompleted()
     {
         selectedRoomSlot = null;
+        EnableInteraction();
     }
 
     public void ReturnButtonClicked()
@@ -235,6 +236,7 @@ public class RoomSelector : MonoBehaviour
     {
         for (int i = 0; i < roomSlots.Count; i++)
             roomSlots[i].DisableInteraction();
+
         playButton.interactable = false;
         nicknameField.interactable = false;
         returnButton.interactable = false;
@@ -245,6 +247,7 @@ public class RoomSelector : MonoBehaviour
     {
         for (int i = 0; i < roomSlots.Count; i++)
             roomSlots[i].EnableInteraction();
+
         playButton.interactable = true;
         nicknameField.interactable = true;
         returnButton.interactable = true;

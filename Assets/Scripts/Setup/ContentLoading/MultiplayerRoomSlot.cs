@@ -34,7 +34,8 @@ public class MultiplayerRoomSlot : MonoBehaviour
         Color color;
         ColorUtility.TryParseHtmlString("#323232FF", out color);
         titleInput.textComponent.color = color;
-        titleInput.text = "Click here to create room...";
+        titleInput.text = "";
+        (titleInput.placeholder as Text).text = "Click here to create room...";
         location.text = "";
         currentWeek.text = "";
         saveEnvelopeAnimator.SetBool("Opened", false);
@@ -72,6 +73,9 @@ public class MultiplayerRoomSlot : MonoBehaviour
             roomFrame.material = DarkestDungeonManager.HighlightMaterial;
             titleInput.interactable = true;
             titleInput.enabled = true;
+            titleInput.textComponent.raycastTarget = true;
+            titleInput.placeholder.raycastTarget = true;
+            (titleInput.placeholder as Text).text = "";
             titleInput.Select();
         }
         else
@@ -92,6 +96,7 @@ public class MultiplayerRoomSlot : MonoBehaviour
         if (titleInput.text.Length == 0)
         {
             FillEmptyRoom();
+            RoomSelector.RoomNamingCompleted();
             return;
         }
         DarkestSoundManager.PlayOneShot("event:/ui/town/button_click");
@@ -111,7 +116,8 @@ public class MultiplayerRoomSlot : MonoBehaviour
     {
         saveSlotButton.interactable = true;
         titleInput.interactable = true;
-        saveSlotButton.targetGraphic.enabled = true;
+        titleInput.textComponent.raycastTarget = false;
+        titleInput.placeholder.raycastTarget = false;
 
         if (nukeFrame.gameObject.activeSelf)
             nukeSaveButton.interactable = true;
@@ -120,7 +126,7 @@ public class MultiplayerRoomSlot : MonoBehaviour
     {
         saveSlotButton.interactable = false;
         titleInput.interactable = false;
-        saveSlotButton.targetGraphic.enabled = false;
+
         if (nukeFrame.gameObject.activeSelf)
             nukeSaveButton.interactable = false;
     }

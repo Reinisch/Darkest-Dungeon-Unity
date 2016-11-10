@@ -2444,14 +2444,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_NormalColor: {r: 0.66176474, g: 0.66176474, b: 0.66176474, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
@@ -2467,7 +2467,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 942969239}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
@@ -6774,22 +6774,22 @@ Prefab:
     - target: {fileID: 224000013552578326, guid: fd3e66e771ceaba47883443064eb6ca8,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 621
       objectReference: {fileID: 0}
     - target: {fileID: 224000013552578326, guid: fd3e66e771ceaba47883443064eb6ca8,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -182.33334
       objectReference: {fileID: 0}
     - target: {fileID: 224000013552578326, guid: fd3e66e771ceaba47883443064eb6ca8,
         type: 2}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 1162
       objectReference: {fileID: 0}
     - target: {fileID: 224000013552578326, guid: fd3e66e771ceaba47883443064eb6ca8,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 184.66667
       objectReference: {fileID: 0}
     - target: {fileID: 224000013552578326, guid: fd3e66e771ceaba47883443064eb6ca8,
         type: 2}
@@ -6799,7 +6799,7 @@ Prefab:
     - target: {fileID: 224000013552578326, guid: fd3e66e771ceaba47883443064eb6ca8,
         type: 2}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 224000013552578326, guid: fd3e66e771ceaba47883443064eb6ca8,
         type: 2}
@@ -6809,7 +6809,7 @@ Prefab:
     - target: {fileID: 224000013552578326, guid: fd3e66e771ceaba47883443064eb6ca8,
         type: 2}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 224000013552578326, guid: fd3e66e771ceaba47883443064eb6ca8,
         type: 2}
