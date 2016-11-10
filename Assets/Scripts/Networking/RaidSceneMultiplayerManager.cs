@@ -8,6 +8,8 @@ using System.Linq;
 
 public class RaidSceneMultiplayerManager : RaidSceneManager
 {
+    public static new RaidSceneMultiplayerManager Instanse { get; set; }
+
     #region Multiplayer Setup
 
     private static Quest MultiplayerQuest = new PlotQuest()
@@ -59,6 +61,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
     {
         if (Instanse == null)
         {
+            RaidSceneManager.Instanse = this;
             Instanse = this;
 
             SaveLoadManager.WriteStartingSave(new SaveCampaignData(4, "MultiplayerTestSave"));

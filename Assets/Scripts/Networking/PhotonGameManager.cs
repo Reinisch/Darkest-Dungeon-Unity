@@ -161,22 +161,19 @@ public class PhotonGameManager : Photon.PunBehaviour
     [PunRPC]
     public void HeroSkillSelected(int skillSlotIndex)
     {
-        RaidSceneMultiplayerManager multiManager = RaidSceneManager.Instanse as RaidSceneMultiplayerManager;
-        multiManager.HeroSkillSelected(skillSlotIndex);
+        RaidSceneMultiplayerManager.Instanse.HeroSkillSelected(skillSlotIndex);
     }
 
     [PunRPC]
     public void HeroMoveSelected()
     {
-        RaidSceneMultiplayerManager multiManager = RaidSceneManager.Instanse as RaidSceneMultiplayerManager;
-        multiManager.HeroMoveSelected();
+        RaidSceneMultiplayerManager.Instanse.HeroMoveSelected();
     }
 
     [PunRPC]
     public void HeroMoveDeselected()
     {
-        RaidSceneMultiplayerManager multiManager = RaidSceneManager.Instanse as RaidSceneMultiplayerManager;
-        multiManager.HeroMoveDeselected();
+        RaidSceneMultiplayerManager.Instanse.HeroMoveDeselected();
     }
 
     #endregion
