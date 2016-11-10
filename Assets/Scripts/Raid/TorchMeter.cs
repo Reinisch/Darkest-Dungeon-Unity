@@ -402,6 +402,9 @@ public class TorchMeter : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         if (!torchAnimator.GetBool("IsActive"))
             return;
 
+        if (SceneManagerHelper.ActiveSceneName == "DungeonMultiplayer")
+            return;
+
 #if UNITY_ANDROID || UNITY_IOS || UNITY_EDITOR
         if (doubleTapTimer > 0)
         {
