@@ -2460,6 +2460,12 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
     }
     public override void HeroSkillTargetSelected(FormationOverlaySlot overlaySlot)
     {
+        if (BattleGround.Round.SelectedUnit.Team == Team.Heroes && !PhotonNetwork.isMasterClient)
+            return;
+
+        if (BattleGround.Round.SelectedUnit.Team == Team.Monsters && PhotonNetwork.isMasterClient)
+            return;
+
         var primaryTarget = overlaySlot.TargetUnit;
 
         if (BattleGround.BattleStatus == BattleStatus.Fighting)
