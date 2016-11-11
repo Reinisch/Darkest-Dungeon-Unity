@@ -37,6 +37,9 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
     /// </summary>
     bool isRandomConnecting;
 
+    bool isNamedConnecting;
+    string actionRoomName;
+
     #endregion
 
     #region Public Variables
@@ -88,8 +91,7 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
     /// </summary>
     void Start()
     {
-        launcherPanel.progressLabel.enabled = false;
-        launcherPanel.progressPanel.enabled = true;
+        launcherPanel.progressLabel.text = "Disconnected!";
     }
 
     #endregion
@@ -99,10 +101,12 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
     public override void OnConnectedToMaster()
     {
         Debug.Log("Darkest Photon Network: OnConnectedToMaster() was called!");
+        launcherPanel.progressLabel.text = "Connected!";
+
         // we don't want to do anything if we are not attempting to join a room. 
         // this case where isConnecting is false is typically when you lost or quit the game, when this level is loaded, OnConnectedToMaster will be called, in that case
         // we don't want to do anything.
-        if(isRandomConnecting)
+        if (isRandomConnecting)
         {
             // #Critical: The first we try to do is to join a potential existing room.
             // If there is, good, else, we'll be called back with OnPhotonRandomJoinFailed() 
@@ -113,6 +117,7 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
     public override void OnPhotonRandomJoinFailed(object[] codeAndMsg)
     {
         Debug.Log("Darkest Photon Network: OnPhotonRandomJoinFailed() was called!");
+        launcherPanel.progressLabel.text = "No available rooms found!";
 
         // #Critical: we failed to join a random room,
         // Maybe none exists or they are all full. No worries, we create a new room.
@@ -124,20 +129,44 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
 
     public override void OnPhotonCreateRoomFailed(object[] codeAndMsg)
     {
-        launcherPanel.progressLabel.enabled = true;
-        launcherPanel.progressPanel.enabled = true;
-        launcherPanel.progressLabel.text = "Can't create room now!";
+        launcherPanel.progressLabel.text = "Can't create room!";
 
         CampaignSelectionManager.Instanse.roomSelector.EnableInteraction();
     }
 
+    public override void OnConnectionFail(DisconnectCause cause)
+    {
+        launcherPanel.progressLabel.text = "Disconnected! ";
+        switch(cause)
+        {
+            case DisconnectCause.DisconnectByClientTimeout:
+            case DisconnectCause.DisconnectByServerTimeout:
+                launcherPanel.progressLabel.text += "Timeout!";
+                break;
+            case DisconnectCause.MaxCcuReached:
+                launcherPanel.progressLabel.text += "Max players amount reached!";
+                break;
+            case DisconnectCause.InvalidRegion:
+                launcherPanel.progressLabel.text += "Invalid region!";
+                break;
+        }
+
+        if (isNamedConnecting)
+        {
+            CampaignSelectionManager.Instanse.roomSelector.RefreshRoomList();
+            CampaignSelectionManager.Instanse.roomSelector.EnableInteraction();
+        }
+
+        isRandomConnecting = false;
+        isNamedConnecting = false;
+    }
+
     public override void OnPhotonJoinRoomFailed(object[] codeAndMsg)
     {
+        isNamedConnecting = false;
         Debug.Log("Darkest Photon Network: OnPhotonJoinFailed() was called!");
 
         // #Critical: we failed to join aroom,
-        launcherPanel.progressLabel.enabled = true;
-        launcherPanel.progressPanel.enabled = true;
         launcherPanel.progressLabel.text = "Room no longer available!";
 
         CampaignSelectionManager.Instanse.roomSelector.EnableInteraction();
@@ -146,17 +175,33 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
     public override void OnJoinedRoom()
     {
         Debug.Log("Darkest Photon Network: OnJoinedRoom() was called!");
+        launcherPanel.progressLabel.text = "Joined " + (PhotonNetwork.room != null ? PhotonNetwork.room.name : "")  + "!";
 
         launcherPanel.FadeToLoadingScreen();
     }
 
     public override void OnDisconnectedFromPhoton()
     {
-        launcherPanel.progressLabel.enabled = false;
-        launcherPanel.progressPanel.enabled = true;
         Debug.LogWarning("Darkest Photon Network: OnDisconnectedFromPhoton() was called!");
 
-        CampaignSelectionManager.Instanse.roomSelector.EnableInteraction();
+        if(isNamedConnecting)
+        {
+            CampaignSelectionManager.Instanse.roomSelector.RefreshRoomList();
+            CampaignSelectionManager.Instanse.roomSelector.EnableInteraction();
+        }
+
+        isRandomConnecting = false;
+        isNamedConnecting = false;
+    }
+
+    public override void OnConnectedToPhoton()
+    {
+        launcherPanel.progressLabel.text = "Connected!";
+    }
+
+    public override void OnCreatedRoom()
+    {
+        launcherPanel.progressLabel.text = "Creating " + (PhotonNetwork.room != null ? PhotonNetwork.room.name : "room") + "!";
     }
 
     #endregion
@@ -205,8 +250,7 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
         launcherPanel.progressPanel.enabled = true;
         // keep track of the will to join a room, because when we come back from the game
         // we will get a callback that we are connected, so we need to know what to do then
-        isRandomConnecting = true;
-
+        isNamedConnecting = true;
         // We check if we are connected or not, we join if we are , else we initiate the connection to the server.
         if (PhotonNetwork.connected)
         {
@@ -229,6 +273,16 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
 
     public bool CreateNamedRoom(string roomName)
     {
+        isNamedConnecting = true;
+        actionRoomName = roomName;
+
+        if (!PhotonNetwork.connected)
+        {
+            launcherPanel.progressLabel.text = "Can't create room! No connection!";
+            PhotonNetwork.ConnectUsingSettings(GameVersion);
+            return false;
+        }
+
         return PhotonNetwork.CreateRoom(roomName, new RoomOptions() { MaxPlayers = MaxPlayersPerRoom }, null);
     }
 

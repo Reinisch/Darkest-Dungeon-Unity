@@ -70,6 +70,7 @@ public class RoomSelector : MonoBehaviour
             else if (Input.GetKeyUp(KeyCode.Escape))
             {
                 isSelecting = false;
+                StopAllCoroutines();
                 slideBackCoroutine = SliderBack();
                 StartCoroutine(slideBackCoroutine);
             }
@@ -79,8 +80,14 @@ public class RoomSelector : MonoBehaviour
     IEnumerator SceneSlider()
     {
         DarkestSoundManager.PlayOneShot("event:/general/title_screen/campaign_button");
-        if (!PhotonNetwork.insideLobby)
-            DarkestPhotonLauncher.Instanse.ConnectToMaster();
+        if(PhotonNetwork.connected)
+            progressLabel.text = "Connected!";
+        else
+            progressLabel.text = "Disconnected!";
+
+        DarkestPhotonLauncher.Instanse.ConnectToMaster();
+
+        DisableInteraction();
 
         while (true)
         {
@@ -89,21 +96,23 @@ public class RoomSelector : MonoBehaviour
                 break;
 
             Vector2 offsetMax = sceneryRect.offsetMax;
-            offsetMax.y += Time.deltaTime * 600;
+            offsetMax.y += Time.deltaTime * 800;
             sceneryRect.offsetMax = offsetMax;
             Vector2 offsetMin = sceneryRect.offsetMin;
-            offsetMin.y += Time.deltaTime * 600;
+            offsetMin.y += Time.deltaTime * 800;
             sceneryRect.offsetMin = offsetMin;
-            yield return 0;
+            yield return null;
         }
+        yield return new WaitForSeconds(1f);
         isSelecting = true;
 
         RefreshRoomList();
-
+        EnableInteraction();
         yield break;
     }
     IEnumerator SliderBack()
     {
+        PhotonNetwork.Disconnect();
         saveFrame.gameObject.SetActive(false);
         returnButton.gameObject.SetActive(false);
 
@@ -174,6 +183,8 @@ public class RoomSelector : MonoBehaviour
 
     public void RefreshRoomList()
     {
+        DarkestPhotonLauncher.Instanse.ConnectToMaster();
+
         if (PhotonNetwork.insideLobby)
         {
             var roomList = PhotonNetwork.GetRoomList();
@@ -219,7 +230,6 @@ public class RoomSelector : MonoBehaviour
     public void RoomNamingCompleted()
     {
         selectedRoomSlot = null;
-        EnableInteraction();
     }
 
     public void ReturnButtonClicked()

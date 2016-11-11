@@ -2602,20 +2602,20 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         MoveSkillSlot skillSlot = RaidPanel.bannerPanel.skillPanel.moveSlot;
         RaidPanel.bannerPanel.skillPanel.SelectedSkill = skillSlot.Skill;
 
-        BattleFormation allies, enemies;
-        if (BattleGround.Round.SelectedUnit.Team == Team.Heroes)
-        {
-            allies = BattleGround.HeroFormation;
-            enemies = BattleGround.MonsterFormation;
-        }
-        else
-        {
-            allies = BattleGround.MonsterFormation;
-            enemies = BattleGround.HeroFormation;
-        }
-
         if (BattleGround.BattleStatus == BattleStatus.Fighting)
         {
+            BattleFormation allies, enemies;
+            if (BattleGround.Round.SelectedUnit.Team == Team.Heroes)
+            {
+                allies = BattleGround.HeroFormation;
+                enemies = BattleGround.MonsterFormation;
+            }
+            else
+            {
+                allies = BattleGround.MonsterFormation;
+                enemies = BattleGround.HeroFormation;
+            }
+
             enemies.overlay.ResetSelections();
             for (int i = 0; i < allies.party.Units.Count; i++)
             {
@@ -2644,16 +2644,6 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                             allies.party.Units[i].SetDeactivatedStatus();
                     }
                 }
-            }
-        }
-        else
-        {
-            for (int i = 0; i < allies.party.Units.Count; i++)
-            {
-                if (allies.party.Units[i] == RaidPanel.SelectedUnit)
-                    RaidPanel.SelectedUnit.SetPerformerStatus();
-                else
-                    allies.party.Units[i].SetMoveTargetStatus(true);
             }
         }
     }

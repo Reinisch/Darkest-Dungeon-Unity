@@ -148,10 +148,17 @@ public static class SaveLoadManager
         return saveHeroData;
     }
 
+    public static void CheckSaveDirectory()
+    {
+        if (!Directory.Exists(Application.persistentDataPath + "\\Saves\\"))
+            Directory.CreateDirectory(Application.persistentDataPath + "\\Saves\\");
+    }
     public static void WriteSave(SaveCampaignData saveData)
     {
         try
         {
+            CheckSaveDirectory();
+
             using (var fs = new FileStream(Application.persistentDataPath + "\\Saves\\DarkestSave" + saveData.saveId +
                     ".darkestsave", FileMode.Create, FileAccess.Write))
             {
@@ -687,14 +694,14 @@ public static class SaveLoadManager
         catch (System.Exception ex)
         {
             Debug.Log(ex.Message);
-            int x = 0;
-            x++;
         }
     }
     public static SaveCampaignData ReadSave(int slotId)
     {
         try
         {
+            CheckSaveDirectory();
+
             SaveCampaignData saveData = new SaveCampaignData();
             using (var fs = new FileStream(Application.persistentDataPath + "\\Saves\\DarkestSave" + slotId +
                     ".darkestsave", FileMode.Open, FileAccess.Read))

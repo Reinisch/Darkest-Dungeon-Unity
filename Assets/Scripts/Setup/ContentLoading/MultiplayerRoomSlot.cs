@@ -97,6 +97,7 @@ public class MultiplayerRoomSlot : MonoBehaviour
         {
             FillEmptyRoom();
             RoomSelector.RoomNamingCompleted();
+            RoomSelector.EnableInteraction();
             return;
         }
         DarkestSoundManager.PlayOneShot("event:/ui/town/button_click");
