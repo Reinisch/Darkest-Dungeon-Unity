@@ -44,7 +44,12 @@ public class RaidQuestPanel : MonoBehaviour
         }
 
         questTitle.text = player.name;
-        questGoal.text = "Defeat the opponent!";
+        if(player.isMasterClient && PhotonNetwork.room.playerCount > 1)
+            questGoal.text = "Defeat the " + PhotonNetwork.otherPlayers[0].name + "!";
+        else if (!player.isMasterClient)
+            questGoal.text = "Defeat the " + PhotonNetwork.masterClient.name + "!";
+        else
+            questGoal.text = "Defeat the opponent!";
     }
 
     public void CompleteQuest()

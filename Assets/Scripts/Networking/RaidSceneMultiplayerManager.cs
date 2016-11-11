@@ -10,6 +10,16 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
 {
     public static new RaidSceneMultiplayerManager Instanse { get; set; }
 
+    public RaidQuestPanel invaderQuestPanel;
+
+    public static RaidQuestPanel InvaderQuestPanel
+    {
+        get
+        {
+            return Instanse.invaderQuestPanel;
+        }
+    }
+
     #region Multiplayer Setup
 
     private static Quest MultiplayerQuest = new PlotQuest()
@@ -108,7 +118,15 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         RaidPanel.bannerPanel.skillPanel.SetMode(SkillPanelMode.Combat);
         RaidPanel.bannerPanel.SetPeacefulState();
         MapPanel.LoadDungeon(currentRaid.Dungeon);
-        QuestPanel.UpdateQuest(currentRaid.Quest, PhotonNetwork.player);
+        QuestPanel.UpdateQuest(currentRaid.Quest, PhotonNetwork.masterClient);
+
+        if (PhotonNetwork.room.playerCount < 2)
+            InvaderQuestPanel.gameObject.SetActive(false);
+        else if (PhotonNetwork.isMasterClient)
+            InvaderQuestPanel.UpdateQuest(currentRaid.Quest, PhotonNetwork.otherPlayers[0]);
+        else
+            InvaderQuestPanel.UpdateQuest(currentRaid.Quest, PhotonNetwork.player);
+
         DarkestSoundManager.StartDungeonSoundtrack(currentRaid.Dungeon.Name);
         TorchMeter.Initialize(100);
         Formations.Initialize();
@@ -135,10 +153,12 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
     {
         #region Set restrictions
         QuestPanel.DisableRetreat(false);
+        InvaderQuestPanel.DisableRetreat(false);
         RaidPanel.SwitchBlocked = true;
         Inventory.SetDeactivated();
         Formations.LockSelections();
         RaidPanel.heroPanel.equipmentPanel.SetDisabled();
+        RaidPanel.SetDisabledState();
         #endregion
 
         #region Switch room scene
@@ -283,9 +303,11 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
 
         #region Remove restrictions
         QuestPanel.EnableRetreat();
+        InvaderQuestPanel.EnableRetreat();
         MapPanel.ShowAvailableRooms(room);
         Inventory.SetPeacefulState(false);
         RaidPanel.heroPanel.equipmentPanel.SetActive();
+        RaidPanel.SetDisabledState();
         currentEvent = null;
         #endregion
     }
@@ -294,6 +316,8 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         #region Set Combat States and Restrictions
         QuestPanel.UpdateEncounterRetreat();
         QuestPanel.SetCombatState();
+        InvaderQuestPanel.UpdateEncounterRetreat();
+        InvaderQuestPanel.SetCombatState();
         DisableEnviroment();
         DisablePartyMovement();
         Formations.LockSelections();
@@ -1545,11 +1569,13 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
 
             #region Hero Action
             QuestPanel.UpdateCombatRetreat(true);
+            InvaderQuestPanel.UpdateCombatRetreat(true);
             while (BattleGround.Round.HeroAction == HeroTurnAction.Waiting)
             {
                 yield return null;
             }
             QuestPanel.UpdateCombatRetreat(false);
+            InvaderQuestPanel.UpdateCombatRetreat(false);
             while (IsUnitEventInProgress)
                 yield return null;
 
@@ -1784,6 +1810,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
 
                         #region Remove Combat States and Restrictions
                         QuestPanel.SetPeacefulState();
+                        InvaderQuestPanel.SetPeacefulState();
                         Formations.ShowHeroOverlay();
                         RaidPanel.SetPeacefulState();
                         EnableEnviroment();

@@ -47,7 +47,7 @@ public class RoomSelector : MonoBehaviour
 
     void Awake()
     {
-        Random.InitState(GetInstanceID());
+        Random.InitState(GetInstanceID() + System.DateTime.Now.Millisecond);
 
         for (int i = 0; i < roomSlots.Count; i++)
             roomSlots[i].RoomSelector = this;
