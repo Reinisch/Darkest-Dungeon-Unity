@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System;
 
-public class MultiplayerPartySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class MultiplayerPartySlot : MonoBehaviour, IPointerEnterHandler
 {
     public Image slotFrame;
     public Image heroFrame;
@@ -17,16 +17,26 @@ public class MultiplayerPartySlot : MonoBehaviour, IPointerEnterHandler, IPointe
         RectTransform = GetComponent<RectTransform>();
     }
 
+    public void UpdateHero(Hero hero)
+    {
+        SelectedHero = hero;
+        heroFrame.sprite = DarkestDungeonManager.HeroSprites[hero.ClassStringId]["A"].Portrait;
+    }
+
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (SelectedHero != null)
             DarkestSoundManager.PlayOneShot("event:/ui/town/button_mouse_over");
     }
 
-    public void OnPointerExit(PointerEventData eventData)
+    public void HeroSelected()
     {
         if (SelectedHero != null)
-            ToolTipManager.Instanse.Show(LocalizationManager.GetString("hero_class_name_" + SelectedHero.ClassStringId),
-                eventData, RectTransform, ToolTipStyle.FromTop, ToolTipSize.Small);
+        {
+            if (!DarkestPhotonLauncher.CharacterWindow.gameObject.activeSelf)
+                DarkestPhotonLauncher.CharacterWindow.WindowOpened();
+
+            DarkestPhotonLauncher.CharacterWindow.UpdateCharacterInfo(SelectedHero, true, true);
+        }
     }
 }

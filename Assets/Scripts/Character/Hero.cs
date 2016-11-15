@@ -586,7 +586,7 @@ public class Hero : Character
 
         #region Combat Generation
         var availableSkills = new List<CombatSkill>(HeroClass.CombatSkills);
-        int skillsRequired = Mathf.Clamp(HeroClass.Generation.NumberOfRandomCombatSkills, 0, HeroClass.CombatSkills.Count);
+        int skillsRequired = HeroClass.CombatSkills.Count;
         CurrentCombatSkills = new CombatSkill[HeroClass.CombatSkills.Count];
 
         foreach (var guaranteedSkill in availableSkills.FindAll(skill => skill.IsGenerationGuaranteed))

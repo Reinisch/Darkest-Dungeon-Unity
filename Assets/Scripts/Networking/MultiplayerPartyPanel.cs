@@ -25,4 +25,13 @@ public class MultiplayerPartyPanel : MonoBehaviour
         for (int i = 0; i < PartySlots.Count; i++)
             PartySlots[i].SlotId = i + 1;
     }
+
+    public void LoadInitialComposition(List<Hero> heroParty)
+    {
+        if (heroParty.Count != PartySlots.Count)
+            return;
+
+        for(int i = 0; i < PartySlots.Count; i++)
+            PartySlots[i].UpdateHero(heroParty[i]);
+    }
 }

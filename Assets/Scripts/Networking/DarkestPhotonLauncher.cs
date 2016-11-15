@@ -52,6 +52,8 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
 
     public CharacterWindow characterWindow;
 
+    public MultiplayerPartyPanel multiplayerPartyPanel;
+
     /// <summary>
     /// The PUN log level.
     /// </summary>
@@ -66,7 +68,24 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
     #endregion
 
     #region Properties
+    public static CharacterWindow CharacterWindow
+    {
+        get
+        {
+            return Instanse.characterWindow;
+        }
+    }
+
+    public static MultiplayerPartyPanel MultiplayerPartyPanel
+    {
+        get
+        {
+            return Instanse.multiplayerPartyPanel;
+        }
+    }
+
     public List<Hero> HeroPool { get; set; }
+
     public List<int> HeroSeeds { get; set; }
     #endregion
 
@@ -99,6 +118,23 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
     /// </summary>
     void Start()
     {
+        HeroPool = new List<Hero>();
+        HeroSeeds = new List<int>();
+
+        foreach (var heroClass in DarkestDungeonManager.Data.HeroClasses.Values.ToList())
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                int heroSeed = GetInstanceID() + System.DateTime.Now.Millisecond + (int)System.DateTime.Now.Ticks + i + HeroPool.Count;
+                Random.InitState(heroSeed);
+                HeroSeeds.Add(heroSeed);
+                HeroPool.Add(new Hero(heroClass.StringId, LocalizationManager.GetString("hero_name_" + Random.Range(0, 556).ToString())));
+            }
+        }
+
+        var initialParty = new List<Hero>(HeroPool).OrderBy(x => Random.value).Take(4).ToList();
+        MultiplayerPartyPanel.LoadInitialComposition(initialParty);
+
         launcherPanel.progressLabel.text = "Disconnected!";
     }
 
