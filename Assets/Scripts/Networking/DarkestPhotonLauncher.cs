@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine.SceneManagement;
 
 public class DarkestPhotonLauncher : Photon.PunBehaviour
@@ -49,6 +50,8 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
     /// </summary>
     public RoomSelector launcherPanel;
 
+    public CharacterWindow characterWindow;
+
     /// <summary>
     /// The PUN log level.
     /// </summary>
@@ -60,6 +63,11 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
     /// </summary>
     public byte MaxPlayersPerRoom = 2;
 
+    #endregion
+
+    #region Properties
+    public List<Hero> HeroPool { get; set; }
+    public List<int> HeroSeeds { get; set; }
     #endregion
 
     #region MonoBehavior callbacks
