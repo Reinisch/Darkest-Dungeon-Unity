@@ -138,10 +138,11 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
         {
             for (int i = 0; i < 4; i++)
             {
+                string generatedName = LocalizationManager.GetString("hero_name_" + Random.Range(0, 556).ToString());
                 int heroSeed = GetInstanceID() + System.DateTime.Now.Millisecond + (int)System.DateTime.Now.Ticks + i + HeroPool.Count;
                 Random.InitState(heroSeed);
                 HeroSeeds.Add(heroSeed);
-                HeroPool.Add(new Hero(heroClass.StringId, LocalizationManager.GetString("hero_name_" + Random.Range(0, 556).ToString())));
+                HeroPool.Add(new Hero(heroClass.StringId, generatedName));
             }
         }
 
@@ -272,6 +273,9 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
     /// </summary>
     public void RandomConnect()
     {
+        if (!CheckSelectedSkills())
+            return;
+
         CampaignSelectionManager.Instanse.roomSelector.DisableInteraction();
 
         launcherPanel.progressLabel.enabled = true;
@@ -303,6 +307,9 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
     /// </summary>
     public void Connect(RoomInfo targetRoom)
     {
+        if(!CheckSelectedSkills())
+            return;
+
         CampaignSelectionManager.Instanse.roomSelector.DisableInteraction();
 
         launcherPanel.progressLabel.enabled = true;
@@ -348,6 +355,19 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
         }
 
         return PhotonNetwork.CreateRoom(roomName, new RoomOptions() { MaxPlayers = MaxPlayersPerRoom }, null);
+    }
+
+    public bool CheckSelectedSkills()
+    {
+        for (int i = 0; i < MultiplayerPartyPanel.PartySlots.Count; i++)
+        {
+            if (MultiplayerPartyPanel.PartySlots[i].SelectedHero.SelectedCombatSkills.Count < 4)
+            {
+                launcherPanel.progressLabel.text = "Choose at least 4 skills for eath hero!";
+                return false;
+            }
+        }
+        return true;
     }
 
     public void UpdateCustomProperties()

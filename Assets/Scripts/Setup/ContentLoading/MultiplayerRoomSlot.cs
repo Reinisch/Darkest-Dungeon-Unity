@@ -67,7 +67,10 @@ public class MultiplayerRoomSlot : MonoBehaviour
     }
     public void RoomButtonClick()
     {
-        if(photonRoom == null)
+        if (!DarkestPhotonLauncher.Instanse.CheckSelectedSkills())
+            return;
+
+        if (photonRoom == null)
         {
             RoomSelector.SaveNamingStart(this);
             roomFrame.material = DarkestDungeonManager.HighlightMaterial;

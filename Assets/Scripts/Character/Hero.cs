@@ -585,6 +585,31 @@ public class Hero : Character
         #endregion
 
         quirkData = new List<QuirkInfo>();
+        #region Quirk Generation
+        quirkData = new List<QuirkInfo>();
+        int positiveQuirkNumber = Random.Range(HeroClass.Generation.NumberOfPositiveQuirksMin,
+            HeroClass.Generation.NumberOfPositiveQuirksMax + 1);
+        for (int i = 0; i < positiveQuirkNumber; i++)
+        {
+            var availableQuirks = DarkestDungeonManager.Data.Quirks.Values.ToList().FindAll(newQuirk => newQuirk.IsPositive &&
+                quirkData.TrueForAll(quirkInfo => !quirkInfo.Quirk.IncompatibleQuirks.Contains(newQuirk.Id)) &&
+                quirkData.Find(quirkInfo => quirkInfo.Quirk == newQuirk) == null);
+            var availableQuirk = availableQuirks[Random.Range(0, availableQuirks.Count)];
+            quirkData.Add(new QuirkInfo(availableQuirk, false, 1, false));
+            ApplyQuirk(availableQuirk);
+        }
+        int negativeQuirkNumber = Random.Range(HeroClass.Generation.NumberOfNegativeQuirksMin,
+            HeroClass.Generation.NumberOfNegativeQuirksMax + 1);
+        for (int i = 0; i < negativeQuirkNumber; i++)
+        {
+            var availableQuirks = DarkestDungeonManager.Data.Quirks.Values.ToList().FindAll(newQuirk => !newQuirk.IsPositive &&
+                !newQuirk.IsDisease && quirkData.TrueForAll(quirkInfo => !quirkInfo.Quirk.IncompatibleQuirks.Contains(newQuirk.Id)) &&
+                quirkData.Find(quirkInfo => quirkInfo.Quirk == newQuirk) == null);
+            var availableQuirk = availableQuirks[Random.Range(0, availableQuirks.Count)];
+            quirkData.Add(new QuirkInfo(availableQuirk, false, 1, false));
+            ApplyQuirk(availableQuirk);
+        }
+        #endregion
 
         #region Combat Generation
         CurrentCombatSkills = new CombatSkill[HeroClass.CombatSkills.Count];
@@ -624,6 +649,31 @@ public class Hero : Character
         #endregion
 
         quirkData = new List<QuirkInfo>();
+        #region Quirk Generation
+        quirkData = new List<QuirkInfo>();
+        int positiveQuirkNumber = Random.Range(HeroClass.Generation.NumberOfPositiveQuirksMin,
+            HeroClass.Generation.NumberOfPositiveQuirksMax + 1);
+        for (int i = 0; i < positiveQuirkNumber; i++)
+        {
+            var availableQuirks = DarkestDungeonManager.Data.Quirks.Values.ToList().FindAll(newQuirk => newQuirk.IsPositive &&
+                quirkData.TrueForAll(quirkInfo => !quirkInfo.Quirk.IncompatibleQuirks.Contains(newQuirk.Id)) &&
+                quirkData.Find(quirkInfo => quirkInfo.Quirk == newQuirk) == null);
+            var availableQuirk = availableQuirks[Random.Range(0, availableQuirks.Count)];
+            quirkData.Add(new QuirkInfo(availableQuirk, false, 1, false));
+            ApplyQuirk(availableQuirk);
+        }
+        int negativeQuirkNumber = Random.Range(HeroClass.Generation.NumberOfNegativeQuirksMin,
+            HeroClass.Generation.NumberOfNegativeQuirksMax + 1);
+        for (int i = 0; i < negativeQuirkNumber; i++)
+        {
+            var availableQuirks = DarkestDungeonManager.Data.Quirks.Values.ToList().FindAll(newQuirk => !newQuirk.IsPositive &&
+                !newQuirk.IsDisease && quirkData.TrueForAll(quirkInfo => !quirkInfo.Quirk.IncompatibleQuirks.Contains(newQuirk.Id)) &&
+                quirkData.Find(quirkInfo => quirkInfo.Quirk == newQuirk) == null);
+            var availableQuirk = availableQuirks[Random.Range(0, availableQuirks.Count)];
+            quirkData.Add(new QuirkInfo(availableQuirk, false, 1, false));
+            ApplyQuirk(availableQuirk);
+        }
+        #endregion
 
         #region Combat Generation
         CurrentCombatSkills = new CombatSkill[HeroClass.CombatSkills.Count];
