@@ -3,6 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.SceneManagement;
 
+public enum PlayerCompositionKeys
+{
+    Hero1Class = 0, Hero1Name, Hero1Seed, Hero1SkillFlags, 
+    Hero2Class = 4, Hero2Name, Hero2Seed, Hero2SkillFlags,
+    Hero3Class = 8, Hero3Name, Hero3Seed, Hero3SkillFlags,
+    Hero4Class = 12, Hero4Name, Hero4Seed, Hero4SkillFlags,
+}
+
+[System.Flags]
+public enum PlayerSkillFlags
+{
+    Empty = 0,
+    One = 1,
+    Two = 2,
+    Three = 4,
+    Four = 8,
+    Five = 16,
+    Six = 32,
+    Seven = 64,
+}
+
 public class DarkestPhotonLauncher : Photon.PunBehaviour
 {
     #region Public Static Variables
@@ -221,6 +242,23 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
         Debug.Log("Darkest Photon Network: OnJoinedRoom() was called!");
         launcherPanel.progressLabel.text = "Joined " + (PhotonNetwork.room != null ? PhotonNetwork.room.name : "")  + "!";
 
+        var playerProps = new ExitGames.Client.Photon.Hashtable();
+
+        for (int i = 0; i < MultiplayerPartyPanel.PartySlots.Count; i++)
+        {
+            var hero = MultiplayerPartyPanel.PartySlots[i].SelectedHero;
+            playerProps.Add(PlayerCompositionKeys.Hero1Class + i * 4, MultiplayerPartyPanel.PartySlots[i].SelectedHero.ClassStringId);
+            playerProps.Add(PlayerCompositionKeys.Hero1Name + i * 4, MultiplayerPartyPanel.PartySlots[i].SelectedHero.Name);
+            playerProps.Add(PlayerCompositionKeys.Hero1Seed + i * 4, HeroSeeds[HeroPool.IndexOf(hero)]);
+
+            var skillFlags = PlayerSkillFlags.Empty;
+            for (int j = 0; j < hero.CurrentCombatSkills.Length; j++)
+                if (hero.CurrentCombatSkills[j] != null && hero.SelectedCombatSkills.Contains(hero.CurrentCombatSkills[j]))
+                    skillFlags |= (PlayerSkillFlags)Mathf.Pow(2, j + 1);
+
+            playerProps.Add(PlayerCompositionKeys.Hero1SkillFlags + i * 4, skillFlags);
+        }
+        PhotonNetwork.player.SetCustomProperties(playerProps);
         launcherPanel.FadeToLoadingScreen();
     }
 
