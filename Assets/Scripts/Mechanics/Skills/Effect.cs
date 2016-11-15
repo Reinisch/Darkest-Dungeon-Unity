@@ -1621,6 +1621,7 @@ public class UnstunEffect : SubEffect
         if (markStatus.IsApplied)
         {
             markStatus.StunApplied = false;
+            target.ResetHalo();
             return true;
         }
         return false;
