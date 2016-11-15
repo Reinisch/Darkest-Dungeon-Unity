@@ -564,6 +564,47 @@ public class Hero : Character
         }
     }
 
+    public Hero(int heroIndex, PhotonPlayer player)
+        : base(DarkestDungeonManager.Data.HeroClasses[(string)player.customProperties["HC" + heroIndex.ToString()]])
+    {
+        Random.InitState((int)player.customProperties["HS" + heroIndex.ToString()]);
+
+        HeroName = (string)player.customProperties["HN" + heroIndex.ToString()];
+        ClassStringId = (string)player.customProperties["HC" + heroIndex.ToString()];
+        Status = HeroStatus.Available;
+        Resolve = new Resolve(0, 0);
+        HeroClass = DarkestDungeonManager.Data.HeroClasses[ClassStringId];
+        ClassIndexId = HeroClass.IndexId;
+        AddPairedAttribute(AttributeType.Stress, new PairedAttribute(10, 200, true, AttributeCategory.CombatStat));
+
+        #region Equipment Generation
+        Equipment weapon = HeroClass.Weapons.Find(wep => wep.UpgradeLevel == 1);
+        Equip(weapon, HeroEquipmentSlot.Weapon);
+        Equipment armor = HeroClass.Armors.Find(arm => arm.UpgradeLevel == 1);
+        Equip(armor, HeroEquipmentSlot.Armor);
+        #endregion
+
+        quirkData = new List<QuirkInfo>();
+
+        #region Combat Generation
+        CurrentCombatSkills = new CombatSkill[HeroClass.CombatSkills.Count];
+        for(int i = 0; i < CurrentCombatSkills.Length; i++)
+            CurrentCombatSkills[i] = HeroClass.CombatSkills[i];
+
+        var playerSkillFlags = (PlayerSkillFlags)player.customProperties["HF" + heroIndex.ToString()];
+        SelectedCombatSkills = new List<CombatSkill>();
+        for (int i = 0; i < CurrentCombatSkills.Length; i++)
+        {
+            if((playerSkillFlags & (PlayerSkillFlags)Mathf.Pow(2, i + 1)) != PlayerSkillFlags.Empty)
+                SelectedCombatSkills.Add(CurrentCombatSkills[i]);
+        }
+        #endregion
+
+        #region Camping Generation
+        CurrentCampingSkills = new CampingSkill[HeroClass.CampingSkills.Count];
+        SelectedCampingSkills = new List<CampingSkill>();
+        #endregion
+    }
     public Hero(string classId, string generatedName)
         : base(DarkestDungeonManager.Data.HeroClasses[classId])
     {
@@ -585,23 +626,9 @@ public class Hero : Character
         quirkData = new List<QuirkInfo>();
 
         #region Combat Generation
-        var availableSkills = new List<CombatSkill>(HeroClass.CombatSkills);
-        int skillsRequired = HeroClass.CombatSkills.Count;
         CurrentCombatSkills = new CombatSkill[HeroClass.CombatSkills.Count];
-
-        foreach (var guaranteedSkill in availableSkills.FindAll(skill => skill.IsGenerationGuaranteed))
-        {
-            CurrentCombatSkills[HeroClass.CombatSkills.IndexOf(guaranteedSkill)] = guaranteedSkill;
-            availableSkills.Remove(guaranteedSkill);
-            skillsRequired--;
-        }
-
-        for (int i = skillsRequired; i > 0; i--)
-        {
-            int generatedIndex = Random.Range(0, availableSkills.Count);
-            CurrentCombatSkills[HeroClass.CombatSkills.IndexOf(availableSkills[generatedIndex])] = availableSkills[generatedIndex];
-            availableSkills.RemoveAt(generatedIndex);
-        }
+        for (int i = 0; i < CurrentCombatSkills.Length; i++)
+            CurrentCombatSkills[i] = HeroClass.CombatSkills[i];
 
         SelectedCombatSkills = new List<CombatSkill>();
         var selectionList = new List<CombatSkill>(CurrentCombatSkills);
@@ -617,30 +644,7 @@ public class Hero : Character
 
         #region Camping Generation
         CurrentCampingSkills = new CampingSkill[HeroClass.CampingSkills.Count];
-
-        var availableGeneralSkills = HeroClass.CampingSkills.FindAll(skill => skill.Classes.Count > 4);
-        int generalSkillsRequired = HeroClass.Generation.NumberOfSharedCampingSkills;
-        foreach (var skill in availableGeneralSkills.OrderBy(x => Random.value)
-            .Take(Mathf.Min(generalSkillsRequired, availableGeneralSkills.Count)))
-        {
-            int skillIndex = HeroClass.CampingSkills.IndexOf(skill);
-            CurrentCampingSkills[skillIndex] = skill;
-        }
-        var availableSpecificSkills = HeroClass.CampingSkills.FindAll(skill => skill.Classes.Count <= 4);
-        int specificSkillsRequired = HeroClass.Generation.NumberOfSpecificCampingSkills;
-
-        foreach (var skill in availableSpecificSkills.OrderBy(x => Random.value)
-            .Take(Mathf.Min(specificSkillsRequired, availableSpecificSkills.Count)))
-        {
-            int skillIndex = HeroClass.CampingSkills.IndexOf(skill);
-            CurrentCampingSkills[skillIndex] = skill;
-        }
-
-        var availableGeneratedSkills = new List<CampingSkill>(CurrentCampingSkills);
-        availableGeneratedSkills.RemoveAll(skill => skill == null);
-
-        SelectedCampingSkills = availableGeneratedSkills.OrderBy(x => Random.value)
-            .Take(Mathf.Min(4, availableGeneratedSkills.Count)).ToList();
+        SelectedCampingSkills = new List<CampingSkill>();
         #endregion
     }
     public Hero(int rosterId, string classId, string generatedName)

@@ -3,14 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.SceneManagement;
 
-public enum PlayerCompositionKeys
-{
-    Hero1Class = 0, Hero1Name, Hero1Seed, Hero1SkillFlags, 
-    Hero2Class = 4, Hero2Name, Hero2Seed, Hero2SkillFlags,
-    Hero3Class = 8, Hero3Name, Hero3Seed, Hero3SkillFlags,
-    Hero4Class = 12, Hero4Name, Hero4Seed, Hero4SkillFlags,
-}
-
 [System.Flags]
 public enum PlayerSkillFlags
 {
@@ -242,23 +234,6 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
         Debug.Log("Darkest Photon Network: OnJoinedRoom() was called!");
         launcherPanel.progressLabel.text = "Joined " + (PhotonNetwork.room != null ? PhotonNetwork.room.name : "")  + "!";
 
-        var playerProps = new ExitGames.Client.Photon.Hashtable();
-
-        for (int i = 0; i < MultiplayerPartyPanel.PartySlots.Count; i++)
-        {
-            var hero = MultiplayerPartyPanel.PartySlots[i].SelectedHero;
-            playerProps.Add(PlayerCompositionKeys.Hero1Class + i * 4, MultiplayerPartyPanel.PartySlots[i].SelectedHero.ClassStringId);
-            playerProps.Add(PlayerCompositionKeys.Hero1Name + i * 4, MultiplayerPartyPanel.PartySlots[i].SelectedHero.Name);
-            playerProps.Add(PlayerCompositionKeys.Hero1Seed + i * 4, HeroSeeds[HeroPool.IndexOf(hero)]);
-
-            var skillFlags = PlayerSkillFlags.Empty;
-            for (int j = 0; j < hero.CurrentCombatSkills.Length; j++)
-                if (hero.CurrentCombatSkills[j] != null && hero.SelectedCombatSkills.Contains(hero.CurrentCombatSkills[j]))
-                    skillFlags |= (PlayerSkillFlags)Mathf.Pow(2, j + 1);
-
-            playerProps.Add(PlayerCompositionKeys.Hero1SkillFlags + i * 4, skillFlags);
-        }
-        PhotonNetwork.player.SetCustomProperties(playerProps);
         launcherPanel.FadeToLoadingScreen();
     }
 
@@ -305,6 +280,8 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
         // we will get a callback that we are connected, so we need to know what to do then
         isRandomConnecting = true;
 
+        UpdateCustomProperties();
+
         // We check if we are connected or not, we join if we are , else we initiate the connection to the server.
         if (PhotonNetwork.connected)
         {
@@ -333,6 +310,9 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
         // keep track of the will to join a room, because when we come back from the game
         // we will get a callback that we are connected, so we need to know what to do then
         isNamedConnecting = true;
+
+        UpdateCustomProperties();
+
         // We check if we are connected or not, we join if we are , else we initiate the connection to the server.
         if (PhotonNetwork.connected)
         {
@@ -358,6 +338,8 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
         isNamedConnecting = true;
         actionRoomName = roomName;
 
+        UpdateCustomProperties();
+
         if (!PhotonNetwork.connected)
         {
             launcherPanel.progressLabel.text = "Can't create room! No connection!";
@@ -366,6 +348,27 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
         }
 
         return PhotonNetwork.CreateRoom(roomName, new RoomOptions() { MaxPlayers = MaxPlayersPerRoom }, null);
+    }
+
+    public void UpdateCustomProperties()
+    {
+        var playerProps = new ExitGames.Client.Photon.Hashtable();
+
+        for (int i = 0; i < MultiplayerPartyPanel.PartySlots.Count; i++)
+        {
+            var hero = MultiplayerPartyPanel.PartySlots[i].SelectedHero;
+            playerProps.Add("HC" + (i + 1).ToString(), MultiplayerPartyPanel.PartySlots[i].SelectedHero.ClassStringId);
+            playerProps.Add("HN" + (i + 1).ToString(), MultiplayerPartyPanel.PartySlots[i].SelectedHero.Name);
+            playerProps.Add("HS" + (i + 1).ToString(), HeroSeeds[HeroPool.IndexOf(hero)]);
+
+            var skillFlags = PlayerSkillFlags.Empty;
+            for (int j = 0; j < hero.CurrentCombatSkills.Length; j++)
+                if (hero.CurrentCombatSkills[j] != null && hero.SelectedCombatSkills.Contains(hero.CurrentCombatSkills[j]))
+                    skillFlags |= (PlayerSkillFlags)Mathf.Pow(2, j + 1);
+
+            playerProps.Add("HF" + (i + 1).ToString(), skillFlags);
+        }
+        PhotonNetwork.player.SetCustomProperties(playerProps, playerProps, false);
     }
 
     #endregion

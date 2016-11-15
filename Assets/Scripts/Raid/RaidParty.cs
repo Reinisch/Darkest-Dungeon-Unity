@@ -10,11 +10,12 @@ public class RaidParty
     {
         List<Hero> MultiplayerHeroes = new List<Hero>()
         {
-            new Hero("abomination", "Abom #4"),
-            new Hero("abomination", "Abom #3"),
-            new Hero("abomination", "Abom #2"),
-            new Hero("abomination", "Abom #1"),
+            new Hero(1, photonPlayer),
+            new Hero(2, photonPlayer),
+            new Hero(3, photonPlayer),
+            new Hero(4, photonPlayer),
         };
+
         HeroInfo = new List<RaidHeroInfo>();
         foreach (var hero in MultiplayerHeroes)
             HeroInfo.Add(new RaidHeroInfo(hero));
