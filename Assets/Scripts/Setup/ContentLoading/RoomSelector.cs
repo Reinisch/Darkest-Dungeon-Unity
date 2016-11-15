@@ -91,8 +91,7 @@ public class RoomSelector : MonoBehaviour
 
         while (true)
         {
-            Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(null, rect.position);
-            if (Screen.height * 0.3f < screenPos.y)
+            if (470 < sceneryRect.offsetMax.y)
                 break;
 
             Vector2 offsetMax = sceneryRect.offsetMax;
