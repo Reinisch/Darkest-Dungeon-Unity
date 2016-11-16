@@ -5,7 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-
 public class RaidSceneMultiplayerManager : RaidSceneManager
 {
     public static new RaidSceneMultiplayerManager Instanse { get; set; }
@@ -337,7 +336,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
 
         #region Switch Soundtrack
         DarkestSoundManager.PauseDungeonSoundtrack();
-        DarkestSoundManager.StartBattleSoundtrack(Raid.Dungeon.Name, SceneState == DungeonSceneState.Room);
+        DarkestSoundManager.StartBattleSoundtrack("town", SceneState == DungeonSceneState.Room);
 
         if (areaView.Area.Type == AreaType.Boss || Raid.Quest.Id == "tutorial")
         {
