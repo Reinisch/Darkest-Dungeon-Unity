@@ -9,6 +9,8 @@ public class CampaignSelectionManager : MonoBehaviour
 
     public SaveSelector saveSelector;
     public RoomSelector roomSelector;
+    public RectTransform titleRect;
+    public RectTransform overlayTitleRect;
 
     public static void OnSelectionStart(CampaignSelection selection)
     {

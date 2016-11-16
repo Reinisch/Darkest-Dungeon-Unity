@@ -75,6 +75,8 @@ public class PreambleSkipper : MonoBehaviour
             }
             yield return 0;
         }
+
+        CampaignSelectionManager.Instanse.titleRect.SetParent(CampaignSelectionManager.Instanse.overlayTitleRect, false);
         yield break;
     }
 }
