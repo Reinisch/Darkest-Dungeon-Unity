@@ -114,8 +114,14 @@ public class SaveSelector : MonoBehaviour
     IEnumerator SceneFade(float seconds, float speed)
     {
         float titleVolume = 0;
+        CampaignSelectionManager.Instanse.titleRect.SetParent(sceneryRect, false);
 
-        if(DarkestSoundManager.TitleMusicInstanse != null)
+        Vector2 localPoint;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(sceneryRect,
+            new Vector2(Screen.width / 2, Screen.height), DarkestDungeonManager.Instanse.MainUICamera, out localPoint);
+        CampaignSelectionManager.Instanse.titleRect.localPosition = localPoint;
+
+        if (DarkestSoundManager.TitleMusicInstanse != null)
         {
             DarkestSoundManager.TitleMusicInstanse.getVolume(out titleVolume);
 

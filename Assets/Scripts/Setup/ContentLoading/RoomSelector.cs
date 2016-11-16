@@ -139,6 +139,12 @@ public class RoomSelector : MonoBehaviour
     IEnumerator SceneFade(float seconds, float speed)
     {
         float titleVolume = 0;
+        CampaignSelectionManager.Instanse.titleRect.SetParent(sceneryRect, false);
+
+        Vector2 localPoint;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(sceneryRect,
+            new Vector2(Screen.width / 2, Screen.height), DarkestDungeonManager.Instanse.MainUICamera, out localPoint);
+        CampaignSelectionManager.Instanse.titleRect.localPosition = localPoint;
 
         if (DarkestSoundManager.TitleMusicInstanse != null)
         {
