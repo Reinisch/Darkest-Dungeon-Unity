@@ -390,6 +390,31 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
 
         yield return StartCoroutine(PhotonGameManager.PreparationCheck());
 
+        var stunResForEveryone = new List<FormationUnit>(HeroParty.Units.Concat(BattleGround.MonsterParty.Units));
+        var stunResBuff = new Buff()
+        {
+            AttributeType = AttributeType.Stun,
+            DurationAmount = 420,
+            DurationType = BuffDurationType.Combat,
+            Id = "",
+            IsFalseRule = false,
+            ModifierValue = 0.4f,
+            RuleType = BuffRule.Always,
+            Type = BuffType.StatAdd,
+        };
+
+        stunResForEveryone = stunResForEveryone.OrderBy(unit => unit.Team == Team.Heroes ? -unit.Rank : unit.Rank).ToList();
+
+        foreach(var unit in stunResForEveryone)
+        {
+            unit.Character.AddBuff(new BuffInfo(stunResBuff, BuffSourceType.Adventure));
+            RaidEvents.ShowPopupMessage(unit, PopupMessageType.Buff);
+            unit.OverlaySlot.UpdateOverlay();
+            yield return new WaitForSeconds(0.4f);
+        }
+
+        yield return StartCoroutine(PhotonGameManager.PreparationCheck());
+
         RaidEvents.roundIndicator.Appear();
         yield return StartCoroutine(BattleRound());
         if (BattleGround.Round.HeroAction == HeroTurnAction.Retreat)

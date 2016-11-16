@@ -105,6 +105,9 @@ public class PhotonGameManager : Photon.PunBehaviour
 
     public static IEnumerator PreparationCheck()
     {
+        while (DarkestSoundManager.NarrationQueue.Count > 0 || DarkestSoundManager.CurrentNarration != null)
+            yield return null;
+
         Instanse.photonView.RPC("PlayerLoaded", PhotonTargets.All);
 
         while (PlayersPreparedCount < PhotonNetwork.room.playerCount)
