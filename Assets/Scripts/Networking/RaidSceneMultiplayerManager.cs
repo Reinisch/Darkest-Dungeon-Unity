@@ -118,14 +118,14 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         RaidPanel.bannerPanel.skillPanel.SetMode(SkillPanelMode.Combat);
         RaidPanel.bannerPanel.SetPeacefulState();
         MapPanel.LoadDungeon(currentRaid.Dungeon);
-        QuestPanel.UpdateQuest(currentRaid.Quest, PhotonNetwork.masterClient);
+        QuestPanel.UpdateQuest(currentRaid.Quest, PhotonNetwork.masterClient, PhotonNetwork.isMasterClient);
 
         if (PhotonNetwork.room.playerCount < 2)
             InvaderQuestPanel.gameObject.SetActive(false);
         else if (PhotonNetwork.isMasterClient)
-            InvaderQuestPanel.UpdateQuest(currentRaid.Quest, PhotonNetwork.otherPlayers[0]);
+            InvaderQuestPanel.UpdateQuest(currentRaid.Quest, PhotonNetwork.otherPlayers[0], false);
         else
-            InvaderQuestPanel.UpdateQuest(currentRaid.Quest, PhotonNetwork.player);
+            InvaderQuestPanel.UpdateQuest(currentRaid.Quest, PhotonNetwork.player, true);
 
         DarkestSoundManager.StartDungeonSoundtrack(currentRaid.Dungeon.Name);
         TorchMeter.Initialize(100);

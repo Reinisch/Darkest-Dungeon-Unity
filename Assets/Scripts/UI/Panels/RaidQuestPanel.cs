@@ -35,7 +35,7 @@ public class RaidQuestPanel : MonoBehaviour
         }
     }
 
-    public void UpdateQuest(Quest quest, PhotonPlayer player, bool completed = false)
+    public void UpdateQuest(Quest quest, PhotonPlayer player, bool isPanelOwner = false, bool completed = false)
     {
         if (completed)
         {
@@ -44,12 +44,9 @@ public class RaidQuestPanel : MonoBehaviour
         }
 
         questTitle.text = player.name;
-        if(player.isMasterClient && PhotonNetwork.room.playerCount > 1)
-            questGoal.text = "Defeat the " + PhotonNetwork.otherPlayers[0].name + "!";
-        else if (!player.isMasterClient)
-            questGoal.text = "Defeat the " + PhotonNetwork.masterClient.name + "!";
-        else
-            questGoal.text = "Defeat the opponent!";
+        questGoal.text = PhotonNetwork.room.playerCount > 1 ?
+            isPanelOwner ? "Defeat the " + PhotonNetwork.otherPlayers[0].name :
+            "Defeat the " + PhotonNetwork.player.name : "Defeat the opponent!";
     }
 
     public void CompleteQuest()
