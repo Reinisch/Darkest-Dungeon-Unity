@@ -62,4 +62,20 @@ public class MultiplayerPartyPanel : MonoBehaviour
 
         compositionPanel.UpdateComposition(PartySlots.Select(slot => slot.SelectedHero.ClassStringId).ToList());
     }
+
+    public void RefreshQuirks()
+    {
+        var currentHero = DarkestPhotonLauncher.CharacterWindow.CurrentHero;
+        var currentSlot = PartySlots.Find(slot => slot.SelectedHero == currentHero);
+        int currentIndex = DarkestPhotonLauncher.Instanse.HeroPool.IndexOf(currentHero);
+
+        int heroSeed = GetInstanceID() + System.DateTime.Now.Millisecond + (int)System.DateTime.Now.Ticks;
+        Random.InitState(heroSeed);
+
+        DarkestPhotonLauncher.Instanse.HeroSeeds[currentIndex] = heroSeed;
+        DarkestPhotonLauncher.Instanse.HeroPool[currentIndex] = new Hero(currentHero.ClassStringId, currentHero.Name);
+
+        DarkestPhotonLauncher.CharacterWindow.UpdateCharacterInfo(DarkestPhotonLauncher.Instanse.HeroPool[currentIndex], true, true);
+        currentSlot.UpdateHero(DarkestPhotonLauncher.Instanse.HeroPool[currentIndex]);
+    }
 }
