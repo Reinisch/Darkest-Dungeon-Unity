@@ -704,7 +704,7 @@ public static class SaveLoadManager
 
             SaveCampaignData saveData = new SaveCampaignData();
             using (var fs = new FileStream(Application.persistentDataPath + Path.AltDirectorySeparatorChar + "Saves" + Path.AltDirectorySeparatorChar +
-                "DarkestSave" + saveData.saveId + ".darkestsave", FileMode.Open, FileAccess.Read))
+                "DarkestSave" + slotId + ".darkestsave", FileMode.Open, FileAccess.Read))
             {
                 using (var br = new BinaryReader(fs))
                 {
@@ -1385,8 +1385,8 @@ public static class SaveLoadManager
 
     public static void DeleteSave(int slotId)
     {
-        if (File.Exists(Application.persistentDataPath + "\\Saves\\DarkestSave" + slotId + ".darkestsave"))
-            File.Delete(Application.persistentDataPath + "\\Saves\\DarkestSave" + slotId + ".darkestsave");
+        File.Delete(Application.persistentDataPath + Path.AltDirectorySeparatorChar + "Saves" + 
+            Path.AltDirectorySeparatorChar + "DarkestSave" + slotId + ".darkestsave");
     }
 
     public static void WriteDungeonMap(SaveCampaignData saveData, string mapName)

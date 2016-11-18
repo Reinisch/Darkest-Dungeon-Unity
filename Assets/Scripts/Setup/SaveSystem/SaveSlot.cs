@@ -68,13 +68,7 @@ public class SaveSlot : MonoBehaviour
 
     public void LoadSaveFrame()
     {
-        if(!Directory.Exists(Application.persistentDataPath + "\\Saves\\"))
-            Directory.CreateDirectory(Application.persistentDataPath + "\\Saves\\");
-
-        if (File.Exists(Application.persistentDataPath + "\\Saves\\DarkestSave" + slotId + ".darkestsave"))
-            saveData = SaveLoadManager.ReadSave(slotId);
-        else
-            saveData = null;
+        saveData = SaveLoadManager.ReadSave(slotId);
 
         if (saveData == null)
             FillEmptySave();
