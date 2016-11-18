@@ -2551,6 +2551,9 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         else
         {
             allies.overlay.ResetSelectionsExcept(BattleGround.Round.SelectedUnit);
+            if (BattleGround.Round.SelectedUnit.IsTargetable)
+                BattleGround.Round.SelectedUnit.SetPerformerStatus();
+
             tempList.Clear();
 
             for (int i = 0; i < enemies.party.Units.Count; i++)
