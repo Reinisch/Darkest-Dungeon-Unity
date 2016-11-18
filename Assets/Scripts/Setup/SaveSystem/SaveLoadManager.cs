@@ -150,8 +150,8 @@ public static class SaveLoadManager
 
     public static void CheckSaveDirectory()
     {
-        if (!Directory.Exists(Application.persistentDataPath + "\\Saves\\"))
-            Directory.CreateDirectory(Application.persistentDataPath + "\\Saves\\");
+        if (!Directory.Exists(Application.persistentDataPath + Path.AltDirectorySeparatorChar + "Saves"))
+            Directory.CreateDirectory(Application.persistentDataPath + Path.AltDirectorySeparatorChar + "Saves");
     }
     public static void WriteSave(SaveCampaignData saveData)
     {
@@ -159,8 +159,8 @@ public static class SaveLoadManager
         {
             CheckSaveDirectory();
 
-            using (var fs = new FileStream(Application.persistentDataPath + "\\Saves\\DarkestSave" + saveData.saveId +
-                    ".darkestsave", FileMode.Create, FileAccess.Write))
+            using (var fs = new FileStream(Application.persistentDataPath + Path.AltDirectorySeparatorChar + "Saves" + Path.AltDirectorySeparatorChar +
+                "DarkestSave" + saveData.saveId + ".darkestsave", FileMode.Create, FileAccess.Write))
             {
                 using (var bw = new BinaryWriter(fs))
                 {
@@ -703,8 +703,8 @@ public static class SaveLoadManager
             CheckSaveDirectory();
 
             SaveCampaignData saveData = new SaveCampaignData();
-            using (var fs = new FileStream(Application.persistentDataPath + "\\Saves\\DarkestSave" + slotId +
-                    ".darkestsave", FileMode.Open, FileAccess.Read))
+            using (var fs = new FileStream(Application.persistentDataPath + Path.AltDirectorySeparatorChar + "Saves" + Path.AltDirectorySeparatorChar +
+                "DarkestSave" + saveData.saveId + ".darkestsave", FileMode.Open, FileAccess.Read))
             {
                 using (var br = new BinaryReader(fs))
                 {
