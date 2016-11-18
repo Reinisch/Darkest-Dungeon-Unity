@@ -1614,24 +1614,6 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                 case HeroTurnAction.Move:
                     if (usedSkill is MoveSkill)
                     {
-                        #region Trait Block
-                        if (targetUnit.Character.Trait != null)
-                        {
-                            if (RandomSolver.CheckSuccess(targetUnit.Character.Trait.Reactions[ReactionType.BlockMove].Chance))
-                            {
-                                actionUnit.CombatInfo.BlockedMoveUnitIds.Add(targetUnit.CombatInfo.CombatId);
-                                yield return new WaitForSeconds(1f);
-                                Formations.ResetSelections();
-                                yield return new WaitForEndOfFrame();
-                                BattleGround.Round.PreHeroTurn(actionUnit);
-                                yield return new WaitForEndOfFrame();
-                                actionUnit.OverlaySlot.UnitSelected();
-                                usedSkill = null;
-                                continue;
-                            }
-                        }
-                        #endregion
-
                         FMODUnity.RuntimeManager.PlayOneShot("event:/general/party/combat_move");
 
                         if (actionUnit.Rank > targetUnit.Rank)
@@ -1650,61 +1632,6 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                         var usedCombatSkill = usedSkill as CombatSkill;
                         SkillTargetInfo targetInfo = BattleSolver.SelectSkillTargets(actionUnit,
                             targetUnit, usedCombatSkill).UpdateSkillInfo(actionUnit, usedCombatSkill);
-
-                        #region Trait Block
-                        if (targetInfo.Type != SkillTargetType.Enemy)
-                        {
-                            if (usedCombatSkill.Heal != null)
-                            {
-                                bool blockedHeal = false;
-                                for (int i = targetInfo.Targets.Count - 1; i >= 0; i--)
-                                {
-                                    if (targetInfo.Targets[i].Character.Trait != null)
-                                    {
-                                        if (RandomSolver.CheckSuccess(targetInfo.Targets[i].
-                                            Character.Trait.Reactions[ReactionType.BlockHeal].Chance))
-                                        {
-                                            actionUnit.CombatInfo.BlockedHealUnitIds.Add(targetInfo.Targets[i].CombatInfo.CombatId);
-                                            targetInfo.Targets.RemoveAt(i);
-                                            blockedHeal = true;
-                                        }
-                                    }
-                                }
-                                if (blockedHeal)
-                                    yield return new WaitForSeconds(1f);
-                            }
-                            else if (usedCombatSkill.Effects.Find(effect => effect.SubEffects.Find(subEffect =>
-                                subEffect.Type == EffectSubType.Buff || subEffect.Type == EffectSubType.StatBuff) != null) != null)
-                            {
-                                bool blockedBuff = false;
-                                for (int i = targetInfo.Targets.Count - 1; i >= 0; i--)
-                                {
-                                    if (targetInfo.Targets[i].Character.Trait != null)
-                                    {
-                                        if (RandomSolver.CheckSuccess(targetInfo.Targets[i].
-                                            Character.Trait.Reactions[ReactionType.BlockBuff].Chance))
-                                        {
-                                            actionUnit.CombatInfo.BlockedBuffUnitIds.Add(targetInfo.Targets[i].CombatInfo.CombatId);
-                                            targetInfo.Targets.RemoveAt(i);
-                                            blockedBuff = true;
-                                        }
-                                    }
-                                }
-                                if (blockedBuff)
-                                    yield return new WaitForSeconds(1f);
-                            }
-                        }
-                        if (targetInfo.Targets.Count == 0)
-                        {
-                            Formations.ResetSelections();
-                            yield return new WaitForEndOfFrame();
-                            BattleGround.Round.PreHeroTurn(actionUnit);
-                            yield return new WaitForEndOfFrame();
-                            actionUnit.OverlaySlot.UnitSelected();
-                            usedSkill = null;
-                            continue;
-                        }
-                        #endregion
 
                         yield return StartCoroutine(ExecuteHeroSkill(actionUnit, targetInfo, usedCombatSkill));
 
@@ -1729,6 +1656,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                     yield return new WaitForSeconds(0.8f);
                     break;
                 #endregion
+                #region Retreat
                 case HeroTurnAction.Retreat:
                     Formations.ResetSelections();
                     bool retreatFailed = RandomSolver.CheckSuccess(0.2f);
@@ -1845,6 +1773,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                         yield break;
                     }
                     break;
+                #endregion
             }
             break;
             #endregion
