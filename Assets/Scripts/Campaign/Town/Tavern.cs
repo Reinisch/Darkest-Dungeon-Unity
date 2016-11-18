@@ -125,10 +125,10 @@ public class Tavern : Building
             {
                 if (i + 1 <= Activities[activityIndex].NumberOfSlots)
                 {
-                    if (saveData.abbeyActivitySlots.Count > activityIndex && saveData.abbeyActivitySlots[activityIndex].Count > i)
+                    if (saveData.tavernActivitySlots.Count > activityIndex && saveData.tavernActivitySlots[activityIndex].Count > i)
                     {
                         var activityHero = DarkestDungeonManager.Campaign.Heroes.Find(hero =>
-                            hero.RosterId == saveData.abbeyActivitySlots[activityIndex][i].HeroRosterId);
+                            hero.RosterId == saveData.tavernActivitySlots[activityIndex][i].HeroRosterId);
 
                         Activities[activityIndex].ActivitySlots[i].Hero = activityHero;
                         Activities[activityIndex].ActivitySlots[i].UpdateSlot(isActivityLocked ? false : true,
@@ -143,6 +143,12 @@ public class Tavern : Building
                         isActivityFree ? 0 : (int)(Activities[activityIndex].ActivityCost.Amount * costModifier));
 
                 Activities[activityIndex].ActivitySlots[i].Status = saveData.tavernActivitySlots[activityIndex][i].Status;
+
+                if (Activities[activityIndex].ActivitySlots[i].Hero == null && Activities[activityIndex].ActivitySlots[i].Status == ActivitySlotStatus.Paid)
+                {
+                    Activities[activityIndex].ActivitySlots[i].Status = ActivitySlotStatus.Available;
+                    UnityEngine.Debug.LogError("Empty paid place in tavern! Activity: " + Activities[activityIndex].Id + " Slot: " + i);
+                }
             }
         }
     }

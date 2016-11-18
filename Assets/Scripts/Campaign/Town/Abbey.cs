@@ -143,6 +143,12 @@ public class Abbey : Building
                         isActivityFree ? 0 : (int)(Activities[activityIndex].ActivityCost.Amount * costModifier));
 
                 Activities[activityIndex].ActivitySlots[i].Status = saveData.abbeyActivitySlots[activityIndex][i].Status;
+
+                if (Activities[activityIndex].ActivitySlots[i].Hero == null && Activities[activityIndex].ActivitySlots[i].Status == ActivitySlotStatus.Paid)
+                {
+                    Activities[activityIndex].ActivitySlots[i].Status = ActivitySlotStatus.Available;
+                    UnityEngine.Debug.LogError("Empty paid place in abbey! Activity: " + Activities[activityIndex].Id + " Slot: " + i);
+                }
             }
         }
     }

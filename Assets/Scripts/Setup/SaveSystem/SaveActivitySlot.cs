@@ -26,7 +26,7 @@ public class SaveActivitySlot
         TargetDiseaseQuirk = "";
 
         HeroRosterId = slot.Hero == null ? -1 : slot.Hero.RosterId;
-        Status = slot.Status;
+        Status = slot.Status == ActivitySlotStatus.Paid && HeroRosterId == -1? ActivitySlotStatus.Available : slot.Status;
     }
     public void UpdateFromTreatment(TreatmentSlot slot)
     {
@@ -35,6 +35,6 @@ public class SaveActivitySlot
         TargetDiseaseQuirk = slot.TargetDiseaseQuirk == null ? "" : TargetDiseaseQuirk;
 
         HeroRosterId = slot.Hero == null ? -1 : slot.Hero.RosterId;
-        Status = slot.Status;
+        Status = slot.Status == ActivitySlotStatus.Paid && HeroRosterId == -1 ? ActivitySlotStatus.Available : slot.Status;
     }
 }
