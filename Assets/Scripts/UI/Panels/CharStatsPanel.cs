@@ -14,18 +14,12 @@ public class CharStatsPanel : MonoBehaviour
 
     public void UpdateStats(Character character)
     {
-        maxHealth.text = string.Format("{0}", character.GetPairedAttribute(AttributeType.HitPoints).ModifiedValue);
-        dodge.text = string.Format("{0:#.#%;-#.#%;0%}",
-            System.Math.Round((double)character.GetSingleAttribute(AttributeType.DefenseRating).ModifiedValue, 3));
-        prot.text = string.Format("{0:#.#%;-#.#%;0%}",
-            System.Math.Round((double)character.GetSingleAttribute(AttributeType.ProtectionRating).ModifiedValue, 3));
-        speed.text = string.Format("{0}", character.GetSingleAttribute(AttributeType.SpeedRating).ModifiedValue);
-        accuracyMod.text = string.Format("{0:+#;-#;+0}",
-            character.GetSingleAttribute(AttributeType.AttackRating).ModifiedValue * 100);
-        crit.text = string.Format("{0:#.#%;-#.#%;0%}",
-            System.Math.Round((double)character.GetSingleAttribute(AttributeType.CritChance).ModifiedValue, 3));
-        damage.text = string.Format("{0:#.#}-{1:#.#}",
-            character.GetSingleAttribute(AttributeType.DamageLow).ModifiedValue,
-            character.GetSingleAttribute(AttributeType.DamageHigh).ModifiedValue);
+        maxHealth.text = string.Format("{0}", Mathf.CeilToInt(character.Health.ModifiedValue));
+        dodge.text = string.Format("{0:#.#%;-#.#%;0%}", System.Math.Round(character.Dodge, 3));
+        prot.text = string.Format("{0:#.#%;-#.#%;0%}", System.Math.Round(character.Protection, 3));
+        speed.text = string.Format("{0}", character.Speed);
+        accuracyMod.text = string.Format("{0:+#;-#;+0}", character.Accuracy * 100);
+        crit.text = string.Format("{0:#.#%;-#.#%;0%}", System.Math.Round(character.Crit, 3));
+        damage.text = string.Format("{0}-{1}", Mathf.CeilToInt(character.MinDamage), Mathf.CeilToInt(character.MaxDamage));
     }
 }
