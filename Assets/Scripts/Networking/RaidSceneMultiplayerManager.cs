@@ -1584,6 +1584,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
             {
                 RaidPanel.SetCombatState();
                 Inventory.SetCombatState();
+                yield return new WaitForSeconds(0.5f);
             }
             else
             {
@@ -1607,6 +1608,8 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
             var targetUnit = BattleGround.Round.SelectedTarget;
             var usedSkill = RaidPanel.bannerPanel.skillPanel.SelectedSkill;
             RaidPanel.SetDisabledState();
+
+            yield return StartCoroutine(PhotonGameManager.PreparationCheck());
 
             switch (BattleGround.Round.HeroAction)
             {
@@ -2483,8 +2486,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
     public override void HeroSkillSelected(BattleSkillSlot skillSlot)
     {
         int slotIndex = RaidPanel.bannerPanel.skillPanel.skillSlots.IndexOf(skillSlot);
-        PhotonGameManager.Instanse.photonView.RPC("HeroSkillSelected", PhotonTargets.Others, slotIndex);
-        HeroSkillSelected(slotIndex);
+        PhotonGameManager.Instanse.photonView.RPC("HeroSkillSelected", PhotonTargets.All, slotIndex);
     }
     public void HeroSkillSelected(int skillSlotIndex)
     {
@@ -2583,8 +2585,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
 
     public override void HeroMoveSelected(MoveSkillSlot skillSlot)
     {
-        PhotonGameManager.Instanse.photonView.RPC("HeroMoveSelected", PhotonTargets.Others);
-        HeroMoveSelected();
+        PhotonGameManager.Instanse.photonView.RPC("HeroMoveSelected", PhotonTargets.All);
     }
     public void HeroMoveSelected()
     {
@@ -2639,8 +2640,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
 
     public override void HeroMoveDeselected(MoveSkillSlot skillSlot)
     {
-        PhotonGameManager.Instanse.photonView.RPC("HeroMoveDeselected", PhotonTargets.Others);
-        HeroMoveDeselected();
+        PhotonGameManager.Instanse.photonView.RPC("HeroMoveDeselected", PhotonTargets.All);
     }
     public void HeroMoveDeselected()
     {
