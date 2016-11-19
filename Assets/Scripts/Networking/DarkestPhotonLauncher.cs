@@ -52,8 +52,6 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
     bool isRandomConnecting;
 
     bool isNamedConnecting;
-    string actionRoomName;
-
     #endregion
 
     #region Public Variables
@@ -179,7 +177,7 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
 
         // #Critical: we failed to join a random room,
         // Maybe none exists or they are all full. No worries, we create a new room.
-        bool success = PhotonNetwork.CreateRoom(CampaignSelectionManager.Instanse.roomSelector.GenerateRoomName(),
+        PhotonNetwork.CreateRoom(CampaignSelectionManager.Instanse.roomSelector.GenerateRoomName(),
             new RoomOptions() { MaxPlayers = MaxPlayersPerRoom }, null);
 
         CampaignSelectionManager.Instanse.roomSelector.DisableInteraction(); 
@@ -343,7 +341,6 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
     public bool CreateNamedRoom(string roomName)
     {
         isNamedConnecting = true;
-        actionRoomName = roomName;
 
         UpdateCustomProperties();
 

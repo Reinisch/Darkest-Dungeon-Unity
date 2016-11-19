@@ -11,7 +11,6 @@ public class SaveSelector : MonoBehaviour
     public Button returnButton;
 
     RectTransform sceneryRect;
-    RectTransform rect;
     Transform saveFrame;
     bool isSelecting = false;
     const int slotNumber = 3;
@@ -29,7 +28,6 @@ public class SaveSelector : MonoBehaviour
 
         startCampaignButton = saveFrame.GetComponentInParent<Button>();
         sceneryRect = startCampaignButton.transform.parent.GetComponent<RectTransform>();
-        rect = saveFrame.GetComponent<RectTransform>();
     }
 	void Start()
     {
