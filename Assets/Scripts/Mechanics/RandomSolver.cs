@@ -66,31 +66,23 @@ public static class RandomSolver
     {
         if (chance >= 1)
             return true;
-        double result = Random.NextDouble();
-        Debug.Log("RNG [CHECK " + chance + "]: " + result + (result < chance ? " true" : " false"));
-        return result < chance;
+
+        return Random.NextDouble() < chance;
     }
     public static int Next(int maxValue)
     {
-        int result = Random.Next(maxValue);
-        Debug.Log("RNG [" + maxValue + "]: " + result);
-        return result;
+        return Random.Next(maxValue);
     }
     public static int Next(int minValue, int maxValue)
     {
-        int result = Random.Next(minValue, maxValue);
-        Debug.Log("RNG [" + minValue + "," + maxValue + "]: " + result);
-        return result;
+        return Random.Next(minValue, maxValue);
     }
     public static double NextDouble()
     {
-        double result = Random.NextDouble();
-        Debug.Log("RNG [DOUBLE]: " + result);
-        return result;
+        return Random.NextDouble();
     }
     public static void SetRandomSeed(int seed)
     {
         Random = new System.Random(seed);
-        Debug.Log("RNG [SET]: " + seed);
     }
 }

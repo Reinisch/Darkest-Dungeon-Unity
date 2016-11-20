@@ -156,6 +156,10 @@ public class SaveSelector : MonoBehaviour
     {
         for (int i = 0; i < slotNumber; i++)
             saveSlots[i].DisableInteraction();
+
+        if (PhotonNetwork.connected)
+            PhotonNetwork.Disconnect();
+        
         fadeCoroutine = SceneFade(1, 2500);
         StartCoroutine(fadeCoroutine); 
     }
