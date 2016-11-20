@@ -2389,7 +2389,7 @@ internal class NetworkingPeer : LoadBalancingPeer, IPhotonPeerListener
 
                 int remoteUpdateServerTimestamp = (int)serializeData[(byte)0];
                 short remoteLevelPrefix = -1;
-                short initialDataIndex = 10;
+                byte initialDataIndex = 10;
                 int headerLength = 1;
                 if (serializeData.ContainsKey((byte)1))
                 {
@@ -2397,7 +2397,7 @@ internal class NetworkingPeer : LoadBalancingPeer, IPhotonPeerListener
                     headerLength = 2;
                 }
 
-                for (short s = initialDataIndex; s - initialDataIndex < serializeData.Count - headerLength; s++)
+                for (byte s = initialDataIndex; s - initialDataIndex < serializeData.Count - headerLength; s++)
                 {
                     this.OnSerializeRead(serializeData[s] as object[], originatingPlayer, remoteUpdateServerTimestamp, remoteLevelPrefix);
                 }
@@ -3802,6 +3802,13 @@ internal class NetworkingPeer : LoadBalancingPeer, IPhotonPeerListener
         }
     }
 
+    /// <summary>
+    /// Defines how many OnPhotonSerialize()-calls might get summarized in one message.
+    /// </summary>
+    /// <remarks>
+    /// A low number increases overhead, a high number might mean fragmentation.
+    /// </remarks>
+    public static int ObjectsInOneUpdate = 10;
 
     // this is called by Update() and in Unity that means it's single threaded.
     public void RunViewUpdate()
@@ -3825,11 +3832,22 @@ internal class NetworkingPeer : LoadBalancingPeer, IPhotonPeerListener
          *  [(byte)0] = PhotonNetwork.ServerTimestamp;
          *  [(byte)1] = currentLevelPrefix;  OPTIONAL!
          *
-         *  [(short)10] = data 1
-         *  [(short)11] = data 2 ...
+         *  [(byte)10] = data 1
+         *  [(byte)11] = data 2 ...
+         *
+         *  We only combine updates for XY objects into one RaiseEvent to avoid fragmentation
          */
 
         int countOfUpdatesToSend = 0;
+
+
+        // we got updates to send. every group is send it's own message and unreliable and reliable are split as well
+        RaiseEventOptions options = new RaiseEventOptions();
+        #if PHOTON_DEVELOP
+        options.Receivers = ReceiverGroup.All;
+        #endif
+
+
         foreach (PhotonView view in this.photonViewList.Values)
         {
             // a client only sends updates for active, synchronized PhotonViews that are under it's control (isMine)
@@ -3857,12 +3875,29 @@ internal class NetworkingPeer : LoadBalancingPeer, IPhotonPeerListener
                 bool found = this.dataPerGroupReliable.TryGetValue(view.group, out groupHashtable);
                 if (!found)
                 {
-                    groupHashtable = new Hashtable(10);
+                    groupHashtable = new Hashtable(NetworkingPeer.ObjectsInOneUpdate);
                     this.dataPerGroupReliable[view.group] = groupHashtable;
                 }
 
-                groupHashtable.Add((short)(groupHashtable.Count+10), evData);
+                groupHashtable.Add((byte)(groupHashtable.Count+10), evData);
                 countOfUpdatesToSend++;
+
+                // if any group has XY elements, we should send it right away (to avoid bigger messages which need fragmentation and reliable transfer).
+                if (groupHashtable.Count >= NetworkingPeer.ObjectsInOneUpdate)
+                {
+                    countOfUpdatesToSend -= groupHashtable.Count;
+
+                    options.InterestGroup = (byte)view.group;
+                    groupHashtable[(byte)0] = PhotonNetwork.ServerTimestamp;
+                    if (this.currentLevelPrefix >= 0)
+                    {
+                        groupHashtable[(byte)1] = this.currentLevelPrefix;
+                    }
+
+                    this.OpRaiseEvent(PunEvent.SendSerializeReliable, groupHashtable, true, options);
+                    //Debug.Log("SendSerializeReliable (10) " + PhotonNetwork.networkingPeer.ByteCountLastOperation);
+                    groupHashtable.Clear();
+                }
             }
             else
             {
@@ -3870,12 +3905,29 @@ internal class NetworkingPeer : LoadBalancingPeer, IPhotonPeerListener
                 bool found = this.dataPerGroupUnreliable.TryGetValue(view.group, out groupHashtable);
                 if (!found)
                 {
-                    groupHashtable = new Hashtable(10);
+                    groupHashtable = new Hashtable(NetworkingPeer.ObjectsInOneUpdate);
                     this.dataPerGroupUnreliable[view.group] = groupHashtable;
                 }
 
-                groupHashtable.Add((short)(groupHashtable.Count+10), evData);
+                groupHashtable.Add((byte)(groupHashtable.Count+10), evData);
                 countOfUpdatesToSend++;
+
+                // if any group has XY elements, we should send it right away (to avoid bigger messages which need fragmentation and reliable transfer).
+                if (groupHashtable.Count >= NetworkingPeer.ObjectsInOneUpdate)
+                {
+                    countOfUpdatesToSend -= groupHashtable.Count;
+
+                    options.InterestGroup = (byte)view.group;
+                    groupHashtable[(byte)0] = PhotonNetwork.ServerTimestamp;
+                    if (this.currentLevelPrefix >= 0)
+                    {
+                        groupHashtable[(byte)1] = this.currentLevelPrefix;
+                    }
+
+                    this.OpRaiseEvent(PunEvent.SendSerialize, groupHashtable, false, options);
+                    groupHashtable.Clear();
+                    //Debug.Log("SendSerializeUnreliable (10) " + PhotonNetwork.networkingPeer.ByteCountLastOperation);
+                }
             }
         }   // all views serialized
 
@@ -3886,12 +3938,6 @@ internal class NetworkingPeer : LoadBalancingPeer, IPhotonPeerListener
             return;
         }
 
-
-        // we got updates to send. every group is send it's own message and unreliable and reliable are split as well
-        RaiseEventOptions options = new RaiseEventOptions();
-        #if PHOTON_DEVELOP
-        options.Receivers = ReceiverGroup.All;
-        #endif
 
         foreach (int groupId in this.dataPerGroupReliable.Keys)
         {
@@ -4054,7 +4100,7 @@ internal class NetworkingPeer : LoadBalancingPeer, IPhotonPeerListener
             view.lastOnSerializeDataReceived = uncompressed;
             data = uncompressed;
         }
-		
+
         // This is when joining late to assign ownership to the sender
         // this has nothing to do with reading the actual synchronization update.
         // We don't do anything is OwnerShip Was Touched, which means we got the infos already. We only possibly act if ownership was never transfered.
@@ -4062,10 +4108,10 @@ internal class NetworkingPeer : LoadBalancingPeer, IPhotonPeerListener
 		if (sender.ID != view.ownerId && (!view.OwnerShipWasTransfered || view.ownerId == 0) )
         {
             // obviously the owner changed and we didn't yet notice.
-            Debug.Log("Adjusting owner to sender of updates. From: " + view.ownerId + " to: " + sender.ID);
+            //Debug.Log("Adjusting owner to sender of updates. From: " + view.ownerId + " to: " + sender.ID);
             view.ownerId = sender.ID;
         }
-		
+
         this.readStream.SetReadStream(data, 3);
         PhotonMessageInfo info = new PhotonMessageInfo(sender, networkTime, view);
 

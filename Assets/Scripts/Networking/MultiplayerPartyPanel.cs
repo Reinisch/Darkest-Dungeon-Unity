@@ -70,7 +70,7 @@ public class MultiplayerPartyPanel : MonoBehaviour
         int currentIndex = DarkestPhotonLauncher.Instanse.HeroPool.IndexOf(currentHero);
 
         int heroSeed = GetInstanceID() + System.DateTime.Now.Millisecond + (int)System.DateTime.Now.Ticks;
-        Random.InitState(heroSeed);
+        RandomSolver.SetRandomSeed(heroSeed);
 
         DarkestPhotonLauncher.Instanse.HeroSeeds[currentIndex] = heroSeed;
         DarkestPhotonLauncher.Instanse.HeroPool[currentIndex] = new Hero(currentHero.ClassStringId, currentHero.Name);

@@ -1069,7 +1069,7 @@ public class SummonMonstersEffect : SubEffect
             bool rollInitiative = SummonRollInitiatives.Count > 0 ? true : false;
             if (SummonRanks.Count > 0)
                 RaidSceneManager.BattleGround.SummonUnit(summonData, summonObject, SummonRanks[summonIndex].
-                    Ranks[UnityEngine.Random.Range(0, SummonRanks[summonIndex].Ranks.Count)], rollInitiative, CanSpawnLoot);
+                    Ranks[RandomSolver.Next(SummonRanks[summonIndex].Ranks.Count)], rollInitiative, CanSpawnLoot);
             else
                 RaidSceneManager.BattleGround.SummonUnit(summonData, summonObject, 1, rollInitiative, CanSpawnLoot);
         }
@@ -3251,7 +3251,7 @@ public class ShuffleTargetEffect : SubEffect
             foreach (var unit in shuffleUnits)
             {
                 var shuffleTargets = unit.Party.Units.FindAll(shuffle => shuffle != unit);
-                var shuffleRoll = shuffleTargets[UnityEngine.Random.Range(0, shuffleTargets.Count)];
+                var shuffleRoll = shuffleTargets[RandomSolver.Next(shuffleTargets.Count)];
 
                 if (shuffleRoll.Rank < unit.Rank)
                     unit.Pull(unit.Rank - shuffleRoll.Rank);
@@ -3274,7 +3274,7 @@ public class ShuffleTargetEffect : SubEffect
             if (RandomSolver.CheckSuccess(moveChance))
             {
                 var shuffleTargets = target.Party.Units.FindAll(unit => unit != target);
-                var shuffleRoll = shuffleTargets[UnityEngine.Random.Range(0, shuffleTargets.Count)];
+                var shuffleRoll = shuffleTargets[RandomSolver.Next(shuffleTargets.Count)];
 
                 if (shuffleRoll.Rank < target.Rank)
                     target.Pull(target.Rank - shuffleRoll.Rank);
@@ -3309,7 +3309,7 @@ public class ShuffleTargetEffect : SubEffect
                 if (RandomSolver.CheckSuccess(moveChance))
                 {
                     var shuffleTargets = unit.Party.Units.FindAll(shuffle => shuffle != unit);
-                    var shuffleRoll = shuffleTargets[UnityEngine.Random.Range(0, shuffleTargets.Count)];
+                    var shuffleRoll = shuffleTargets[RandomSolver.Next(shuffleTargets.Count)];
 
                     if (shuffleRoll.Rank < unit.Rank)
                         unit.Pull(unit.Rank - shuffleRoll.Rank);
@@ -3333,7 +3333,7 @@ public class ShuffleTargetEffect : SubEffect
             if (RandomSolver.CheckSuccess(moveChance))
             {
                 var shuffleTargets = target.Party.Units.FindAll(unit => unit != target);
-                var shuffleRoll = shuffleTargets[UnityEngine.Random.Range(0, shuffleTargets.Count)];
+                var shuffleRoll = shuffleTargets[RandomSolver.Next(shuffleTargets.Count)];
 
                 if (shuffleRoll.Rank < target.Rank)
                     target.Pull(target.Rank - shuffleRoll.Rank);

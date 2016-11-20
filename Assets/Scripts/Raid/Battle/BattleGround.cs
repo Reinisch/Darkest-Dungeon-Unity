@@ -175,8 +175,7 @@ public class BattleGround : MonoBehaviour
     {
         if(CombatIds.Count > 0)
         {
-            int index = Random.Range(0, CombatIds.Count);
-            int newId = CombatIds[index];
+            int newId = CombatIds[0];
             CombatIds.Remove(newId);
             return newId;
         }

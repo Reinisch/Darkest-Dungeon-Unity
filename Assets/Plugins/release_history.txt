@@ -8,11 +8,16 @@ https://doc.photonengine.com
 http://forum.photonengine.com
  
 
+*** Version 4.1.1.5 (18. November 2016 - rev3775)
+Internal:
+    Fixed: Photon-init request is now created by the factory method CreateAndEnqueueCommand to make sure we fragment the init if needed (for small MTU and more init-data).
+    Fixed: Bug in TrafficStatsReset method, which caused the averaged stats to go up infinitely after a reset.
+
+
 *** Version 4.1.1.4 (21. October 2016 - rev3737)
     Internal: Added ArraySegment<T> support for byte[]. This way, we can internally reuse more memory.
     Changed: Implementations of PeerBase Disconnect() are now using EnqueueStatusCallback(StatusCode.Disconnect) to delay the "callback". That enables any thread to call Disconnect() while the status change correctly gets called in the main thread via DispatchIncomingCommands().
     Changed: When a SocketImplementationConfig for UDP is set, this will be used via Activator.CreateInstance(socketImplementation, this).
-
 
 *** Version 4.1.1.3 (20. September 2016 - rev3673)
     Changed: NETFX_CORE implementation for UDP. This no longer attempts to detach the stream after every single Send, which caused issues when connecting and getting a lot of messages.

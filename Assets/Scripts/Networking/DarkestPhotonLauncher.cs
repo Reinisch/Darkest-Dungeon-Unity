@@ -136,15 +136,15 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
         {
             for (int i = 0; i < 4; i++)
             {
-                string generatedName = LocalizationManager.GetString("hero_name_" + Random.Range(0, 556).ToString());
+                string generatedName = LocalizationManager.GetString("hero_name_" + RandomSolver.Next(0, 556).ToString());
                 int heroSeed = GetInstanceID() + System.DateTime.Now.Millisecond + (int)System.DateTime.Now.Ticks + i + HeroPool.Count;
-                Random.InitState(heroSeed);
+                RandomSolver.SetRandomSeed(heroSeed);
                 HeroSeeds.Add(heroSeed);
                 HeroPool.Add(new Hero(heroClass.StringId, generatedName));
             }
         }
 
-        var initialParty = new List<Hero>(HeroPool).OrderBy(x => Random.value).Take(4).ToList();
+        var initialParty = new List<Hero>(HeroPool).OrderBy(x => RandomSolver.NextDouble()).Take(4).ToList();
         MultiplayerPartyPanel.LoadInitialComposition(initialParty);
 
         launcherPanel.progressLabel.text = "Disconnected!";

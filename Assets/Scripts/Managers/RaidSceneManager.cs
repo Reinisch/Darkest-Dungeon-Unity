@@ -2899,7 +2899,7 @@ public class RaidSceneManager : MonoBehaviour
                         tempList.Clear();
                         tempList.AddRange(actionUnit.Party.Units);
                         tempList.Remove(actionUnit);
-                        var barkTarget = tempList[Random.Range(0, tempList.Count)];
+                        var barkTarget = tempList[RandomSolver.Next(tempList.Count)];
                         tempList.Clear();
                         for (int i = 0; i < barkStressEffect.SubEffects.Count; i++)
                             barkStressEffect.SubEffects[i].Apply(actionUnit, barkTarget, barkStressEffect);
@@ -2915,7 +2915,7 @@ public class RaidSceneManager : MonoBehaviour
                         tempList.Clear();
                         tempList.AddRange(actionUnit.Party.Units);
                         tempList.Remove(actionUnit);
-                        var buffAllyTarget = tempList[Random.Range(0, tempList.Count)];
+                        var buffAllyTarget = tempList[RandomSolver.Next(tempList.Count)];
                         tempList.Clear();
                         for (int i = 0; i < buffAllyEffect.SubEffects.Count; i++)
                             buffAllyEffect.SubEffects[i].Apply(actionUnit, buffAllyTarget, buffAllyEffect);
@@ -2965,7 +2965,7 @@ public class RaidSceneManager : MonoBehaviour
                         yield return new WaitForSeconds(1f);
                         FMODUnity.RuntimeManager.PlayOneShot("event:/general/party/combat_move");
                         yield return new WaitForSeconds(0.1f);
-                        var shuffleRoll = tempList[Random.Range(0, tempList.Count)];
+                        var shuffleRoll = tempList[RandomSolver.Next(tempList.Count)];
                         tempList.Clear();
 
                         if (shuffleRoll.Rank < actionUnit.Rank)
@@ -3947,12 +3947,12 @@ public class RaidSceneManager : MonoBehaviour
             if (SceneState == DungeonSceneState.Hall)
             {
                 HallwayView.CurrentSector.SetInside(false);
-                currentEvent = RoomLoadingEvent(targetRooms[Random.Range(0, targetRooms.Count)],
+                currentEvent = RoomLoadingEvent(targetRooms[RandomSolver.Next(targetRooms.Count)],
                     RoomTransitionType.Teleport, HallwayView.CurrentSector);
             }
             else if (SceneState == DungeonSceneState.Room)
             {
-                currentEvent = RoomLoadingEvent(targetRooms[Random.Range(0, targetRooms.Count)],
+                currentEvent = RoomLoadingEvent(targetRooms[RandomSolver.Next(targetRooms.Count)],
                     RoomTransitionType.Teleport);
             }
 #region Remove Combat States and Restrictions
@@ -4201,7 +4201,7 @@ public class RaidSceneManager : MonoBehaviour
                                     tempList.Clear();
                                     tempList.AddRange(skillEntry.Target.Party.Units);
                                     tempList.Remove(skillEntry.Target);
-                                    var barkTarget = tempList[Random.Range(0, tempList.Count)];
+                                    var barkTarget = tempList[RandomSolver.Next(tempList.Count)];
                                     tempList.Clear();
                                     for (int i = 0; i < barkStressEffect.SubEffects.Count; i++)
                                         barkStressEffect.SubEffects[i].Apply(skillEntry.Target, barkTarget, barkStressEffect);
@@ -4226,7 +4226,7 @@ public class RaidSceneManager : MonoBehaviour
                                     tempList.Clear();
                                     tempList.AddRange(skillEntry.Target.Party.Units);
                                     tempList.Remove(skillEntry.Target);
-                                    var barkTarget = tempList[Random.Range(0, tempList.Count)];
+                                    var barkTarget = tempList[RandomSolver.Next(tempList.Count)];
                                     tempList.Clear();
                                     for (int i = 0; i < barkStressEffect.SubEffects.Count; i++)
                                         barkStressEffect.SubEffects[i].Apply(skillEntry.Target, barkTarget, barkStressEffect);
@@ -4936,7 +4936,7 @@ public class RaidSceneManager : MonoBehaviour
             bool isVirtue = RandomSolver.CheckSuccess(virtueChance);
             var availableTraits = isVirtue ? DarkestDungeonManager.Data.Traits.FindAll(trait => trait.Type == OverstressType.Virtue) :
                 DarkestDungeonManager.Data.Traits.FindAll(trait => trait.Type == OverstressType.Affliction);
-            Trait resolveTrait = availableTraits[Random.Range(0, availableTraits.Count)];
+            Trait resolveTrait = availableTraits[RandomSolver.Next(availableTraits.Count)];
 
             if (!isVirtue)
                 for (int i = 0; i < Formations.heroes.party.Units.Count; i++)
@@ -4998,7 +4998,7 @@ public class RaidSceneManager : MonoBehaviour
             DungeonCamera.blur.enabled = false;
             yield return new WaitForSeconds(0.15f);
             if (isVirtue)
-                resolveUnit.Character.Stress.CurrentValue = Random.Range(20, 40);
+                resolveUnit.Character.Stress.CurrentValue = RandomSolver.Next(20, 40);
             resolveUnit.OverlaySlot.UpdateOverlay();
 
             RaidEvents.HideAnnouncment();
@@ -5174,7 +5174,7 @@ public class RaidSceneManager : MonoBehaviour
                         tempList.Clear();
                         tempList.AddRange(Formations.heroes.party.Units);
                         tempList.Remove(heroBarker);
-                        var barkTarget = tempList[Random.Range(0, tempList.Count)];
+                        var barkTarget = tempList[RandomSolver.Next(tempList.Count)];
                         tempList.Clear();
                         for (int i = 0; i < barkStressEffect.SubEffects.Count; i++)
                             barkStressEffect.SubEffects[i].Apply(heroBarker, barkTarget, barkStressEffect);
@@ -5845,7 +5845,7 @@ public class RaidSceneManager : MonoBehaviour
             {
                 unit.SetSurprised(true);
                 var shuffleTargets = unit.Party.Units.FindAll(shuffle => shuffle != unit);
-                var shuffleRoll = shuffleTargets[Random.Range(0, shuffleTargets.Count)];
+                var shuffleRoll = shuffleTargets[RandomSolver.Next(shuffleTargets.Count)];
 
                 if (shuffleRoll.Rank < unit.Rank)
                     unit.Pull(unit.Rank - shuffleRoll.Rank);

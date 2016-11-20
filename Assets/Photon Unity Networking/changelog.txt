@@ -1,8 +1,20 @@
+v1.79 (18. November 2016)
+Changed: PUN will no longer aggregate the data from ALL objects in a group into ONE message. Instead, a maximum of 10 objects will be sent together. The idea is to avoid huge messages, which need fragmentation. Fragmentation needs to be avoided, cause fragments are always reliable (and you basically lose "unreliable" updates when you send too much). There is a new variable for this: NetworkingPeer.ObjectsInOneUpdate.
+Changed: As we send a max of 10 gameobject-updates in one message, we can use a byte as type for their ID (instead of short). This minimally saves data but makes this PUN incompatible with older builds. We separate PUN versions for you so there won't be a clash. PhotonNetwork.versionPUN is inserted into your Game Version to separate players.
+Updated: PunTeams to keep PlayerPerTeams Listing up to date.
+Updated: PlayerRoomIndexing improved consistency across various network contexts.
+Fixed: SocketWebTcp for WebGL was time scale dependant and would stop receiving events when Time.TimeScale = 0.
+Updated: DemoChat UI reworked to match demo Hub look and feel.
+Updated: DemoHub pixel Perfect Canvas fix.
+Added: Two more regions: Korea, Seoul (kr) and India, Chennai (in). If you're using the hosting option "Best Region", you may want to update the configuration in your PhotonServerSettings file.
+
+
 v1.78 (1. November 2016)
 Fixed: NetworkingPeer ownership assignment on late join when MasterClient is involved.
 Fixed: SetTeam() (in PunTeam) now assigns the team to the target player, instead of the local one. You could use the extension method on any PhotonPlayer (not only on yours).
 Fixed: PlayerVariable.cs material assignment to take MasterClient as a special case and avoid color mixup.
-
+New: PlayerRoomIndexing component in Utilities to have simple indexing of Players inside a room. Used in ColorPerPlayer script.
+Updated: PunTeams more consistent for PlayersPerTeam content, and now featuring a custom inspector to show Teams assignment to each Player.
 
 v1.77 (24. October 2016)
 Changed: Transfer Ownership requests are now handled a little different. For "takeover", any player's request is successful if taking from the correct, current owner OR when taking from the master client (even though the owner is technically the room). E.g.: You can takeover from actor 1, even when clients registered the object's owner as 0 (null is used for "the room", which is equivalent to "belongs to master client").

@@ -10,13 +10,9 @@ public class RaidParty
     public RaidParty(PhotonPlayer photonPlayer)
     {
         List<Hero> MultiplayerHeroes = new List<Hero>();
-        Random.InitState((int)photonPlayer.customProperties["HS1"]);
         MultiplayerHeroes.Add(new Hero(1, photonPlayer));
-        Random.InitState((int)photonPlayer.customProperties["HS2"]);
         MultiplayerHeroes.Add(new Hero(2, photonPlayer));
-        Random.InitState((int)photonPlayer.customProperties["HS3"]);
         MultiplayerHeroes.Add(new Hero(3, photonPlayer));
-        Random.InitState((int)photonPlayer.customProperties["HS4"]);
         MultiplayerHeroes.Add(new Hero(4, photonPlayer));
 
         HeroInfo = new List<RaidHeroInfo>();

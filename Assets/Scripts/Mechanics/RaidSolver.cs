@@ -35,7 +35,7 @@ public static class RaidSolver
                     if (journalEntry.SpecificId.HasValue)
                         dataJournal.Id = journalEntry.SpecificId.Value.ToString();
                     else
-                        dataJournal.Id = Random.Range(journalEntry.MinIndex, journalEntry.MaxIndex + 1).ToString();
+                        dataJournal.Id = RandomSolver.Next(journalEntry.MinIndex, journalEntry.MaxIndex + 1).ToString();
                     dataJournal.Amount = 1;
                     lootItems.Add(dataJournal);
                     break;
@@ -44,7 +44,7 @@ public static class RaidSolver
                     var trinketList = DarkestDungeonManager.Data.Items["trinket"].Values.ToList().
                         FindAll(trinket => ((Trinket)trinket).RarityId == trinketEntry.Rarity);
 
-                    Trinket trinketItem = (Trinket)trinketList[Random.Range(0, trinketList.Count)];
+                    Trinket trinketItem = (Trinket)trinketList[RandomSolver.Next(trinketList.Count)];
                     ItemDefinition trinketDef = new ItemDefinition();
                     trinketDef.Type = trinketItem.Type;
                     trinketDef.Id = trinketItem.Id;
@@ -82,7 +82,7 @@ public static class RaidSolver
                         if (journalEntry.SpecificId.HasValue)
                             dataJournal.Id = journalEntry.SpecificId.Value.ToString();
                         else
-                            dataJournal.Id = Random.Range(journalEntry.MinIndex, journalEntry.MaxIndex + 1).ToString();
+                            dataJournal.Id = RandomSolver.Next(journalEntry.MinIndex, journalEntry.MaxIndex + 1).ToString();
                         dataJournal.Amount = 1;
                         lootItems.Add(dataJournal);
                         break;
@@ -91,7 +91,7 @@ public static class RaidSolver
                         var trinketList = DarkestDungeonManager.Data.Items["trinket"].Values.ToList().
                             FindAll(trinket => ((Trinket)trinket).RarityId == trinketEntry.Rarity);
 
-                        Trinket trinketItem = (Trinket)trinketList[Random.Range(0, trinketList.Count)];
+                        Trinket trinketItem = (Trinket)trinketList[RandomSolver.Next(trinketList.Count)];
                         ItemDefinition trinketDef = new ItemDefinition();
                         trinketDef.Type = trinketItem.Type;
                         trinketDef.Id = trinketItem.Id;
@@ -128,7 +128,7 @@ public static class RaidSolver
                     if(journalEntry.SpecificId.HasValue)
                         dataJournal.Id = journalEntry.SpecificId.Value.ToString();
                     else
-                        dataJournal.Id = Random.Range(journalEntry.MinIndex, journalEntry.MaxIndex + 1).ToString();
+                        dataJournal.Id = RandomSolver.Next(journalEntry.MinIndex, journalEntry.MaxIndex + 1).ToString();
                     dataJournal.Amount = 1;
                     lootItems.Add(dataJournal);
                     break;
@@ -137,7 +137,7 @@ public static class RaidSolver
                     var trinketList = DarkestDungeonManager.Data.Items["trinket"].Values.ToList().
                         FindAll(trinket => ((Trinket)trinket).RarityId == trinketEntry.Rarity);
 
-                    Trinket trinketItem = (Trinket)trinketList[Random.Range(0, trinketList.Count)];
+                    Trinket trinketItem = (Trinket)trinketList[RandomSolver.Next(trinketList.Count)];
                     ItemDefinition trinketDef = new ItemDefinition();
                     trinketDef.Type = trinketItem.Type;
                     trinketDef.Id = trinketItem.Id;

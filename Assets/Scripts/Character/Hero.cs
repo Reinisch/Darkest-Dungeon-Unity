@@ -299,7 +299,7 @@ public class Hero : Character
             }
             else
             {
-                int replaceIndex = Random.Range(0, diseases.Count);
+                int replaceIndex = RandomSolver.Next(diseases.Count);
                 RevertQuirk(diseases[replaceIndex].Quirk);
                 diseases[replaceIndex].ReplaceBy(newQuirk);
                 ApplyQuirk(newQuirk);
@@ -320,7 +320,7 @@ public class Hero : Character
                 var replacements = quirkGroup.FindAll(quirkInfo => !quirkInfo.IsLocked);
                 if (replacements.Count > 0)
                 {
-                    int replaceIndex = Random.Range(0, replacements.Count);
+                    int replaceIndex = RandomSolver.Next(replacements.Count);
                     RevertQuirk(replacements[replaceIndex].Quirk);
                     replacements[replaceIndex].ReplaceBy(newQuirk);
                     ApplyQuirk(newQuirk);
@@ -349,7 +349,7 @@ public class Hero : Character
                 quirkData.TrueForAll(quirkInfo => !quirkInfo.Quirk.IncompatibleQuirks.Contains(newQuirk.Id)) &&
                 quirkData.Find(quirkInfo => quirkInfo.Quirk == newQuirk) == null);
 
-        var addedQuirk = availableQuirks[Random.Range(0, availableQuirks.Count)];
+        var addedQuirk = availableQuirks[RandomSolver.Next(availableQuirks.Count)];
         if (quirkGroup.Count < 5)
         {
             quirkData.Add(new QuirkInfo(addedQuirk, false, 1, true));
@@ -360,7 +360,7 @@ public class Hero : Character
             var replacements = quirkGroup.FindAll(quirkInfo => !quirkInfo.IsLocked);
             if (replacements.Count > 0)
             {
-                int replaceIndex = Random.Range(0, replacements.Count);
+                int replaceIndex = RandomSolver.Next(replacements.Count);
                 RevertQuirk(replacements[replaceIndex].Quirk);
                 replacements[replaceIndex].ReplaceBy(addedQuirk);
                 ApplyQuirk(addedQuirk);
@@ -376,7 +376,7 @@ public class Hero : Character
                 !quirkInfo.Quirk.IncompatibleQuirks.Contains(newQuirk.Id)) &&
                 quirkData.Find(quirkInfo => quirkInfo.Quirk == newQuirk) == null);
 
-        var addedQuirk = availableQuirks[Random.Range(0, availableQuirks.Count)];
+        var addedQuirk = availableQuirks[RandomSolver.Next(availableQuirks.Count)];
         if (quirkGroup.Count < 5)
         {
             quirkData.Add(new QuirkInfo(addedQuirk, false, 1, true));
@@ -387,7 +387,7 @@ public class Hero : Character
             var replacements = quirkGroup.FindAll(quirkInfo => !quirkInfo.IsLocked);
             if (replacements.Count > 0)
             {
-                int replaceIndex = Random.Range(0, replacements.Count);
+                int replaceIndex = RandomSolver.Next(replacements.Count);
                 RevertQuirk(replacements[replaceIndex].Quirk);
                 replacements[replaceIndex].ReplaceBy(addedQuirk);
                 ApplyQuirk(addedQuirk);
@@ -401,7 +401,7 @@ public class Hero : Character
                 quirkData.TrueForAll(quirkInfo => !quirkInfo.Quirk.IncompatibleQuirks.Contains(newQuirk.Id)) &&
                 quirkData.Find(quirkInfo => quirkInfo.Quirk == newQuirk) == null);
 
-        var rolledDisease = availableDiseases[Random.Range(0, availableDiseases.Count)];
+        var rolledDisease = availableDiseases[RandomSolver.Next(availableDiseases.Count)];
 
         var diseases = quirkData.FindAll(quirkInfo => quirkInfo.Quirk.IsDisease);
         if (diseases.Count < 3)
@@ -411,7 +411,7 @@ public class Hero : Character
         }
         else
         {
-            int replaceIndex = Random.Range(0, diseases.Count);
+            int replaceIndex = RandomSolver.Next(diseases.Count);
             RevertQuirk(diseases[replaceIndex].Quirk);
             diseases[replaceIndex].ReplaceBy(rolledDisease);
             ApplyQuirk(rolledDisease);
@@ -434,7 +434,7 @@ public class Hero : Character
         var positiveQuirks = quirkData.FindAll(quirkInfo => quirkInfo.Quirk.IsPositive && !quirkInfo.IsLocked);
         if(positiveQuirks.Count > 0)
         {
-            var removedQuirk = positiveQuirks[Random.Range(0, positiveQuirks.Count)];
+            var removedQuirk = positiveQuirks[RandomSolver.Next(positiveQuirks.Count)];
             RevertQuirk(removedQuirk.Quirk);
             quirkData.Remove(removedQuirk);
             return removedQuirk.Quirk;
@@ -450,7 +450,7 @@ public class Hero : Character
 
         if (negativeQuirks.Count > 0)
         {
-            var removedQuirk = negativeQuirks[Random.Range(0, negativeQuirks.Count)];
+            var removedQuirk = negativeQuirks[RandomSolver.Next(negativeQuirks.Count)];
             RevertQuirk(removedQuirk.Quirk);
             quirkData.Remove(removedQuirk);
             return removedQuirk.Quirk;
@@ -463,7 +463,7 @@ public class Hero : Character
 
         if (diseases.Count > 0)
         {
-            var removedDisease = diseases[Random.Range(0, diseases.Count)];
+            var removedDisease = diseases[RandomSolver.Next(diseases.Count)];
             RevertQuirk(removedDisease.Quirk);
             quirkData.Remove(removedDisease);
             return removedDisease.Quirk;
@@ -567,7 +567,7 @@ public class Hero : Character
     public Hero(int heroIndex, PhotonPlayer player)
         : base(DarkestDungeonManager.Data.HeroClasses[(string)player.customProperties["HC" + heroIndex.ToString()]])
     {
-        Random.InitState((int)player.customProperties["HS" + heroIndex.ToString()]);
+        RandomSolver.SetRandomSeed((int)player.customProperties["HS" + heroIndex.ToString()]);
 
         HeroName = (string)player.customProperties["HN" + heroIndex.ToString()];
         ClassStringId = (string)player.customProperties["HC" + heroIndex.ToString()];
@@ -587,25 +587,25 @@ public class Hero : Character
         quirkData = new List<QuirkInfo>();
         #region Quirk Generation
         quirkData = new List<QuirkInfo>();
-        int positiveQuirkNumber = Random.Range(HeroClass.Generation.NumberOfPositiveQuirksMin,
+        int positiveQuirkNumber = RandomSolver.Next(HeroClass.Generation.NumberOfPositiveQuirksMin,
             HeroClass.Generation.NumberOfPositiveQuirksMax + 1);
         for (int i = 0; i < positiveQuirkNumber; i++)
         {
             var availableQuirks = DarkestDungeonManager.Data.Quirks.Values.ToList().FindAll(newQuirk => newQuirk.IsPositive &&
                 quirkData.TrueForAll(quirkInfo => !quirkInfo.Quirk.IncompatibleQuirks.Contains(newQuirk.Id)) &&
                 quirkData.Find(quirkInfo => quirkInfo.Quirk == newQuirk) == null);
-            var availableQuirk = availableQuirks[Random.Range(0, availableQuirks.Count)];
+            var availableQuirk = availableQuirks[RandomSolver.Next(availableQuirks.Count)];
             quirkData.Add(new QuirkInfo(availableQuirk, false, 1, false));
             ApplyQuirk(availableQuirk);
         }
-        int negativeQuirkNumber = Random.Range(HeroClass.Generation.NumberOfNegativeQuirksMin,
+        int negativeQuirkNumber = RandomSolver.Next(HeroClass.Generation.NumberOfNegativeQuirksMin,
             HeroClass.Generation.NumberOfNegativeQuirksMax + 1);
         for (int i = 0; i < negativeQuirkNumber; i++)
         {
             var availableQuirks = DarkestDungeonManager.Data.Quirks.Values.ToList().FindAll(newQuirk => !newQuirk.IsPositive &&
                 !newQuirk.IsDisease && quirkData.TrueForAll(quirkInfo => !quirkInfo.Quirk.IncompatibleQuirks.Contains(newQuirk.Id)) &&
                 quirkData.Find(quirkInfo => quirkInfo.Quirk == newQuirk) == null);
-            var availableQuirk = availableQuirks[Random.Range(0, availableQuirks.Count)];
+            var availableQuirk = availableQuirks[RandomSolver.Next(availableQuirks.Count)];
             quirkData.Add(new QuirkInfo(availableQuirk, false, 1, false));
             ApplyQuirk(availableQuirk);
         }
@@ -651,25 +651,25 @@ public class Hero : Character
         quirkData = new List<QuirkInfo>();
         #region Quirk Generation
         quirkData = new List<QuirkInfo>();
-        int positiveQuirkNumber = Random.Range(HeroClass.Generation.NumberOfPositiveQuirksMin,
+        int positiveQuirkNumber = RandomSolver.Next(HeroClass.Generation.NumberOfPositiveQuirksMin,
             HeroClass.Generation.NumberOfPositiveQuirksMax + 1);
         for (int i = 0; i < positiveQuirkNumber; i++)
         {
             var availableQuirks = DarkestDungeonManager.Data.Quirks.Values.ToList().FindAll(newQuirk => newQuirk.IsPositive &&
                 quirkData.TrueForAll(quirkInfo => !quirkInfo.Quirk.IncompatibleQuirks.Contains(newQuirk.Id)) &&
                 quirkData.Find(quirkInfo => quirkInfo.Quirk == newQuirk) == null);
-            var availableQuirk = availableQuirks[Random.Range(0, availableQuirks.Count)];
+            var availableQuirk = availableQuirks[RandomSolver.Next(availableQuirks.Count)];
             quirkData.Add(new QuirkInfo(availableQuirk, false, 1, false));
             ApplyQuirk(availableQuirk);
         }
-        int negativeQuirkNumber = Random.Range(HeroClass.Generation.NumberOfNegativeQuirksMin,
+        int negativeQuirkNumber = RandomSolver.Next(HeroClass.Generation.NumberOfNegativeQuirksMin,
             HeroClass.Generation.NumberOfNegativeQuirksMax + 1);
         for (int i = 0; i < negativeQuirkNumber; i++)
         {
             var availableQuirks = DarkestDungeonManager.Data.Quirks.Values.ToList().FindAll(newQuirk => !newQuirk.IsPositive &&
                 !newQuirk.IsDisease && quirkData.TrueForAll(quirkInfo => !quirkInfo.Quirk.IncompatibleQuirks.Contains(newQuirk.Id)) &&
                 quirkData.Find(quirkInfo => quirkInfo.Quirk == newQuirk) == null);
-            var availableQuirk = availableQuirks[Random.Range(0, availableQuirks.Count)];
+            var availableQuirk = availableQuirks[RandomSolver.Next(availableQuirks.Count)];
             quirkData.Add(new QuirkInfo(availableQuirk, false, 1, false));
             ApplyQuirk(availableQuirk);
         }
@@ -686,7 +686,7 @@ public class Hero : Character
         int selectedSkills = Mathf.Clamp(HeroClass.NumberOfSelectedCombatSkills, 0, selectionList.Count);
         for (int i = 0; i < selectedSkills; i++)
         {
-            int selectedItem = Random.Range(0, selectionList.Count);
+            int selectedItem = RandomSolver.Next(selectionList.Count);
             SelectedCombatSkills.Add(selectionList[selectedItem]);
             selectionList.RemoveAt(selectedItem);
         }
@@ -718,25 +718,25 @@ public class Hero : Character
 
         #region Quirk Generation
         quirkData = new List<QuirkInfo>();
-        int positiveQuirkNumber = Random.Range(HeroClass.Generation.NumberOfPositiveQuirksMin,
+        int positiveQuirkNumber = RandomSolver.Next(HeroClass.Generation.NumberOfPositiveQuirksMin,
             HeroClass.Generation.NumberOfPositiveQuirksMax + 1);
         for (int i = 0; i < positiveQuirkNumber ; i++ )
         {
             var availableQuirks = DarkestDungeonManager.Data.Quirks.Values.ToList().FindAll(newQuirk => newQuirk.IsPositive &&
                 quirkData.TrueForAll(quirkInfo => !quirkInfo.Quirk.IncompatibleQuirks.Contains(newQuirk.Id)) &&
                 quirkData.Find(quirkInfo => quirkInfo.Quirk == newQuirk) == null);
-            var availableQuirk = availableQuirks[Random.Range(0, availableQuirks.Count)];
+            var availableQuirk = availableQuirks[RandomSolver.Next(availableQuirks.Count)];
             quirkData.Add(new QuirkInfo(availableQuirk, false, 1, false));
             ApplyQuirk(availableQuirk);
         }
-        int negativeQuirkNumber = Random.Range(HeroClass.Generation.NumberOfNegativeQuirksMin,
+        int negativeQuirkNumber = RandomSolver.Next(HeroClass.Generation.NumberOfNegativeQuirksMin,
             HeroClass.Generation.NumberOfNegativeQuirksMax + 1);
         for (int i = 0; i < negativeQuirkNumber; i++)
         {
             var availableQuirks = DarkestDungeonManager.Data.Quirks.Values.ToList().FindAll(newQuirk => !newQuirk.IsPositive &&
                 !newQuirk.IsDisease && quirkData.TrueForAll(quirkInfo => !quirkInfo.Quirk.IncompatibleQuirks.Contains(newQuirk.Id)) &&
                 quirkData.Find(quirkInfo => quirkInfo.Quirk == newQuirk) == null);
-            var availableQuirk = availableQuirks[Random.Range(0, availableQuirks.Count)];
+            var availableQuirk = availableQuirks[RandomSolver.Next(availableQuirks.Count)];
             quirkData.Add(new QuirkInfo(availableQuirk, false, 1, false));
             ApplyQuirk(availableQuirk);
         }
@@ -756,7 +756,7 @@ public class Hero : Character
 
         for(int i = skillsRequired; i > 0; i--)
         {
-            int generatedIndex = Random.Range(0, availableSkills.Count);
+            int generatedIndex = RandomSolver.Next(availableSkills.Count);
             CurrentCombatSkills[HeroClass.CombatSkills.IndexOf(availableSkills[generatedIndex])] = availableSkills[generatedIndex];
             availableSkills.RemoveAt(generatedIndex);
         }
@@ -767,7 +767,7 @@ public class Hero : Character
         int selectedSkills = Mathf.Clamp(HeroClass.NumberOfSelectedCombatSkills, 0, selectionList.Count);
         for (int i = 0; i < selectedSkills; i++)
         {
-            int selectedItem = Random.Range(0, selectionList.Count);
+            int selectedItem = RandomSolver.Next(selectionList.Count);
             SelectedCombatSkills.Add(selectionList[selectedItem]);
             selectionList.RemoveAt(selectedItem);
         }
@@ -778,7 +778,7 @@ public class Hero : Character
 
         var availableGeneralSkills = HeroClass.CampingSkills.FindAll(skill => skill.Classes.Count > 4);
         int generalSkillsRequired = HeroClass.Generation.NumberOfSharedCampingSkills;
-        foreach(var skill in availableGeneralSkills.OrderBy(x => Random.value)
+        foreach(var skill in availableGeneralSkills.OrderBy(x => RandomSolver.NextDouble())
             .Take(Mathf.Min(generalSkillsRequired, availableGeneralSkills.Count)))
         {
             int skillIndex = HeroClass.CampingSkills.IndexOf(skill);
@@ -787,7 +787,7 @@ public class Hero : Character
         var availableSpecificSkills = HeroClass.CampingSkills.FindAll(skill => skill.Classes.Count <= 4);
         int specificSkillsRequired = HeroClass.Generation.NumberOfSpecificCampingSkills;
 
-        foreach (var skill in availableSpecificSkills.OrderBy(x => Random.value)
+        foreach (var skill in availableSpecificSkills.OrderBy(x => RandomSolver.NextDouble())
             .Take(Mathf.Min(specificSkillsRequired, availableSpecificSkills.Count)))
         {
             int skillIndex = HeroClass.CampingSkills.IndexOf(skill);
@@ -797,7 +797,7 @@ public class Hero : Character
         var availableGeneratedSkills = new List<CampingSkill>(CurrentCampingSkills);
         availableGeneratedSkills.RemoveAll(skill => skill == null);
 
-        SelectedCampingSkills = availableGeneratedSkills.OrderBy(x => Random.value)
+        SelectedCampingSkills = availableGeneratedSkills.OrderBy(x => RandomSolver.NextDouble())
             .Take(Mathf.Min(4, availableGeneratedSkills.Count)).ToList();
         #endregion
     }
@@ -825,25 +825,25 @@ public class Hero : Character
 
         #region Quirk Generation
         quirkData = new List<QuirkInfo>();
-        int positiveQuirkNumber = Random.Range(HeroClass.Generation.NumberOfPositiveQuirksMin,
+        int positiveQuirkNumber = RandomSolver.Next(HeroClass.Generation.NumberOfPositiveQuirksMin,
             HeroClass.Generation.NumberOfPositiveQuirksMax + expUpgrade.ExtraPositiveQuirks + 1);
         for (int i = 0; i < positiveQuirkNumber; i++)
         {
             var availableQuirks = DarkestDungeonManager.Data.Quirks.Values.ToList().FindAll(newQuirk => newQuirk.IsPositive &&
                 quirkData.TrueForAll(quirkInfo => !quirkInfo.Quirk.IncompatibleQuirks.Contains(newQuirk.Id)) &&
                 quirkData.Find(quirkInfo => quirkInfo.Quirk == newQuirk) == null);
-            var availableQuirk = availableQuirks[Random.Range(0, availableQuirks.Count)];
+            var availableQuirk = availableQuirks[RandomSolver.Next(availableQuirks.Count)];
             quirkData.Add(new QuirkInfo(availableQuirk, false, 1, false));
             ApplyQuirk(availableQuirk);
         }
-        int negativeQuirkNumber = Random.Range(HeroClass.Generation.NumberOfNegativeQuirksMin,
+        int negativeQuirkNumber = RandomSolver.Next(HeroClass.Generation.NumberOfNegativeQuirksMin,
             HeroClass.Generation.NumberOfNegativeQuirksMax + expUpgrade.ExtraNegativeQuirks + 1);
         for (int i = 0; i < negativeQuirkNumber; i++)
         {
             var availableQuirks = DarkestDungeonManager.Data.Quirks.Values.ToList().FindAll(newQuirk => !newQuirk.IsPositive &&
                 !newQuirk.IsDisease && quirkData.TrueForAll(quirkInfo => !quirkInfo.Quirk.IncompatibleQuirks.Contains(newQuirk.Id)) &&
                 quirkData.Find(quirkInfo => quirkInfo.Quirk == newQuirk) == null);
-            var availableQuirk = availableQuirks[Random.Range(0, availableQuirks.Count)];
+            var availableQuirk = availableQuirks[RandomSolver.Next(availableQuirks.Count)];
             quirkData.Add(new QuirkInfo(availableQuirk, false, 1, false));
             ApplyQuirk(availableQuirk);
         }
@@ -864,7 +864,7 @@ public class Hero : Character
 
         for (int i = skillsRequired; i > 0; i--)
         {
-            int generatedIndex = Random.Range(0, availableSkills.Count);
+            int generatedIndex = RandomSolver.Next(availableSkills.Count);
             CurrentCombatSkills[HeroClass.CombatSkills.IndexOf(availableSkills[generatedIndex])] = availableSkills[generatedIndex];
             availableSkills.RemoveAt(generatedIndex);
         }
@@ -875,7 +875,7 @@ public class Hero : Character
         int selectedSkills = Mathf.Clamp(HeroClass.NumberOfSelectedCombatSkills, 0, selectionList.Count);
         for (int i = 0; i < selectedSkills; i++)
         {
-            int selectedItem = Random.Range(0, selectionList.Count);
+            int selectedItem = RandomSolver.Next(selectionList.Count);
             SelectedCombatSkills.Add(selectionList[selectedItem]);
             selectionList.RemoveAt(selectedItem);
         }
@@ -886,7 +886,7 @@ public class Hero : Character
 
         var availableGeneralSkills = HeroClass.CampingSkills.FindAll(skill => skill.Classes.Count > 4);
         int generalSkillsRequired = HeroClass.Generation.NumberOfSharedCampingSkills;
-        foreach (var skill in availableGeneralSkills.OrderBy(x => Random.value)
+        foreach (var skill in availableGeneralSkills.OrderBy(x => RandomSolver.NextDouble())
             .Take(Mathf.Min(generalSkillsRequired, availableGeneralSkills.Count)))
         {
             int skillIndex = HeroClass.CampingSkills.IndexOf(skill);
@@ -895,7 +895,7 @@ public class Hero : Character
         var availableSpecificSkills = HeroClass.CampingSkills.FindAll(skill => skill.Classes.Count <= 4);
         int specificSkillsRequired = HeroClass.Generation.NumberOfSpecificCampingSkills + expUpgrade.ExtraCampingSkills;
 
-        foreach (var skill in availableSpecificSkills.OrderBy(x => Random.value)
+        foreach (var skill in availableSpecificSkills.OrderBy(x => RandomSolver.NextDouble())
             .Take(Mathf.Min(specificSkillsRequired, availableSpecificSkills.Count)))
         {
             int skillIndex = HeroClass.CampingSkills.IndexOf(skill);
@@ -905,7 +905,7 @@ public class Hero : Character
         var availableGeneratedSkills = new List<CampingSkill>(CurrentCampingSkills);
         availableGeneratedSkills.RemoveAll(skill => skill == null);
 
-        SelectedCampingSkills = availableGeneratedSkills.OrderBy(x => Random.value)
+        SelectedCampingSkills = availableGeneratedSkills.OrderBy(x => RandomSolver.NextDouble())
             .Take(Mathf.Min(4, availableGeneratedSkills.Count)).ToList();
         #endregion
     }
@@ -933,25 +933,25 @@ public class Hero : Character
 
         #region Quirk Generation
         quirkData = new List<QuirkInfo>();
-        int positiveQuirkNumber = Random.Range(HeroClass.Generation.NumberOfPositiveQuirksMin,
+        int positiveQuirkNumber = RandomSolver.Next(HeroClass.Generation.NumberOfPositiveQuirksMin,
             HeroClass.Generation.NumberOfPositiveQuirksMax + 1);
         for (int i = 0; i < positiveQuirkNumber; i++)
         {
             var availableQuirks = DarkestDungeonManager.Data.Quirks.Values.ToList().FindAll(newQuirk => newQuirk.IsPositive &&
                 quirkData.TrueForAll(quirkInfo => !quirkInfo.Quirk.IncompatibleQuirks.Contains(newQuirk.Id)) &&
                 quirkData.Find(quirkInfo => quirkInfo.Quirk == newQuirk) == null);
-            var availableQuirk = availableQuirks[Random.Range(0, availableQuirks.Count)];
+            var availableQuirk = availableQuirks[RandomSolver.Next(availableQuirks.Count)];
             quirkData.Add(new QuirkInfo(availableQuirk, false, 1, false));
             ApplyQuirk(availableQuirk);
         }
-        int negativeQuirkNumber = Random.Range(HeroClass.Generation.NumberOfNegativeQuirksMin,
+        int negativeQuirkNumber = RandomSolver.Next(HeroClass.Generation.NumberOfNegativeQuirksMin,
             HeroClass.Generation.NumberOfNegativeQuirksMax + 1);
         for (int i = 0; i < negativeQuirkNumber; i++)
         {
             var availableQuirks = DarkestDungeonManager.Data.Quirks.Values.ToList().FindAll(newQuirk => !newQuirk.IsPositive &&
                 !newQuirk.IsDisease && quirkData.TrueForAll(quirkInfo => !quirkInfo.Quirk.IncompatibleQuirks.Contains(newQuirk.Id)) &&
                 quirkData.Find(quirkInfo => quirkInfo.Quirk == newQuirk) == null);
-            var availableQuirk = availableQuirks[Random.Range(0, availableQuirks.Count)];
+            var availableQuirk = availableQuirks[RandomSolver.Next(availableQuirks.Count)];
             quirkData.Add(new QuirkInfo(availableQuirk, false, 1, false));
             ApplyQuirk(availableQuirk);
         }
@@ -971,7 +971,7 @@ public class Hero : Character
 
         for (int i = skillsRequired; i > 0; i--)
         {
-            int generatedIndex = Random.Range(0, availableSkills.Count);
+            int generatedIndex = RandomSolver.Next(availableSkills.Count);
             CurrentCombatSkills[HeroClass.CombatSkills.IndexOf(availableSkills[generatedIndex])] = availableSkills[generatedIndex];
             availableSkills.RemoveAt(generatedIndex);
         }
@@ -982,7 +982,7 @@ public class Hero : Character
         int selectedSkills = Mathf.Clamp(HeroClass.NumberOfSelectedCombatSkills, 0, selectionList.Count);
         for (int i = 0; i < selectedSkills; i++)
         {
-            int selectedItem = Random.Range(0, selectionList.Count);
+            int selectedItem = RandomSolver.Next(selectionList.Count);
             SelectedCombatSkills.Add(selectionList[selectedItem]);
             selectionList.RemoveAt(selectedItem);
         }
@@ -993,7 +993,7 @@ public class Hero : Character
 
         var availableGeneralSkills = HeroClass.CampingSkills.FindAll(skill => skill.Classes.Count > 4);
         int generalSkillsRequired = HeroClass.Generation.NumberOfSharedCampingSkills;
-        foreach (var skill in availableGeneralSkills.OrderBy(x => Random.value)
+        foreach (var skill in availableGeneralSkills.OrderBy(x => RandomSolver.NextDouble())
             .Take(Mathf.Min(generalSkillsRequired, availableGeneralSkills.Count)))
         {
             int skillIndex = HeroClass.CampingSkills.IndexOf(skill);
@@ -1002,7 +1002,7 @@ public class Hero : Character
         var availableSpecificSkills = HeroClass.CampingSkills.FindAll(skill => skill.Classes.Count <= 4);
         int specificSkillsRequired = HeroClass.Generation.NumberOfSpecificCampingSkills;
 
-        foreach (var skill in availableSpecificSkills.OrderBy(x => Random.value)
+        foreach (var skill in availableSpecificSkills.OrderBy(x => RandomSolver.NextDouble())
             .Take(Mathf.Min(specificSkillsRequired, availableSpecificSkills.Count)))
         {
             int skillIndex = HeroClass.CampingSkills.IndexOf(skill);
@@ -1012,7 +1012,7 @@ public class Hero : Character
         var availableGeneratedSkills = new List<CampingSkill>(CurrentCampingSkills);
         availableGeneratedSkills.RemoveAll(skill => skill == null);
 
-        SelectedCampingSkills = availableGeneratedSkills.OrderBy(x => Random.value)
+        SelectedCampingSkills = availableGeneratedSkills.OrderBy(x => RandomSolver.NextDouble())
             .Take(Mathf.Min(4, availableGeneratedSkills.Count)).ToList();
         #endregion
     }

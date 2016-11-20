@@ -241,7 +241,7 @@ public static class BattleSolver
             {
                 var monsterBrainDecision = new MonsterBrainDecision(BrainDecisionType.Pass);
                 monsterBrainDecision.Decision = BrainDecisionType.Perform;
-                monsterBrainDecision.SelectedSkill = availableSkills[Random.Range(0, availableSkills.Count)];
+                monsterBrainDecision.SelectedSkill = availableSkills[RandomSolver.Next(availableSkills.Count)];
                 monsterBrainDecision.TargetInfo.Targets = GetSkillAvailableTargets(performer, monsterBrainDecision.SelectedSkill);
                 monsterBrainDecision.TargetInfo.Type = monsterBrainDecision.SelectedSkill.TargetRanks.IsSelfTarget ?
                     SkillTargetType.Self : monsterBrainDecision.SelectedSkill.TargetRanks.IsSelfFormation ?
@@ -259,7 +259,7 @@ public static class BattleSolver
                     }
                     else
                     {
-                        int index = Random.Range(0, availableTargets.Count);
+                        int index = RandomSolver.Next(availableTargets.Count);
                         monsterBrainDecision.TargetInfo.Targets.Add(availableTargets[index]);
                         availableTargets.RemoveAt(index);
                         return monsterBrainDecision;
@@ -336,7 +336,7 @@ public static class BattleSolver
             #region Heal
             if (skill.Heal != null)
             {
-                float initialHeal = Random.Range(skill.Heal.MinAmount, skill.Heal.MaxAmount + 1) *
+                float initialHeal = RandomSolver.Next(skill.Heal.MinAmount, skill.Heal.MaxAmount + 1) *
                             (1 + performer.GetSingleAttribute(AttributeType.HpHealPercent).ModifiedValue);
 
                 int heal = Mathf.CeilToInt(initialHeal * (1 + target[AttributeType.HpHealReceivedPercent].ModifiedValue));
@@ -381,7 +381,7 @@ public static class BattleSolver
             #region Damage
             float accuracy = skill.Accuracy + performer.Accuracy;
             float hitChance = Mathf.Clamp(accuracy - target.Dodge, 0, 0.95f);
-            float roll = Random.value;
+            float roll = (float)RandomSolver.NextDouble();
             if (target.BattleModifiers != null && target.BattleModifiers.CanBeHit == false)
                 roll = float.MaxValue;
 
@@ -401,8 +401,8 @@ public static class BattleSolver
             }
 
             float initialDamage = performer is Hero ?
-                Mathf.Lerp(performer.MinDamage, performer.MaxDamage, Random.value) * (1 + skill.DamageMod) :
-                Mathf.Lerp(skill.DamageMin, skill.DamageMax, Random.value) * performer.DamageMod;
+                Mathf.Lerp(performer.MinDamage, performer.MaxDamage, (float)RandomSolver.NextDouble()) * (1 + skill.DamageMod) :
+                Mathf.Lerp(skill.DamageMin, skill.DamageMax, (float)RandomSolver.NextDouble()) * performer.DamageMod;
 
             int damage = Mathf.CeilToInt(initialDamage * (1 - target.Protection));
             if(damage < 0)

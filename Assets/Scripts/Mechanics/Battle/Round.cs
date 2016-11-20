@@ -78,6 +78,12 @@ public class Round
         HeroAction = actionType;
         SelectedTarget = selectedTarget;
     }
+    public void HeroActionSelected(HeroTurnAction actionType, FormationUnit selectedTarget, int rngSeed)
+    {
+        HeroAction = actionType;
+        SelectedTarget = selectedTarget;
+        RandomSolver.SetRandomSeed(rngSeed);
+    }
 
     public void StartBattle(BattleGround battleground)
     {
@@ -115,21 +121,21 @@ public class Round
         {
             if (RaidSceneManager.BattleGround.SurpriseStatus == SurpriseStatus.HeroesSurprised)
                 OrderedUnits = new List<FormationUnit>(OrderedUnits.OrderByDescending(unit => unit.Character.IsMonster ?
-                    unit.Character.Speed + Random.Range(0, 3) + Random.value :
-                    unit.Character.Speed + Random.Range(0, 3) + Random.value - 100));
+                    unit.Character.Speed + RandomSolver.Next(0, 3) + RandomSolver.NextDouble() :
+                    unit.Character.Speed + RandomSolver.Next(0, 3) + RandomSolver.NextDouble() - 100));
             else if (RaidSceneManager.BattleGround.SurpriseStatus == SurpriseStatus.MonstersSurprised)
                 OrderedUnits = new List<FormationUnit>(OrderedUnits.OrderByDescending(unit => unit.Character.IsMonster ?
                     unit.Character.BattleModifiers != null && unit.Character.BattleModifiers.CanBeSurprised ?
-                    unit.Character.Speed + Random.Range(0, 3) + Random.value - 100 :
-                    unit.Character.Speed + Random.Range(0, 3) + Random.value :
-                    unit.Character.Speed + Random.Range(0, 3) + Random.value ));
+                    unit.Character.Speed + RandomSolver.Next(0, 3) + RandomSolver.NextDouble() - 100 :
+                    unit.Character.Speed + RandomSolver.Next(0, 3) + RandomSolver.NextDouble() :
+                    unit.Character.Speed + RandomSolver.Next(0, 3) + RandomSolver.NextDouble()));
             else
                 OrderedUnits = new List<FormationUnit>(OrderedUnits.OrderByDescending(unit =>
-                unit.Character.Speed + Random.Range(0, 3) + Random.value));
+                unit.Character.Speed + RandomSolver.Next(0, 3) + RandomSolver.NextDouble()));
         }
         else
             OrderedUnits = new List<FormationUnit>(OrderedUnits.OrderByDescending(unit =>
-                unit.Character.Speed + Random.Range(0, 3) + Random.value));
+                unit.Character.Speed + RandomSolver.Next(0, 3) + RandomSolver.NextDouble()));
 
         return ++RoundNumber;
     }

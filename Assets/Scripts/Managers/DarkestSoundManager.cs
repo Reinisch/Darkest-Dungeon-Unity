@@ -71,7 +71,7 @@ public class DarkestSoundManager : MonoBehaviour
         possibleEvents.RemoveAll(lowPriorityEvent => lowPriorityEvent.Priority < maxPriority);
 
         NarrationAudioEvent narrationEvent = id == "combat_start" ?
-            possibleEvents[0] : possibleEvents[Random.Range(0, possibleEvents.Count)];
+            possibleEvents[0] : possibleEvents[RandomSolver.Next(possibleEvents.Count)];
 
         if (narrationEvent.QueueOnlyOnEmpty && NarrationQueue.Count > 0)
             return;
@@ -83,7 +83,7 @@ public class DarkestSoundManager : MonoBehaviour
                 if (RandomSolver.CheckSuccess(narrationEvent.Chance))
                     break;
                 else
-                    narrationEvent = possibleEvents[Random.Range(0, possibleEvents.Count)];
+                    narrationEvent = possibleEvents[RandomSolver.Next(possibleEvents.Count)];
 
                 if (i == 2)
                     return;

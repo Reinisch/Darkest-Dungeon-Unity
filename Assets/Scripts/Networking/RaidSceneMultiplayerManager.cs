@@ -81,10 +81,10 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
             int sessionSeed = 0;
             foreach(var player in PhotonNetwork.playerList)
             {
-                Random.InitState(player.ID + player.ToString().GetHashCode());
-                sessionSeed += Random.Range(0, (int)Mathf.Pow(2, 16));
+                RandomSolver.SetRandomSeed(player.ID + player.ToString().GetHashCode());
+                sessionSeed += RandomSolver.Next((int)Mathf.Pow(2, 16));
             }
-            Random.InitState(sessionSeed);
+            RandomSolver.SetRandomSeed(sessionSeed);
 
             RaidEvents.Initialize();
             currentRaid = new RaidInfo();
@@ -1397,7 +1397,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                     tempList.Clear();
                     tempList.AddRange(actionUnit.Party.Units);
                     tempList.Remove(actionUnit);
-                    var barkTarget = tempList[Random.Range(0, tempList.Count)];
+                    var barkTarget = tempList[RandomSolver.Next(tempList.Count)];
                     tempList.Clear();
                     for (int i = 0; i < barkStressEffect.SubEffects.Count; i++)
                         barkStressEffect.SubEffects[i].Apply(actionUnit, barkTarget, barkStressEffect);
@@ -1413,7 +1413,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                     tempList.Clear();
                     tempList.AddRange(actionUnit.Party.Units);
                     tempList.Remove(actionUnit);
-                    var buffAllyTarget = tempList[Random.Range(0, tempList.Count)];
+                    var buffAllyTarget = tempList[RandomSolver.Next(tempList.Count)];
                     tempList.Clear();
                     for (int i = 0; i < buffAllyEffect.SubEffects.Count; i++)
                         buffAllyEffect.SubEffects[i].Apply(actionUnit, buffAllyTarget, buffAllyEffect);
@@ -1463,7 +1463,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                     yield return new WaitForSeconds(1f);
                     FMODUnity.RuntimeManager.PlayOneShot("event:/general/party/combat_move");
                     yield return new WaitForSeconds(0.1f);
-                    var shuffleRoll = tempList[Random.Range(0, tempList.Count)];
+                    var shuffleRoll = tempList[RandomSolver.Next(tempList.Count)];
                     tempList.Clear();
 
                     if (shuffleRoll.Rank < actionUnit.Rank)
