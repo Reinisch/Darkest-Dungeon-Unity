@@ -2640,7 +2640,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 314193421}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 1392445389, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
   m_Name: 
@@ -2698,8 +2698,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_Color: {r: 0.2647059, g: 0.2647059, b: 0.2647059, a: 1}
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -5729,6 +5729,7 @@ MonoBehaviour:
   saveFrame: {fileID: 1353514357}
   sceneryRect: {fileID: 801244351}
   rect: {fileID: 1353514357}
+  versionLabel: {fileID: 0}
   playButton: {fileID: 964425253}
   nicknameField: {fileID: 225967989}
   progressPanel: {fileID: 1329593992}
@@ -9544,7 +9545,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.8611379, b: 0.4705882, a: 1}
+  m_Color: {r: 0.24264705, g: 0.20708066, b: 0.10705017, a: 1}
   m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:

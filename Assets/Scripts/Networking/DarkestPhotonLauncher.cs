@@ -32,7 +32,7 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
     /// <summary>
     /// Client's version number. Users are separated from each other by gameversion.
     /// </summary>
-    private static string GameVersion
+    public static string GameVersion
     {
         get
         {

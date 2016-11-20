@@ -15,6 +15,7 @@ public class RoomSelector : MonoBehaviour
 
     public RectTransform sceneryRect;
     public RectTransform rect;
+    public Text versionLabel;
 
     #region Multiplayer Launcher UI
 
@@ -51,6 +52,8 @@ public class RoomSelector : MonoBehaviour
 
         for (int i = 0; i < roomSlots.Count; i++)
             roomSlots[i].RoomSelector = this;
+
+        versionLabel.text = DarkestPhotonLauncher.GameVersion;
     }
     void Start()
     {
