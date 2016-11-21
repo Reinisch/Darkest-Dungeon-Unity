@@ -1556,6 +1556,7 @@ public class StunEffect : SubEffect
         {
             stunStatus.StunApplied = true;
             target.SetHalo("stunned");
+            target.Character[StatusType.Guard].ResetStatus();
             return true;
         }
         return false;
