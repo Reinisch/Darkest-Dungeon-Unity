@@ -2252,7 +2252,89 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         }
         #endregion
     }
+    protected override IEnumerator ExecuteResolveChecks()
+    {
+        while (resolveCheckQueue.Count > 0)
+        {
+            var resolveUnit = resolveCheckQueue[0];
+            var resolveHero = resolveUnit.Character as Hero;
+            resolveCheckQueue.RemoveAt(0);
+            float virtueChance = 0.25f + resolveUnit.Character[AttributeType.ResolveCheckPercent].ModifiedValue;
+            virtueChance = Mathf.Clamp(virtueChance, 0.01f, 0.6f);
+            bool isVirtue = RandomSolver.CheckSuccess(virtueChance);
+            var availableTraits = isVirtue ? DarkestDungeonManager.Data.Traits.FindAll(trait => trait.Type == OverstressType.Virtue) :
+                DarkestDungeonManager.Data.Traits.FindAll(trait => trait.Type == OverstressType.Affliction);
+            Trait resolveTrait = availableTraits[RandomSolver.Next(availableTraits.Count)];
 
+            if (!isVirtue)
+                for (int i = 0; i < resolveUnit.Party.Units.Count; i++)
+                    if (resolveUnit.Party.Units[i] != resolveUnit)
+                        DarkestDungeonManager.Data.Effects["AfflictedAllyStress"].
+                            ApplyIndependent(resolveUnit.Party.Units[i]);
+
+            if (!isVirtue && resolveUnit.Character.Mode != null && resolveUnit.Character.Mode.AfflictionSkillId != null)
+            {
+                var resolveSkill = resolveHero.SelectedCombatSkills.Find(skill =>
+                skill.Id == resolveUnit.Character.Mode.AfflictionSkillId);
+                if (resolveSkill != null)
+                {
+                    SkillTargetInfo targetInfo = BattleSolver.SelectSkillTargets(resolveUnit,
+                        resolveUnit, resolveSkill).UpdateSkillInfo(resolveUnit, resolveSkill);
+                    yield return StartCoroutine(ExecuteHeroSkill(resolveUnit, targetInfo, resolveSkill));
+                }
+            }
+
+            RaidEvents.ShowAnnouncment(string.Format(LocalizationManager.GetString("resolve_test"),
+                resolveUnit.Character.Name), AnnouncmentPosition.Top);
+
+            FMODUnity.RuntimeManager.PlayOneShot("event:/general/char/resolve_test");
+            yield return new WaitForSeconds(1.6f);
+            RaidEvents.HideAnnouncment();
+            Formations.HideUnitOverlay();
+            yield return new WaitForSeconds(0.1f);
+            DungeonCamera.blur.enabled = true;
+
+            Rules.GetIdleUnitRules(resolveUnit);
+            resolveHero.ApplyTrait(resolveTrait);
+            resolveHero.ApplySingleBuffRule(Rules, BuffRule.Afflicted);
+            resolveHero.ApplySingleBuffRule(Rules, BuffRule.Virtued);
+
+            if (isVirtue)
+            {
+                DarkestSoundManager.ExecuteNarration("virtue", NarrationPlace.Raid, resolveTrait.Id);
+                FMODUnity.RuntimeManager.PlayOneShot("event:/general/char/resolve_virtue");
+            }
+            else
+            {
+                DarkestSoundManager.ExecuteNarration("afflicted", NarrationPlace.Raid, resolveTrait.Id);
+                FMODUnity.RuntimeManager.PlayOneShot("event:/general/char/resolve_afflict");
+            }
+
+            Formations.HeroResolveCheckIntro(resolveUnit, isVirtue);
+            Formations.partyBuffPositions.SetUnitTarget(resolveUnit, 0.05f, Vector2.zero);
+            RaidEvents.ShowAnnouncment(isVirtue ?
+                LocalizationManager.GetString("str_virtue_name_" + resolveTrait.Id) :
+                LocalizationManager.GetString("str_affliction_name_" + resolveTrait.Id), AnnouncmentPosition.Bottom);
+            if (!Rules.IsDoingCamping)
+                dungeonCamera.Zoom(45, 0.1f);
+
+            yield return new WaitForSeconds(2.45f);
+            if (!Rules.IsDoingCamping)
+                dungeonCamera.Zoom(dungeonCamera.StandardFOV, 0.1f);
+
+            Formations.HeroResolveCheckOutro(resolveUnit, isVirtue);
+            DungeonCamera.blur.enabled = false;
+            yield return new WaitForSeconds(0.15f);
+            if (isVirtue)
+                resolveUnit.Character.Stress.CurrentValue = RandomSolver.Next(20, 40);
+            resolveUnit.OverlaySlot.UpdateOverlay();
+
+            RaidEvents.HideAnnouncment();
+            Formations.ShowUnitOverlay();
+            yield return new WaitForSeconds(0.15f);
+        }
+        yield break;
+    }
     protected override void ExecuteDeath(FormationUnit targetUnit)
     {
         if (targetUnit.CombatInfo.IsDead)
