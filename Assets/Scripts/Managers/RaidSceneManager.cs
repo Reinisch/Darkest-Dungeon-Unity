@@ -2990,6 +2990,7 @@ public class RaidSceneManager : MonoBehaviour
                         FMODUnity.RuntimeManager.PlayOneShot("event:/general/status/heal_ally");
                         if (actionHero.AtDeathsDoor)
                             actionHero.RevertDeathsDoor();
+                        actionUnit.OverlaySlot.UpdateOverlay();
                         yield return new WaitForSeconds(0.5f);
                         break;
 #endregion

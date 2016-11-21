@@ -1487,6 +1487,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                     FMODUnity.RuntimeManager.PlayOneShot("event:/general/status/heal_ally");
                     if (actionHero.AtDeathsDoor)
                         actionHero.RevertDeathsDoor();
+                    actionUnit.OverlaySlot.UpdateOverlay();
                     yield return new WaitForSeconds(0.5f);
                     break;
                 #endregion
@@ -2055,6 +2056,13 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                 }
                 else
                 {
+                    if (!skillEntry.Target.Character.IsMonster && skillEntry.IsZeroed)
+                    {
+                        if (skillEntry.Type == SkillResultType.Hit || skillEntry.Type == SkillResultType.Crit)
+                            if (!skillEntry.Target.Character.AtDeathsDoor && !deathDoorEnterQueue.Contains(skillEntry.Target))
+                                PrepareDeath(skillEntry.Target);
+                    }
+                    
                     switch (skillEntry.Type)
                     {
                         case SkillResultType.Miss:
