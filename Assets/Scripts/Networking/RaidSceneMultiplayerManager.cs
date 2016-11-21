@@ -1509,41 +1509,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                     break;
                 #endregion
                 case StartTurnActType.RandomCommand:
-                    #region Random Command
-                    yield return new WaitForSeconds(1f);
-                    var brainDesicion = BattleSolver.UseMonsterBrain(actionUnit);
-                    Formations.ShowUnitOverlay();
-                    BattleGround.Round.OnHeroTurn();
-                    yield return new WaitForSeconds(0.2f);
-                    if (brainDesicion.Decision == BrainDecisionType.Pass)
-                    {
-                        Formations.heroes.overlay.ResetSelectionsExcept(actionUnit);
-                        RaidEvents.ShowPopupMessage(actionUnit, PopupMessageType.Pass);
-                        yield return new WaitForSeconds(0.6f);
-                        yield break;
-                    }
-                    else
-                    {
-                        if (brainDesicion.TargetInfo.Targets.Count > 0)
-                        {
-                            SkillTargetInfo targetInfo = BattleSolver.SelectSkillTargets(actionUnit, brainDesicion.TargetInfo.Targets[0],
-                                brainDesicion.SelectedSkill).UpdateSkillInfo(actionUnit, brainDesicion.SelectedSkill);
-                            yield return StartCoroutine(ExecuteHeroSkill(actionUnit, targetInfo, brainDesicion.SelectedSkill));
-                        }
-
-                        if (brainDesicion.SelectedSkill.IsContinueTurn)
-                        {
-                            Formations.ResetSelections();
-                            yield return new WaitForEndOfFrame();
-                            BattleGround.Round.PreHeroTurn(actionUnit);
-                            yield return new WaitForEndOfFrame();
-                            actionUnit.OverlaySlot.UnitSelected();
-                        }
-                        else
-                            yield break;
-                    }
                     break;
-                #endregion
                 case StartTurnActType.StressHealParty:
                     #region Stress Heal Party
                     var stressHealPartyEffect = DarkestDungeonManager.Data.Effects[actOut.StringParameter];
