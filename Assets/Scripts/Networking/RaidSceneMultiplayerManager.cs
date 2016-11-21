@@ -1471,8 +1471,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                     else
                         actionUnit.Push(shuffleRoll.Rank - actionUnit.Rank);
                     yield return new WaitForSeconds(0.2f);
-                    BattleGround.Round.PostHeroTurn();
-                    yield break;
+                    break;
                 #endregion
                 case StartTurnActType.HealSelf:
                     #region Heal Self
