@@ -19,7 +19,7 @@ public static class RandomSolver
     public static T ChooseByRandom<T>(IEnumerable<T> collection)
         where T : IProportionValue
     {
-        var rnd = UnityEngine.Random.Range(0, collection.Sum(item => item.Chance > 0 ? item.Chance : 0));
+        var rnd = Random.Next(collection.Sum(item => item.Chance > 0 ? item.Chance : 0));
         foreach (var item in collection)
         {
             if (rnd < item.Chance)

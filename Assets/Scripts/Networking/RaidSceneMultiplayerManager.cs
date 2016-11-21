@@ -1495,6 +1495,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                     yield return new WaitForSeconds(1f);
                     RaidEvents.ShowPopupMessage(actionUnit, PopupMessageType.Pass);
                     yield return new WaitForSeconds(0.8f);
+                    BattleGround.Round.PostHeroTurn();
                     yield break;
                 #endregion
                 case StartTurnActType.MarkSelf:
