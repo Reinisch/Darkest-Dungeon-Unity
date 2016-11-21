@@ -575,7 +575,7 @@ public class Hero : Character
         Resolve = new Resolve(0, 0);
         HeroClass = DarkestDungeonManager.Data.HeroClasses[ClassStringId];
         ClassIndexId = HeroClass.IndexId;
-        AddPairedAttribute(AttributeType.Stress, new PairedAttribute(10, 200, true, AttributeCategory.CombatStat));
+        AddPairedAttribute(AttributeType.Stress, new PairedAttribute(30, 200, true, AttributeCategory.CombatStat));
 
         #region Equipment Generation
         Equipment weapon = HeroClass.Weapons.Find(wep => wep.UpgradeLevel == 1);
