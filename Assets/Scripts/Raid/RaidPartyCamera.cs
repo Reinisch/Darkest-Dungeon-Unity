@@ -8,26 +8,26 @@ public class RaidPartyCamera : MonoBehaviour
 {
     public Transform target;
     public float smoothTime = 0.7F;
-    public BlurOptimized blur;
-    public Camera blurCamera;
     public Light raidLight;
-    private Vector3 velocity = Vector3.zero;
-
+    public CameraMode mode;
     public RaidPartyController controller;
+
+    [SerializeField]
+    private BlurOptimized blur;
+    [SerializeField]
+    private Camera blurCamera;
+
+    float velocityFOV = 0;
+    float frustumDistanceTarget = 0;
+    float frustumTargetWidth = 252.2945f;
+    Vector3 velocity = Vector3.zero;
 
     public float StandardFOV { get; set; }
     public float TargetFOV { get; set; }
     public float SmoothTimeFOV { get; set; }
-    float velocityFOV = 0;
-
-    float frustumDistanceTarget = 0;
-    float frustumTargetWidth = 252.2945f;
 
     public Camera Camera { get; set; }
-
     public Stopwatch StopWatch { get; set; }
-    public CameraMode mode;
-
     public Transform Transform { get; set; }
     public Vector3 ActionPosition
     {
@@ -101,6 +101,7 @@ public class RaidPartyCamera : MonoBehaviour
         }
     }
 
+
     public void SetCampingLight()
     {
         raidLight.color = new Color(0.8f, 0, 0, 1);
@@ -109,6 +110,7 @@ public class RaidPartyCamera : MonoBehaviour
         raidLight.range = 150;
         raidLight.intensity = 5;
     }
+
     public void SetRaidingLight(TorchRangeType torchRange)
     {
         raidLight.color = Color.white;
@@ -116,10 +118,18 @@ public class RaidPartyCamera : MonoBehaviour
         raidLight.range = 150;
         raidLight.intensity = 7;
     }
+
     public void Zoom(float targetFOV, float time)
     {
         zooming = true;
         TargetFOV = targetFOV;
         SmoothTimeFOV = time;
+    }
+
+    public void SwitchBlur(bool activate)
+    {
+#if !(UNITY_ANDROID || UNITY_IOS)
+        blur.enabled = activate;
+#endif
     }
 }

@@ -18,7 +18,8 @@ public class RaidSceneManager : MonoBehaviour
     public StartingMode startingMode;
     public List<string> startingItems;
 
-    public RaidPartyCamera dungeonCamera;
+    [SerializeField]
+    private RaidPartyCamera dungeonCamera;
     public RaidHallwayView hallwayView;
     public RaidRoomView roomView;
     public BattleGround battleGround;
@@ -792,7 +793,7 @@ public class RaidSceneManager : MonoBehaviour
                 Formations.HideHeroOverlay();
                 DarkestDungeonManager.Instanse.screenFader.Fade(1);
 
-                dungeonCamera.Zoom(30, 1);
+                DungeonCamera.Zoom(30, 1);
                 raidDoor.Open();
                 DisablePartyMovement();
                 yield return new WaitForSeconds(0.3f);
@@ -807,7 +808,7 @@ public class RaidSceneManager : MonoBehaviour
                 {
                     Formations.GetUnitOutOfDoor(fromRaidSector, i);
                 }
-                dungeonCamera.Zoom(dungeonCamera.StandardFOV, 0.1f);
+                DungeonCamera.Zoom(DungeonCamera.StandardFOV, 0.1f);
                 EnablePartyMovement();
             }
         }
@@ -2155,9 +2156,9 @@ public class RaidSceneManager : MonoBehaviour
                     {
                         Formations.HideUnitOverlay();
                         yield return new WaitForSeconds(0.2f);
-                        dungeonCamera.Zoom(50, 0.05f);
+                        DungeonCamera.Zoom(50, 0.05f);
                         yield return new WaitForSeconds(0.05f);
-                        DungeonCamera.blur.enabled = true;
+                        DungeonCamera.SwitchBlur(true);
                         foreach (var targetUnit in tempList)
                             Formations.UnitBuffedIntro(targetUnit);
                         yield return new WaitForSeconds(0.05f);
@@ -2215,8 +2216,8 @@ public class RaidSceneManager : MonoBehaviour
                             if (tempList[i].Character.Class != mutationData[i].TypeId)
                                 tempList[i].CurrentState.MeshRenderer.enabled = false;
                         yield return new WaitForSeconds(1.2f);
-                        dungeonCamera.Zoom(dungeonCamera.StandardFOV, 0.1f);
-                        DungeonCamera.blur.enabled = false;
+                        DungeonCamera.Zoom(DungeonCamera.StandardFOV, 0.1f);
+                        DungeonCamera.SwitchBlur(false);
                         foreach (var targetUnit in tempList)
                             Formations.UnitBuffedOutro(targetUnit);
 #region Transformation
@@ -2286,16 +2287,16 @@ public class RaidSceneManager : MonoBehaviour
                                     yield return new WaitForSeconds(0.4f);
                                     Formations.HideUnitOverlay();
                                     yield return new WaitForSeconds(0.2f);
-                                    dungeonCamera.Zoom(50, 0.05f);
+                                    DungeonCamera.Zoom(50, 0.05f);
                                     FMODUnity.RuntimeManager.PlayOneShot("event:/char/enemy/" + captorMonster.Data.TypeId + "_vo_death");
                                     yield return new WaitForSeconds(0.05f);
-                                    DungeonCamera.blur.enabled = true;
+                                    DungeonCamera.SwitchBlur(true);
                                     Formations.UnitSkillIntro(BattleGround.Captures[i].CaptorUnit, "release");
                                     yield return new WaitForSeconds(0.05f);
                                     Formations.partyBuffPositions.SetUnitTargets(BattleGround.Captures[i].CaptorUnit, 0.05f, Vector2.zero);
                                     yield return new WaitForSeconds(1.2f);
-                                    dungeonCamera.Zoom(dungeonCamera.StandardFOV, 0.1f);
-                                    DungeonCamera.blur.enabled = false;
+                                    DungeonCamera.Zoom(DungeonCamera.StandardFOV, 0.1f);
+                                    DungeonCamera.SwitchBlur(false);
                                     Formations.UnitSkillOutro(BattleGround.Captures[i].CaptorUnit, "release");
                                     var captureRelease = BattleGround.Captures[i];
                                     BattleGround.ReleaseUnit(captureRelease);
@@ -3873,12 +3874,12 @@ public class RaidSceneManager : MonoBehaviour
             RaidEvents.HideAnnouncment();
 #endregion
         yield return new WaitForSeconds(0.2f);
-        dungeonCamera.Zoom(50, 0.05f);
+        DungeonCamera.Zoom(50, 0.05f);
         var skillResult = ExecuteSkillBase(actionUnit, brainDecision.TargetInfo);
         if(skillResult.HasCritEffect && brainDecision.TargetInfo.Type == SkillTargetType.Enemy)
             DarkestSoundManager.ExecuteNarration("crit_hero", NarrationPlace.Raid);
         yield return new WaitForSeconds(0.05f);
-        DungeonCamera.blur.enabled = true;
+        DungeonCamera.SwitchBlur(true);
         ExecuteSkillAnimationIntro(actionUnit, brainDecision.TargetInfo);
         yield return new WaitForSeconds(0.01f);
         ExecuteSkillInstants(actionUnit, brainDecision.TargetInfo, skillResult);
@@ -3932,8 +3933,8 @@ public class RaidSceneManager : MonoBehaviour
                     Formations.UnitDefendOutro(targetUnit);
             }
 
-            dungeonCamera.Zoom(dungeonCamera.StandardFOV, 0.1f);
-            DungeonCamera.blur.enabled = false;
+            DungeonCamera.Zoom(DungeonCamera.StandardFOV, 0.1f);
+            DungeonCamera.SwitchBlur(false);
             TorchMeter.Show();
             yield return new WaitForSeconds(0.2f);
             BattleGround.Round.HeroAction = HeroTurnAction.Retreat;
@@ -4094,9 +4095,9 @@ public class RaidSceneManager : MonoBehaviour
             yield return new WaitForSeconds(1.2f);
         else
             yield return new WaitForSeconds(0.7f);
-        dungeonCamera.Zoom(dungeonCamera.StandardFOV, 0.1f);
-        DungeonCamera.blur.enabled = false;
-#region Animation Outro
+        DungeonCamera.Zoom(DungeonCamera.StandardFOV, 0.1f);
+        DungeonCamera.SwitchBlur(false);
+        #region Animation Outro
         if (riposteResults.Count > 0)
         {
             actionUnit.SetPerformerSkillAnimation(brainDecision.TargetInfo.SkillArtInfo, false);
@@ -4343,21 +4344,21 @@ public class RaidSceneManager : MonoBehaviour
             RaidEvents.HideAnnouncment();
 #endregion
         yield return new WaitForSeconds(0.2f);
-        dungeonCamera.Zoom(50, 0.05f);
+        DungeonCamera.Zoom(50, 0.05f);
         var skillResult = ExecuteSkillBase(actionUnit, brainDecision.TargetInfo);
         if (skillResult.HasCritEffect && brainDecision.TargetInfo.Type == SkillTargetType.Enemy)
             DarkestSoundManager.ExecuteNarration("crit_hero", NarrationPlace.Raid);
         yield return new WaitForSeconds(0.05f);
-        DungeonCamera.blur.enabled = true;
+        DungeonCamera.SwitchBlur(true);
         ExecuteSkillAnimationIntro(actionUnit, brainDecision.TargetInfo);
         yield return new WaitForSeconds(0.01f);
         ExecuteSkillInstants(actionUnit, brainDecision.TargetInfo, skillResult);
         yield return new WaitForSeconds(0.01f);
         ExecuteSlidingSetup(actionUnit, brainDecision.TargetInfo);
         yield return new WaitForSeconds(1.5f);
-        dungeonCamera.Zoom(dungeonCamera.StandardFOV, 0.1f);
-        DungeonCamera.blur.enabled = false;
-#region Animation Outro
+        DungeonCamera.Zoom(DungeonCamera.StandardFOV, 0.1f);
+        DungeonCamera.SwitchBlur(false);
+        #region Animation Outro
         Formations.UnitSkillOutro(actionUnit, brainDecision.TargetInfo.SkillArtInfo);
 
         if (brainDecision.TargetInfo.Type == SkillTargetType.Party)
@@ -4445,12 +4446,12 @@ public class RaidSceneManager : MonoBehaviour
         Formations.HideUnitOverlay();
         TorchMeter.Hide();
         yield return new WaitForSeconds(0.2f);
-        dungeonCamera.Zoom(50, 0.05f);
+        DungeonCamera.Zoom(50, 0.05f);
         var skillResult = ExecuteSkillBase(actionUnit, targetInfo);
         if (skillResult.HasCritEffect && targetInfo.Type == SkillTargetType.Enemy)
             DarkestSoundManager.ExecuteNarration("crit_monster", NarrationPlace.Raid);
         yield return new WaitForSeconds(0.05f);
-        DungeonCamera.blur.enabled = true;
+        DungeonCamera.SwitchBlur(true);
         ExecuteSkillAnimationIntro(actionUnit, targetInfo);
         yield return new WaitForSeconds(0.01f);
         ExecuteSkillInstants(actionUnit, targetInfo, skillResult);
@@ -4585,10 +4586,10 @@ public class RaidSceneManager : MonoBehaviour
             yield return new WaitForSeconds(1.2f);
         else
             yield return new WaitForSeconds(0.7f);
-        dungeonCamera.Zoom(dungeonCamera.StandardFOV, 0.1f);
-        DungeonCamera.blur.enabled = false;
-#region Animation Outro
-#region Riposte Results
+        DungeonCamera.Zoom(DungeonCamera.StandardFOV, 0.1f);
+        DungeonCamera.SwitchBlur(false);
+        #region Animation Outro
+        #region Riposte Results
         if (riposteResults.Count > 0)
         {
             actionUnit.SetPerformerSkillAnimation(targetInfo.SkillArtInfo, false);
@@ -4965,7 +4966,7 @@ public class RaidSceneManager : MonoBehaviour
             RaidEvents.HideAnnouncment();
             Formations.HideUnitOverlay();
             yield return new WaitForSeconds(0.1f);
-            DungeonCamera.blur.enabled = true;
+            DungeonCamera.SwitchBlur(true);
 
             Rules.GetIdleUnitRules(resolveUnit);
             resolveHero.ApplyTrait(resolveTrait);
@@ -4989,14 +4990,14 @@ public class RaidSceneManager : MonoBehaviour
                 LocalizationManager.GetString("str_virtue_name_" + resolveTrait.Id):
                 LocalizationManager.GetString("str_affliction_name_" + resolveTrait.Id), AnnouncmentPosition.Bottom);
             if(!Rules.IsDoingCamping)
-                dungeonCamera.Zoom(45, 0.1f);
+                DungeonCamera.Zoom(45, 0.1f);
 
             yield return new WaitForSeconds(2.45f);
             if(!Rules.IsDoingCamping)
-                dungeonCamera.Zoom(dungeonCamera.StandardFOV, 0.1f);
+                DungeonCamera.Zoom(DungeonCamera.StandardFOV, 0.1f);
 
             Formations.HeroResolveCheckOutro(resolveUnit, isVirtue);
-            DungeonCamera.blur.enabled = false;
+            DungeonCamera.SwitchBlur(false);
             yield return new WaitForSeconds(0.15f);
             if (isVirtue)
                 resolveUnit.Character.Stress.CurrentValue = RandomSolver.Next(20, 40);
@@ -6568,7 +6569,7 @@ public class RaidSceneManager : MonoBehaviour
         Raid.QuestCompleted = true;
         completionWindow.Appear();
         FMODUnity.RuntimeManager.PlayOneShot("event:/general/party/quest_goal_complete");
-        DungeonCamera.blur.enabled = true;
+        DungeonCamera.SwitchBlur(true);
         while (completionWindow.Action == CompletionAction.Waiting)
             yield return null;
 
@@ -6579,7 +6580,7 @@ public class RaidSceneManager : MonoBehaviour
         }
 
         QuestPanel.CompleteQuest();
-        DungeonCamera.blur.enabled = false;
+        DungeonCamera.SwitchBlur(false);
         yield return new WaitForSeconds(1f);
     }
     IEnumerator CurioEvent(IRaidArea areaView, Quirk triggerQuirk = null, Trait triggerTrait = null)
@@ -6806,7 +6807,7 @@ public class RaidSceneManager : MonoBehaviour
         Formations.InvestigateCurioIntro(areaView.Prop);
         if(stringId != message)
             RaidEvents.ShowAnnouncment(message);
-        dungeonCamera.Zoom(50, 0.1f);
+        DungeonCamera.Zoom(50, 0.1f);
 
         GameObject animationObject = Resources.Load<GameObject>("Prefabs/Effects/interaction_curio");
         if (animationObject != null)
@@ -6821,7 +6822,7 @@ public class RaidSceneManager : MonoBehaviour
             }
         }
         yield return new WaitForSeconds(2f);
-        dungeonCamera.Zoom(dungeonCamera.StandardFOV, 0.1f);
+        DungeonCamera.Zoom(DungeonCamera.StandardFOV, 0.1f);
         Formations.InvestigateCurioOutro(areaView);
         yield return new WaitForSeconds(0.10f);
         areaView.Prop.SetSortingOrder(PartyFormationManager.BackgroundOrder);
@@ -7046,7 +7047,7 @@ public class RaidSceneManager : MonoBehaviour
             else
                 DarkestSoundManager.ExecuteNarration("trap", NarrationPlace.Raid);
         }
-        dungeonCamera.Zoom(50, 0.1f);
+        DungeonCamera.Zoom(50, 0.1f);
         yield return new WaitForSeconds(0.10f);
         raidTrap.SkeletonAnimation.MeshRenderer.enabled = true;
         Formations.InvestigateTrapIntro(raidTrap, isDisarmed);
@@ -7144,7 +7145,7 @@ public class RaidSceneManager : MonoBehaviour
         trapTarget.OverlaySlot.UpdateOverlay();
 #endregion
         yield return new WaitForSeconds(1.4f);
-        dungeonCamera.Zoom(dungeonCamera.StandardFOV, 0.1f);
+        DungeonCamera.Zoom(DungeonCamera.StandardFOV, 0.1f);
         Formations.InvestigateTrapOutro(sector, isDisarmed);
         yield return new WaitForSeconds(0.10f);
         raidTrap.SetSortingOrder(3);

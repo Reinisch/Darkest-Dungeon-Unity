@@ -549,8 +549,10 @@ public class FormationUnit : MonoBehaviour
 
     public void SetLayer(int layer)
     {
+#if !(UNITY_ANDROID || UNITY_IOS)
         for (int i = 0; i < unitAnimator.SkeletonAnimations.Count; i++)
             unitAnimator.SkeletonAnimations[i].gameObject.layer = layer;
+#endif
     }
     public void SetSortingOrder(int order)
     {
