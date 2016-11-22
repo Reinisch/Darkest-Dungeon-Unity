@@ -80,10 +80,10 @@ public class FormationOverlaySlot : MonoBehaviour, IPointerClickHandler, IPointe
         RectTransform.position = new Vector3(screenPoint.x, screenPoint.y, RectTransform.position.z);
     }
 
-    public void StartDialog(string dialogText)
+    public void StartDialog(string dialogText, bool skipable = true)
     {
         FMODUnity.RuntimeManager.PlayOneShot("event:/ui/shared/text_popup");
-        dialogPopup.SetCurrentDialog(dialogText);
+        dialogPopup.SetCurrentDialog(dialogText, skipable);
     }
     public void LockOnUnit(FormationUnit unit)
     {

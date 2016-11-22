@@ -19,6 +19,22 @@ public class PhotonGameManager : Photon.PunBehaviour
     /// Number of players who are combat ready
     /// </summary>
     public static int PlayersPreparedCount { get; set; }
+
+    public static List<BarkMessage> BarkMessages
+    {
+        get
+        {
+            return barkMessages;
+        }
+    }
+
+    public static bool SkipMessagesOnClick { get; set; }
+    #endregion
+
+    #region Private variables
+
+    private static List<BarkMessage> barkMessages = new List<BarkMessage>();
+
     #endregion
 
     #region Private Methods
@@ -124,6 +140,12 @@ public class PhotonGameManager : Photon.PunBehaviour
     #endregion
 
     #region Remote Calls
+
+    [PunRPC]
+    public void ExecuteBarkMessage(int team, string message)
+    {
+        BarkMessages.Add(new BarkMessage((Team)team, message));
+    }
 
     [PunRPC]
     public void PlayerLoaded()

@@ -45,4 +45,5 @@ MonoBehaviour:
   - HeroMoveSelected
   - HeroSkillSelected
   - PlayerLoaded
+  - ExecuteBarkMessage
   DisableAutoOpenWizard: 1

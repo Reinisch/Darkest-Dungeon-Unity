@@ -100,14 +100,6 @@ public class TorchMeter : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         if (doubleTapTimer > 0)
             doubleTapTimer -= Time.deltaTime;
 #endif
-        if (Input.GetKeyUp(KeyCode.G))
-        {
-            if (torchAnimator.GetBool("IsActive"))
-                Hide();
-            else
-                Show();
-        }
-            
         if(canvasGroup.alpha != torchSwitch.skeleton.A)
         {
             torchSwitch.skeleton.A = canvasGroup.alpha;

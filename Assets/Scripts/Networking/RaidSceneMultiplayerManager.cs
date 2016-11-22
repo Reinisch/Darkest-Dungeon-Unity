@@ -20,50 +20,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
     }
 
     #region Multiplayer Setup
-
-    private static Quest MultiplayerQuest = new PlotQuest()
-    {
-        IsPlotQuest = true,
-        Id = "tutorial",
-        Type = "tutorial_room",
-        Dungeon = "weald",
-        Difficulty = 1,
-        Length = 1,
-        Goal = DarkestDungeonManager.Data.QuestDatabase.QuestGoals["tutorial_final_room"],
-        Reward = new CompletionReward(),
-        CanRetreat = false,
-        AlwaysRetreatFromRaid = false,
-        CompletionDungeonXp = false,
-        HasStatueContents = false,
-        IsProgression = false,
-        IsScoutingEnabled = false,
-        IsStressClearedOnCompletion = false,
-        IsSurpriseEnabled = false,
-        RetreatKillCount = 0,
-        RosterBuffOnFailureMinimumPartyResolveLevel = 0,
-    };
-
-    private Dungeon MultiplayerDungeon = new Dungeon()
-    {
-        GridSizeX = 1,
-        GridSizeY = 1,
-        Name = MultiplayerQuest.Dungeon,
-        DungeonMash = DarkestDungeonManager.Data.DungeonEnviromentData[MultiplayerQuest.Dungeon].
-            BattleMashes.Find(mash => mash.MashId == MultiplayerQuest.Difficulty),
-        SharedMash = DarkestDungeonManager.Data.DungeonEnviromentData["shared"].
-            BattleMashes.Find(mash => mash.MashId == MultiplayerQuest.Difficulty),
-        Rooms = new Dictionary<string, DungeonRoom>()
-        {
-            { "room2_1", new DungeonRoom("room2_1", 1, 1)
-                {
-                    TextureId = "effigy_1", Type = AreaType.Entrance,
-                    BattleEncounter = new BattleEncounter() { Cleared = false },
-                }
-            },
-        },
-        StartingRoomId = "room2_1",
-    };
-
+    List<FormationUnit> pvpDialogUnits = new List<FormationUnit>();
     #endregion
 
     protected override void Awake()
@@ -88,8 +45,48 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
 
             RaidEvents.Initialize();
             currentRaid = new RaidInfo();
-            currentRaid.Quest = MultiplayerQuest;
-            currentRaid.Dungeon = MultiplayerDungeon;
+
+            currentRaid.Quest = new PlotQuest()
+            {
+                IsPlotQuest = true,
+                        Id = "tutorial",
+                        Type = "tutorial_room",
+                        Dungeon = "weald",
+                        Difficulty = 1,
+                        Length = 1,
+                        Goal = DarkestDungeonManager.Data.QuestDatabase.QuestGoals["tutorial_final_room"],
+                        Reward = new CompletionReward(),
+                        CanRetreat = false,
+                        AlwaysRetreatFromRaid = false,
+                        CompletionDungeonXp = false,
+                        HasStatueContents = false,
+                        IsProgression = false,
+                        IsScoutingEnabled = false,
+                        IsStressClearedOnCompletion = false,
+                        IsSurpriseEnabled = false,
+                        RetreatKillCount = 0,
+                        RosterBuffOnFailureMinimumPartyResolveLevel = 0,
+            };
+            currentRaid.Dungeon = new Dungeon()
+            {
+                GridSizeX = 1,
+                GridSizeY = 1,
+                Name = currentRaid.Quest.Dungeon,
+                DungeonMash = DarkestDungeonManager.Data.DungeonEnviromentData[currentRaid.Quest.Dungeon].
+                    BattleMashes.Find(mash => mash.MashId == currentRaid.Quest.Difficulty),
+                SharedMash = DarkestDungeonManager.Data.DungeonEnviromentData["shared"].
+                    BattleMashes.Find(mash => mash.MashId == currentRaid.Quest.Difficulty),
+                Rooms = new Dictionary<string, DungeonRoom>()
+                {
+                    { "room2_1", new DungeonRoom("room2_1", 1, 1)
+                        {
+                            TextureId = "effigy_1", Type = AreaType.Entrance,
+                            BattleEncounter = new BattleEncounter() { Cleared = false },
+                        }
+                    },
+                },
+                StartingRoomId = "room2_1",
+            };
             currentRaid.RaidParty = new RaidParty(PhotonNetwork.masterClient);
 
             DarkestDungeonManager.ScreenFader.StartFaded();
@@ -1562,10 +1559,47 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
             #region Hero Action
             QuestPanel.UpdateCombatRetreat(true);
             InvaderQuestPanel.UpdateCombatRetreat(true);
+
+            FormationUnit barkUnit;
+            BarkMessage barkMessage;
+
             while (BattleGround.Round.HeroAction == HeroTurnAction.Waiting)
             {
+                while (PhotonGameManager.BarkMessages.Count > 0)
+                {
+                    barkMessage = PhotonGameManager.BarkMessages.Find(message => message.Team == Team.Heroes);
+                    if (barkMessage != null)
+                    {
+                        barkUnit = BattleGround.HeroParty.Units[Random.Range(0, BattleGround.HeroParty.Units.Count)];
+                        pvpDialogUnits.Add(barkUnit);
+
+                        barkUnit.OverlaySlot.StartDialog(barkMessage.Message, PhotonGameManager.SkipMessagesOnClick);
+                        PhotonGameManager.BarkMessages.Remove(barkMessage);
+                    }
+
+                    barkMessage = PhotonGameManager.BarkMessages.Find(message => message.Team == Team.Monsters);
+                    if (barkMessage != null)
+                    {
+                        barkUnit = BattleGround.MonsterParty.Units[Random.Range(0, BattleGround.MonsterParty.Units.Count)];
+                        pvpDialogUnits.Add(barkUnit);
+
+                        barkUnit.OverlaySlot.StartDialog(barkMessage.Message, PhotonGameManager.SkipMessagesOnClick);
+                        PhotonGameManager.BarkMessages.Remove(barkMessage);
+                    }
+
+                    while (pvpDialogUnits.Count > 0)
+                    {
+                        for (int i = pvpDialogUnits.Count - 1; i >= 0; i--)
+                            if (!pvpDialogUnits[i].OverlaySlot.IsDoingDialog)
+                                pvpDialogUnits.RemoveAt(i);
+
+                        yield return null;
+                    }
+                }
+
                 yield return null;
             }
+
             QuestPanel.UpdateCombatRetreat(false);
             InvaderQuestPanel.UpdateCombatRetreat(false);
             while (IsUnitEventInProgress)
