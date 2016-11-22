@@ -56,6 +56,7 @@ public class MonsterTooltip : MonoBehaviour
     {
         targetPosition = monsterIndicator.position.x;
     }
+
     void Update()
     {
         if (targetPosition != monsterIndicator.position.x)
@@ -63,7 +64,8 @@ public class MonsterTooltip : MonoBehaviour
                 targetPosition, ref velocity, 0.2f), monsterIndicator.position.y, monsterIndicator.position.z);
     }
 
-    public void UpdateTooltiop(FormationUnit monsterUnit)
+
+    void UpdateMonsterTooltip(FormationUnit monsterUnit)
     {
         Monster monster = monsterUnit.Character as Monster;
 
@@ -111,49 +113,83 @@ public class MonsterTooltip : MonoBehaviour
         for (int i = monsterSkillCounter; i < monsterSkills.Count; i++)
             monsterSkills[i].ResetSkill();
     }
-    public void UpdateTooltip(FormationUnit monsterUnit, float hitChance, float critChance, int minDamage, int maxDamage)
+
+    void UpdateHeroTooltip(FormationUnit heroUnit)
     {
-        Monster monster = monsterUnit.Character as Monster;
+        Hero hero = heroUnit.Character as Hero;
 
-        monsterLabel.text = LocalizationManager.GetString("str_monstername_" + monster.Data.StringId);
+        monsterLabel.text = hero.Name;
         monsterDodge.text = string.Format(LocalizationManager.GetString("monster_tooltip_dodge_format"),
-            System.Math.Round((double)monster.Dodge, 3));
+            System.Math.Round((double)hero.Dodge, 3));
         monsterProt.text = string.Format(LocalizationManager.GetString("monster_tooltip_prot_format"),
-            System.Math.Round((double)monster.Protection, 3));
-        monsterSpeed.text = string.Format(LocalizationManager.GetString("monster_tooltip_speed_format"), monster.Speed);
-        monsterHealth.text = string.Format(LocalizationManager.GetString("monster_tooltip_hp_format"), 
-            Mathf.RoundToInt(monster.Health.CurrentValue), Mathf.RoundToInt(monster.Health.ModifiedValue));
+            System.Math.Round((double)hero.Protection, 3));
+        monsterSpeed.text = string.Format(LocalizationManager.GetString("monster_tooltip_speed_format"), hero.Speed);
+        monsterHealth.text = string.Format(LocalizationManager.GetString("monster_tooltip_hp_format"),
+            Mathf.RoundToInt(hero.Health.CurrentValue), Mathf.RoundToInt(hero.Health.ModifiedValue));
 
-        int monsterTypesCounter = Mathf.Min(monsterTypes.Count, monster.Data.EnemyTypes.Count);
+        int monsterTypesCounter = Mathf.Min(monsterTypes.Count, 1);
         for (int i = 0; i < monsterTypesCounter; i++)
         {
             monsterTypes[i].enabled = true;
             monsterTypes[i].text = LocalizationManager.GetString(
-                CharacterLocalizationHelper.MonsterTooltipTypeString(monster.Data.EnemyTypes[i]));
+                CharacterLocalizationHelper.MonsterTooltipTypeString(MonsterType.Man));
         }
         for (int i = monsterTypesCounter; i < monsterTypes.Count; i++)
             monsterTypes[i].enabled = false;
 
-        heroHitLabel.text = LocalizationManager.GetString("str_ui_hero_to_hit") + string.Format(": {0:#.#%;0.#%}", hitChance);
-        heroCritLabel.text = LocalizationManager.GetString("str_ui_hero_crit") + string.Format(": {0:#.#%;0.#%}", critChance);
-        heroDmgLabel.text = LocalizationManager.GetString("str_ui_hero_dmg") + string.Format(": {0} - {1}", minDamage, maxDamage);
+        heroHitLabel.text = "";
+        heroCritLabel.text = "";
+        heroDmgLabel.text = "";
 
-        stunAmountLabel.text = string.Format("{0:0.#%;-0.#%}", monster[AttributeType.Stun].ModifiedValue);
-        blightAmountLabel.text = string.Format("{0:0.#%;-0.#%}", monster[AttributeType.Poison].ModifiedValue);
-        bleedAmountLabel.text = string.Format("{0:0.#%;-0.#%}", monster[AttributeType.Bleed].ModifiedValue);
-        debuffAmountLabel.text = string.Format("{0:0.#%;-0.#%}", monster[AttributeType.Debuff].ModifiedValue);
-        moveAmountLabel.text = string.Format("{0:0.#%;-0.#%}", monster[AttributeType.Move].ModifiedValue);
+        stunAmountLabel.text = string.Format("{0:0.#%;-0.#%}", hero[AttributeType.Stun].ModifiedValue);
+        blightAmountLabel.text = string.Format("{0:0.#%;-0.#%}", hero[AttributeType.Poison].ModifiedValue);
+        bleedAmountLabel.text = string.Format("{0:0.#%;-0.#%}", hero[AttributeType.Bleed].ModifiedValue);
+        debuffAmountLabel.text = string.Format("{0:0.#%;-0.#%}", hero[AttributeType.Debuff].ModifiedValue);
+        moveAmountLabel.text = string.Format("{0:0.#%;-0.#%}", hero[AttributeType.Move].ModifiedValue);
 
-        int monsterSkillCounter = Mathf.Min(monsterSkills.Count, monster.Data.CombatSkills.Count);
+        int monsterSkillCounter = Mathf.Min(monsterSkills.Count, hero.SelectedCombatSkills.Count);
         for (int i = 0; i < monsterSkillCounter; i++)
         {
-            if (monster.Data.CombatSkills[i].IsKnowledgeable == false)
+            if (hero.SelectedCombatSkills[i].IsKnowledgeable == false)
+            {
+                monsterSkillCounter--;
+                i--;
                 continue;
+            }
 
-            monsterSkills[i].UpdateSkill(monster.Data.CombatSkills[i]);
+            monsterSkills[i].UpdateHeroSkill(hero, hero.SelectedCombatSkills[i]);
         }
         for (int i = monsterSkillCounter; i < monsterSkills.Count; i++)
             monsterSkills[i].ResetSkill();
+    }
+
+
+    public void UpdateTooltiop(FormationUnit monsterUnit)
+    {
+        if (monsterUnit.Character.IsMonster)
+            UpdateMonsterTooltip(monsterUnit);
+        else
+            UpdateHeroTooltip(monsterUnit);
+    }
+
+    public void UpdateTooltip(FormationUnit monsterUnit, float hitChance, float critChance, int minDamage, int maxDamage)
+    {
+        if (monsterUnit.Character.IsMonster)
+        {
+            UpdateMonsterTooltip(monsterUnit);
+
+            heroHitLabel.text = LocalizationManager.GetString("str_ui_hero_to_hit") + string.Format(": {0:#.#%;0.#%}", hitChance);
+            heroCritLabel.text = LocalizationManager.GetString("str_ui_hero_crit") + string.Format(": {0:#.#%;0.#%}", critChance);
+            heroDmgLabel.text = LocalizationManager.GetString("str_ui_hero_dmg") + string.Format(": {0} - {1}", minDamage, maxDamage);
+        }
+        else
+        {
+            UpdateHeroTooltip(monsterUnit);
+
+            heroHitLabel.text = LocalizationManager.GetString("str_ui_hero_to_hit") + string.Format(": {0:#.#%;0.#%}", hitChance);
+            heroCritLabel.text = LocalizationManager.GetString("str_ui_hero_crit") + string.Format(": {0:#.#%;0.#%}", critChance);
+            heroDmgLabel.text = LocalizationManager.GetString("str_ui_hero_dmg") + string.Format(": {0} - {1}", minDamage, maxDamage);
+        }
     }
 
     public void Show(FormationUnit monsterUnit)
@@ -164,7 +200,9 @@ public class MonsterTooltip : MonoBehaviour
             return;
 
         Vector3 screenPoint = RaidSceneManager.DungeonPositionToScreen(monsterUnit.RectTransform.position);
-        targetPosition = screenPoint.x;
+        if(monsterUnit.Team == Team.Monsters)
+            targetPosition = screenPoint.x;
+
         animator.SetBool("IsActive", true);
 
         if(RaidSceneManager.BattleGround.Round.TurnType == TurnType.HeroTurn)

@@ -290,7 +290,10 @@ public class FormationOverlaySlot : MonoBehaviour, IPointerClickHandler, IPointe
     public void OnPointerEnter(PointerEventData eventData)
     {
         IsHovered = true;
-        if (TargetUnit != null && TargetUnit.Character.IsMonster)
+        if (TargetUnit == null)
+            return;
+
+        if (TargetUnit != null && RaidSceneManager.RaidPanel.SelectedUnit.Team != TargetUnit.Team)
         {
             if (TargetUnit.IsTargetable)
                 RaidSceneManager.RaidEvents.MonsterTooltip.Show(TargetUnit);

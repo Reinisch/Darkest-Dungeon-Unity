@@ -357,7 +357,6 @@ public static class BattleSolver
                         ApplyEffects(performerUnit, targetUnit, skill);
                         if (targetUnit.Character.IsMonster == false)
                             DarkestDungeonManager.Data.Effects["crit_heal_stress_heal"].ApplyIndependent(targetUnit);
-                        RemoveConditions(performerUnit, targetUnit);
                         return;
                     }
                 }
@@ -366,13 +365,11 @@ public static class BattleSolver
 
                 SkillResult.AddResultEntry(new SkillResultEntry(targetUnit, heal, SkillResultType.Heal));
                 ApplyEffects(performerUnit, targetUnit, skill);
-                RemoveConditions(performerUnit, targetUnit);
             }
             else
             {
                 SkillResult.AddResultEntry(new SkillResultEntry(targetUnit, SkillResultType.Utility));
                 ApplyEffects(performerUnit, targetUnit, skill);
-                RemoveConditions(performerUnit, targetUnit);
             }
             #endregion
         }
@@ -395,7 +392,6 @@ public static class BattleSolver
                         SkillResult.AddResultEntry(new SkillResultEntry(targetUnit, SkillResultType.Dodge));
 
                     ApplyEffects(performerUnit, targetUnit, skill);
-                    RemoveConditions(performerUnit, targetUnit);
                     return;
                 }
             }
@@ -428,7 +424,6 @@ public static class BattleSolver
                     ApplyEffects(performerUnit, targetUnit, skill);
                     if (targetUnit.Character.IsMonster == false)
                         DarkestDungeonManager.Data.Effects["Stress 2"].ApplyIndependent(targetUnit);
-                    RemoveConditions(performerUnit, targetUnit);
                     return;
                 }
             }
@@ -440,7 +435,6 @@ public static class BattleSolver
                 SkillResult.AddResultEntry(new SkillResultEntry(targetUnit, damage, SkillResultType.Hit));
 
             ApplyEffects(performerUnit, targetUnit, skill);
-            RemoveConditions(performerUnit, targetUnit);
             return;
             #endregion
         }
@@ -489,7 +483,8 @@ public static class BattleSolver
             if (skill.IsCritValid)
                 critChance = performer.GetSingleAttribute(AttributeType.CritChance).ModifiedValue + skill.CritMod;
 
-            RemoveConditions(performerUnit, targetUnit);
+            RemoveConditions(performerUnit);
+            RemoveConditions(targetUnit);
             HeroActionInfo.UpdateInfo(true, hitChance, critChance, minDamage, maxDamage);
             return HeroActionInfo;
         }
@@ -519,12 +514,5 @@ public static class BattleSolver
     {
         targetUnit.Character.ApplyAllBuffRules(RaidSceneManager.Rules.GetIdleUnitRules(targetUnit));
         targetUnit.Character.RemoveConditionalBuffs();
-    }
-    public static void RemoveConditions(FormationUnit performerUnit, FormationUnit targetUnit)
-    {
-        //performerUnit.Character.ApplyAllBuffRules(RaidSceneManager.Rules.GetIdleUnitRules(performerUnit));
-        //targetUnit.Character.ApplyAllBuffRules(RaidSceneManager.Rules.GetIdleUnitRules(targetUnit));
-        //performerUnit.Character.RemoveConditionalBuffs();
-        //targetUnit.Character.RemoveConditionalBuffs();
     }
 }
