@@ -105,6 +105,10 @@ public class Round
         {
             unit.CombatInfo.UpdateNextRound();
             OrderedUnits.Add(unit);
+
+            if(SceneManagerHelper.ActiveSceneName == "DungeonMultiplayer")
+                if(unit.Character.Class == "antiquarian")
+                    OrderedUnits.Add(unit);
         }
 
         foreach (var unit in battleground.MonsterParty.Units)
@@ -115,6 +119,10 @@ public class Round
                     OrderedUnits.Add(unit);
             else
                 OrderedUnits.Add(unit);
+
+            if (SceneManagerHelper.ActiveSceneName == "DungeonMultiplayer")
+                if (unit.Character.Class == "antiquarian")
+                    OrderedUnits.Add(unit);
         }
         
         if(RoundNumber == 0)

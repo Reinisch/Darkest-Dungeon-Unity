@@ -36,7 +36,7 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
     {
         get
         {
-            return "1.0.1-Test";
+            return "1.0.2";
         }
     }
 

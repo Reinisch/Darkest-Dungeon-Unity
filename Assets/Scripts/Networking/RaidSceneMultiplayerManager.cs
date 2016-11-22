@@ -1285,7 +1285,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         {
             float initialDamage = actionUnit.Character.Mode.StressPerTurn;
 
-            int damage = Mathf.RoundToInt(initialDamage * (1 +
+            int damage = Mathf.RoundToInt(initialDamage * 2.5f * (1 +
                     actionUnit.Character.GetSingleAttribute(AttributeType.StressDmgReceivedPercent).ModifiedValue));
             if (damage < 1) damage = 1;
 
@@ -2269,7 +2269,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
             resolveCheckQueue.RemoveAt(0);
             float virtueChance = 0.25f + resolveUnit.Character[AttributeType.ResolveCheckPercent].ModifiedValue;
             virtueChance = Mathf.Clamp(virtueChance, 0.01f, 0.6f);
-            bool isVirtue = RandomSolver.CheckSuccess(virtueChance);
+            bool isVirtue = resolveUnit.Character.Class == "abomination" ? false : RandomSolver.CheckSuccess(virtueChance);
             var availableTraits = isVirtue ? DarkestDungeonManager.Data.Traits.FindAll(trait => trait.Type == OverstressType.Virtue) :
                 DarkestDungeonManager.Data.Traits.FindAll(trait => trait.Type == OverstressType.Affliction);
             Trait resolveTrait = availableTraits[RandomSolver.Next(availableTraits.Count)];
