@@ -51,6 +51,9 @@ public class MultiplayerPartyPanel : MonoBehaviour
             if (PartySlots.Find(slot => slot.SelectedHero == heroPool[targetIndex]))
                 continue;
 
+            if (PartySlots[slotIndex].SelectedHero.Class == heroPool[targetIndex].Class)
+                continue;
+
             break;
         }
 
