@@ -138,6 +138,8 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
 
         currentEvent = RoomLoadingEvent(currentRaid.Dungeon.StartingRoom, RoomTransitionType.Entrance);
         StartCoroutine(currentEvent);
+
+        PhotonGameManager.BarkMessages.Clear();
     }
     protected override void Update()
     {
@@ -1168,6 +1170,8 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                                 }
                             }
                         }
+                        yield return StartCoroutine(ExecuteEffectEvents(true));
+
                         yield break;
                     }
                     else
@@ -1238,6 +1242,8 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                                 }
                             }
                         }
+                        yield return StartCoroutine(ExecuteEffectEvents(true));
+
                         yield break;
                     }
                     else

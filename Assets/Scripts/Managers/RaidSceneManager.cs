@@ -2674,6 +2674,8 @@ public class RaidSceneManager : MonoBehaviour
                                     }
                                 }
                             }
+                            yield return StartCoroutine(ExecuteEffectEvents(true));
+
                             yield break;
                         }
                         else
@@ -2744,6 +2746,8 @@ public class RaidSceneManager : MonoBehaviour
                                     }
                                 }
                             }
+                            yield return StartCoroutine(ExecuteEffectEvents(true));
+
                             yield break;
                         }
                         else
