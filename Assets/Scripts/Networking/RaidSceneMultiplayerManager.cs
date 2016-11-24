@@ -21,6 +21,8 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
 
     #region Multiplayer Setup
     List<FormationUnit> pvpDialogUnits = new List<FormationUnit>();
+
+    Buff DeathsDoorSurvivalDebuff { get; set; }
     #endregion
 
     protected override void Awake()
@@ -95,7 +97,16 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
 
             #if !(UNITY_ANDROID || UNITY_IOS)
             escapeButton.gameObject.SetActive(false);
-            #endif
+#endif
+            DeathsDoorSurvivalDebuff = new Buff()
+            {
+                Id = "",
+                AttributeType = AttributeType.DeathBlow,
+                DurationAmount = 3,
+                DurationType = BuffDurationType.Combat,
+                ModifierValue = -0.1f,
+                Type = BuffType.StatAdd,
+            };
         }
         else
             Destroy(Instanse.gameObject);
@@ -1993,6 +2004,89 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         yield return StartCoroutine(ExecuteMonsterOverridenSkill(actionUnit, combatSkillOverride));
     }
 
+    protected override void ExecuteSkillInstants(FormationUnit performer, SkillTargetInfo targetInfo, SkillResult skillResult)
+    {
+        foreach (var skillEntry in skillResult.SkillEntries)
+        {
+            if (skillEntry.IsTargetHit)
+                skillEntry.Target.SetTargetSkillEffect(targetInfo.SkillArtInfo, performer);
+
+            skillEntry.Target.OverlaySlot.UpdateOverlay();
+
+            if (targetInfo.Type == SkillTargetType.Enemy && skillEntry.Target.Character.AtDeathsDoor)
+            {
+                if (PrepareDeath(skillEntry.Target))
+                {
+                    RaidEvents.ShowPopupMessage(skillEntry.Target, PopupMessageType.DeathBlow);
+                }
+                else
+                {
+                    RaidEvents.ShowPopupMessage(skillEntry.Target, PopupMessageType.DeathsDoor);
+                    skillEntry.Target.Character.AddBuff(new BuffInfo(DeathsDoorSurvivalDebuff, BuffSourceType.Adventure));
+                }
+            }
+            else
+            {
+                switch (skillEntry.Type)
+                {
+                    case SkillResultType.Miss:
+                        RaidEvents.ShowPopupMessage(skillEntry.Target, PopupMessageType.Miss);
+                        break;
+                    case SkillResultType.Dodge:
+                        RaidEvents.ShowPopupMessage(skillEntry.Target, PopupMessageType.Dodge);
+                        break;
+                    case SkillResultType.Hit:
+                        if (performer.Character.IsMonster && targetInfo.Skill.DamageMax == 0)
+                            break;
+                        if (!performer.Character.IsMonster && targetInfo.Skill.DamageMod == -1)
+                            break;
+
+                        RaidEvents.ShowPopupMessage(skillEntry.Target, PopupMessageType.Damage, skillEntry.Amount.ToString());
+                        break;
+                    case SkillResultType.Crit:
+                        if (performer.Character.IsMonster && targetInfo.Skill.DamageMax == 0)
+                            break;
+                        if (!performer.Character.IsMonster && targetInfo.Skill.DamageMod == -1)
+                            break;
+
+                        RaidEvents.ShowPopupMessage(skillEntry.Target, PopupMessageType.CritDamage, skillEntry.Amount.ToString());
+                        break;
+                    case SkillResultType.Heal:
+                        RaidEvents.ShowPopupMessage(skillEntry.Target, PopupMessageType.Heal, skillEntry.Amount.ToString());
+                        FMODUnity.RuntimeManager.PlayOneShot("event:/general/status/heal_ally");
+                        break;
+                    case SkillResultType.CritHeal:
+                        RaidEvents.ShowPopupMessage(skillEntry.Target, PopupMessageType.CritHeal, skillEntry.Amount.ToString());
+                        FMODUnity.RuntimeManager.PlayOneShot("event:/general/status/heal_ally_crit");
+                        break;
+                    case SkillResultType.Utility:
+                    default:
+                        break;
+                }
+
+                if (skillEntry.IsTargetHit && skillEntry.Target.Character.SkillReaction != null &&
+                    skillEntry.Target.Character.SkillReaction.WasHitPerformerEffects.Count > 0)
+                {
+                    for (int i = 0; i < skillEntry.Target.Character.SkillReaction.WasHitPerformerEffects.Count; i++)
+                        for (int j = 0; j < skillEntry.Target.Character.SkillReaction.WasHitPerformerEffects[i].SubEffects.Count; j++)
+                            skillEntry.Target.Character.SkillReaction.WasHitPerformerEffects[i].SubEffects[j].Apply(skillEntry.Target,
+                                performer, skillEntry.Target.Character.SkillReaction.WasHitPerformerEffects[i]);
+                }
+
+                if (skillEntry.Target.Character.IsMonster && Mathf.RoundToInt(skillEntry.Target.Character.Health.CurrentValue) == 0)
+                    PrepareDeath(skillEntry.Target);
+                else if (skillEntry.Target.Character.IsMonster == false && skillEntry.Target.Character.AtDeathsDoor == false)
+                    if (Mathf.RoundToInt(skillEntry.Target.Character.Health.CurrentValue) == 0)
+                        PrepareDeath(skillEntry.Target);
+            }
+        }
+
+        for (int i = 0; i < BattleGround.MonsterParty.Units.Count; i++)
+            if (BattleGround.MonsterParty.Units[i].CombatInfo.MarkedForDeath)
+                PrepareDeath(BattleGround.MonsterParty.Units[i]);
+
+        performer.OverlaySlot.UpdateOverlay();
+    }
     protected override IEnumerator ExecuteHeroSkill(FormationUnit actionUnit, SkillTargetInfo targetInfo, CombatSkill skill)
     {
         RaidEvents.MonsterTooltip.IsDisabled = true;
@@ -2092,6 +2186,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                     else
                     {
                         RaidEvents.ShowPopupMessage(skillEntry.Target, PopupMessageType.DeathsDoor);
+                        actionUnit.Character.AddBuff(new BuffInfo(DeathsDoorSurvivalDebuff, BuffSourceType.Adventure));
                     }
                 }
                 else
