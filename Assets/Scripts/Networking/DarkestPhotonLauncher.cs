@@ -119,6 +119,10 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
 
             // Auto sync loaded level with master client
             PhotonNetwork.automaticallySyncScene = false;
+
+            PhotonNetwork.MaxResendsBeforeDisconnect = 10;
+
+            PhotonNetwork.QuickResends = 3;
         }
         else
             Destroy(gameObject);
