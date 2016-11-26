@@ -40,6 +40,60 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
         }
     }
 
+    public static List<CloudRegionCode> AvailableRegions = new List<CloudRegionCode>()
+    {
+        CloudRegionCode.eu,
+        CloudRegionCode.us,
+        CloudRegionCode.asia,
+        CloudRegionCode.jp,
+        CloudRegionCode.au,
+        CloudRegionCode.usw,
+        CloudRegionCode.sa,
+        CloudRegionCode.cae,
+        CloudRegionCode.kr,
+        CloudRegionCode.@in,
+    };
+
+    public static CloudRegionCode SelectedRegion = CloudRegionCode.eu;
+
+    public static string RegionToString(CloudRegionCode code)
+    {
+        switch(code)
+        {
+            /// <summary>European servers in Amsterdam.</summary>
+            case CloudRegionCode.eu:
+                return "Europe";
+            /// <summary>US servers (East Coast).</summary>
+            case CloudRegionCode.us:
+                return "US East";
+            /// <summary>Asian servers in Singapore.</summary>
+            case CloudRegionCode.asia:
+                return "Asia";
+            /// <summary>Japanese servers in Tokyo.</summary>
+            case CloudRegionCode.jp:
+                return "Japan";
+            /// <summary>Australian servers in Melbourne.</summary>
+            case CloudRegionCode.au:
+                return "Australia";
+            ///<summary>USA West, San José, usw</summary>
+            case CloudRegionCode.usw:
+                return "US West";
+            ///<summary>South America	, Sao Paulo, sa</summary>
+            case CloudRegionCode.sa:
+                return "South America";
+            ///<summary>Canada East, Montreal, cae</summary>
+            case CloudRegionCode.cae:
+                return "Canada East";
+            ///<summary>South Korea, Seoul, kr</summary>
+            case CloudRegionCode.kr:
+                return "South Korea";
+            ///<summary>India, Chennai, in</summary>
+            case CloudRegionCode.@in:
+                return "India";
+            default:
+                goto case CloudRegionCode.eu;
+        }
+    }
     #endregion
 
     #region Private Variables
@@ -152,6 +206,7 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
         MultiplayerPartyPanel.LoadInitialComposition(initialParty);
 
         launcherPanel.progressLabel.text = "Disconnected!";
+        CampaignSelectionManager.Instanse.roomSelector.regionLabel.text = "Region: " + RegionToString(SelectedRegion);
     }
 
     #endregion
@@ -298,7 +353,8 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
         else
         {
             // #Critical, we must first and foremost connect to Photon Online Server.
-            PhotonNetwork.ConnectUsingSettings(GameVersion);
+            //PhotonNetwork.ConnectUsingSettings(GameVersion);
+            PhotonNetwork.ConnectToRegion(SelectedRegion, GameVersion);
         }
     }
 
@@ -332,14 +388,15 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
         else
         {
             // #Critical, we must first and foremost connect to Photon Online Server.
-            PhotonNetwork.ConnectUsingSettings(GameVersion);
+            //PhotonNetwork.ConnectUsingSettings(GameVersion);
+            PhotonNetwork.ConnectToRegion(SelectedRegion, GameVersion);
         }
     }
 
     public void ConnectToMaster()
     {
         if (!PhotonNetwork.connected)
-            PhotonNetwork.ConnectUsingSettings(GameVersion);
+            PhotonNetwork.ConnectToRegion(SelectedRegion, GameVersion);
     }
 
     public bool CreateNamedRoom(string roomName)
@@ -351,7 +408,7 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
         if (!PhotonNetwork.connected)
         {
             launcherPanel.progressLabel.text = "Can't create room! No connection!";
-            PhotonNetwork.ConnectUsingSettings(GameVersion);
+            PhotonNetwork.ConnectToRegion(SelectedRegion, GameVersion);
             return false;
         }
 
@@ -390,6 +447,34 @@ public class DarkestPhotonLauncher : Photon.PunBehaviour
             playerProps.Add("HF" + (i + 1).ToString(), skillFlags);
         }
         PhotonNetwork.player.SetCustomProperties(playerProps, playerProps, false);
+    }
+
+    public void NextRegion()
+    {
+        int targetIndex = AvailableRegions.IndexOf(SelectedRegion) + 1;
+        if (targetIndex > AvailableRegions.Count - 1)
+            targetIndex = 0;
+
+        SelectedRegion = AvailableRegions[targetIndex];
+        CampaignSelectionManager.Instanse.roomSelector.regionLabel.text = "Region: " + RegionToString(SelectedRegion);
+
+        if(PhotonNetwork.connected)
+            PhotonNetwork.Disconnect();
+        launcherPanel.progressLabel.text = "Disconnected!";
+    }
+    
+    public void PrevRegion()
+    {
+        int targetIndex = AvailableRegions.IndexOf(SelectedRegion) - 1;
+        if (targetIndex < 0)
+            targetIndex = AvailableRegions.Count - 1;
+
+        SelectedRegion = AvailableRegions[targetIndex];
+        CampaignSelectionManager.Instanse.roomSelector.regionLabel.text = "Region: " + RegionToString(SelectedRegion);
+
+        if (PhotonNetwork.connected)
+            PhotonNetwork.Disconnect();
+        launcherPanel.progressLabel.text = "Disconnected!";
     }
 
     #endregion

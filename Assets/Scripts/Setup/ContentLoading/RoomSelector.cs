@@ -17,6 +17,8 @@ public class RoomSelector : MonoBehaviour
     public RectTransform rect;
     public Text versionLabel;
 
+    public Text regionLabel;
+
     #region Multiplayer Launcher UI
 
     public Button playButton;

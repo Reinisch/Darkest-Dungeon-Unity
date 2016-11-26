@@ -18,7 +18,7 @@ MonoBehaviour:
   AppID: 4b075f41-8556-4cac-bc8d-223a9bef6de9
   VoiceAppID: 
   PreferredRegion: 0
-  EnabledRegions: -1
+  EnabledRegions: -382
   JoinLobby: 1
   EnableLobbyStatistics: 0
   RpcList:
