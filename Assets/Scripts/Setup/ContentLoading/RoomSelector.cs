@@ -72,7 +72,7 @@ public class RoomSelector : MonoBehaviour
                     selectedRoomSlot.RefocusInput();
                 }
             }
-            else if (Input.GetKeyUp(KeyCode.Escape))
+            else if (Input.GetKeyUp(KeyCode.Escape) && fadeCoroutine == null)
             {
                 isSelecting = false;
                 StopAllCoroutines();
@@ -90,8 +90,6 @@ public class RoomSelector : MonoBehaviour
         else
             progressLabel.text = "Disconnected!";
 
-        DarkestPhotonLauncher.Instanse.ConnectToMaster();
-
         DisableInteraction();
 
         while (true)
@@ -107,6 +105,8 @@ public class RoomSelector : MonoBehaviour
             sceneryRect.offsetMin = offsetMin;
             yield return null;
         }
+
+        DarkestPhotonLauncher.Instanse.ConnectToMaster();
         yield return new WaitForSeconds(1f);
         isSelecting = true;
 
@@ -208,9 +208,14 @@ public class RoomSelector : MonoBehaviour
         }
         else
         {
-            for (int i = 0; i < roomSlots.Count; i++)
-                roomSlots[i].LoadSaveFrame(null);
+            CleanRoomList();
         }
+    }
+
+    public void CleanRoomList()
+    {
+        for (int i = 0; i < roomSlots.Count; i++)
+            roomSlots[i].LoadSaveFrame(null);
     }
 
     public void FadeToLoadingScreen()
