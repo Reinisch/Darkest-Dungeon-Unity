@@ -31,7 +31,6 @@ sysinfo.txt
 
 # Game Assets
 /Assets/Audio/
-/Assets/Spine/
 /Assets/Sprites/
 /Assets/StreamingAssets/
 /Assets/Textures/
@@ -41,8 +40,6 @@ sysinfo.txt
 /Assets/Resources/Sprites/
 /Assets/Resources/Dungeons/
 /Assets/Resources/Data/Heroes/Sprites/
-/Assets/Plugins/FMOD/
-/Assets/Photon Unity Networking/Demos/
 
 # Logs
 UpgradeLog.htm
