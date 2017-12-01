@@ -17,7 +17,7 @@ public class PositionSet : MonoBehaviour
     void Update()
     {
         smoothTarget.Set(layoutGroup.spacing, rectTransform.anchoredPosition.x);
-        var target = Vector2.SmoothDamp(smoothTarget, targetValues, ref velocity, smoothTime);
+        var target = Vector2.SmoothDamp(smoothTarget, targetValues, ref velocity, smoothTime, float.MaxValue, Time.deltaTime);
 
         layoutGroup.spacing = target.x;
 

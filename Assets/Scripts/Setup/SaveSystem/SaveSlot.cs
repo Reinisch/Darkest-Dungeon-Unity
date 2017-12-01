@@ -29,17 +29,17 @@ public class SaveSlot : MonoBehaviour
 
     void Awake()
     {
-        saveSlotButton = transform.FindChild("Save").GetComponent<Button>();
-        title = saveSlotButton.transform.FindChild("Title").GetComponent<Text>();
-        titleInput = saveSlotButton.transform.FindChild("Title").GetComponent<InputField>();
+        saveSlotButton = transform.Find("Save").GetComponent<Button>();
+        title = saveSlotButton.transform.Find("Title").GetComponent<Text>();
+        titleInput = saveSlotButton.transform.Find("Title").GetComponent<InputField>();
 
-        location = saveSlotButton.transform.FindChild("Current Location").GetComponent<Text>();
-        currentWeek = saveSlotButton.transform.FindChild("Current Week").GetComponent<Text>();
+        location = saveSlotButton.transform.Find("Current Location").GetComponent<Text>();
+        currentWeek = saveSlotButton.transform.Find("Current Week").GetComponent<Text>();
 
-        nukeFrame = transform.FindChild("NukeSaveFrame").GetComponent<RectTransform>();
+        nukeFrame = transform.Find("NukeSaveFrame").GetComponent<RectTransform>();
         nukeSaveButton = nukeFrame.GetComponentInChildren<Button>();
 
-        saveEnvelopeAnimator = transform.FindChild("SaveEnvelope").GetComponent<Animator>();
+        saveEnvelopeAnimator = transform.Find("SaveEnvelope").GetComponent<Animator>();
     }
 
     void FillEmptySave()

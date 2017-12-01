@@ -13,7 +13,6 @@
 using System;
 using UnityEngine;
 
-
 [RequireComponent(typeof (PhotonView))]
 public class CubeInter : Photon.MonoBehaviour, IPunObservable
 {

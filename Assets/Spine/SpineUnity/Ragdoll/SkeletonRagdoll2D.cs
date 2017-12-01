@@ -283,7 +283,7 @@ public class SkeletonRagdoll2D : MonoBehaviour {
 #if UNITY_5
 				box.offset = new Vector2((b.WorldFlipX ? -length : length) / 2, 0);
 #else
-				box.center = new Vector2((b.WorldFlipX ? -length : length) / 2, 0);
+				box.offset = new Vector2((b.WorldFlipX ? -length : length) / 2, 0);
 #endif
 			}
 		}

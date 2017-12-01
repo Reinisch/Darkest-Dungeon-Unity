@@ -55,7 +55,7 @@ public class RaidPartyPanel : MonoBehaviour
 
     void Awake()
     {
-        PartySlots = new List<RaidPartySlot>(transform.FindChild("PartySlots").GetComponentsInChildren<RaidPartySlot>());
+        PartySlots = new List<RaidPartySlot>(transform.Find("PartySlots").GetComponentsInChildren<RaidPartySlot>());
         for(int i = 0; i < slotNumber; i++)
         {
             PartySlots[i].SlotId = i + 1;

@@ -19,7 +19,8 @@ public class MaterialPerOwner : Photon.MonoBehaviour
     {
         if( this.photonView.ownerId != assignedColorForUserId )
         {
-            m_Renderer.material = PlayerVariables.GetMaterial( m_Renderer.material, this.photonView.ownerId );
+            int index = System.Array.IndexOf(ExitGames.UtilityScripts.PlayerRoomIndexing.instance.PlayerIds, this.photonView.ownerId);
+            m_Renderer.material.color = FindObjectOfType<ColorPerPlayer>().Colors[index];
             this.assignedColorForUserId = this.photonView.ownerId;
             //Debug.Log("Switched Material to: " + this.assignedColorForUserId + " " + this.renderer.material.GetInstanceID());
         }

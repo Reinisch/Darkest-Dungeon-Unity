@@ -1,6 +1,6 @@
 
 Photon Unity Networking (PUN)
-	This package is a re-implementation of Unity's Networking, using Photon.
+	This package is a re-implementation of Unity 4's Networking, using Photon.
 	Also included: A setup wizard, demo scenes, documentation and Editor extensions.
 
 
@@ -28,8 +28,8 @@ UnityScript / JavaScript
 
 Help and Documentation
 	Please read the included chm (or pdf).
+    Online documentation:   http://doc.photonengine.com/en/pun
 	Exit Games Forum:       http://forum.photonengine.com/categories/unity-networking-plugin-pun
-	Online documentation:   http://doc.photonengine.com/en/pun
     Unity Forum Thread:     http://forum.unity3d.com/threads/photon-unity-networking.101734/
 
 

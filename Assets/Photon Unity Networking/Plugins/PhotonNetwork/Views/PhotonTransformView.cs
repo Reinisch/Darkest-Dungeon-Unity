@@ -137,9 +137,22 @@ public class PhotonTransformView : MonoBehaviour, IPunObservable
 			if (m_firstTake)
 			{
 				m_firstTake = false;
-				this.transform.localPosition = this.m_PositionControl.GetNetworkPosition();
-				this.transform.localRotation = this.m_RotationControl.GetNetworkRotation();
-				this.transform.localScale = this.m_ScaleControl.GetNetworkScale();
+
+				if (this.m_PositionModel.SynchronizeEnabled)
+				{
+					this.transform.localPosition = this.m_PositionControl.GetNetworkPosition();
+				}
+
+				if (this.m_RotationModel.SynchronizeEnabled)
+				{
+					this.transform.localRotation = this.m_RotationControl.GetNetworkRotation();
+				}
+
+				if (this.m_ScaleModel.SynchronizeEnabled)
+				{
+					this.transform.localScale = this.m_ScaleControl.GetNetworkScale();
+				}
+
 			}
 
         }

@@ -41,10 +41,34 @@ public class ColorPerPlayer : PunBehaviour
 
     public bool ColorPicked { get; set; }
 
+	// we need to reach the PlayerRoomindexing Component. So for safe initialization, we avoid having to mess with script execution order
+	bool isInitialized;
+
 	void OnEnable()
 	{
-		PlayerRoomIndexing.instance.OnRoomIndexingChanged += Refresh;
+		if (!isInitialized)
+		{
+			Init();
+		}
 	}
+
+	void Start()
+	{
+		if (!isInitialized)
+		{
+			Init();
+		}
+	}
+
+	void Init()
+	{
+		if (!isInitialized && PlayerRoomIndexing.instance!=null)
+		{
+			PlayerRoomIndexing.instance.OnRoomIndexingChanged += Refresh;
+			isInitialized = true;
+		}
+	}
+
 
 	void OnDisable()
 	{
@@ -64,6 +88,13 @@ public class ColorPerPlayer : PunBehaviour
 
 	}
 
+	public override void OnJoinedRoom()
+	{
+		if (!isInitialized)
+		{
+			Init();
+		}
+	}
 
     public override void OnLeftRoom()
     {

@@ -7,7 +7,7 @@ using System.Linq;
 
 public class RaidSceneMultiplayerManager : RaidSceneManager
 {
-    public static new RaidSceneMultiplayerManager Instanse { get; set; }
+    public new static RaidSceneMultiplayerManager Instanse { get; set; }
 
     public RaidQuestPanel invaderQuestPanel;
 

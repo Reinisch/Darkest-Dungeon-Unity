@@ -9,7 +9,6 @@
 
 using UnityEngine;
 
-
 [RequireComponent(typeof (PhotonView))]
 public class CubeLerp : Photon.MonoBehaviour, IPunObservable
 {

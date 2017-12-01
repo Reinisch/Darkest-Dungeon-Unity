@@ -42,13 +42,13 @@ public class WorkerInGame : Photon.MonoBehaviour
         if (chatComponent != null)
         {
             // to check if this client is the new master...
-            if (player.isLocal)
+            if (player.IsLocal)
             {
                 message = "You are Master Client now.";
             }
             else
             {
-                message = player.name + " is Master Client now.";
+                message = player.NickName + " is Master Client now.";
             }
 
 

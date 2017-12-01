@@ -67,10 +67,6 @@ namespace ExitGames.Demos.DemoAnimator
 				Debug.LogError("<Color=Red><b>Missing</b></Color> loaderAnime Reference.",this);
 			}
 
-			// #NotImportant
-			// Force LogLevel
-			PhotonNetwork.logLevel = PhotonLogLevel.ErrorsOnly;
-
 			// #Critical
 			// we don't join the lobby. There is no need to join a lobby to get the list of rooms.
 			PhotonNetwork.autoJoinLobby = false;
@@ -115,6 +111,7 @@ namespace ExitGames.Demos.DemoAnimator
 				LogFeedback("Joining Room...");
 				// #Critical we need at this point to attempt joining a Random Room. If it fails, we'll get notified in OnPhotonRandomJoinFailed() and we'll create one.
 				PhotonNetwork.JoinRandomRoom();
+				PhotonNetwork.JoinRandomRoom(null,(byte)(2));
 			}else{
 
 				LogFeedback("Connecting...");
@@ -213,16 +210,16 @@ namespace ExitGames.Demos.DemoAnimator
 		/// If a match has to be started "actively", you can call an [PunRPC](@ref PhotonView.RPC) triggered by a user's button-press or a timer.
 		///
 		/// When this is called, you can usually already access the existing players in the room via PhotonNetwork.playerList.
-		/// Also, all custom properties should be already available as Room.customProperties. Check Room.playerCount to find out if
+		/// Also, all custom properties should be already available as Room.customProperties. Check Room..PlayerCount to find out if
 		/// enough players are in the room to start playing.
 		/// </remarks>
 		public override void OnJoinedRoom()
 		{
-			LogFeedback("<Color=Green>OnJoinedRoom</Color> with "+PhotonNetwork.room.playerCount+" Player(s)");
+			LogFeedback("<Color=Green>OnJoinedRoom</Color> with "+PhotonNetwork.room.PlayerCount+" Player(s)");
 			Debug.Log("DemoAnimator/Launcher: OnJoinedRoom() called by PUN. Now this client is in a room.\nFrom here on, your game would be running. For reference, all callbacks are listed in enum: PhotonNetworkingMessage");
 		
 			// #Critical: We only load if we are the first player, else we rely on  PhotonNetwork.automaticallySyncScene to sync our instance scene.
-			if (PhotonNetwork.room.playerCount == 1)
+			if (PhotonNetwork.room.PlayerCount == 1)
 			{
 				Debug.Log("We load the 'Room for 1' ");
 

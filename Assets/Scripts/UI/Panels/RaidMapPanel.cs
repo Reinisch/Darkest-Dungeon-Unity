@@ -255,7 +255,7 @@ public class RaidMapPanel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         if (focus)
         {
             focusTimeMax -= Time.deltaTime;
-            scrollRect.normalizedPosition = Vector2.SmoothDamp(scrollRect.normalizedPosition, normalizedTarget, ref focusVelocity, 0.8f);
+            scrollRect.normalizedPosition = Vector2.SmoothDamp(scrollRect.normalizedPosition, normalizedTarget, ref focusVelocity, 0.8f, float.MaxValue, Time.deltaTime);
             if (scrollRect.normalizedPosition == normalizedTarget || focusTimeMax < 0)
                 focus = false;
         }

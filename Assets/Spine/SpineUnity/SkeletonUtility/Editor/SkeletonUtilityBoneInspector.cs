@@ -203,7 +203,7 @@ public class SkeletonUtilityBoneInspector : Editor {
 				GUILayout.BeginHorizontal();
 				GUILayout.Space(30);
 				if (GUILayout.Button(box.Name, GUILayout.Width(200))) {
-					var child = utilityBone.transform.FindChild("[BoundingBox]" + box.Name);
+					var child = utilityBone.transform.Find("[BoundingBox]" + box.Name);
 					if (child != null) {
 						var originalCollider = child.GetComponent<PolygonCollider2D>();
 						var updatedCollider = SkeletonUtility.AddBoundingBoxAsComponent(box, child.gameObject, originalCollider.isTrigger);

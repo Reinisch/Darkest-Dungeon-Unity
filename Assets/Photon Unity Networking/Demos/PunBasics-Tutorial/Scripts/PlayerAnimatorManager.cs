@@ -25,6 +25,7 @@ namespace ExitGames.Demos.DemoAnimator
 		#region PRIVATE PROPERTIES
 
 		Animator animator;
+	//	PhotonAnimatorView animatorView;
 
 		#endregion
 
@@ -36,6 +37,7 @@ namespace ExitGames.Demos.DemoAnimator
 	    void Start () 
 	    {
 	        animator = GetComponent<Animator>();
+	//		animatorView = GetComponent<PhotonAnimatorView>();
 	    }
 	        
 		/// <summary>
@@ -63,7 +65,7 @@ namespace ExitGames.Demos.DemoAnimator
             if (stateInfo.IsName("Base Layer.Run"))
             {
 				// When using trigger parameter
-                if (Input.GetButtonDown("Fire2")) animator.SetTrigger("Jump"); 
+				if (Input.GetButtonDown("Fire2")) animator.SetTrigger("Jump"); 
 			}
            
 			// deal with movement

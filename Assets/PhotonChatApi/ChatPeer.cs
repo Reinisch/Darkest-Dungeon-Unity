@@ -4,7 +4,7 @@
 // <copyright company="Exit Games GmbH">Photon Chat Api - Copyright (C) 2014 Exit Games GmbH</copyright>
 // ----------------------------------------------------------------------------------------------------------------------
 
-#if UNITY_4_7 || UNITY_5 || UNITY_5_0 || UNITY_5_1 || UNITY_6_0
+#if UNITY_4_7 || UNITY_5 || UNITY_5_0 || UNITY_5_1 || UNITY_2017
 #define UNITY
 #endif
 
@@ -82,17 +82,15 @@ namespace ExitGames.Client.Photon.Chat
             #endif
 
 
-            // to support WebGL export in Unity, we find and assign the SocketWebTcp class (if it's in the project).
-            // alternatively class SocketWebTcp might be in the Photon3Unity3D.dll
-            Type socketTcp = Type.GetType("ExitGames.Client.Photon.SocketWebTcp, Assembly-CSharp", false);
-            if (socketTcp == null)
+            // to support WebGL export in Unity, we find and assign the SocketWebTcpThread or SocketWebTcpCoroutine class (if it's in the project).
+            Type websocketType = Type.GetType("ExitGames.Client.Photon.SocketWebTcpThread, Assembly-CSharp", false);
+			websocketType = websocketType ?? Type.GetType("ExitGames.Client.Photon.SocketWebTcpThread, Assembly-CSharp-firstpass", false);
+            websocketType = websocketType ?? Type.GetType("ExitGames.Client.Photon.SocketWebTcpCoroutine, Assembly-CSharp", false);
+			websocketType = websocketType ?? Type.GetType("ExitGames.Client.Photon.SocketWebTcpCoroutine, Assembly-CSharp-firstpass", false);
+            if (websocketType != null)
             {
-                socketTcp = Type.GetType("ExitGames.Client.Photon.SocketWebTcp, Assembly-CSharp-firstpass", false);
-            }
-            if (socketTcp != null)
-            {
-                this.SocketImplementationConfig[ConnectionProtocol.WebSocket] = socketTcp;
-                this.SocketImplementationConfig[ConnectionProtocol.WebSocketSecure] = socketTcp;
+                this.SocketImplementationConfig[ConnectionProtocol.WebSocket] = websocketType;
+                this.SocketImplementationConfig[ConnectionProtocol.WebSocketSecure] = websocketType;
             }
         }
 

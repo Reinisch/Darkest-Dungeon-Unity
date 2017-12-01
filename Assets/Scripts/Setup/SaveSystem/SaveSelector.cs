@@ -21,7 +21,7 @@ public class SaveSelector : MonoBehaviour
 
     void Awake()
     {
-        saveFrame = transform.FindChild("SaveFrame");
+        saveFrame = transform.Find("SaveFrame");
         saveSlots = saveFrame.GetComponentsInChildren<SaveSlot>();
         for (int i = 0; i < slotNumber; i++)
             saveSlots[i].SaveSelector = this;

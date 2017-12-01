@@ -18,8 +18,8 @@ public class DungeonPanel : MonoBehaviour
 
     public void Initialize()
     {
-        QuestSlots = new List<QuestSlot>(transform.FindChild("DungeonFrame")
-            .FindChild("GeneratedQuests").GetComponentsInChildren<QuestSlot>());
+        QuestSlots = new List<QuestSlot>(transform.Find("DungeonFrame")
+            .Find("GeneratedQuests").GetComponentsInChildren<QuestSlot>());
         for (int i = 0; i < QuestSlots.Count; i++)
         {
             QuestSlots[i].Initialize();

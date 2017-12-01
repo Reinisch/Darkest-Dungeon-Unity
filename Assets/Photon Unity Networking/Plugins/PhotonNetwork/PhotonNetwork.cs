@@ -28,7 +28,7 @@ using System.IO;
 public static class PhotonNetwork
 {
     /// <summary>Version number of PUN. Also used in GameVersion to separate client version from each other.</summary>
-    public const string versionPUN = "1.79";
+    public const string versionPUN = "1.87";
 
     /// <summary>Version string for your this build. Can be used to separate incompatible clients. Sent during connect.</summary>
     /// <remarks>This is only sent when you connect so that is also the place you set it usually (e.g. in ConnectUsingSettings).</remarks>
@@ -54,15 +54,14 @@ public static class PhotonNetwork
     /// <summary>Name of the PhotonServerSettings file (used to load and by PhotonEditor to save new files).</summary>
     internal const string serverSettingsAssetFile = "PhotonServerSettings";
 
-    /// <summary>Path to the PhotonServerSettings file (used by PhotonEditor).</summary>
-    internal const string serverSettingsAssetPath = "Assets/Photon Unity Networking/Resources/" + PhotonNetwork.serverSettingsAssetFile + ".asset";
-
-
     /// <summary>Serialized server settings, written by the Setup Wizard for use in ConnectUsingSettings.</summary>
     public static ServerSettings PhotonServerSettings = (ServerSettings)Resources.Load(PhotonNetwork.serverSettingsAssetFile, typeof(ServerSettings));
 
     /// <summary>Currently used server address (no matter if master or game server).</summary>
     public static string ServerAddress { get { return (networkingPeer != null) ? networkingPeer.ServerAddress : "<not connected>"; } }
+
+    /// <summary>Currently used Cloud Region (if any). As long as the client is not on a Master Server or Game Server, the region is not yet defined.</summary>
+    public static CloudRegionCode CloudRegion { get { return (networkingPeer != null && connected && Server!=ServerConnection.NameServer) ? networkingPeer.CloudRegion : CloudRegionCode.none; } }
 
     /// <summary>
     /// False until you connected to Photon initially. True in offline mode, while connected to any server and even while switching servers.
@@ -197,7 +196,7 @@ public static class PhotonNetwork
     /// <remarks>
     /// Set these before calling Connect if you want custom authentication.
     /// These values set the userId, if and how that userId gets verified (server-side), etc..
-    /// 
+    ///
     /// If authentication fails for any values, PUN will call your implementation of OnCustomAuthenticationFailed(string debugMsg).
     /// See: PhotonNetworkingMessage.OnCustomAuthenticationFailed
     /// </remarks>
@@ -286,12 +285,12 @@ public static class PhotonNetwork
     }
 
     /// <summary>
-    /// Set to synchronize the player's nickname with everyone in the room(s) you enter. This sets PhotonPlayer.name.
+    /// Set to synchronize the player's nickname with everyone in the room(s) you enter. This sets PhotonNetwork.player.NickName.
     /// </summary>
     /// <remarks>
     /// The playerName is just a nickname and does not have to be unique or backed up with some account.<br/>
     /// Set the value any time (e.g. before you connect) and it will be available to everyone you play with.<br/>
-    /// Access the names of players by: PhotonPlayer.name. <br/>
+    /// Access the names of players by: PhotonPlayer.NickName. <br/>
     /// PhotonNetwork.otherPlayers is a list of other players - each contains the playerName the remote player set.
     /// </remarks>
     public static string playerName
@@ -852,11 +851,11 @@ public static class PhotonNetwork
     /// <remarks>
     /// It's best practice to disconnect inactive apps/connections after a while but to also allow users to take calls, etc..
     /// We think a reasonable backgroung timeout is 60 seconds.
-    /// 
-    /// To handle the timeout, implement: OnDisconnectedFromPhoton(), as usual. 
+    ///
+    /// To handle the timeout, implement: OnDisconnectedFromPhoton(), as usual.
     /// Your application will "notice" the background disconnect when it becomes active again (running the Update() loop).
-    /// 
-    /// If you need to separate this case from others, you need to track if the app was in the background 
+    ///
+    /// If you need to separate this case from others, you need to track if the app was in the background
     /// (there is no special callback by PUN).
     ///
     /// A value below 0.1 seconds will disable this timeout (careful: connections can be kept indefinitely).
@@ -1106,7 +1105,10 @@ public static class PhotonNetwork
         }
         #endif
 
-        Application.runInBackground = true;
+		if (PhotonServerSettings != null)
+		{
+			Application.runInBackground = PhotonServerSettings.RunInBackground;
+		}
 
         // Set up a MonoBehaviour to run Photon, and hide it
         GameObject photonGO = new GameObject();
@@ -1123,14 +1125,7 @@ public static class PhotonNetwork
 
 
         #if UNITY_XBOXONE
-        Debug.Log("UNITY_XBOXONE is defined: Using AuthMode 'AuthOnceWss' and EncryptionMode 'DatagramEncryption'.");
-        if (!PhotonPeer.NativeDatagramEncrypt)
-        {
-            Debug.LogError("XB1 builds need a Photon3Unity3d.dll which uses the native PhotonEncryptorPlugin. This dll does not!");
-        }
-
-        networkingPeer.AuthMode = AuthModeOption.AuthOnceWss;
-        networkingPeer.EncryptionMode = EncryptionMode.DatagramEncryption;
+        networkingPeer.AuthMode = AuthModeOption.Auth;
         #endif
 
         if (UsePreciseTimer)
@@ -1167,7 +1162,7 @@ public static class PhotonNetwork
     /// <param name="cp">Network protocol to use as low level connection. UDP is default. TCP is not available on all platforms (see remarks).</param>
     public static void SwitchToProtocol(ConnectionProtocol cp)
     {
-        Debug.Log("SwitchToProtocol: " + cp + " PhotonNetwork.connected: " + PhotonNetwork.connected);
+        // Debug.Log("SwitchToProtocol: " + cp + " PhotonNetwork.connected: " + PhotonNetwork.connected);
         networkingPeer.TransportProtocol = cp;
     }
 
@@ -1213,6 +1208,19 @@ public static class PhotonNetwork
             Debug.LogError("You did not select a Hosting Type in your PhotonServerSettings. Please set it up or don't use ConnectUsingSettings().");
             return false;
         }
+
+		// only apply Settings if logLevel is default ( see ServerSettings.cs), else it means it's been set programmatically
+		if (PhotonNetwork.logLevel == PhotonLogLevel.ErrorsOnly)
+		{
+        	PhotonNetwork.logLevel = PhotonServerSettings.PunLogging;
+		}
+
+		// only apply Settings if logLevel is default ( see ServerSettings.cs), else it means it's been set programmatically
+		if (PhotonNetwork.networkingPeer.DebugOut == DebugLevel.ERROR)
+		{
+        	PhotonNetwork.networkingPeer.DebugOut = PhotonServerSettings.NetworkLogging;
+		}
+
 
         SwitchToProtocol(PhotonServerSettings.Protocol);
         networkingPeer.SetApp(PhotonServerSettings.AppID, gameVersion);
@@ -1575,9 +1583,9 @@ public static class PhotonNetwork
     /// That list is initialized on first use of OpFindFriends (before that, it is null).
     /// To refresh the list, call FindFriends again (in 5 seconds or 10 or 20).
     ///
-    /// Users identify themselves by setting a unique userId in the PhotonNetwork.AuthValues. 
+    /// Users identify themselves by setting a unique userId in the PhotonNetwork.AuthValues.
     /// See remarks of AuthenticationValues for info about how this is set and used.
-    /// 
+    ///
     /// The list of friends must be fetched from some other source (not provided by Photon).
     ///
     ///
@@ -1718,7 +1726,7 @@ public static class PhotonNetwork
     /// JoinRoom fails if the room is either full or no longer available (it might become empty while you attempt to join).
     /// Implement OnPhotonJoinRoomFailed() to get a callback in error case.
     ///
-    /// To join a room from the lobby's listing, use RoomInfo.name as roomName here.
+    /// To join a room from the lobby's listing, use RoomInfo.Name as roomName here.
     /// Despite using multiple lobbies, a roomName is always "global" for your application and so you don't
     /// have to specify which lobby it's in. The Master Server will find the room.
     /// In the Photon Cloud, an application is defined by AppId, Game- and PUN-version.
@@ -1739,7 +1747,7 @@ public static class PhotonNetwork
     /// JoinRoom fails if the room is either full or no longer available (it might become empty while you attempt to join).
     /// Implement OnPhotonJoinRoomFailed() to get a callback in error case.
     ///
-    /// To join a room from the lobby's listing, use RoomInfo.name as roomName here.
+    /// To join a room from the lobby's listing, use RoomInfo.Name as roomName here.
     /// Despite using multiple lobbies, a roomName is always "global" for your application and so you don't
     /// have to specify which lobby it's in. The Master Server will find the room.
     /// In the Photon Cloud, an application is defined by AppId, Game- and PUN-version.
@@ -1849,7 +1857,7 @@ public static class PhotonNetwork
         opParams.RoomOptions = roomOptions;
         opParams.Lobby = typedLobby;
         opParams.CreateIfNotExists = true;
-        opParams.PlayerProperties = player.customProperties;
+        opParams.PlayerProperties = player.CustomProperties;
         opParams.ExpectedUsers = expectedUsers;
 
         return networkingPeer.OpJoinRoom(opParams);
@@ -1996,7 +2004,7 @@ public static class PhotonNetwork
         EnterRoomParams opParams = new EnterRoomParams();
         opParams.RoomName = roomName;
         opParams.RejoinOnly = true;
-        opParams.PlayerProperties = player.customProperties;
+        opParams.PlayerProperties = player.CustomProperties;
 
         return networkingPeer.OpJoinRoom(opParams);
     }
@@ -2009,7 +2017,7 @@ public static class PhotonNetwork
     {
         offlineModeRoom = new Room(roomName, roomOptions);
         networkingPeer.ChangeLocalID(1);
-        offlineModeRoom.masterClientId = 1;
+        offlineModeRoom.MasterClientId = 1;
 
         if (createdRoom)
         {
@@ -2149,6 +2157,22 @@ public static class PhotonNetwork
         return true;
     }
 
+    /// <summary>Fetches a custom list of games from the server, matching a SQL-like "where" clause, then triggers OnReceivedRoomListUpdate callback.</summary>
+    /// <remarks>
+    /// Operation is only available for lobbies of type SqlLobby. Note: You don't have to join that lobby.
+    /// This is an async request.
+    ///
+    /// When done, OnReceivedRoomListUpdate gets called. Use GetRoomList() to access it.
+    /// </remarks>
+    /// <see cref="http://doc.photonengine.com/en-us/pun/current/manuals-and-demos/matchmaking-and-lobby#sql_lobby_type"/>
+    /// <param name="typedLobby">The lobby to query. Has to be of type SqlLobby.</param>
+    /// <param name="sqlLobbyFilter">The sql query statement.</param>
+    /// <returns>If the operation could be sent (has to be connected).</returns>
+    public static bool GetCustomRoomList(TypedLobby typedLobby, string sqlLobbyFilter)
+    {
+        return networkingPeer.OpGetGameList(typedLobby, sqlLobbyFilter);
+    }
+
     /// <summary>
     /// Gets currently known rooms as RoomInfo array. This is available and updated while in a lobby (check insideLobby).
     /// </summary>
@@ -2191,13 +2215,13 @@ public static class PhotonNetwork
         if (customProperties == null)
         {
             customProperties = new Hashtable();
-            foreach (object k in player.customProperties.Keys)
+            foreach (object k in player.CustomProperties.Keys)
             {
                 customProperties[(string)k] = null;
             }
         }
 
-        if (room != null && room.isLocalClientInside)
+        if (room != null && room.IsLocalClientInside)
         {
             player.SetCustomProperties(customProperties);
         }
@@ -2224,9 +2248,9 @@ public static class PhotonNetwork
     /// <param name="customPropertiesToDelete">List of Custom Property keys to remove. See remarks.</param>
     public static void RemovePlayerCustomProperties(string[] customPropertiesToDelete)
     {
-        if (customPropertiesToDelete == null || customPropertiesToDelete.Length == 0 || player.customProperties == null)
+        if (customPropertiesToDelete == null || customPropertiesToDelete.Length == 0 || player.CustomProperties == null)
         {
-            player.customProperties = new Hashtable();
+            player.CustomProperties = new Hashtable();
             return;
         }
 
@@ -2234,9 +2258,9 @@ public static class PhotonNetwork
         for (int i = 0; i < customPropertiesToDelete.Length; i++)
         {
             string key = customPropertiesToDelete[i];
-            if (player.customProperties.ContainsKey(key))
+            if (player.CustomProperties.ContainsKey(key))
             {
-                player.customProperties.Remove(key);
+                player.CustomProperties.Remove(key);
             }
         }
     }
@@ -2403,7 +2427,7 @@ public static class PhotonNetwork
     /// <param name="rotation">Rotation Quaternion to apply on instantiation.</param>
     /// <param name="group">The group for this PhotonView.</param>
     /// <returns>The new instance of a GameObject with initialized PhotonView.</returns>
-    public static GameObject Instantiate(string prefabName, Vector3 position, Quaternion rotation, int group)
+    public static GameObject Instantiate(string prefabName, Vector3 position, Quaternion rotation, byte group)
     {
         return Instantiate(prefabName, position, rotation, group, null);
     }
@@ -2418,7 +2442,7 @@ public static class PhotonNetwork
     /// <param name="group">The group for this PhotonView.</param>
     /// <param name="data">Optional instantiation data. This will be saved to it's PhotonView.instantiationData.</param>
     /// <returns>The new instance of a GameObject with initialized PhotonView.</returns>
-    public static GameObject Instantiate(string prefabName, Vector3 position, Quaternion rotation, int group, object[] data)
+    public static GameObject Instantiate(string prefabName, Vector3 position, Quaternion rotation, byte group, object[] data)
     {
         if (!connected || (InstantiateInRoomOnly && !inRoom))
         {
@@ -2478,7 +2502,7 @@ public static class PhotonNetwork
     /// <param name="group">The group for this PhotonView.</param>
     /// <param name="data">Optional instantiation data. This will be saved to it's PhotonView.instantiationData.</param>
     /// <returns>The new instance of a GameObject with initialized PhotonView.</returns>
-    public static GameObject InstantiateSceneObject(string prefabName, Vector3 position, Quaternion rotation, int group, object[] data)
+    public static GameObject InstantiateSceneObject(string prefabName, Vector3 position, Quaternion rotation, byte group, object[] data)
     {
         if (!connected || (InstantiateInRoomOnly && !inRoom))
         {
@@ -2581,7 +2605,7 @@ public static class PhotonNetwork
             return false;
         }
 
-        if (!player.isMasterClient)
+        if (!player.IsMasterClient)
         {
             Debug.LogError("CloseConnection: Only the masterclient can kick another player.");
             return false;
@@ -2759,7 +2783,7 @@ public static class PhotonNetwork
         {
             return;
         }
-        if (player.isMasterClient || targetPlayerId == player.ID)
+        if (player.IsMasterClient || targetPlayerId == player.ID)
         {
             networkingPeer.DestroyPlayerObjects(targetPlayerId, false);
         }
@@ -2816,7 +2840,7 @@ public static class PhotonNetwork
             return;
         }
 
-        if (!targetPlayer.isLocal && !isMasterClient)
+        if (!targetPlayer.IsLocal && !isMasterClient)
         {
             Debug.LogError("Error; Only the MasterClient can call RemoveRPCs for other players.");
             return;
@@ -2954,48 +2978,123 @@ public static class PhotonNetwork
         Component[] targetComponents = (Component[]) GameObject.FindObjectsOfType(type);
         for (int index = 0; index < targetComponents.Length; index++)
         {
-            objectsWithComponent.Add(targetComponents[index].gameObject);
+            if (targetComponents[index] != null)
+            {
+                objectsWithComponent.Add(targetComponents[index].gameObject);
+            }
         }
 
         return objectsWithComponent;
     }
 
-    /// <summary>
-    /// Enable/disable receiving on given group (applied to PhotonViews)
-    /// </summary>
-    /// <param name="group">The interest group to affect.</param>
-    /// <param name="enabled">Sets if receiving from group to enabled (or not).</param>
+
+
+    [Obsolete("Use SetInterestGroups(byte group, bool enabled) instead.")]
     public static void SetReceivingEnabled(int group, bool enabled)
     {
         if (!VerifyCanUseNetwork())
         {
             return;
         }
-        networkingPeer.SetReceivingEnabled(group, enabled);
+
+        SetInterestGroups((byte)group, enabled);
+    }
+
+    /// <summary>Enable/disable receiving events from a given Interest Group.</summary>
+    /// <remarks>
+    /// A client can tell the server which Interest Groups it's interested in.
+    /// The server will only forward events for those Interest Groups to that client (saving bandwidth and performance).
+    ///
+    /// See: https://doc.photonengine.com/en-us/pun/current/manuals-and-demos/interestgroupsinterestgroups
+    ///
+    /// See: https://doc.photonengine.com/en-us/pun/current/manuals-and-demos/culling-demo
+    /// </remarks>
+    /// <param name="group">The interest group to affect.</param>
+    /// <param name="enabled">Sets if receiving from group to enabled (or not).</param>
+    public static void SetInterestGroups(byte group, bool enabled)
+    {
+        if (!VerifyCanUseNetwork())
+        {
+            return;
+        }
+
+        if (enabled)
+        {
+            byte[] groups = new byte[1] { (byte)group };
+            networkingPeer.SetInterestGroups(null, groups);
+        }
+        else
+        {
+            byte[] groups = new byte[1] { (byte)group };
+            networkingPeer.SetInterestGroups(groups, null);
+        }
     }
 
 
-    /// <summary>
-    /// Enable/disable receiving on given groups (applied to PhotonViews)
-    /// </summary>
-    /// <param name="enableGroups">The interest groups to enable (or null).</param>
-    /// <param name="disableGroups">The interest groups to disable (or null).</param>
+    [Obsolete("Use SetInterestGroups(byte[] disableGroups, byte[] enableGroups) instead. Mind the parameter order!")]
     public static void SetReceivingEnabled(int[] enableGroups, int[] disableGroups)
     {
         if (!VerifyCanUseNetwork())
         {
             return;
         }
-        networkingPeer.SetReceivingEnabled(enableGroups, disableGroups);
+
+        byte[] disableByteGroups = null;
+        byte[] enableByteGroups = null;
+
+        if (enableGroups != null)
+        {
+            enableByteGroups = new byte[enableGroups.Length];
+            Array.Copy(enableGroups, enableByteGroups, enableGroups.Length);
+        }
+        if (disableGroups != null)
+        {
+            disableByteGroups = new byte[disableGroups.Length];
+            Array.Copy(disableGroups, disableByteGroups, disableGroups.Length);
+        }
+
+        networkingPeer.SetInterestGroups(disableByteGroups, enableByteGroups);
+    }
+
+    /// <summary>Enable/disable receiving on given Interest Groups (applied to PhotonViews).</summary>
+    /// <remarks>
+    /// A client can tell the server which Interest Groups it's interested in.
+    /// The server will only forward events for those Interest Groups to that client (saving bandwidth and performance).
+    ///
+    /// See: https://doc.photonengine.com/en-us/pun/current/manuals-and-demos/interestgroupsinterestgroups
+    ///
+    /// See: https://doc.photonengine.com/en-us/pun/current/manuals-and-demos/culling-demo
+    /// </remarks>
+    /// <param name="disableGroups">The interest groups to disable (or null).</param>
+    /// <param name="enableGroups">The interest groups to enable (or null).</param>
+    public static void SetInterestGroups(byte[] disableGroups, byte[] enableGroups)
+    {
+        if (!VerifyCanUseNetwork())
+        {
+            return;
+        }
+        networkingPeer.SetInterestGroups(disableGroups, enableGroups);
     }
 
 
-    /// <summary>
-    /// Enable/disable sending on given group (applied to PhotonViews)
-    /// </summary>
+
+    [Obsolete("Use SetSendingEnabled(byte group, bool enabled). Interest Groups have a byte-typed ID. Mind the parameter order.")]
+    public static void SetSendingEnabled(int group, bool enabled)
+    {
+        SetSendingEnabled((byte)group, enabled);
+    }
+
+    /// <summary>Enable/disable sending on given group (applied to PhotonViews)</summary>
+    /// <remarks>
+    /// This does not interact with the Photon server-side.
+    /// It's just a client-side setting to suppress updates, should they be sent to one of the blocked groups.
+    ///
+    /// This setting is not particularly useful, as it means that updates literally never reach the server or anyone else.
+    /// Use with care.
+    /// </remarks>
     /// <param name="group">The interest group to affect.</param>
     /// <param name="enabled">Sets if sending to group is enabled (or not).</param>
-    public static void SetSendingEnabled(int group, bool enabled)
+    public static void SetSendingEnabled(byte group, bool enabled)
     {
         if (!VerifyCanUseNetwork())
         {
@@ -3006,18 +3105,43 @@ public static class PhotonNetwork
     }
 
 
-    /// <summary>
-    /// Enable/disable sending on given groups (applied to PhotonViews)
-    /// </summary>
+    [Obsolete("Use SetSendingEnabled(byte group, bool enabled). Interest Groups have a byte-typed ID. Mind the parameter order.")]
+    public static void SetSendingEnabled(int[] enableGroups, int[] disableGroups)
+    {
+        byte[] disableByteGroups = null;
+        byte[] enableByteGroups = null;
+
+        if (enableGroups != null)
+        {
+            enableByteGroups = new byte[enableGroups.Length];
+            Array.Copy(enableGroups, enableByteGroups, enableGroups.Length);
+        }
+        if (disableGroups != null)
+        {
+            disableByteGroups = new byte[disableGroups.Length];
+            Array.Copy(disableGroups, disableByteGroups, disableGroups.Length);
+        }
+
+        SetSendingEnabled(disableByteGroups, enableByteGroups);
+    }
+
+    /// <summary>Enable/disable sending on given groups (applied to PhotonViews)</summary>
+    /// <remarks>
+    /// This does not interact with the Photon server-side.
+    /// It's just a client-side setting to suppress updates, should they be sent to one of the blocked groups.
+    ///
+    /// This setting is not particularly useful, as it means that updates literally never reach the server or anyone else.
+    /// Use with care.
     /// <param name="enableGroups">The interest groups to enable sending on (or null).</param>
     /// <param name="disableGroups">The interest groups to disable sending on (or null).</param>
-    public static void SetSendingEnabled(int[] enableGroups, int[] disableGroups)
+    public static void SetSendingEnabled(byte[] disableGroups, byte[] enableGroups)
     {
         if (!VerifyCanUseNetwork())
         {
             return;
         }
-        networkingPeer.SetSendingEnabled(enableGroups, disableGroups);
+
+        networkingPeer.SetSendingEnabled(disableGroups, enableGroups);
     }
 
 
@@ -3141,6 +3265,74 @@ public static class PhotonNetwork
 
 
 #if UNITY_EDITOR
+
+
+	/// <summary>
+	/// Finds the asset path base on its name or search query: https://docs.unity3d.com/ScriptReference/AssetDatabase.FindAssets.html
+	/// </summary>
+	/// <returns>The asset path.</returns>
+	/// <param name="asset">Asset.</param>
+	public static string FindAssetPath(string asset)
+	{
+		string[] guids = AssetDatabase.FindAssets (asset, null);
+		if (guids.Length != 1)
+		{
+			return string.Empty;
+		} else
+		{
+			return AssetDatabase.GUIDToAssetPath (guids [0]);
+		}
+	}
+
+
+	/// <summary>
+	/// Finds the pun asset folder. Something like Assets/Photon Unity Networking/Resources/
+	/// </summary>
+	/// <returns>The pun asset folder.</returns>
+	public static string FindPunAssetFolder()
+	{
+		string _thisPath =	FindAssetPath("PhotonClasses");
+		string _PunFolderPath = string.Empty;
+
+		_PunFolderPath = GetParent(_thisPath,"Photon Unity Networking");
+
+		if (_PunFolderPath != null)
+		{
+			return "Assets" + _PunFolderPath.Substring(Application.dataPath.Length)+"/";
+		}
+
+		return "Assets/Photon Unity Networking/";
+	}
+
+	/// <summary>
+	/// Gets the parent directory of a path. Recursive Function, will return null if parentName not found
+	/// </summary>
+	/// <returns>The parent directory</returns>
+	/// <param name="path">Path.</param>
+	/// <param name="parentName">Parent name.</param>
+	public static string GetParent(string path, string parentName)
+	{
+		var dir = new DirectoryInfo(path);
+
+		if (dir.Parent == null)
+		{
+			return null;
+		}
+
+		if (string.IsNullOrEmpty(parentName))
+		{
+			return  dir.Parent.FullName;
+		}
+
+		if (dir.Parent.Name == parentName)
+		{
+			return dir.Parent.FullName;
+		}
+
+		return GetParent(dir.Parent.FullName, parentName);
+	}
+
+
     [Conditional("UNITY_EDITOR")]
     public static void CreateSettings()
     {
@@ -3163,7 +3355,13 @@ public static class PhotonNetwork
         // if still not loaded, create one
         if (PhotonNetwork.PhotonServerSettings == null)
         {
-            string settingsPath = Path.GetDirectoryName(PhotonNetwork.serverSettingsAssetPath);
+			string _PunResourcesPath = PhotonNetwork.FindPunAssetFolder();
+
+			_PunResourcesPath += "Resources/";
+
+
+			string serverSettingsAssetPath = _PunResourcesPath+ PhotonNetwork.serverSettingsAssetFile + ".asset";
+			string settingsPath = Path.GetDirectoryName(serverSettingsAssetPath);
             if (!Directory.Exists(settingsPath))
             {
                 Directory.CreateDirectory(settingsPath);
@@ -3173,7 +3371,7 @@ public static class PhotonNetwork
             PhotonNetwork.PhotonServerSettings = (ServerSettings)ScriptableObject.CreateInstance("ServerSettings");
             if (PhotonNetwork.PhotonServerSettings != null)
             {
-                AssetDatabase.CreateAsset(PhotonNetwork.PhotonServerSettings, PhotonNetwork.serverSettingsAssetPath);
+				AssetDatabase.CreateAsset(PhotonNetwork.PhotonServerSettings, serverSettingsAssetPath);
             }
             else
             {

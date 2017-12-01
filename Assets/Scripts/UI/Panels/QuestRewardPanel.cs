@@ -7,7 +7,7 @@ public class QuestRewardPanel : MonoBehaviour
 
     void Awake()
     {
-        RewardSlots = new List<RewardSlot>(transform.FindChild("RewardItems").GetComponentsInChildren<RewardSlot>());
+        RewardSlots = new List<RewardSlot>(transform.Find("RewardItems").GetComponentsInChildren<RewardSlot>());
     }
 
     public void UpdateRewardSlots(Quest quest)

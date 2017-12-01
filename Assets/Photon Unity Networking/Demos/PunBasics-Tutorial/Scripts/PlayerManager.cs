@@ -8,7 +8,7 @@
 // <author>developer@exitgames.com</author>
 // --------------------------------------------------------------------------------------------------------------------
 
-#if UNITY_5 && (!UNITY_5_0 && !UNITY_5_1 && !UNITY_5_2 && !UNITY_5_3) || UNITY_6
+#if UNITY_5 && (!UNITY_5_0 && !UNITY_5_1 && !UNITY_5_2 && !UNITY_5_3) || UNITY_2017
 #define UNITY_MIN_5_4
 #endif
 
@@ -106,12 +106,18 @@ namespace ExitGames.Demos.DemoAnimator
 
             #if UNITY_MIN_5_4
             // Unity 5.4 has a new scene management. register a method to call CalledOnLevelWasLoaded.
-            UnityEngine.SceneManagement.SceneManager.sceneLoaded += (scene, loadingMode) =>
-            {
-                this.CalledOnLevelWasLoaded(scene.buildIndex);
-            };
+			UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
             #endif
         }
+
+
+		public void OnDisable()
+		{
+			#if UNITY_MIN_5_4
+			UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnSceneLoaded;
+			#endif
+		}
+
 
         /// <summary>
         /// MonoBehaviour method called on GameObject by Unity on every frame.
@@ -217,6 +223,15 @@ namespace ExitGames.Demos.DemoAnimator
         #endregion
 
         #region Private Methods
+
+
+		#if UNITY_MIN_5_4
+		void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode loadingMode)
+		{
+			
+			this.CalledOnLevelWasLoaded(scene.buildIndex);
+		}
+		#endif
 
         /// <summary>
         /// Processes the inputs. This MUST ONLY BE USED when the player has authority over this Networked GameObject (photonView.isMine == true)

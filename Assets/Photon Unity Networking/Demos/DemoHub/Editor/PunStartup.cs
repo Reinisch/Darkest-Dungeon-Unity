@@ -4,24 +4,12 @@ using System.IO;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEditor;
+using ExitGames.Client.Photon;
+
 
 [InitializeOnLoad]
 public class PunStartup : MonoBehaviour
 { 
-    // paths to demo scenes to setup (if needed)
-    private const string demoBasePath = "Assets/Photon Unity Networking/Demos/";
-    private static string[] demoPaths =
-        {
-            "DemoHub/DemoHub-Scene-V2.unity",
-            "DemoBoxes/DemoBoxes-Scene.unity",
-            "DemoWorker/DemoWorker-Scene.unity",
-            "DemoWorker/DemoWorkerGame-Scene.unity",
-            "MarcoPolo-Tutorial/MarcoPolo-Scene.unity",
-            "DemoSynchronization/DemoSynchronization-Scene.unity",
-            "DemoFriendsAndCustomAuth/DemoFriends-Scene.unity",
-            "DemoFriendsAndCustomAuth/DemoPickup-Scene.unity",
-            "DemoChat/DemoChat-Scene.unity"
-        };
 
     static PunStartup()
     {
@@ -73,17 +61,35 @@ public class PunStartup : MonoBehaviour
 
     public static void LoadPunDemoHub()
     {
-        EditorSceneManager.OpenScene(demoBasePath + demoPaths[0]);
-        Selection.activeObject = AssetDatabase.LoadMainAssetAtPath(demoBasePath + demoPaths[0]);
+		string _hubScene = PhotonNetwork.FindAssetPath("DemoHub-Scene-V2 t:scene");
+		EditorSceneManager.OpenScene(_hubScene);
+		Selection.activeObject = AssetDatabase.LoadMainAssetAtPath(_hubScene);
     }
+
+
+
 
     /// <summary>
     /// Finds scenes in "Assets/Photon Unity Networking/Demos/", excludes those in folder "PUNGuide_M2H" and applies remaining scenes to build settings. The one with "Hub" in it first.
     /// </summary>
     public static void SetPunDemoBuildSettings()
     {
+
+		string _PunPath = string.Empty;
+		
+		string _thisPath = PhotonNetwork.FindAssetPath ("PunStartUp");
+		
+		_thisPath = Application.dataPath + _thisPath.Substring (6); // remove "Assets/"
+
+		_PunPath = PhotonEditorUtils.GetParent(_thisPath,"Photon Unity Networking");
+
+		if (_PunPath == null)
+		{
+			_PunPath = Application.dataPath+"Photon Unity Networking";
+		}
+
         // find path of pun guide
-        string[] tempPaths = Directory.GetDirectories(Application.dataPath + "/Photon Unity Networking", "Demos", SearchOption.AllDirectories);
+		string[] tempPaths = Directory.GetDirectories(_PunPath, "Demos", SearchOption.AllDirectories);
         if (tempPaths == null || tempPaths.Length != 1)
         {
             return;

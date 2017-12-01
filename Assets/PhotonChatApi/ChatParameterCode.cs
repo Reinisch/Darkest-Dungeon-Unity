@@ -45,5 +45,8 @@ namespace ExitGames.Client.Photon.Chat
 
         /// <summary>(14) Number of message to fetch from history. 0: no history. 1 and higher: number of messages in history. -1: all history.</summary>
         public const byte HistoryLength = 14;
+
+        /// <summary>(21) WebFlags object for changing behaviour of webhooks from client.</summary>
+        public const byte WebFlags = 21;
     }
 }

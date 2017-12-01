@@ -14,7 +14,6 @@
 
 using UnityEngine;
 
-
 [RequireComponent(typeof (PhotonView))]
 public class CubeExtra : Photon.MonoBehaviour, IPunObservable
 {

@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
+using ExitGames.Client.Photon;
+
 // the Photon server assigns a ActorNumber (player.ID) to each player, beginning at 1
 // for this game, we don't mind the actual number
 // this game uses player 0 and 1, so clients need to figure out their number somehow
@@ -145,7 +147,7 @@ public class RpsCore : PunBehaviour, IPunTurnManagerCallbacks
 		}
 
 
-		if (PhotonNetwork.room.playerCount>1)
+		if (PhotonNetwork.room.PlayerCount>1)
 		{
 			if (this.turnManager.IsOver)
 			{
@@ -200,9 +202,9 @@ public class RpsCore : PunBehaviour, IPunTurnManagerCallbacks
         }
         else
         {
-			ButtonCanvasGroup.interactable = PhotonNetwork.room.playerCount > 1;
+			ButtonCanvasGroup.interactable = PhotonNetwork.room.PlayerCount > 1;
 
-            if (PhotonNetwork.room.playerCount < 2)
+            if (PhotonNetwork.room.PlayerCount < 2)
             {
                 this.remoteSelectionImage.color = new Color(1, 1, 1, 0);
             }
@@ -217,7 +219,7 @@ public class RpsCore : PunBehaviour, IPunTurnManagerCallbacks
                 {
                     alpha = 1;
                 }
-                if (remote != null && remote.isInactive)
+                if (remote != null && remote.IsInactive)
                 {
                     alpha = 0.1f;
                 }
@@ -271,7 +273,7 @@ public class RpsCore : PunBehaviour, IPunTurnManagerCallbacks
     {
         Debug.Log("OnTurnFinished: " + photonPlayer + " turn: " + turn + " action: " + move);
 
-        if (photonPlayer.isLocal)
+        if (photonPlayer.IsLocal)
         {
             this.localSelection = (Hand)(byte)move;
         }
@@ -410,7 +412,7 @@ public class RpsCore : PunBehaviour, IPunTurnManagerCallbacks
         if (remote != null)
         {
             // should be this format: "name        00"
-            this.RemotePlayerText.text = remote.name + "        " + remote.GetScore().ToString("D2");
+            this.RemotePlayerText.text = remote.NickName + "        " + remote.GetScore().ToString("D2");
         }
         else
         {
@@ -478,7 +480,7 @@ public class RpsCore : PunBehaviour, IPunTurnManagerCallbacks
 		ConnectUiView.gameObject.SetActive(!PhotonNetwork.inRoom);
 		GameUiView.gameObject.SetActive(PhotonNetwork.inRoom);
 
-		ButtonCanvasGroup.interactable = PhotonNetwork.room!=null?PhotonNetwork.room.playerCount > 1:false;
+		ButtonCanvasGroup.interactable = PhotonNetwork.room!=null?PhotonNetwork.room.PlayerCount > 1:false;
 	}
 
 
@@ -495,7 +497,7 @@ public class RpsCore : PunBehaviour, IPunTurnManagerCallbacks
     {
 		RefreshUIViews();
 
-        if (PhotonNetwork.room.playerCount == 2)
+        if (PhotonNetwork.room.PlayerCount == 2)
         {
             if (this.turnManager.Turn == 0)
             {
@@ -511,9 +513,9 @@ public class RpsCore : PunBehaviour, IPunTurnManagerCallbacks
 
     public override void OnPhotonPlayerConnected(PhotonPlayer newPlayer)
     {
-        Debug.Log("Other player arrived");
+		Debug.Log("Other player arrived");
 
-        if (PhotonNetwork.room.playerCount == 2)
+        if (PhotonNetwork.room.PlayerCount == 2)
         {
             if (this.turnManager.Turn == 0)
             {
@@ -526,7 +528,7 @@ public class RpsCore : PunBehaviour, IPunTurnManagerCallbacks
 
     public override void OnPhotonPlayerDisconnected(PhotonPlayer otherPlayer)
     {
-        Debug.Log("Other player disconnected! isInactive: " + otherPlayer.isInactive);
+		Debug.Log("Other player disconnected! "+otherPlayer.ToStringFull());
     }
 
 

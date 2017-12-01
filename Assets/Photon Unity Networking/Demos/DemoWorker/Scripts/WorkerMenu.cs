@@ -7,6 +7,7 @@
 using System;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using ExitGames.Client.Photon;
 
 public class WorkerMenu : MonoBehaviour
 {
@@ -179,10 +180,10 @@ public class WorkerMenu : MonoBehaviour
             foreach (RoomInfo roomInfo in PhotonNetwork.GetRoomList())
             {
                 GUILayout.BeginHorizontal();
-                GUILayout.Label(roomInfo.name + " " + roomInfo.playerCount + "/" + roomInfo.maxPlayers);
+                GUILayout.Label(roomInfo.Name + " " + roomInfo.PlayerCount + "/" + roomInfo.MaxPlayers);
                 if (GUILayout.Button("Join", GUILayout.Width(150)))
                 {
-                    PhotonNetwork.JoinRoom(roomInfo.name);
+                    PhotonNetwork.JoinRoom(roomInfo.Name);
                 }
 
                 GUILayout.EndHorizontal();
@@ -233,5 +234,11 @@ public class WorkerMenu : MonoBehaviour
     {
         this.connectFailed = true;
         Debug.Log("OnFailedToConnectToPhoton. StatusCode: " + parameters + " ServerAddress: " + PhotonNetwork.ServerAddress);
+    }
+
+    public void OnConnectedToMaster()
+    {
+        Debug.Log("As OnConnectedToMaster() got called, the PhotonServerSetting.AutoJoinLobby must be off. Joining lobby by calling PhotonNetwork.JoinLobby().");
+        PhotonNetwork.JoinLobby();
     }
 }

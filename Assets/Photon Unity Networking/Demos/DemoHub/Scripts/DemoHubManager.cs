@@ -26,7 +26,8 @@ namespace ExitGames.Demos
 		public Text TitleText;
 		public Text DescriptionText;
 		public GameObject OpenSceneButton;
-		public GameObject OpenWebLinkButton;
+		public GameObject OpenTutorialLinkButton;
+		public GameObject OpenDocLinkButton;
 
         string MainDemoWebLink = "http://bit.ly/2f8OFu8";
 
@@ -35,7 +36,8 @@ namespace ExitGames.Demos
 			public string Title;
 			public string Description;
 			public string Scene;
-			public string WebLink;
+			public string TutorialLink;
+			public string DocLink;
 		}
 
 		Dictionary<string,DemoData> _data = new Dictionary<string, DemoData>();
@@ -47,7 +49,8 @@ namespace ExitGames.Demos
 		
 			OpenSceneButton.SetActive(false);
 			
-			OpenWebLinkButton.SetActive(false);
+			OpenTutorialLinkButton.SetActive(false);
+			OpenDocLinkButton.SetActive(false);
 
 			// Setup data
 			_data.Add(
@@ -102,7 +105,7 @@ namespace ExitGames.Demos
 						"New Unity UI all around, for Menus and player health HUD.\n" +
 						"Full step by step tutorial available online.",
 				Scene = "PunBasics-Launcher" ,
-				WebLink = "http://j.mp/2dibZIM"
+				TutorialLink = "http://j.mp/2dibZIM"
 				}
 			);
 			
@@ -144,7 +147,8 @@ namespace ExitGames.Demos
 					"Allows simple commands via text.\n" +
 					"\n" +
 					"Requires configuration of Chat App ID in scene.",
-				Scene = "DemoChat-Scene"
+						Scene = "DemoChat-Scene",
+						DocLink = "http://j.mp/2iwQkPJ" 
 				}
 			);
 
@@ -216,7 +220,7 @@ namespace ExitGames.Demos
 				Description = "Final result you could get when you do the Marco Polo Tutorial.\n" +
 					"Slightly modified to be more compatible with this package.",
 				Scene = "MarcoPolo-Scene",
-				WebLink = "http://tinyurl.com/nmylf44"
+				TutorialLink = "http://tinyurl.com/nmylf44"
 				}
 			);
 
@@ -232,8 +236,8 @@ namespace ExitGames.Demos
 
 			OpenSceneButton.SetActive(!string.IsNullOrEmpty(_data[currentSelection].Scene));
 
-			OpenWebLinkButton.SetActive(!string.IsNullOrEmpty(_data[currentSelection].WebLink));
-
+			OpenTutorialLinkButton.SetActive(!string.IsNullOrEmpty(_data[currentSelection].TutorialLink));
+			OpenDocLinkButton.SetActive(!string.IsNullOrEmpty(_data[currentSelection].DocLink));
 		}
 
 		public void OpenScene()
@@ -247,7 +251,18 @@ namespace ExitGames.Demos
 			SceneManager.LoadScene(_data[currentSelection].Scene);
 		}
 
-		public void OpenWebLink()
+		public void OpenTutorialLink()
+		{
+			if (string.IsNullOrEmpty(currentSelection))
+			{
+				Debug.LogError("Bad setup, a CurrentSelection is expected at this point");
+				return;
+			}
+			
+			Application.OpenURL(_data[currentSelection].TutorialLink);
+		}
+
+		public void OpenDocLink()
 		{
 			if (string.IsNullOrEmpty(currentSelection))
 			{
@@ -255,12 +270,19 @@ namespace ExitGames.Demos
 				return;
 			}
 
-			Application.OpenURL(_data[currentSelection].WebLink);
+			Application.OpenURL(_data[currentSelection].DocLink);
 		}
 
 		public void OpenMainWebLink()
 		{
 			Application.OpenURL(MainDemoWebLink);
+		}
+
+		// Fixes the annoying issue described here: http://forum.unity3d.com/threads/158676-!dest-m_MultiFrameGUIState-m_NamedKeyControlList/page2
+		Rect BugFixbounds = new Rect(0,0,0,0);
+		void OnGUI() {
+			GUI.SetNextControlName(gameObject.GetHashCode().ToString());
+			GUI.TextField(BugFixbounds, string.Empty, 0);
 		}
 	}
 }

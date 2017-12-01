@@ -415,6 +415,36 @@ public enum PhotonNetworkingMessage
     /// And the client has to be connected to the Master Server, which is providing the info about lobbies.
     /// </remarks>
     OnLobbyStatisticsUpdate,
+
+
+	/// <summary>
+	/// Called when a remote Photon Player activity changed. This will be called ONLY is PlayerTtl is greater then 0.
+	///
+	/// Use PhotonPlayer.IsInactive to check the current activity state
+	///
+	/// Example: void OnPhotonPlayerActivityChanged(PhotonPlayer otherPlayer) {...}
+	/// </summary>
+	/// <remarks>
+	/// This callback has precondition:
+	/// PlayerTtl must be greater then 0
+	/// </remarks>
+	OnPhotonPlayerActivityChanged,
+
+
+	/// <summary>
+	/// Called when a PhotonView Owner is transfered to a Player.
+	/// </summary>
+	/// <remarks>
+	/// The parameter viewAndPlayers contains:
+	///
+	/// PhotonView view = viewAndPlayers[0] as PhotonView;
+	///
+	/// PhotonPlayer newOwner = viewAndPlayers[1] as PhotonPlayer;
+	///
+	/// PhotonPlayer oldOwner = viewAndPlayers[2] as PhotonPlayer;
+	/// </remarks>
+	/// <example>void OnOwnershipTransfered(object[] viewAndPlayers) {} //</example>
+	OnOwnershipTransfered,
 }
 
 
@@ -478,7 +508,7 @@ public enum CloudRegionCode
     au = 5,
     ///<summary>USA West, San José, usw</summary>
     usw = 6,
-    ///<summary>South America	, Sao Paulo, sa</summary>
+    ///<summary>South America, Sao Paulo, sa</summary>
     sa = 7,
     ///<summary>Canada East, Montreal, cae</summary>
     cae = 8,
@@ -486,6 +516,8 @@ public enum CloudRegionCode
     kr = 9,
     ///<summary>India, Chennai, in</summary>
     @in = 10,
+    /// <summary>Russia, ru</summary>
+    ru = 11,
 
     /// <summary>No region selected.</summary>
     none = 4
@@ -509,6 +541,7 @@ public enum CloudRegionFlag
     cae =   1 << 7,
     kr =    1 << 8,
     @in =   1 << 9,
+    ru =    1 << 10
 };
 
 

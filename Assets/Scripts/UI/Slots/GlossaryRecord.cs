@@ -16,7 +16,7 @@ public class GlossaryRecord : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     RectTransform tooltip;
     void Awake()
     {
-        var objRect = gameObject.transform.FindChild("MouseOver");
+        var objRect = gameObject.transform.Find("MouseOver");
         if(objRect != null)
             tooltip = objRect.GetComponent<RectTransform>();
     }

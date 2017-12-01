@@ -14,6 +14,8 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement; 
 
+using ExitGames.Client.Photon;
+
 namespace ExitGames.Demos.DemoAnimator
 {
 	/// <summary>
@@ -22,7 +24,7 @@ namespace ExitGames.Demos.DemoAnimator
 	/// Deals with quiting the room and the game
 	/// Deals with level loading (outside the in room synchronization)
 	/// </summary>
-	public class GameManager : Photon.MonoBehaviour {
+	public class GameManager : Photon.PunBehaviour {
 
 		#region Public Variables
 
@@ -98,9 +100,9 @@ namespace ExitGames.Demos.DemoAnimator
 		/// Called when a Photon Player got connected. We need to then load a bigger scene.
 		/// </summary>
 		/// <param name="other">Other.</param>
-		public void OnPhotonPlayerConnected( PhotonPlayer other  )
+		public override void OnPhotonPlayerConnected( PhotonPlayer other  )
 		{
-			Debug.Log( "OnPhotonPlayerConnected() " + other.name ); // not seen if you're the player connecting
+			Debug.Log( "OnPhotonPlayerConnected() " + other.NickName); // not seen if you're the player connecting
 
 			if ( PhotonNetwork.isMasterClient ) 
 			{
@@ -114,9 +116,9 @@ namespace ExitGames.Demos.DemoAnimator
 		/// Called when a Photon Player got disconnected. We need to load a smaller scene.
 		/// </summary>
 		/// <param name="other">Other.</param>
-		public void OnPhotonPlayerDisconnected( PhotonPlayer other  )
+		public override void OnPhotonPlayerDisconnected( PhotonPlayer other  )
 		{
-			Debug.Log( "OnPhotonPlayerDisconnected() " + other.name ); // seen when other disconnects
+			Debug.Log( "OnPhotonPlayerDisconnected() " + other.NickName ); // seen when other disconnects
 
 			if ( PhotonNetwork.isMasterClient ) 
 			{
@@ -129,7 +131,7 @@ namespace ExitGames.Demos.DemoAnimator
 		/// <summary>
 		/// Called when the local player left the room. We need to load the launcher scene.
 		/// </summary>
-		public virtual void OnLeftRoom()
+		public override void OnLeftRoom()
 		{
 			SceneManager.LoadScene("PunBasics-Launcher");
 		}
@@ -159,9 +161,9 @@ namespace ExitGames.Demos.DemoAnimator
 				Debug.LogError( "PhotonNetwork : Trying to Load a level but we are not the master Client" );
 			}
 
-			Debug.Log( "PhotonNetwork : Loading Level : " + PhotonNetwork.room.playerCount ); 
+			Debug.Log( "PhotonNetwork : Loading Level : " + PhotonNetwork.room.PlayerCount ); 
 
-			PhotonNetwork.LoadLevel("PunBasics-Room for "+PhotonNetwork.room.playerCount);
+			PhotonNetwork.LoadLevel("PunBasics-Room for "+PhotonNetwork.room.PlayerCount);
 		}
 
 		#endregion

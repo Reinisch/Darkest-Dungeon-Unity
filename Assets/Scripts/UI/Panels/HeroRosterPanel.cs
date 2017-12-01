@@ -28,7 +28,7 @@ public class HeroRosterPanel : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     void Awake()
     {
-        rosterSlots = transform.FindChild("RosterScroll").FindChild("Viewport").FindChild("RosterSlots");
+        rosterSlots = transform.Find("RosterScroll").Find("Viewport").Find("RosterSlots");
 #if !(UNITY_ANDROID || UNITY_IOS)
         var scrollRect = GetComponentInChildren<ScrollRect>();
         scrollRect.verticalScrollbar.gameObject.SetActive(false);

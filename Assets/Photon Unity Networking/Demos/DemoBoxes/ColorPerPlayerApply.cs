@@ -12,6 +12,44 @@ public class ColorPerPlayerApply : PunBehaviour
     // Cached, so we can apply color changes
     private Renderer rendererComponent;
 
+	// we need to reach the PlayerRoomindexing Component. So for safe initialization, we avoid having to mess with script execution order
+	bool isInitialized;
+	
+	void OnEnable()
+	{
+		if (!isInitialized)
+		{
+			Init();
+		}
+	}
+	
+	void Start()
+	{
+		if (!isInitialized)
+		{
+			Init();
+		}
+	}
+	
+	void Init()
+	{
+		if (!isInitialized && PlayerRoomIndexing.instance!=null)
+		{
+			PlayerRoomIndexing.instance.OnRoomIndexingChanged += ApplyColor;
+			isInitialized = true;
+		}
+	}
+	
+	
+	void OnDisable()
+	{
+		isInitialized = false;
+		if (PlayerRoomIndexing.instance!=null)
+		{
+			PlayerRoomIndexing.instance.OnRoomIndexingChanged -= ApplyColor;
+		}
+	}
+
 
     public void Awake()
     {
@@ -48,6 +86,12 @@ public class ColorPerPlayerApply : PunBehaviour
             return;
         }
 
-		this.rendererComponent.material.color = colorPickerCache.Colors[photonView.owner.GetRoomIndex()];
+		int _index = photonView.owner.GetRoomIndex();
+
+		if (_index>=0 && _index<=colorPickerCache.Colors.Length)
+		{
+			this.rendererComponent.material.color = colorPickerCache.Colors[_index];
+		}
+
     }
 }
