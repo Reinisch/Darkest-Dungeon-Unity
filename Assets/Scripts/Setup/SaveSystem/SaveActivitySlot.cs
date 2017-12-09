@@ -1,7 +1,6 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.IO;
 
-public class SaveActivitySlot
+public class SaveActivitySlot : IBinarySaveData<SaveActivitySlot>
 {
     public string TargetPositiveQuirk { get; set; }
     public string TargetNegativeQuirk { get; set; }
@@ -9,6 +8,8 @@ public class SaveActivitySlot
 
     public int HeroRosterId { get; set; }
     public ActivitySlotStatus Status { get; set; }
+    public bool IsMeetingSaveCriteria { get { return true; } }
+
 
     public SaveActivitySlot()
     {
@@ -19,6 +20,7 @@ public class SaveActivitySlot
         HeroRosterId = -1;
     }
 
+
     public void UpdateFromActivity(ActivitySlot slot)
     {
         TargetPositiveQuirk = "";
@@ -28,13 +30,37 @@ public class SaveActivitySlot
         HeroRosterId = slot.Hero == null ? -1 : slot.Hero.RosterId;
         Status = slot.Status == ActivitySlotStatus.Paid && HeroRosterId == -1? ActivitySlotStatus.Available : slot.Status;
     }
+
     public void UpdateFromTreatment(TreatmentSlot slot)
     {
-        TargetPositiveQuirk = slot.TargetPositiveQuirk == null ? "" : slot.TargetPositiveQuirk;
-        TargetNegativeQuirk = slot.TargetNegativeQuirk == null ? "" : slot.TargetNegativeQuirk;
-        TargetDiseaseQuirk = slot.TargetDiseaseQuirk == null ? "" : TargetDiseaseQuirk;
+        TargetPositiveQuirk = slot.TargetPositiveQuirk ?? "";
+        TargetNegativeQuirk = slot.TargetNegativeQuirk ?? "";
+        TargetDiseaseQuirk = slot.TargetDiseaseQuirk ?? "";
 
         HeroRosterId = slot.Hero == null ? -1 : slot.Hero.RosterId;
         Status = slot.Status == ActivitySlotStatus.Paid && HeroRosterId == -1 ? ActivitySlotStatus.Available : slot.Status;
+    }
+
+
+    public void Write(BinaryWriter bw)
+    {
+        bw.Write(HeroRosterId);
+        bw.Write((int)Status);
+
+        bw.Write(TargetDiseaseQuirk ?? "");
+        bw.Write(TargetNegativeQuirk ?? "");
+        bw.Write(TargetPositiveQuirk ?? "");
+    }
+
+    public SaveActivitySlot Read(BinaryReader br)
+    {
+        HeroRosterId = br.ReadInt32();
+        Status = (ActivitySlotStatus)br.ReadInt32();
+
+        TargetDiseaseQuirk = br.ReadString();
+        TargetNegativeQuirk = br.ReadString();
+        TargetPositiveQuirk = br.ReadString();
+
+        return this;
     }
 }

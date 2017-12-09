@@ -327,10 +327,10 @@ public class RaidSceneManager : MonoBehaviour
 
             if (currentRaid.CurrentLocation is DungeonRoom)
                 currentEvent = RoomLoadingEvent(currentRaid.CurrentLocation as DungeonRoom, 
-                    DarkestDungeonManager.SaveData.inBattle ? RoomTransitionType.CombatLoad : RoomTransitionType.PeacefulLoad);
+                    DarkestDungeonManager.SaveData.InBattle ? RoomTransitionType.CombatLoad : RoomTransitionType.PeacefulLoad);
             else
                 currentEvent = HallwayLoadingEvent(currentRaid.CurrentLocation as HallSector,
-                    DarkestDungeonManager.SaveData.inBattle ? HallTransitionType.CombatLoad : HallTransitionType.PeacefulLoad,
+                    DarkestDungeonManager.SaveData.InBattle ? HallTransitionType.CombatLoad : HallTransitionType.PeacefulLoad,
                     currentRaid.RaidParty.IsMovingLeft ? Direction.Left : Direction.Right);
 
             TorchMeter.Initialize(DarkestDungeonManager.SaveData.TorchAmount);
@@ -5563,9 +5563,9 @@ public class RaidSceneManager : MonoBehaviour
 #endregion
 
 #region Battle Loop
-        BattleGround.LoadBattle(DarkestDungeonManager.SaveData.battleGroundSaveData);
+        BattleGround.LoadBattle(DarkestDungeonManager.SaveData.BattleGroundSaveData);
         yield return new WaitForEndOfFrame();
-        BattleGround.LoadEffects(DarkestDungeonManager.SaveData.battleGroundSaveData);
+        BattleGround.LoadEffects(DarkestDungeonManager.SaveData.BattleGroundSaveData);
 
         RaidEvents.roundIndicator.Appear();
 

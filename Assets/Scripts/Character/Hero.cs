@@ -1020,20 +1020,20 @@ public class Hero : Character
     {
         var database = DarkestDungeonManager.Data;
 
-        Status = saveHeroData.status;
-        InActivity = saveHeroData.inActivity;
-        MissingDuration = saveHeroData.missingDuration;
+        Status = saveHeroData.Status;
+        InActivity = saveHeroData.InActivity;
+        MissingDuration = saveHeroData.MissingDuration;
 
-        RosterId = saveHeroData.rosterId;
-        HeroName = saveHeroData.name;
-        ClassStringId = saveHeroData.heroClass;
+        RosterId = saveHeroData.RosterId;
+        HeroName = saveHeroData.Name;
+        ClassStringId = saveHeroData.HeroClass;
 
         if (!estate.PickRosterId(RosterId))
             Debug.LogError("Missing id " + RosterId.ToString() + " in estate from hero " + HeroName);
 
-        Resolve = new Resolve(saveHeroData.resolveLevel, saveHeroData.resolveXP);
+        Resolve = new Resolve(saveHeroData.ResolveLevel, saveHeroData.ResolveXP);
 
-        AddPairedAttribute(AttributeType.Stress, new PairedAttribute(saveHeroData.stressLevel, 200, true, AttributeCategory.CombatStat));
+        AddPairedAttribute(AttributeType.Stress, new PairedAttribute(saveHeroData.StressLevel, 200, true, AttributeCategory.CombatStat));
 
         HeroClass = database.HeroClasses[ClassStringId];
         ClassIndexId = HeroClass.IndexId;
@@ -1041,19 +1041,19 @@ public class Hero : Character
         Equip(weapon, HeroEquipmentSlot.Weapon);
         Equipment armor = HeroClass.Armors.Find(arm => arm.UpgradeLevel == estate.GetUpgradedArmorLevel(RosterId, HeroClass.StringId));
         Equip(armor, HeroEquipmentSlot.Armor);
-        if(saveHeroData.leftTrinketId != "")
+        if(saveHeroData.LeftTrinketId != "")
         {
-            Trinket trinket = (Trinket)database.Items["trinket"][saveHeroData.leftTrinketId];
+            Trinket trinket = (Trinket)database.Items["trinket"][saveHeroData.LeftTrinketId];
             Equip(trinket, TrinketSlot.Left);
         }
-        if (saveHeroData.rightTrinketId != "")
+        if (saveHeroData.RightTrinketId != "")
         {
-            Trinket trinket = (Trinket)database.Items["trinket"][saveHeroData.rightTrinketId];
+            Trinket trinket = (Trinket)database.Items["trinket"][saveHeroData.RightTrinketId];
             Equip(trinket, TrinketSlot.Right);
         }
 
         quirkData = new List<QuirkInfo>();
-        foreach (var quirkEntry in saveHeroData.quirks)
+        foreach (var quirkEntry in saveHeroData.Quirks)
         {
             quirkData.Add(quirkEntry);
             ApplyQuirk(quirkEntry.Quirk);
@@ -1066,9 +1066,9 @@ public class Hero : Character
             CurrentCombatSkills[i] = HeroClass.CombatSkillVariants.Find(skill => skill.Id == HeroClass.CombatSkills[i].Id
                 && skill.Level == estate.GetUpgradedSkillLevel(RosterId, HeroClass.StringId, HeroClass.CombatSkills[i].Id));
 
-        for (int i = 0; i < saveHeroData.selectedCombatSkillIndexes.Count; i++)
-            if (CurrentCombatSkills[saveHeroData.selectedCombatSkillIndexes[i]] != null)
-                SelectedCombatSkills.Add(CurrentCombatSkills[saveHeroData.selectedCombatSkillIndexes[i]]);
+        for (int i = 0; i < saveHeroData.SelectedCombatSkillIndexes.Count; i++)
+            if (CurrentCombatSkills[saveHeroData.SelectedCombatSkillIndexes[i]] != null)
+                SelectedCombatSkills.Add(CurrentCombatSkills[saveHeroData.SelectedCombatSkillIndexes[i]]);
 
         CurrentCampingSkills = new CampingSkill[HeroClass.CampingSkills.Count];
         SelectedCampingSkills = new List<CampingSkill>();
@@ -1077,18 +1077,18 @@ public class Hero : Character
             if (estate.GetUpgradedCampingStatus(RosterId, HeroClass.CampingSkills[i].Id))
                 CurrentCampingSkills[i] = HeroClass.CampingSkills[i];
 
-        for (int i = 0; i < saveHeroData.selectedCampingSkillIndexes.Count; i++)
-            if (CurrentCampingSkills[saveHeroData.selectedCampingSkillIndexes[i]] != null)
-                SelectedCampingSkills.Add(CurrentCampingSkills[saveHeroData.selectedCampingSkillIndexes[i]]);
+        for (int i = 0; i < saveHeroData.SelectedCampingSkillIndexes.Count; i++)
+            if (CurrentCampingSkills[saveHeroData.SelectedCampingSkillIndexes[i]] != null)
+                SelectedCampingSkills.Add(CurrentCampingSkills[saveHeroData.SelectedCampingSkillIndexes[i]]);
 
-        if (saveHeroData.trait != "")
+        if (saveHeroData.Trait != "")
         {
-            var heroTrait = DarkestDungeonManager.Data.Traits.Find(trait => trait.Id == saveHeroData.trait);
+            var heroTrait = DarkestDungeonManager.Data.Traits.Find(trait => trait.Id == saveHeroData.Trait);
             if (heroTrait != null)
                 ApplyTrait(heroTrait);
         }
 
-        Health.CurrentValue = saveHeroData.currentHp;
+        Health.CurrentValue = saveHeroData.CurrentHp;
     }
 
     public void UpdateResolve()
@@ -1097,37 +1097,37 @@ public class Hero : Character
     }
     public void UpdateSaveData(SaveHeroData saveHeroData)
     {
-        saveHeroData.status = Status;
-        saveHeroData.inActivity = InActivity;
-        saveHeroData.trait = Trait == null ? "" : Trait.Id;
-        saveHeroData.missingDuration = MissingDuration;
+        saveHeroData.Status = Status;
+        saveHeroData.InActivity = InActivity;
+        saveHeroData.Trait = Trait == null ? "" : Trait.Id;
+        saveHeroData.MissingDuration = MissingDuration;
 
-        saveHeroData.rosterId = RosterId;
-        saveHeroData.name = HeroName;
-        saveHeroData.heroClass = HeroClass.StringId;
-        saveHeroData.resolveLevel = Resolve.Level;
-        saveHeroData.resolveXP = Resolve.CurrentXP;
-        saveHeroData.currentHp = Health.CurrentValue;
-        saveHeroData.stressLevel = Stress.CurrentValue;
-        saveHeroData.weaponLevel = Weapon.UpgradeLevel;
-        saveHeroData.armorLevel = Armor.UpgradeLevel;
-        saveHeroData.leftTrinketId = LeftTrinket != null ? LeftTrinket.Id : "";
-        saveHeroData.rightTrinketId = RightTrinket != null ? RightTrinket.Id : "";
+        saveHeroData.RosterId = RosterId;
+        saveHeroData.Name = HeroName;
+        saveHeroData.HeroClass = HeroClass.StringId;
+        saveHeroData.ResolveLevel = Resolve.Level;
+        saveHeroData.ResolveXP = Resolve.CurrentXP;
+        saveHeroData.CurrentHp = Health.CurrentValue;
+        saveHeroData.StressLevel = Stress.CurrentValue;
+        saveHeroData.WeaponLevel = Weapon.UpgradeLevel;
+        saveHeroData.ArmorLevel = Armor.UpgradeLevel;
+        saveHeroData.LeftTrinketId = LeftTrinket != null ? LeftTrinket.Id : "";
+        saveHeroData.RightTrinketId = RightTrinket != null ? RightTrinket.Id : "";
 
-        saveHeroData.quirks = quirkData;
-        saveHeroData.buffs = buffInfo;
+        saveHeroData.Quirks = quirkData;
+        saveHeroData.Buffs = buffInfo;
 
-        saveHeroData.selectedCombatSkillIndexes.Clear();
-        saveHeroData.selectedCampingSkillIndexes.Clear();
+        saveHeroData.SelectedCombatSkillIndexes.Clear();
+        saveHeroData.SelectedCampingSkillIndexes.Clear();
         for(int i = 0; i < CurrentCombatSkills.Length; i++)
         {
             if (CurrentCombatSkills[i] != null && SelectedCombatSkills.Contains(CurrentCombatSkills[i]))
-                saveHeroData.selectedCombatSkillIndexes.Add(i);
+                saveHeroData.SelectedCombatSkillIndexes.Add(i);
         }
         for (int i = 0; i < CurrentCampingSkills.Length; i++)
         {
             if (CurrentCampingSkills[i] != null && SelectedCampingSkills.Contains(CurrentCampingSkills[i]))
-                saveHeroData.selectedCampingSkillIndexes.Add(i);
+                saveHeroData.SelectedCampingSkillIndexes.Add(i);
         }
     }
     public override void UpdateSaveData(FormationUnitSaveData saveUnitData)

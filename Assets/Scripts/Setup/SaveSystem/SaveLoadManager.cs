@@ -1,517 +1,81 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.IO;
+using System;
+
+using Random = UnityEngine.Random;
 
 public static class SaveLoadManager
 {
-    static void WriteHero(BinaryWriter bw, SaveHeroData saveHeroData)
-    {
-        bw.Write((int)saveHeroData.status);
-        bw.Write(saveHeroData.missingDuration);
-        bw.Write(saveHeroData.inActivity == null ? "" : saveHeroData.inActivity);
-        bw.Write(saveHeroData.trait);
-        bw.Write(saveHeroData.rosterId);
+    private static readonly string SaveVersion = "1";
 
-        bw.Write(saveHeroData.name);
-        bw.Write(saveHeroData.heroClass);
 
-        bw.Write(saveHeroData.resolveLevel);
-        bw.Write(saveHeroData.resolveXP);
-
-        bw.Write(saveHeroData.currentHp);
-        bw.Write(saveHeroData.stressLevel);
-
-        bw.Write(saveHeroData.weaponLevel);
-        bw.Write(saveHeroData.armorLevel);
-
-        bw.Write(saveHeroData.leftTrinketId);
-        bw.Write(saveHeroData.rightTrinketId);
-
-        bw.Write(saveHeroData.quirks.Count);
-        for (int i = 0; i < saveHeroData.quirks.Count; i++)
-        {
-            bw.Write(saveHeroData.quirks[i].Quirk.Id);
-            bw.Write(saveHeroData.quirks[i].IsLocked);
-            bw.Write(saveHeroData.quirks[i].IsNew);
-            bw.Write(saveHeroData.quirks[i].IsReplaced);
-            bw.Write(saveHeroData.quirks[i].Longetivity);
-            bw.Write(saveHeroData.quirks[i].ReplacedQuirk);
-        }
-        bw.Write(saveHeroData.buffs.Count);
-        for (int i = 0; i < saveHeroData.buffs.Count; i++)
-        {
-            bw.Write((int)saveHeroData.buffs[i].SourceType);
-
-            if(saveHeroData.buffs[i].SourceType == BuffSourceType.Adventure ||
-                saveHeroData.buffs[i].SourceType == BuffSourceType.Estate)
-            {
-                bw.Write((int)saveHeroData.buffs[i].DurationType);
-                bw.Write(saveHeroData.buffs[i].OverridenValue);
-                bw.Write(saveHeroData.buffs[i].Duration);
-
-                bw.Write(saveHeroData.buffs[i].Buff.Id);
-                if (saveHeroData.buffs[i].Buff.Id == "")
-                {
-                    bw.Write(saveHeroData.buffs[i].Buff.ModifierValue);
-                    bw.Write((int)saveHeroData.buffs[i].Buff.Type);
-                    bw.Write((int)saveHeroData.buffs[i].Buff.AttributeType);
-                    bw.Write((int)saveHeroData.buffs[i].Buff.RuleType);
-                }
-            }
-        }
-
-        bw.Write(saveHeroData.selectedCombatSkillIndexes.Count);
-        for (int i = 0; i < saveHeroData.selectedCombatSkillIndexes.Count; i++)
-            bw.Write(saveHeroData.selectedCombatSkillIndexes[i]);
-
-        bw.Write(saveHeroData.selectedCampingSkillIndexes.Count);
-        for (int i = 0; i < saveHeroData.selectedCampingSkillIndexes.Count; i++)
-            bw.Write(saveHeroData.selectedCampingSkillIndexes[i]);
-    }
-    static SaveHeroData ReadHero(BinaryReader br)
-    {
-        SaveHeroData saveHeroData = new SaveHeroData();
-
-        saveHeroData.status = (HeroStatus)br.ReadInt32();
-        saveHeroData.missingDuration = br.ReadInt32();
-        saveHeroData.inActivity = br.ReadString();
-        saveHeroData.trait = br.ReadString();
-        saveHeroData.rosterId = br.ReadInt32();
-
-        saveHeroData.name = br.ReadString();
-        saveHeroData.heroClass = br.ReadString();
-
-        saveHeroData.resolveLevel = br.ReadInt32();
-        saveHeroData.resolveXP = br.ReadInt32();
-
-        saveHeroData.currentHp = br.ReadSingle();
-        saveHeroData.stressLevel = br.ReadSingle();
-
-        saveHeroData.weaponLevel = br.ReadInt32();
-        saveHeroData.armorLevel = br.ReadInt32();
-
-        saveHeroData.leftTrinketId = br.ReadString();
-        saveHeroData.rightTrinketId = br.ReadString();
-
-        int quirkCount = br.ReadInt32();
-        for (int i = 0; i < quirkCount; i++)
-        {
-            var newQuirkInfo = new QuirkInfo(br.ReadString())
-            {
-                IsLocked = br.ReadBoolean(),
-                IsNew = br.ReadBoolean(),
-                IsReplaced = br.ReadBoolean(),
-                Longetivity = br.ReadInt32(),
-                ReplacedQuirk = br.ReadString(),
-            };
-            saveHeroData.quirks.Add(newQuirkInfo);
-        }
-        int buffEntryCount = br.ReadInt32();
-        for (int i = 0; i < buffEntryCount; i++)
-        {
-            BuffSourceType buffSourceType =  (BuffSourceType)br.ReadInt32();
-
-            if (buffSourceType == BuffSourceType.Adventure || buffSourceType == BuffSourceType.Estate)
-            {
-                BuffInfo newBuffInfo = new BuffInfo((BuffDurationType)br.ReadInt32(), buffSourceType);
-
-                newBuffInfo.OverridenValue = br.ReadSingle();
-                newBuffInfo.Duration = br.ReadInt32();
-
-                string buffId = br.ReadString();
-                if (buffId == "")
-                {
-                    newBuffInfo.Buff = new Buff()
-                    {
-                        Id = "",
-                        ModifierValue = br.ReadSingle(),
-                        Type = (BuffType)br.ReadInt32(),
-                        AttributeType = (AttributeType)br.ReadInt32(),
-                        RuleType = (BuffRule)br.ReadInt32(),
-                    };
-                }
-                else
-                    newBuffInfo.Buff = DarkestDungeonManager.Data.Buffs[buffId];
-
-                saveHeroData.buffs.Add(newBuffInfo);
-            }
-        }
-
-        int selectedCombatCount = br.ReadInt32();
-        for (int i = 0; i < selectedCombatCount; i++)
-            saveHeroData.selectedCombatSkillIndexes.Add(br.ReadInt32());
-
-        int selectedCampingCount = br.ReadInt32();
-        for (int i = 0; i < selectedCampingCount; i++)
-            saveHeroData.selectedCampingSkillIndexes.Add(br.ReadInt32());
-
-        return saveHeroData;
-    }
-
-    public static void CheckSaveDirectory()
-    {
-        if (!Directory.Exists(Application.persistentDataPath + Path.AltDirectorySeparatorChar + "Saves"))
-            Directory.CreateDirectory(Application.persistentDataPath + Path.AltDirectorySeparatorChar + "Saves");
-    }
     public static void WriteSave(SaveCampaignData saveData)
     {
         try
         {
-            CheckSaveDirectory();
+            RecreateSaveDirectory();
 
-            using (var fs = new FileStream(Application.persistentDataPath + Path.AltDirectorySeparatorChar + "Saves" + Path.AltDirectorySeparatorChar +
-                "DarkestSave" + saveData.saveId + ".darkestsave", FileMode.Create, FileAccess.Write))
+            using (var fs = new FileStream(GenerateSaveFileName(saveData.SaveId), FileMode.Create, FileAccess.Write))
             {
                 using (var bw = new BinaryWriter(fs))
                 {
                     #region Estate
-                    bw.Write(saveData.isFirstStart);
-                    bw.Write(saveData.gameVersion);
-                    bw.Write(saveData.hamletTitle);
-                    bw.Write(saveData.locationName);
-                    bw.Write(saveData.questsCompleted);
-                    bw.Write(saveData.currentWeek);
-                    bw.Write(saveData.saveId);
-                    // Currencies
-                    bw.Write(saveData.goldAmount);
-                    bw.Write(saveData.bustsAmount);
-                    bw.Write(saveData.deedsAmount);
-                    bw.Write(saveData.portraitsAmount);
-                    bw.Write(saveData.crestsAmount);
-                    // Heroes
-                    bw.Write(saveData.saveHeroData.Length);
-                    for (int i = 0; i < saveData.saveHeroData.Length; i++)
-                        WriteHero(bw, saveData.saveHeroData[i]);
-                    bw.Write(saveData.stageCoachData.Length);
-                    for (int i = 0; i < saveData.stageCoachData.Length; i++)
-                        WriteHero(bw, saveData.stageCoachData[i]);
-                    bw.Write(saveData.stageEventData.Length);
-                    for (int i = 0; i < saveData.stageEventData.Length; i++)
-                        WriteHero(bw, saveData.stageEventData[i]);
-                    bw.Write(saveData.deathEventData.Count);
-                    for (int i = 0; i < saveData.deathEventData.Count; i++)
-                        bw.Write(saveData.deathEventData[i]);
-                    // Trinkets
-                    bw.Write(saveData.trinketData.Count);
-                    for (int i = 0; i < saveData.trinketData.Count; i++)
-                        bw.Write(saveData.trinketData[i]);
-                    bw.Write(saveData.wagonData.Count);
-                    for (int i = 0; i < saveData.wagonData.Count; i++)
-                        bw.Write(saveData.wagonData[i]);
-                    // Dungeon infos
-                    bw.Write(saveData.saveDungeonData.Count);
-                    foreach(var dungeonProgress in saveData.saveDungeonData)
-                    {
-                        bw.Write(dungeonProgress.Value.DungeonName);
-                        bw.Write(dungeonProgress.Value.MasteryLevel);
-                        bw.Write(dungeonProgress.Value.CurrentXP);
-                        bw.Write(dungeonProgress.Value.IsUnlocked);
-                        bw.Write(dungeonProgress.Value.IsEvent);
-                    }
-                    // Hero deaths
-                    bw.Write(saveData.deathRecords.Count);
-                    for (int i = 0; i < saveData.deathRecords.Count; i++)
-                    {
-                        bw.Write(saveData.deathRecords[i].HeroName);
-                        bw.Write(saveData.deathRecords[i].HeroClassIndex);
-                        bw.Write(saveData.deathRecords[i].ResolveLevel);
-                        bw.Write((int)saveData.deathRecords[i].Factor);
-                        bw.Write(saveData.deathRecords[i].KillerName);
-                    }
-                    // Building upgrade trees
-                    bw.Write(saveData.buildingUpgrades.Count);
-                    foreach(var buildingTreeEntry in saveData.buildingUpgrades)
-                    {
-                        bw.Write(buildingTreeEntry.Key);
-                        bw.Write(buildingTreeEntry.Value.PurchasedUpgrades.Count);
-                        for (int i = 0; i < buildingTreeEntry.Value.PurchasedUpgrades.Count; i++)
-                            bw.Write(buildingTreeEntry.Value.PurchasedUpgrades[i]);
-                    }
-                    // Hero upgrade trees
-                    bw.Write(saveData.instancedPurchases.Count);
-                    foreach(var inst in saveData.instancedPurchases)
-                    {
-                        bw.Write(inst.Key);
-                        bw.Write(inst.Value.Count);
-                        foreach(var tree in inst.Value)
-                        {
-                            bw.Write(tree.Key);
-                            bw.Write(tree.Value.PurchasedUpgrades.Count);
-                            for (int i = 0; i < tree.Value.PurchasedUpgrades.Count; i++)
-                                bw.Write(tree.Value.PurchasedUpgrades[i]);
-                        }
-                    }
-                    #region Activity Log
-                    bw.Write(saveData.activityLog.Count);
-                    for(int i = 0; i < saveData.activityLog.Count; i++)
-                    {
-                        bw.Write(saveData.activityLog[i].WeekNumber);
-                        bw.Write(saveData.activityLog[i].ReturnRecord != null ? true : false);
-                        bw.Write(saveData.activityLog[i].EmbarkRecord != null ? true : false);
-                        if(saveData.activityLog[i].ReturnRecord != null)
-                        {
-                            bw.Write((int)saveData.activityLog[i].ReturnRecord.PartyActionType);
-                            bw.Write(saveData.activityLog[i].ReturnRecord.QuestType);
-                            bw.Write(saveData.activityLog[i].ReturnRecord.QuestDifficulty);
-                            bw.Write(saveData.activityLog[i].ReturnRecord.QuestLength);
-                            bw.Write(saveData.activityLog[i].ReturnRecord.Dungeon);
 
-                            bw.Write(saveData.activityLog[i].ReturnRecord.Names.Count);
-                            for(int j = 0; j < saveData.activityLog[i].ReturnRecord.Names.Count; j++)
-                                bw.Write(saveData.activityLog[i].ReturnRecord.Names[j]);
+                    bw.Write(SaveVersion);
+                    bw.Write(saveData.IsFirstStart);
+                    bw.Write(saveData.HamletTitle);
+                    bw.Write(saveData.LocationName);
+                    bw.Write(saveData.QuestsCompleted);
+                    bw.Write(saveData.CurrentWeek);
+                    bw.Write(saveData.SaveId);
+                    
+                    bw.Write(saveData.GoldAmount);
+                    bw.Write(saveData.BustsAmount);
+                    bw.Write(saveData.DeedsAmount);
+                    bw.Write(saveData.PortraitsAmount);
+                    bw.Write(saveData.CrestsAmount);
+                    
+                    saveData.RosterHeroes.Write(bw);
+                    saveData.StageCoachHeroes.Write(bw);
+                    saveData.StageEventHeroes.Write(bw);
+                    saveData.DeathRecords.Write(bw);
+                    saveData.DeathEventData.Write(bw);
 
-                            bw.Write(saveData.activityLog[i].ReturnRecord.Classes.Count);
-                            for(int j = 0; j < saveData.activityLog[i].ReturnRecord.Classes.Count; j++)
-                                bw.Write(saveData.activityLog[i].ReturnRecord.Classes[j]);
+                    saveData.InventoryTrinkets.Write(bw);
+                    saveData.WagonTrinkets.Write(bw);
+                    saveData.DungeonProgress.Write(bw);
+                    saveData.BuildingUpgrades.Write(bw);
+                    saveData.InstancedPurchases.Write(bw);
+                    saveData.ActivityLog.Write(bw);
 
-                            bw.Write(saveData.activityLog[i].ReturnRecord.Alive.Count);
-                            for(int j = 0; j < saveData.activityLog[i].ReturnRecord.Alive.Count; j++)
-                                bw.Write(saveData.activityLog[i].ReturnRecord.Alive[j]);
+                    saveData.CompletedPlot.Write(bw);
+                    saveData.GeneratedQuests.Write(bw);
 
-                            bw.Write(saveData.activityLog[i].ReturnRecord.IsSuccessfull);
-                        }
-                        if (saveData.activityLog[i].EmbarkRecord != null)
-                        {
-                            bw.Write((int)saveData.activityLog[i].EmbarkRecord.PartyActionType);
-                            bw.Write(saveData.activityLog[i].EmbarkRecord.QuestType);
-                            bw.Write(saveData.activityLog[i].EmbarkRecord.QuestDifficulty);
-                            bw.Write(saveData.activityLog[i].EmbarkRecord.QuestLength);
-                            bw.Write(saveData.activityLog[i].EmbarkRecord.Dungeon);
+                    saveData.AbbeyActivitySlots.Write(bw);
+                    saveData.TavernActivitySlots.Write(bw);
+                    saveData.SanitariumActivitySlots.Write(bw);
 
-                            bw.Write(saveData.activityLog[i].EmbarkRecord.Names.Count);
-                            for (int j = 0; j < saveData.activityLog[i].EmbarkRecord.Names.Count; j++)
-                                bw.Write(saveData.activityLog[i].EmbarkRecord.Names[j]);
+                    bw.Write(saveData.CurrentEvent ?? "");
+                    bw.Write(saveData.GuaranteedEvent ?? "");
+                    saveData.EventData.Write(bw);
+                    saveData.EventModifers.Write(bw);
 
-                            bw.Write(saveData.activityLog[i].EmbarkRecord.Classes.Count);
-                            for (int j = 0; j < saveData.activityLog[i].EmbarkRecord.Classes.Count; j++)
-                                bw.Write(saveData.activityLog[i].EmbarkRecord.Classes[j]);
+                    saveData.TownNarrations.Write(bw);
+                    saveData.RaidNarrations.Write(bw);
+                    saveData.CampaignNarrations.Write(bw);
 
-                            bw.Write(saveData.activityLog[i].EmbarkRecord.Alive.Count);
-                            for (int j = 0; j < saveData.activityLog[i].EmbarkRecord.Alive.Count; j++)
-                                bw.Write(saveData.activityLog[i].EmbarkRecord.Alive[j]);
-
-                            bw.Write(saveData.activityLog[i].EmbarkRecord.IsSuccessfull);
-                        }
-                    }
-                    #endregion
-
-                    #region Quests
-                    bw.Write(saveData.completedPlot.Count);
-                    for (int i = 0; i < saveData.completedPlot.Count; i++)
-                        bw.Write(saveData.completedPlot[i]);
-                    bw.Write(saveData.generatedQuests.Count);
-                    for (int i = 0; i < saveData.generatedQuests.Count; i++)
-                    {
-                        bw.Write(saveData.generatedQuests[i].IsPlotQuest ? (saveData.generatedQuests[i] as PlotQuest).Id : "");
-                        bw.Write(saveData.generatedQuests[i].Type);
-                        bw.Write(saveData.generatedQuests[i].Dungeon);
-                        bw.Write(saveData.generatedQuests[i].Difficulty);
-                        bw.Write(saveData.generatedQuests[i].Length);
-                        bw.Write(saveData.generatedQuests[i].Goal.Id);
-                        bw.Write(saveData.generatedQuests[i].Reward.ResolveXP);
-                        bw.Write(saveData.generatedQuests[i].Reward.ItemDefinitions.Count);
-                        for (int j = 0; j < saveData.generatedQuests[i].Reward.ItemDefinitions.Count; j++)
-                        {
-                            bw.Write(saveData.generatedQuests[i].Reward.ItemDefinitions[j].Id);
-                            bw.Write(saveData.generatedQuests[i].Reward.ItemDefinitions[j].Type);
-                            bw.Write(saveData.generatedQuests[i].Reward.ItemDefinitions[j].Amount);
-                        }
-
-                        bw.Write(saveData.generatedQuests[i].IsProgression);
-                        bw.Write(saveData.generatedQuests[i].HasStatueContents);
-                        bw.Write(saveData.generatedQuests[i].CompletionDungeonXp);
-                        bw.Write(saveData.generatedQuests[i].CanRetreat);
-                        bw.Write(saveData.generatedQuests[i].AlwaysRetreatFromRaid);
-                        bw.Write(saveData.generatedQuests[i].RetreatKillCount);
-                        bw.Write(saveData.generatedQuests[i].IsSurpriseEnabled);
-                        bw.Write(saveData.generatedQuests[i].IsScoutingEnabled);
-                        bw.Write(saveData.generatedQuests[i].IsStressClearedOnCompletion);
-                        bw.Write(saveData.generatedQuests[i].RosterBuffOnFailureMinimumPartyResolveLevel);
-                        bw.Write(saveData.generatedQuests[i].RosterBuffsOnFailure.Count);
-                        for (int j = 0; j < saveData.generatedQuests[i].RosterBuffsOnFailure.Count; j++)
-                            bw.Write(saveData.generatedQuests[i].RosterBuffsOnFailure[j].Id);
-                        bw.Write(saveData.generatedQuests[i].SuggestedTrinkets.Count);
-                        for (int j = 0; j < saveData.generatedQuests[i].SuggestedTrinkets.Count; j++)
-                        {
-                            bw.Write(saveData.generatedQuests[i].SuggestedTrinkets[j].Id);
-                            bw.Write(saveData.generatedQuests[i].SuggestedTrinkets[j].Amount);
-                        }
-                        bw.Write(saveData.generatedQuests[i].UpgradeTagsRemovedOnIgnore.Count);
-                        for (int j = 0; j < saveData.generatedQuests[i].UpgradeTagsRemovedOnIgnore.Count; j++)
-                        {
-                            bw.Write(saveData.generatedQuests[i].UpgradeTagsRemovedOnIgnore[j].Tag);
-                            bw.Write(saveData.generatedQuests[i].UpgradeTagsRemovedOnIgnore[j].Amount);
-                        }
-                    }
-                    #endregion
-
-                    #region Activity Slots
-                    bw.Write(saveData.abbeyActivitySlots.Count);
-                    for(int i = 0; i < saveData.abbeyActivitySlots.Count; i++)
-                    {
-                        bw.Write(saveData.abbeyActivitySlots[i].Count);
-                        for(int j = 0; j < saveData.abbeyActivitySlots[i].Count; j++)
-                        {
-                            bw.Write(saveData.abbeyActivitySlots[i][j].HeroRosterId);
-                            bw.Write((int)saveData.abbeyActivitySlots[i][j].Status);
-                        }
-                    }
-                    bw.Write(saveData.tavernActivitySlots.Count);
-                    for (int i = 0; i < saveData.tavernActivitySlots.Count; i++)
-                    {
-                        bw.Write(saveData.tavernActivitySlots[i].Count);
-                        for (int j = 0; j < saveData.tavernActivitySlots[i].Count; j++)
-                        {
-                            bw.Write(saveData.tavernActivitySlots[i][j].HeroRosterId);
-                            bw.Write((int)saveData.tavernActivitySlots[i][j].Status);
-                        }
-                    }
-                    bw.Write(saveData.sanitariumActivitySlots.Count);
-                    for (int i = 0; i < saveData.sanitariumActivitySlots.Count; i++)
-                    {
-                        bw.Write(saveData.sanitariumActivitySlots[i].Count);
-                        for (int j = 0; j < saveData.sanitariumActivitySlots[i].Count; j++)
-                        {
-                            bw.Write(saveData.sanitariumActivitySlots[i][j].HeroRosterId);
-                            bw.Write((int)saveData.sanitariumActivitySlots[i][j].Status);
-                            bw.Write(saveData.sanitariumActivitySlots[i][j].TargetDiseaseQuirk == null ?
-                                "" : saveData.sanitariumActivitySlots[i][j].TargetDiseaseQuirk);
-                            bw.Write(saveData.sanitariumActivitySlots[i][j].TargetNegativeQuirk == null ?
-                                "" : saveData.sanitariumActivitySlots[i][j].TargetNegativeQuirk);
-                            bw.Write(saveData.sanitariumActivitySlots[i][j].TargetPositiveQuirk == null ?
-                                "" : saveData.sanitariumActivitySlots[i][j].TargetPositiveQuirk);
-                        }
-                    }
-                    #endregion
-
-                    #region Town Events
-                    bw.Write(saveData.currentEvent == null ? "" : saveData.currentEvent);
-                    bw.Write(saveData.guaranteedEvent == null ? "" : saveData.guaranteedEvent);
-
-                    bw.Write(saveData.eventData.Count);
-                    for(int i = 0; i < saveData.eventData.Count; i++)
-                    {
-                        bw.Write(saveData.eventData[i].EventId);
-                        bw.Write(saveData.eventData[i].ActiveCooldown);
-                        bw.Write(saveData.eventData[i].NotRolledAmount);
-                    }
-                    bw.Write(saveData.eventModifers.NoLevelRestrictions);
-
-                    bw.Write(saveData.eventModifers.ActivityLocks.Count);
-                    foreach(var entry in saveData.eventModifers.ActivityLocks)
-                    {
-                        bw.Write(entry.Key);
-                        bw.Write(entry.Value);
-                    }
-                    bw.Write(saveData.eventModifers.FreeActivities.Count);
-                    foreach (var entry in saveData.eventModifers.FreeActivities)
-                    {
-                        bw.Write(entry.Key);
-                        bw.Write(entry.Value);
-                    }
-                    bw.Write(saveData.eventModifers.ActivityCostModifiers.Count);
-                    foreach (var entry in saveData.eventModifers.ActivityCostModifiers)
-                    {
-                        bw.Write(entry.Key);
-                        bw.Write(entry.Value);
-                    }
-                    bw.Write(saveData.eventModifers.ProvisionCostModifiers.Count);
-                    foreach (var entry in saveData.eventModifers.ProvisionCostModifiers)
-                    {
-                        bw.Write(entry.Key);
-                        bw.Write(entry.Value);
-                    }
-                    bw.Write(saveData.eventModifers.ProvisionAmountModifiers.Count);
-                    foreach (var entry in saveData.eventModifers.ProvisionAmountModifiers)
-                    {
-                        bw.Write(entry.Key);
-                        bw.Write(entry.Value);
-                    }
-                    bw.Write(saveData.eventModifers.UpgradeTagCostModifiers.Count);
-                    foreach (var entry in saveData.eventModifers.UpgradeTagCostModifiers)
-                    {
-                        bw.Write(entry.Key);
-                        bw.Write(entry.Value);
-                    }
-                    bw.Write(saveData.eventModifers.FreeUpgradeTags.Count);
-                    foreach (var entry in saveData.eventModifers.FreeUpgradeTags)
-                    {
-                        bw.Write(entry.Key);
-                        bw.Write(entry.Value);
-                    }
-                    #endregion
-
-                    #region Narration
-                    bw.Write(saveData.townNarrations.Count);
-                    foreach(var entry in saveData.townNarrations)
-                    {
-                        bw.Write(entry.Key);
-                        bw.Write(entry.Value);
-                    }
-                    bw.Write(saveData.raidNarrations.Count);
-                    foreach (var entry in saveData.raidNarrations)
-                    {
-                        bw.Write(entry.Key);
-                        bw.Write(entry.Value);
-                    }
-                    bw.Write(saveData.campaignNarrations.Count);
-                    foreach (var entry in saveData.campaignNarrations)
-                    {
-                        bw.Write(entry.Key);
-                        bw.Write(entry.Value);
-                    }
-                    #endregion
                     #endregion
 
                     #region Raid
+
                     bw.Write(saveData.InRaid);
-                    if (saveData.InRaid == false)
+                    if (!saveData.InRaid)
                         return;
 
-                    #region Quest
                     bw.Write(saveData.QuestCompleted);
-                    bw.Write(saveData.Quest.IsPlotQuest ? (saveData.Quest as PlotQuest).Id : "");
-                    bw.Write(saveData.Quest.Type);
-                    bw.Write(saveData.Quest.Dungeon);
-                    bw.Write(saveData.Quest.Difficulty);
-                    bw.Write(saveData.Quest.Length);
-                    bw.Write(saveData.Quest.Goal.Id);
-                    bw.Write(saveData.Quest.Reward.ResolveXP);
-                    bw.Write(saveData.Quest.Reward.ItemDefinitions.Count);
-                    for (int i = 0; i < saveData.Quest.Reward.ItemDefinitions.Count; i++)
-                    {
-                        bw.Write(saveData.Quest.Reward.ItemDefinitions[i].Id);
-                        bw.Write(saveData.Quest.Reward.ItemDefinitions[i].Type);
-                        bw.Write(saveData.Quest.Reward.ItemDefinitions[i].Amount);
-                    }
-
-                    bw.Write(saveData.Quest.IsProgression);
-                    bw.Write(saveData.Quest.HasStatueContents);
-                    bw.Write(saveData.Quest.CompletionDungeonXp);
-                    bw.Write(saveData.Quest.CanRetreat);
-                    bw.Write(saveData.Quest.AlwaysRetreatFromRaid);
-                    bw.Write(saveData.Quest.RetreatKillCount);
-                    bw.Write(saveData.Quest.IsSurpriseEnabled);
-                    bw.Write(saveData.Quest.IsScoutingEnabled);
-                    bw.Write(saveData.Quest.IsStressClearedOnCompletion);
-                    bw.Write(saveData.Quest.RosterBuffOnFailureMinimumPartyResolveLevel);
-                    bw.Write(saveData.Quest.RosterBuffsOnFailure.Count);
-                    for (int i = 0; i < saveData.Quest.RosterBuffsOnFailure.Count; i++)
-                        bw.Write(saveData.Quest.RosterBuffsOnFailure[i].Id);
-                    bw.Write(saveData.Quest.SuggestedTrinkets.Count);
-                    for (int i = 0; i < saveData.Quest.SuggestedTrinkets.Count; i++)
-                    {
-                        bw.Write(saveData.Quest.SuggestedTrinkets[i].Id);
-                        bw.Write(saveData.Quest.SuggestedTrinkets[i].Amount);
-                    }
-                    bw.Write(saveData.Quest.UpgradeTagsRemovedOnIgnore.Count);
-                    for (int i = 0; i < saveData.Quest.UpgradeTagsRemovedOnIgnore.Count; i++)
-                    {
-                        bw.Write(saveData.Quest.UpgradeTagsRemovedOnIgnore[i].Tag);
-                        bw.Write(saveData.Quest.UpgradeTagsRemovedOnIgnore[i].Amount);
-                    }
-                    #endregion
-
+                    saveData.Quest.Write(bw);
+                   
                     #region Dungeon
                     bw.Write(saveData.Dungeon.Name);
                     bw.Write(saveData.Dungeon.GridSizeX);
@@ -681,434 +245,99 @@ public static class SaveLoadManager
                     #endregion
 
                     #region Battle
-                    bw.Write(saveData.inBattle);
-                    if (saveData.inBattle == false)
+                    bw.Write(saveData.InBattle);
+                    if (saveData.InBattle == false)
                         return;
 
-                    saveData.battleGroundSaveData.WriteBattlegroundData(bw);
+                    saveData.BattleGroundSaveData.WriteBattlegroundData(bw);
                     #endregion
                     #endregion
                 }
             }
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
-            Debug.Log(ex.Message);
+            Debug.LogError("Error while writing save slot " + saveData.SaveId + "! " + ex.Message +
+                "Inner: " + ex.InnerException != null ? ex.InnerException.Message : "None");
         }
     }
+
+    public static void DeleteSave(int slotId)
+    {
+        File.Delete(GenerateSaveFileName(slotId));
+    }
+
     public static SaveCampaignData ReadSave(int slotId)
     {
+        if (!File.Exists(GenerateSaveFileName(slotId)))
+            return null;
+
         try
         {
-            CheckSaveDirectory();
+            RecreateSaveDirectory();
 
             SaveCampaignData saveData = new SaveCampaignData();
-            using (var fs = new FileStream(Application.persistentDataPath + Path.AltDirectorySeparatorChar + "Saves" + Path.AltDirectorySeparatorChar +
-                "DarkestSave" + slotId + ".darkestsave", FileMode.Open, FileAccess.Read))
+            using (var fs = new FileStream(GenerateSaveFileName(slotId), FileMode.Open, FileAccess.Read))
             {
                 using (var br = new BinaryReader(fs))
                 {
                     #region Estate
-                    saveData.isFirstStart = br.ReadBoolean(); 
-                    saveData.gameVersion = br.ReadString();
-                    saveData.hamletTitle = br.ReadString();
-                    saveData.locationName = br.ReadString();
-                    saveData.questsCompleted = br.ReadInt32();
-                    saveData.currentWeek = br.ReadInt32();
 
-                    saveData.saveId = br.ReadInt32();
+                    if (br.ReadString() != SaveVersion)
+                        throw new NotImplementedException("Updater for old save files is not implemented!");
 
-                    saveData.goldAmount = br.ReadInt32();
-                    saveData.bustsAmount = br.ReadInt32();
-                    saveData.deedsAmount = br.ReadInt32();
-                    saveData.portraitsAmount = br.ReadInt32();
-                    saveData.crestsAmount = br.ReadInt32();
+                    saveData.IsFirstStart = br.ReadBoolean();
+                    saveData.HamletTitle = br.ReadString();
+                    saveData.LocationName = br.ReadString();
+                    saveData.QuestsCompleted = br.ReadInt32();
+                    saveData.CurrentWeek = br.ReadInt32();
+                    saveData.SaveId = br.ReadInt32();
 
-                    saveData.saveHeroData = new SaveHeroData[br.ReadInt32()];
-                    for (int i = 0; i < saveData.saveHeroData.Length; i++)
-                        saveData.saveHeroData[i] = ReadHero(br);
+                    saveData.GoldAmount = br.ReadInt32();
+                    saveData.BustsAmount = br.ReadInt32();
+                    saveData.DeedsAmount = br.ReadInt32();
+                    saveData.PortraitsAmount = br.ReadInt32();
+                    saveData.CrestsAmount = br.ReadInt32();
 
-                    saveData.stageCoachData = new SaveHeroData[br.ReadInt32()];
-                    for (int i = 0; i < saveData.stageCoachData.Length; i++)
-                        saveData.stageCoachData[i] = ReadHero(br);
+                    saveData.RosterHeroes.Read(br);
+                    saveData.StageCoachHeroes.Read(br);
+                    saveData.StageEventHeroes.Read(br);
+                    saveData.DeathRecords.Read(br);
+                    saveData.DeathEventData.Read(br);
 
-                    saveData.stageEventData = new SaveHeroData[br.ReadInt32()];
-                    for (int i = 0; i < saveData.stageEventData.Length; i++)
-                        saveData.stageEventData[i] = ReadHero(br);
+                    saveData.InventoryTrinkets.Read(br);
+                    saveData.WagonTrinkets.Read(br);
+                    saveData.DungeonProgress.Read(item => item.DungeonName, br);
+                    saveData.BuildingUpgrades.Read(item => item.TreeId, br);
+                    saveData.InstancedPurchases.Read(item => item.TreeId, br);
+                    saveData.ActivityLog.Read(br);
 
-                    int deathEventGraveIndexCount = br.ReadInt32();
-                    for (int i = 0; i < deathEventGraveIndexCount; i++)
-                        saveData.deathEventData.Add(br.ReadInt32());
+                    saveData.CompletedPlot.Read(br);
+                    saveData.GeneratedQuests.Read(br);
 
-                    int trinketCount = br.ReadInt32();
-                    for (int i = 0; i < trinketCount; i++)
-                        saveData.trinketData.Add(br.ReadString());
+                    saveData.AbbeyActivitySlots.Read(br);
+                    saveData.TavernActivitySlots.Read(br);
+                    saveData.SanitariumActivitySlots.Read(br);
 
-                    int wagonCount = br.ReadInt32();
-                    for (int i = 0; i < wagonCount; i++)
-                        saveData.wagonData.Add(br.ReadString());
+                    saveData.CurrentEvent = br.ReadString();
+                    saveData.GuaranteedEvent = br.ReadString();
+                    saveData.EventData.Read(br);
+                    saveData.EventModifers.Read(br);
 
-                    int dungeonProgressCount = br.ReadInt32();
-                    for (int i = 0; i < dungeonProgressCount; i++)
-                    {
-                        var newProgress = new DungeonProgress(br.ReadString(), br.ReadInt32(),
-                            br.ReadInt32(), br.ReadBoolean(), br.ReadBoolean());
-                        saveData.saveDungeonData.Add(newProgress.DungeonName, newProgress);;
-                    }
+                    saveData.TownNarrations.Read(br);
+                    saveData.RaidNarrations.Read(br);
+                    saveData.CampaignNarrations.Read(br);
 
-                    int deathRecordCount = br.ReadInt32();
-                    for (int i = 0; i < deathRecordCount; i++)
-                    {
-                        var newRecord = new DeathRecord();
-                        newRecord.HeroName = br.ReadString();
-                        newRecord.HeroClassIndex = br.ReadInt32();
-                        newRecord.ResolveLevel = br.ReadInt32();
-                        newRecord.Factor = (DeathFactor)br.ReadInt32();
-                        newRecord.KillerName = br.ReadString();
-                        saveData.deathRecords.Add(newRecord);
-                    }
-
-                    // Building upgrade trees
-                    int buildingTreeCount = br.ReadInt32();
-                    saveData.buildingUpgrades = new Dictionary<string, UpgradePurchases>(buildingTreeCount);
-                    for (int i = 0; i < buildingTreeCount; i++)
-                    {
-                        var newPurchases = new UpgradePurchases(br.ReadString());
-                        int treeCodesCount = br.ReadInt32();
-                        for (int j = 0; j < treeCodesCount; j++)
-                            newPurchases.PurchasedUpgrades.Add(br.ReadString());
-                        saveData.buildingUpgrades.Add(newPurchases.TreeId, newPurchases);
-                    }
-                    // Hero upgrade trees
-                    saveData.instancedPurchases = new Dictionary<int, Dictionary<string, UpgradePurchases>>();
-                    int instancesCount = br.ReadInt32();
-
-                    for (int i = 0; i < instancesCount; i++)
-                    {
-                        var newInstance = new Dictionary<string, UpgradePurchases>();
-                        saveData.instancedPurchases.Add(br.ReadInt32(), newInstance);
-                        int instanceTreeCount = br.ReadInt32();
-                        for (int j = 0; j < instanceTreeCount; j++)
-                        {
-                            var newPurchases = new UpgradePurchases(br.ReadString());
-                            int treeCodesCount = br.ReadInt32();
-                            for (int k = 0; k < treeCodesCount; k++)
-                                newPurchases.PurchasedUpgrades.Add(br.ReadString());
-                            newInstance.Add(newPurchases.TreeId, newPurchases);
-                        }
-                    }
-                    #region Activity Log
-                    int activityLogCount = br.ReadInt32();
-                    for (int i = 0; i < activityLogCount; i++)
-                    {
-                        var newLog = new WeekActivityLog(br.ReadInt32());
-                        bool hasReturn = br.ReadBoolean();
-                        bool hasEmbark = br.ReadBoolean();
-                        if (hasReturn)
-                        {
-                            newLog.ReturnRecord = new PartyActivityRecord();
-                            newLog.ReturnRecord.PartyActionType = (PartyActionType)br.ReadInt32();
-                            newLog.ReturnRecord.QuestType = br.ReadString();
-                            newLog.ReturnRecord.QuestDifficulty = br.ReadString();
-                            newLog.ReturnRecord.QuestLength = br.ReadString();
-                            newLog.ReturnRecord.Dungeon = br.ReadString();
-
-                            int namesCount = br.ReadInt32();
-                            for (int j = 0; j < namesCount; j++)
-                                newLog.ReturnRecord.Names.Add(br.ReadString());
-
-                            int classesCount = br.ReadInt32();
-                            for (int j = 0; j < classesCount; j++)
-                                newLog.ReturnRecord.Classes.Add(br.ReadString());
-
-                            int aliveCount = br.ReadInt32();
-                            for (int j = 0; j < aliveCount; j++)
-                                newLog.ReturnRecord.Alive.Add(br.ReadBoolean());
-
-                            newLog.ReturnRecord.IsSuccessfull = br.ReadBoolean();
-                        }
-                        if (hasEmbark)
-                        {
-                            newLog.EmbarkRecord = new PartyActivityRecord();
-                            newLog.EmbarkRecord.PartyActionType = (PartyActionType)br.ReadInt32();
-                            newLog.EmbarkRecord.QuestType = br.ReadString();
-                            newLog.EmbarkRecord.QuestDifficulty = br.ReadString();
-                            newLog.EmbarkRecord.QuestLength = br.ReadString();
-                            newLog.EmbarkRecord.Dungeon = br.ReadString();
-
-                            int namesCount = br.ReadInt32();
-                            for (int j = 0; j < namesCount; j++)
-                                newLog.EmbarkRecord.Names.Add(br.ReadString());
-
-                            int classesCount = br.ReadInt32();
-                            for (int j = 0; j < classesCount; j++)
-                                newLog.EmbarkRecord.Classes.Add(br.ReadString());
-
-                            int aliveCount = br.ReadInt32();
-                            for (int j = 0; j < aliveCount; j++)
-                                newLog.EmbarkRecord.Alive.Add(br.ReadBoolean());
-
-                            newLog.EmbarkRecord.IsSuccessfull = br.ReadBoolean();
-                        }
-                        saveData.activityLog.Add(newLog);
-                    }
-                    #endregion
-
-                    #region Quests
-                    int completedPlotCount = br.ReadInt32();
-                    saveData.completedPlot.Clear();
-                    for (int i = 0; i < completedPlotCount; i++)
-                        saveData.completedPlot.Add(br.ReadString());
-
-                    int generatedQuestCount = br.ReadInt32();
-                    saveData.generatedQuests.Clear();
-                    for (int i = 0; i < generatedQuestCount; i++)
-                    {
-                        Quest quest;
-                        string plotGenId = br.ReadString();
-                        if (plotGenId == "tutorial")
-                        {
-                            quest = new PlotQuest()
-                            {
-                                Id = plotGenId,
-                                PlotTrinket = new PlotTrinketReward() { Amount = 0, Rarity = "very_common" },
-                            };
-                        }
-                        else if (plotGenId != "")
-                            quest = DarkestDungeonManager.Data.QuestDatabase.PlotQuests.Find(plQuest => plQuest.Id == plotGenId).Copy();
-                        else
-                            quest = new Quest();
-
-                        quest.Type = br.ReadString();
-                        quest.Dungeon = br.ReadString();
-                        quest.Difficulty = br.ReadInt32();
-                        quest.Length = br.ReadInt32();
-                        quest.Goal = DarkestDungeonManager.Data.QuestDatabase.QuestGoals[br.ReadString()];
-                        quest.Reward = new CompletionReward();
-                        quest.Reward.ResolveXP = br.ReadInt32();
-                        int questRewardGenCount = br.ReadInt32();
-                        quest.Reward.ItemDefinitions.Clear();
-                        for (int j = 0; j < questRewardGenCount; j++)
-                        {
-                            quest.Reward.ItemDefinitions.Add(new ItemDefinition()
-                            {
-                                Id = br.ReadString(),
-                                Type = br.ReadString(),
-                                Amount = br.ReadInt32(),
-                            });
-                        }
-
-                        quest.IsProgression = br.ReadBoolean();
-                        quest.HasStatueContents = br.ReadBoolean();
-                        quest.CompletionDungeonXp = br.ReadBoolean();
-                        quest.CanRetreat = br.ReadBoolean();
-                        quest.AlwaysRetreatFromRaid = br.ReadBoolean();
-                        quest.RetreatKillCount = br.ReadInt32();
-                        quest.IsSurpriseEnabled = br.ReadBoolean();
-                        quest.IsScoutingEnabled = br.ReadBoolean();
-                        quest.IsStressClearedOnCompletion = br.ReadBoolean();
-                        quest.RosterBuffOnFailureMinimumPartyResolveLevel = br.ReadInt32();
-                        int rostBuffsFailGenCount = br.ReadInt32();
-                        quest.RosterBuffsOnFailure.Clear();
-                        for (int j = 0; j < rostBuffsFailGenCount; j++)
-                            quest.RosterBuffsOnFailure.Add(DarkestDungeonManager.Data.Buffs[br.ReadString()]);
-
-                        int suggestedGenCount = br.ReadInt32();
-                        quest.SuggestedTrinkets.Clear();
-                        for (int j = 0; j < suggestedGenCount; j++)
-                            quest.SuggestedTrinkets.Add(new ItemDefinition("trinket", br.ReadString(), br.ReadInt32()));
-
-                        int tagGenCount = br.ReadInt32();
-                        quest.UpgradeTagsRemovedOnIgnore.Clear();
-                        for (int j = 0; j < tagGenCount; j++)
-                            quest.UpgradeTagsRemovedOnIgnore.Add(new UpgradeTag(br.ReadString(), br.ReadInt32()));
-
-                        saveData.generatedQuests.Add(quest);
-                    }
-                    #endregion
-
-                    #region Activity Slots
-                    int abbeyActivityCount = br.ReadInt32();
-                    for (int i = 0; i < abbeyActivityCount; i++)
-                    {
-                        int abbeySlotCount = br.ReadInt32();
-                        var newActivitySlotList = new List<SaveActivitySlot>();
-
-                        for (int j = 0; j < abbeySlotCount; j++)
-                        {
-                            var newSaveActivity = new SaveActivitySlot()
-                            {
-                                HeroRosterId = br.ReadInt32(),
-                                Status = (ActivitySlotStatus)br.ReadInt32(),
-                            };
-                            newActivitySlotList.Add(newSaveActivity);
-                        }
-                        saveData.abbeyActivitySlots.Add(newActivitySlotList);
-                    }
-                    int tavernActivityCount = br.ReadInt32();
-                    for (int i = 0; i < tavernActivityCount; i++)
-                    {
-                        int tavernSlotCount = br.ReadInt32();
-                        var newActivitySlotList = new List<SaveActivitySlot>();
-
-                        for (int j = 0; j < tavernSlotCount; j++)
-                        {
-                            var newSaveActivity = new SaveActivitySlot()
-                            {
-                                HeroRosterId = br.ReadInt32(),
-                                Status = (ActivitySlotStatus)br.ReadInt32(),
-                            };
-                            newActivitySlotList.Add(newSaveActivity);
-                        }
-                        saveData.tavernActivitySlots.Add(newActivitySlotList);
-                    }
-
-                    int sanitariumActivityCount = br.ReadInt32();
-                    for (int i = 0; i < sanitariumActivityCount; i++)
-                    {
-                        int sanitariumSlotCount = br.ReadInt32();
-                        var newActivitySlotList = new List<SaveActivitySlot>();
-
-                        for (int j = 0; j < sanitariumSlotCount; j++)
-                        {
-                            var newSaveActivity = new SaveActivitySlot()
-                            {
-                                HeroRosterId = br.ReadInt32(),
-                                Status = (ActivitySlotStatus)br.ReadInt32(),
-                                TargetDiseaseQuirk = br.ReadString(),
-                                TargetNegativeQuirk = br.ReadString(),
-                                TargetPositiveQuirk = br.ReadString(),
-                            };
-                            newActivitySlotList.Add(newSaveActivity);
-                        }
-                        saveData.sanitariumActivitySlots.Add(newActivitySlotList);
-                    }
-                    #endregion
-
-                    #region Town Events
-                    saveData.currentEvent = br.ReadString();
-                    saveData.guaranteedEvent = br.ReadString();
-
-                    int eventDataCount = br.ReadInt32();
-                    for (int i = 0; i < eventDataCount; i++)
-                    {
-                        SaveEventData saveEventData = new SaveEventData();
-                        saveEventData.EventId = br.ReadString();
-                        saveEventData.ActiveCooldown = br.ReadInt32();
-                        saveEventData.NotRolledAmount = br.ReadInt32();
-                        saveData.eventData.Add(saveEventData);
-                    }
-                    saveData.eventModifers.NoLevelRestrictions = br.ReadBoolean();
-
-                    int dictionaryCount = br.ReadInt32();
-                    for (int i = 0; i < dictionaryCount; i++)
-                        saveData.eventModifers.ActivityLocks.Add(br.ReadString(), br.ReadBoolean());
-
-                    dictionaryCount = br.ReadInt32();
-                    for (int i = 0; i < dictionaryCount; i++)
-                        saveData.eventModifers.FreeActivities.Add(br.ReadString(), br.ReadBoolean());
-
-                    dictionaryCount = br.ReadInt32();
-                    for (int i = 0; i < dictionaryCount; i++)
-                        saveData.eventModifers.ActivityCostModifiers.Add(br.ReadString(), br.ReadSingle());
-
-                    dictionaryCount = br.ReadInt32();
-                    for (int i = 0; i < dictionaryCount; i++)
-                        saveData.eventModifers.ProvisionCostModifiers.Add(br.ReadString(), br.ReadSingle());
-
-                    dictionaryCount = br.ReadInt32();
-                    for (int i = 0; i < dictionaryCount; i++)
-                        saveData.eventModifers.ProvisionAmountModifiers.Add(br.ReadString(), br.ReadSingle());
-
-                    dictionaryCount = br.ReadInt32();
-                    for (int i = 0; i < dictionaryCount; i++)
-                        saveData.eventModifers.UpgradeTagCostModifiers.Add(br.ReadString(), br.ReadSingle());
-
-                    dictionaryCount = br.ReadInt32();
-                    for (int i = 0; i < dictionaryCount; i++)
-                        saveData.eventModifers.FreeUpgradeTags.Add(br.ReadString(), br.ReadInt32());
-                    #endregion
-
-                    #region Narration
-                    int narrationCount = br.ReadInt32();
-                    for (int i = 0; i < narrationCount; i++)
-                        saveData.townNarrations.Add(br.ReadString(), br.ReadInt32());
-
-                    narrationCount = br.ReadInt32();
-                    for (int i = 0; i < narrationCount; i++)
-                        saveData.raidNarrations.Add(br.ReadString(), br.ReadInt32());
-
-                    narrationCount = br.ReadInt32();
-                    for (int i = 0; i < narrationCount; i++)
-                        saveData.campaignNarrations.Add(br.ReadString(), br.ReadInt32());
-                    #endregion
                     #endregion
 
                     #region Raid
+
                     saveData.InRaid = br.ReadBoolean();
-                    if (saveData.InRaid == false)
+                    if (!saveData.InRaid)
                         return saveData;
 
-                    #region Quest
                     saveData.QuestCompleted = br.ReadBoolean();
-                    string plotId = br.ReadString();
-                    if (plotId == "tutorial")
-                    {
-                        saveData.Quest = new PlotQuest()
-                        {
-                            Id = plotId,
-                            PlotTrinket = new PlotTrinketReward() { Amount = 0, Rarity = "very_common" },
-                        };
-                    }
-                    else if (plotId != "")
-                        saveData.Quest = DarkestDungeonManager.Data.QuestDatabase.PlotQuests.Find(plQuest => plQuest.Id == plotId).Copy();
-                    else
-                        saveData.Quest = new Quest();
-
-                    saveData.Quest.Type = br.ReadString();
-                    saveData.Quest.Dungeon = br.ReadString();
-                    saveData.Quest.Difficulty = br.ReadInt32();
-                    saveData.Quest.Length = br.ReadInt32();
-                    saveData.Quest.Goal = DarkestDungeonManager.Data.QuestDatabase.QuestGoals[br.ReadString()];
-                    saveData.Quest.Reward = new CompletionReward();
-                    saveData.Quest.Reward.ResolveXP = br.ReadInt32();
-                    int questRewardCount = br.ReadInt32();
-                    saveData.Quest.Reward.ItemDefinitions.Clear();
-                    for (int i = 0; i < questRewardCount; i++)
-                    {
-                        saveData.Quest.Reward.ItemDefinitions.Add(new ItemDefinition()
-                            {
-                                Id = br.ReadString(),
-                                Type = br.ReadString(),
-                                Amount = br.ReadInt32(),
-                            });
-                    }
-
-                    saveData.Quest.IsProgression = br.ReadBoolean();
-                    saveData.Quest.HasStatueContents = br.ReadBoolean();
-                    saveData.Quest.CompletionDungeonXp = br.ReadBoolean();
-                    saveData.Quest.CanRetreat = br.ReadBoolean();
-                    saveData.Quest.AlwaysRetreatFromRaid = br.ReadBoolean();
-                    saveData.Quest.RetreatKillCount = br.ReadInt32();
-                    saveData.Quest.IsSurpriseEnabled = br.ReadBoolean();
-                    saveData.Quest.IsScoutingEnabled = br.ReadBoolean();
-                    saveData.Quest.IsStressClearedOnCompletion = br.ReadBoolean();
-                    saveData.Quest.RosterBuffOnFailureMinimumPartyResolveLevel = br.ReadInt32();
-                    int rostBuffsFailCount = br.ReadInt32();
-                    saveData.Quest.RosterBuffsOnFailure.Clear();
-                    for (int i = 0; i < rostBuffsFailCount; i++)
-                        saveData.Quest.RosterBuffsOnFailure.Add(DarkestDungeonManager.Data.Buffs[br.ReadString()]);
-
-                    int suggestedCount = br.ReadInt32();
-                    saveData.Quest.SuggestedTrinkets.Clear();
-                    for (int i = 0; i < suggestedCount; i++)
-                        saveData.Quest.SuggestedTrinkets.Add(new ItemDefinition("trinket", br.ReadString(), br.ReadInt32()));
-
-                    int tagCount = br.ReadInt32();
-                    saveData.Quest.UpgradeTagsRemovedOnIgnore.Clear();
-                    for (int i = 0; i < tagCount; i++)
-                        saveData.Quest.UpgradeTagsRemovedOnIgnore.Add(new UpgradeTag(br.ReadString(), br.ReadInt32()));
-                    #endregion
+                    saveData.Quest = BinarySaveDataHelper.Create<Quest>(br);
 
                     #region Dungeon
                     saveData.Dungeon = new Dungeon();
@@ -1363,39 +592,34 @@ public static class SaveLoadManager
                     #endregion
 
                     #region Battle
-                    saveData.inBattle = br.ReadBoolean();
-                    if (saveData.inBattle == false)
+                    saveData.InBattle = br.ReadBoolean();
+                    if (saveData.InBattle == false)
                         return saveData;
 
-                    saveData.battleGroundSaveData.ReadBattlegroundData(br);
+                    saveData.BattleGroundSaveData.ReadBattlegroundData(br);
                     #endregion
+
                     #endregion
 
                     return saveData;
                 }
             }
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
-            Debug.LogError("Error in slot " + slotId + "!");
-            Debug.Log(ex.Message);
+            Debug.LogError("Error while reading save slot " + slotId + "! " + ex.Message +
+                "Inner: " + ex.InnerException != null ? ex.InnerException.Message : "None");
+            DeleteSave(slotId);
             return null;
         }
     }
 
-    public static void DeleteSave(int slotId)
-    {
-        File.Delete(Application.persistentDataPath + Path.AltDirectorySeparatorChar + "Saves" + 
-            Path.AltDirectorySeparatorChar + "DarkestSave" + slotId + ".darkestsave");
-    }
 
     public static void WriteDungeonMap(SaveCampaignData saveData, string mapName)
     {
-        if (!Directory.Exists(Application.persistentDataPath + "\\Maps\\"))
-            Directory.CreateDirectory(Application.persistentDataPath + "\\Maps\\");
+        RecreateMapDirectory();
 
-        using (var fs = new FileStream(Application.persistentDataPath + "\\Maps\\" + mapName +
-                    ".darkestmap", FileMode.Create, FileAccess.Write))
+        using (var fs = new FileStream(GenerateMapFileName(mapName), FileMode.Create, FileAccess.Write))
         {
             using (var bw = new BinaryWriter(fs))
             {
@@ -1503,10 +727,10 @@ public static class SaveLoadManager
             }
         }
     }
+
     public static void ReadDungeonMap(SaveCampaignData saveData, string mapName)
     {
-        using (var fs = new FileStream(Application.persistentDataPath + "\\Saves\\DarkestSave" + saveData.saveId +
-                    ".darkestsave", FileMode.Open, FileAccess.Read))
+        using (var fs = new FileStream(GenerateSaveFileName(saveData.SaveId), FileMode.Open, FileAccess.Read))
         {
             using (var br = new BinaryReader(fs))
             {
@@ -1670,6 +894,7 @@ public static class SaveLoadManager
             }
         }
     }
+
     public static Dungeon LoadDungeonMap(string mapName, Quest quest)
     {
         TextAsset mapAsset = Resources.Load("Data/Maps/" + mapName) as TextAsset;
@@ -1837,37 +1062,37 @@ public static class SaveLoadManager
         }
     }
 
+
     public static SaveCampaignData WriteStartingSave(SaveCampaignData saveData)
     {
-        saveData.isFirstStart = true;
-        saveData.gameVersion = Application.version;
-        saveData.locationName = "Raid";
-        saveData.questsCompleted = 0;
-        saveData.currentWeek = 1;
+        saveData.IsFirstStart = true;
+        saveData.LocationName = "Raid";
+        saveData.QuestsCompleted = 0;
+        saveData.CurrentWeek = 1;
 
-        saveData.goldAmount = 1000;
-        saveData.bustsAmount = 10;
-        saveData.deedsAmount = 10;
-        saveData.portraitsAmount = 10;
-        saveData.crestsAmount = 10;
+        saveData.GoldAmount = 1000;
+        saveData.BustsAmount = 10;
+        saveData.DeedsAmount = 10;
+        saveData.PortraitsAmount = 10;
+        saveData.CrestsAmount = 10;
 
         #region Initial Heroes
-        saveData.saveHeroData = new SaveHeroData[2]
+        saveData.RosterHeroes = new List<SaveHeroData>
         {
             #region Hero 1
             new SaveHeroData()
             {
-                rosterId = 1,
-                name = "Reynald",
-                heroClass = "crusader",
-                resolveLevel = 0,
-                resolveXP = 0,
-                stressLevel = 10,
-                weaponLevel = 1,
-                armorLevel = 1,
-                leftTrinketId = "",
-                rightTrinketId = "",
-                quirks = new List<QuirkInfo>()
+                RosterId = 1,
+                Name = "Reynald",
+                HeroClass = "crusader",
+                ResolveLevel = 0,
+                ResolveXP = 0,
+                StressLevel = 10,
+                WeaponLevel = 1,
+                ArmorLevel = 1,
+                LeftTrinketId = "",
+                RightTrinketId = "",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("warrior_of_light"),
                     new QuirkInfo("kleptomaniac"),
@@ -1878,17 +1103,17 @@ public static class SaveLoadManager
             #region Hero 2
             new SaveHeroData()
             {
-                rosterId = 2,
-                name = "Dismas",
-                heroClass = "highwayman",
-                resolveLevel = 0,
-                resolveXP = 0,
-                stressLevel = 10,
-                weaponLevel = 1,
-                armorLevel = 1,
-                leftTrinketId = "",
-                rightTrinketId = "",
-                quirks = new List<QuirkInfo>()
+                RosterId = 2,
+                Name = "Dismas",
+                HeroClass = "highwayman",
+                ResolveLevel = 0,
+                ResolveXP = 0,
+                StressLevel = 10,
+                WeaponLevel = 1,
+                ArmorLevel = 1,
+                LeftTrinketId = "",
+                RightTrinketId = "",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("hard_noggin"),
                     new QuirkInfo("known_cheat"),
@@ -1900,105 +1125,105 @@ public static class SaveLoadManager
         #endregion
 
         #region StageCoach Heroes
-        saveData.stageCoachData = new SaveHeroData[0];
+        saveData.StageCoachHeroes = new List<SaveHeroData>();
         #endregion
 
         #region Initial Hero Purchases
-        saveData.instancedPurchases = new Dictionary<int, Dictionary<string, UpgradePurchases>>();
-        for (int i = 0; i < saveData.saveHeroData.Length; i++)
+        saveData.InstancedPurchases.Clear();
+        for (int i = 0; i < saveData.RosterHeroes.Count; i++)
         {
             var newHeroPurchases = new Dictionary<string, UpgradePurchases>();
-            saveData.instancedPurchases.Add(saveData.saveHeroData[i].rosterId, newHeroPurchases);
-            newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + ".weapon",
-                new UpgradePurchases(saveData.saveHeroData[i].heroClass + ".weapon", new string[0]));
-            newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + ".armour",
-                new UpgradePurchases(saveData.saveHeroData[i].heroClass + ".armour", new string[0]));
-            var heroClass = DarkestDungeonManager.Data.HeroClasses[saveData.saveHeroData[i].heroClass];
+            saveData.InstancedPurchases.Add(saveData.RosterHeroes[i].RosterId, newHeroPurchases);
+            newHeroPurchases.Add(saveData.RosterHeroes[i].HeroClass + ".weapon",
+                new UpgradePurchases(saveData.RosterHeroes[i].HeroClass + ".weapon", new string[0]));
+            newHeroPurchases.Add(saveData.RosterHeroes[i].HeroClass + ".armour",
+                new UpgradePurchases(saveData.RosterHeroes[i].HeroClass + ".armour", new string[0]));
+            var heroClass = DarkestDungeonManager.Data.HeroClasses[saveData.RosterHeroes[i].HeroClass];
             for (int j = 0; j < heroClass.CombatSkills.Count; j++)
-                newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + "." + heroClass.CombatSkills[j].Id, new UpgradePurchases(
-                    saveData.saveHeroData[i].heroClass + "." + heroClass.CombatSkills[j].Id, new string[0]));
+                newHeroPurchases.Add(saveData.RosterHeroes[i].HeroClass + "." + heroClass.CombatSkills[j].Id, new UpgradePurchases(
+                    saveData.RosterHeroes[i].HeroClass + "." + heroClass.CombatSkills[j].Id, new string[0]));
             for (int j = 0; j < heroClass.CampingSkills.Count; j++)
                 newHeroPurchases.Add(heroClass.CampingSkills[j].Id, new UpgradePurchases(
                     heroClass.CampingSkills[j].Id, new string[0]));
         }
-        saveData.instancedPurchases[1]["crusader.smite"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["crusader.zealous_accusation"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["crusader.stunning_blow"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["crusader.bulwark_of_faith"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(0);
-        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(1);
-        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(2);
-        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(3);
-        saveData.instancedPurchases[1]["encourage"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["stand_tall"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["zealous_speech"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(0);
-        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(4);
-        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(5);
+        saveData.InstancedPurchases[1]["crusader.smite"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["crusader.zealous_accusation"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["crusader.stunning_blow"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["crusader.bulwark_of_faith"].PurchasedUpgrades.Add("0");
+        saveData.RosterHeroes[0].SelectedCombatSkillIndexes.Add(0);
+        saveData.RosterHeroes[0].SelectedCombatSkillIndexes.Add(1);
+        saveData.RosterHeroes[0].SelectedCombatSkillIndexes.Add(2);
+        saveData.RosterHeroes[0].SelectedCombatSkillIndexes.Add(3);
+        saveData.InstancedPurchases[1]["encourage"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["stand_tall"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["zealous_speech"].PurchasedUpgrades.Add("0");
+        saveData.RosterHeroes[0].SelectedCampingSkillIndexes.Add(0);
+        saveData.RosterHeroes[0].SelectedCampingSkillIndexes.Add(4);
+        saveData.RosterHeroes[0].SelectedCampingSkillIndexes.Add(5);
 
-        saveData.instancedPurchases[2]["highwayman.opened_vein"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["highwayman.pistol_shot"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["highwayman.grape_shot_blast"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["highwayman.take_aim"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(6);
-        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(1);
-        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(3);
-        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(4);
-        saveData.instancedPurchases[2]["first_aid"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["clean_guns"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["bandits_sense"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(1);
-        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(5);
-        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(6);
+        saveData.InstancedPurchases[2]["highwayman.opened_vein"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["highwayman.pistol_shot"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["highwayman.grape_shot_blast"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["highwayman.take_aim"].PurchasedUpgrades.Add("0");
+        saveData.RosterHeroes[1].SelectedCombatSkillIndexes.Add(6);
+        saveData.RosterHeroes[1].SelectedCombatSkillIndexes.Add(1);
+        saveData.RosterHeroes[1].SelectedCombatSkillIndexes.Add(3);
+        saveData.RosterHeroes[1].SelectedCombatSkillIndexes.Add(4);
+        saveData.InstancedPurchases[2]["first_aid"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["clean_guns"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["bandits_sense"].PurchasedUpgrades.Add("0");
+        saveData.RosterHeroes[1].SelectedCampingSkillIndexes.Add(1);
+        saveData.RosterHeroes[1].SelectedCampingSkillIndexes.Add(5);
+        saveData.RosterHeroes[1].SelectedCampingSkillIndexes.Add(6);
         #endregion
 
         #region Activity Log
-        saveData.activityLog = new List<WeekActivityLog>();
-        saveData.completedPlot = new List<string>();
-        saveData.generatedQuests = new List<Quest>();
+        saveData.ActivityLog = new List<WeekActivityLog>();
+        saveData.CompletedPlot = new List<string>();
+        saveData.GeneratedQuests = new List<Quest>();
         #endregion
 
         #region Estate Misc
-        saveData.trinketData.Clear();
+        saveData.InventoryTrinkets.Clear();
 
-        saveData.wagonData.Clear();
+        saveData.WagonTrinkets.Clear();
 
-        saveData.saveDungeonData.Clear();
-        saveData.saveDungeonData.Add("crypts", new DungeonProgress("crypts", 0, 0, true, false));
-        saveData.saveDungeonData.Add("warrens", new DungeonProgress("warrens", 0, 0, true, false));
-        saveData.saveDungeonData.Add("weald", new DungeonProgress("weald", 0, 0, true, false));
-        saveData.saveDungeonData.Add("cove", new DungeonProgress("cove", 0, 0, true, false));
-        saveData.saveDungeonData.Add("darkestdungeon", new DungeonProgress("darkestdungeon", 1, 0, true, false));
-        saveData.saveDungeonData.Add("town", new DungeonProgress("town", 1, 0, true, true));
+        saveData.DungeonProgress.Clear();
+        saveData.DungeonProgress.Add("crypts", new DungeonProgress("crypts", 0, 0, true, false));
+        saveData.DungeonProgress.Add("warrens", new DungeonProgress("warrens", 0, 0, true, false));
+        saveData.DungeonProgress.Add("weald", new DungeonProgress("weald", 0, 0, true, false));
+        saveData.DungeonProgress.Add("cove", new DungeonProgress("cove", 0, 0, true, false));
+        saveData.DungeonProgress.Add("darkestdungeon", new DungeonProgress("darkestdungeon", 1, 0, true, false));
+        saveData.DungeonProgress.Add("town", new DungeonProgress("town", 1, 0, true, true));
 
-        saveData.deathRecords = new List<DeathRecord>();
+        saveData.DeathRecords = new List<DeathRecord>();
 
-        saveData.buildingUpgrades = new Dictionary<string, UpgradePurchases>();
+        saveData.BuildingUpgrades.Clear();
 
-        saveData.buildingUpgrades.Add("abbey.meditation", new UpgradePurchases("abbey.meditation", new string[0]));
-        saveData.buildingUpgrades.Add("abbey.prayer", new UpgradePurchases("abbey.prayer", new string[0]));
-        saveData.buildingUpgrades.Add("abbey.flagellation", new UpgradePurchases("abbey.flagellation", new string[0]));
-        saveData.buildingUpgrades.Add("tavern.bar", new UpgradePurchases("tavern.bar", new string[0]));
-        saveData.buildingUpgrades.Add("tavern.gambling", new UpgradePurchases("tavern.gambling", new string[0]));
-        saveData.buildingUpgrades.Add("tavern.brothel", new UpgradePurchases("tavern.brothel", new string[0]));
-        saveData.buildingUpgrades.Add("sanitarium.cost", new UpgradePurchases("sanitarium.cost", new string[0]));
-        saveData.buildingUpgrades.Add("sanitarium.disease_quirk_cost", new UpgradePurchases("sanitarium.disease_quirk_cost", new string[0]));
-        saveData.buildingUpgrades.Add("sanitarium.slots", new UpgradePurchases("sanitarium.slots", new string[0]));
-        saveData.buildingUpgrades.Add("blacksmith.weapon", new UpgradePurchases("blacksmith.weapon", new string[0]));
-        saveData.buildingUpgrades.Add("blacksmith.armour", new UpgradePurchases("blacksmith.armour", new string[0]));
-        saveData.buildingUpgrades.Add("blacksmith.cost", new UpgradePurchases("blacksmith.cost", new string[0]));
-        saveData.buildingUpgrades.Add("guild.skill_levels", new UpgradePurchases("guild.skill_levels", new string[0]));
-        saveData.buildingUpgrades.Add("guild.cost", new UpgradePurchases("guild.cost", new string[0]));
-        saveData.buildingUpgrades.Add("camping_trainer.cost", new UpgradePurchases("camping_trainer.cost", new string[0]));
-        saveData.buildingUpgrades.Add("nomad_wagon.numitems", new UpgradePurchases("nomad_wagon.numitems", new string[0]));
-        saveData.buildingUpgrades.Add("nomad_wagon.cost", new UpgradePurchases("nomad_wagon.cost", new string[0]));
-        saveData.buildingUpgrades.Add("stage_coach.numrecruits", new UpgradePurchases("stage_coach.numrecruits", new string[0]));
-        saveData.buildingUpgrades.Add("stage_coach.rostersize", new UpgradePurchases("stage_coach.rostersize", new string[0]));
-        saveData.buildingUpgrades.Add("stage_coach.upgraded_recruits", new UpgradePurchases("stage_coach.upgraded_recruits", new string[0]));
+        saveData.BuildingUpgrades.Add("abbey.meditation", new UpgradePurchases("abbey.meditation", new string[0]));
+        saveData.BuildingUpgrades.Add("abbey.prayer", new UpgradePurchases("abbey.prayer", new string[0]));
+        saveData.BuildingUpgrades.Add("abbey.flagellation", new UpgradePurchases("abbey.flagellation", new string[0]));
+        saveData.BuildingUpgrades.Add("tavern.bar", new UpgradePurchases("tavern.bar", new string[0]));
+        saveData.BuildingUpgrades.Add("tavern.gambling", new UpgradePurchases("tavern.gambling", new string[0]));
+        saveData.BuildingUpgrades.Add("tavern.brothel", new UpgradePurchases("tavern.brothel", new string[0]));
+        saveData.BuildingUpgrades.Add("sanitarium.cost", new UpgradePurchases("sanitarium.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("sanitarium.disease_quirk_cost", new UpgradePurchases("sanitarium.disease_quirk_cost", new string[0]));
+        saveData.BuildingUpgrades.Add("sanitarium.slots", new UpgradePurchases("sanitarium.slots", new string[0]));
+        saveData.BuildingUpgrades.Add("blacksmith.weapon", new UpgradePurchases("blacksmith.weapon", new string[0]));
+        saveData.BuildingUpgrades.Add("blacksmith.armour", new UpgradePurchases("blacksmith.armour", new string[0]));
+        saveData.BuildingUpgrades.Add("blacksmith.cost", new UpgradePurchases("blacksmith.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("guild.skill_levels", new UpgradePurchases("guild.skill_levels", new string[0]));
+        saveData.BuildingUpgrades.Add("guild.cost", new UpgradePurchases("guild.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("camping_trainer.cost", new UpgradePurchases("camping_trainer.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("nomad_wagon.numitems", new UpgradePurchases("nomad_wagon.numitems", new string[0]));
+        saveData.BuildingUpgrades.Add("nomad_wagon.cost", new UpgradePurchases("nomad_wagon.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("stage_coach.numrecruits", new UpgradePurchases("stage_coach.numrecruits", new string[0]));
+        saveData.BuildingUpgrades.Add("stage_coach.rostersize", new UpgradePurchases("stage_coach.rostersize", new string[0]));
+        saveData.BuildingUpgrades.Add("stage_coach.upgraded_recruits", new UpgradePurchases("stage_coach.upgraded_recruits", new string[0]));
         #endregion
 
         #region ActivitySlots
-        saveData.abbeyActivitySlots = new List<List<SaveActivitySlot>>()
+        saveData.AbbeyActivitySlots = new List<List<SaveActivitySlot>>()
         {
             new List<SaveActivitySlot>()
             {
@@ -2019,7 +1244,7 @@ public static class SaveLoadManager
                  new SaveActivitySlot(),
             },
         };
-        saveData.tavernActivitySlots = new List<List<SaveActivitySlot>>()
+        saveData.TavernActivitySlots = new List<List<SaveActivitySlot>>()
         {
             new List<SaveActivitySlot>()
             {
@@ -2040,7 +1265,7 @@ public static class SaveLoadManager
                  new SaveActivitySlot(),
             },
         };
-        saveData.sanitariumActivitySlots = new List<List<SaveActivitySlot>>()
+        saveData.SanitariumActivitySlots = new List<List<SaveActivitySlot>>()
         {
             new List<SaveActivitySlot>()
             {
@@ -2228,37 +1453,37 @@ public static class SaveLoadManager
         WriteSave(saveData);
         return saveData;
     }
+
     public static SaveCampaignData WriteTestingSave(SaveCampaignData saveData)
     {
-        saveData.isFirstStart = true;
-        saveData.gameVersion = Application.version;
-        saveData.locationName = "Hamlet";
-        saveData.questsCompleted = 50;
-        saveData.currentWeek = 2;
+        saveData.IsFirstStart = true;
+        saveData.LocationName = "Hamlet";
+        saveData.QuestsCompleted = 50;
+        saveData.CurrentWeek = 2;
 
-        saveData.goldAmount = 120000;
-        saveData.bustsAmount = 123;
-        saveData.deedsAmount = 128;
-        saveData.portraitsAmount = 274;
-        saveData.crestsAmount = 492;
+        saveData.GoldAmount = 120000;
+        saveData.BustsAmount = 123;
+        saveData.DeedsAmount = 128;
+        saveData.PortraitsAmount = 274;
+        saveData.CrestsAmount = 492;
 
         #region Initial Heroes
-        saveData.saveHeroData = new SaveHeroData[20]
+        saveData.RosterHeroes = new List<SaveHeroData>
         {
             #region Hero 1
             new SaveHeroData()
             {
-                rosterId = 1,
-                name = "Reynald",
-                heroClass = "arbalest",
-                resolveLevel = 6,
-                resolveXP = 94,
-                stressLevel = 30,
-                weaponLevel = 5,
-                armorLevel = 4,
-                leftTrinketId = "ancestors_coat",
-                rightTrinketId = "ancestors_musket_ball",
-                quirks = new List<QuirkInfo>()
+                RosterId = 1,
+                Name = "Reynald",
+                HeroClass = "arbalest",
+                ResolveLevel = 6,
+                ResolveXP = 94,
+                StressLevel = 30,
+                WeaponLevel = 5,
+                ArmorLevel = 4,
+                LeftTrinketId = "ancestors_coat",
+                RightTrinketId = "ancestors_musket_ball",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("slugger"),
                     new QuirkInfo("robust"),
@@ -2272,17 +1497,17 @@ public static class SaveLoadManager
             #region Hero 2
             new SaveHeroData()
             {
-                rosterId = 2,
-                name = "Dismas",
-                heroClass = "occultist",
-                resolveLevel = 5,
-                resolveXP = 60,
-                stressLevel = 15,
-                weaponLevel = 3,
-                armorLevel = 3,
-                leftTrinketId = "ancestors_pistol",
-                rightTrinketId = "ancestors_pen",
-                quirks = new List<QuirkInfo>()
+                RosterId = 2,
+                Name = "Dismas",
+                HeroClass = "occultist",
+                ResolveLevel = 5,
+                ResolveXP = 60,
+                StressLevel = 15,
+                WeaponLevel = 3,
+                ArmorLevel = 3,
+                LeftTrinketId = "ancestors_pistol",
+                RightTrinketId = "ancestors_pen",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("slugger"),
                     new QuirkInfo("robust"),
@@ -2295,17 +1520,17 @@ public static class SaveLoadManager
             #region Hero 3
             new SaveHeroData()
             {
-                rosterId = 3,
-                name = "Renold",
-                heroClass = "man_at_arms",
-                resolveLevel = 4,
-                resolveXP = 10,
-                stressLevel = 0,
-                weaponLevel = 1,
-                armorLevel = 1,
-                leftTrinketId = "ancestors_handkerchief",
-                rightTrinketId = "ancestors_lantern",
-                quirks = new List<QuirkInfo>()
+                RosterId = 3,
+                Name = "Renold",
+                HeroClass = "man_at_arms",
+                ResolveLevel = 4,
+                ResolveXP = 10,
+                StressLevel = 0,
+                WeaponLevel = 1,
+                ArmorLevel = 1,
+                LeftTrinketId = "ancestors_handkerchief",
+                RightTrinketId = "ancestors_lantern",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("hard_skinned"),
                     new QuirkInfo("quick_reflexes"),
@@ -2318,17 +1543,17 @@ public static class SaveLoadManager
             #region Hero 4
             new SaveHeroData()
             {
-                rosterId = 4,
-                name = "Maudit",
-                heroClass = "abomination",
-                resolveLevel = 5,
-                resolveXP = 79,
-                stressLevel = 60,
-                weaponLevel = 5,
-                armorLevel = 2,
-                leftTrinketId = "ancestors_signet_ring",
-                rightTrinketId = "ancestors_moustache_cream",
-                quirks = new List<QuirkInfo>()
+                RosterId = 4,
+                Name = "Maudit",
+                HeroClass = "abomination",
+                ResolveLevel = 5,
+                ResolveXP = 79,
+                StressLevel = 60,
+                WeaponLevel = 5,
+                ArmorLevel = 2,
+                LeftTrinketId = "ancestors_signet_ring",
+                RightTrinketId = "ancestors_moustache_cream",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("tough"),
                     new QuirkInfo("slow_reflexes"),
@@ -2342,17 +1567,17 @@ public static class SaveLoadManager
             #region Hero 5
             new SaveHeroData()
             {
-                rosterId = 5,
-                name = "Fairfax",
-                heroClass = "hellion",
-                resolveLevel = 0,
-                resolveXP = 1,
-                stressLevel = 64,
-                weaponLevel = 1,
-                armorLevel = 1,
-                leftTrinketId = "",
-                rightTrinketId = "ancestors_map",
-                quirks = new List<QuirkInfo>()
+                RosterId = 5,
+                Name = "Fairfax",
+                HeroClass = "hellion",
+                ResolveLevel = 0,
+                ResolveXP = 1,
+                StressLevel = 64,
+                WeaponLevel = 1,
+                ArmorLevel = 1,
+                LeftTrinketId = "",
+                RightTrinketId = "ancestors_map",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("warrior_of_light"),
                     new QuirkInfo("second_wind"),
@@ -2363,17 +1588,17 @@ public static class SaveLoadManager
             #region Hero 6
             new SaveHeroData()
             {
-                rosterId = 6,
-                name = "Bernard",
-                heroClass = "jester",
-                resolveLevel = 1,
-                resolveXP = 7,
-                stressLevel = 99,
-                weaponLevel = 1,
-                armorLevel = 1,
-                leftTrinketId = "ancestors_candle",
-                rightTrinketId = "",
-                quirks = new List<QuirkInfo>()
+                RosterId = 6,
+                Name = "Bernard",
+                HeroClass = "jester",
+                ResolveLevel = 1,
+                ResolveXP = 7,
+                StressLevel = 99,
+                WeaponLevel = 1,
+                ArmorLevel = 1,
+                LeftTrinketId = "ancestors_candle",
+                RightTrinketId = "",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("tough"),
                     new QuirkInfo("robust"),
@@ -2384,17 +1609,17 @@ public static class SaveLoadManager
             #region Hero 7
             new SaveHeroData()
             {
-                rosterId = 7,
-                name = "Trixy",
-                heroClass = "grave_robber",
-                resolveLevel = 4,
-                resolveXP = 5,
-                stressLevel = 15,
-                weaponLevel = 2,
-                armorLevel = 2,
-                leftTrinketId = "ancestors_tentacle_idol",
-                rightTrinketId = "ancestors_bottle",
-                quirks = new List<QuirkInfo>()
+                RosterId = 7,
+                Name = "Trixy",
+                HeroClass = "grave_robber",
+                ResolveLevel = 4,
+                ResolveXP = 5,
+                StressLevel = 15,
+                WeaponLevel = 2,
+                ArmorLevel = 2,
+                LeftTrinketId = "ancestors_tentacle_idol",
+                RightTrinketId = "ancestors_bottle",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("tough"),
                     new QuirkInfo("hard_skinned"),
@@ -2405,17 +1630,17 @@ public static class SaveLoadManager
             #region Hero 8
             new SaveHeroData()
             {
-                rosterId = 8,
-                name = "Leonel",
-                heroClass = "occultist",
-                resolveLevel = 4,
-                resolveXP = 21,
-                stressLevel = 27,
-                weaponLevel = 3,
-                armorLevel = 3,
-                leftTrinketId = "legendary_bracer",
-                rightTrinketId = "focus_ring",
-                quirks = new List<QuirkInfo>()
+                RosterId = 8,
+                Name = "Leonel",
+                HeroClass = "occultist",
+                ResolveLevel = 4,
+                ResolveXP = 21,
+                StressLevel = 27,
+                WeaponLevel = 3,
+                ArmorLevel = 3,
+                LeftTrinketId = "legendary_bracer",
+                RightTrinketId = "focus_ring",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("meditator"),
                 },
@@ -2424,17 +1649,17 @@ public static class SaveLoadManager
             #region Hero 9
             new SaveHeroData()
             {
-                rosterId = 9,
-                name = "Daston",
-                heroClass = "plague_doctor",
-                resolveLevel = 6,
-                resolveXP = 90,
-                stressLevel = 87,
-                weaponLevel = 4,
-                armorLevel = 4,
-                leftTrinketId = "tough_ring",
-                rightTrinketId = "cleansing_crystal",
-                quirks = new List<QuirkInfo>()
+                RosterId = 9,
+                Name = "Daston",
+                HeroClass = "plague_doctor",
+                ResolveLevel = 6,
+                ResolveXP = 90,
+                StressLevel = 87,
+                WeaponLevel = 4,
+                ArmorLevel = 4,
+                LeftTrinketId = "tough_ring",
+                RightTrinketId = "cleansing_crystal",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("slow_reflexes"),
                     new QuirkInfo("slugger"),
@@ -2445,17 +1670,17 @@ public static class SaveLoadManager
             #region Hero 10
             new SaveHeroData()
             {
-                rosterId = 10,
-                name = "Murax",
-                heroClass = "leper",
-                resolveLevel = 6,
-                resolveXP = 15,
-                stressLevel = 62,
-                weaponLevel = 1,
-                armorLevel = 1,
-                leftTrinketId = "",
-                rightTrinketId = "",
-                quirks = new List<QuirkInfo>()
+                RosterId = 10,
+                Name = "Murax",
+                HeroClass = "leper",
+                ResolveLevel = 6,
+                ResolveXP = 15,
+                StressLevel = 62,
+                WeaponLevel = 1,
+                ArmorLevel = 1,
+                LeftTrinketId = "",
+                RightTrinketId = "",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("slow_reflexes"),
                     new QuirkInfo("slugger"),
@@ -2467,17 +1692,17 @@ public static class SaveLoadManager
             #region Hero 11
             new SaveHeroData()
             {
-                rosterId = 11,
-                name = "John",
-                heroClass = "crusader",
-                resolveLevel = 3,
-                resolveXP = 10,
-                stressLevel = 10,
-                weaponLevel = 3,
-                armorLevel = 3,
-                leftTrinketId = "",
-                rightTrinketId = "",
-                quirks = new List<QuirkInfo>()
+                RosterId = 11,
+                Name = "John",
+                HeroClass = "crusader",
+                ResolveLevel = 3,
+                ResolveXP = 10,
+                StressLevel = 10,
+                WeaponLevel = 3,
+                ArmorLevel = 3,
+                LeftTrinketId = "",
+                RightTrinketId = "",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("slow_reflexes"),
                     new QuirkInfo("warrior_of_light"),
@@ -2489,17 +1714,17 @@ public static class SaveLoadManager
             #region Hero 12
             new SaveHeroData()
             {
-                rosterId = 12,
-                name = "Tulio",
-                heroClass = "bounty_hunter",
-                resolveLevel = 2,
-                resolveXP = 12,
-                stressLevel = 15,
-                weaponLevel = 2,
-                armorLevel = 2,
-                leftTrinketId = "spiked_collar",
-                rightTrinketId = "poisoning_buckle",
-                quirks = new List<QuirkInfo>()
+                RosterId = 12,
+                Name = "Tulio",
+                HeroClass = "bounty_hunter",
+                ResolveLevel = 2,
+                ResolveXP = 12,
+                StressLevel = 15,
+                WeaponLevel = 2,
+                ArmorLevel = 2,
+                LeftTrinketId = "spiked_collar",
+                RightTrinketId = "poisoning_buckle",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("slow_reflexes"),
                 },
@@ -2508,17 +1733,17 @@ public static class SaveLoadManager
             #region Hero 13
             new SaveHeroData()
             {
-                rosterId = 13,
-                name = "Axe",
-                heroClass = "leper",
-                resolveLevel = 5,
-                resolveXP = 20,
-                stressLevel = 0,
-                weaponLevel = 2,
-                armorLevel = 3,
-                leftTrinketId = "berserk_mask",
-                rightTrinketId = "martyrs_seal",
-                quirks = new List<QuirkInfo>()
+                RosterId = 13,
+                Name = "Axe",
+                HeroClass = "leper",
+                ResolveLevel = 5,
+                ResolveXP = 20,
+                StressLevel = 0,
+                WeaponLevel = 2,
+                ArmorLevel = 3,
+                LeftTrinketId = "berserk_mask",
+                RightTrinketId = "martyrs_seal",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("tough"),
                 },
@@ -2527,17 +1752,17 @@ public static class SaveLoadManager
             #region Hero 14
             new SaveHeroData()
             {
-                rosterId = 14,
-                name = "Jaraxus",
-                heroClass = "highwayman",
-                resolveLevel = 6,
-                resolveXP = 78,
-                stressLevel = 100,
-                weaponLevel = 5,
-                armorLevel = 2,
-                leftTrinketId = "sun_cloak",
-                rightTrinketId = "",
-                quirks = new List<QuirkInfo>()
+                RosterId = 14,
+                Name = "Jaraxus",
+                HeroClass = "highwayman",
+                ResolveLevel = 6,
+                ResolveXP = 78,
+                StressLevel = 100,
+                WeaponLevel = 5,
+                ArmorLevel = 2,
+                LeftTrinketId = "sun_cloak",
+                RightTrinketId = "",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("slow_reflexes"),
                     new QuirkInfo("robust"),
@@ -2547,17 +1772,17 @@ public static class SaveLoadManager
             #region Hero 15
             new SaveHeroData()
             {
-                rosterId = 15,
-                name = "Kirk",
-                heroClass = "crusader",
-                resolveLevel = 4,
-                resolveXP = 31,
-                stressLevel = 64,
-                weaponLevel = 3,
-                armorLevel = 4,
-                leftTrinketId = "holy_orders",
-                rightTrinketId = "",
-                quirks = new List<QuirkInfo>()
+                RosterId = 15,
+                Name = "Kirk",
+                HeroClass = "crusader",
+                ResolveLevel = 4,
+                ResolveXP = 31,
+                StressLevel = 64,
+                WeaponLevel = 3,
+                ArmorLevel = 4,
+                LeftTrinketId = "holy_orders",
+                RightTrinketId = "",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("tough"),
                 },
@@ -2566,17 +1791,17 @@ public static class SaveLoadManager
             #region Hero 16
             new SaveHeroData()
             {
-                rosterId = 16,
-                name = "William",
-                heroClass = "jester",
-                resolveLevel = 0,
-                resolveXP = 0,
-                stressLevel = 99,
-                weaponLevel = 1,
-                armorLevel = 1,
-                leftTrinketId = "berserk_charm",
-                rightTrinketId = "",
-                quirks = new List<QuirkInfo>()
+                RosterId = 16,
+                Name = "William",
+                HeroClass = "jester",
+                ResolveLevel = 0,
+                ResolveXP = 0,
+                StressLevel = 99,
+                WeaponLevel = 1,
+                ArmorLevel = 1,
+                LeftTrinketId = "berserk_charm",
+                RightTrinketId = "",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("tough"),
                     new QuirkInfo("satanophobia"),
@@ -2586,17 +1811,17 @@ public static class SaveLoadManager
             #region Hero 17
             new SaveHeroData()
             {
-                rosterId = 17,
-                name = "Jorgen",
-                heroClass = "occultist",
-                resolveLevel = 1,
-                resolveXP = 2,
-                stressLevel = 15,
-                weaponLevel = 2,
-                armorLevel = 2,
-                leftTrinketId = "",
-                rightTrinketId = "feather_crystal",
-                quirks = new List<QuirkInfo>()
+                RosterId = 17,
+                Name = "Jorgen",
+                HeroClass = "occultist",
+                ResolveLevel = 1,
+                ResolveXP = 2,
+                StressLevel = 15,
+                WeaponLevel = 2,
+                ArmorLevel = 2,
+                LeftTrinketId = "",
+                RightTrinketId = "feather_crystal",
+                Quirks = new List<QuirkInfo>()
                 {
                 },
             },
@@ -2604,17 +1829,17 @@ public static class SaveLoadManager
             #region Hero 18
             new SaveHeroData()
             {
-                rosterId = 18,
-                name = "Robert",
-                heroClass = "plague_doctor",
-                resolveLevel = 5,
-                resolveXP = 40,
-                stressLevel = 27,
-                weaponLevel = 3,
-                armorLevel = 3,
-                leftTrinketId = "brawlers_gloves",
-                rightTrinketId = "life_crystal",
-                quirks = new List<QuirkInfo>()
+                RosterId = 18,
+                Name = "Robert",
+                HeroClass = "plague_doctor",
+                ResolveLevel = 5,
+                ResolveXP = 40,
+                StressLevel = 27,
+                WeaponLevel = 3,
+                ArmorLevel = 3,
+                LeftTrinketId = "brawlers_gloves",
+                RightTrinketId = "life_crystal",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("tough"),
                 },
@@ -2623,17 +1848,17 @@ public static class SaveLoadManager
             #region Hero 19
             new SaveHeroData()
             {
-                rosterId = 19,
-                name = "Quasim",
-                heroClass = "highwayman",
-                resolveLevel = 5,
-                resolveXP = 60,
-                stressLevel = 87,
-                weaponLevel = 4,
-                armorLevel = 4,
-                leftTrinketId = "snipers_ring",
-                rightTrinketId = "quick_draw_charm",
-                quirks = new List<QuirkInfo>()
+                RosterId = 19,
+                Name = "Quasim",
+                HeroClass = "highwayman",
+                ResolveLevel = 5,
+                ResolveXP = 60,
+                StressLevel = 87,
+                WeaponLevel = 4,
+                ArmorLevel = 4,
+                LeftTrinketId = "snipers_ring",
+                RightTrinketId = "quick_draw_charm",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("warrior_of_light"),
                     new QuirkInfo("second_wind"),
@@ -2643,17 +1868,17 @@ public static class SaveLoadManager
             #region Hero 20
             new SaveHeroData()
             {
-                rosterId = 20,
-                name = "Lion",
-                heroClass = "crusader",
-                resolveLevel = 6,
-                resolveXP = 94,
-                stressLevel = 62,
-                weaponLevel = 1,
-                armorLevel = 1,
-                leftTrinketId = "bulls_eye_bandana",
-                rightTrinketId = "protective_collar",
-                quirks = new List<QuirkInfo>()
+                RosterId = 20,
+                Name = "Lion",
+                HeroClass = "crusader",
+                ResolveLevel = 6,
+                ResolveXP = 94,
+                StressLevel = 62,
+                WeaponLevel = 1,
+                ArmorLevel = 1,
+                LeftTrinketId = "bulls_eye_bandana",
+                RightTrinketId = "protective_collar",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("slow_reflexes"),
                     new QuirkInfo("satanophobia"),
@@ -2664,22 +1889,22 @@ public static class SaveLoadManager
         #endregion
 
         #region StageCoach Heroes
-        saveData.stageCoachData = new SaveHeroData[4]
+        saveData.StageCoachHeroes = new List<SaveHeroData>
         {
             #region Hero 1
             new SaveHeroData()
             {
-                rosterId = 21,
-                name = "Recald",
-                heroClass = "crusader",
-                resolveLevel = 0,
-                resolveXP = 0,
-                stressLevel = 0,
-                weaponLevel = 1,
-                armorLevel = 1,
-                leftTrinketId = "",
-                rightTrinketId = "",
-                quirks = new List<QuirkInfo>()
+                RosterId = 21,
+                Name = "Recald",
+                HeroClass = "crusader",
+                ResolveLevel = 0,
+                ResolveXP = 0,
+                StressLevel = 0,
+                WeaponLevel = 1,
+                ArmorLevel = 1,
+                LeftTrinketId = "",
+                RightTrinketId = "",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("meditator"),
                 },
@@ -2688,17 +1913,17 @@ public static class SaveLoadManager
             #region Hero 2
             new SaveHeroData()
             {
-                rosterId = 22,
-                name = "Resmas",
-                heroClass = "highwayman",
-                resolveLevel = 0,
-                resolveXP = 0,
-                stressLevel = 0,
-                weaponLevel = 0,
-                armorLevel = 0,
-                leftTrinketId = "",
-                rightTrinketId = "",
-                quirks = new List<QuirkInfo>()
+                RosterId = 22,
+                Name = "Resmas",
+                HeroClass = "highwayman",
+                ResolveLevel = 0,
+                ResolveXP = 0,
+                StressLevel = 0,
+                WeaponLevel = 0,
+                ArmorLevel = 0,
+                LeftTrinketId = "",
+                RightTrinketId = "",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("slugger"),
                     new QuirkInfo("warrior_of_light"),
@@ -2708,17 +1933,17 @@ public static class SaveLoadManager
             #region Hero 3
             new SaveHeroData()
             {
-                rosterId = 23,
-                name = "Recold",
-                heroClass = "bounty_hunter",
-                resolveLevel = 0,
-                resolveXP = 0,
-                stressLevel = 0,
-                weaponLevel = 1,
-                armorLevel = 1,
-                leftTrinketId = "",
-                rightTrinketId = "",
-                quirks = new List<QuirkInfo>()
+                RosterId = 23,
+                Name = "Recold",
+                HeroClass = "bounty_hunter",
+                ResolveLevel = 0,
+                ResolveXP = 0,
+                StressLevel = 0,
+                WeaponLevel = 1,
+                ArmorLevel = 1,
+                LeftTrinketId = "",
+                RightTrinketId = "",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("hard_skinned"),
                     new QuirkInfo("slugger"),
@@ -2728,17 +1953,17 @@ public static class SaveLoadManager
             #region Hero 4
             new SaveHeroData()
             {
-                rosterId = 24,
-                name = "Reudit",
-                heroClass = "vestal",
-                resolveLevel = 0,
-                resolveXP = 0,
-                stressLevel = 0,
-                weaponLevel = 1,
-                armorLevel = 1,
-                leftTrinketId = "",
-                rightTrinketId = "",
-                quirks = new List<QuirkInfo>()
+                RosterId = 24,
+                Name = "Reudit",
+                HeroClass = "vestal",
+                ResolveLevel = 0,
+                ResolveXP = 0,
+                StressLevel = 0,
+                WeaponLevel = 1,
+                ArmorLevel = 1,
+                LeftTrinketId = "",
+                RightTrinketId = "",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("tough"),
                     new QuirkInfo("slow_reflexes"),
@@ -2749,24 +1974,24 @@ public static class SaveLoadManager
         #endregion
 
         #region Initial Hero Purchases
-        saveData.instancedPurchases = new Dictionary<int, Dictionary<string, UpgradePurchases>>();
+        saveData.InstancedPurchases.Clear();
         List<string> equipCodes = new List<string>() { "0", "1", "2", "3", "4" };
-        for (int i = 0; i < saveData.saveHeroData.Length; i++)
+        for (int i = 0; i < saveData.RosterHeroes.Count; i++)
         {
             var newHeroPurchases = new Dictionary<string, UpgradePurchases>();
-            saveData.instancedPurchases.Add(saveData.saveHeroData[i].rosterId, newHeroPurchases);
-            newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + ".weapon",
-                new UpgradePurchases(saveData.saveHeroData[i].heroClass + ".weapon", equipCodes.GetRange(0,
-                Mathf.Clamp(saveData.saveHeroData[i].weaponLevel - 1, 0, 4)).ToArray()));
-            newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + ".armour",
-                new UpgradePurchases(saveData.saveHeroData[i].heroClass + ".armour", equipCodes.GetRange(0,
-                Mathf.Clamp(saveData.saveHeroData[i].armorLevel - 1, 0, 4)).ToArray()));
-            var heroClass = DarkestDungeonManager.Data.HeroClasses[saveData.saveHeroData[i].heroClass];
+            saveData.InstancedPurchases.Add(saveData.RosterHeroes[i].RosterId, newHeroPurchases);
+            newHeroPurchases.Add(saveData.RosterHeroes[i].HeroClass + ".weapon",
+                new UpgradePurchases(saveData.RosterHeroes[i].HeroClass + ".weapon", equipCodes.GetRange(0,
+                Mathf.Clamp(saveData.RosterHeroes[i].WeaponLevel - 1, 0, 4)).ToArray()));
+            newHeroPurchases.Add(saveData.RosterHeroes[i].HeroClass + ".armour",
+                new UpgradePurchases(saveData.RosterHeroes[i].HeroClass + ".armour", equipCodes.GetRange(0,
+                Mathf.Clamp(saveData.RosterHeroes[i].ArmorLevel - 1, 0, 4)).ToArray()));
+            var heroClass = DarkestDungeonManager.Data.HeroClasses[saveData.RosterHeroes[i].HeroClass];
             for (int j = 0; j < heroClass.CombatSkills.Count; j++)
             {
-                    newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + "." + heroClass.CombatSkills[j].Id, new UpgradePurchases(
-                        saveData.saveHeroData[i].heroClass + "." + heroClass.CombatSkills[j].Id,equipCodes.GetRange(0,
-                            Mathf.Clamp(saveData.saveHeroData[i].armorLevel, 0, 5)).ToArray()));
+                    newHeroPurchases.Add(saveData.RosterHeroes[i].HeroClass + "." + heroClass.CombatSkills[j].Id, new UpgradePurchases(
+                        saveData.RosterHeroes[i].HeroClass + "." + heroClass.CombatSkills[j].Id,equipCodes.GetRange(0,
+                            Mathf.Clamp(saveData.RosterHeroes[i].ArmorLevel, 0, 5)).ToArray()));
             }
             for (int j = 0; j < heroClass.CampingSkills.Count; j++)
             {
@@ -2774,35 +1999,35 @@ public static class SaveLoadManager
                     new UpgradePurchases(heroClass.CampingSkills[j].Id, new string[] { "0" }));
             }
 
-            if (saveData.saveHeroData[i].heroClass != "abomination")
+            if (saveData.RosterHeroes[i].HeroClass != "abomination")
             {
-                saveData.saveHeroData[i].selectedCombatSkillIndexes.AddRange(new int[] { 0, 1, 2, 3 });
-                saveData.saveHeroData[i].selectedCampingSkillIndexes.AddRange(new int[] { 0, 3, 5, 6 });
+                saveData.RosterHeroes[i].SelectedCombatSkillIndexes.AddRange(new int[] { 0, 1, 2, 3 });
+                saveData.RosterHeroes[i].SelectedCampingSkillIndexes.AddRange(new int[] { 0, 3, 5, 6 });
             }
             else
             {
-                saveData.saveHeroData[i].selectedCombatSkillIndexes.AddRange(new int[] { 0, 1, 2, 3, 4, 5, 6 });
-                saveData.saveHeroData[i].selectedCampingSkillIndexes.AddRange(new int[] { 0, 3, 5, 6 });
+                saveData.RosterHeroes[i].SelectedCombatSkillIndexes.AddRange(new int[] { 0, 1, 2, 3, 4, 5, 6 });
+                saveData.RosterHeroes[i].SelectedCampingSkillIndexes.AddRange(new int[] { 0, 3, 5, 6 });
             }
 
         }
-        for (int i = 0; i < saveData.stageCoachData.Length; i++)
+        for (int i = 0; i < saveData.StageCoachHeroes.Count; i++)
         {
             var newHeroPurchases = new Dictionary<string, UpgradePurchases>();
-            saveData.instancedPurchases.Add(saveData.stageCoachData[i].rosterId, newHeroPurchases);
-            newHeroPurchases.Add(saveData.stageCoachData[i].heroClass + ".weapon",
-                new UpgradePurchases(saveData.stageCoachData[i].heroClass + ".weapon", new string[0]));
-            newHeroPurchases.Add(saveData.stageCoachData[i].heroClass + ".armour",
-                new UpgradePurchases(saveData.stageCoachData[i].heroClass + ".armour", new string[0]));
-            var heroClass = DarkestDungeonManager.Data.HeroClasses[saveData.stageCoachData[i].heroClass];
+            saveData.InstancedPurchases.Add(saveData.StageCoachHeroes[i].RosterId, newHeroPurchases);
+            newHeroPurchases.Add(saveData.StageCoachHeroes[i].HeroClass + ".weapon",
+                new UpgradePurchases(saveData.StageCoachHeroes[i].HeroClass + ".weapon", new string[0]));
+            newHeroPurchases.Add(saveData.StageCoachHeroes[i].HeroClass + ".armour",
+                new UpgradePurchases(saveData.StageCoachHeroes[i].HeroClass + ".armour", new string[0]));
+            var heroClass = DarkestDungeonManager.Data.HeroClasses[saveData.StageCoachHeroes[i].HeroClass];
             for (int j = 0; j < heroClass.CombatSkills.Count; j++)
             {
                 if (j == 4 || j == 5 || j == 6 )
-                    newHeroPurchases.Add(saveData.stageCoachData[i].heroClass + "." + heroClass.CombatSkills[j].Id, new UpgradePurchases(
-                        saveData.stageCoachData[i].heroClass + "." + heroClass.CombatSkills[j].Id, new string[0]));
+                    newHeroPurchases.Add(saveData.StageCoachHeroes[i].HeroClass + "." + heroClass.CombatSkills[j].Id, new UpgradePurchases(
+                        saveData.StageCoachHeroes[i].HeroClass + "." + heroClass.CombatSkills[j].Id, new string[0]));
                 else
-                    newHeroPurchases.Add(saveData.stageCoachData[i].heroClass + "." + heroClass.CombatSkills[j].Id, new UpgradePurchases(
-                        saveData.stageCoachData[i].heroClass + "." + heroClass.CombatSkills[j].Id, new string[1] { "0" }));
+                    newHeroPurchases.Add(saveData.StageCoachHeroes[i].HeroClass + "." + heroClass.CombatSkills[j].Id, new UpgradePurchases(
+                        saveData.StageCoachHeroes[i].HeroClass + "." + heroClass.CombatSkills[j].Id, new string[1] { "0" }));
 
             }
             for (int j = 0; j < heroClass.CampingSkills.Count; j++)
@@ -2818,7 +2043,7 @@ public static class SaveLoadManager
         #endregion
 
         #region Activity Log
-        saveData.activityLog = new List<WeekActivityLog>()
+        saveData.ActivityLog = new List<WeekActivityLog>()
         {
             new WeekActivityLog(1)
             {
@@ -2866,7 +2091,7 @@ public static class SaveLoadManager
         #endregion
 
         #region Completed Plot
-        saveData.completedPlot = new List<string>()
+        saveData.CompletedPlot = new List<string>()
         {
             "leper", "crusader", "plot_tutorial_crypts",
             "plot_darkest_dungeon_1", "plot_darkest_dungeon_2",
@@ -2882,7 +2107,7 @@ public static class SaveLoadManager
         };
         #endregion
 
-        saveData.trinketData = new List<string>()
+        saveData.InventoryTrinkets = new List<string>()
         {
             "sun_ring","sun_cloak", "tough_ring", "heavy_boots","focus_ring","defenders_seal", "deteriorating_bracer",
             "demons_cauldron","sacred_scroll", "cleansing_crystal","ancestors_musket_ball", "ancestors_coat",
@@ -2890,20 +2115,20 @@ public static class SaveLoadManager
             "sacrificial_cauldron","witchs_vial", "sharpening_sheath","immunity_mask", "bright_tambourine", "agility_whistle",
         };
 
-        saveData.wagonData = new List<string>()
+        saveData.WagonTrinkets = new List<string>()
         {
             "demons_cauldron", "sacred_scroll", "cleansing_crystal", "ancestors_musket_ball", "ancestors_coat", 
         };
 
-        saveData.saveDungeonData.Clear();
-        saveData.saveDungeonData.Add("crypts", new DungeonProgress("crypts", 7, 42, true, false));
-        saveData.saveDungeonData.Add("warrens", new DungeonProgress("warrens", 6, 16, true, false));
-        saveData.saveDungeonData.Add("weald", new DungeonProgress("weald", 5, 32, true, false));
-        saveData.saveDungeonData.Add("cove", new DungeonProgress("cove", 3, 1, true, false));
-        saveData.saveDungeonData.Add("darkestdungeon", new DungeonProgress("darkestdungeon", 1, 0, true, false));
-        saveData.saveDungeonData.Add("town", new DungeonProgress("town", 1, 0, true, true));
+        saveData.DungeonProgress.Clear();
+        saveData.DungeonProgress.Add("crypts", new DungeonProgress("crypts", 7, 42, true, false));
+        saveData.DungeonProgress.Add("warrens", new DungeonProgress("warrens", 6, 16, true, false));
+        saveData.DungeonProgress.Add("weald", new DungeonProgress("weald", 5, 32, true, false));
+        saveData.DungeonProgress.Add("cove", new DungeonProgress("cove", 3, 1, true, false));
+        saveData.DungeonProgress.Add("darkestdungeon", new DungeonProgress("darkestdungeon", 1, 0, true, false));
+        saveData.DungeonProgress.Add("town", new DungeonProgress("town", 1, 0, true, true));
 
-        saveData.deathRecords = new List<DeathRecord>()
+        saveData.DeathRecords = new List<DeathRecord>()
         {
             new DeathRecord() { HeroName = "Ronald", HeroClassIndex = 2,
                 Factor = DeathFactor.Hunger, KillerName = "", ResolveLevel = 2, },
@@ -2927,51 +2152,51 @@ public static class SaveLoadManager
                 Factor = DeathFactor.AttackMonster, KillerName = "necromancer_C", ResolveLevel = 5, },
         };
 
-        saveData.buildingUpgrades = new Dictionary<string, UpgradePurchases>();
+        saveData.BuildingUpgrades.Clear();
 
-        saveData.buildingUpgrades.Add("abbey.meditation",
+        saveData.BuildingUpgrades.Add("abbey.meditation",
             new UpgradePurchases("abbey.meditation", new string[6] { "a", "b", "c", "d", "e", "f" }));
-        saveData.buildingUpgrades.Add("abbey.prayer",
+        saveData.BuildingUpgrades.Add("abbey.prayer",
             new UpgradePurchases("abbey.prayer", new string[3] { "a", "b", "c" }));
-        saveData.buildingUpgrades.Add("abbey.flagellation", 
+        saveData.BuildingUpgrades.Add("abbey.flagellation", 
             new UpgradePurchases("abbey.flagellation", new string[0]));
-        saveData.buildingUpgrades.Add("tavern.bar",
+        saveData.BuildingUpgrades.Add("tavern.bar",
             new UpgradePurchases("tavern.bar", new string[2] { "a", "b" }));
-        saveData.buildingUpgrades.Add("tavern.gambling",
+        saveData.BuildingUpgrades.Add("tavern.gambling",
             new UpgradePurchases("tavern.gambling", new string[5] { "a", "b", "c", "d", "e" }));
-        saveData.buildingUpgrades.Add("tavern.brothel",
+        saveData.BuildingUpgrades.Add("tavern.brothel",
             new UpgradePurchases("tavern.brothel", new string[1] { "a" }));
-        saveData.buildingUpgrades.Add("sanitarium.cost",
+        saveData.BuildingUpgrades.Add("sanitarium.cost",
             new UpgradePurchases("sanitarium.cost", new string[3] { "a", "b", "c" }));
-        saveData.buildingUpgrades.Add("sanitarium.disease_quirk_cost",
+        saveData.BuildingUpgrades.Add("sanitarium.disease_quirk_cost",
             new UpgradePurchases("sanitarium.disease_quirk_cost", new string[1] { "a" }));
-        saveData.buildingUpgrades.Add("sanitarium.slots",
+        saveData.BuildingUpgrades.Add("sanitarium.slots",
             new UpgradePurchases("sanitarium.slots", new string[2] { "a", "b" }));
-        saveData.buildingUpgrades.Add("blacksmith.weapon",
+        saveData.BuildingUpgrades.Add("blacksmith.weapon",
             new UpgradePurchases("blacksmith.weapon", new string[1] { "a" }));
-        saveData.buildingUpgrades.Add("blacksmith.armour",
+        saveData.BuildingUpgrades.Add("blacksmith.armour",
             new UpgradePurchases("blacksmith.armour", new string[2] { "a", "b" }));
-        saveData.buildingUpgrades.Add("blacksmith.cost", 
+        saveData.BuildingUpgrades.Add("blacksmith.cost", 
             new UpgradePurchases("blacksmith.cost", new string[4] { "a", "b", "c", "d" }));
-        saveData.buildingUpgrades.Add("guild.skill_levels", 
+        saveData.BuildingUpgrades.Add("guild.skill_levels", 
             new UpgradePurchases("guild.skill_levels", new string[1] { "a" }));
-        saveData.buildingUpgrades.Add("guild.cost", 
+        saveData.BuildingUpgrades.Add("guild.cost", 
             new UpgradePurchases("guild.cost", new string[2] { "a", "b" }));
-        saveData.buildingUpgrades.Add("camping_trainer.cost",
+        saveData.BuildingUpgrades.Add("camping_trainer.cost",
             new UpgradePurchases("camping_trainer.cost", new string[2] { "a", "b" }));
-        saveData.buildingUpgrades.Add("nomad_wagon.numitems",
+        saveData.BuildingUpgrades.Add("nomad_wagon.numitems",
             new UpgradePurchases("nomad_wagon.numitems", new string[4] { "a", "b", "c", "d" }));
-        saveData.buildingUpgrades.Add("nomad_wagon.cost",
+        saveData.BuildingUpgrades.Add("nomad_wagon.cost",
             new UpgradePurchases("nomad_wagon.cost", new string[0]));
-        saveData.buildingUpgrades.Add("stage_coach.numrecruits",
+        saveData.BuildingUpgrades.Add("stage_coach.numrecruits",
             new UpgradePurchases("stage_coach.numrecruits", new string[4] { "a", "b", "c", "d" }));
-        saveData.buildingUpgrades.Add("stage_coach.rostersize",
+        saveData.BuildingUpgrades.Add("stage_coach.rostersize",
             new UpgradePurchases("stage_coach.rostersize", new string[4] { "a", "b", "c", "d" }));
-        saveData.buildingUpgrades.Add("stage_coach.upgraded_recruits",
+        saveData.BuildingUpgrades.Add("stage_coach.upgraded_recruits",
             new UpgradePurchases("stage_coach.upgraded_recruits", new string[1] { "a" }));
 
         #region ActivitySlots
-        saveData.abbeyActivitySlots = new List<List<SaveActivitySlot>>()
+        saveData.AbbeyActivitySlots = new List<List<SaveActivitySlot>>()
         {
             new List<SaveActivitySlot>()
             {
@@ -2992,7 +2217,7 @@ public static class SaveLoadManager
                  new SaveActivitySlot(),
             },
         };
-        saveData.tavernActivitySlots = new List<List<SaveActivitySlot>>()
+        saveData.TavernActivitySlots = new List<List<SaveActivitySlot>>()
         {
             new List<SaveActivitySlot>()
             {
@@ -3013,7 +2238,7 @@ public static class SaveLoadManager
                  new SaveActivitySlot(),
             },
         };
-        saveData.sanitariumActivitySlots = new List<List<SaveActivitySlot>>()
+        saveData.SanitariumActivitySlots = new List<List<SaveActivitySlot>>()
         {
             new List<SaveActivitySlot>()
             {
@@ -3033,37 +2258,37 @@ public static class SaveLoadManager
         WriteSave(saveData);
         return saveData;
     }
+
     public static SaveCampaignData WriteDarkestQuestOneSave(SaveCampaignData saveData)
     {
-        saveData.isFirstStart = true;
-        saveData.gameVersion = Application.version;
-        saveData.locationName = "Raid";
-        saveData.questsCompleted = 0;
-        saveData.currentWeek = 1;
+        saveData.IsFirstStart = true;
+        saveData.LocationName = "Raid";
+        saveData.QuestsCompleted = 0;
+        saveData.CurrentWeek = 1;
 
-        saveData.goldAmount = 1000;
-        saveData.bustsAmount = 10;
-        saveData.deedsAmount = 10;
-        saveData.portraitsAmount = 10;
-        saveData.crestsAmount = 10;
+        saveData.GoldAmount = 1000;
+        saveData.BustsAmount = 10;
+        saveData.DeedsAmount = 10;
+        saveData.PortraitsAmount = 10;
+        saveData.CrestsAmount = 10;
 
         #region Initial Heroes
-        saveData.saveHeroData = new SaveHeroData[2]
+        saveData.RosterHeroes = new List<SaveHeroData>
         {
             #region Hero 1
             new SaveHeroData()
             {
-                rosterId = 1,
-                name = "Reynald",
-                heroClass = "crusader",
-                resolveLevel = 0,
-                resolveXP = 0,
-                stressLevel = 10,
-                weaponLevel = 1,
-                armorLevel = 1,
-                leftTrinketId = "",
-                rightTrinketId = "",
-                quirks = new List<QuirkInfo>()
+                RosterId = 1,
+                Name = "Reynald",
+                HeroClass = "crusader",
+                ResolveLevel = 0,
+                ResolveXP = 0,
+                StressLevel = 10,
+                WeaponLevel = 1,
+                ArmorLevel = 1,
+                LeftTrinketId = "",
+                RightTrinketId = "",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("warrior_of_light"),
                     new QuirkInfo("kleptomaniac"),
@@ -3074,17 +2299,17 @@ public static class SaveLoadManager
             #region Hero 2
             new SaveHeroData()
             {
-                rosterId = 2,
-                name = "Dismas",
-                heroClass = "highwayman",
-                resolveLevel = 0,
-                resolveXP = 0,
-                stressLevel = 10,
-                weaponLevel = 1,
-                armorLevel = 1,
-                leftTrinketId = "",
-                rightTrinketId = "",
-                quirks = new List<QuirkInfo>()
+                RosterId = 2,
+                Name = "Dismas",
+                HeroClass = "highwayman",
+                ResolveLevel = 0,
+                ResolveXP = 0,
+                StressLevel = 10,
+                WeaponLevel = 1,
+                ArmorLevel = 1,
+                LeftTrinketId = "",
+                RightTrinketId = "",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("hard_noggin"),
                     new QuirkInfo("known_cheat"),
@@ -3096,106 +2321,106 @@ public static class SaveLoadManager
         #endregion
 
         #region StageCoach Heroes
-        saveData.stageCoachData = new SaveHeroData[0];
+        saveData.StageCoachHeroes = new List<SaveHeroData>();
         #endregion
 
         #region Initial Hero Purchases
-        saveData.instancedPurchases = new Dictionary<int, Dictionary<string, UpgradePurchases>>();
-        for (int i = 0; i < saveData.saveHeroData.Length; i++)
+        saveData.InstancedPurchases.Clear();
+        for (int i = 0; i < saveData.RosterHeroes.Count; i++)
         {
             var newHeroPurchases = new Dictionary<string, UpgradePurchases>();
-            saveData.instancedPurchases.Add(saveData.saveHeroData[i].rosterId, newHeroPurchases);
-            newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + ".weapon",
-                new UpgradePurchases(saveData.saveHeroData[i].heroClass + ".weapon", new string[0]));
-            newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + ".armour",
-                new UpgradePurchases(saveData.saveHeroData[i].heroClass + ".armour", new string[0]));
-            var heroClass = DarkestDungeonManager.Data.HeroClasses[saveData.saveHeroData[i].heroClass];
+            saveData.InstancedPurchases.Add(saveData.RosterHeroes[i].RosterId, newHeroPurchases);
+            newHeroPurchases.Add(saveData.RosterHeroes[i].HeroClass + ".weapon",
+                new UpgradePurchases(saveData.RosterHeroes[i].HeroClass + ".weapon", new string[0]));
+            newHeroPurchases.Add(saveData.RosterHeroes[i].HeroClass + ".armour",
+                new UpgradePurchases(saveData.RosterHeroes[i].HeroClass + ".armour", new string[0]));
+            var heroClass = DarkestDungeonManager.Data.HeroClasses[saveData.RosterHeroes[i].HeroClass];
             for (int j = 0; j < heroClass.CombatSkills.Count; j++)
-                newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + "." + heroClass.CombatSkills[j].Id, new UpgradePurchases(
-                    saveData.saveHeroData[i].heroClass + "." + heroClass.CombatSkills[j].Id, new string[0]));
+                newHeroPurchases.Add(saveData.RosterHeroes[i].HeroClass + "." + heroClass.CombatSkills[j].Id, new UpgradePurchases(
+                    saveData.RosterHeroes[i].HeroClass + "." + heroClass.CombatSkills[j].Id, new string[0]));
             for (int j = 0; j < heroClass.CampingSkills.Count; j++)
                 newHeroPurchases.Add(heroClass.CampingSkills[j].Id, new UpgradePurchases(
                     heroClass.CampingSkills[j].Id, new string[0]));
         }
-        saveData.instancedPurchases[1]["crusader.smite"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["crusader.zealous_accusation"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["crusader.stunning_blow"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["crusader.bulwark_of_faith"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(0);
-        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(1);
-        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(2);
-        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(3);
-        saveData.instancedPurchases[1]["encourage"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["stand_tall"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["zealous_speech"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(0);
-        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(4);
-        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(5);
+        saveData.InstancedPurchases[1]["crusader.smite"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["crusader.zealous_accusation"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["crusader.stunning_blow"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["crusader.bulwark_of_faith"].PurchasedUpgrades.Add("0");
+        saveData.RosterHeroes[0].SelectedCombatSkillIndexes.Add(0);
+        saveData.RosterHeroes[0].SelectedCombatSkillIndexes.Add(1);
+        saveData.RosterHeroes[0].SelectedCombatSkillIndexes.Add(2);
+        saveData.RosterHeroes[0].SelectedCombatSkillIndexes.Add(3);
+        saveData.InstancedPurchases[1]["encourage"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["stand_tall"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["zealous_speech"].PurchasedUpgrades.Add("0");
+        saveData.RosterHeroes[0].SelectedCampingSkillIndexes.Add(0);
+        saveData.RosterHeroes[0].SelectedCampingSkillIndexes.Add(4);
+        saveData.RosterHeroes[0].SelectedCampingSkillIndexes.Add(5);
 
 
-        saveData.instancedPurchases[2]["highwayman.opened_vein"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["highwayman.pistol_shot"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["highwayman.grape_shot_blast"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["highwayman.take_aim"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(6);
-        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(1);
-        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(3);
-        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(4);
-        saveData.instancedPurchases[2]["first_aid"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["clean_guns"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["bandits_sense"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(1);
-        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(5);
-        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(6);
+        saveData.InstancedPurchases[2]["highwayman.opened_vein"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["highwayman.pistol_shot"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["highwayman.grape_shot_blast"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["highwayman.take_aim"].PurchasedUpgrades.Add("0");
+        saveData.RosterHeroes[1].SelectedCombatSkillIndexes.Add(6);
+        saveData.RosterHeroes[1].SelectedCombatSkillIndexes.Add(1);
+        saveData.RosterHeroes[1].SelectedCombatSkillIndexes.Add(3);
+        saveData.RosterHeroes[1].SelectedCombatSkillIndexes.Add(4);
+        saveData.InstancedPurchases[2]["first_aid"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["clean_guns"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["bandits_sense"].PurchasedUpgrades.Add("0");
+        saveData.RosterHeroes[1].SelectedCampingSkillIndexes.Add(1);
+        saveData.RosterHeroes[1].SelectedCampingSkillIndexes.Add(5);
+        saveData.RosterHeroes[1].SelectedCampingSkillIndexes.Add(6);
         #endregion
 
         #region Activity Log
-        saveData.activityLog = new List<WeekActivityLog>();
-        saveData.completedPlot = new List<string>();
-        saveData.generatedQuests = new List<Quest>();
+        saveData.ActivityLog = new List<WeekActivityLog>();
+        saveData.CompletedPlot = new List<string>();
+        saveData.GeneratedQuests = new List<Quest>();
         #endregion
 
         #region Estate Misc
-        saveData.trinketData.Clear();
+        saveData.InventoryTrinkets.Clear();
 
-        saveData.wagonData.Clear();
+        saveData.WagonTrinkets.Clear();
 
-        saveData.saveDungeonData.Clear();
-        saveData.saveDungeonData.Add("crypts", new DungeonProgress("crypts", 0, 0, true, false));
-        saveData.saveDungeonData.Add("warrens", new DungeonProgress("warrens", 0, 0, true, false));
-        saveData.saveDungeonData.Add("weald", new DungeonProgress("weald", 0, 0, true, false));
-        saveData.saveDungeonData.Add("cove", new DungeonProgress("cove", 0, 0, true, false));
-        saveData.saveDungeonData.Add("darkestdungeon", new DungeonProgress("darkestdungeon", 1, 0, true, false));
-        saveData.saveDungeonData.Add("town", new DungeonProgress("town", 1, 0, true, true));
+        saveData.DungeonProgress.Clear();
+        saveData.DungeonProgress.Add("crypts", new DungeonProgress("crypts", 0, 0, true, false));
+        saveData.DungeonProgress.Add("warrens", new DungeonProgress("warrens", 0, 0, true, false));
+        saveData.DungeonProgress.Add("weald", new DungeonProgress("weald", 0, 0, true, false));
+        saveData.DungeonProgress.Add("cove", new DungeonProgress("cove", 0, 0, true, false));
+        saveData.DungeonProgress.Add("darkestdungeon", new DungeonProgress("darkestdungeon", 1, 0, true, false));
+        saveData.DungeonProgress.Add("town", new DungeonProgress("town", 1, 0, true, true));
 
-        saveData.deathRecords = new List<DeathRecord>();
+        saveData.DeathRecords = new List<DeathRecord>();
 
-        saveData.buildingUpgrades = new Dictionary<string, UpgradePurchases>();
+        saveData.BuildingUpgrades.Clear();
 
-        saveData.buildingUpgrades.Add("abbey.meditation", new UpgradePurchases("abbey.meditation", new string[0]));
-        saveData.buildingUpgrades.Add("abbey.prayer", new UpgradePurchases("abbey.prayer", new string[0]));
-        saveData.buildingUpgrades.Add("abbey.flagellation", new UpgradePurchases("abbey.flagellation", new string[0]));
-        saveData.buildingUpgrades.Add("tavern.bar", new UpgradePurchases("tavern.bar", new string[0]));
-        saveData.buildingUpgrades.Add("tavern.gambling", new UpgradePurchases("tavern.gambling", new string[0]));
-        saveData.buildingUpgrades.Add("tavern.brothel", new UpgradePurchases("tavern.brothel", new string[0]));
-        saveData.buildingUpgrades.Add("sanitarium.cost", new UpgradePurchases("sanitarium.cost", new string[0]));
-        saveData.buildingUpgrades.Add("sanitarium.disease_quirk_cost", new UpgradePurchases("sanitarium.disease_quirk_cost", new string[0]));
-        saveData.buildingUpgrades.Add("sanitarium.slots", new UpgradePurchases("sanitarium.slots", new string[0]));
-        saveData.buildingUpgrades.Add("blacksmith.weapon", new UpgradePurchases("blacksmith.weapon", new string[0]));
-        saveData.buildingUpgrades.Add("blacksmith.armour", new UpgradePurchases("blacksmith.armour", new string[0]));
-        saveData.buildingUpgrades.Add("blacksmith.cost", new UpgradePurchases("blacksmith.cost", new string[0]));
-        saveData.buildingUpgrades.Add("guild.skill_levels", new UpgradePurchases("guild.skill_levels", new string[0]));
-        saveData.buildingUpgrades.Add("guild.cost", new UpgradePurchases("guild.cost", new string[0]));
-        saveData.buildingUpgrades.Add("camping_trainer.cost", new UpgradePurchases("camping_trainer.cost", new string[0]));
-        saveData.buildingUpgrades.Add("nomad_wagon.numitems", new UpgradePurchases("nomad_wagon.numitems", new string[0]));
-        saveData.buildingUpgrades.Add("nomad_wagon.cost", new UpgradePurchases("nomad_wagon.cost", new string[0]));
-        saveData.buildingUpgrades.Add("stage_coach.numrecruits", new UpgradePurchases("stage_coach.numrecruits", new string[0]));
-        saveData.buildingUpgrades.Add("stage_coach.rostersize", new UpgradePurchases("stage_coach.rostersize", new string[0]));
-        saveData.buildingUpgrades.Add("stage_coach.upgraded_recruits", new UpgradePurchases("stage_coach.upgraded_recruits", new string[0]));
+        saveData.BuildingUpgrades.Add("abbey.meditation", new UpgradePurchases("abbey.meditation", new string[0]));
+        saveData.BuildingUpgrades.Add("abbey.prayer", new UpgradePurchases("abbey.prayer", new string[0]));
+        saveData.BuildingUpgrades.Add("abbey.flagellation", new UpgradePurchases("abbey.flagellation", new string[0]));
+        saveData.BuildingUpgrades.Add("tavern.bar", new UpgradePurchases("tavern.bar", new string[0]));
+        saveData.BuildingUpgrades.Add("tavern.gambling", new UpgradePurchases("tavern.gambling", new string[0]));
+        saveData.BuildingUpgrades.Add("tavern.brothel", new UpgradePurchases("tavern.brothel", new string[0]));
+        saveData.BuildingUpgrades.Add("sanitarium.cost", new UpgradePurchases("sanitarium.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("sanitarium.disease_quirk_cost", new UpgradePurchases("sanitarium.disease_quirk_cost", new string[0]));
+        saveData.BuildingUpgrades.Add("sanitarium.slots", new UpgradePurchases("sanitarium.slots", new string[0]));
+        saveData.BuildingUpgrades.Add("blacksmith.weapon", new UpgradePurchases("blacksmith.weapon", new string[0]));
+        saveData.BuildingUpgrades.Add("blacksmith.armour", new UpgradePurchases("blacksmith.armour", new string[0]));
+        saveData.BuildingUpgrades.Add("blacksmith.cost", new UpgradePurchases("blacksmith.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("guild.skill_levels", new UpgradePurchases("guild.skill_levels", new string[0]));
+        saveData.BuildingUpgrades.Add("guild.cost", new UpgradePurchases("guild.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("camping_trainer.cost", new UpgradePurchases("camping_trainer.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("nomad_wagon.numitems", new UpgradePurchases("nomad_wagon.numitems", new string[0]));
+        saveData.BuildingUpgrades.Add("nomad_wagon.cost", new UpgradePurchases("nomad_wagon.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("stage_coach.numrecruits", new UpgradePurchases("stage_coach.numrecruits", new string[0]));
+        saveData.BuildingUpgrades.Add("stage_coach.rostersize", new UpgradePurchases("stage_coach.rostersize", new string[0]));
+        saveData.BuildingUpgrades.Add("stage_coach.upgraded_recruits", new UpgradePurchases("stage_coach.upgraded_recruits", new string[0]));
         #endregion
 
         #region ActivitySlots
-        saveData.abbeyActivitySlots = new List<List<SaveActivitySlot>>()
+        saveData.AbbeyActivitySlots = new List<List<SaveActivitySlot>>()
         {
             new List<SaveActivitySlot>()
             {
@@ -3216,7 +2441,7 @@ public static class SaveLoadManager
                  new SaveActivitySlot(),
             },
         };
-        saveData.tavernActivitySlots = new List<List<SaveActivitySlot>>()
+        saveData.TavernActivitySlots = new List<List<SaveActivitySlot>>()
         {
             new List<SaveActivitySlot>()
             {
@@ -3237,7 +2462,7 @@ public static class SaveLoadManager
                  new SaveActivitySlot(),
             },
         };
-        saveData.sanitariumActivitySlots = new List<List<SaveActivitySlot>>()
+        saveData.SanitariumActivitySlots = new List<List<SaveActivitySlot>>()
         {
             new List<SaveActivitySlot>()
             {
@@ -4210,37 +3435,37 @@ public static class SaveLoadManager
         WriteSave(saveData);
         return saveData;
     }
+
     public static SaveCampaignData WriteDarkestQuestTwoSave(SaveCampaignData saveData)
     {
-        saveData.isFirstStart = true;
-        saveData.gameVersion = Application.version;
-        saveData.locationName = "Raid";
-        saveData.questsCompleted = 0;
-        saveData.currentWeek = 1;
+        saveData.IsFirstStart = true;
+        saveData.LocationName = "Raid";
+        saveData.QuestsCompleted = 0;
+        saveData.CurrentWeek = 1;
 
-        saveData.goldAmount = 1000;
-        saveData.bustsAmount = 10;
-        saveData.deedsAmount = 10;
-        saveData.portraitsAmount = 10;
-        saveData.crestsAmount = 10;
+        saveData.GoldAmount = 1000;
+        saveData.BustsAmount = 10;
+        saveData.DeedsAmount = 10;
+        saveData.PortraitsAmount = 10;
+        saveData.CrestsAmount = 10;
 
         #region Initial Heroes
-        saveData.saveHeroData = new SaveHeroData[2]
+        saveData.RosterHeroes = new List<SaveHeroData>
         {
             #region Hero 1
             new SaveHeroData()
             {
-                rosterId = 1,
-                name = "Reynald",
-                heroClass = "crusader",
-                resolveLevel = 0,
-                resolveXP = 0,
-                stressLevel = 10,
-                weaponLevel = 1,
-                armorLevel = 1,
-                leftTrinketId = "",
-                rightTrinketId = "dd_trinket",
-                quirks = new List<QuirkInfo>()
+                RosterId = 1,
+                Name = "Reynald",
+                HeroClass = "crusader",
+                ResolveLevel = 0,
+                ResolveXP = 0,
+                StressLevel = 10,
+                WeaponLevel = 1,
+                ArmorLevel = 1,
+                LeftTrinketId = "",
+                RightTrinketId = "dd_trinket",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("warrior_of_light"),
                     new QuirkInfo("kleptomaniac"),
@@ -4251,17 +3476,17 @@ public static class SaveLoadManager
             #region Hero 2
             new SaveHeroData()
             {
-                rosterId = 2,
-                name = "Dismas",
-                heroClass = "highwayman",
-                resolveLevel = 0,
-                resolveXP = 0,
-                stressLevel = 10,
-                weaponLevel = 1,
-                armorLevel = 1,
-                leftTrinketId = "",
-                rightTrinketId = "dd_trinket",
-                quirks = new List<QuirkInfo>()
+                RosterId = 2,
+                Name = "Dismas",
+                HeroClass = "highwayman",
+                ResolveLevel = 0,
+                ResolveXP = 0,
+                StressLevel = 10,
+                WeaponLevel = 1,
+                ArmorLevel = 1,
+                LeftTrinketId = "",
+                RightTrinketId = "dd_trinket",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("hard_noggin"),
                     new QuirkInfo("known_cheat"),
@@ -4273,106 +3498,106 @@ public static class SaveLoadManager
         #endregion
 
         #region StageCoach Heroes
-        saveData.stageCoachData = new SaveHeroData[0];
+        saveData.StageCoachHeroes = new List<SaveHeroData>();
         #endregion
 
         #region Initial Hero Purchases
-        saveData.instancedPurchases = new Dictionary<int, Dictionary<string, UpgradePurchases>>();
-        for (int i = 0; i < saveData.saveHeroData.Length; i++)
+        saveData.InstancedPurchases.Clear();
+        for (int i = 0; i < saveData.RosterHeroes.Count; i++)
         {
             var newHeroPurchases = new Dictionary<string, UpgradePurchases>();
-            saveData.instancedPurchases.Add(saveData.saveHeroData[i].rosterId, newHeroPurchases);
-            newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + ".weapon",
-                new UpgradePurchases(saveData.saveHeroData[i].heroClass + ".weapon", new string[0]));
-            newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + ".armour",
-                new UpgradePurchases(saveData.saveHeroData[i].heroClass + ".armour", new string[0]));
-            var heroClass = DarkestDungeonManager.Data.HeroClasses[saveData.saveHeroData[i].heroClass];
+            saveData.InstancedPurchases.Add(saveData.RosterHeroes[i].RosterId, newHeroPurchases);
+            newHeroPurchases.Add(saveData.RosterHeroes[i].HeroClass + ".weapon",
+                new UpgradePurchases(saveData.RosterHeroes[i].HeroClass + ".weapon", new string[0]));
+            newHeroPurchases.Add(saveData.RosterHeroes[i].HeroClass + ".armour",
+                new UpgradePurchases(saveData.RosterHeroes[i].HeroClass + ".armour", new string[0]));
+            var heroClass = DarkestDungeonManager.Data.HeroClasses[saveData.RosterHeroes[i].HeroClass];
             for (int j = 0; j < heroClass.CombatSkills.Count; j++)
-                newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + "." + heroClass.CombatSkills[j].Id, new UpgradePurchases(
-                    saveData.saveHeroData[i].heroClass + "." + heroClass.CombatSkills[j].Id, new string[0]));
+                newHeroPurchases.Add(saveData.RosterHeroes[i].HeroClass + "." + heroClass.CombatSkills[j].Id, new UpgradePurchases(
+                    saveData.RosterHeroes[i].HeroClass + "." + heroClass.CombatSkills[j].Id, new string[0]));
             for (int j = 0; j < heroClass.CampingSkills.Count; j++)
                 newHeroPurchases.Add(heroClass.CampingSkills[j].Id, new UpgradePurchases(
                     heroClass.CampingSkills[j].Id, new string[0]));
         }
-        saveData.instancedPurchases[1]["crusader.smite"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["crusader.zealous_accusation"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["crusader.stunning_blow"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["crusader.bulwark_of_faith"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(0);
-        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(1);
-        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(2);
-        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(3);
-        saveData.instancedPurchases[1]["encourage"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["stand_tall"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["zealous_speech"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(0);
-        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(4);
-        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(5);
+        saveData.InstancedPurchases[1]["crusader.smite"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["crusader.zealous_accusation"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["crusader.stunning_blow"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["crusader.bulwark_of_faith"].PurchasedUpgrades.Add("0");
+        saveData.RosterHeroes[0].SelectedCombatSkillIndexes.Add(0);
+        saveData.RosterHeroes[0].SelectedCombatSkillIndexes.Add(1);
+        saveData.RosterHeroes[0].SelectedCombatSkillIndexes.Add(2);
+        saveData.RosterHeroes[0].SelectedCombatSkillIndexes.Add(3);
+        saveData.InstancedPurchases[1]["encourage"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["stand_tall"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["zealous_speech"].PurchasedUpgrades.Add("0");
+        saveData.RosterHeroes[0].SelectedCampingSkillIndexes.Add(0);
+        saveData.RosterHeroes[0].SelectedCampingSkillIndexes.Add(4);
+        saveData.RosterHeroes[0].SelectedCampingSkillIndexes.Add(5);
 
 
-        saveData.instancedPurchases[2]["highwayman.opened_vein"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["highwayman.pistol_shot"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["highwayman.grape_shot_blast"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["highwayman.take_aim"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(6);
-        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(1);
-        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(3);
-        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(4);
-        saveData.instancedPurchases[2]["first_aid"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["clean_guns"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["bandits_sense"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(1);
-        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(5);
-        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(6);
+        saveData.InstancedPurchases[2]["highwayman.opened_vein"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["highwayman.pistol_shot"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["highwayman.grape_shot_blast"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["highwayman.take_aim"].PurchasedUpgrades.Add("0");
+        saveData.RosterHeroes[1].SelectedCombatSkillIndexes.Add(6);
+        saveData.RosterHeroes[1].SelectedCombatSkillIndexes.Add(1);
+        saveData.RosterHeroes[1].SelectedCombatSkillIndexes.Add(3);
+        saveData.RosterHeroes[1].SelectedCombatSkillIndexes.Add(4);
+        saveData.InstancedPurchases[2]["first_aid"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["clean_guns"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["bandits_sense"].PurchasedUpgrades.Add("0");
+        saveData.RosterHeroes[1].SelectedCampingSkillIndexes.Add(1);
+        saveData.RosterHeroes[1].SelectedCampingSkillIndexes.Add(5);
+        saveData.RosterHeroes[1].SelectedCampingSkillIndexes.Add(6);
         #endregion
 
         #region Activity Log
-        saveData.activityLog = new List<WeekActivityLog>();
-        saveData.completedPlot = new List<string>();
-        saveData.generatedQuests = new List<Quest>();
+        saveData.ActivityLog = new List<WeekActivityLog>();
+        saveData.CompletedPlot = new List<string>();
+        saveData.GeneratedQuests = new List<Quest>();
         #endregion
 
         #region Estate Misc
-        saveData.trinketData.Clear();
+        saveData.InventoryTrinkets.Clear();
 
-        saveData.wagonData.Clear();
+        saveData.WagonTrinkets.Clear();
 
-        saveData.saveDungeonData.Clear();
-        saveData.saveDungeonData.Add("crypts", new DungeonProgress("crypts", 0, 0, true, false));
-        saveData.saveDungeonData.Add("warrens", new DungeonProgress("warrens", 0, 0, true, false));
-        saveData.saveDungeonData.Add("weald", new DungeonProgress("weald", 0, 0, true, false));
-        saveData.saveDungeonData.Add("cove", new DungeonProgress("cove", 0, 0, true, false));
-        saveData.saveDungeonData.Add("darkestdungeon", new DungeonProgress("darkestdungeon", 1, 0, true, false));
-        saveData.saveDungeonData.Add("town", new DungeonProgress("town", 1, 0, true, true));
+        saveData.DungeonProgress.Clear();
+        saveData.DungeonProgress.Add("crypts", new DungeonProgress("crypts", 0, 0, true, false));
+        saveData.DungeonProgress.Add("warrens", new DungeonProgress("warrens", 0, 0, true, false));
+        saveData.DungeonProgress.Add("weald", new DungeonProgress("weald", 0, 0, true, false));
+        saveData.DungeonProgress.Add("cove", new DungeonProgress("cove", 0, 0, true, false));
+        saveData.DungeonProgress.Add("darkestdungeon", new DungeonProgress("darkestdungeon", 1, 0, true, false));
+        saveData.DungeonProgress.Add("town", new DungeonProgress("town", 1, 0, true, true));
 
-        saveData.deathRecords = new List<DeathRecord>();
+        saveData.DeathRecords = new List<DeathRecord>();
 
-        saveData.buildingUpgrades = new Dictionary<string, UpgradePurchases>();
+        saveData.BuildingUpgrades.Clear();
 
-        saveData.buildingUpgrades.Add("abbey.meditation", new UpgradePurchases("abbey.meditation", new string[0]));
-        saveData.buildingUpgrades.Add("abbey.prayer", new UpgradePurchases("abbey.prayer", new string[0]));
-        saveData.buildingUpgrades.Add("abbey.flagellation", new UpgradePurchases("abbey.flagellation", new string[0]));
-        saveData.buildingUpgrades.Add("tavern.bar", new UpgradePurchases("tavern.bar", new string[0]));
-        saveData.buildingUpgrades.Add("tavern.gambling", new UpgradePurchases("tavern.gambling", new string[0]));
-        saveData.buildingUpgrades.Add("tavern.brothel", new UpgradePurchases("tavern.brothel", new string[0]));
-        saveData.buildingUpgrades.Add("sanitarium.cost", new UpgradePurchases("sanitarium.cost", new string[0]));
-        saveData.buildingUpgrades.Add("sanitarium.disease_quirk_cost", new UpgradePurchases("sanitarium.disease_quirk_cost", new string[0]));
-        saveData.buildingUpgrades.Add("sanitarium.slots", new UpgradePurchases("sanitarium.slots", new string[0]));
-        saveData.buildingUpgrades.Add("blacksmith.weapon", new UpgradePurchases("blacksmith.weapon", new string[0]));
-        saveData.buildingUpgrades.Add("blacksmith.armour", new UpgradePurchases("blacksmith.armour", new string[0]));
-        saveData.buildingUpgrades.Add("blacksmith.cost", new UpgradePurchases("blacksmith.cost", new string[0]));
-        saveData.buildingUpgrades.Add("guild.skill_levels", new UpgradePurchases("guild.skill_levels", new string[0]));
-        saveData.buildingUpgrades.Add("guild.cost", new UpgradePurchases("guild.cost", new string[0]));
-        saveData.buildingUpgrades.Add("camping_trainer.cost", new UpgradePurchases("camping_trainer.cost", new string[0]));
-        saveData.buildingUpgrades.Add("nomad_wagon.numitems", new UpgradePurchases("nomad_wagon.numitems", new string[0]));
-        saveData.buildingUpgrades.Add("nomad_wagon.cost", new UpgradePurchases("nomad_wagon.cost", new string[0]));
-        saveData.buildingUpgrades.Add("stage_coach.numrecruits", new UpgradePurchases("stage_coach.numrecruits", new string[0]));
-        saveData.buildingUpgrades.Add("stage_coach.rostersize", new UpgradePurchases("stage_coach.rostersize", new string[0]));
-        saveData.buildingUpgrades.Add("stage_coach.upgraded_recruits", new UpgradePurchases("stage_coach.upgraded_recruits", new string[0]));
+        saveData.BuildingUpgrades.Add("abbey.meditation", new UpgradePurchases("abbey.meditation", new string[0]));
+        saveData.BuildingUpgrades.Add("abbey.prayer", new UpgradePurchases("abbey.prayer", new string[0]));
+        saveData.BuildingUpgrades.Add("abbey.flagellation", new UpgradePurchases("abbey.flagellation", new string[0]));
+        saveData.BuildingUpgrades.Add("tavern.bar", new UpgradePurchases("tavern.bar", new string[0]));
+        saveData.BuildingUpgrades.Add("tavern.gambling", new UpgradePurchases("tavern.gambling", new string[0]));
+        saveData.BuildingUpgrades.Add("tavern.brothel", new UpgradePurchases("tavern.brothel", new string[0]));
+        saveData.BuildingUpgrades.Add("sanitarium.cost", new UpgradePurchases("sanitarium.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("sanitarium.disease_quirk_cost", new UpgradePurchases("sanitarium.disease_quirk_cost", new string[0]));
+        saveData.BuildingUpgrades.Add("sanitarium.slots", new UpgradePurchases("sanitarium.slots", new string[0]));
+        saveData.BuildingUpgrades.Add("blacksmith.weapon", new UpgradePurchases("blacksmith.weapon", new string[0]));
+        saveData.BuildingUpgrades.Add("blacksmith.armour", new UpgradePurchases("blacksmith.armour", new string[0]));
+        saveData.BuildingUpgrades.Add("blacksmith.cost", new UpgradePurchases("blacksmith.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("guild.skill_levels", new UpgradePurchases("guild.skill_levels", new string[0]));
+        saveData.BuildingUpgrades.Add("guild.cost", new UpgradePurchases("guild.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("camping_trainer.cost", new UpgradePurchases("camping_trainer.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("nomad_wagon.numitems", new UpgradePurchases("nomad_wagon.numitems", new string[0]));
+        saveData.BuildingUpgrades.Add("nomad_wagon.cost", new UpgradePurchases("nomad_wagon.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("stage_coach.numrecruits", new UpgradePurchases("stage_coach.numrecruits", new string[0]));
+        saveData.BuildingUpgrades.Add("stage_coach.rostersize", new UpgradePurchases("stage_coach.rostersize", new string[0]));
+        saveData.BuildingUpgrades.Add("stage_coach.upgraded_recruits", new UpgradePurchases("stage_coach.upgraded_recruits", new string[0]));
         #endregion
 
         #region ActivitySlots
-        saveData.abbeyActivitySlots = new List<List<SaveActivitySlot>>()
+        saveData.AbbeyActivitySlots = new List<List<SaveActivitySlot>>()
         {
             new List<SaveActivitySlot>()
             {
@@ -4393,7 +3618,7 @@ public static class SaveLoadManager
                  new SaveActivitySlot(),
             },
         };
-        saveData.tavernActivitySlots = new List<List<SaveActivitySlot>>()
+        saveData.TavernActivitySlots = new List<List<SaveActivitySlot>>()
         {
             new List<SaveActivitySlot>()
             {
@@ -4414,7 +3639,7 @@ public static class SaveLoadManager
                  new SaveActivitySlot(),
             },
         };
-        saveData.sanitariumActivitySlots = new List<List<SaveActivitySlot>>()
+        saveData.SanitariumActivitySlots = new List<List<SaveActivitySlot>>()
         {
             new List<SaveActivitySlot>()
             {
@@ -5652,37 +4877,37 @@ public static class SaveLoadManager
         WriteSave(saveData);
         return saveData;
     }
+
     public static SaveCampaignData WriteDarkestQuestThreeSave(SaveCampaignData saveData)
     {
-        saveData.isFirstStart = true;
-        saveData.gameVersion = Application.version;
-        saveData.locationName = "Raid";
-        saveData.questsCompleted = 0;
-        saveData.currentWeek = 1;
+        saveData.IsFirstStart = true;
+        saveData.LocationName = "Raid";
+        saveData.QuestsCompleted = 0;
+        saveData.CurrentWeek = 1;
 
-        saveData.goldAmount = 1000;
-        saveData.bustsAmount = 10;
-        saveData.deedsAmount = 10;
-        saveData.portraitsAmount = 10;
-        saveData.crestsAmount = 10;
+        saveData.GoldAmount = 1000;
+        saveData.BustsAmount = 10;
+        saveData.DeedsAmount = 10;
+        saveData.PortraitsAmount = 10;
+        saveData.CrestsAmount = 10;
 
         #region Initial Heroes
-        saveData.saveHeroData = new SaveHeroData[2]
+        saveData.RosterHeroes = new List<SaveHeroData>
         {
             #region Hero 1
             new SaveHeroData()
             {
-                rosterId = 1,
-                name = "Reynald",
-                heroClass = "crusader",
-                resolveLevel = 0,
-                resolveXP = 0,
-                stressLevel = 10,
-                weaponLevel = 1,
-                armorLevel = 1,
-                leftTrinketId = "",
-                rightTrinketId = "dd_trinket",
-                quirks = new List<QuirkInfo>()
+                RosterId = 1,
+                Name = "Reynald",
+                HeroClass = "crusader",
+                ResolveLevel = 0,
+                ResolveXP = 0,
+                StressLevel = 10,
+                WeaponLevel = 1,
+                ArmorLevel = 1,
+                LeftTrinketId = "",
+                RightTrinketId = "dd_trinket",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("warrior_of_light"),
                     new QuirkInfo("kleptomaniac"),
@@ -5693,17 +4918,17 @@ public static class SaveLoadManager
             #region Hero 2
             new SaveHeroData()
             {
-                rosterId = 2,
-                name = "Dismas",
-                heroClass = "highwayman",
-                resolveLevel = 0,
-                resolveXP = 0,
-                stressLevel = 10,
-                weaponLevel = 1,
-                armorLevel = 1,
-                leftTrinketId = "",
-                rightTrinketId = "dd_trinket",
-                quirks = new List<QuirkInfo>()
+                RosterId = 2,
+                Name = "Dismas",
+                HeroClass = "highwayman",
+                ResolveLevel = 0,
+                ResolveXP = 0,
+                StressLevel = 10,
+                WeaponLevel = 1,
+                ArmorLevel = 1,
+                LeftTrinketId = "",
+                RightTrinketId = "dd_trinket",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("hard_noggin"),
                     new QuirkInfo("known_cheat"),
@@ -5715,106 +4940,106 @@ public static class SaveLoadManager
         #endregion
 
         #region StageCoach Heroes
-        saveData.stageCoachData = new SaveHeroData[0];
+        saveData.StageCoachHeroes = new List<SaveHeroData>();
         #endregion
 
         #region Initial Hero Purchases
-        saveData.instancedPurchases = new Dictionary<int, Dictionary<string, UpgradePurchases>>();
-        for (int i = 0; i < saveData.saveHeroData.Length; i++)
+        saveData.InstancedPurchases.Clear();
+        for (int i = 0; i < saveData.RosterHeroes.Count; i++)
         {
             var newHeroPurchases = new Dictionary<string, UpgradePurchases>();
-            saveData.instancedPurchases.Add(saveData.saveHeroData[i].rosterId, newHeroPurchases);
-            newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + ".weapon",
-                new UpgradePurchases(saveData.saveHeroData[i].heroClass + ".weapon", new string[0]));
-            newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + ".armour",
-                new UpgradePurchases(saveData.saveHeroData[i].heroClass + ".armour", new string[0]));
-            var heroClass = DarkestDungeonManager.Data.HeroClasses[saveData.saveHeroData[i].heroClass];
+            saveData.InstancedPurchases.Add(saveData.RosterHeroes[i].RosterId, newHeroPurchases);
+            newHeroPurchases.Add(saveData.RosterHeroes[i].HeroClass + ".weapon",
+                new UpgradePurchases(saveData.RosterHeroes[i].HeroClass + ".weapon", new string[0]));
+            newHeroPurchases.Add(saveData.RosterHeroes[i].HeroClass + ".armour",
+                new UpgradePurchases(saveData.RosterHeroes[i].HeroClass + ".armour", new string[0]));
+            var heroClass = DarkestDungeonManager.Data.HeroClasses[saveData.RosterHeroes[i].HeroClass];
             for (int j = 0; j < heroClass.CombatSkills.Count; j++)
-                newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + "." + heroClass.CombatSkills[j].Id, new UpgradePurchases(
-                    saveData.saveHeroData[i].heroClass + "." + heroClass.CombatSkills[j].Id, new string[0]));
+                newHeroPurchases.Add(saveData.RosterHeroes[i].HeroClass + "." + heroClass.CombatSkills[j].Id, new UpgradePurchases(
+                    saveData.RosterHeroes[i].HeroClass + "." + heroClass.CombatSkills[j].Id, new string[0]));
             for (int j = 0; j < heroClass.CampingSkills.Count; j++)
                 newHeroPurchases.Add(heroClass.CampingSkills[j].Id, new UpgradePurchases(
                     heroClass.CampingSkills[j].Id, new string[0]));
         }
-        saveData.instancedPurchases[1]["crusader.smite"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["crusader.zealous_accusation"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["crusader.stunning_blow"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["crusader.bulwark_of_faith"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(0);
-        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(1);
-        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(2);
-        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(3);
-        saveData.instancedPurchases[1]["encourage"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["stand_tall"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["zealous_speech"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(0);
-        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(4);
-        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(5);
+        saveData.InstancedPurchases[1]["crusader.smite"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["crusader.zealous_accusation"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["crusader.stunning_blow"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["crusader.bulwark_of_faith"].PurchasedUpgrades.Add("0");
+        saveData.RosterHeroes[0].SelectedCombatSkillIndexes.Add(0);
+        saveData.RosterHeroes[0].SelectedCombatSkillIndexes.Add(1);
+        saveData.RosterHeroes[0].SelectedCombatSkillIndexes.Add(2);
+        saveData.RosterHeroes[0].SelectedCombatSkillIndexes.Add(3);
+        saveData.InstancedPurchases[1]["encourage"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["stand_tall"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["zealous_speech"].PurchasedUpgrades.Add("0");
+        saveData.RosterHeroes[0].SelectedCampingSkillIndexes.Add(0);
+        saveData.RosterHeroes[0].SelectedCampingSkillIndexes.Add(4);
+        saveData.RosterHeroes[0].SelectedCampingSkillIndexes.Add(5);
 
 
-        saveData.instancedPurchases[2]["highwayman.opened_vein"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["highwayman.pistol_shot"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["highwayman.grape_shot_blast"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["highwayman.take_aim"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(6);
-        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(1);
-        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(3);
-        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(4);
-        saveData.instancedPurchases[2]["first_aid"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["clean_guns"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["bandits_sense"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(1);
-        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(5);
-        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(6);
+        saveData.InstancedPurchases[2]["highwayman.opened_vein"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["highwayman.pistol_shot"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["highwayman.grape_shot_blast"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["highwayman.take_aim"].PurchasedUpgrades.Add("0");
+        saveData.RosterHeroes[1].SelectedCombatSkillIndexes.Add(6);
+        saveData.RosterHeroes[1].SelectedCombatSkillIndexes.Add(1);
+        saveData.RosterHeroes[1].SelectedCombatSkillIndexes.Add(3);
+        saveData.RosterHeroes[1].SelectedCombatSkillIndexes.Add(4);
+        saveData.InstancedPurchases[2]["first_aid"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["clean_guns"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["bandits_sense"].PurchasedUpgrades.Add("0");
+        saveData.RosterHeroes[1].SelectedCampingSkillIndexes.Add(1);
+        saveData.RosterHeroes[1].SelectedCampingSkillIndexes.Add(5);
+        saveData.RosterHeroes[1].SelectedCampingSkillIndexes.Add(6);
         #endregion
 
         #region Activity Log
-        saveData.activityLog = new List<WeekActivityLog>();
-        saveData.completedPlot = new List<string>();
-        saveData.generatedQuests = new List<Quest>();
+        saveData.ActivityLog = new List<WeekActivityLog>();
+        saveData.CompletedPlot = new List<string>();
+        saveData.GeneratedQuests = new List<Quest>();
         #endregion
 
         #region Estate Misc
-        saveData.trinketData.Clear();
+        saveData.InventoryTrinkets.Clear();
 
-        saveData.wagonData.Clear();
+        saveData.WagonTrinkets.Clear();
 
-        saveData.saveDungeonData.Clear();
-        saveData.saveDungeonData.Add("crypts", new DungeonProgress("crypts", 0, 0, true, false));
-        saveData.saveDungeonData.Add("warrens", new DungeonProgress("warrens", 0, 0, true, false));
-        saveData.saveDungeonData.Add("weald", new DungeonProgress("weald", 0, 0, true, false));
-        saveData.saveDungeonData.Add("cove", new DungeonProgress("cove", 0, 0, true, false));
-        saveData.saveDungeonData.Add("darkestdungeon", new DungeonProgress("darkestdungeon", 1, 0, true, false));
-        saveData.saveDungeonData.Add("town", new DungeonProgress("town", 1, 0, true, true));
+        saveData.DungeonProgress.Clear();
+        saveData.DungeonProgress.Add("crypts", new DungeonProgress("crypts", 0, 0, true, false));
+        saveData.DungeonProgress.Add("warrens", new DungeonProgress("warrens", 0, 0, true, false));
+        saveData.DungeonProgress.Add("weald", new DungeonProgress("weald", 0, 0, true, false));
+        saveData.DungeonProgress.Add("cove", new DungeonProgress("cove", 0, 0, true, false));
+        saveData.DungeonProgress.Add("darkestdungeon", new DungeonProgress("darkestdungeon", 1, 0, true, false));
+        saveData.DungeonProgress.Add("town", new DungeonProgress("town", 1, 0, true, true));
 
-        saveData.deathRecords = new List<DeathRecord>();
+        saveData.DeathRecords = new List<DeathRecord>();
 
-        saveData.buildingUpgrades = new Dictionary<string, UpgradePurchases>();
+        saveData.BuildingUpgrades.Clear();
 
-        saveData.buildingUpgrades.Add("abbey.meditation", new UpgradePurchases("abbey.meditation", new string[0]));
-        saveData.buildingUpgrades.Add("abbey.prayer", new UpgradePurchases("abbey.prayer", new string[0]));
-        saveData.buildingUpgrades.Add("abbey.flagellation", new UpgradePurchases("abbey.flagellation", new string[0]));
-        saveData.buildingUpgrades.Add("tavern.bar", new UpgradePurchases("tavern.bar", new string[0]));
-        saveData.buildingUpgrades.Add("tavern.gambling", new UpgradePurchases("tavern.gambling", new string[0]));
-        saveData.buildingUpgrades.Add("tavern.brothel", new UpgradePurchases("tavern.brothel", new string[0]));
-        saveData.buildingUpgrades.Add("sanitarium.cost", new UpgradePurchases("sanitarium.cost", new string[0]));
-        saveData.buildingUpgrades.Add("sanitarium.disease_quirk_cost", new UpgradePurchases("sanitarium.disease_quirk_cost", new string[0]));
-        saveData.buildingUpgrades.Add("sanitarium.slots", new UpgradePurchases("sanitarium.slots", new string[0]));
-        saveData.buildingUpgrades.Add("blacksmith.weapon", new UpgradePurchases("blacksmith.weapon", new string[0]));
-        saveData.buildingUpgrades.Add("blacksmith.armour", new UpgradePurchases("blacksmith.armour", new string[0]));
-        saveData.buildingUpgrades.Add("blacksmith.cost", new UpgradePurchases("blacksmith.cost", new string[0]));
-        saveData.buildingUpgrades.Add("guild.skill_levels", new UpgradePurchases("guild.skill_levels", new string[0]));
-        saveData.buildingUpgrades.Add("guild.cost", new UpgradePurchases("guild.cost", new string[0]));
-        saveData.buildingUpgrades.Add("camping_trainer.cost", new UpgradePurchases("camping_trainer.cost", new string[0]));
-        saveData.buildingUpgrades.Add("nomad_wagon.numitems", new UpgradePurchases("nomad_wagon.numitems", new string[0]));
-        saveData.buildingUpgrades.Add("nomad_wagon.cost", new UpgradePurchases("nomad_wagon.cost", new string[0]));
-        saveData.buildingUpgrades.Add("stage_coach.numrecruits", new UpgradePurchases("stage_coach.numrecruits", new string[0]));
-        saveData.buildingUpgrades.Add("stage_coach.rostersize", new UpgradePurchases("stage_coach.rostersize", new string[0]));
-        saveData.buildingUpgrades.Add("stage_coach.upgraded_recruits", new UpgradePurchases("stage_coach.upgraded_recruits", new string[0]));
+        saveData.BuildingUpgrades.Add("abbey.meditation", new UpgradePurchases("abbey.meditation", new string[0]));
+        saveData.BuildingUpgrades.Add("abbey.prayer", new UpgradePurchases("abbey.prayer", new string[0]));
+        saveData.BuildingUpgrades.Add("abbey.flagellation", new UpgradePurchases("abbey.flagellation", new string[0]));
+        saveData.BuildingUpgrades.Add("tavern.bar", new UpgradePurchases("tavern.bar", new string[0]));
+        saveData.BuildingUpgrades.Add("tavern.gambling", new UpgradePurchases("tavern.gambling", new string[0]));
+        saveData.BuildingUpgrades.Add("tavern.brothel", new UpgradePurchases("tavern.brothel", new string[0]));
+        saveData.BuildingUpgrades.Add("sanitarium.cost", new UpgradePurchases("sanitarium.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("sanitarium.disease_quirk_cost", new UpgradePurchases("sanitarium.disease_quirk_cost", new string[0]));
+        saveData.BuildingUpgrades.Add("sanitarium.slots", new UpgradePurchases("sanitarium.slots", new string[0]));
+        saveData.BuildingUpgrades.Add("blacksmith.weapon", new UpgradePurchases("blacksmith.weapon", new string[0]));
+        saveData.BuildingUpgrades.Add("blacksmith.armour", new UpgradePurchases("blacksmith.armour", new string[0]));
+        saveData.BuildingUpgrades.Add("blacksmith.cost", new UpgradePurchases("blacksmith.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("guild.skill_levels", new UpgradePurchases("guild.skill_levels", new string[0]));
+        saveData.BuildingUpgrades.Add("guild.cost", new UpgradePurchases("guild.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("camping_trainer.cost", new UpgradePurchases("camping_trainer.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("nomad_wagon.numitems", new UpgradePurchases("nomad_wagon.numitems", new string[0]));
+        saveData.BuildingUpgrades.Add("nomad_wagon.cost", new UpgradePurchases("nomad_wagon.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("stage_coach.numrecruits", new UpgradePurchases("stage_coach.numrecruits", new string[0]));
+        saveData.BuildingUpgrades.Add("stage_coach.rostersize", new UpgradePurchases("stage_coach.rostersize", new string[0]));
+        saveData.BuildingUpgrades.Add("stage_coach.upgraded_recruits", new UpgradePurchases("stage_coach.upgraded_recruits", new string[0]));
         #endregion
 
         #region ActivitySlots
-        saveData.abbeyActivitySlots = new List<List<SaveActivitySlot>>()
+        saveData.AbbeyActivitySlots = new List<List<SaveActivitySlot>>()
         {
             new List<SaveActivitySlot>()
             {
@@ -5835,7 +5060,7 @@ public static class SaveLoadManager
                  new SaveActivitySlot(),
             },
         };
-        saveData.tavernActivitySlots = new List<List<SaveActivitySlot>>()
+        saveData.TavernActivitySlots = new List<List<SaveActivitySlot>>()
         {
             new List<SaveActivitySlot>()
             {
@@ -5856,7 +5081,7 @@ public static class SaveLoadManager
                  new SaveActivitySlot(),
             },
         };
-        saveData.sanitariumActivitySlots = new List<List<SaveActivitySlot>>()
+        saveData.SanitariumActivitySlots = new List<List<SaveActivitySlot>>()
         {
             new List<SaveActivitySlot>()
             {
@@ -7996,37 +7221,37 @@ public static class SaveLoadManager
         WriteSave(saveData);
         return saveData;
     }
+
     public static SaveCampaignData WriteDarkestQuestFourSave(SaveCampaignData saveData)
     {
-        saveData.isFirstStart = true;
-        saveData.gameVersion = Application.version;
-        saveData.locationName = "Raid";
-        saveData.questsCompleted = 0;
-        saveData.currentWeek = 1;
+        saveData.IsFirstStart = true;
+        saveData.LocationName = "Raid";
+        saveData.QuestsCompleted = 0;
+        saveData.CurrentWeek = 1;
 
-        saveData.goldAmount = 1000;
-        saveData.bustsAmount = 10;
-        saveData.deedsAmount = 10;
-        saveData.portraitsAmount = 10;
-        saveData.crestsAmount = 10;
+        saveData.GoldAmount = 1000;
+        saveData.BustsAmount = 10;
+        saveData.DeedsAmount = 10;
+        saveData.PortraitsAmount = 10;
+        saveData.CrestsAmount = 10;
 
         #region Initial Heroes
-        saveData.saveHeroData = new SaveHeroData[2]
+        saveData.RosterHeroes = new List<SaveHeroData>
         {
             #region Hero 1
             new SaveHeroData()
             {
-                rosterId = 1,
-                name = "Reynald",
-                heroClass = "crusader",
-                resolveLevel = 0,
-                resolveXP = 0,
-                stressLevel = 10,
-                weaponLevel = 1,
-                armorLevel = 1,
-                leftTrinketId = "",
-                rightTrinketId = "dd_trinket",
-                quirks = new List<QuirkInfo>()
+                RosterId = 1,
+                Name = "Reynald",
+                HeroClass = "crusader",
+                ResolveLevel = 0,
+                ResolveXP = 0,
+                StressLevel = 10,
+                WeaponLevel = 1,
+                ArmorLevel = 1,
+                LeftTrinketId = "",
+                RightTrinketId = "dd_trinket",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("warrior_of_light"),
                     new QuirkInfo("kleptomaniac"),
@@ -8037,17 +7262,17 @@ public static class SaveLoadManager
             #region Hero 2
             new SaveHeroData()
             {
-                rosterId = 2,
-                name = "Dismas",
-                heroClass = "highwayman",
-                resolveLevel = 0,
-                resolveXP = 0,
-                stressLevel = 10,
-                weaponLevel = 1,
-                armorLevel = 1,
-                leftTrinketId = "",
-                rightTrinketId = "dd_trinket",
-                quirks = new List<QuirkInfo>()
+                RosterId = 2,
+                Name = "Dismas",
+                HeroClass = "highwayman",
+                ResolveLevel = 0,
+                ResolveXP = 0,
+                StressLevel = 10,
+                WeaponLevel = 1,
+                ArmorLevel = 1,
+                LeftTrinketId = "",
+                RightTrinketId = "dd_trinket",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("hard_noggin"),
                     new QuirkInfo("known_cheat"),
@@ -8059,106 +7284,106 @@ public static class SaveLoadManager
         #endregion
 
         #region StageCoach Heroes
-        saveData.stageCoachData = new SaveHeroData[0];
+        saveData.StageCoachHeroes = new List<SaveHeroData>();
         #endregion
 
         #region Initial Hero Purchases
-        saveData.instancedPurchases = new Dictionary<int, Dictionary<string, UpgradePurchases>>();
-        for (int i = 0; i < saveData.saveHeroData.Length; i++)
+        saveData.InstancedPurchases.Clear();
+        for (int i = 0; i < saveData.RosterHeroes.Count; i++)
         {
             var newHeroPurchases = new Dictionary<string, UpgradePurchases>();
-            saveData.instancedPurchases.Add(saveData.saveHeroData[i].rosterId, newHeroPurchases);
-            newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + ".weapon",
-                new UpgradePurchases(saveData.saveHeroData[i].heroClass + ".weapon", new string[0]));
-            newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + ".armour",
-                new UpgradePurchases(saveData.saveHeroData[i].heroClass + ".armour", new string[0]));
-            var heroClass = DarkestDungeonManager.Data.HeroClasses[saveData.saveHeroData[i].heroClass];
+            saveData.InstancedPurchases.Add(saveData.RosterHeroes[i].RosterId, newHeroPurchases);
+            newHeroPurchases.Add(saveData.RosterHeroes[i].HeroClass + ".weapon",
+                new UpgradePurchases(saveData.RosterHeroes[i].HeroClass + ".weapon", new string[0]));
+            newHeroPurchases.Add(saveData.RosterHeroes[i].HeroClass + ".armour",
+                new UpgradePurchases(saveData.RosterHeroes[i].HeroClass + ".armour", new string[0]));
+            var heroClass = DarkestDungeonManager.Data.HeroClasses[saveData.RosterHeroes[i].HeroClass];
             for (int j = 0; j < heroClass.CombatSkills.Count; j++)
-                newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + "." + heroClass.CombatSkills[j].Id, new UpgradePurchases(
-                    saveData.saveHeroData[i].heroClass + "." + heroClass.CombatSkills[j].Id, new string[0]));
+                newHeroPurchases.Add(saveData.RosterHeroes[i].HeroClass + "." + heroClass.CombatSkills[j].Id, new UpgradePurchases(
+                    saveData.RosterHeroes[i].HeroClass + "." + heroClass.CombatSkills[j].Id, new string[0]));
             for (int j = 0; j < heroClass.CampingSkills.Count; j++)
                 newHeroPurchases.Add(heroClass.CampingSkills[j].Id, new UpgradePurchases(
                     heroClass.CampingSkills[j].Id, new string[0]));
         }
-        saveData.instancedPurchases[1]["crusader.smite"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["crusader.zealous_accusation"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["crusader.stunning_blow"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["crusader.bulwark_of_faith"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(0);
-        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(1);
-        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(2);
-        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(3);
-        saveData.instancedPurchases[1]["encourage"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["stand_tall"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["zealous_speech"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(0);
-        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(4);
-        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(5);
+        saveData.InstancedPurchases[1]["crusader.smite"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["crusader.zealous_accusation"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["crusader.stunning_blow"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["crusader.bulwark_of_faith"].PurchasedUpgrades.Add("0");
+        saveData.RosterHeroes[0].SelectedCombatSkillIndexes.Add(0);
+        saveData.RosterHeroes[0].SelectedCombatSkillIndexes.Add(1);
+        saveData.RosterHeroes[0].SelectedCombatSkillIndexes.Add(2);
+        saveData.RosterHeroes[0].SelectedCombatSkillIndexes.Add(3);
+        saveData.InstancedPurchases[1]["encourage"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["stand_tall"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["zealous_speech"].PurchasedUpgrades.Add("0");
+        saveData.RosterHeroes[0].SelectedCampingSkillIndexes.Add(0);
+        saveData.RosterHeroes[0].SelectedCampingSkillIndexes.Add(4);
+        saveData.RosterHeroes[0].SelectedCampingSkillIndexes.Add(5);
 
 
-        saveData.instancedPurchases[2]["highwayman.opened_vein"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["highwayman.pistol_shot"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["highwayman.grape_shot_blast"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["highwayman.take_aim"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(6);
-        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(1);
-        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(3);
-        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(4);
-        saveData.instancedPurchases[2]["first_aid"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["clean_guns"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["bandits_sense"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(1);
-        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(5);
-        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(6);
+        saveData.InstancedPurchases[2]["highwayman.opened_vein"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["highwayman.pistol_shot"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["highwayman.grape_shot_blast"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["highwayman.take_aim"].PurchasedUpgrades.Add("0");
+        saveData.RosterHeroes[1].SelectedCombatSkillIndexes.Add(6);
+        saveData.RosterHeroes[1].SelectedCombatSkillIndexes.Add(1);
+        saveData.RosterHeroes[1].SelectedCombatSkillIndexes.Add(3);
+        saveData.RosterHeroes[1].SelectedCombatSkillIndexes.Add(4);
+        saveData.InstancedPurchases[2]["first_aid"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["clean_guns"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["bandits_sense"].PurchasedUpgrades.Add("0");
+        saveData.RosterHeroes[1].SelectedCampingSkillIndexes.Add(1);
+        saveData.RosterHeroes[1].SelectedCampingSkillIndexes.Add(5);
+        saveData.RosterHeroes[1].SelectedCampingSkillIndexes.Add(6);
         #endregion
 
         #region Activity Log
-        saveData.activityLog = new List<WeekActivityLog>();
-        saveData.completedPlot = new List<string>();
-        saveData.generatedQuests = new List<Quest>();
+        saveData.ActivityLog = new List<WeekActivityLog>();
+        saveData.CompletedPlot = new List<string>();
+        saveData.GeneratedQuests = new List<Quest>();
         #endregion
 
         #region Estate Misc
-        saveData.trinketData.Clear();
+        saveData.InventoryTrinkets.Clear();
 
-        saveData.wagonData.Clear();
+        saveData.WagonTrinkets.Clear();
 
-        saveData.saveDungeonData.Clear();
-        saveData.saveDungeonData.Add("crypts", new DungeonProgress("crypts", 0, 0, true, false));
-        saveData.saveDungeonData.Add("warrens", new DungeonProgress("warrens", 0, 0, true, false));
-        saveData.saveDungeonData.Add("weald", new DungeonProgress("weald", 0, 0, true, false));
-        saveData.saveDungeonData.Add("cove", new DungeonProgress("cove", 0, 0, true, false));
-        saveData.saveDungeonData.Add("darkestdungeon", new DungeonProgress("darkestdungeon", 1, 0, true, false));
-        saveData.saveDungeonData.Add("town", new DungeonProgress("town", 1, 0, true, true));
+        saveData.DungeonProgress.Clear();
+        saveData.DungeonProgress.Add("crypts", new DungeonProgress("crypts", 0, 0, true, false));
+        saveData.DungeonProgress.Add("warrens", new DungeonProgress("warrens", 0, 0, true, false));
+        saveData.DungeonProgress.Add("weald", new DungeonProgress("weald", 0, 0, true, false));
+        saveData.DungeonProgress.Add("cove", new DungeonProgress("cove", 0, 0, true, false));
+        saveData.DungeonProgress.Add("darkestdungeon", new DungeonProgress("darkestdungeon", 1, 0, true, false));
+        saveData.DungeonProgress.Add("town", new DungeonProgress("town", 1, 0, true, true));
 
-        saveData.deathRecords = new List<DeathRecord>();
+        saveData.DeathRecords = new List<DeathRecord>();
 
-        saveData.buildingUpgrades = new Dictionary<string, UpgradePurchases>();
+        saveData.BuildingUpgrades.Clear();
 
-        saveData.buildingUpgrades.Add("abbey.meditation", new UpgradePurchases("abbey.meditation", new string[0]));
-        saveData.buildingUpgrades.Add("abbey.prayer", new UpgradePurchases("abbey.prayer", new string[0]));
-        saveData.buildingUpgrades.Add("abbey.flagellation", new UpgradePurchases("abbey.flagellation", new string[0]));
-        saveData.buildingUpgrades.Add("tavern.bar", new UpgradePurchases("tavern.bar", new string[0]));
-        saveData.buildingUpgrades.Add("tavern.gambling", new UpgradePurchases("tavern.gambling", new string[0]));
-        saveData.buildingUpgrades.Add("tavern.brothel", new UpgradePurchases("tavern.brothel", new string[0]));
-        saveData.buildingUpgrades.Add("sanitarium.cost", new UpgradePurchases("sanitarium.cost", new string[0]));
-        saveData.buildingUpgrades.Add("sanitarium.disease_quirk_cost", new UpgradePurchases("sanitarium.disease_quirk_cost", new string[0]));
-        saveData.buildingUpgrades.Add("sanitarium.slots", new UpgradePurchases("sanitarium.slots", new string[0]));
-        saveData.buildingUpgrades.Add("blacksmith.weapon", new UpgradePurchases("blacksmith.weapon", new string[0]));
-        saveData.buildingUpgrades.Add("blacksmith.armour", new UpgradePurchases("blacksmith.armour", new string[0]));
-        saveData.buildingUpgrades.Add("blacksmith.cost", new UpgradePurchases("blacksmith.cost", new string[0]));
-        saveData.buildingUpgrades.Add("guild.skill_levels", new UpgradePurchases("guild.skill_levels", new string[0]));
-        saveData.buildingUpgrades.Add("guild.cost", new UpgradePurchases("guild.cost", new string[0]));
-        saveData.buildingUpgrades.Add("camping_trainer.cost", new UpgradePurchases("camping_trainer.cost", new string[0]));
-        saveData.buildingUpgrades.Add("nomad_wagon.numitems", new UpgradePurchases("nomad_wagon.numitems", new string[0]));
-        saveData.buildingUpgrades.Add("nomad_wagon.cost", new UpgradePurchases("nomad_wagon.cost", new string[0]));
-        saveData.buildingUpgrades.Add("stage_coach.numrecruits", new UpgradePurchases("stage_coach.numrecruits", new string[0]));
-        saveData.buildingUpgrades.Add("stage_coach.rostersize", new UpgradePurchases("stage_coach.rostersize", new string[0]));
-        saveData.buildingUpgrades.Add("stage_coach.upgraded_recruits", new UpgradePurchases("stage_coach.upgraded_recruits", new string[0]));
+        saveData.BuildingUpgrades.Add("abbey.meditation", new UpgradePurchases("abbey.meditation", new string[0]));
+        saveData.BuildingUpgrades.Add("abbey.prayer", new UpgradePurchases("abbey.prayer", new string[0]));
+        saveData.BuildingUpgrades.Add("abbey.flagellation", new UpgradePurchases("abbey.flagellation", new string[0]));
+        saveData.BuildingUpgrades.Add("tavern.bar", new UpgradePurchases("tavern.bar", new string[0]));
+        saveData.BuildingUpgrades.Add("tavern.gambling", new UpgradePurchases("tavern.gambling", new string[0]));
+        saveData.BuildingUpgrades.Add("tavern.brothel", new UpgradePurchases("tavern.brothel", new string[0]));
+        saveData.BuildingUpgrades.Add("sanitarium.cost", new UpgradePurchases("sanitarium.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("sanitarium.disease_quirk_cost", new UpgradePurchases("sanitarium.disease_quirk_cost", new string[0]));
+        saveData.BuildingUpgrades.Add("sanitarium.slots", new UpgradePurchases("sanitarium.slots", new string[0]));
+        saveData.BuildingUpgrades.Add("blacksmith.weapon", new UpgradePurchases("blacksmith.weapon", new string[0]));
+        saveData.BuildingUpgrades.Add("blacksmith.armour", new UpgradePurchases("blacksmith.armour", new string[0]));
+        saveData.BuildingUpgrades.Add("blacksmith.cost", new UpgradePurchases("blacksmith.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("guild.skill_levels", new UpgradePurchases("guild.skill_levels", new string[0]));
+        saveData.BuildingUpgrades.Add("guild.cost", new UpgradePurchases("guild.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("camping_trainer.cost", new UpgradePurchases("camping_trainer.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("nomad_wagon.numitems", new UpgradePurchases("nomad_wagon.numitems", new string[0]));
+        saveData.BuildingUpgrades.Add("nomad_wagon.cost", new UpgradePurchases("nomad_wagon.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("stage_coach.numrecruits", new UpgradePurchases("stage_coach.numrecruits", new string[0]));
+        saveData.BuildingUpgrades.Add("stage_coach.rostersize", new UpgradePurchases("stage_coach.rostersize", new string[0]));
+        saveData.BuildingUpgrades.Add("stage_coach.upgraded_recruits", new UpgradePurchases("stage_coach.upgraded_recruits", new string[0]));
         #endregion
 
         #region ActivitySlots
-        saveData.abbeyActivitySlots = new List<List<SaveActivitySlot>>()
+        saveData.AbbeyActivitySlots = new List<List<SaveActivitySlot>>()
         {
             new List<SaveActivitySlot>()
             {
@@ -8179,7 +7404,7 @@ public static class SaveLoadManager
                  new SaveActivitySlot(),
             },
         };
-        saveData.tavernActivitySlots = new List<List<SaveActivitySlot>>()
+        saveData.TavernActivitySlots = new List<List<SaveActivitySlot>>()
         {
             new List<SaveActivitySlot>()
             {
@@ -8200,7 +7425,7 @@ public static class SaveLoadManager
                  new SaveActivitySlot(),
             },
         };
-        saveData.sanitariumActivitySlots = new List<List<SaveActivitySlot>>()
+        saveData.SanitariumActivitySlots = new List<List<SaveActivitySlot>>()
         {
             new List<SaveActivitySlot>()
             {
@@ -8505,37 +7730,37 @@ public static class SaveLoadManager
         WriteSave(saveData);
         return saveData;
     }
+
     public static SaveCampaignData WriteStartingPlusSave(SaveCampaignData saveData)
     {
-        saveData.isFirstStart = true;
-        saveData.gameVersion = Application.version;
-        saveData.locationName = "Raid";
-        saveData.questsCompleted = 0;
-        saveData.currentWeek = 1;
+        saveData.IsFirstStart = true;
+        saveData.LocationName = "Raid";
+        saveData.QuestsCompleted = 0;
+        saveData.CurrentWeek = 1;
 
-        saveData.goldAmount = 1000;
-        saveData.bustsAmount = 10;
-        saveData.deedsAmount = 10;
-        saveData.portraitsAmount = 10;
-        saveData.crestsAmount = 10;
+        saveData.GoldAmount = 1000;
+        saveData.BustsAmount = 10;
+        saveData.DeedsAmount = 10;
+        saveData.PortraitsAmount = 10;
+        saveData.CrestsAmount = 10;
 
         #region Initial Heroes
-        saveData.saveHeroData = new SaveHeroData[2]
+        saveData.RosterHeroes = new List<SaveHeroData>
         {
             #region Hero 1
             new SaveHeroData()
             {
-                rosterId = 1,
-                name = "Reynald",
-                heroClass = "crusader",
-                resolveLevel = 0,
-                resolveXP = 0,
-                stressLevel = 10,
-                weaponLevel = 1,
-                armorLevel = 1,
-                leftTrinketId = "",
-                rightTrinketId = "",
-                quirks = new List<QuirkInfo>()
+                RosterId = 1,
+                Name = "Reynald",
+                HeroClass = "crusader",
+                ResolveLevel = 0,
+                ResolveXP = 0,
+                StressLevel = 10,
+                WeaponLevel = 1,
+                ArmorLevel = 1,
+                LeftTrinketId = "",
+                RightTrinketId = "",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("warrior_of_light"),
                     new QuirkInfo("kleptomaniac"),
@@ -8546,17 +7771,17 @@ public static class SaveLoadManager
             #region Hero 2
             new SaveHeroData()
             {
-                rosterId = 2,
-                name = "Dismas",
-                heroClass = "highwayman",
-                resolveLevel = 0,
-                resolveXP = 0,
-                stressLevel = 10,
-                weaponLevel = 1,
-                armorLevel = 1,
-                leftTrinketId = "",
-                rightTrinketId = "",
-                quirks = new List<QuirkInfo>()
+                RosterId = 2,
+                Name = "Dismas",
+                HeroClass = "highwayman",
+                ResolveLevel = 0,
+                ResolveXP = 0,
+                StressLevel = 10,
+                WeaponLevel = 1,
+                ArmorLevel = 1,
+                LeftTrinketId = "",
+                RightTrinketId = "",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("hard_noggin"),
                     new QuirkInfo("known_cheat"),
@@ -8568,105 +7793,105 @@ public static class SaveLoadManager
         #endregion
 
         #region StageCoach Heroes
-        saveData.stageCoachData = new SaveHeroData[0];
+        saveData.StageCoachHeroes = new List<SaveHeroData>();
         #endregion
 
         #region Initial Hero Purchases
-        saveData.instancedPurchases = new Dictionary<int, Dictionary<string, UpgradePurchases>>();
-        for (int i = 0; i < saveData.saveHeroData.Length; i++)
+        saveData.InstancedPurchases.Clear();
+        for (int i = 0; i < saveData.RosterHeroes.Count; i++)
         {
             var newHeroPurchases = new Dictionary<string, UpgradePurchases>();
-            saveData.instancedPurchases.Add(saveData.saveHeroData[i].rosterId, newHeroPurchases);
-            newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + ".weapon",
-                new UpgradePurchases(saveData.saveHeroData[i].heroClass + ".weapon", new string[0]));
-            newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + ".armour",
-                new UpgradePurchases(saveData.saveHeroData[i].heroClass + ".armour", new string[0]));
-            var heroClass = DarkestDungeonManager.Data.HeroClasses[saveData.saveHeroData[i].heroClass];
+            saveData.InstancedPurchases.Add(saveData.RosterHeroes[i].RosterId, newHeroPurchases);
+            newHeroPurchases.Add(saveData.RosterHeroes[i].HeroClass + ".weapon",
+                new UpgradePurchases(saveData.RosterHeroes[i].HeroClass + ".weapon", new string[0]));
+            newHeroPurchases.Add(saveData.RosterHeroes[i].HeroClass + ".armour",
+                new UpgradePurchases(saveData.RosterHeroes[i].HeroClass + ".armour", new string[0]));
+            var heroClass = DarkestDungeonManager.Data.HeroClasses[saveData.RosterHeroes[i].HeroClass];
             for (int j = 0; j < heroClass.CombatSkills.Count; j++)
-                newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + "." + heroClass.CombatSkills[j].Id, new UpgradePurchases(
-                    saveData.saveHeroData[i].heroClass + "." + heroClass.CombatSkills[j].Id, new string[0]));
+                newHeroPurchases.Add(saveData.RosterHeroes[i].HeroClass + "." + heroClass.CombatSkills[j].Id, new UpgradePurchases(
+                    saveData.RosterHeroes[i].HeroClass + "." + heroClass.CombatSkills[j].Id, new string[0]));
             for (int j = 0; j < heroClass.CampingSkills.Count; j++)
                 newHeroPurchases.Add(heroClass.CampingSkills[j].Id, new UpgradePurchases(
                     heroClass.CampingSkills[j].Id, new string[0]));
         }
-        saveData.instancedPurchases[1]["crusader.smite"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["crusader.zealous_accusation"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["crusader.stunning_blow"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["crusader.bulwark_of_faith"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(0);
-        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(1);
-        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(2);
-        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(3);
-        saveData.instancedPurchases[1]["encourage"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["stand_tall"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["zealous_speech"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(0);
-        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(4);
-        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(5);
+        saveData.InstancedPurchases[1]["crusader.smite"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["crusader.zealous_accusation"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["crusader.stunning_blow"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["crusader.bulwark_of_faith"].PurchasedUpgrades.Add("0");
+        saveData.RosterHeroes[0].SelectedCombatSkillIndexes.Add(0);
+        saveData.RosterHeroes[0].SelectedCombatSkillIndexes.Add(1);
+        saveData.RosterHeroes[0].SelectedCombatSkillIndexes.Add(2);
+        saveData.RosterHeroes[0].SelectedCombatSkillIndexes.Add(3);
+        saveData.InstancedPurchases[1]["encourage"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["stand_tall"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["zealous_speech"].PurchasedUpgrades.Add("0");
+        saveData.RosterHeroes[0].SelectedCampingSkillIndexes.Add(0);
+        saveData.RosterHeroes[0].SelectedCampingSkillIndexes.Add(4);
+        saveData.RosterHeroes[0].SelectedCampingSkillIndexes.Add(5);
 
-        saveData.instancedPurchases[2]["highwayman.opened_vein"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["highwayman.pistol_shot"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["highwayman.grape_shot_blast"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["highwayman.take_aim"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(6);
-        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(1);
-        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(3);
-        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(4);
-        saveData.instancedPurchases[2]["first_aid"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["clean_guns"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["bandits_sense"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(1);
-        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(5);
-        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(6);
+        saveData.InstancedPurchases[2]["highwayman.opened_vein"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["highwayman.pistol_shot"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["highwayman.grape_shot_blast"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["highwayman.take_aim"].PurchasedUpgrades.Add("0");
+        saveData.RosterHeroes[1].SelectedCombatSkillIndexes.Add(6);
+        saveData.RosterHeroes[1].SelectedCombatSkillIndexes.Add(1);
+        saveData.RosterHeroes[1].SelectedCombatSkillIndexes.Add(3);
+        saveData.RosterHeroes[1].SelectedCombatSkillIndexes.Add(4);
+        saveData.InstancedPurchases[2]["first_aid"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["clean_guns"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["bandits_sense"].PurchasedUpgrades.Add("0");
+        saveData.RosterHeroes[1].SelectedCampingSkillIndexes.Add(1);
+        saveData.RosterHeroes[1].SelectedCampingSkillIndexes.Add(5);
+        saveData.RosterHeroes[1].SelectedCampingSkillIndexes.Add(6);
         #endregion
 
         #region Activity Log
-        saveData.activityLog = new List<WeekActivityLog>();
-        saveData.completedPlot = new List<string>();
-        saveData.generatedQuests = new List<Quest>();
+        saveData.ActivityLog = new List<WeekActivityLog>();
+        saveData.CompletedPlot = new List<string>();
+        saveData.GeneratedQuests = new List<Quest>();
         #endregion
 
         #region Estate Misc
-        saveData.trinketData.Clear();
+        saveData.InventoryTrinkets.Clear();
 
-        saveData.wagonData.Clear();
+        saveData.WagonTrinkets.Clear();
 
-        saveData.saveDungeonData.Clear();
-        saveData.saveDungeonData.Add("crypts", new DungeonProgress("crypts", 0, 0, true, false));
-        saveData.saveDungeonData.Add("warrens", new DungeonProgress("warrens", 0, 0, true, false));
-        saveData.saveDungeonData.Add("weald", new DungeonProgress("weald", 0, 0, true, false));
-        saveData.saveDungeonData.Add("cove", new DungeonProgress("cove", 0, 0, true, false));
-        saveData.saveDungeonData.Add("darkestdungeon", new DungeonProgress("darkestdungeon", 1, 0, true, false));
-        saveData.saveDungeonData.Add("town", new DungeonProgress("town", 1, 0, true, true));
+        saveData.DungeonProgress.Clear();
+        saveData.DungeonProgress.Add("crypts", new DungeonProgress("crypts", 0, 0, true, false));
+        saveData.DungeonProgress.Add("warrens", new DungeonProgress("warrens", 0, 0, true, false));
+        saveData.DungeonProgress.Add("weald", new DungeonProgress("weald", 0, 0, true, false));
+        saveData.DungeonProgress.Add("cove", new DungeonProgress("cove", 0, 0, true, false));
+        saveData.DungeonProgress.Add("darkestdungeon", new DungeonProgress("darkestdungeon", 1, 0, true, false));
+        saveData.DungeonProgress.Add("town", new DungeonProgress("town", 1, 0, true, true));
 
-        saveData.deathRecords = new List<DeathRecord>();
+        saveData.DeathRecords = new List<DeathRecord>();
 
-        saveData.buildingUpgrades = new Dictionary<string, UpgradePurchases>();
+        saveData.BuildingUpgrades.Clear();
 
-        saveData.buildingUpgrades.Add("abbey.meditation", new UpgradePurchases("abbey.meditation", new string[0]));
-        saveData.buildingUpgrades.Add("abbey.prayer", new UpgradePurchases("abbey.prayer", new string[0]));
-        saveData.buildingUpgrades.Add("abbey.flagellation", new UpgradePurchases("abbey.flagellation", new string[0]));
-        saveData.buildingUpgrades.Add("tavern.bar", new UpgradePurchases("tavern.bar", new string[0]));
-        saveData.buildingUpgrades.Add("tavern.gambling", new UpgradePurchases("tavern.gambling", new string[0]));
-        saveData.buildingUpgrades.Add("tavern.brothel", new UpgradePurchases("tavern.brothel", new string[0]));
-        saveData.buildingUpgrades.Add("sanitarium.cost", new UpgradePurchases("sanitarium.cost", new string[0]));
-        saveData.buildingUpgrades.Add("sanitarium.disease_quirk_cost", new UpgradePurchases("sanitarium.disease_quirk_cost", new string[0]));
-        saveData.buildingUpgrades.Add("sanitarium.slots", new UpgradePurchases("sanitarium.slots", new string[0]));
-        saveData.buildingUpgrades.Add("blacksmith.weapon", new UpgradePurchases("blacksmith.weapon", new string[0]));
-        saveData.buildingUpgrades.Add("blacksmith.armour", new UpgradePurchases("blacksmith.armour", new string[0]));
-        saveData.buildingUpgrades.Add("blacksmith.cost", new UpgradePurchases("blacksmith.cost", new string[0]));
-        saveData.buildingUpgrades.Add("guild.skill_levels", new UpgradePurchases("guild.skill_levels", new string[0]));
-        saveData.buildingUpgrades.Add("guild.cost", new UpgradePurchases("guild.cost", new string[0]));
-        saveData.buildingUpgrades.Add("camping_trainer.cost", new UpgradePurchases("camping_trainer.cost", new string[0]));
-        saveData.buildingUpgrades.Add("nomad_wagon.numitems", new UpgradePurchases("nomad_wagon.numitems", new string[0]));
-        saveData.buildingUpgrades.Add("nomad_wagon.cost", new UpgradePurchases("nomad_wagon.cost", new string[0]));
-        saveData.buildingUpgrades.Add("stage_coach.numrecruits", new UpgradePurchases("stage_coach.numrecruits", new string[0]));
-        saveData.buildingUpgrades.Add("stage_coach.rostersize", new UpgradePurchases("stage_coach.rostersize", new string[0]));
-        saveData.buildingUpgrades.Add("stage_coach.upgraded_recruits", new UpgradePurchases("stage_coach.upgraded_recruits", new string[0]));
+        saveData.BuildingUpgrades.Add("abbey.meditation", new UpgradePurchases("abbey.meditation", new string[0]));
+        saveData.BuildingUpgrades.Add("abbey.prayer", new UpgradePurchases("abbey.prayer", new string[0]));
+        saveData.BuildingUpgrades.Add("abbey.flagellation", new UpgradePurchases("abbey.flagellation", new string[0]));
+        saveData.BuildingUpgrades.Add("tavern.bar", new UpgradePurchases("tavern.bar", new string[0]));
+        saveData.BuildingUpgrades.Add("tavern.gambling", new UpgradePurchases("tavern.gambling", new string[0]));
+        saveData.BuildingUpgrades.Add("tavern.brothel", new UpgradePurchases("tavern.brothel", new string[0]));
+        saveData.BuildingUpgrades.Add("sanitarium.cost", new UpgradePurchases("sanitarium.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("sanitarium.disease_quirk_cost", new UpgradePurchases("sanitarium.disease_quirk_cost", new string[0]));
+        saveData.BuildingUpgrades.Add("sanitarium.slots", new UpgradePurchases("sanitarium.slots", new string[0]));
+        saveData.BuildingUpgrades.Add("blacksmith.weapon", new UpgradePurchases("blacksmith.weapon", new string[0]));
+        saveData.BuildingUpgrades.Add("blacksmith.armour", new UpgradePurchases("blacksmith.armour", new string[0]));
+        saveData.BuildingUpgrades.Add("blacksmith.cost", new UpgradePurchases("blacksmith.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("guild.skill_levels", new UpgradePurchases("guild.skill_levels", new string[0]));
+        saveData.BuildingUpgrades.Add("guild.cost", new UpgradePurchases("guild.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("camping_trainer.cost", new UpgradePurchases("camping_trainer.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("nomad_wagon.numitems", new UpgradePurchases("nomad_wagon.numitems", new string[0]));
+        saveData.BuildingUpgrades.Add("nomad_wagon.cost", new UpgradePurchases("nomad_wagon.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("stage_coach.numrecruits", new UpgradePurchases("stage_coach.numrecruits", new string[0]));
+        saveData.BuildingUpgrades.Add("stage_coach.rostersize", new UpgradePurchases("stage_coach.rostersize", new string[0]));
+        saveData.BuildingUpgrades.Add("stage_coach.upgraded_recruits", new UpgradePurchases("stage_coach.upgraded_recruits", new string[0]));
         #endregion
 
         #region ActivitySlots
-        saveData.abbeyActivitySlots = new List<List<SaveActivitySlot>>()
+        saveData.AbbeyActivitySlots = new List<List<SaveActivitySlot>>()
         {
             new List<SaveActivitySlot>()
             {
@@ -8687,7 +7912,7 @@ public static class SaveLoadManager
                  new SaveActivitySlot(),
             },
         };
-        saveData.tavernActivitySlots = new List<List<SaveActivitySlot>>()
+        saveData.TavernActivitySlots = new List<List<SaveActivitySlot>>()
         {
             new List<SaveActivitySlot>()
             {
@@ -8708,7 +7933,7 @@ public static class SaveLoadManager
                  new SaveActivitySlot(),
             },
         };
-        saveData.sanitariumActivitySlots = new List<List<SaveActivitySlot>>()
+        saveData.SanitariumActivitySlots = new List<List<SaveActivitySlot>>()
         {
             new List<SaveActivitySlot>()
             {
@@ -8896,37 +8121,37 @@ public static class SaveLoadManager
         WriteSave(saveData);
         return saveData;
     }
+
     public static SaveCampaignData WriteTownInvasionSave(SaveCampaignData saveData)
     {
-        saveData.isFirstStart = true;
-        saveData.gameVersion = Application.version;
-        saveData.locationName = "Raid";
-        saveData.questsCompleted = 0;
-        saveData.currentWeek = 1;
+        saveData.IsFirstStart = true;
+        saveData.LocationName = "Raid";
+        saveData.QuestsCompleted = 0;
+        saveData.CurrentWeek = 1;
 
-        saveData.goldAmount = 1000;
-        saveData.bustsAmount = 10;
-        saveData.deedsAmount = 10;
-        saveData.portraitsAmount = 10;
-        saveData.crestsAmount = 10;
+        saveData.GoldAmount = 1000;
+        saveData.BustsAmount = 10;
+        saveData.DeedsAmount = 10;
+        saveData.PortraitsAmount = 10;
+        saveData.CrestsAmount = 10;
 
         #region Initial Heroes
-        saveData.saveHeroData = new SaveHeroData[2]
+        saveData.RosterHeroes = new List<SaveHeroData>
         {
             #region Hero 1
             new SaveHeroData()
             {
-                rosterId = 1,
-                name = "Reynald",
-                heroClass = "crusader",
-                resolveLevel = 0,
-                resolveXP = 0,
-                stressLevel = 10,
-                weaponLevel = 1,
-                armorLevel = 1,
-                leftTrinketId = "",
-                rightTrinketId = "dd_trinket",
-                quirks = new List<QuirkInfo>()
+                RosterId = 1,
+                Name = "Reynald",
+                HeroClass = "crusader",
+                ResolveLevel = 0,
+                ResolveXP = 0,
+                StressLevel = 10,
+                WeaponLevel = 1,
+                ArmorLevel = 1,
+                LeftTrinketId = "",
+                RightTrinketId = "dd_trinket",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("warrior_of_light"),
                     new QuirkInfo("kleptomaniac"),
@@ -8937,17 +8162,17 @@ public static class SaveLoadManager
             #region Hero 2
             new SaveHeroData()
             {
-                rosterId = 2,
-                name = "Dismas",
-                heroClass = "highwayman",
-                resolveLevel = 0,
-                resolveXP = 0,
-                stressLevel = 10,
-                weaponLevel = 1,
-                armorLevel = 1,
-                leftTrinketId = "",
-                rightTrinketId = "dd_trinket",
-                quirks = new List<QuirkInfo>()
+                RosterId = 2,
+                Name = "Dismas",
+                HeroClass = "highwayman",
+                ResolveLevel = 0,
+                ResolveXP = 0,
+                StressLevel = 10,
+                WeaponLevel = 1,
+                ArmorLevel = 1,
+                LeftTrinketId = "",
+                RightTrinketId = "dd_trinket",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("hard_noggin"),
                     new QuirkInfo("known_cheat"),
@@ -8959,106 +8184,106 @@ public static class SaveLoadManager
         #endregion
 
         #region StageCoach Heroes
-        saveData.stageCoachData = new SaveHeroData[0];
+        saveData.StageCoachHeroes = new List<SaveHeroData>();
         #endregion
 
         #region Initial Hero Purchases
-        saveData.instancedPurchases = new Dictionary<int, Dictionary<string, UpgradePurchases>>();
-        for (int i = 0; i < saveData.saveHeroData.Length; i++)
+        saveData.InstancedPurchases.Clear();
+        for (int i = 0; i < saveData.RosterHeroes.Count; i++)
         {
             var newHeroPurchases = new Dictionary<string, UpgradePurchases>();
-            saveData.instancedPurchases.Add(saveData.saveHeroData[i].rosterId, newHeroPurchases);
-            newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + ".weapon",
-                new UpgradePurchases(saveData.saveHeroData[i].heroClass + ".weapon", new string[0]));
-            newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + ".armour",
-                new UpgradePurchases(saveData.saveHeroData[i].heroClass + ".armour", new string[0]));
-            var heroClass = DarkestDungeonManager.Data.HeroClasses[saveData.saveHeroData[i].heroClass];
+            saveData.InstancedPurchases.Add(saveData.RosterHeroes[i].RosterId, newHeroPurchases);
+            newHeroPurchases.Add(saveData.RosterHeroes[i].HeroClass + ".weapon",
+                new UpgradePurchases(saveData.RosterHeroes[i].HeroClass + ".weapon", new string[0]));
+            newHeroPurchases.Add(saveData.RosterHeroes[i].HeroClass + ".armour",
+                new UpgradePurchases(saveData.RosterHeroes[i].HeroClass + ".armour", new string[0]));
+            var heroClass = DarkestDungeonManager.Data.HeroClasses[saveData.RosterHeroes[i].HeroClass];
             for (int j = 0; j < heroClass.CombatSkills.Count; j++)
-                newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + "." + heroClass.CombatSkills[j].Id, new UpgradePurchases(
-                    saveData.saveHeroData[i].heroClass + "." + heroClass.CombatSkills[j].Id, new string[0]));
+                newHeroPurchases.Add(saveData.RosterHeroes[i].HeroClass + "." + heroClass.CombatSkills[j].Id, new UpgradePurchases(
+                    saveData.RosterHeroes[i].HeroClass + "." + heroClass.CombatSkills[j].Id, new string[0]));
             for (int j = 0; j < heroClass.CampingSkills.Count; j++)
                 newHeroPurchases.Add(heroClass.CampingSkills[j].Id, new UpgradePurchases(
                     heroClass.CampingSkills[j].Id, new string[0]));
         }
-        saveData.instancedPurchases[1]["crusader.smite"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["crusader.zealous_accusation"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["crusader.stunning_blow"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["crusader.bulwark_of_faith"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(0);
-        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(1);
-        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(2);
-        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(3);
-        saveData.instancedPurchases[1]["encourage"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["stand_tall"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["zealous_speech"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(0);
-        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(4);
-        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(5);
+        saveData.InstancedPurchases[1]["crusader.smite"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["crusader.zealous_accusation"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["crusader.stunning_blow"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["crusader.bulwark_of_faith"].PurchasedUpgrades.Add("0");
+        saveData.RosterHeroes[0].SelectedCombatSkillIndexes.Add(0);
+        saveData.RosterHeroes[0].SelectedCombatSkillIndexes.Add(1);
+        saveData.RosterHeroes[0].SelectedCombatSkillIndexes.Add(2);
+        saveData.RosterHeroes[0].SelectedCombatSkillIndexes.Add(3);
+        saveData.InstancedPurchases[1]["encourage"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["stand_tall"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["zealous_speech"].PurchasedUpgrades.Add("0");
+        saveData.RosterHeroes[0].SelectedCampingSkillIndexes.Add(0);
+        saveData.RosterHeroes[0].SelectedCampingSkillIndexes.Add(4);
+        saveData.RosterHeroes[0].SelectedCampingSkillIndexes.Add(5);
 
 
-        saveData.instancedPurchases[2]["highwayman.opened_vein"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["highwayman.pistol_shot"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["highwayman.grape_shot_blast"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["highwayman.take_aim"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(6);
-        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(1);
-        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(3);
-        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(4);
-        saveData.instancedPurchases[2]["first_aid"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["clean_guns"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["bandits_sense"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(1);
-        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(5);
-        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(6);
+        saveData.InstancedPurchases[2]["highwayman.opened_vein"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["highwayman.pistol_shot"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["highwayman.grape_shot_blast"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["highwayman.take_aim"].PurchasedUpgrades.Add("0");
+        saveData.RosterHeroes[1].SelectedCombatSkillIndexes.Add(6);
+        saveData.RosterHeroes[1].SelectedCombatSkillIndexes.Add(1);
+        saveData.RosterHeroes[1].SelectedCombatSkillIndexes.Add(3);
+        saveData.RosterHeroes[1].SelectedCombatSkillIndexes.Add(4);
+        saveData.InstancedPurchases[2]["first_aid"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["clean_guns"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["bandits_sense"].PurchasedUpgrades.Add("0");
+        saveData.RosterHeroes[1].SelectedCampingSkillIndexes.Add(1);
+        saveData.RosterHeroes[1].SelectedCampingSkillIndexes.Add(5);
+        saveData.RosterHeroes[1].SelectedCampingSkillIndexes.Add(6);
         #endregion
 
         #region Activity Log
-        saveData.activityLog = new List<WeekActivityLog>();
-        saveData.completedPlot = new List<string>();
-        saveData.generatedQuests = new List<Quest>();
+        saveData.ActivityLog = new List<WeekActivityLog>();
+        saveData.CompletedPlot = new List<string>();
+        saveData.GeneratedQuests = new List<Quest>();
         #endregion
 
         #region Estate Misc
-        saveData.trinketData.Clear();
+        saveData.InventoryTrinkets.Clear();
 
-        saveData.wagonData.Clear();
+        saveData.WagonTrinkets.Clear();
 
-        saveData.saveDungeonData.Clear();
-        saveData.saveDungeonData.Add("crypts", new DungeonProgress("crypts", 0, 0, true, false));
-        saveData.saveDungeonData.Add("warrens", new DungeonProgress("warrens", 0, 0, true, false));
-        saveData.saveDungeonData.Add("weald", new DungeonProgress("weald", 0, 0, true, false));
-        saveData.saveDungeonData.Add("cove", new DungeonProgress("cove", 0, 0, true, false));
-        saveData.saveDungeonData.Add("darkestdungeon", new DungeonProgress("darkestdungeon", 1, 0, true, false));
-        saveData.saveDungeonData.Add("town", new DungeonProgress("town", 1, 0, true, true));
+        saveData.DungeonProgress.Clear();
+        saveData.DungeonProgress.Add("crypts", new DungeonProgress("crypts", 0, 0, true, false));
+        saveData.DungeonProgress.Add("warrens", new DungeonProgress("warrens", 0, 0, true, false));
+        saveData.DungeonProgress.Add("weald", new DungeonProgress("weald", 0, 0, true, false));
+        saveData.DungeonProgress.Add("cove", new DungeonProgress("cove", 0, 0, true, false));
+        saveData.DungeonProgress.Add("darkestdungeon", new DungeonProgress("darkestdungeon", 1, 0, true, false));
+        saveData.DungeonProgress.Add("town", new DungeonProgress("town", 1, 0, true, true));
 
-        saveData.deathRecords = new List<DeathRecord>();
+        saveData.DeathRecords = new List<DeathRecord>();
 
-        saveData.buildingUpgrades = new Dictionary<string, UpgradePurchases>();
+        saveData.BuildingUpgrades.Clear();
 
-        saveData.buildingUpgrades.Add("abbey.meditation", new UpgradePurchases("abbey.meditation", new string[0]));
-        saveData.buildingUpgrades.Add("abbey.prayer", new UpgradePurchases("abbey.prayer", new string[0]));
-        saveData.buildingUpgrades.Add("abbey.flagellation", new UpgradePurchases("abbey.flagellation", new string[0]));
-        saveData.buildingUpgrades.Add("tavern.bar", new UpgradePurchases("tavern.bar", new string[0]));
-        saveData.buildingUpgrades.Add("tavern.gambling", new UpgradePurchases("tavern.gambling", new string[0]));
-        saveData.buildingUpgrades.Add("tavern.brothel", new UpgradePurchases("tavern.brothel", new string[0]));
-        saveData.buildingUpgrades.Add("sanitarium.cost", new UpgradePurchases("sanitarium.cost", new string[0]));
-        saveData.buildingUpgrades.Add("sanitarium.disease_quirk_cost", new UpgradePurchases("sanitarium.disease_quirk_cost", new string[0]));
-        saveData.buildingUpgrades.Add("sanitarium.slots", new UpgradePurchases("sanitarium.slots", new string[0]));
-        saveData.buildingUpgrades.Add("blacksmith.weapon", new UpgradePurchases("blacksmith.weapon", new string[0]));
-        saveData.buildingUpgrades.Add("blacksmith.armour", new UpgradePurchases("blacksmith.armour", new string[0]));
-        saveData.buildingUpgrades.Add("blacksmith.cost", new UpgradePurchases("blacksmith.cost", new string[0]));
-        saveData.buildingUpgrades.Add("guild.skill_levels", new UpgradePurchases("guild.skill_levels", new string[0]));
-        saveData.buildingUpgrades.Add("guild.cost", new UpgradePurchases("guild.cost", new string[0]));
-        saveData.buildingUpgrades.Add("camping_trainer.cost", new UpgradePurchases("camping_trainer.cost", new string[0]));
-        saveData.buildingUpgrades.Add("nomad_wagon.numitems", new UpgradePurchases("nomad_wagon.numitems", new string[0]));
-        saveData.buildingUpgrades.Add("nomad_wagon.cost", new UpgradePurchases("nomad_wagon.cost", new string[0]));
-        saveData.buildingUpgrades.Add("stage_coach.numrecruits", new UpgradePurchases("stage_coach.numrecruits", new string[0]));
-        saveData.buildingUpgrades.Add("stage_coach.rostersize", new UpgradePurchases("stage_coach.rostersize", new string[0]));
-        saveData.buildingUpgrades.Add("stage_coach.upgraded_recruits", new UpgradePurchases("stage_coach.upgraded_recruits", new string[0]));
+        saveData.BuildingUpgrades.Add("abbey.meditation", new UpgradePurchases("abbey.meditation", new string[0]));
+        saveData.BuildingUpgrades.Add("abbey.prayer", new UpgradePurchases("abbey.prayer", new string[0]));
+        saveData.BuildingUpgrades.Add("abbey.flagellation", new UpgradePurchases("abbey.flagellation", new string[0]));
+        saveData.BuildingUpgrades.Add("tavern.bar", new UpgradePurchases("tavern.bar", new string[0]));
+        saveData.BuildingUpgrades.Add("tavern.gambling", new UpgradePurchases("tavern.gambling", new string[0]));
+        saveData.BuildingUpgrades.Add("tavern.brothel", new UpgradePurchases("tavern.brothel", new string[0]));
+        saveData.BuildingUpgrades.Add("sanitarium.cost", new UpgradePurchases("sanitarium.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("sanitarium.disease_quirk_cost", new UpgradePurchases("sanitarium.disease_quirk_cost", new string[0]));
+        saveData.BuildingUpgrades.Add("sanitarium.slots", new UpgradePurchases("sanitarium.slots", new string[0]));
+        saveData.BuildingUpgrades.Add("blacksmith.weapon", new UpgradePurchases("blacksmith.weapon", new string[0]));
+        saveData.BuildingUpgrades.Add("blacksmith.armour", new UpgradePurchases("blacksmith.armour", new string[0]));
+        saveData.BuildingUpgrades.Add("blacksmith.cost", new UpgradePurchases("blacksmith.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("guild.skill_levels", new UpgradePurchases("guild.skill_levels", new string[0]));
+        saveData.BuildingUpgrades.Add("guild.cost", new UpgradePurchases("guild.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("camping_trainer.cost", new UpgradePurchases("camping_trainer.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("nomad_wagon.numitems", new UpgradePurchases("nomad_wagon.numitems", new string[0]));
+        saveData.BuildingUpgrades.Add("nomad_wagon.cost", new UpgradePurchases("nomad_wagon.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("stage_coach.numrecruits", new UpgradePurchases("stage_coach.numrecruits", new string[0]));
+        saveData.BuildingUpgrades.Add("stage_coach.rostersize", new UpgradePurchases("stage_coach.rostersize", new string[0]));
+        saveData.BuildingUpgrades.Add("stage_coach.upgraded_recruits", new UpgradePurchases("stage_coach.upgraded_recruits", new string[0]));
         #endregion
 
         #region ActivitySlots
-        saveData.abbeyActivitySlots = new List<List<SaveActivitySlot>>()
+        saveData.AbbeyActivitySlots = new List<List<SaveActivitySlot>>()
         {
             new List<SaveActivitySlot>()
             {
@@ -9079,7 +8304,7 @@ public static class SaveLoadManager
                  new SaveActivitySlot(),
             },
         };
-        saveData.tavernActivitySlots = new List<List<SaveActivitySlot>>()
+        saveData.TavernActivitySlots = new List<List<SaveActivitySlot>>()
         {
             new List<SaveActivitySlot>()
             {
@@ -9100,7 +8325,7 @@ public static class SaveLoadManager
                  new SaveActivitySlot(),
             },
         };
-        saveData.sanitariumActivitySlots = new List<List<SaveActivitySlot>>()
+        saveData.SanitariumActivitySlots = new List<List<SaveActivitySlot>>()
         {
             new List<SaveActivitySlot>()
             {
@@ -9628,37 +8853,37 @@ public static class SaveLoadManager
         WriteSave(saveData);
         return saveData;
     }
+
     public static SaveCampaignData WriteTutorialCryptsSave(SaveCampaignData saveData)
     {
-        saveData.isFirstStart = true;
-        saveData.gameVersion = Application.version;
-        saveData.locationName = "Raid";
-        saveData.questsCompleted = 0;
-        saveData.currentWeek = 1;
+        saveData.IsFirstStart = true;
+        saveData.LocationName = "Raid";
+        saveData.QuestsCompleted = 0;
+        saveData.CurrentWeek = 1;
 
-        saveData.goldAmount = 1000;
-        saveData.bustsAmount = 10;
-        saveData.deedsAmount = 10;
-        saveData.portraitsAmount = 10;
-        saveData.crestsAmount = 10;
+        saveData.GoldAmount = 1000;
+        saveData.BustsAmount = 10;
+        saveData.DeedsAmount = 10;
+        saveData.PortraitsAmount = 10;
+        saveData.CrestsAmount = 10;
 
         #region Initial Heroes
-        saveData.saveHeroData = new SaveHeroData[2]
+        saveData.RosterHeroes = new List<SaveHeroData>
         {
             #region Hero 1
             new SaveHeroData()
             {
-                rosterId = 1,
-                name = "Reynald",
-                heroClass = "crusader",
-                resolveLevel = 0,
-                resolveXP = 0,
-                stressLevel = 10,
-                weaponLevel = 1,
-                armorLevel = 1,
-                leftTrinketId = "",
-                rightTrinketId = "dd_trinket",
-                quirks = new List<QuirkInfo>()
+                RosterId = 1,
+                Name = "Reynald",
+                HeroClass = "crusader",
+                ResolveLevel = 0,
+                ResolveXP = 0,
+                StressLevel = 10,
+                WeaponLevel = 1,
+                ArmorLevel = 1,
+                LeftTrinketId = "",
+                RightTrinketId = "dd_trinket",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("warrior_of_light"),
                     new QuirkInfo("kleptomaniac"),
@@ -9669,17 +8894,17 @@ public static class SaveLoadManager
             #region Hero 2
             new SaveHeroData()
             {
-                rosterId = 2,
-                name = "Dismas",
-                heroClass = "highwayman",
-                resolveLevel = 0,
-                resolveXP = 0,
-                stressLevel = 10,
-                weaponLevel = 1,
-                armorLevel = 1,
-                leftTrinketId = "",
-                rightTrinketId = "dd_trinket",
-                quirks = new List<QuirkInfo>()
+                RosterId = 2,
+                Name = "Dismas",
+                HeroClass = "highwayman",
+                ResolveLevel = 0,
+                ResolveXP = 0,
+                StressLevel = 10,
+                WeaponLevel = 1,
+                ArmorLevel = 1,
+                LeftTrinketId = "",
+                RightTrinketId = "dd_trinket",
+                Quirks = new List<QuirkInfo>()
                 {
                     new QuirkInfo("hard_noggin"),
                     new QuirkInfo("known_cheat"),
@@ -9691,106 +8916,106 @@ public static class SaveLoadManager
         #endregion
 
         #region StageCoach Heroes
-        saveData.stageCoachData = new SaveHeroData[0];
+        saveData.StageCoachHeroes = new List<SaveHeroData>();
         #endregion
 
         #region Initial Hero Purchases
-        saveData.instancedPurchases = new Dictionary<int, Dictionary<string, UpgradePurchases>>();
-        for (int i = 0; i < saveData.saveHeroData.Length; i++)
+        saveData.InstancedPurchases.Clear();
+        for (int i = 0; i < saveData.RosterHeroes.Count; i++)
         {
             var newHeroPurchases = new Dictionary<string, UpgradePurchases>();
-            saveData.instancedPurchases.Add(saveData.saveHeroData[i].rosterId, newHeroPurchases);
-            newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + ".weapon",
-                new UpgradePurchases(saveData.saveHeroData[i].heroClass + ".weapon", new string[0]));
-            newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + ".armour",
-                new UpgradePurchases(saveData.saveHeroData[i].heroClass + ".armour", new string[0]));
-            var heroClass = DarkestDungeonManager.Data.HeroClasses[saveData.saveHeroData[i].heroClass];
+            saveData.InstancedPurchases.Add(saveData.RosterHeroes[i].RosterId, newHeroPurchases);
+            newHeroPurchases.Add(saveData.RosterHeroes[i].HeroClass + ".weapon",
+                new UpgradePurchases(saveData.RosterHeroes[i].HeroClass + ".weapon", new string[0]));
+            newHeroPurchases.Add(saveData.RosterHeroes[i].HeroClass + ".armour",
+                new UpgradePurchases(saveData.RosterHeroes[i].HeroClass + ".armour", new string[0]));
+            var heroClass = DarkestDungeonManager.Data.HeroClasses[saveData.RosterHeroes[i].HeroClass];
             for (int j = 0; j < heroClass.CombatSkills.Count; j++)
-                newHeroPurchases.Add(saveData.saveHeroData[i].heroClass + "." + heroClass.CombatSkills[j].Id, new UpgradePurchases(
-                    saveData.saveHeroData[i].heroClass + "." + heroClass.CombatSkills[j].Id, new string[0]));
+                newHeroPurchases.Add(saveData.RosterHeroes[i].HeroClass + "." + heroClass.CombatSkills[j].Id, new UpgradePurchases(
+                    saveData.RosterHeroes[i].HeroClass + "." + heroClass.CombatSkills[j].Id, new string[0]));
             for (int j = 0; j < heroClass.CampingSkills.Count; j++)
                 newHeroPurchases.Add(heroClass.CampingSkills[j].Id, new UpgradePurchases(
                     heroClass.CampingSkills[j].Id, new string[0]));
         }
-        saveData.instancedPurchases[1]["crusader.smite"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["crusader.zealous_accusation"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["crusader.stunning_blow"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["crusader.bulwark_of_faith"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(0);
-        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(1);
-        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(2);
-        saveData.saveHeroData[0].selectedCombatSkillIndexes.Add(3);
-        saveData.instancedPurchases[1]["encourage"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["stand_tall"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[1]["zealous_speech"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(0);
-        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(4);
-        saveData.saveHeroData[0].selectedCampingSkillIndexes.Add(5);
+        saveData.InstancedPurchases[1]["crusader.smite"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["crusader.zealous_accusation"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["crusader.stunning_blow"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["crusader.bulwark_of_faith"].PurchasedUpgrades.Add("0");
+        saveData.RosterHeroes[0].SelectedCombatSkillIndexes.Add(0);
+        saveData.RosterHeroes[0].SelectedCombatSkillIndexes.Add(1);
+        saveData.RosterHeroes[0].SelectedCombatSkillIndexes.Add(2);
+        saveData.RosterHeroes[0].SelectedCombatSkillIndexes.Add(3);
+        saveData.InstancedPurchases[1]["encourage"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["stand_tall"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[1]["zealous_speech"].PurchasedUpgrades.Add("0");
+        saveData.RosterHeroes[0].SelectedCampingSkillIndexes.Add(0);
+        saveData.RosterHeroes[0].SelectedCampingSkillIndexes.Add(4);
+        saveData.RosterHeroes[0].SelectedCampingSkillIndexes.Add(5);
 
 
-        saveData.instancedPurchases[2]["highwayman.opened_vein"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["highwayman.pistol_shot"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["highwayman.grape_shot_blast"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["highwayman.take_aim"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(6);
-        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(1);
-        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(3);
-        saveData.saveHeroData[1].selectedCombatSkillIndexes.Add(4);
-        saveData.instancedPurchases[2]["first_aid"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["clean_guns"].PurchasedUpgrades.Add("0");
-        saveData.instancedPurchases[2]["bandits_sense"].PurchasedUpgrades.Add("0");
-        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(1);
-        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(5);
-        saveData.saveHeroData[1].selectedCampingSkillIndexes.Add(6);
+        saveData.InstancedPurchases[2]["highwayman.opened_vein"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["highwayman.pistol_shot"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["highwayman.grape_shot_blast"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["highwayman.take_aim"].PurchasedUpgrades.Add("0");
+        saveData.RosterHeroes[1].SelectedCombatSkillIndexes.Add(6);
+        saveData.RosterHeroes[1].SelectedCombatSkillIndexes.Add(1);
+        saveData.RosterHeroes[1].SelectedCombatSkillIndexes.Add(3);
+        saveData.RosterHeroes[1].SelectedCombatSkillIndexes.Add(4);
+        saveData.InstancedPurchases[2]["first_aid"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["clean_guns"].PurchasedUpgrades.Add("0");
+        saveData.InstancedPurchases[2]["bandits_sense"].PurchasedUpgrades.Add("0");
+        saveData.RosterHeroes[1].SelectedCampingSkillIndexes.Add(1);
+        saveData.RosterHeroes[1].SelectedCampingSkillIndexes.Add(5);
+        saveData.RosterHeroes[1].SelectedCampingSkillIndexes.Add(6);
         #endregion
 
         #region Activity Log
-        saveData.activityLog = new List<WeekActivityLog>();
-        saveData.completedPlot = new List<string>();
-        saveData.generatedQuests = new List<Quest>();
+        saveData.ActivityLog = new List<WeekActivityLog>();
+        saveData.CompletedPlot = new List<string>();
+        saveData.GeneratedQuests = new List<Quest>();
         #endregion
 
         #region Estate Misc
-        saveData.trinketData.Clear();
+        saveData.InventoryTrinkets.Clear();
 
-        saveData.wagonData.Clear();
+        saveData.WagonTrinkets.Clear();
 
-        saveData.saveDungeonData.Clear();
-        saveData.saveDungeonData.Add("crypts", new DungeonProgress("crypts", 0, 0, true, false));
-        saveData.saveDungeonData.Add("warrens", new DungeonProgress("warrens", 0, 0, true, false));
-        saveData.saveDungeonData.Add("weald", new DungeonProgress("weald", 0, 0, true, false));
-        saveData.saveDungeonData.Add("cove", new DungeonProgress("cove", 0, 0, true, false));
-        saveData.saveDungeonData.Add("darkestdungeon", new DungeonProgress("darkestdungeon", 1, 0, true, false));
-        saveData.saveDungeonData.Add("town", new DungeonProgress("town", 1, 0, true, true));
+        saveData.DungeonProgress.Clear();
+        saveData.DungeonProgress.Add("crypts", new DungeonProgress("crypts", 0, 0, true, false));
+        saveData.DungeonProgress.Add("warrens", new DungeonProgress("warrens", 0, 0, true, false));
+        saveData.DungeonProgress.Add("weald", new DungeonProgress("weald", 0, 0, true, false));
+        saveData.DungeonProgress.Add("cove", new DungeonProgress("cove", 0, 0, true, false));
+        saveData.DungeonProgress.Add("darkestdungeon", new DungeonProgress("darkestdungeon", 1, 0, true, false));
+        saveData.DungeonProgress.Add("town", new DungeonProgress("town", 1, 0, true, true));
 
-        saveData.deathRecords = new List<DeathRecord>();
+        saveData.DeathRecords = new List<DeathRecord>();
 
-        saveData.buildingUpgrades = new Dictionary<string, UpgradePurchases>();
+        saveData.BuildingUpgrades.Clear();
 
-        saveData.buildingUpgrades.Add("abbey.meditation", new UpgradePurchases("abbey.meditation", new string[0]));
-        saveData.buildingUpgrades.Add("abbey.prayer", new UpgradePurchases("abbey.prayer", new string[0]));
-        saveData.buildingUpgrades.Add("abbey.flagellation", new UpgradePurchases("abbey.flagellation", new string[0]));
-        saveData.buildingUpgrades.Add("tavern.bar", new UpgradePurchases("tavern.bar", new string[0]));
-        saveData.buildingUpgrades.Add("tavern.gambling", new UpgradePurchases("tavern.gambling", new string[0]));
-        saveData.buildingUpgrades.Add("tavern.brothel", new UpgradePurchases("tavern.brothel", new string[0]));
-        saveData.buildingUpgrades.Add("sanitarium.cost", new UpgradePurchases("sanitarium.cost", new string[0]));
-        saveData.buildingUpgrades.Add("sanitarium.disease_quirk_cost", new UpgradePurchases("sanitarium.disease_quirk_cost", new string[0]));
-        saveData.buildingUpgrades.Add("sanitarium.slots", new UpgradePurchases("sanitarium.slots", new string[0]));
-        saveData.buildingUpgrades.Add("blacksmith.weapon", new UpgradePurchases("blacksmith.weapon", new string[0]));
-        saveData.buildingUpgrades.Add("blacksmith.armour", new UpgradePurchases("blacksmith.armour", new string[0]));
-        saveData.buildingUpgrades.Add("blacksmith.cost", new UpgradePurchases("blacksmith.cost", new string[0]));
-        saveData.buildingUpgrades.Add("guild.skill_levels", new UpgradePurchases("guild.skill_levels", new string[0]));
-        saveData.buildingUpgrades.Add("guild.cost", new UpgradePurchases("guild.cost", new string[0]));
-        saveData.buildingUpgrades.Add("camping_trainer.cost", new UpgradePurchases("camping_trainer.cost", new string[0]));
-        saveData.buildingUpgrades.Add("nomad_wagon.numitems", new UpgradePurchases("nomad_wagon.numitems", new string[0]));
-        saveData.buildingUpgrades.Add("nomad_wagon.cost", new UpgradePurchases("nomad_wagon.cost", new string[0]));
-        saveData.buildingUpgrades.Add("stage_coach.numrecruits", new UpgradePurchases("stage_coach.numrecruits", new string[0]));
-        saveData.buildingUpgrades.Add("stage_coach.rostersize", new UpgradePurchases("stage_coach.rostersize", new string[0]));
-        saveData.buildingUpgrades.Add("stage_coach.upgraded_recruits", new UpgradePurchases("stage_coach.upgraded_recruits", new string[0]));
+        saveData.BuildingUpgrades.Add("abbey.meditation", new UpgradePurchases("abbey.meditation", new string[0]));
+        saveData.BuildingUpgrades.Add("abbey.prayer", new UpgradePurchases("abbey.prayer", new string[0]));
+        saveData.BuildingUpgrades.Add("abbey.flagellation", new UpgradePurchases("abbey.flagellation", new string[0]));
+        saveData.BuildingUpgrades.Add("tavern.bar", new UpgradePurchases("tavern.bar", new string[0]));
+        saveData.BuildingUpgrades.Add("tavern.gambling", new UpgradePurchases("tavern.gambling", new string[0]));
+        saveData.BuildingUpgrades.Add("tavern.brothel", new UpgradePurchases("tavern.brothel", new string[0]));
+        saveData.BuildingUpgrades.Add("sanitarium.cost", new UpgradePurchases("sanitarium.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("sanitarium.disease_quirk_cost", new UpgradePurchases("sanitarium.disease_quirk_cost", new string[0]));
+        saveData.BuildingUpgrades.Add("sanitarium.slots", new UpgradePurchases("sanitarium.slots", new string[0]));
+        saveData.BuildingUpgrades.Add("blacksmith.weapon", new UpgradePurchases("blacksmith.weapon", new string[0]));
+        saveData.BuildingUpgrades.Add("blacksmith.armour", new UpgradePurchases("blacksmith.armour", new string[0]));
+        saveData.BuildingUpgrades.Add("blacksmith.cost", new UpgradePurchases("blacksmith.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("guild.skill_levels", new UpgradePurchases("guild.skill_levels", new string[0]));
+        saveData.BuildingUpgrades.Add("guild.cost", new UpgradePurchases("guild.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("camping_trainer.cost", new UpgradePurchases("camping_trainer.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("nomad_wagon.numitems", new UpgradePurchases("nomad_wagon.numitems", new string[0]));
+        saveData.BuildingUpgrades.Add("nomad_wagon.cost", new UpgradePurchases("nomad_wagon.cost", new string[0]));
+        saveData.BuildingUpgrades.Add("stage_coach.numrecruits", new UpgradePurchases("stage_coach.numrecruits", new string[0]));
+        saveData.BuildingUpgrades.Add("stage_coach.rostersize", new UpgradePurchases("stage_coach.rostersize", new string[0]));
+        saveData.BuildingUpgrades.Add("stage_coach.upgraded_recruits", new UpgradePurchases("stage_coach.upgraded_recruits", new string[0]));
         #endregion
 
         #region ActivitySlots
-        saveData.abbeyActivitySlots = new List<List<SaveActivitySlot>>()
+        saveData.AbbeyActivitySlots = new List<List<SaveActivitySlot>>()
         {
             new List<SaveActivitySlot>()
             {
@@ -9811,7 +9036,7 @@ public static class SaveLoadManager
                  new SaveActivitySlot(),
             },
         };
-        saveData.tavernActivitySlots = new List<List<SaveActivitySlot>>()
+        saveData.TavernActivitySlots = new List<List<SaveActivitySlot>>()
         {
             new List<SaveActivitySlot>()
             {
@@ -9832,7 +9057,7 @@ public static class SaveLoadManager
                  new SaveActivitySlot(),
             },
         };
-        saveData.sanitariumActivitySlots = new List<List<SaveActivitySlot>>()
+        saveData.SanitariumActivitySlots = new List<List<SaveActivitySlot>>()
         {
             new List<SaveActivitySlot>()
             {
@@ -10346,5 +9571,29 @@ public static class SaveLoadManager
 
         WriteSave(saveData);
         return saveData;
+    }
+
+
+    private static void RecreateMapDirectory()
+    {
+        if (!Directory.Exists(Application.persistentDataPath + Path.AltDirectorySeparatorChar + "Maps"))
+            Directory.CreateDirectory(Application.persistentDataPath + Path.AltDirectorySeparatorChar + "Maps");
+    }
+
+    private static void RecreateSaveDirectory()
+    {
+        if (!Directory.Exists(Application.persistentDataPath + Path.AltDirectorySeparatorChar + "Saves"))
+            Directory.CreateDirectory(Application.persistentDataPath + Path.AltDirectorySeparatorChar + "Saves");
+    }
+
+    private static string GenerateSaveFileName(int slotId)
+    {
+        return Application.persistentDataPath + Path.AltDirectorySeparatorChar + "Saves" +
+               Path.AltDirectorySeparatorChar + "DarkestSave" + slotId + ".darkestsave";
+    }
+
+    private static string GenerateMapFileName(string mapName)
+    {
+        return Application.persistentDataPath + "\\Maps\\" + mapName + ".darkestmap";
     }
 }

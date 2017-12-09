@@ -59,9 +59,9 @@ public class SaveSlot : MonoBehaviour
         Color color;
         ColorUtility.TryParseHtmlString("#FFDB77FF", out color);
         title.color = color;
-        title.text = saveData.hamletTitle;
-        location.text = String.Format("In: {0}", saveData.locationName);
-        currentWeek.text = String.Format("Week {0}", saveData.currentWeek);
+        title.text = saveData.HamletTitle;
+        location.text = String.Format("In: {0}", saveData.LocationName);
+        currentWeek.text = String.Format("Week {0}", saveData.CurrentWeek);
         saveEnvelopeAnimator.SetBool("Opened", true);
         nukeFrame.gameObject.SetActive(true);
     }
@@ -120,8 +120,8 @@ public class SaveSlot : MonoBehaviour
             return;
         }
         saveData = new SaveCampaignData();
-        saveData.hamletTitle = titleInput.text;
-        saveData.saveId = slotId;
+        saveData.HamletTitle = titleInput.text;
+        saveData.SaveId = slotId;
         SaveLoadManager.WriteStartingSave(saveData);
         saveData = SaveLoadManager.ReadSave(slotId);
         FillPopulatedSave();

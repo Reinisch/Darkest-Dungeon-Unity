@@ -500,13 +500,13 @@ public class Character
     }
     public Character(SaveHeroData saveHeroData)
     {
-        buffInfo = saveHeroData.buffs;
+        buffInfo = saveHeroData.Buffs;
         pairedAttributes = new Dictionary<AttributeType, PairedAttribute>();
         singleAttributes = new Dictionary<AttributeType, SingleAttribute>();
         statusEffects = new Dictionary<StatusType, StatusEffect>();
         InitializeBasicStatuses(statusEffects);
 
-        HeroClass heroClass = DarkestDungeonManager.Data.HeroClasses[saveHeroData.heroClass];
+        HeroClass heroClass = DarkestDungeonManager.Data.HeroClasses[saveHeroData.HeroClass];
 
         AddPairedAttribute(AttributeType.HitPoints, new PairedAttribute(AttributeCategory.CombatStat));
 
@@ -526,7 +526,7 @@ public class Character
             else
                 AddSingleAttribute(HeroResistances[i],
                     new SingleAttribute(heroClass.Resistanses[HeroResistances[i]]
-                    + saveHeroData.resolveLevel * 0.1f, AttributeCategory.Resistance));
+                    + saveHeroData.ResolveLevel * 0.1f, AttributeCategory.Resistance));
     }
     public Character(MonsterData monsterData)
     {

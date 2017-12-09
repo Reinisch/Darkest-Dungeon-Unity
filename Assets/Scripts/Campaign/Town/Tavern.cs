@@ -125,10 +125,10 @@ public class Tavern : Building
             {
                 if (i + 1 <= Activities[activityIndex].NumberOfSlots)
                 {
-                    if (saveData.tavernActivitySlots.Count > activityIndex && saveData.tavernActivitySlots[activityIndex].Count > i)
+                    if (saveData.TavernActivitySlots.Count > activityIndex && saveData.TavernActivitySlots[activityIndex].Count > i)
                     {
                         var activityHero = DarkestDungeonManager.Campaign.Heroes.Find(hero =>
-                            hero.RosterId == saveData.tavernActivitySlots[activityIndex][i].HeroRosterId);
+                            hero.RosterId == saveData.TavernActivitySlots[activityIndex][i].HeroRosterId);
 
                         Activities[activityIndex].ActivitySlots[i].Hero = activityHero;
                         Activities[activityIndex].ActivitySlots[i].UpdateSlot(isActivityLocked ? false : true,
@@ -142,7 +142,7 @@ public class Tavern : Building
                     Activities[activityIndex].ActivitySlots[i].UpdateSlot(false,
                         isActivityFree ? 0 : (int)(Activities[activityIndex].ActivityCost.Amount * costModifier));
 
-                Activities[activityIndex].ActivitySlots[i].Status = saveData.tavernActivitySlots[activityIndex][i].Status;
+                Activities[activityIndex].ActivitySlots[i].Status = saveData.TavernActivitySlots[activityIndex][i].Status;
 
                 if (Activities[activityIndex].ActivitySlots[i].Hero == null && Activities[activityIndex].ActivitySlots[i].Status == ActivitySlotStatus.Paid)
                 {

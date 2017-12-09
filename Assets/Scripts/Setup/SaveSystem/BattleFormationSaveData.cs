@@ -60,6 +60,7 @@ public class FormationUnitSaveData
 
     public FormationUnitInfo CombatInfo { get; set; }
 
+
     public FormationUnitSaveData()
     {
         Buffs = new List<BuffInfo>();
@@ -67,6 +68,7 @@ public class FormationUnitSaveData
         CurrentMode = "";
         OriginalClass = "";
     }
+
 
     public void UpdateFromUnit(FormationUnit unit)
     {
@@ -79,6 +81,7 @@ public class FormationUnitSaveData
 
         unit.Character.UpdateSaveData(this);
     }
+
 
     public void WriteFormationUnitData(BinaryWriter bw)
     {
@@ -105,32 +108,12 @@ public class FormationUnitSaveData
             bw.Write(Class);
             bw.Write(Name);
             bw.Write(CurrentHp);
-
-            bw.Write(Buffs.Count);
-            for (int i = 0; i < Buffs.Count; i++)
-            {
-                bw.Write((int)Buffs[i].SourceType);
-
-                if (Buffs[i].SourceType == BuffSourceType.Adventure)
-                {
-                    bw.Write((int)Buffs[i].DurationType);
-                    bw.Write(Buffs[i].OverridenValue);
-                    bw.Write(Buffs[i].Duration);
-
-                    bw.Write(Buffs[i].Buff.Id);
-                    if (Buffs[i].Buff.Id == "")
-                    {
-                        bw.Write(Buffs[i].Buff.ModifierValue);
-                        bw.Write((int)Buffs[i].Buff.Type);
-                        bw.Write((int)Buffs[i].Buff.AttributeType);
-                        bw.Write((int)Buffs[i].Buff.RuleType);
-                    }
-                }
-            }
+            Buffs.Write(bw);
         }
 
         CombatInfo.WriteCombatInfoData(bw);
     }
+
     public void ReadFormationUnitData(BinaryReader br)
     {
         IsHero = br.ReadBoolean();
@@ -157,38 +140,7 @@ public class FormationUnitSaveData
             Class = br.ReadString();
             Name = br.ReadString();
             CurrentHp = br.ReadSingle();
-
-            int buffEntryCount = br.ReadInt32();
-            Buffs.Clear();
-            for (int i = 0; i < buffEntryCount; i++)
-            {
-                BuffSourceType buffSourceType = (BuffSourceType)br.ReadInt32();
-
-                if (buffSourceType == BuffSourceType.Adventure)
-                {
-                    BuffInfo newBuffInfo = new BuffInfo((BuffDurationType)br.ReadInt32(), buffSourceType);
-
-                    newBuffInfo.OverridenValue = br.ReadSingle();
-                    newBuffInfo.Duration = br.ReadInt32();
-
-                    string buffId = br.ReadString();
-                    if (buffId == "")
-                    {
-                        newBuffInfo.Buff = new Buff()
-                        {
-                            Id = "",
-                            ModifierValue = br.ReadSingle(),
-                            Type = (BuffType)br.ReadInt32(),
-                            AttributeType = (AttributeType)br.ReadInt32(),
-                            RuleType = (BuffRule)br.ReadInt32(),
-                        };
-                    }
-                    else
-                        newBuffInfo.Buff = DarkestDungeonManager.Data.Buffs[buffId];
-
-                    Buffs.Add(newBuffInfo);
-                }
-            }
+            Buffs.Read(br);
         }
 
         CombatInfo = new FormationUnitInfo();

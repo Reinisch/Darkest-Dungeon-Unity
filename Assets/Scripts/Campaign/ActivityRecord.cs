@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -25,13 +26,29 @@ public enum LogType
     Activity, Raid
 }
 
-public abstract class ActivityRecord
+public abstract class ActivityRecord : IBinarySaveData<ActivityRecord>
 {
     public LogType LogType { get; private set; }
+    public bool IsMeetingSaveCriteria { get { return true; } }
 
-    public ActivityRecord(LogType logType)
+
+    public ActivityRecord()
+    {
+    }
+
+    public ActivityRecord(LogType logType) : this()
     {
         LogType = logType;
+    }
+
+
+    public virtual void Write(BinaryWriter bw)
+    {
+    }
+
+    public virtual ActivityRecord Read(BinaryReader br)
+    {
+        return this;
     }
 }
 
@@ -1130,5 +1147,40 @@ public class PartyActivityRecord : ActivityRecord
         Names = embarkRecord.Names.ToList();
         Classes = embarkRecord.Classes.ToList();
         Alive = new List<bool>(aliveStatus);
+    }
+
+
+    public override void Write(BinaryWriter bw)
+    {
+        base.Write(bw);
+
+        bw.Write(IsSuccessfull);
+        bw.Write(QuestType);
+        bw.Write(QuestDifficulty);
+        bw.Write(QuestLength);
+        bw.Write(Dungeon);
+        bw.Write((int)PartyActionType);
+
+        Names.Write(bw);
+        Classes.Write(bw);
+        Alive.Write(bw);
+    }
+
+    public override ActivityRecord Read(BinaryReader br)
+    {
+        base.Read(br);
+
+        IsSuccessfull = br.ReadBoolean();
+        QuestType = br.ReadString();
+        QuestDifficulty = br.ReadString();
+        QuestLength = br.ReadString();
+        Dungeon = br.ReadString();
+        PartyActionType = (PartyActionType)br.ReadInt32();
+
+        Names.Read(br);
+        Classes.Read(br);
+        Alive.Read(br);
+
+        return this;
     }
 }

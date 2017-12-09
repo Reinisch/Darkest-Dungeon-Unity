@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-public class PlotQuest : Quest
+public sealed class PlotQuest : Quest
 {
     public override string Id { get; set; }
     public int DungeonLevel { get; set; }
@@ -11,6 +11,12 @@ public class PlotQuest : Quest
 
     public PlotQuest():base(true)
     {
+    }
+
+    public PlotQuest(string id, PlotTrinketReward trinketReward) : this()
+    {
+        Id = id;
+        PlotTrinket = trinketReward;
     }
 
     public PlotQuest Copy()
@@ -51,6 +57,6 @@ public class PlotQuest : Quest
 
 public class PlotTrinketReward
 {
-    public string Rarity { get; set; }
-    public int Amount { get; set;}
+    public string Rarity;
+    public int Amount;
 }

@@ -1,9 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 
-public class UpgradePurchases
+public class UpgradePurchases : IBinarySaveData<UpgradePurchases>
 {
     public string TreeId { get; set; }
-    public List<string> PurchasedUpgrades { get; set; }
+    public List<string> PurchasedUpgrades { get; private set; }
+
+    public bool IsMeetingSaveCriteria { get { return true; } }
+
 
     public UpgradePurchases()
     {
@@ -19,13 +23,27 @@ public class UpgradePurchases
     public UpgradePurchases(string treeId, string code)
     {
         TreeId = treeId;
-        PurchasedUpgrades = new List<string>();
-        PurchasedUpgrades.Add(code);
+        PurchasedUpgrades = new List<string> {code};
     }
 
     public UpgradePurchases(string treeId)
     {
         TreeId = treeId;
         PurchasedUpgrades = new List<string>();
+    }
+
+
+    public void Write(BinaryWriter bw)
+    {
+        bw.Write(TreeId);
+        PurchasedUpgrades.Write(bw);
+    }
+
+    public UpgradePurchases Read(BinaryReader br)
+    {
+        TreeId = br.ReadString();
+        PurchasedUpgrades.Read(br);
+
+        return this;
     }
 }

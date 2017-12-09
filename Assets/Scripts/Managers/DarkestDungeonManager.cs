@@ -154,7 +154,6 @@ public class DarkestDungeonManager : MonoBehaviour
     {
         if (Instanse == null)
         {
-            SaveLoadManager.CheckSaveDirectory();
             RandomBarkChance = 0.2f;
 
             Instanse = this;

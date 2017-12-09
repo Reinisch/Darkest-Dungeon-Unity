@@ -125,10 +125,10 @@ public class Abbey : Building
             {
                 if (i + 1 <= Activities[activityIndex].NumberOfSlots)
                 {
-                    if(saveData.abbeyActivitySlots.Count > activityIndex && saveData.abbeyActivitySlots[activityIndex].Count > i)
+                    if(saveData.AbbeyActivitySlots.Count > activityIndex && saveData.AbbeyActivitySlots[activityIndex].Count > i)
                     {
                         var activityHero = DarkestDungeonManager.Campaign.Heroes.Find(hero => 
-                            hero.RosterId == saveData.abbeyActivitySlots[activityIndex][i].HeroRosterId);
+                            hero.RosterId == saveData.AbbeyActivitySlots[activityIndex][i].HeroRosterId);
 
                         Activities[activityIndex].ActivitySlots[i].Hero = activityHero;
                         Activities[activityIndex].ActivitySlots[i].UpdateSlot(isActivityLocked ? false : true,
@@ -142,7 +142,7 @@ public class Abbey : Building
                     Activities[activityIndex].ActivitySlots[i].UpdateSlot(false,
                         isActivityFree ? 0 : (int)(Activities[activityIndex].ActivityCost.Amount * costModifier));
 
-                Activities[activityIndex].ActivitySlots[i].Status = saveData.abbeyActivitySlots[activityIndex][i].Status;
+                Activities[activityIndex].ActivitySlots[i].Status = saveData.AbbeyActivitySlots[activityIndex][i].Status;
 
                 if (Activities[activityIndex].ActivitySlots[i].Hero == null && Activities[activityIndex].ActivitySlots[i].Status == ActivitySlotStatus.Paid)
                 {

@@ -21,7 +21,7 @@ public class RealmInventory
     public RealmInventory(SaveCampaignData saveData)
     {
         Trinkets = new List<Trinket>();
-        for(int i = 0; i < saveData.trinketData.Count; i++)
-            Trinkets.Add((Trinket)DarkestDungeonManager.Data.Items["trinket"][saveData.trinketData[i]]);
+        for(int i = 0; i < saveData.InventoryTrinkets.Count; i++)
+            Trinkets.Add((Trinket)DarkestDungeonManager.Data.Items["trinket"][saveData.InventoryTrinkets[i]]);
     }
 }

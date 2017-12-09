@@ -1,55 +1,52 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 public class SaveCampaignData
 {
-    public int saveId;
+    public int SaveId;
 
     #region Estate
-    public bool isFirstStart;
-    public string gameVersion;
-    public string hamletTitle;
-    public string locationName;
-    public int questsCompleted;
-    public int currentWeek;
+    public bool IsFirstStart;
+    public string HamletTitle;
+    public string LocationName;
+    public int QuestsCompleted;
+    public int CurrentWeek;
 
-    public int goldAmount;
-    public int bustsAmount;
-    public int deedsAmount;
-    public int portraitsAmount;
-    public int crestsAmount;
+    public int GoldAmount;
+    public int BustsAmount;
+    public int DeedsAmount;
+    public int PortraitsAmount;
+    public int CrestsAmount;
 
-    public List<string> trinketData;
-    public List<string> wagonData;
-    public List<WeekActivityLog> activityLog;
-    public List<Quest> generatedQuests;
-    public List<string> completedPlot;
+    public List<string> InventoryTrinkets;
+    public List<string> WagonTrinkets;
+    public List<WeekActivityLog> ActivityLog;
+    public List<Quest> GeneratedQuests;
+    public List<string> CompletedPlot;
 
-    public SaveHeroData[] saveHeroData;
-    public SaveHeroData[] stageCoachData;
-    public SaveHeroData[] stageEventData;
-    public List<int> deathEventData;
+    public List<SaveHeroData> RosterHeroes;
+    public List<SaveHeroData> StageCoachHeroes;
+    public List<SaveHeroData> StageEventHeroes;
+    public List<int> DeathEventData;
 
-    public Dictionary<string, DungeonProgress> saveDungeonData;
-    public List<DeathRecord> deathRecords;
+    public Dictionary<string, DungeonProgress> DungeonProgress;
+    public List<DeathRecord> DeathRecords;
 
-    public Dictionary<string, UpgradePurchases> buildingUpgrades;
-    public Dictionary<int, Dictionary<string, UpgradePurchases>> instancedPurchases;
+    public Dictionary<string, UpgradePurchases> BuildingUpgrades { get; private set; }
+    public Dictionary<int, Dictionary<string, UpgradePurchases>> InstancedPurchases { get; private set; }
 
-    public List<List<SaveActivitySlot>> tavernActivitySlots;
-    public List<List<SaveActivitySlot>> abbeyActivitySlots;
-    public List<List<SaveActivitySlot>> sanitariumActivitySlots;
+    public List<List<SaveActivitySlot>> TavernActivitySlots;
+    public List<List<SaveActivitySlot>> AbbeyActivitySlots;
+    public List<List<SaveActivitySlot>> SanitariumActivitySlots;
 
-    public string currentEvent;
-    public string guaranteedEvent;
+    public string CurrentEvent;
+    public string GuaranteedEvent;
 
-    public List<SaveEventData> eventData;
-    public EventModifiers eventModifers;
+    public List<SaveEventData> EventData;
+    public EventModifiers EventModifers;
 
-    public Dictionary<string, int> townNarrations;
-    public Dictionary<string, int> raidNarrations;
-    public Dictionary<string, int> campaignNarrations;
+    public Dictionary<string, int> TownNarrations;
+    public Dictionary<string, int> RaidNarrations;
+    public Dictionary<string, int> CampaignNarrations;
     #endregion
     
     #region Raid
@@ -84,226 +81,189 @@ public class SaveCampaignData
     #endregion
 
     #region Battle
-    public bool inBattle;
-    public BattleGroundSaveData battleGroundSaveData = new BattleGroundSaveData();
+    public bool InBattle;
+    public BattleGroundSaveData BattleGroundSaveData = new BattleGroundSaveData();
     #endregion
+
 
     public SaveCampaignData()
     {
-        saveId = 1;
-        trinketData = new List<string>();
-        wagonData = new List<string>();
+        InventoryTrinkets = new List<string>();
+        WagonTrinkets = new List<string>();
         KilledMonsters = new List<string>();
         InvestigatedCurios = new List<string>();
-        deathRecords = new List<DeathRecord>();
-        activityLog = new List<WeekActivityLog>();
-        generatedQuests = new List<Quest>();
-        completedPlot = new List<string>();
+        DeathRecords = new List<DeathRecord>();
+        ActivityLog = new List<WeekActivityLog>();
+        GeneratedQuests = new List<Quest>();
+        CompletedPlot = new List<string>();
         InventoryItems = new List<InventorySlotData>();
-        saveDungeonData = new Dictionary<string, DungeonProgress>();
-        eventData = new List<SaveEventData>();
-        eventModifers = new EventModifiers();
-        deathEventData = new List<int>();
-        stageEventData = new SaveHeroData[0];
+        DungeonProgress = new Dictionary<string, DungeonProgress>();
+        EventData = new List<SaveEventData>();
+        EventModifers = new EventModifiers();
+        RosterHeroes = new List<SaveHeroData>();
+        StageCoachHeroes = new List<SaveHeroData>();
+        StageEventHeroes = new List<SaveHeroData>();
+        DeathEventData = new List<int>();
 
-        tavernActivitySlots = new List<List<SaveActivitySlot>>();
-        abbeyActivitySlots = new List<List<SaveActivitySlot>>();
-        sanitariumActivitySlots = new List<List<SaveActivitySlot>>();
+        TavernActivitySlots = new List<List<SaveActivitySlot>>();
+        AbbeyActivitySlots = new List<List<SaveActivitySlot>>();
+        SanitariumActivitySlots = new List<List<SaveActivitySlot>>();
 
-        townNarrations = new Dictionary<string, int>();
-        raidNarrations = new Dictionary<string, int>();
-        campaignNarrations = new Dictionary<string, int>();
+        BuildingUpgrades = new Dictionary<string, UpgradePurchases>();
+        InstancedPurchases = new Dictionary<int, Dictionary<string, UpgradePurchases>>();
+
+        TownNarrations = new Dictionary<string, int>();
+        RaidNarrations = new Dictionary<string, int>();
+        CampaignNarrations = new Dictionary<string, int>();
 
         HeroFormationData = new BattleFormationSaveData();
     }
-    public SaveCampaignData(int newSaveId)
+
+    public SaveCampaignData(int newSaveId) : this()
     {
-        saveId = newSaveId;
-        trinketData = new List<string>();
-        wagonData = new List<string>();
-        KilledMonsters = new List<string>();
-        InvestigatedCurios = new List<string>();
-        deathRecords = new List<DeathRecord>();
-        activityLog = new List<WeekActivityLog>();
-        generatedQuests = new List<Quest>();
-        completedPlot = new List<string>();
-        InventoryItems = new List<InventorySlotData>();
-        saveDungeonData = new Dictionary<string, DungeonProgress>();
-        eventData = new List<SaveEventData>();
-        eventModifers = new EventModifiers();
-        deathEventData = new List<int>();
-        stageEventData = new SaveHeroData[0];
-
-        tavernActivitySlots = new List<List<SaveActivitySlot>>();
-        abbeyActivitySlots = new List<List<SaveActivitySlot>>();
-        sanitariumActivitySlots = new List<List<SaveActivitySlot>>();
-
-        HeroFormationData = new BattleFormationSaveData();
-
-        townNarrations = new Dictionary<string, int>();
-        raidNarrations = new Dictionary<string, int>();
-        campaignNarrations = new Dictionary<string, int>();
+        SaveId = newSaveId;
     }
-    public SaveCampaignData(int newSaveId, string newEstateName)
+
+    public SaveCampaignData(int newSaveId, string newEstateName) : this()
     {
-        saveId = newSaveId;
-        hamletTitle = newEstateName;
-        trinketData = new List<string>();
-        wagonData = new List<string>();
-        KilledMonsters = new List<string>();
-        InvestigatedCurios = new List<string>();
-        deathRecords = new List<DeathRecord>();
-        activityLog = new List<WeekActivityLog>();
-        generatedQuests = new List<Quest>();
-        completedPlot = new List<string>();
-        InventoryItems = new List<InventorySlotData>();
-        saveDungeonData = new Dictionary<string, DungeonProgress>();
-        eventData = new List<SaveEventData>();
-        eventModifers = new EventModifiers();
-        deathEventData = new List<int>();
-        stageEventData = new SaveHeroData[0];
-
-        tavernActivitySlots = new List<List<SaveActivitySlot>>();
-        abbeyActivitySlots = new List<List<SaveActivitySlot>>();
-        sanitariumActivitySlots = new List<List<SaveActivitySlot>>();
-
-        HeroFormationData = new BattleFormationSaveData();
-
-        townNarrations = new Dictionary<string, int>();
-        raidNarrations = new Dictionary<string, int>();
-        campaignNarrations = new Dictionary<string, int>();
+        SaveId = newSaveId;
+        HamletTitle = newEstateName;
     }
+
 
     public void UpdateFromEstate()
     {
         var campaign = DarkestDungeonManager.Campaign;
 
-        isFirstStart = false;
-        gameVersion = Application.version;
-        locationName = "Hamlet";
-        questsCompleted = campaign.QuestsComleted;
-        currentWeek = campaign.CurrentWeek;
+        IsFirstStart = false;
+        LocationName = "Hamlet";
+        QuestsCompleted = campaign.QuestsComleted;
+        CurrentWeek = campaign.CurrentWeek;
 
-        goldAmount = campaign.Estate.Currencies["gold"].amount;
-        bustsAmount = campaign.Estate.Currencies["bust"].amount;
-        deedsAmount = campaign.Estate.Currencies["deed"].amount;
-        portraitsAmount = campaign.Estate.Currencies["portrait"].amount;
-        crestsAmount = campaign.Estate.Currencies["crest"].amount;
+        GoldAmount = campaign.Estate.Currencies["gold"].amount;
+        BustsAmount = campaign.Estate.Currencies["bust"].amount;
+        DeedsAmount = campaign.Estate.Currencies["deed"].amount;
+        PortraitsAmount = campaign.Estate.Currencies["portrait"].amount;
+        CrestsAmount = campaign.Estate.Currencies["crest"].amount;
 
         #region Estate Misc
         #region Trinkets
-        trinketData.Clear();
+        InventoryTrinkets.Clear();
         for (int i = 0; i < campaign.RealmInventory.Trinkets.Count; i++)
-            trinketData.Add(campaign.RealmInventory.Trinkets[i].Id);
+            InventoryTrinkets.Add(campaign.RealmInventory.Trinkets[i].Id);
         #endregion
         #region Wagon Trinkets
-        wagonData.Clear();
+        WagonTrinkets.Clear();
         for (int i = 0; i < campaign.Estate.NomadWagon.Trinkets.Count; i++)
-            wagonData.Add(campaign.Estate.NomadWagon.Trinkets[i].Id);
+            WagonTrinkets.Add(campaign.Estate.NomadWagon.Trinkets[i].Id);
         #endregion
 
-        activityLog = campaign.Logs;
-        completedPlot = campaign.CompletedPlot;
-        generatedQuests = campaign.Quests;
+        ActivityLog = campaign.Logs;
+        CompletedPlot = campaign.CompletedPlot;
+        GeneratedQuests = campaign.Quests;
 
         #region Initial Heroes
-        saveHeroData = new SaveHeroData[campaign.Heroes.Count];
+        RosterHeroes = new List<SaveHeroData>();
         for (int i = 0; i < campaign.Heroes.Count; i++)
         {
-            saveHeroData[i] = new SaveHeroData();
-            campaign.Heroes[i].UpdateSaveData(saveHeroData[i]);
+            var newHeroData = new SaveHeroData();
+            campaign.Heroes[i].UpdateSaveData(newHeroData);
+            RosterHeroes.Add(newHeroData);
         };
         #endregion
         #region StageCoach Heroes
-        stageCoachData = new SaveHeroData[campaign.Estate.StageCoach.Heroes.Count];
+        StageCoachHeroes = new List<SaveHeroData>();
         for (int i = 0; i < campaign.Estate.StageCoach.Heroes.Count; i++)
         {
-            stageCoachData[i] = new SaveHeroData();
-            campaign.Estate.StageCoach.Heroes[i].UpdateSaveData(stageCoachData[i]);
+            var newHeroData = new SaveHeroData();
+            campaign.Estate.StageCoach.Heroes[i].UpdateSaveData(newHeroData);
+            StageCoachHeroes.Add(newHeroData);
         }
-        stageEventData = new SaveHeroData[campaign.Estate.StageCoach.EventHeroes.Count];
+        StageEventHeroes = new List<SaveHeroData>();
         for (int i = 0; i < campaign.Estate.StageCoach.EventHeroes.Count; i++)
         {
-            stageEventData[i] = new SaveHeroData();
-            campaign.Estate.StageCoach.EventHeroes[i].UpdateSaveData(stageEventData[i]);
+            var newHeroData = new SaveHeroData();
+            campaign.Estate.StageCoach.EventHeroes[i].UpdateSaveData(newHeroData);
+            StageEventHeroes.Add(newHeroData);
         }
-        deathEventData = campaign.Estate.StageCoach.GraveIndexes;
+        DeathEventData = campaign.Estate.StageCoach.GraveIndexes;
         #endregion
 
-        deathRecords = campaign.Estate.Graveyard.Records;
-        saveDungeonData = campaign.Dungeons;
+        DeathRecords = campaign.Estate.Graveyard.Records;
+        DungeonProgress = campaign.Dungeons;
 
-        buildingUpgrades = campaign.Estate.TownPurchases;
-        instancedPurchases = campaign.Estate.HeroPurchases;
+        BuildingUpgrades = campaign.Estate.TownPurchases;
+        InstancedPurchases = campaign.Estate.HeroPurchases;
 
-        abbeyActivitySlots.Clear();
+        AbbeyActivitySlots.Clear();
         for (int i = 0; i < campaign.Estate.Abbey.Activities.Count; i++)
         {
-            if (abbeyActivitySlots.Count < i + 1)
-                abbeyActivitySlots.Add(new List<SaveActivitySlot>());
+            if (AbbeyActivitySlots.Count < i + 1)
+                AbbeyActivitySlots.Add(new List<SaveActivitySlot>());
 
             for (int j = 0; j < campaign.Estate.Abbey.Activities[i].ActivitySlots.Count; j++)
             {
-                if (abbeyActivitySlots[i].Count < j + 1)
-                    abbeyActivitySlots[i].Add(new SaveActivitySlot());
+                if (AbbeyActivitySlots[i].Count < j + 1)
+                    AbbeyActivitySlots[i].Add(new SaveActivitySlot());
 
-                abbeyActivitySlots[i][j].UpdateFromActivity(campaign.Estate.Abbey.Activities[i].ActivitySlots[j]);
+                AbbeyActivitySlots[i][j].UpdateFromActivity(campaign.Estate.Abbey.Activities[i].ActivitySlots[j]);
             }
         }
 
-        tavernActivitySlots.Clear();
+        TavernActivitySlots.Clear();
         for (int i = 0; i < campaign.Estate.Tavern.Activities.Count; i++)
         {
-            if (tavernActivitySlots.Count < i + 1)
-                tavernActivitySlots.Add(new List<SaveActivitySlot>());
+            if (TavernActivitySlots.Count < i + 1)
+                TavernActivitySlots.Add(new List<SaveActivitySlot>());
 
             for (int j = 0; j < campaign.Estate.Tavern.Activities[i].ActivitySlots.Count; j++)
             {
-                if (tavernActivitySlots[i].Count < j + 1)
-                    tavernActivitySlots[i].Add(new SaveActivitySlot());
+                if (TavernActivitySlots[i].Count < j + 1)
+                    TavernActivitySlots[i].Add(new SaveActivitySlot());
 
-                tavernActivitySlots[i][j].UpdateFromActivity(campaign.Estate.Tavern.Activities[i].ActivitySlots[j]);
+                TavernActivitySlots[i][j].UpdateFromActivity(campaign.Estate.Tavern.Activities[i].ActivitySlots[j]);
             }
         }
 
-        sanitariumActivitySlots.Clear();
-        if (sanitariumActivitySlots.Count < 1)
-            sanitariumActivitySlots.Add(new List<SaveActivitySlot>());
+        SanitariumActivitySlots.Clear();
+        if (SanitariumActivitySlots.Count < 1)
+            SanitariumActivitySlots.Add(new List<SaveActivitySlot>());
 
         for (int i = 0; i < campaign.Estate.Sanitarium.QuirkActivity.TreatmentSlots.Count; i++)
         {
-            if (sanitariumActivitySlots[0].Count < i + 1)
-                sanitariumActivitySlots[0].Add(new SaveActivitySlot());
+            if (SanitariumActivitySlots[0].Count < i + 1)
+                SanitariumActivitySlots[0].Add(new SaveActivitySlot());
 
-            sanitariumActivitySlots[0][i].UpdateFromTreatment(campaign.Estate.Sanitarium.QuirkActivity.TreatmentSlots[i]);
+            SanitariumActivitySlots[0][i].UpdateFromTreatment(campaign.Estate.Sanitarium.QuirkActivity.TreatmentSlots[i]);
         }
 
-        if (sanitariumActivitySlots.Count < 2)
-            sanitariumActivitySlots.Add(new List<SaveActivitySlot>());
+        if (SanitariumActivitySlots.Count < 2)
+            SanitariumActivitySlots.Add(new List<SaveActivitySlot>());
         for (int i = 0; i < campaign.Estate.Sanitarium.DiseaseActivity.TreatmentSlots.Count; i++)
         {
-            if (sanitariumActivitySlots[1].Count < i + 1)
-                sanitariumActivitySlots[1].Add(new SaveActivitySlot());
+            if (SanitariumActivitySlots[1].Count < i + 1)
+                SanitariumActivitySlots[1].Add(new SaveActivitySlot());
 
-            sanitariumActivitySlots[1][i].UpdateFromTreatment(campaign.Estate.Sanitarium.DiseaseActivity.TreatmentSlots[i]);
+            SanitariumActivitySlots[1][i].UpdateFromTreatment(campaign.Estate.Sanitarium.DiseaseActivity.TreatmentSlots[i]);
         }
 
-        currentEvent = campaign.TriggeredEvent == null ? "" : campaign.TriggeredEvent.Id;
-        guaranteedEvent = campaign.GuaranteedEvent == null ? "" : campaign.GuaranteedEvent.Id;
+        CurrentEvent = campaign.TriggeredEvent == null ? "" : campaign.TriggeredEvent.Id;
+        GuaranteedEvent = campaign.GuaranteedEvent == null ? "" : campaign.GuaranteedEvent.Id;
 
-        eventData.Clear();
+        EventData.Clear();
         for (int i = 0; i < DarkestDungeonManager.Data.EventDatabase.Events.Count; i++)
             if (!DarkestDungeonManager.Data.EventDatabase.Events[i].IsDefault)
-                eventData.Add(DarkestDungeonManager.Data.EventDatabase.Events[i].GetSaveData());
-        eventModifers = campaign.EventModifiers;
+                EventData.Add(DarkestDungeonManager.Data.EventDatabase.Events[i].GetSaveData());
+        EventModifers = campaign.EventModifiers;
 
-        townNarrations = campaign.NarrationCampaignInfo;
-        raidNarrations = campaign.NarrationRaidInfo;
-        campaignNarrations = campaign.NarrationCampaignInfo;
+        TownNarrations = campaign.NarrationCampaignInfo;
+        RaidNarrations = campaign.NarrationRaidInfo;
+        CampaignNarrations = campaign.NarrationCampaignInfo;
 
         InRaid = false;
         #endregion
     }
+
     public void UpdateFromRaid()
     {
         UpdateFromEstate();
@@ -346,10 +306,10 @@ public class SaveCampaignData
 
         if (RaidSceneManager.BattleGround.BattleStatus == BattleStatus.Fighting)
         {
-            inBattle = true;
-            battleGroundSaveData.UpdateFromBattleGround(RaidSceneManager.BattleGround);
+            InBattle = true;
+            BattleGroundSaveData.UpdateFromBattleGround(RaidSceneManager.BattleGround);
         }
         else
-            inBattle = false;
+            InBattle = false;
     }
 }

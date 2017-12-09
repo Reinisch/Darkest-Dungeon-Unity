@@ -31,17 +31,17 @@ public class Estate
         for (int i = 1; i < 100; i++)
             rosterIds.Add(i);
 
-        EstateTitle = saveData.hamletTitle;
+        EstateTitle = saveData.HamletTitle;
 
         Currencies = new Dictionary<string, EstateCurrency>();
-        Currencies.Add("gold", new EstateCurrency(saveData.goldAmount, false));
-        Currencies.Add("bust", new EstateCurrency(saveData.bustsAmount, true));
-        Currencies.Add("deed", new EstateCurrency(saveData.deedsAmount, true));
-        Currencies.Add("portrait", new EstateCurrency(saveData.portraitsAmount, true));
-        Currencies.Add("crest", new EstateCurrency(saveData.crestsAmount, true));
+        Currencies.Add("gold", new EstateCurrency(saveData.GoldAmount, false));
+        Currencies.Add("bust", new EstateCurrency(saveData.BustsAmount, true));
+        Currencies.Add("deed", new EstateCurrency(saveData.DeedsAmount, true));
+        Currencies.Add("portrait", new EstateCurrency(saveData.PortraitsAmount, true));
+        Currencies.Add("crest", new EstateCurrency(saveData.CrestsAmount, true));
 
-        HeroPurchases = saveData.instancedPurchases;
-        TownPurchases = saveData.buildingUpgrades;
+        HeroPurchases = saveData.InstancedPurchases;
+        TownPurchases = saveData.BuildingUpgrades;
 
         Abbey = DarkestDungeonManager.Data.Buildings["abbey"] as Abbey;
         Tavern = DarkestDungeonManager.Data.Buildings["tavern"] as Tavern;
@@ -61,7 +61,7 @@ public class Estate
         CampingTrainer.InitializeBuilding(TownPurchases);
         NomadWagon.InitializeBuilding(TownPurchases);
         StageCoach.InitializeBuilding(TownPurchases);
-        Graveyard.Records.AddRange(saveData.deathRecords);
+        Graveyard.Records.AddRange(saveData.DeathRecords);
 
     }
 

@@ -1,46 +1,88 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 
-public class SaveHeroData
+public class SaveHeroData : IBinarySaveData<SaveHeroData>
 {
-    public HeroStatus status;
-    public string inActivity;
-    public int missingDuration;
+    public HeroStatus Status = HeroStatus.Available;
+    public string InActivity;
+    public int MissingDuration;
 
-    public int rosterId;
-    public string name;
-    public string heroClass;
-    public string trait;
+    public int RosterId;
+    public string Name;
+    public string HeroClass;
+    public string Trait;
 
-    public int resolveLevel;
-    public int resolveXP;
+    public int ResolveLevel;
+    public int ResolveXP;
 
-    public float currentHp;
-    public float stressLevel;
+    public float CurrentHp = 1000;
+    public float StressLevel;
 
-    public int weaponLevel;
-    public int armorLevel;
+    public int WeaponLevel;
+    public int ArmorLevel;
 
-    public string leftTrinketId;
-    public string rightTrinketId;
+    public string LeftTrinketId;
+    public string RightTrinketId;
 
-    public List<QuirkInfo> quirks;
-    public List<BuffInfo> buffs;
+    public List<QuirkInfo> Quirks = new List<QuirkInfo>();
+    public List<BuffInfo> Buffs = new List<BuffInfo>();
+    public readonly List<int> SelectedCombatSkillIndexes = new List<int>();
+    public readonly List<int> SelectedCampingSkillIndexes = new List<int>();
 
-    public List<int> selectedCombatSkillIndexes;
-    public List<int> selectedCampingSkillIndexes;
+    public bool IsMeetingSaveCriteria { get { return true; } }
 
-    public SaveHeroData()
+
+    public void Write(BinaryWriter bw)
     {
-        status = HeroStatus.Available;
-        inActivity = "";
-        trait = "";
+        bw.Write((int)Status);
+        bw.Write(MissingDuration);
+        bw.Write(InActivity ?? "");
+        bw.Write(Trait ?? "");
+        bw.Write(RosterId);
+        bw.Write(Name ?? "");
+        bw.Write(HeroClass ?? "");
 
-        quirks = new List<QuirkInfo>();
-        buffs = new List<BuffInfo>();
+        bw.Write(ResolveLevel);
+        bw.Write(ResolveXP);
+        bw.Write(CurrentHp);
+        bw.Write(StressLevel);
 
-        selectedCombatSkillIndexes = new List<int>();
-        selectedCampingSkillIndexes = new List<int>();
+        bw.Write(WeaponLevel);
+        bw.Write(ArmorLevel);
+        bw.Write(LeftTrinketId ?? "");
+        bw.Write(RightTrinketId ?? "");
 
-        currentHp = 1000;
+        Quirks.Write(bw);
+        Buffs.Write(bw);
+        SelectedCombatSkillIndexes.Write(bw);
+        SelectedCampingSkillIndexes.Write(bw);
+    }
+
+    public SaveHeroData Read(BinaryReader br)
+    {
+        Status = (HeroStatus)br.ReadInt32();
+        MissingDuration = br.ReadInt32();
+        InActivity = br.ReadString();
+        Trait = br.ReadString();
+        RosterId = br.ReadInt32();
+        Name = br.ReadString();
+        HeroClass = br.ReadString();
+
+        ResolveLevel = br.ReadInt32();
+        ResolveXP = br.ReadInt32();
+        CurrentHp = br.ReadSingle();
+        StressLevel = br.ReadSingle();
+
+        WeaponLevel = br.ReadInt32();
+        ArmorLevel = br.ReadInt32();
+        LeftTrinketId = br.ReadString();
+        RightTrinketId = br.ReadString();
+
+        Quirks.Read(br);
+        Buffs.Read(br);
+        SelectedCombatSkillIndexes.Read(br);
+        SelectedCampingSkillIndexes.Read(br);
+
+        return this;
     }
 }

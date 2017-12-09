@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class Campaign
@@ -159,71 +160,66 @@ public class Campaign
 
     public void Load(SaveCampaignData saveData)
     {
-        EventModifiers = saveData.eventModifers;
+        EventModifiers = saveData.EventModifers;
 
         foreach (var townEvent in DarkestDungeonManager.Data.EventDatabase.Events)
             townEvent.SetDefaultState();
 
-        SaveSlotId = saveData.saveId;
-        CurrentWeek = saveData.currentWeek;
-
-        QuestsComleted = saveData.questsCompleted;
+        SaveSlotId = saveData.SaveId;
+        CurrentWeek = saveData.CurrentWeek;
+        QuestsComleted = saveData.QuestsCompleted;
 
         Estate = new Estate(saveData);
         RealmInventory = new RealmInventory(saveData);
-        CompletedPlot = saveData.completedPlot;
+        CompletedPlot = saveData.CompletedPlot;
 
         Heroes = new List<Hero>();
-        for (int i = 0; i < saveData.saveHeroData.Length; i++)
-            Heroes.Add(new Hero(Estate, saveData.saveHeroData[i]));
-        for (int i = 0; i < saveData.stageCoachData.Length; i++)
-            Estate.StageCoach.Heroes.Add(new Hero(Estate, saveData.stageCoachData[i]));
-        for (int i = 0; i < saveData.stageEventData.Length; i++)
-            Estate.StageCoach.EventHeroes.Add(new Hero(Estate, saveData.stageEventData[i]));
-        for (int i = 0; i < saveData.wagonData.Count; i++)
-            Estate.NomadWagon.Trinkets.Add(DarkestDungeonManager.Data.Items["trinket"][saveData.wagonData[i]] as Trinket);
-        Estate.StageCoach.GraveIndexes = saveData.deathEventData;
+        saveData.RosterHeroes.ForEach(hero => Heroes.Add(new Hero(Estate, hero)));
+        saveData.StageCoachHeroes.ForEach(hero => Estate.StageCoach.Heroes.Add(new Hero(Estate, hero)));
+        saveData.StageEventHeroes.ForEach(hero => Estate.StageCoach.EventHeroes.Add(new Hero(Estate, hero)));
+        saveData.WagonTrinkets.ForEach(trinketName => Estate.NomadWagon.Trinkets.Add(DarkestDungeonManager.Data.Items["trinket"][trinketName] as Trinket));
 
+        Estate.StageCoach.GraveIndexes = saveData.DeathEventData;
         Estate.Abbey.UpdateActivitySlots(saveData);
         Estate.Tavern.UpdateActivitySlots(saveData);
         Estate.Sanitarium.QuirkActivity.UpdateActivitySlots(saveData);
         Estate.Sanitarium.DiseaseActivity.UpdateActivitySlots(saveData);
 
-        Dungeons = saveData.saveDungeonData;
-        Quests = saveData.generatedQuests;
+        Dungeons = saveData.DungeonProgress;
+        Quests = saveData.GeneratedQuests;
         if (Quests.Count == 0 && saveData.InRaid == false)
             GenerateQuests();
 
-        Logs = new List<WeekActivityLog>(saveData.activityLog);
+        Logs = new List<WeekActivityLog>(saveData.ActivityLog);
         if (Logs.Count == 0)
             Logs.Add(new WeekActivityLog(CurrentWeek));
 
         EventsOption = DarkestDungeonManager.Data.EventDatabase.Settings[2];
 
-        if(saveData.currentEvent != "")
+        if(saveData.CurrentEvent != "")
         {
-            TriggeredEvent = DarkestDungeonManager.Data.EventDatabase.Events.Find(townEvent => townEvent.Id == saveData.currentEvent);
+            TriggeredEvent = DarkestDungeonManager.Data.EventDatabase.Events.Find(townEvent => townEvent.Id == saveData.CurrentEvent);
             if (TriggeredEvent != null)
                 EventModifiers.EventData.AddRange(TriggeredEvent.Data);
         }
 
-        if(saveData.guaranteedEvent != "")
+        if(saveData.GuaranteedEvent != "")
         {
-            GuaranteedEvent = DarkestDungeonManager.Data.EventDatabase.Events.Find(townEvent => townEvent.Id == saveData.guaranteedEvent);
+            GuaranteedEvent = DarkestDungeonManager.Data.EventDatabase.Events.Find(townEvent => townEvent.Id == saveData.GuaranteedEvent);
             if (GuaranteedEvent != null)
                 EventModifiers.EventData.AddRange(GuaranteedEvent.Data);
         }
 
-        foreach(var saveEventEntry in saveData.eventData)
+        foreach(var saveEventEntry in saveData.EventData)
         {
             var targetEvent = DarkestDungeonManager.Data.EventDatabase.Events.Find(townEvent => townEvent.Id == saveEventEntry.EventId);
             if(targetEvent != null)
                 targetEvent.UpdateFromSave(saveEventEntry);
         }
 
-        NarrationCampaignInfo = saveData.campaignNarrations;
-        NarrationRaidInfo = saveData.raidNarrations;
-        NarrationTownInfo = saveData.townNarrations;
+        NarrationCampaignInfo = saveData.CampaignNarrations;
+        NarrationRaidInfo = saveData.RaidNarrations;
+        NarrationTownInfo = saveData.TownNarrations;
     }
 
     public WeekActivityLog CurrentLog()
@@ -241,7 +237,7 @@ public class Campaign
     }
 }
 
-public class EventModifiers
+public class EventModifiers : IBinarySaveData<EventModifiers>
 {
     public bool NoLevelRestrictions { get; set; }
     public Dictionary<string, bool> ActivityLocks { get; set; }
@@ -252,6 +248,8 @@ public class EventModifiers
     public Dictionary<string, float> UpgradeTagCostModifiers { get; set; }
     public Dictionary<string, int> FreeUpgradeTags { get; set; }
     public List<TownEventData> EventData { get; set; }
+
+    public bool IsMeetingSaveCriteria { get { return true; } }
 
     public bool IsActivityFree(string activityName)
     {
@@ -308,6 +306,7 @@ public class EventModifiers
             FreeUpgradeTags[tag]--;
     }
 
+
     public EventModifiers()
     {
         ActivityLocks = new Dictionary<string, bool>();
@@ -320,6 +319,7 @@ public class EventModifiers
 
         EventData = new List<TownEventData>();
     }
+
 
     public void Reset()
     {
@@ -335,6 +335,7 @@ public class EventModifiers
 
         EventData.Clear();
     }
+
     public void IncludeEvent(TownEvent townEvent)
     {
         for(int i = 0; i < townEvent.Data.Count; i++)
@@ -395,5 +396,89 @@ public class EventModifiers
                     break;
             }
         }
+    }
+
+
+    public void Write(BinaryWriter bw)
+    {
+        bw.Write(NoLevelRestrictions);
+
+        bw.Write(ActivityLocks.Count);
+        foreach (var entry in ActivityLocks)
+        {
+            bw.Write(entry.Key);
+            bw.Write(entry.Value);
+        }
+        bw.Write(FreeActivities.Count);
+        foreach (var entry in FreeActivities)
+        {
+            bw.Write(entry.Key);
+            bw.Write(entry.Value);
+        }
+        bw.Write(ActivityCostModifiers.Count);
+        foreach (var entry in ActivityCostModifiers)
+        {
+            bw.Write(entry.Key);
+            bw.Write(entry.Value);
+        }
+        bw.Write(ProvisionCostModifiers.Count);
+        foreach (var entry in ProvisionCostModifiers)
+        {
+            bw.Write(entry.Key);
+            bw.Write(entry.Value);
+        }
+        bw.Write(ProvisionAmountModifiers.Count);
+        foreach (var entry in ProvisionAmountModifiers)
+        {
+            bw.Write(entry.Key);
+            bw.Write(entry.Value);
+        }
+        bw.Write(UpgradeTagCostModifiers.Count);
+        foreach (var entry in UpgradeTagCostModifiers)
+        {
+            bw.Write(entry.Key);
+            bw.Write(entry.Value);
+        }
+        bw.Write(FreeUpgradeTags.Count);
+        foreach (var entry in FreeUpgradeTags)
+        {
+            bw.Write(entry.Key);
+            bw.Write(entry.Value);
+        }
+    }
+
+    public EventModifiers Read(BinaryReader br)
+    {
+        NoLevelRestrictions = br.ReadBoolean();
+
+        int dictionaryCount = br.ReadInt32();
+        for (int i = 0; i < dictionaryCount; i++)
+            ActivityLocks.Add(br.ReadString(), br.ReadBoolean());
+
+        dictionaryCount = br.ReadInt32();
+        for (int i = 0; i < dictionaryCount; i++)
+            FreeActivities.Add(br.ReadString(), br.ReadBoolean());
+
+        dictionaryCount = br.ReadInt32();
+        for (int i = 0; i < dictionaryCount; i++)
+            ActivityCostModifiers.Add(br.ReadString(), br.ReadSingle());
+
+        dictionaryCount = br.ReadInt32();
+        for (int i = 0; i < dictionaryCount; i++)
+            ProvisionCostModifiers.Add(br.ReadString(), br.ReadSingle());
+
+        dictionaryCount = br.ReadInt32();
+        for (int i = 0; i < dictionaryCount; i++)
+            ProvisionAmountModifiers.Add(br.ReadString(), br.ReadSingle());
+
+        dictionaryCount = br.ReadInt32();
+        for (int i = 0; i < dictionaryCount; i++)
+            UpgradeTagCostModifiers.Add(br.ReadString(), br.ReadSingle());
+
+        dictionaryCount = br.ReadInt32();
+        for (int i = 0; i < dictionaryCount; i++)
+            FreeUpgradeTags.Add(br.ReadString(), br.ReadInt32());
+
+        return this;
     }
 }

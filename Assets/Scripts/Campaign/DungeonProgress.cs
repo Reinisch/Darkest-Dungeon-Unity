@@ -1,15 +1,14 @@
-﻿using UnityEngine;
+﻿using System.IO;
+using UnityEngine;
 
-public class DungeonProgress
+public class DungeonProgress : IBinarySaveData<DungeonProgress>
 {
-    const int maxLevel = 7;
+    private const int MaxLevel = 7;
 
     public string DungeonName { get; set; }
     public int MasteryLevel { get; set; }
-    
     public int CurrentXP { get; set; }
     public int NextLevelXP { get; set; }
-
     public bool IsEvent { get; set; }
     public bool IsUnlocked { get; set; }
 
@@ -23,6 +22,12 @@ public class DungeonProgress
             return (float)CurrentXP / NextLevelXP;
         }
     }
+
+    public bool IsMeetingSaveCriteria
+    {
+        get { return true; }
+    }
+
     public PlotQuest CurrentPlotQuest
     {
         get
@@ -33,7 +38,7 @@ public class DungeonProgress
             {
                 if (!DarkestDungeonManager.Campaign.CompletedPlot.Contains(dungeonPlot[i].Id))
                 {
-                    var plotDependency = (dungeonPlot[i] as PlotQuest).PlotDependency;
+                    var plotDependency = dungeonPlot[i].PlotDependency;
                     if (plotDependency != null)
                     {
                         if (DarkestDungeonManager.Campaign.CompletedPlot.Contains(plotDependency))
@@ -47,21 +52,48 @@ public class DungeonProgress
         }
     }
 
+
+    public DungeonProgress()
+    {
+    }
+
     public DungeonProgress(string dungeonName, int masteryLevel, int currentXP, bool isUnlocked, bool isEvent)
     {
         DungeonName = dungeonName;
-
         IsUnlocked = isUnlocked;
         IsEvent = isEvent;
-
-        MasteryLevel = Mathf.Clamp(masteryLevel, 0, maxLevel);
+        MasteryLevel = Mathf.Clamp(masteryLevel, 0, MaxLevel);
         CurrentXP = currentXP;
-        NextLevelXP = DarkestDungeonManager.Data.CampaignGeneration.DungeonXpLevelThreshold[Mathf.Clamp(MasteryLevel + 1, 0, maxLevel)];
+
+        UpdateNextLevelXP();
+    }
+
+
+    public void Write(BinaryWriter bw)
+    {
+        bw.Write(DungeonName);
+        bw.Write(MasteryLevel);
+        bw.Write(CurrentXP);
+        bw.Write(IsUnlocked);
+        bw.Write(IsEvent);
+    }
+
+    public DungeonProgress Read(BinaryReader br)
+    {
+        DungeonName = br.ReadString();
+        MasteryLevel = br.ReadInt32();
+        CurrentXP = br.ReadInt32();
+        IsUnlocked = br.ReadBoolean();
+        IsEvent = br.ReadBoolean();
+
+        UpdateNextLevelXP();
+
+        return this;
     }
 
     public void AddExperience(int expAmount)
     {
-        if (MasteryLevel == maxLevel)
+        if (MasteryLevel == MaxLevel)
             return;
 
         CurrentXP += expAmount;
@@ -79,19 +111,24 @@ public class DungeonProgress
                 }
             }
 
-            if (MasteryLevel < maxLevel)
+            if (MasteryLevel < MaxLevel)
             {
                 MasteryLevel++;
-                CurrentXP = CurrentXP - NextLevelXP;
-                NextLevelXP = NextLevelXP = DarkestDungeonManager.Data.CampaignGeneration.
-                    DungeonXpLevelThreshold[Mathf.Clamp(MasteryLevel + 1, 0, maxLevel)];
+                CurrentXP -= NextLevelXP;
+                UpdateNextLevelXP();
             }
             else
             {
-                NextLevelXP = NextLevelXP = DarkestDungeonManager.Data.CampaignGeneration.DungeonXpLevelThreshold[maxLevel];
+                UpdateNextLevelXP();
                 CurrentXP = NextLevelXP;
                 break;
             }
         }
+    }
+
+
+    private void UpdateNextLevelXP()
+    {
+        NextLevelXP = DarkestDungeonManager.Data.CampaignGeneration.DungeonXpLevelThreshold[Mathf.Clamp(MasteryLevel + 1, 0, MaxLevel)];
     }
 }

@@ -222,20 +222,20 @@ public class QuirkTreatmentActivity
         {
             if (i + 1 <= QuirkSlots)
             {
-                if (saveData.sanitariumActivitySlots.Count > 0 && saveData.sanitariumActivitySlots[0].Count >= i)
+                if (saveData.SanitariumActivitySlots.Count > 0 && saveData.SanitariumActivitySlots[0].Count >= i)
                 {
                     var activityHero = DarkestDungeonManager.Campaign.Heroes.Find(hero =>
-                        hero.RosterId == saveData.sanitariumActivitySlots[0][i].HeroRosterId);
+                        hero.RosterId == saveData.SanitariumActivitySlots[0][i].HeroRosterId);
 
                     TreatmentSlots[i].Hero = activityHero;
                     if (activityHero != null)
-                        TreatmentSlots[i].Status = saveData.sanitariumActivitySlots[0][i].Status;
+                        TreatmentSlots[i].Status = saveData.SanitariumActivitySlots[0][i].Status;
                     else
                         TreatmentSlots[i].Status = ActivitySlotStatus.Available;
 
-                    TreatmentSlots[i].TargetDiseaseQuirk = saveData.sanitariumActivitySlots[0][i].TargetDiseaseQuirk;
-                    TreatmentSlots[i].TargetPositiveQuirk = saveData.sanitariumActivitySlots[0][i].TargetPositiveQuirk;
-                    TreatmentSlots[i].TargetNegativeQuirk = saveData.sanitariumActivitySlots[0][i].TargetNegativeQuirk;
+                    TreatmentSlots[i].TargetDiseaseQuirk = saveData.SanitariumActivitySlots[0][i].TargetDiseaseQuirk;
+                    TreatmentSlots[i].TargetPositiveQuirk = saveData.SanitariumActivitySlots[0][i].TargetPositiveQuirk;
+                    TreatmentSlots[i].TargetNegativeQuirk = saveData.SanitariumActivitySlots[0][i].TargetNegativeQuirk;
                 }
 
                 if (isActivityFree)
