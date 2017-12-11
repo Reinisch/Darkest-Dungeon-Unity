@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-public class UpgradePurchases : IBinarySaveData<UpgradePurchases>
+public class UpgradePurchases : IBinarySaveData
 {
     public string TreeId { get; set; }
     public List<string> PurchasedUpgrades { get; private set; }
@@ -39,11 +39,9 @@ public class UpgradePurchases : IBinarySaveData<UpgradePurchases>
         PurchasedUpgrades.Write(bw);
     }
 
-    public UpgradePurchases Read(BinaryReader br)
+    public void Read(BinaryReader br)
     {
         TreeId = br.ReadString();
         PurchasedUpgrades.Read(br);
-
-        return this;
     }
 }

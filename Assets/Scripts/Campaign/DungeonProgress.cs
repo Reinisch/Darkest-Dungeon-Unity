@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using UnityEngine;
 
-public class DungeonProgress : IBinarySaveData<DungeonProgress>
+public class DungeonProgress : IBinarySaveData
 {
     private const int MaxLevel = 7;
 
@@ -78,7 +78,7 @@ public class DungeonProgress : IBinarySaveData<DungeonProgress>
         bw.Write(IsEvent);
     }
 
-    public DungeonProgress Read(BinaryReader br)
+    public void Read(BinaryReader br)
     {
         DungeonName = br.ReadString();
         MasteryLevel = br.ReadInt32();
@@ -87,8 +87,6 @@ public class DungeonProgress : IBinarySaveData<DungeonProgress>
         IsEvent = br.ReadBoolean();
 
         UpdateNextLevelXP();
-
-        return this;
     }
 
     public void AddExperience(int expAmount)

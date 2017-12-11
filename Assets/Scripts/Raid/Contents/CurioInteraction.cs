@@ -6,9 +6,16 @@ public class CurioInteraction : IProportionValue
     public List<CurioResult> Results { get; set; }
     public int Chance { get; set; }
 
+
     public CurioInteraction()
     {
         Results = new List<CurioResult>();
+    }
+
+    public CurioInteraction(int chance, string resultType) : this()
+    {
+        Chance = chance;
+        ResultType = resultType;
     }
 
     public virtual string ResultString()

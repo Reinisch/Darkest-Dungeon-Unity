@@ -1,6 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.IO;
 
 public class DungeonRoom : Area
 {
@@ -11,17 +10,12 @@ public class DungeonRoom : Area
             return Doors.Count;
         }
     }
-    public int GridX { get; set; }
-    public int GridY { get; set; }
+   
     public List<Door> Doors { get; set; }
 
-    public DungeonRoom(string id, int gridX, int gridY)
+
+    public DungeonRoom()
     {
-        Id = id;
-
-        GridX = gridX;
-        GridY = gridY;
-
         Type = AreaType.Empty;
         Knowledge = Knowledge.Hidden;
         Prop = null;
@@ -30,5 +24,27 @@ public class DungeonRoom : Area
         MashId = 0;
         Doors = new List<Door>();
     }
-}
 
+    public DungeonRoom(string id, int gridX, int gridY) : this()
+    {
+        Id = id;
+
+        GridX = gridX;
+        GridY = gridY;
+    }
+
+
+    public override void Write(BinaryWriter bw)
+    {
+        base.Write(bw);
+
+        Doors.Write(bw);
+    }
+
+    public override void Read(BinaryReader br)
+    {
+        base.Read(br);
+
+        Doors.Read(br);
+    }
+}

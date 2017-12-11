@@ -80,10 +80,8 @@ public class SaveCampaignData
     public List<InventorySlotData> InventoryItems { get; set; }
     #endregion
 
-    #region Battle
     public bool InBattle;
     public BattleGroundSaveData BattleGroundSaveData = new BattleGroundSaveData();
-    #endregion
 
 
     public SaveCampaignData()
@@ -131,6 +129,188 @@ public class SaveCampaignData
     }
 
 
+    public void SetEstateInfo(bool firstStart, string locationName, int questsCompleted, int currentWeek, int gold, int busts, int deeds, int portraits, int crests)
+    {
+        IsFirstStart = firstStart;
+        LocationName = locationName;
+        QuestsCompleted = questsCompleted;
+        CurrentWeek = currentWeek;
+
+        GoldAmount = gold;
+        BustsAmount = busts;
+        DeedsAmount = deeds;
+        PortraitsAmount = portraits;
+        CrestsAmount = crests;
+    }
+
+    public void SetTavernSlots(int activityCount, int activitySlots)
+    {
+        SetEmptySlots(TavernActivitySlots, activityCount, activitySlots);
+    }
+
+    public void SetAbbeySlots(int activityCount, int activitySlots)
+    {
+        SetEmptySlots(AbbeyActivitySlots, activityCount, activitySlots);
+    }
+
+    public void SetSanitariumSlots(int activityCount, int activitySlots)
+    {
+        SetEmptySlots(SanitariumActivitySlots, activityCount, activitySlots);
+    }
+
+    public void PopulateStartingEstateData()
+    {
+        SetEstateInfo(true, "Raid", 0, 1, 1000, 10, 10, 10, 10);
+
+        RosterHeroes = new List<SaveHeroData>
+        {
+            new SaveHeroData(1, "Reynald", "crusader", 0, 0, 10, 1, 1, "", "", "warrior_of_light", "kleptomaniac", "god_fearing"),
+            new SaveHeroData(2, "Dismas", "highwayman", 0, 0, 10, 1, 1, "", "", "hard_noggin", "known_cheat", "quick_reflexes"),
+        };
+
+        StageCoachHeroes = new List<SaveHeroData>();
+
+        InstancedPurchases.Clear();
+        foreach (SaveHeroData heroData in RosterHeroes)
+        {
+            var newHeroPurchases = new Dictionary<string, UpgradePurchases>();
+            InstancedPurchases.Add(heroData.RosterId, newHeroPurchases);
+            newHeroPurchases.Add(heroData.HeroClass + ".weapon", new UpgradePurchases(heroData.HeroClass + ".weapon", new string[0]));
+            newHeroPurchases.Add(heroData.HeroClass + ".armour", new UpgradePurchases(heroData.HeroClass + ".armour", new string[0]));
+
+            foreach (CombatSkill skill in DarkestDungeonManager.Data.HeroClasses[heroData.HeroClass].CombatSkills)
+                newHeroPurchases.Add(heroData.HeroClass + "." + skill.Id, new UpgradePurchases(heroData.HeroClass + "." + skill.Id, new string[0]));
+            foreach (CampingSkill skill in DarkestDungeonManager.Data.HeroClasses[heroData.HeroClass].CampingSkills)
+                newHeroPurchases.Add(skill.Id, new UpgradePurchases(skill.Id, new string[0]));
+        }
+
+        InstancedPurchases[1]["crusader.smite"].PurchasedUpgrades.Add("0");
+        InstancedPurchases[1]["crusader.zealous_accusation"].PurchasedUpgrades.Add("0");
+        InstancedPurchases[1]["crusader.stunning_blow"].PurchasedUpgrades.Add("0");
+        InstancedPurchases[1]["crusader.bulwark_of_faith"].PurchasedUpgrades.Add("0");
+        RosterHeroes[0].SelectedCombatSkillIndexes.AddRange(new[] { 0, 1, 2, 3 });
+        InstancedPurchases[1]["encourage"].PurchasedUpgrades.Add("0");
+        InstancedPurchases[1]["stand_tall"].PurchasedUpgrades.Add("0");
+        InstancedPurchases[1]["zealous_speech"].PurchasedUpgrades.Add("0");
+        RosterHeroes[0].SelectedCampingSkillIndexes.AddRange(new[] { 0, 4, 5 });
+
+        InstancedPurchases[2]["highwayman.opened_vein"].PurchasedUpgrades.Add("0");
+        InstancedPurchases[2]["highwayman.pistol_shot"].PurchasedUpgrades.Add("0");
+        InstancedPurchases[2]["highwayman.grape_shot_blast"].PurchasedUpgrades.Add("0");
+        InstancedPurchases[2]["highwayman.take_aim"].PurchasedUpgrades.Add("0");
+        RosterHeroes[1].SelectedCombatSkillIndexes.AddRange(new[] { 6, 1, 3, 4 });
+        InstancedPurchases[2]["first_aid"].PurchasedUpgrades.Add("0");
+        InstancedPurchases[2]["clean_guns"].PurchasedUpgrades.Add("0");
+        InstancedPurchases[2]["bandits_sense"].PurchasedUpgrades.Add("0");
+        RosterHeroes[1].SelectedCampingSkillIndexes.AddRange(new[] { 1, 5, 6 });
+
+        ActivityLog = new List<WeekActivityLog>();
+        CompletedPlot = new List<string>();
+        GeneratedQuests = new List<Quest>();
+        DeathRecords = new List<DeathRecord>();
+        InventoryTrinkets.Clear();
+        WagonTrinkets.Clear();
+
+        DungeonProgress.Clear();
+        DungeonProgress.Add("crypts", new DungeonProgress("crypts", 0, 0, true, false));
+        DungeonProgress.Add("warrens", new DungeonProgress("warrens", 0, 0, true, false));
+        DungeonProgress.Add("weald", new DungeonProgress("weald", 0, 0, true, false));
+        DungeonProgress.Add("cove", new DungeonProgress("cove", 0, 0, true, false));
+        DungeonProgress.Add("darkestdungeon", new DungeonProgress("darkestdungeon", 1, 0, true, false));
+        DungeonProgress.Add("town", new DungeonProgress("town", 1, 0, true, true));
+
+        BuildingUpgrades.Clear();
+        BuildingUpgrades.Add("abbey.meditation", new UpgradePurchases("abbey.meditation", new string[0]));
+        BuildingUpgrades.Add("abbey.prayer", new UpgradePurchases("abbey.prayer", new string[0]));
+        BuildingUpgrades.Add("abbey.flagellation", new UpgradePurchases("abbey.flagellation", new string[0]));
+        BuildingUpgrades.Add("tavern.bar", new UpgradePurchases("tavern.bar", new string[0]));
+        BuildingUpgrades.Add("tavern.gambling", new UpgradePurchases("tavern.gambling", new string[0]));
+        BuildingUpgrades.Add("tavern.brothel", new UpgradePurchases("tavern.brothel", new string[0]));
+        BuildingUpgrades.Add("sanitarium.cost", new UpgradePurchases("sanitarium.cost", new string[0]));
+        BuildingUpgrades.Add("sanitarium.disease_quirk_cost", new UpgradePurchases("sanitarium.disease_quirk_cost", new string[0]));
+        BuildingUpgrades.Add("sanitarium.slots", new UpgradePurchases("sanitarium.slots", new string[0]));
+        BuildingUpgrades.Add("blacksmith.weapon", new UpgradePurchases("blacksmith.weapon", new string[0]));
+        BuildingUpgrades.Add("blacksmith.armour", new UpgradePurchases("blacksmith.armour", new string[0]));
+        BuildingUpgrades.Add("blacksmith.cost", new UpgradePurchases("blacksmith.cost", new string[0]));
+        BuildingUpgrades.Add("guild.skill_levels", new UpgradePurchases("guild.skill_levels", new string[0]));
+        BuildingUpgrades.Add("guild.cost", new UpgradePurchases("guild.cost", new string[0]));
+        BuildingUpgrades.Add("camping_trainer.cost", new UpgradePurchases("camping_trainer.cost", new string[0]));
+        BuildingUpgrades.Add("nomad_wagon.numitems", new UpgradePurchases("nomad_wagon.numitems", new string[0]));
+        BuildingUpgrades.Add("nomad_wagon.cost", new UpgradePurchases("nomad_wagon.cost", new string[0]));
+        BuildingUpgrades.Add("stage_coach.numrecruits", new UpgradePurchases("stage_coach.numrecruits", new string[0]));
+        BuildingUpgrades.Add("stage_coach.rostersize", new UpgradePurchases("stage_coach.rostersize", new string[0]));
+        BuildingUpgrades.Add("stage_coach.upgraded_recruits", new UpgradePurchases("stage_coach.upgraded_recruits", new string[0]));
+
+        SetAbbeySlots(3, 3);
+        SetTavernSlots(3, 3);
+        SetSanitariumSlots(2, 3);
+
+        InRaid = true;
+        QuestCompleted = false;
+    }
+
+    public void PopulateStartingRaidInfo(string startingRoom)
+    {
+        RaidParty = new RaidPartySaveData()
+        {
+            IsMovingLeft = false,
+            HeroInfo = new List<RaidPartyHeroInfoSaveData>()
+            {
+                new RaidPartyHeroInfoSaveData()
+                {
+                Factor = DeathFactor.AttackMonster,
+                Killer = "",
+                IsAlive = true,
+                HeroRosterId = 1,
+                },
+                new RaidPartyHeroInfoSaveData()
+                {
+                Factor = DeathFactor.AttackMonster,
+                Killer = "",
+                IsAlive = true,
+                HeroRosterId = 2,
+                },
+            }
+        };
+
+        ExploredRoomCount = 1;
+        CurrentLocation = startingRoom;
+        LastRoom = startingRoom;
+        PreviousLastSector = "";
+        LastSector = "";
+        KilledMonsters = new List<string>();
+        InvestigatedCurios = new List<string>();
+
+        TorchAmount = 100;
+        MaxTorchAmount = 100;
+        ModifiedMinTorch = -1;
+        ModifiedMaxTorch = -1;
+
+        HeroFormationData = new BattleFormationSaveData();
+        HeroFormationData.unitData.Add(new FormationUnitSaveData()
+        {
+            IsHero = true,
+            RosterId = 1,
+            Rank = 1,
+            CombatInfo = new FormationUnitInfo()
+            {
+                CombatId = 1,
+            }
+        });
+        HeroFormationData.unitData.Add(new FormationUnitSaveData()
+        {
+            IsHero = true,
+            RosterId = 2,
+            Rank = 2,
+            CombatInfo = new FormationUnitInfo()
+            {
+                CombatId = 2,
+            }
+        });
+
+        InventoryItems = new List<InventorySlotData>();
+    }
+
     public void UpdateFromEstate()
     {
         var campaign = DarkestDungeonManager.Campaign;
@@ -146,32 +326,24 @@ public class SaveCampaignData
         PortraitsAmount = campaign.Estate.Currencies["portrait"].amount;
         CrestsAmount = campaign.Estate.Currencies["crest"].amount;
 
-        #region Estate Misc
-        #region Trinkets
         InventoryTrinkets.Clear();
         for (int i = 0; i < campaign.RealmInventory.Trinkets.Count; i++)
             InventoryTrinkets.Add(campaign.RealmInventory.Trinkets[i].Id);
-        #endregion
-        #region Wagon Trinkets
         WagonTrinkets.Clear();
         for (int i = 0; i < campaign.Estate.NomadWagon.Trinkets.Count; i++)
             WagonTrinkets.Add(campaign.Estate.NomadWagon.Trinkets[i].Id);
-        #endregion
 
         ActivityLog = campaign.Logs;
         CompletedPlot = campaign.CompletedPlot;
         GeneratedQuests = campaign.Quests;
 
-        #region Initial Heroes
         RosterHeroes = new List<SaveHeroData>();
         for (int i = 0; i < campaign.Heroes.Count; i++)
         {
             var newHeroData = new SaveHeroData();
             campaign.Heroes[i].UpdateSaveData(newHeroData);
             RosterHeroes.Add(newHeroData);
-        };
-        #endregion
-        #region StageCoach Heroes
+        }
         StageCoachHeroes = new List<SaveHeroData>();
         for (int i = 0; i < campaign.Estate.StageCoach.Heroes.Count; i++)
         {
@@ -187,7 +359,6 @@ public class SaveCampaignData
             StageEventHeroes.Add(newHeroData);
         }
         DeathEventData = campaign.Estate.StageCoach.GraveIndexes;
-        #endregion
 
         DeathRecords = campaign.Estate.Graveyard.Records;
         DungeonProgress = campaign.Dungeons;
@@ -261,7 +432,6 @@ public class SaveCampaignData
         CampaignNarrations = campaign.NarrationCampaignInfo;
 
         InRaid = false;
-        #endregion
     }
 
     public void UpdateFromRaid()
@@ -311,5 +481,17 @@ public class SaveCampaignData
         }
         else
             InBattle = false;
+    }
+
+
+    private static void SetEmptySlots(List<List<SaveActivitySlot>> activities, int activityCount, int activitySlots)
+    {
+        activities.Clear();
+        for (int i = 0; i < activityCount; i++)
+        {
+            activities.Add(new List<SaveActivitySlot>());
+            for (int j = 0; j < activitySlots; j++)
+                activities[i].Add(new SaveActivitySlot());
+        }
     }
 }

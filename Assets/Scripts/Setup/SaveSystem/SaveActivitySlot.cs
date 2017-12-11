@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-public class SaveActivitySlot : IBinarySaveData<SaveActivitySlot>
+public class SaveActivitySlot : IBinarySaveData
 {
     public string TargetPositiveQuirk { get; set; }
     public string TargetNegativeQuirk { get; set; }
@@ -52,7 +52,7 @@ public class SaveActivitySlot : IBinarySaveData<SaveActivitySlot>
         bw.Write(TargetPositiveQuirk ?? "");
     }
 
-    public SaveActivitySlot Read(BinaryReader br)
+    public void Read(BinaryReader br)
     {
         HeroRosterId = br.ReadInt32();
         Status = (ActivitySlotStatus)br.ReadInt32();
@@ -60,7 +60,5 @@ public class SaveActivitySlot : IBinarySaveData<SaveActivitySlot>
         TargetDiseaseQuirk = br.ReadString();
         TargetNegativeQuirk = br.ReadString();
         TargetPositiveQuirk = br.ReadString();
-
-        return this;
     }
 }

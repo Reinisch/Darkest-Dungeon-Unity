@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 
 public class TrapVariation
 {
@@ -22,14 +23,26 @@ public class Trap : Prop
 
     public Dictionary<int, TrapVariation> Variations;
 
-    public Trap(string id)
+
+    public Trap()
     {
-        StringId = id;
         Type = AreaType.Trap;
 
         SuccessEffects = new List<Effect>();
         FailEffects = new List<Effect>();
         Variations = new Dictionary<int, TrapVariation>();
     }
-}
 
+    public Trap(string id) : this()
+    {
+        StringId = id;
+    }
+
+
+    public override void Write(BinaryWriter bw)
+    {
+        base.Write(bw);
+
+        bw.Write(StringId);
+    }
+}

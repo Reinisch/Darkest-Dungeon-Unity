@@ -237,7 +237,7 @@ public class Campaign
     }
 }
 
-public class EventModifiers : IBinarySaveData<EventModifiers>
+public class EventModifiers : IBinarySaveData
 {
     public bool NoLevelRestrictions { get; set; }
     public Dictionary<string, bool> ActivityLocks { get; set; }
@@ -447,7 +447,7 @@ public class EventModifiers : IBinarySaveData<EventModifiers>
         }
     }
 
-    public EventModifiers Read(BinaryReader br)
+    public void Read(BinaryReader br)
     {
         NoLevelRestrictions = br.ReadBoolean();
 
@@ -478,7 +478,5 @@ public class EventModifiers : IBinarySaveData<EventModifiers>
         dictionaryCount = br.ReadInt32();
         for (int i = 0; i < dictionaryCount; i++)
             FreeUpgradeTags.Add(br.ReadString(), br.ReadInt32());
-
-        return this;
     }
 }

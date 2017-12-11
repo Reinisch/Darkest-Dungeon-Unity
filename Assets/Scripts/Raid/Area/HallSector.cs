@@ -1,37 +1,37 @@
-﻿public class HallSector : Area
+﻿using System.IO;
+
+public class HallSector : Area
 {
-    public Hallway Hallway { get; private set; }
+    public Hallway Hallway { get; set; }
 
-    public int GridX { get; set; }
-    public int GridY { get; set; }
 
-    public HallSector(string id, int gridX, int gridY, Hallway parentHallway)
+    public HallSector()
     {
-        Id = id;
-        Hallway = parentHallway;
-        GridX = gridX;
-        GridY = gridY;
-
         Knowledge = Knowledge.Hidden;
-        Type = AreaType.Empty;
-        Prop = null;
-
         TextureId = "0";
         MashId = 0;
     }
 
-    public HallSector(string id, int gridX, int gridY, Hallway parentHallway, Door door)
+    public HallSector(string id, int gridX, int gridY, Hallway parentHallway) : this()
     {
         Id = id;
         Hallway = parentHallway;
+
         GridX = gridX;
         GridY = gridY;
 
-        Knowledge = Knowledge.Hidden;
-        Type = AreaType.Door;
-        Prop = door;
+        Type = AreaType.Empty;
+    }
 
-        TextureId = "0";
-        MashId = 0;
+    public HallSector(string id, int gridX, int gridY, Hallway parentHallway, Door door) : this()
+    {
+        Id = id;
+        Hallway = parentHallway;
+
+        GridX = gridX;
+        GridY = gridY;
+
+        Prop = door;
+        Type = AreaType.Door;
     }
 }

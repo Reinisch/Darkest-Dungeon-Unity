@@ -26,7 +26,7 @@ public enum BuffSourceType
     Light
 }
 
-public class BuffInfo : IBinarySaveData<BuffInfo>
+public class BuffInfo : IBinarySaveData
 {
     public BuffDurationType DurationType { get; private set; }
     public BuffSourceType SourceType { get; private set; }
@@ -103,7 +103,7 @@ public class BuffInfo : IBinarySaveData<BuffInfo>
         }
     }
 
-    public BuffInfo Read(BinaryReader br)
+    public void Read(BinaryReader br)
     {
         SourceType = (BuffSourceType)br.ReadInt32();
         DurationType = (BuffDurationType)br.ReadInt32();
@@ -124,7 +124,5 @@ public class BuffInfo : IBinarySaveData<BuffInfo>
         }
         else
             Buff = DarkestDungeonManager.Data.Buffs[buffId];
-
-        return this;
     }
 }

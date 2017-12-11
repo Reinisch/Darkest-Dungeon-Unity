@@ -1,8 +1,6 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.IO;
+﻿using System.IO;
 
-public class SaveEventData : IBinarySaveData<SaveEventData>
+public class SaveEventData : IBinarySaveData
 {
     public string EventId { get; set; }
     public int ActiveCooldown { get; set; }
@@ -18,12 +16,10 @@ public class SaveEventData : IBinarySaveData<SaveEventData>
         bw.Write(NotRolledAmount);
     }
 
-    public SaveEventData Read(BinaryReader br)
+    public void Read(BinaryReader br)
     {
         EventId = br.ReadString();
         ActiveCooldown = br.ReadInt32();
         NotRolledAmount = br.ReadInt32();
-
-        return this;
     }
 }

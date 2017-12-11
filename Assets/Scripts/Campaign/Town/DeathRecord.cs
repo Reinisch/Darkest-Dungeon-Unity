@@ -18,7 +18,7 @@ public enum DeathFactor
     HeartAttack
 }
 
-public class DeathRecord : IBinarySaveData<DeathRecord>
+public class DeathRecord : IBinarySaveData
 {
     public string HeroName { get; set; }
     public int HeroClassIndex { get; set; }
@@ -38,14 +38,12 @@ public class DeathRecord : IBinarySaveData<DeathRecord>
         bw.Write(KillerName ?? "");
     }
 
-    public DeathRecord Read(BinaryReader br)
+    public void Read(BinaryReader br)
     {
         HeroName = br.ReadString();
         HeroClassIndex = br.ReadInt32();
         ResolveLevel = br.ReadInt32();
         Factor = (DeathFactor)br.ReadInt32();
         KillerName = br.ReadString();
-
-        return this;
     }
 }

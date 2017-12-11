@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 
 public class Obstacle : Prop
 {
@@ -7,11 +8,23 @@ public class Obstacle : Prop
     public float TorchlightPenalty;
     public bool AncestorTalk;
 
-    public Obstacle(string id)
+
+    public Obstacle()
+    {
+        Type = AreaType.Obstacle;
+        FailEffects = new List<Effect>();
+    }
+
+    public Obstacle(string id) : this()
     {
         StringId = id;
-        Type = AreaType.Obstacle;
+    }
 
-        FailEffects = new List<Effect>();
+
+    public override void Write(BinaryWriter bw)
+    {
+        base.Write(bw);
+
+        bw.Write(StringId);
     }
 }

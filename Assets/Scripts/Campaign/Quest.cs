@@ -20,7 +20,7 @@ public class UpgradeTag
 }
 
 
-public class Quest : IBinarySaveData<Quest>
+public class Quest : IBinarySaveData
 {
     public virtual string Id
     {
@@ -119,14 +119,15 @@ public class Quest : IBinarySaveData<Quest>
         }
     }
 
-    public Quest Read(BinaryReader br)
+    public void Read(BinaryReader br)
     {
         // Id = br.ReadString(); called in BinarySaveDataHelper.Create<Quest>()
         Type = br.ReadString();
         Dungeon = br.ReadString();
         Difficulty = br.ReadInt32();
         Length = br.ReadInt32();
-        Goal = DarkestDungeonManager.Data.QuestDatabase.QuestGoals[br.ReadString()];
+        string goalId = br.ReadString();
+        Goal = DarkestDungeonManager.Data.QuestDatabase.QuestGoals[goalId];
         Reward = new CompletionReward();
         Reward.ResolveXP = br.ReadInt32();
         int questRewardGenCount = br.ReadInt32();
@@ -166,7 +167,5 @@ public class Quest : IBinarySaveData<Quest>
         UpgradeTagsRemovedOnIgnore.Clear();
         for (int j = 0; j < tagGenCount; j++)
             UpgradeTagsRemovedOnIgnore.Add(new UpgradeTag(br.ReadString(), br.ReadInt32()));
-
-        return this;
     }
 }

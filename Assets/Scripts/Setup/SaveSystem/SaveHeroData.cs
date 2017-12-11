@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-public class SaveHeroData : IBinarySaveData<SaveHeroData>
+public class SaveHeroData : IBinarySaveData
 {
     public HeroStatus Status = HeroStatus.Available;
     public string InActivity;
@@ -32,6 +32,28 @@ public class SaveHeroData : IBinarySaveData<SaveHeroData>
     public bool IsMeetingSaveCriteria { get { return true; } }
 
 
+    public SaveHeroData()
+    {
+    }
+
+    public SaveHeroData(int id, string name, string heroClass, int resolveLevel, int resolveXp, int stressLevel,
+        int weaponLevel, int armorLevel, string leftTrinket, string rightTrinket, params string[] quirks)
+    {
+        RosterId = id;
+        Name = name;
+        HeroClass = heroClass;
+        ResolveLevel = resolveLevel;
+        ResolveXP = resolveXp;
+        StressLevel = stressLevel;
+        WeaponLevel = weaponLevel;
+        ArmorLevel = armorLevel;
+        LeftTrinketId = leftTrinket;
+        RightTrinketId = rightTrinket;
+
+        foreach (string quirk in quirks)
+            Quirks.Add(new QuirkInfo(quirk));
+    }
+
     public void Write(BinaryWriter bw)
     {
         bw.Write((int)Status);
@@ -58,7 +80,7 @@ public class SaveHeroData : IBinarySaveData<SaveHeroData>
         SelectedCampingSkillIndexes.Write(bw);
     }
 
-    public SaveHeroData Read(BinaryReader br)
+    public void Read(BinaryReader br)
     {
         Status = (HeroStatus)br.ReadInt32();
         MissingDuration = br.ReadInt32();
@@ -82,7 +104,5 @@ public class SaveHeroData : IBinarySaveData<SaveHeroData>
         Buffs.Read(br);
         SelectedCombatSkillIndexes.Read(br);
         SelectedCampingSkillIndexes.Read(br);
-
-        return this;
     }
 }

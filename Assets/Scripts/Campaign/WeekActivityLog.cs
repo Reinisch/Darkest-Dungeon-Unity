@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-public class WeekActivityLog : IBinarySaveData<WeekActivityLog>
+public class WeekActivityLog : IBinarySaveData
 {
     public int WeekNumber { get; private set; }
     public PartyActivityRecord EmbarkRecord { get; set; }
@@ -34,7 +34,7 @@ public class WeekActivityLog : IBinarySaveData<WeekActivityLog>
             EmbarkRecord.Write(bw);
     }
 
-    public WeekActivityLog Read(BinaryReader br)
+    public void Read(BinaryReader br)
     {
         WeekNumber = br.ReadInt32();
 
@@ -50,6 +50,5 @@ public class WeekActivityLog : IBinarySaveData<WeekActivityLog>
             EmbarkRecord = new PartyActivityRecord();
             EmbarkRecord.Read(br);
         }
-        return this;
     }
 }

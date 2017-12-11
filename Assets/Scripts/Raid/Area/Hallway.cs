@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 
-public class Hallway
+public class Hallway : IBinarySaveData
 {
     public string Id { get; set; }
 
@@ -16,6 +17,7 @@ public class Hallway
 
     public DungeonRoom RoomA { get; set; }
     public DungeonRoom RoomB { get; set; }
+    public bool IsMeetingSaveCriteria { get { return true; } }
 
     public Direction DirectionFromA
     {
@@ -40,20 +42,31 @@ public class Hallway
         }
     }
 
-    public Hallway(string id)
+    private string roomAId;
+    private string roomBId;
+
+
+    public Hallway()
     {
-        Id = id;
         Halls = new List<HallSector>();
     }
+
+    public Hallway(string id) : this()
+    {
+        Id = id;
+    }
+
 
     public bool Connects(DungeonRoom room)
     {
         return RoomA == room || RoomB == room;
     }
+
     public bool Connects(DungeonRoom roomOne, DungeonRoom roomTwo)
     {
         return (RoomA == roomOne && RoomB == roomTwo) || (RoomB == roomOne && RoomA == roomTwo);
     }
+
     public DungeonRoom OppositeRoom(DungeonRoom room)
     {
         if (RoomA.Id == room.Id)
@@ -61,5 +74,31 @@ public class Hallway
         if (RoomB.Id == room.Id)
             return RoomA;
         return null;
+    }
+
+
+    public void Initialize(Dungeon dungeon)
+    {
+        RoomA = dungeon.Rooms[roomAId];
+        RoomB = dungeon.Rooms[roomBId];
+
+        foreach (var hall in Halls)
+            hall.Hallway = this;
+    }
+
+    public void Write(BinaryWriter bw)
+    {
+        bw.Write(Id);
+        bw.Write(RoomA.Id);
+        bw.Write(RoomB.Id);
+        Halls.Write(bw);
+    }
+
+    public void Read(BinaryReader br)
+    {
+        Id = br.ReadString();
+        roomAId = br.ReadString();
+        roomBId = br.ReadString();
+        Halls.Read(br);
     }
 }

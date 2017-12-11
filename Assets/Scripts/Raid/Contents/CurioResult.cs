@@ -8,4 +8,15 @@
         get;
         set;
     }
+
+    public CurioResult()
+    {
+    }
+
+    public CurioResult(int chance, int draws,  string item)
+    {
+        Chance = chance;
+        Draws = draws;
+        Item = item;
+    }
 }

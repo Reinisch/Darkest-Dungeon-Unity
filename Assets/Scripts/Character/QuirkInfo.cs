@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-public class QuirkInfo : IBinarySaveData<QuirkInfo>
+public class QuirkInfo : IBinarySaveData
 {
     public Quirk Quirk { get; set; }
     public bool IsLocked { get; set; }
@@ -51,7 +51,7 @@ public class QuirkInfo : IBinarySaveData<QuirkInfo>
         bw.Write(ReplacedQuirk);
     }
 
-    public QuirkInfo Read(BinaryReader br)
+    public void Read(BinaryReader br)
     {
         Quirk = DarkestDungeonManager.Data.Quirks[br.ReadString()];
         IsLocked = br.ReadBoolean();
@@ -59,8 +59,6 @@ public class QuirkInfo : IBinarySaveData<QuirkInfo>
         IsReplaced = br.ReadBoolean();
         Longetivity = br.ReadInt32();
         ReplacedQuirk = br.ReadString();
-
-        return this;
     }
 
 

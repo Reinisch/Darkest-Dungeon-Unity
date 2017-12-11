@@ -26,7 +26,7 @@ public enum LogType
     Activity, Raid
 }
 
-public abstract class ActivityRecord : IBinarySaveData<ActivityRecord>
+public abstract class ActivityRecord : IBinarySaveData
 {
     public LogType LogType { get; private set; }
     public bool IsMeetingSaveCriteria { get { return true; } }
@@ -46,9 +46,8 @@ public abstract class ActivityRecord : IBinarySaveData<ActivityRecord>
     {
     }
 
-    public virtual ActivityRecord Read(BinaryReader br)
+    public virtual void Read(BinaryReader br)
     {
-        return this;
     }
 }
 
@@ -1166,7 +1165,7 @@ public class PartyActivityRecord : ActivityRecord
         Alive.Write(bw);
     }
 
-    public override ActivityRecord Read(BinaryReader br)
+    public override void Read(BinaryReader br)
     {
         base.Read(br);
 
@@ -1180,7 +1179,5 @@ public class PartyActivityRecord : ActivityRecord
         Names.Read(br);
         Classes.Read(br);
         Alive.Read(br);
-
-        return this;
     }
 }

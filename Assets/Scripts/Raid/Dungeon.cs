@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.IO;
+using NUnit.Framework;
 
-public class Dungeon
+public class Dungeon : IBinarySaveData
 {
     public string Name { get; set; }
 
@@ -32,13 +34,84 @@ public class Dungeon
 
     public DungeonBattleMash SharedMash { get; set; }
     public DungeonBattleMash DungeonMash { get; set; }
-
     public List<int> SharedMashExecutionIds { get; set; }
+
+    public bool IsMeetingSaveCriteria { get { return true; } }
+
 
     public Dungeon()
     {
         Rooms = new Dictionary<string, DungeonRoom>();
         Hallways = new Dictionary<string, Hallway>();
         SharedMashExecutionIds = new List<int>();
+    }
+
+
+    public void Initialize(Quest quest)
+    {
+        foreach (var hallway in Hallways)
+        {
+            hallway.Value.Initialize(this);
+            foreach (var sector in hallway.Value.Halls)
+                InitializeQuestCurios(sector, quest);
+        }
+
+        foreach (var entry in Rooms)
+            InitializeQuestCurios(entry.Value, quest);
+
+        SharedMash = DarkestDungeonManager.Data.DungeonEnviromentData["shared"].BattleMashes.Find(mash => mash.MashId == quest.Difficulty);
+        DungeonMash = DarkestDungeonManager.Data.DungeonEnviromentData[quest.Dungeon].BattleMashes.Find(mash => mash.MashId == quest.Difficulty);
+    }
+
+    public void Write(BinaryWriter bw)
+    {
+        bw.Write(Name);
+        bw.Write(GridSizeX);
+        bw.Write(GridSizeY);
+        bw.Write(StartingRoomId);
+
+        Rooms.Write(bw);
+        Hallways.Write(bw);
+        SharedMashExecutionIds.Write(bw);
+    }
+
+    public void Read(BinaryReader br)
+    {
+        Name = br.ReadString();
+        GridSizeX = br.ReadInt32();
+        GridSizeY = br.ReadInt32();
+        StartingRoomId = br.ReadString();
+
+        Rooms.Read(room => room.Id, br);
+        Hallways.Read(hallway => hallway.Id, br);
+        SharedMashExecutionIds.Read(br);
+    }
+
+
+    private void InitializeQuestCurios(Area area, Quest quest)
+    {
+        var curio = area.Prop as Curio;
+
+        if (curio == null || !curio.IsQuestCurio)
+            return;
+
+        if (quest.Goal.Type == "activate")
+        {
+            Assert.IsInstanceOf(typeof(QuestActivateData), quest.Goal.QuestData);
+
+            if (quest.Goal.StartingItems.Count > 0)
+                curio.ItemInteractions.Add(new ItemInteraction(1, quest.Goal.StartingItems[0].Id, "loot"));
+            else
+                curio.Results.Add(new CurioInteraction(1, "loot"));
+        }
+        else if (quest.Goal.Type == "gather")
+        {
+            Assert.IsInstanceOf(typeof(QuestGatherData), quest.Goal.QuestData);
+
+            var gatherData = (QuestGatherData)quest.Goal.QuestData;
+            var curioInteraction = new CurioInteraction(1, "loot");
+            curioInteraction.Results.Add(new CurioResult(1, 1, gatherData.Item.Id));
+            curio.Results.Add(curioInteraction);
+        }
     }
 }
