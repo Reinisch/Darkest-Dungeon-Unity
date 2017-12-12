@@ -481,45 +481,15 @@ public static class SaveLoadManager
         {
             new WeekActivityLog(1)
             {
-                 ReturnRecord = new PartyActivityRecord()
-                 {
-                      PartyActionType = PartyActionType.Tutorial,
-                      QuestType = "explore",
-                      QuestDifficulty = "1",
-                      QuestLength = "1",
-                      Dungeon = "weald",
-                      Names = new List<string>(new [] { "Reynald", "Dismas", }),
-                      Classes = new List<string>(new [] { "crusader", "highwayman"}),
-                      Alive = new List<bool>(new [] { true, true}),
-                      IsSuccessfull = true,
-                 },
-                 EmbarkRecord = new PartyActivityRecord()
-                 {
-                      PartyActionType = PartyActionType.Embark,
-                      QuestType = "gather",
-                      QuestDifficulty = "1",
-                      QuestLength = "2",
-                      Dungeon = "crypts",
-                      Names = new List<string>(new [] { "Reynald", "Dismas", "Renold", "Maudit" }),
-                      Classes = new List<string>(new [] { "crusader", "highwayman", "bounty_hunter", "vestal" }),
-                      Alive = new List<bool>(new [] { true, true, true, true }),
-                      IsSuccessfull = true,
-                 },
+                 ReturnRecord = new PartyActivityRecord(PartyActionType.Tutorial, "explore", "1", "1", "weald",
+                    saveData.RosterHeroes.GetRange(0, 2), new [] { true, true }, true),
+                 EmbarkRecord = new PartyActivityRecord(PartyActionType.Embark, "gather", "1", "2", "crypts",
+                    saveData.RosterHeroes.GetRange(0, 4), new [] { true, true, true, true }, true),
             },
             new WeekActivityLog(2)
             {
-                ReturnRecord = new PartyActivityRecord()
-                 {
-                      PartyActionType = PartyActionType.Result,
-                      QuestType = "gather",
-                      QuestDifficulty = "1",
-                      QuestLength = "2",
-                      Dungeon = "crypts",
-                      Names = new List<string>(new [] { "Reynald", "Dismas", "Renold", "Maudit" }),
-                      Classes = new List<string>(new [] { "crusader", "highwayman", "bounty_hunter", "vestal" }),
-                      Alive = new List<bool>(new [] { true, true, true, true }),
-                      IsSuccessfull = true,
-                 },
+                ReturnRecord = new PartyActivityRecord(PartyActionType.Result, "gather", "1", "2", "crypts",
+                    saveData.RosterHeroes.GetRange(0, 4), new [] { true, true, true, true }, true),
             },
         };
 
@@ -567,14 +537,6 @@ public static class SaveLoadManager
                 Factor = DeathFactor.AttackMonster, KillerName = "necromancer_C", ResolveLevel = 5, },
             new DeathRecord() { HeroName = "Qweoas", HeroClassIndex = 2,
                 Factor = DeathFactor.AttackMonster, KillerName = "necromancer_C", ResolveLevel = 5, },
-            new DeathRecord() { HeroName = "Klosopas", HeroClassIndex = 1,
-                Factor = DeathFactor.AttackMonster, KillerName = "necromancer_C", ResolveLevel = 6, },
-            new DeathRecord() { HeroName = "Klosopas", HeroClassIndex = 1,
-                Factor = DeathFactor.AttackMonster, KillerName = "necromancer_C", ResolveLevel = 6, },
-            new DeathRecord() { HeroName = "Klosopas", HeroClassIndex = 1,
-                Factor = DeathFactor.AttackMonster, KillerName = "necromancer_C", ResolveLevel = 6, },
-            new DeathRecord() { HeroName = "Klosopas", HeroClassIndex = 1,
-                Factor = DeathFactor.AttackMonster, KillerName = "necromancer_C", ResolveLevel = 6, },
             new DeathRecord() { HeroName = "Trexos", HeroClassIndex = 0,
                 Factor = DeathFactor.AttackMonster, KillerName = "necromancer_C", ResolveLevel = 4, },
             new DeathRecord() { HeroName = "Oloks", HeroClassIndex = 9,
@@ -836,247 +798,35 @@ public static class SaveLoadManager
 
         Dungeon dungeon = saveData.Dungeon = new Dungeon(saveData.Quest.Dungeon, 31, 32, "room:16/11");
 
-        #region Rooms
-        #region Room (1,2) 1/11
-        DungeonRoom room = new DungeonRoom("room:1/11", 1, 11)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Empty,
-            MashId = 6,
-            Prop = null,
-            BattleEncounter = null,
-            Doors = new List<Door>(),
-            TextureId = "random1",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room (2,2) 5/7
-        room = new DungeonRoom("room:5/7", 5, 7)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Battle,
-            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
-                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_2_mash_03"][0].MonsterSet),
-            MashId = 6,
-            Prop = null,
-            Doors = new List<Door>(),
-            TextureId = "random2",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room (2,1) 5/1 Boss Beacon
-        room = new DungeonRoom("room:5/1", 5, 1)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Boss,
-            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
-                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_2_miniboss_1"][0].MonsterSet),
-            MashId = 6,
-            Prop = new Curio("beacon") { IsQuestCurio = true, },
-            Doors = new List<Door>(),
-            TextureId = "plot_darkest_dungeon_2_final",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room (3,3) 9/11
-        room = new DungeonRoom("room:9/11", 9, 11)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Empty,
-            MashId = 6,
-            Prop = null,
-            BattleEncounter = null,
-            Doors = new List<Door>(),
-            TextureId = "random3",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room (2,4) 5/15
-        room = new DungeonRoom("room:5/15", 5, 15)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Empty,
-            MashId = 6,
-            Prop = null,
-            BattleEncounter = null,
-            Doors = new List<Door>(),
-            TextureId = "random1",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room (2,5) 5/22
-        room = new DungeonRoom("room:5/22", 5, 22)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Battle,
-            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
-                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_2_mash_10"][0].MonsterSet),
-            MashId = 6,
-            Prop = null,
-            Doors = new List<Door>(),
-            TextureId = "random2",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room (5,3) 16/11 Entry
-        room = new DungeonRoom("room:16/11", 16, 11)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Entrance,
-            MashId = 6,
-            Prop = null,
-            BattleEncounter = null,
-            Doors = new List<Door>(),
-            TextureId = "plot_darkest_dungeon_2_enter",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room (5,4) 16/18
-        room = new DungeonRoom("room:16/18", 16, 18)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Empty,
-            MashId = 6,
-            Prop = null,
-            BattleEncounter = null,
-            Doors = new List<Door>(),
-            TextureId = "random1",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room (4,5) 12/22
-        room = new DungeonRoom("room:12/22", 12, 22)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Empty,
-            MashId = 6,
-            Prop = null,
-            BattleEncounter = null,
-            Doors = new List<Door>(),
-            TextureId = "random2",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room (6,5) 20/22
-        room = new DungeonRoom("room:20/22", 20, 22)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Empty,
-            MashId = 6,
-            Prop = null,
-            BattleEncounter = null,
-            Doors = new List<Door>(),
-            TextureId = "random3",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room (5,6) 16/26
-        room = new DungeonRoom("room:16/26", 16, 26)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Battle,
-            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
-                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_2_mash_07"][0].MonsterSet),
-            MashId = 6,
-            Prop = null,
-            Doors = new List<Door>(),
-            TextureId = "random1",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room (5,7) 16/32 Boss Beacon
-        room = new DungeonRoom("room:16/32", 16, 32)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Boss,
-            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
-                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_2_miniboss_2"][0].MonsterSet),
-            MashId = 6,
-            Prop = new Curio("beacon") { IsQuestCurio = true, },
-            Doors = new List<Door>(),
-            TextureId = "plot_darkest_dungeon_2_final",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room (7,3) 23/11
-        room = new DungeonRoom("room:23/11", 23, 11)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Empty,
-            MashId = 6,
-            Prop = null,
-            BattleEncounter = null,
-            Doors = new List<Door>(),
-            TextureId = "random2",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room (9,3) 31/11
-        room = new DungeonRoom("room:31/11", 31, 11)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Empty,
-            MashId = 6,
-            Prop = null,
-            BattleEncounter = null,
-            Doors = new List<Door>(),
-            TextureId = "random3",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room (8,1) 27/1 Boss Beacon
-        room = new DungeonRoom("room:27/1", 27, 1)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Boss,
-            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
-                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_2_miniboss_3"][0].MonsterSet),
-            MashId = 6,
-            Prop = new Curio("beacon") { IsQuestCurio = true, },
-            Doors = new List<Door>(),
-            TextureId = "plot_darkest_dungeon_2_final",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room (8,2) 27/7
-        room = new DungeonRoom("room:27/7", 27, 7)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Empty,
-            MashId = 6,
-            Prop = null,
-            Doors = new List<Door>(),
-            TextureId = "random1",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room (8,4) 27/15
-        room = new DungeonRoom("room:27/15", 27, 15)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Empty,
-            MashId = 6,
-            Prop = null,
-            Doors = new List<Door>(),
-            TextureId = "random2",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room (8,5) 27/22
-        room = new DungeonRoom("room:27/22", 27, 22)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.BattleTresure,
-            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
-                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_2_mash_10"][0].MonsterSet),
-            MashId = 6,
-            Prop = DarkestDungeonManager.Data.Curios["ancestors_knapsack"],
-            Doors = new List<Door>(),
-            TextureId = "random3",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #endregion
+        dungeon.Rooms["room:1/11"] = new DungeonRoom("room:1/11", 1, 11, Knowledge.Hidden, AreaType.Empty, 6, "random1");
+        dungeon.Rooms["room:5/7"] = new DungeonRoom("room:5/7", 5, 7, Knowledge.Hidden, AreaType.Battle, 6, "random2");
+        dungeon.Rooms["room:5/7"].SetNamedEncounter("darkestdungeon", "dd_quest_2_mash_03", 0, 6);
+        dungeon.Rooms["room:5/1"] = new DungeonRoom("room:5/1", 5, 1, Knowledge.Hidden, AreaType.Boss, 6, "plot_darkest_dungeon_2_final");
+        dungeon.Rooms["room:5/1"].SetNamedEncounter("darkestdungeon", "dd_quest_2_miniboss_1", 0, 6);
+        dungeon.Rooms["room:5/1"].Prop = new Curio("beacon") { IsQuestCurio = true };
+        dungeon.Rooms["room:9/11"] = new DungeonRoom("room:9/11", 9, 11, Knowledge.Hidden, AreaType.Empty, 6, "random3");
+        dungeon.Rooms["room:5/15"] = new DungeonRoom("room:5/15", 5, 15, Knowledge.Hidden, AreaType.Empty, 6, "random1");
+        dungeon.Rooms["room:5/22"] = new DungeonRoom("room:5/22", 5, 22, Knowledge.Hidden, AreaType.Battle, 6, "random2");
+        dungeon.Rooms["room:5/22"].SetNamedEncounter("darkestdungeon", "dd_quest_2_mash_10", 0, 6);
+        dungeon.Rooms["room:16/11"] = new DungeonRoom("room:16/11", 16, 11, Knowledge.Completed, AreaType.Entrance, 6, "plot_darkest_dungeon_2_enter");
+        dungeon.Rooms["room:16/18"] = new DungeonRoom("room:16/18", 16, 18, Knowledge.Hidden, AreaType.Empty, 6, "random1");
+        dungeon.Rooms["room:12/22"] = new DungeonRoom("room:12/22", 12, 22, Knowledge.Hidden, AreaType.Empty, 6, "random2");
+        dungeon.Rooms["room:20/22"] = new DungeonRoom("room:20/22", 20, 22, Knowledge.Hidden, AreaType.Empty, 6, "random3");
+        dungeon.Rooms["room:16/26"] = new DungeonRoom("room:16/26", 16, 26, Knowledge.Hidden, AreaType.Battle, 6, "random1");
+        dungeon.Rooms["room:16/26"].SetNamedEncounter("darkestdungeon", "dd_quest_2_mash_07", 0, 6);
+        dungeon.Rooms["room:16/32"] = new DungeonRoom("room:16/32", 16, 32, Knowledge.Hidden, AreaType.Boss, 6, "plot_darkest_dungeon_2_final");
+        dungeon.Rooms["room:16/32"].SetNamedEncounter("darkestdungeon", "dd_quest_2_miniboss_2", 0, 6);
+        dungeon.Rooms["room:16/32"].Prop = new Curio("beacon") { IsQuestCurio = true };
+        dungeon.Rooms["room:23/11"] = new DungeonRoom("room:23/11", 23, 11, Knowledge.Hidden, AreaType.Empty, 6, "random2");
+        dungeon.Rooms["room:31/11"] = new DungeonRoom("room:31/11", 31, 11, Knowledge.Hidden, AreaType.Empty, 6, "random3");
+        dungeon.Rooms["room:27/1"] = new DungeonRoom("room:27/1", 27, 1, Knowledge.Hidden, AreaType.Boss, 6, "plot_darkest_dungeon_2_final");
+        dungeon.Rooms["room:27/1"].SetNamedEncounter("darkestdungeon", "dd_quest_2_miniboss_3", 0, 6);
+        dungeon.Rooms["room:27/1"].Prop = new Curio("beacon") { IsQuestCurio = true };
+        dungeon.Rooms["room:27/7"] = new DungeonRoom("room:27/7", 27, 7, Knowledge.Hidden, AreaType.Empty, 6, "random1");
+        dungeon.Rooms["room:27/15"] = new DungeonRoom("room:27/15", 27, 15, Knowledge.Hidden, AreaType.Empty, 6, "random2");
+        dungeon.Rooms["room:27/22"] = new DungeonRoom("room:27/22", 27, 22, Knowledge.Hidden, AreaType.BattleTresure, 6, "random3");
+        dungeon.Rooms["room:27/22"].SetNamedEncounter("darkestdungeon", "dd_quest_2_mash_10", 0, 6);
+        dungeon.Rooms["room:27/22"].SetCurio("ancestors_knapsack");
 
         Hallway hallway = dungeon.Hallways["5/15_to_1/11"] = new Hallway("5/15_to_1/11", dungeon.Rooms["room:1/11"], dungeon.Rooms["room:5/15"], Direction.Right, Direction.Left);
         hallway.Halls = new List<HallSector>()
@@ -1320,389 +1070,54 @@ public static class SaveLoadManager
 
         Dungeon dungeon = saveData.Dungeon = new Dungeon(saveData.Quest.Dungeon, 45, 30, "room:2/29");
 
-        #region Rooms
-        // Top 26-29
-        #region Room 2/29
-        DungeonRoom room = new DungeonRoom("room:2/29", 2, 29)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Entrance,
-            MashId = 6,
-            Doors = new List<Door>(),
-            TextureId = "plot_darkest_dungeon_3_enter",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 11/29
-        room = new DungeonRoom("room:11/29", 11, 29)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Empty,
-            MashId = 6,
-            Doors = new List<Door>(),
-            TextureId = "random1",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 31/29
-        room = new DungeonRoom("room:31/29", 31, 29)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Empty,
-            MashId = 6,
-            Prop = null,
-            Doors = new List<Door>(),
-            TextureId = "random1",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 37/29
-        room = new DungeonRoom("room:37/29", 37, 29)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.BattleTresure,
-            MashId = 6,
-            Prop = DarkestDungeonManager.Data.Curios["ancestors_knapsack"],
-            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
-                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_3_mash_06"][0].MonsterSet),
-            Doors = new List<Door>(),
-            TextureId = "random2",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 17/28
-        room = new DungeonRoom("room:17/28", 17, 28)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Battle,
-            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
-                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_3_mash_02"][0].MonsterSet),
-            MashId = 6,
-            Prop = null,
-            Doors = new List<Door>(),
-            TextureId = "random2",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 43/26
-        room = new DungeonRoom("room:43/26", 43, 26)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Battle,
-            MashId = 6,
-            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
-                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_3_mash_01"][0].MonsterSet),
-            Doors = new List<Door>(),
-            TextureId = "random3",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 21/26
-        room = new DungeonRoom("room:21/26", 21, 26)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Battle,
-            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
-                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_3_mash_02"][0].MonsterSet),
-            MashId = 6,
-            Prop = null,
-            Doors = new List<Door>(),
-            TextureId = "random3",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        // Top 20-25
-        #region Room 10/23
-        room = new DungeonRoom("room:10/23", 10, 23)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Empty,
-            MashId = 6,
-            Doors = new List<Door>(),
-            TextureId = "random1",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 18/22
-        room = new DungeonRoom("room:18/22", 18, 22)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Empty,
-            MashId = 6,
-            Doors = new List<Door>(),
-            TextureId = "random2",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 24/23
-        room = new DungeonRoom("room:24/23", 24, 23)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Battle,
-            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
-                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_3_mash_03"][0].MonsterSet),
-            MashId = 6,
-            Doors = new List<Door>(),
-            TextureId = "random3",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 30/24
-        room = new DungeonRoom("room:30/24", 30, 24)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Empty,
-            MashId = 6,
-            Doors = new List<Door>(),
-            TextureId = "random1",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 35/21
-        room = new DungeonRoom("room:35/21", 35, 21)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Battle,
-            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
-                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_3_mash_10"][0].MonsterSet),
-            MashId = 6,
-            Doors = new List<Door>(),
-            TextureId = "random2",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 40/23
-        room = new DungeonRoom("room:40/23", 40, 23)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Empty,
-            MashId = 6,
-            Doors = new List<Door>(),
-            TextureId = "random3",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        // Mid 15-19
-        #region Room 5/17
-        room = new DungeonRoom("room:5/17", 5, 17)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Battle,
-            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
-                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_3_mash_01"][0].MonsterSet),
-            MashId = 6,
-            Doors = new List<Door>(),
-            TextureId = "random1",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 11/17
-        room = new DungeonRoom("room:11/17", 11, 17)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Empty,
-            MashId = 6,
-            Doors = new List<Door>(),
-            TextureId = "random2",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 18/16
-        room = new DungeonRoom("room:18/16", 18, 16)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Battle,
-            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
-                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_3_mash_09"][0].MonsterSet),
-            MashId = 6,
-            Doors = new List<Door>(),
-            TextureId = "random3",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 24/17
-        room = new DungeonRoom("room:24/17", 24, 17)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Empty,
-            MashId = 6,
-            Doors = new List<Door>(),
-            TextureId = "random1",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 30/18
-        room = new DungeonRoom("room:30/18", 30, 18)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Empty,
-            MashId = 6,
-            Doors = new List<Door>(),
-            TextureId = "random2",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 41/17
-        room = new DungeonRoom("room:41/17", 41, 17)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Battle,
-            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
-                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_3_mash_05"][0].MonsterSet),
-            MashId = 6,
-            Doors = new List<Door>(),
-            TextureId = "random3",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        // Bot 8-14
-        #region Room 12/11
-        room = new DungeonRoom("room:12/11", 12, 11)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Battle,
-            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
-                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_3_mash_07"][0].MonsterSet),
-            MashId = 6,
-            Doors = new List<Door>(),
-            TextureId = "random1",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 19/10
-        room = new DungeonRoom("room:19/10", 19, 10)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Empty,
-            MashId = 6,
-            Doors = new List<Door>(),
-            TextureId = "random2",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion 
-        #region Room 26/10 Boss Teleport
-        room = new DungeonRoom("room:26/10", 26, 10)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.BattleCurio,
-            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
-                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_3_teleport"][0].MonsterSet),
-            MashId = 6,
-            Prop = new Curio("teleporter") { IsQuestCurio = true, },
-            Doors = new List<Door>(),
-            TextureId = "plot_darkest_dungeon_3_final",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 32/12
-        room = new DungeonRoom("room:32/12", 32, 12)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Empty,
-            MashId = 6,
-            Doors = new List<Door>(),
-            TextureId = "random3",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 38/13
-        room = new DungeonRoom("room:38/13", 38, 13)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Empty,
-            MashId = 6,
-            Doors = new List<Door>(),
-            TextureId = "random1",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 44/13
-        room = new DungeonRoom("room:44/13", 44, 13)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Battle,
-            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
-                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_3_mash_04"][0].MonsterSet),
-            MashId = 6,
-            Doors = new List<Door>(),
-            TextureId = "random2",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        // Bot 1-7
-        #region Room 16/1
-        room = new DungeonRoom("room:16/1", 16, 1)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Battle,
-            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
-                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_3_mash_02"][0].MonsterSet),
-            MashId = 6,
-            Doors = new List<Door>(),
-            TextureId = "random1",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 19/4
-        room = new DungeonRoom("room:19/4", 19, 4)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Empty,
-            MashId = 6,
-            Doors = new List<Door>(),
-            TextureId = "random2",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 25/4
-        room = new DungeonRoom("room:25/4", 25, 4)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Empty,
-            MashId = 6,
-            Doors = new List<Door>(),
-            TextureId = "random3",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 32/6
-        room = new DungeonRoom("room:32/6", 32, 6)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Empty,
-            MashId = 6,
-            Doors = new List<Door>(),
-            TextureId = "random1",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 35/3
-        room = new DungeonRoom("room:35/3", 35, 3)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Battle,
-            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
-                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_3_mash_03"][0].MonsterSet),
-            MashId = 6,
-            Doors = new List<Door>(),
-            TextureId = "random2",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 38/6
-        room = new DungeonRoom("room:38/6", 38, 6)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Battle,
-            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["darkestdungeon"].BattleMashes.
-                    Find(mash => mash.MashId == 6).NamedEncounters["dd_quest_3_mash_07"][0].MonsterSet),
-            MashId = 6,
-            Doors = new List<Door>(),
-            TextureId = "random3",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #endregion
+        saveData.Dungeon.Rooms["room:2/29"] = new DungeonRoom("room:2/29", 2, 29, Knowledge.Completed, AreaType.Entrance, 6, "plot_darkest_dungeon_3_enter");
+        saveData.Dungeon.Rooms["room:11/29"] = new DungeonRoom("room:11/29", 11, 29, Knowledge.Hidden, AreaType.Empty, 6, "random1");
+        saveData.Dungeon.Rooms["room:31/29"] = new DungeonRoom("room:31/29", 31, 29, Knowledge.Hidden, AreaType.Empty, 6, "random2");
+        saveData.Dungeon.Rooms["room:37/29"] = new DungeonRoom("room:37/29", 37, 29, Knowledge.Hidden, AreaType.BattleTresure, 6, "random2");
+        saveData.Dungeon.Rooms["room:37/29"].SetNamedEncounter("darkestdungeon", "dd_quest_3_mash_06", 0, 6);
+        saveData.Dungeon.Rooms["room:37/29"].SetCurio("ancestors_knapsack");
+        saveData.Dungeon.Rooms["room:17/28"] = new DungeonRoom("room:17/28", 17, 28, Knowledge.Hidden, AreaType.Battle, 6, "random2");
+        saveData.Dungeon.Rooms["room:17/28"].SetNamedEncounter("darkestdungeon", "dd_quest_3_mash_02", 0, 6);
+        saveData.Dungeon.Rooms["room:43/26"] = new DungeonRoom("room:43/26", 43, 26, Knowledge.Hidden, AreaType.Battle, 6, "random3");
+        saveData.Dungeon.Rooms["room:43/26"].SetNamedEncounter("darkestdungeon", "dd_quest_3_mash_01", 0, 6);
+        saveData.Dungeon.Rooms["room:21/26"] = new DungeonRoom("room:21/26", 21, 26, Knowledge.Hidden, AreaType.Battle, 6, "random3");
+        saveData.Dungeon.Rooms["room:21/26"].SetNamedEncounter("darkestdungeon", "dd_quest_3_mash_02", 0, 6);
+        saveData.Dungeon.Rooms["room:10/23"] = new DungeonRoom("room:10/23", 10, 23, Knowledge.Hidden, AreaType.Empty, 6, "random1");
+        saveData.Dungeon.Rooms["room:18/22"] = new DungeonRoom("room:18/22", 18, 22, Knowledge.Hidden, AreaType.Empty, 6, "random2");
+        saveData.Dungeon.Rooms["room:24/23"] = new DungeonRoom("room:24/23", 24, 23, Knowledge.Hidden, AreaType.Battle, 6, "random3");
+        saveData.Dungeon.Rooms["room:24/23"].SetNamedEncounter("darkestdungeon", "dd_quest_3_mash_03", 0, 6);
+        saveData.Dungeon.Rooms["room:30/24"] = new DungeonRoom("room:30/24", 30, 24, Knowledge.Hidden, AreaType.Empty, 6, "random1");
+        saveData.Dungeon.Rooms["room:35/21"] = new DungeonRoom("room:35/21", 35, 21, Knowledge.Hidden, AreaType.Battle, 6, "random2");
+        saveData.Dungeon.Rooms["room:35/21"].SetNamedEncounter("darkestdungeon", "dd_quest_3_mash_10", 0, 6);
+        saveData.Dungeon.Rooms["room:40/23"] = new DungeonRoom("room:40/23", 40, 23, Knowledge.Hidden, AreaType.Empty, 6, "random3");
+        saveData.Dungeon.Rooms["room:5/17"] = new DungeonRoom("room:5/17", 5, 17, Knowledge.Hidden, AreaType.Battle, 6, "random1");
+        saveData.Dungeon.Rooms["room:5/17"].SetNamedEncounter("darkestdungeon", "dd_quest_3_mash_01", 0, 6);
+        saveData.Dungeon.Rooms["room:11/17"] = new DungeonRoom("room:11/17", 11, 17, Knowledge.Hidden, AreaType.Empty, 6, "random2");
+        saveData.Dungeon.Rooms["room:18/16"] = new DungeonRoom("room:18/16", 18, 16, Knowledge.Hidden, AreaType.Battle, 6, "random3");
+        saveData.Dungeon.Rooms["room:18/16"].SetNamedEncounter("darkestdungeon", "dd_quest_3_mash_09", 0, 6);
+        saveData.Dungeon.Rooms["room:24/17"] = new DungeonRoom("room:24/17", 24, 17, Knowledge.Hidden, AreaType.Empty, 6, "random1");
+        saveData.Dungeon.Rooms["room:30/18"] = new DungeonRoom("room:30/18", 30, 18, Knowledge.Hidden, AreaType.Empty, 6, "random2");
+        saveData.Dungeon.Rooms["room:41/17"] = new DungeonRoom("room:41/17", 41, 17, Knowledge.Hidden, AreaType.Battle, 6, "random3");
+        saveData.Dungeon.Rooms["room:41/17"].SetNamedEncounter("darkestdungeon", "dd_quest_3_mash_05", 0, 6);
+        saveData.Dungeon.Rooms["room:12/11"] = new DungeonRoom("room:12/11", 12, 11, Knowledge.Hidden, AreaType.Battle, 6, "random1");
+        saveData.Dungeon.Rooms["room:12/11"].SetNamedEncounter("darkestdungeon", "dd_quest_3_mash_07", 0, 6);
+        saveData.Dungeon.Rooms["room:19/10"] = new DungeonRoom("room:19/10", 19, 10, Knowledge.Hidden, AreaType.Empty, 6, "random2");
+        saveData.Dungeon.Rooms["room:26/10"] = new DungeonRoom("room:26/10", 26, 10, Knowledge.Hidden, AreaType.BattleCurio, 6, "plot_darkest_dungeon_3_final");
+        saveData.Dungeon.Rooms["room:26/10"].SetNamedEncounter("darkestdungeon", "dd_quest_3_teleport", 0, 6);
+        saveData.Dungeon.Rooms["room:26/10"].Prop = new Curio("teleporter") {IsQuestCurio = true};
+        saveData.Dungeon.Rooms["room:32/12"] = new DungeonRoom("room:32/12", 32, 12, Knowledge.Hidden, AreaType.Empty, 6, "random3");
+        saveData.Dungeon.Rooms["room:38/13"] = new DungeonRoom("room:38/13", 38, 13, Knowledge.Hidden, AreaType.Empty, 6, "random1");
+        saveData.Dungeon.Rooms["room:44/13"] = new DungeonRoom("room:44/13", 44, 13, Knowledge.Hidden, AreaType.Battle, 6, "random2");
+        saveData.Dungeon.Rooms["room:44/13"].SetNamedEncounter("darkestdungeon", "dd_quest_3_mash_04", 0, 6);
+        saveData.Dungeon.Rooms["room:16/1"] = new DungeonRoom("room:16/1", 16, 1, Knowledge.Hidden, AreaType.Battle, 6, "random1");
+        saveData.Dungeon.Rooms["room:16/1"].SetNamedEncounter("darkestdungeon", "dd_quest_3_mash_02", 0, 6);
+        saveData.Dungeon.Rooms["room:19/4"] = new DungeonRoom("room:19/4", 19, 4, Knowledge.Hidden, AreaType.Empty, 6, "random2");
+        saveData.Dungeon.Rooms["room:25/4"] = new DungeonRoom("room:25/4", 25, 4, Knowledge.Hidden, AreaType.Empty, 6, "random3");
+        saveData.Dungeon.Rooms["room:32/6"] = new DungeonRoom("room:32/6", 32, 6, Knowledge.Hidden, AreaType.Empty, 6, "random1");
+        saveData.Dungeon.Rooms["room:35/3"] = new DungeonRoom("room:35/3", 35, 3, Knowledge.Hidden, AreaType.Battle, 6, "random2");
+        saveData.Dungeon.Rooms["room:35/3"].SetNamedEncounter("darkestdungeon", "dd_quest_3_mash_03", 0, 6);
+        saveData.Dungeon.Rooms["room:38/6"] = new DungeonRoom("room:38/6", 38, 6, Knowledge.Hidden, AreaType.Battle, 6, "random3");
+        saveData.Dungeon.Rooms["room:38/6"].SetNamedEncounter("darkestdungeon", "dd_quest_3_mash_07", 0, 6);
 
         Hallway hallway = dungeon.Hallways["2/29_to_11/29"] = new Hallway("2/29_to_11/29", dungeon.Rooms["room:11/29"], dungeon.Rooms["room:2/29"], Direction.Right, Direction.Left);
         hallway.Halls = new List<HallSector>()
@@ -2206,101 +1621,22 @@ public static class SaveLoadManager
 
         Dungeon dungeon = saveData.Dungeon = new Dungeon(saveData.Quest.Dungeon, 33, 30, "room:17/13");
 
-        #region Rooms
-        #region Room 17/13 Entrance
-        DungeonRoom room = new DungeonRoom("room:17/13", 17, 13)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Entrance,
-            MashId = 6,
-            Doors = new List<Door>(),
-            TextureId = "start",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 17/23 Vvulf
-        room = new DungeonRoom("room:17/23", 17, 23)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Boss,
-            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["town"].BattleMashes.
-                    Find(mash => mash.MashId == 6).BossEncounters.Find(enc => enc.MonsterSet.Contains("brigand_sapper_D")).MonsterSet),
-            MashId = 6,
-            Doors = new List<Door>(),
-            TextureId = "altar",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 12/18
-        room = new DungeonRoom("room:12/18", 12, 18)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Battle,
-            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["town"].BattleMashes.
-                    Find(mash => mash.MashId == 6).NamedEncounters["town_incursion_03"][0].MonsterSet),
-            MashId = 6,
-            Doors = new List<Door>(),
-            TextureId = "square",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 22/18
-        room = new DungeonRoom("room:22/18", 22, 18)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Battle,
-            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["town"].BattleMashes.
-                    Find(mash => mash.MashId == 6).NamedEncounters["town_incursion_04"][0].MonsterSet),
-            MashId = 6,
-            Doors = new List<Door>(),
-            TextureId = "square",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 7/18
-        room = new DungeonRoom("room:7/18", 7, 18)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.BattleCurio,
-            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["town"].BattleMashes.
-                    Find(mash => mash.MashId == 6).NamedEncounters["town_incursion_05"][0].MonsterSet),
-            MashId = 6,
-            Prop = DarkestDungeonManager.Data.Curios["ancestors_knapsack"],
-            Doors = new List<Door>(),
-            TextureId = "square",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 27/18
-        room = new DungeonRoom("room:27/18", 27, 18)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.BattleCurio,
-            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["town"].BattleMashes.
-                    Find(mash => mash.MashId == 6).NamedEncounters["town_incursion_06"][0].MonsterSet),
-            MashId = 6,
-            Prop = DarkestDungeonManager.Data.Curios["ancestors_knapsack"],
-            Doors = new List<Door>(),
-            TextureId = "square",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 17/18
-        room = new DungeonRoom("room:17/18", 17, 18)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.BattleCurio,
-            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["town"].BattleMashes.
-                    Find(mash => mash.MashId == 6).NamedEncounters["town_incursion_06"][0].MonsterSet),
-            MashId = 6,
-            Prop = DarkestDungeonManager.Data.Curios["ancestors_knapsack"],
-            Doors = new List<Door>(),
-            TextureId = "square",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-
-        #endregion
+        saveData.Dungeon.Rooms["room:17/13"] = new DungeonRoom("room:17/13", 17, 13, Knowledge.Completed, AreaType.Entrance, 6, "start");
+        saveData.Dungeon.Rooms["room:17/23"] = new DungeonRoom("room:17/23", 17, 23, Knowledge.Hidden, AreaType.Boss, 6, "start");
+        saveData.Dungeon.Rooms["room:17/23"].SetBossEncounter("town", "brigand_sapper_D", 6);
+        saveData.Dungeon.Rooms["room:12/18"] = new DungeonRoom("room:12/18", 12, 18, Knowledge.Hidden, AreaType.Battle, 6, "square");
+        saveData.Dungeon.Rooms["room:12/18"].SetNamedEncounter("town", "town_incursion_03", 0, 6);
+        saveData.Dungeon.Rooms["room:22/18"] = new DungeonRoom("room:22/18", 22, 18, Knowledge.Hidden, AreaType.Battle, 6, "square");
+        saveData.Dungeon.Rooms["room:22/18"].SetNamedEncounter("town", "town_incursion_04", 0, 6);
+        saveData.Dungeon.Rooms["room:7/18"] = new DungeonRoom("room:7/18", 7, 18, Knowledge.Hidden, AreaType.BattleCurio, 6, "square");
+        saveData.Dungeon.Rooms["room:7/18"].SetNamedEncounter("town", "town_incursion_05", 0, 6);
+        saveData.Dungeon.Rooms["room:7/18"].SetCurio("ancestors_knapsack");
+        saveData.Dungeon.Rooms["room:27/18"] = new DungeonRoom("room:27/18", 27, 18, Knowledge.Hidden, AreaType.BattleCurio, 6, "square");
+        saveData.Dungeon.Rooms["room:27/18"].SetNamedEncounter("town", "town_incursion_06", 0, 6);
+        saveData.Dungeon.Rooms["room:27/18"].SetCurio("ancestors_knapsack");
+        saveData.Dungeon.Rooms["room:17/18"] = new DungeonRoom("room:17/18", 17, 18, Knowledge.Hidden, AreaType.BattleCurio, 6, "square");
+        saveData.Dungeon.Rooms["room:17/18"].SetNamedEncounter("town", "town_incursion_06", 0, 6);
+        saveData.Dungeon.Rooms["room:17/18"].SetCurio("ancestors_knapsack");
 
         Hallway hallway = dungeon.Hallways["17/13_to_12/18"] = new Hallway("17/13_to_12/18", dungeon.Rooms["room:12/18"], dungeon.Rooms["room:17/13"], Direction.Right, Direction.Left);
         hallway.Halls = new List<HallSector>()
@@ -2391,108 +1727,22 @@ public static class SaveLoadManager
 
         Dungeon dungeon = saveData.Dungeon = new Dungeon(saveData.Quest.Dungeon, 30, 25, "room:14/4");
 
-        #region Rooms
-        #region Room 14/4 Entrance
-        DungeonRoom room = new DungeonRoom("room:14/4", 14, 4)
-        {
-            Knowledge = Knowledge.Scouted,
-            Type = AreaType.Entrance,
-            MashId = 1,
-            Doors = new List<Door>(),
-            TextureId = "entrance",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 14/11
-        room = new DungeonRoom("room:14/11", 14, 11)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.BattleTresure,
-            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["crypts"].BattleMashes.
-                    Find(mash => mash.MashId == 1).NamedEncounters["tutorial_mash_01"][0].MonsterSet),
-            MashId = 1,
-            Prop = DarkestDungeonManager.Data.Curios["tutorial_shovel"],
-            Doors = new List<Door>(),
-            TextureId = "altar",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 14/18
-        room = new DungeonRoom("room:14/18", 14, 18)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Empty,
-            MashId = 1,
-            Doors = new List<Door>(),
-            TextureId = "empty",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 14/25
-        room = new DungeonRoom("room:14/25", 14, 25)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.BattleTresure,
-            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["crypts"].BattleMashes.
-                    Find(mash => mash.MashId == 1).NamedEncounters["tutorial_mash_03"][0].MonsterSet),
-            MashId = 1,
-            Prop = DarkestDungeonManager.Data.Curios["heirloom_chest"],
-            Doors = new List<Door>(),
-            TextureId = "drain",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 21/25
-        room = new DungeonRoom("room:21/25", 21, 25)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Empty,
-            MashId = 1,
-            Doors = new List<Door>(),
-            TextureId = "barrels",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 28/25
-        room = new DungeonRoom("room:28/25", 28, 25)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.Empty,
-            MashId = 1,
-            Doors = new List<Door>(),
-            TextureId = "library",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 28/18
-        room = new DungeonRoom("room:28/18", 28, 18)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.BattleTresure,
-            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["crypts"].BattleMashes.
-                    Find(mash => mash.MashId == 1).NamedEncounters["tutorial_mash_05"][0].MonsterSet),
-            Prop = DarkestDungeonManager.Data.Curios["heirloom_chest"],
-            MashId = 1,
-            Doors = new List<Door>(),
-            TextureId = "torture",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #region Room 21/18
-        room = new DungeonRoom("room:21/18", 21, 18)
-        {
-            Knowledge = Knowledge.Hidden,
-            Type = AreaType.BattleCurio,
-            BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData["crypts"].BattleMashes.
-                    Find(mash => mash.MashId == 1).NamedEncounters["tutorial_mash_04"][0].MonsterSet),
-            Prop = DarkestDungeonManager.Data.Curios["altar_of_light"],
-            MashId = 1,
-            Doors = new List<Door>(),
-            TextureId = "empty",
-        };
-        saveData.Dungeon.Rooms.Add(room.Id, room);
-        #endregion
-        #endregion
+        saveData.Dungeon.Rooms["room:14/4"] = new DungeonRoom("room:14/4", 14, 4, Knowledge.Scouted, AreaType.Entrance, 1, "entrance");
+        saveData.Dungeon.Rooms["room:14/11"] = new DungeonRoom("room:14/11", 14, 11, Knowledge.Hidden, AreaType.BattleTresure, 1, "altar");
+        saveData.Dungeon.Rooms["room:14/11"].SetNamedEncounter("crypts", "tutorial_mash_01", 0, 1);
+        saveData.Dungeon.Rooms["room:14/11"].SetCurio("tutorial_shovel");
+        saveData.Dungeon.Rooms["room:14/18"] = new DungeonRoom("room:14/18", 14, 18, Knowledge.Hidden, AreaType.Empty, 1, "empty");
+        saveData.Dungeon.Rooms["room:14/25"] = new DungeonRoom("room:14/25", 14, 25, Knowledge.Hidden, AreaType.BattleTresure, 1, "drain");
+        saveData.Dungeon.Rooms["room:14/25"].SetNamedEncounter("crypts", "tutorial_mash_03", 0, 1);
+        saveData.Dungeon.Rooms["room:14/25"].SetCurio("heirloom_chest");
+        saveData.Dungeon.Rooms["room:21/25"] = new DungeonRoom("room:21/25", 21, 25, Knowledge.Hidden, AreaType.Empty, 1, "barrels");
+        saveData.Dungeon.Rooms["room:28/25"] = new DungeonRoom("room:28/25", 28, 25, Knowledge.Hidden, AreaType.Empty, 1, "library");
+        saveData.Dungeon.Rooms["room:28/18"] = new DungeonRoom("room:28/18", 28, 18, Knowledge.Hidden, AreaType.BattleTresure, 1, "torture");
+        saveData.Dungeon.Rooms["room:28/18"].SetNamedEncounter("crypts", "tutorial_mash_05", 0, 1);
+        saveData.Dungeon.Rooms["room:28/18"].SetCurio("heirloom_chest");
+        saveData.Dungeon.Rooms["room:21/18"] = new DungeonRoom("room:21/18", 21, 18, Knowledge.Hidden, AreaType.BattleCurio, 1, "empty");
+        saveData.Dungeon.Rooms["room:21/18"].SetNamedEncounter("crypts", "tutorial_mash_04", 0, 1);
+        saveData.Dungeon.Rooms["room:21/18"].SetCurio("altar_of_light");
 
         Hallway hallway = dungeon.Hallways["14/4_to_14/11"] = new Hallway("14/4_to_14/11", dungeon.Rooms["room:14/11"], dungeon.Rooms["room:14/4"], Direction.Right, Direction.Left);
         hallway.Halls = new List<HallSector>()

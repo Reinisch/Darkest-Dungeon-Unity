@@ -2020,7 +2020,7 @@ public class DarkestDatabase : MonoBehaviour
             if (!Items.ContainsKey(newItemData.Type))
                 Items.Add(newItemData.Type, new Dictionary<string, ItemData>());
             Items[newItemData.Type].Add(newItemData.Id, newItemData);
-        };
+        }
     }
     public void LoadProvision()
     {

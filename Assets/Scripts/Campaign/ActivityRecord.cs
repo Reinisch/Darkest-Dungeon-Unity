@@ -1117,9 +1117,8 @@ public class PartyActivityRecord : ActivityRecord
         }
     }
 
-    public PartyActivityRecord(PartyActionType actionType, string questType, string questDifficulty,
-        string questLength, string dungeon, List<Hero> heroes, bool[] aliveStatus, bool isSuccessfull)
-        : base(LogType.Raid)
+    public PartyActivityRecord(PartyActionType actionType, string questType, string questDifficulty, string questLength,
+        string dungeon, List<SaveHeroData> heroes, bool[] aliveStatus, bool isSuccessfull) : base(LogType.Raid)
     {
         PartyActionType = actionType;
         QuestType = questType;
@@ -1128,8 +1127,8 @@ public class PartyActivityRecord : ActivityRecord
         Dungeon = dungeon;
         IsSuccessfull = isSuccessfull;
 
-        Names = new List<string>(heroes.Select(item => item.HeroName));
-        Classes = new List<string>(heroes.Select(item => item.Class));
+        Names = new List<string>(heroes.Select(item => item.Name));
+        Classes = new List<string>(heroes.Select(item => item.HeroClass));
         Alive = new List<bool>(aliveStatus);
     }
 
