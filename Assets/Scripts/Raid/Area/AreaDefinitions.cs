@@ -64,22 +64,6 @@ public abstract class Area : IBinarySaveData
 
     public bool IsMeetingSaveCriteria { get { return true; } }
 
-    public Direction OppositeDirection(Direction targetDirection)
-    {
-        switch (targetDirection)
-        {
-            case Direction.Bot:
-                return Direction.Top;
-            case Direction.Top:
-                return Direction.Bot;
-            case Direction.Left:
-                return Direction.Right;
-            case Direction.Right:
-                return Direction.Left;
-        }
-        return Direction.Left;
-    }
-
     public bool HasActiveBattle
     {
         get
@@ -88,6 +72,23 @@ public abstract class Area : IBinarySaveData
         }
     }
 
+
+    public void SetNamedEncounter(string dungeon, string encounter, int index, int mashId)
+    {
+        BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData[dungeon].BattleMashes.
+            Find(mash => mash.MashId == mashId).NamedEncounters[encounter][index].MonsterSet);
+    }
+
+    public void SetBossEncounter(string dungeon, string boss, int mashId)
+    {
+        BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData[dungeon].BattleMashes.
+            Find(mash => mash.MashId == mashId).BossEncounters.Find(enc => enc.MonsterSet.Contains(boss)).MonsterSet);
+    }
+
+    public void SetCurio(string propName)
+    {
+        Prop = DarkestDungeonManager.Data.Curios[propName];
+    }
 
     public virtual void Write(BinaryWriter bw)
     {

@@ -18,10 +18,8 @@ public class DungeonRoom : Area
     {
         Type = AreaType.Empty;
         Knowledge = Knowledge.Hidden;
-        Prop = null;
 
         TextureId = "";
-        MashId = 0;
         Doors = new List<Door>();
     }
 
@@ -31,6 +29,23 @@ public class DungeonRoom : Area
 
         GridX = gridX;
         GridY = gridY;
+    }
+
+    public DungeonRoom(string id, int gridX, int gridY, Knowledge knowledge, AreaType areaType, int mashId, string textureId)
+    {
+        Id = id;
+
+        GridX = gridX;
+        GridY = gridY;
+
+        Knowledge = knowledge;
+        Type = areaType;
+        MashId = mashId;
+        TextureId = textureId;
+
+        Prop = null;
+        BattleEncounter = null;
+        Doors = new List<Door>();
     }
 
 

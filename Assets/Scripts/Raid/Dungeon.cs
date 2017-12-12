@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
+using UnityEngine;
 
 public class Dungeon : IBinarySaveData
 {
@@ -44,6 +45,14 @@ public class Dungeon : IBinarySaveData
         Rooms = new Dictionary<string, DungeonRoom>();
         Hallways = new Dictionary<string, Hallway>();
         SharedMashExecutionIds = new List<int>();
+    }
+
+    public Dungeon(string name, int gridSizeX, int gridSizeY, string startingRoomId) : this()
+    {
+        Name = name;
+        GridSizeX = gridSizeX;
+        GridSizeY = gridSizeY;
+        StartingRoomId = startingRoomId;
     }
 
 

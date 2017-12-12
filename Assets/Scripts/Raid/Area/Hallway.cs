@@ -56,6 +56,14 @@ public class Hallway : IBinarySaveData
         Id = id;
     }
 
+    public Hallway(string id, DungeonRoom fromRoomB, DungeonRoom toRoomA, Direction directionFromB, Direction directionFromA) : this(id)
+    {
+        RoomA = toRoomA;
+        RoomB = fromRoomB;
+        RoomA.Doors.Add(new Door(toRoomA.Id, Id, directionFromA));
+        RoomB.Doors.Add(new Door(fromRoomB.Id, Id, directionFromB));
+    }
+
 
     public bool Connects(DungeonRoom room)
     {
@@ -76,6 +84,11 @@ public class Hallway : IBinarySaveData
         return null;
     }
 
+
+    public void AddHall(HallSector hallSector)
+    {
+        Halls.Add(hallSector);
+    }
 
     public void Initialize(Dungeon dungeon)
     {

@@ -1777,7 +1777,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                         {
                             var currentRoom = Raid.CurrentLocation as DungeonRoom;
                             var targetDoor = currentRoom.Doors.Find(door => door.TargetArea == Raid.LastSector.Hallway.Id);
-                            var direction = currentRoom.OppositeDirection(targetDoor.Direction);
+                            var direction = targetDoor.Direction.OppositeDirection();
                             currentEvent = HallwayLoadingEvent(Raid.LastSector, HallTransitionType.Retreat, direction, currentRoom);
                         }
 

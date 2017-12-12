@@ -311,6 +311,50 @@ public class SaveCampaignData
         InventoryItems = new List<InventorySlotData>();
     }
 
+    public void PopulateStartingDungeonInfo(bool isNewGamePlus)
+    {
+        Quest = new PlotQuest()
+        {
+            IsPlotQuest = true,
+            Id = "tutorial",
+            Difficulty = 1,
+            Type = "tutorial_room",
+            Dungeon = "weald",
+            DungeonLevel = 1,
+            Goal = DarkestDungeonManager.Data.QuestDatabase.QuestGoals["tutorial_final_room"],
+            Length = 1,
+            PlotTrinket = new PlotTrinketReward() { Amount = 0, Rarity = "very_common" },
+            Reward = new CompletionReward()
+            {
+                ResolveXP = 2,
+                ItemDefinitions = new List<ItemDefinition>()
+                 {
+                     new ItemDefinition("gold", "", 5000),
+                 }
+            },
+
+            CanRetreat = false,
+            CompletionDungeonXp = false,
+        };
+
+        Dungeon = new Dungeon("weald", 9, 1, "room1_1");
+        Dungeon.Rooms["room1_1"] = new DungeonRoom("room1_1", 1, 1, Knowledge.Completed, AreaType.Entrance, 1, "effigy_0");
+        Dungeon.Rooms["room2_1"] = new DungeonRoom("room2_1", 8, 1, Knowledge.Hidden, AreaType.BattleTresure, 1, "effigy_1");
+        Dungeon.Rooms["room2_1"].SetNamedEncounter("weald", "tutorial_2", 0, 1);
+        Dungeon.Rooms["room2_1"].SetCurio("bandits_trapped_chest");
+
+        Hallway hallway = Dungeon.Hallways["hallroom2_1_room1_1"] = new Hallway("hallroom2_1_room1_1", Dungeon.Rooms["room1_1"], Dungeon.Rooms["room2_1"], Direction.Right, Direction.Left);
+        hallway.Halls = new List<HallSector>()
+        {
+            new HallSector("0", 7, 1, hallway, new Door(hallway.Id, hallway.RoomA.Id, Direction.Left)),
+            new HallSector("1", 6, 1, hallway, Knowledge.Hidden, AreaType.Curio, "7", isNewGamePlus ? "open_grave" : "travellers_tent_tutorial"),
+            new HallSector("2", 5, 1, hallway, Knowledge.Hidden, AreaType.Empty, "8"),
+            new HallSector("3", 4, 1, hallway, Knowledge.Hidden, AreaType.Battle, "2", "weald", "tutorial_1", 1, 0),
+            new HallSector("4", 3, 1, hallway, Knowledge.Hidden, AreaType.Empty, "1"),
+            new HallSector("5", 2, 1, hallway, new Door(hallway.Id, hallway.RoomB.Id, Direction.Right)),
+        };
+    }
+
     public void UpdateFromEstate()
     {
         var campaign = DarkestDungeonManager.Campaign;

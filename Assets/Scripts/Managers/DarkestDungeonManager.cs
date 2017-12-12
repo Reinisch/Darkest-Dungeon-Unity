@@ -195,9 +195,6 @@ public class DarkestDungeonManager : MonoBehaviour
 
     void Start()
     {
-#if UNITY_EDITOR
-        SaveLoadManager.WriteAllDungeons();
-#endif
     }
 
     public void LoadSave()

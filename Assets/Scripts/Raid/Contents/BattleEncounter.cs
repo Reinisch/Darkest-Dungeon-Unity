@@ -25,6 +25,12 @@ public class BattleEncounter : IBinarySaveData
             Monsters.Add(new Monster(DarkestDungeonManager.Data.Monsters[monsterName]));
     }
 
+    public BattleEncounter(params string[] monsterNames) : this()
+    {
+        foreach (var monsterName in monsterNames)
+            Monsters.Add(new Monster(DarkestDungeonManager.Data.Monsters[monsterName]));
+    }
+
 
     public void Write(BinaryWriter bw)
     {
