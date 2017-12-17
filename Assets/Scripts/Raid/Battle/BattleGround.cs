@@ -596,7 +596,7 @@ public class BattleGround : MonoBehaviour
 
         newUnit.Initialize(new Monster(monsterData), targetRank, Team.Monsters);
         newUnit.transform.SetParent(MonsterParty.transform, false);
-        newUnit.RectTransform.position = MonsterFormation.rankHolder.rankMarkSlots[targetRank - 1].transform.position;
+        newUnit.RectTransform.position = MonsterFormation.rankHolder.RankMarkSlots[targetRank - 1].transform.position;
         newUnit.Party = MonsterParty;
         newUnit.Formation = MonsterFormation;
         newUnit.CombatInfo.PrepareForBattle(PickId(), newUnit.Character as Monster, canSpawnLoot);

@@ -388,9 +388,11 @@ public class TorchMeter : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 sb.Append("</color>");
                 sb.AppendFormat("<color={0}>", DarkestDungeonManager.Data.HexColors["notable"]);
                 sb.Append("++");
-                sb.Append(LocalizationManager.GetString("str_darkness_loot")); sb.AppendLine();
+                sb.Append(LocalizationManager.GetString("str_darkness_loot"));
+                sb.AppendLine();
                 sb.Append("++");
-                sb.Append(LocalizationManager.GetString("str_darkness_player_crit")); sb.AppendLine();
+                sb.Append(LocalizationManager.GetString("str_darkness_player_crit"));
+                sb.AppendLine();
                 sb.Append("</color>");
                 break;
             case TorchRangeType.Out:

@@ -31,6 +31,24 @@ public class Buff
     public float SingleParam { get; set; }
     public string StringParam { get; set; }
 
+    public Buff()
+    {
+    }
+
+    public Buff(BuffType buffType, BuffRule rule, AttributeType attributeType, float modifierValue)
+    {
+        Id = "";
+        Type = buffType;
+        RuleType = rule;
+        AttributeType = attributeType;
+        ModifierValue = modifierValue;
+    }
+
+    public Buff(BuffType buffType, AttributeType attributeType, float modifierValue) :
+        this(buffType, BuffRule.Always, attributeType, modifierValue)
+    {
+    }
+
     public bool IsPositive()
     {
         if (AttributeType == AttributeType.StressDmgPercent || AttributeType == AttributeType.StressDmgReceivedPercent)
@@ -120,6 +138,7 @@ public class Buff
             return sb.ToString();
         }
     }
+
     public string TooltipOverrided(float amount)
     {
         if (AttributeType == AttributeType.DamageLow || amount == 0)
