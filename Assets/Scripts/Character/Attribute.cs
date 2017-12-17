@@ -176,24 +176,43 @@ public abstract class BaseAttribute
     protected float modifiedValue;
 
     public float RawValue
-    { 
+    {
         get { return rawValue; }
-        set { rawValue = value; isModificationCurrent = false; }
+        set
+        {
+            rawValue = value;
+            isModificationCurrent = false;
+        }
     }
+
     public float FlatAddition
     {
         get { return flatAddition; }
-        set { flatAddition = value; isModificationCurrent = false; }
+        set
+        {
+            flatAddition = value;
+            isModificationCurrent = false;
+        }
     }
+
     public float Multiplier
     {
         get { return multiplier; }
-        set { multiplier = value; isModificationCurrent = false; }
+        set
+        {
+            multiplier = value;
+            isModificationCurrent = false;
+        }
     }
+
     public float FinalFlatAddition
     {
         get { return finalFlatAddition; }
-        set { finalFlatAddition = value; isModificationCurrent = false; }
+        set
+        {
+            finalFlatAddition = value;
+            isModificationCurrent = false;
+        }
     }
 
     protected bool isModificationCurrent;

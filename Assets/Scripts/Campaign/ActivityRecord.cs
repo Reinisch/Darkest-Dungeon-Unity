@@ -1039,7 +1039,8 @@ public class PartyActivityRecord : ActivityRecord
                                     Alive[0] ? Alive[1] ? Alive[2] ? Names[3] : Names[2] : Names[1] : Names[0]);
                                 break;
                             case 2:
-                                int deadOne = 0; int deadTwo = 0;
+                                int deadOne = 0;
+                                int deadTwo = 0;
                                 for(int i = 0; i < Alive.Count; i++)
                                     if(!Alive[i]) deadTwo = i;
                                 for (int i = Alive.Count - 1; i >= 0; i--)
@@ -1048,12 +1049,13 @@ public class PartyActivityRecord : ActivityRecord
                                     DarkestDungeonManager.Data.HexColors["harmful"], Names[deadOne], Names[deadTwo]);
                                 break;
                             case 3:
-                                int dead = 0; int live = Alive.IndexOf(true);
+                                int dead = 0;
+                                int live = Alive.IndexOf(true);
                                 deadHeroes = string.Format(LocalizationManager.GetString("str_party_members_3"),
                                     DarkestDungeonManager.Data.HexColors["harmful"],
                                     dead++ == live ? Names[dead++] : Names[dead - 1],
                                     dead++ == live ? Names[dead++] : Names[dead - 1],
-                                    dead++ == live ? Names[dead++] : Names[dead - 1]);
+                                    dead++ == live ? Names[dead] : Names[dead - 1]);
                                 break;
                         }
                         sb.AppendFormat("\n" + LocalizationManager.GetString("str_perished"), deadHeroes);

@@ -29,7 +29,7 @@ public class SkillUpgradeSlot : MonoBehaviour, IPointerEnterHandler, IPointerExi
     {
         Hero = hero;
         Tree = tree;
-        Upgrade = upgrade; ;
+        Upgrade = upgrade;
         Skill = hero.HeroClass.CombatSkillVariants.Find(skill =>
             skill.Id == hero.HeroClass.CombatSkills[skillIndex].Id
             && skill.Level == tree.Upgrades.IndexOf(upgrade));

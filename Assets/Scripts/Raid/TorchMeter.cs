@@ -330,56 +330,95 @@ public class TorchMeter : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         {
             case TorchRangeType.Radiant:
                 sb.AppendFormat("<color={0}>", DarkestDungeonManager.Data.HexColors["notable"]);
-                sb.Append("++"); sb.Append(LocalizationManager.GetString("str_darkness_player_scout")); sb.AppendLine();
-                sb.Append("++"); sb.Append(LocalizationManager.GetString("str_darkness_monstersSurprised")); sb.AppendLine();
+                sb.Append("++");
+                sb.Append(LocalizationManager.GetString("str_darkness_player_scout"));
+                sb.AppendLine();
+                sb.Append("++");
+                sb.Append(LocalizationManager.GetString("str_darkness_monstersSurprised"));
+                sb.AppendLine();
                 sb.Append("</color>");
                 break;
             case TorchRangeType.Dim:
                 sb.AppendFormat("<color={0}>", DarkestDungeonManager.Data.HexColors["harmful"]);
-                sb.Append("+"); sb.Append(LocalizationManager.GetString("str_darkness_stress")); sb.AppendLine();
+                sb.Append("+");
+                sb.Append(LocalizationManager.GetString("str_darkness_stress"));
+                sb.AppendLine();
                 sb.Append("</color>");
                 sb.AppendFormat("<color={0}>", DarkestDungeonManager.Data.HexColors["notable"]);
-                sb.Append("++"); sb.Append(LocalizationManager.GetString("str_darkness_player_scout")); sb.AppendLine();
-                sb.Append("++"); sb.Append(LocalizationManager.GetString("str_darkness_monstersSurprised")); sb.AppendLine();
+                sb.Append("++");
+                sb.Append(LocalizationManager.GetString("str_darkness_player_scout"));
+                sb.AppendLine();
+                sb.Append("++");
+                sb.Append(LocalizationManager.GetString("str_darkness_monstersSurprised"));
+                sb.AppendLine();
                 sb.Append("</color>");
                 break;
             case TorchRangeType.Shadowy:
                 sb.AppendFormat("<color={0}>", DarkestDungeonManager.Data.HexColors["harmful"]);
-                sb.Append("++"); sb.Append(LocalizationManager.GetString("str_darkness_stress")); sb.AppendLine();
-                sb.Append("+"); sb.Append(LocalizationManager.GetString("str_darkness_monster")); sb.AppendLine();
-                sb.Append("+"); sb.Append(LocalizationManager.GetString("str_darkness_heroesSurprised")); sb.AppendLine();
+                sb.Append("++");
+                sb.Append(LocalizationManager.GetString("str_darkness_stress"));
+                sb.AppendLine();
+                sb.Append("+");
+                sb.Append(LocalizationManager.GetString("str_darkness_monster"));
+                sb.AppendLine();
+                sb.Append("+");
+                sb.Append(LocalizationManager.GetString("str_darkness_heroesSurprised"));
+                sb.AppendLine();
                 sb.Append("</color>");
                 sb.AppendFormat("<color={0}>", DarkestDungeonManager.Data.HexColors["notable"]);
-                sb.Append("+"); sb.Append(LocalizationManager.GetString("str_darkness_loot")); sb.AppendLine();
-                sb.Append("+"); sb.Append(LocalizationManager.GetString("str_darkness_player_crit")); sb.AppendLine();
+                sb.Append("+");
+                sb.Append(LocalizationManager.GetString("str_darkness_loot"));
+                sb.AppendLine();
+                sb.Append("+");
+                sb.Append(LocalizationManager.GetString("str_darkness_player_crit"));
+                sb.AppendLine();
                 sb.Append("</color>");
                 break;
             case TorchRangeType.Dark:
                 sb.AppendFormat("<color={0}>", DarkestDungeonManager.Data.HexColors["harmful"]);
-                sb.Append("+++"); sb.Append(LocalizationManager.GetString("str_darkness_stress")); sb.AppendLine();
-                sb.Append("++"); sb.Append(LocalizationManager.GetString("str_darkness_monster")); sb.AppendLine();
-                sb.Append("++"); sb.Append(LocalizationManager.GetString("str_darkness_heroesSurprised")); sb.AppendLine();
+                sb.Append("+++");
+                sb.Append(LocalizationManager.GetString("str_darkness_stress"));
+                sb.AppendLine();
+                sb.Append("++");
+                sb.Append(LocalizationManager.GetString("str_darkness_monster"));
+                sb.AppendLine();
+                sb.Append("++");
+                sb.Append(LocalizationManager.GetString("str_darkness_heroesSurprised"));
+                sb.AppendLine();
                 sb.Append("</color>");
                 sb.AppendFormat("<color={0}>", DarkestDungeonManager.Data.HexColors["notable"]);
-                sb.Append("++"); sb.Append(LocalizationManager.GetString("str_darkness_loot")); sb.AppendLine();
-                sb.Append("++"); sb.Append(LocalizationManager.GetString("str_darkness_player_crit")); sb.AppendLine();
+                sb.Append("++");
+                sb.Append(LocalizationManager.GetString("str_darkness_loot")); sb.AppendLine();
+                sb.Append("++");
+                sb.Append(LocalizationManager.GetString("str_darkness_player_crit")); sb.AppendLine();
                 sb.Append("</color>");
                 break;
             case TorchRangeType.Out:
                 sb.AppendFormat("<color={0}>", DarkestDungeonManager.Data.HexColors["harmful"]);
-                sb.Append("++++"); sb.Append(LocalizationManager.GetString("str_darkness_stress")); sb.AppendLine();
-                sb.Append("+++"); sb.Append(LocalizationManager.GetString("str_darkness_monster")); sb.AppendLine();
-                sb.Append("+++"); sb.Append(LocalizationManager.GetString("str_darkness_heroesSurprised")); sb.AppendLine();
+                sb.Append("++++");
+                sb.Append(LocalizationManager.GetString("str_darkness_stress"));
+                sb.AppendLine();
+                sb.Append("+++");
+                sb.Append(LocalizationManager.GetString("str_darkness_monster"));
+                sb.AppendLine();
+                sb.Append("+++");
+                sb.Append(LocalizationManager.GetString("str_darkness_heroesSurprised"));
+                sb.AppendLine();
                 sb.Append("</color>");
                 sb.AppendFormat("<color={0}>", DarkestDungeonManager.Data.HexColors["notable"]);
-                sb.Append("+++"); sb.Append(LocalizationManager.GetString("str_darkness_loot")); sb.AppendLine();
-                sb.Append("+++"); sb.Append(LocalizationManager.GetString("str_darkness_player_crit")); sb.AppendLine();
+                sb.Append("+++");
+                sb.Append(LocalizationManager.GetString("str_darkness_loot"));
+                sb.AppendLine();
+                sb.Append("+++");
+                sb.Append(LocalizationManager.GetString("str_darkness_player_crit"));
+                sb.AppendLine();
                 sb.Append("</color>");
                 break;
 
         }
         sb.AppendFormat("<color={0}>", DarkestDungeonManager.Data.HexColors["harmful"]);
-        sb.Append(LocalizationManager.GetString("str_reduce_torch_tip")); sb.AppendLine();
+        sb.Append(LocalizationManager.GetString("str_reduce_torch_tip"));
+        sb.AppendLine();
         sb.Append(LocalizationManager.GetString("str_snuff_torch_tip"));
         sb.Append("</color>");
         ToolTipManager.Instanse.Show(sb.ToString(), eventData, torchRect, ToolTipStyle.FromBottom, ToolTipSize.Normal);
@@ -397,7 +436,7 @@ public class TorchMeter : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         if (SceneManagerHelper.ActiveSceneName == "DungeonMultiplayer")
             return;
 
-#if UNITY_ANDROID || UNITY_IOS || UNITY_EDITOR
+#if UNITY_ANDROID || UNITY_IOS
         if (doubleTapTimer > 0)
         {
             DecreaseTorch(10);
