@@ -14,14 +14,14 @@ public class RaidCharStatsPanel : MonoBehaviour
 
     public void UpdateStats(Character character)
     {
-        if(Mathf.Approximately(character.Health.CurrentValue, character.Health.ModifiedValue))
+        if(Mathf.Approximately(character.CurrentHealth, character.MaxHealth))
             maxHealth.text = string.Format("{0}/{1}",
-                Mathf.CeilToInt(character.Health.ModifiedValue),
-                Mathf.CeilToInt(character.Health.ModifiedValue));
+                Mathf.CeilToInt(character.MaxHealth),
+                Mathf.CeilToInt(character.MaxHealth));
         else
             maxHealth.text = string.Format("{0}/{1}",
-                Mathf.RoundToInt(character.Health.CurrentValue),
-                Mathf.CeilToInt(character.Health.ModifiedValue));
+                Mathf.RoundToInt(character.CurrentHealth),
+                Mathf.CeilToInt(character.MaxHealth));
 
         stressLevel.text = string.Format("{0:0}/{1:0}", character.Stress.CurrentValue, character.Stress.ModifiedValue);
 

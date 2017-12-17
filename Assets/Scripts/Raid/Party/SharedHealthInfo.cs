@@ -55,7 +55,7 @@ public class SharedHealthInfo : MonoBehaviour
     {
         IsActive = true;
         SharedId = healthComponent.SharedId;
-        Health.RawValue = sharedUnits.Sum(unit => unit.Character.Health.ModifiedValue);
+        Health.RawValue = sharedUnits.Sum(unit => unit.Character.MaxHealth);
         Health.ValueRatio = 1;
         SharedUnits.AddRange(sharedUnits);
         for (int i = 0; i < SharedUnits.Count; i++)

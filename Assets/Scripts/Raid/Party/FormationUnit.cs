@@ -708,8 +708,6 @@ public class FormationUnit : MonoBehaviour
         hasRectTarget = false;
         targetPosition = Vector3.zero;
         smoothTime = time;
-        
-
     }
 
     public void SetHalo(string haloAnimation)

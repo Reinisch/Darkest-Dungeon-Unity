@@ -32,6 +32,7 @@ public class Character
         AttributeType.AttackRating, AttributeType.CritChance, AttributeType.DamageLow, AttributeType.DamageHigh,
     };
     #endregion
+
     #region Modifiers
     private static AttributeType[] Modifiers = new AttributeType[]
     {
@@ -43,6 +44,7 @@ public class Character
         AttributeType.RemoveQuirkChance, AttributeType.FoodConsumption, AttributeType.StarvingDamagePercent,
     };
     #endregion
+
     #region Hero Discounts
     private static AttributeType[] HeroDiscounts = new AttributeType[]
     {
@@ -50,6 +52,7 @@ public class Character
         AttributeType.WeaponDiscount,
     };
     #endregion
+
     #region Hero Resistances
     private static AttributeType[] HeroResistances = new AttributeType[]
     {
@@ -58,6 +61,7 @@ public class Character
         AttributeType.Debuff, AttributeType.Trap,
     };
     #endregion
+
     #region Monster Resistances
     private static AttributeType[] MonsterResistances = new AttributeType[]
     {
@@ -73,6 +77,7 @@ public class Character
             return new List<SkillArtInfo>();
         }
     }
+
     public virtual CombatSkill RiposteSkill
     {
         get
@@ -80,6 +85,7 @@ public class Character
             return null;
         }
     }
+
     public virtual int Size
     {
         get
@@ -87,6 +93,7 @@ public class Character
             return 1;
         }
     }
+
     public virtual string Name
     {
         get
@@ -94,6 +101,7 @@ public class Character
             return "Character";
         }
     }
+
     public virtual string Class
     {
         get
@@ -101,6 +109,7 @@ public class Character
             return "Class";
         }
     }
+
     public virtual bool AtDeathsDoor
     {
         get
@@ -108,6 +117,7 @@ public class Character
             return false;
         }
     }
+
     public virtual bool IsStressed
     {
         get
@@ -115,6 +125,7 @@ public class Character
             return false;
         }
     }
+
     public virtual bool IsOverstressed
     {
         get
@@ -122,6 +133,7 @@ public class Character
             return false;
         }
     }
+
     public virtual bool IsVirtued
     {
         get
@@ -129,6 +141,7 @@ public class Character
             return false;
         }
     }
+
     public virtual bool IsAfflicted
     {
         get
@@ -136,6 +149,7 @@ public class Character
             return false;
         }
     }
+
     public virtual bool IsMonster
     {
         get
@@ -143,6 +157,7 @@ public class Character
             return false;
         }
     }
+
     public virtual int RenderRankOverride
     {
         get
@@ -150,6 +165,7 @@ public class Character
             return 0;
         }
     }
+
     public virtual bool InMode
     {
         get
@@ -157,6 +173,7 @@ public class Character
             return false;
         }
     }
+
     public virtual CharacterMode Mode
     {
         get
@@ -164,6 +181,7 @@ public class Character
             return null;
         }
     }
+
     public virtual Trait Trait
     {
         get
@@ -183,6 +201,7 @@ public class Character
             return null;
         }
     }
+
     public virtual Initiative Initiative
     {
         get
@@ -190,6 +209,7 @@ public class Character
             return null;
         }
     }
+
     public virtual DisplayModifier DisplayModifier
     {
         get
@@ -197,6 +217,7 @@ public class Character
             return null;
         }
     }
+
     public virtual TorchlightModifier TorchlightModifier
     {
         get
@@ -204,6 +225,7 @@ public class Character
             return null;
         }
     }
+
     public virtual HealthbarModifier HealthbarModifier
     {
         get
@@ -211,6 +233,7 @@ public class Character
             return null;
         }
     }
+
     public virtual DeathClass DeathClass
     {
         get
@@ -218,6 +241,7 @@ public class Character
             return null;
         }
     }
+
     public virtual DeathDamage DeathDamage
     {
         get
@@ -225,6 +249,7 @@ public class Character
             return null;
         }
     }
+
     public virtual BattleModifier BattleModifiers
     {
         get
@@ -232,6 +257,7 @@ public class Character
             return null;
         }
     }
+
     public virtual Companion Companion
     {
         get
@@ -239,6 +265,7 @@ public class Character
             return null;
         }
     }
+
     public virtual EmptyCaptor EmptyCaptor
     {
         get
@@ -246,6 +273,7 @@ public class Character
             return null;
         }
     }
+
     public virtual FullCaptor FullCaptor
     {
         get
@@ -253,6 +281,7 @@ public class Character
             return null;
         }
     }
+
     public virtual Controller ControllerCaptor
     {
         get
@@ -260,6 +289,7 @@ public class Character
             return null;
         }
     }
+
     public virtual LifeTime LifeTime
     {
         get
@@ -267,6 +297,7 @@ public class Character
             return null;
         }
     }
+
     public virtual LifeLink LifeLink
     {
         get
@@ -274,6 +305,7 @@ public class Character
             return null;
         }
     }
+
     public virtual SharedHealth SharedHealth
     {
         get
@@ -281,6 +313,7 @@ public class Character
             return null;
         }
     }
+
     public virtual Shapeshifter Shapeshifter
     {
         get
@@ -288,6 +321,7 @@ public class Character
             return null;
         }
     }
+
     public virtual Spawn Spawn
     {
         get
@@ -295,6 +329,7 @@ public class Character
             return null;
         }
     }
+
     public virtual SkillReaction SkillReaction
     {
         get
@@ -302,6 +337,7 @@ public class Character
             return null;
         }
     }
+
     public virtual List<MonsterType> MonsterTypes
     {
         get
@@ -309,6 +345,7 @@ public class Character
             return null;
         }
     }
+
     public virtual List<LootDefinition> Loot
     {
         get
@@ -324,6 +361,7 @@ public class Character
             return !(IsVirtued || IsAfflicted) && IsOverstressed;
         }
     }
+
     public float FoodConsumption
     {
         get
@@ -335,6 +373,7 @@ public class Character
                 return 0;
         }
     }
+
     public float Speed
     {
         get
@@ -346,6 +385,7 @@ public class Character
                 return 0;
         }
     }
+
     public float Crit
     {
         get
@@ -357,6 +397,7 @@ public class Character
                 return 0;
         }
     }
+
     public float Accuracy
     {
         get
@@ -368,6 +409,7 @@ public class Character
                 return 0;
         }
     }
+
     public float Dodge
     {
         get
@@ -379,6 +421,7 @@ public class Character
                 return 0;
         }
     }
+
     public float Protection
     {
         get
@@ -390,6 +433,7 @@ public class Character
                 return 0;
         }
     }
+
     public float MinDamage
     {
         get
@@ -401,6 +445,7 @@ public class Character
                 return 0;
         }
     }
+
     public float MaxDamage
     {
         get
@@ -412,6 +457,7 @@ public class Character
                 return 0;
         }
     }
+
     public float DamageMod
     {
         get
@@ -422,6 +468,26 @@ public class Character
             else
                 return 1;
         }
+    }
+
+    public float HealthRatio
+    {
+        get { return GetPairedAttribute(AttributeType.HitPoints).ValueRatio; }
+    }
+
+    public float CurrentHealth
+    {
+        get { return GetPairedAttribute(AttributeType.HitPoints).CurrentValue; }
+    }
+
+    public float MaxHealth
+    {
+        get { return GetPairedAttribute(AttributeType.HitPoints).ModifiedValue; }
+    }
+
+    public bool HasZeroHealth
+    {
+        get { return Mathf.RoundToInt(CurrentHealth) == 0; }
     }
 
     public static void InitializeBasicStatuses(Dictionary<StatusType, StatusEffect> targetDictionary)
@@ -443,10 +509,12 @@ public class Character
     {
         singleAttributes.Add(stat, attribute);
     }
+
     protected void AddPairedAttribute(AttributeType stat, PairedAttribute attribute)
     {
         pairedAttributes.Add(stat, attribute);
     }
+
 
     public Character(HeroClass heroClass, int level)
     {
@@ -475,6 +543,7 @@ public class Character
                 AddSingleAttribute(HeroResistances[i],
                     new SingleAttribute(heroClass.Resistanses[HeroResistances[i]] + level * 0.1f, AttributeCategory.Resistance));
     }
+
     public Character(HeroClass heroClass)
     {
         buffInfo = new List<BuffInfo>();
@@ -498,6 +567,7 @@ public class Character
             AddSingleAttribute(HeroResistances[i],
                 new SingleAttribute(heroClass.Resistanses[HeroResistances[i]], AttributeCategory.Resistance));
     }
+
     public Character(SaveHeroData saveHeroData)
     {
         buffInfo = saveHeroData.Buffs;
@@ -528,6 +598,7 @@ public class Character
                     new SingleAttribute(heroClass.Resistanses[HeroResistances[i]]
                     + saveHeroData.ResolveLevel * 0.1f, AttributeCategory.Resistance));
     }
+
     public Character(MonsterData monsterData)
     {
         buffInfo = new List<BuffInfo>();
@@ -553,6 +624,7 @@ public class Character
             AddSingleAttribute(MonsterResistances[i],
                 new SingleAttribute(monsterData.Attributes[MonsterResistances[i]], AttributeCategory.Resistance));
     }
+
     public Character(FormationUnitSaveData unitSaveData, MonsterData monsterData)
     {
         buffInfo = unitSaveData.Buffs;
@@ -578,6 +650,7 @@ public class Character
                 new SingleAttribute(monsterData.Attributes[MonsterResistances[i]], AttributeCategory.Resistance));
     }
 
+
     protected void UpdateResolve(int level, HeroClass heroClass)
     {
         for (int i = 0; i < HeroResistances.Length; i++)
@@ -587,16 +660,19 @@ public class Character
                 GetSingleAttribute(HeroResistances[i]).RawValue = heroClass.Resistanses[HeroResistances[i]] + level * 0.1f;
     }
 
+
     public void LoadStatusEffects(Dictionary<StatusType, StatusEffect> newStatusEffects)
     {
         statusEffects = newStatusEffects;
     }
+
     public void UpdateDurations(BuffDurationType durationType)
     {
         foreach (var buffEntry in buffInfo.FindAll(roundBuff => roundBuff.DurationType == durationType))
             if (--buffEntry.Duration <= 0)
                 RemoveBuff(buffEntry);
     }
+
     public void UpdateRound()
     {
         foreach (var effect in statusEffects)
@@ -605,6 +681,7 @@ public class Character
         UpdateDurations(BuffDurationType.Round);
     }
 
+
     public PairedAttribute Health
     {
         get
@@ -612,6 +689,7 @@ public class Character
             return GetPairedAttribute(AttributeType.HitPoints);
         }
     }
+
     public PairedAttribute Stress
     {
         get
@@ -624,14 +702,17 @@ public class Character
     {
         return buffInfo.Find(info => info.SourceType == BuffSourceType.Adventure && info.Buff.IsPositive()) != null;
     }
+
     public bool HasDebuffs()
     {
         return buffInfo.Find(info => info.SourceType == BuffSourceType.Adventure && !info.Buff.IsPositive()) != null;
     }
+
     public bool HasEventBuffs()
     {
         return buffInfo.Find(info => info.SourceType == BuffSourceType.Estate) != null;
     }
+
     public void ApplyStunRecovery()
     {
         var recoveryBuff = DarkestDungeonManager.Data.Buffs["STUNRECOVERYBUFF"];
@@ -648,6 +729,7 @@ public class Character
         for (int i = 0; i < recoveryStackCount; i++)
             AddBuff(new BuffInfo(recoveryBuff, BuffDurationType.Round, BuffSourceType.Adventure, 2));
     }
+
     public void RemoveConditionalBuffs()
     {
         for (int i = buffInfo.Count - 1; i >= 0; i--)
@@ -656,6 +738,7 @@ public class Character
                 RemoveBuff(buffInfo[i]);
         }
     }
+
     public void RemoveCampingBuffs()
     {
         for (int i = buffInfo.Count - 1; i >= 0; i--)
@@ -664,6 +747,7 @@ public class Character
                 RemoveBuff(buffInfo[i]);
         }
     }
+
     public void RemoveLightBuffs()
     {
         for (int i = buffInfo.Count - 1; i >= 0; i--)
@@ -672,6 +756,7 @@ public class Character
                 RemoveBuff(buffInfo[i]);
         }
     }
+
 
     public string DeathsDoorBuffsTooltip()
     {
@@ -683,6 +768,7 @@ public class Character
             toolTip += "\n" + buffEntry.Buff.ToolTip;
         return toolTip.TrimStart('\n');
     }
+
     public string MortalityBuffsTooltip()
     {
         string toolTip = "";
@@ -693,6 +779,7 @@ public class Character
             toolTip += "\n" + buffEntry.Buff.ToolTip;
         return toolTip.TrimStart('\n');
     }
+
     public string TraitBuffsTooltip()
     {
         string toolTip = "";
@@ -703,6 +790,7 @@ public class Character
             toolTip += "\n" + buffEntry.Buff.ToolTip;
         return toolTip.TrimStart('\n');
     }
+
     public string EventBuffTooltip()
     {
         string toolTip = "";
@@ -727,6 +815,7 @@ public class Character
         }
         return toolTip.TrimStart('\n');
     }
+
     public string CombatBuffTooltip()
     {
         string toolTip = "";
@@ -802,6 +891,7 @@ public class Character
         }
         return toolTip.TrimStart('\n');
     }
+
     public string CombatDebuffTooltip()
     {
         string toolTip = "";
@@ -877,6 +967,7 @@ public class Character
         return toolTip.TrimStart('\n');
     }
 
+
     protected void ApplyBuff(BuffInfo buffEntry)
     {
         if (buffEntry.IsApplied)
@@ -888,6 +979,7 @@ public class Character
         else if(buffEntry.Buff.Type == BuffType.StatMultiply)
             GetAttribute(buffEntry.Buff.AttributeType).Multiplier += buffEntry.ModifierValue;
     }
+
     protected void RevertBuff(BuffInfo buffEntry)
     {
         if (!buffEntry.IsApplied)
@@ -899,11 +991,13 @@ public class Character
         else if (buffEntry.Buff.Type == BuffType.StatMultiply)
             GetAttribute(buffEntry.Buff.AttributeType).Multiplier -= buffEntry.ModifierValue;
     }
+
     protected void RemoveBuff(BuffInfo buffEntry)
     {
         buffInfo.Remove(buffEntry);
         RevertBuff(buffEntry);
     }
+
     protected void ApplyBuffRule(BuffInfo buffEntry, RaidRuleInfo raidRuleInfo)
     {
         switch (buffEntry.Buff.RuleType)
@@ -1010,14 +1104,14 @@ public class Character
                 #region HpAbove
                 if (buffEntry.Buff.IsFalseRule)
                 {
-                    if (raidRuleInfo.Unit.Character.Health.ValueRatio > buffEntry.Buff.SingleParam)
+                    if (raidRuleInfo.Unit.Character.HealthRatio > buffEntry.Buff.SingleParam)
                         RevertBuff(buffEntry);
                     else
                         ApplyBuff(buffEntry);
                 }
                 else
                 {
-                    if (raidRuleInfo.Unit.Character.Health.ValueRatio > buffEntry.Buff.SingleParam)
+                    if (raidRuleInfo.Unit.Character.HealthRatio > buffEntry.Buff.SingleParam)
                         ApplyBuff(buffEntry);
                     else
                         RevertBuff(buffEntry);
@@ -1028,14 +1122,14 @@ public class Character
                 #region HpAbove
                 if (buffEntry.Buff.IsFalseRule)
                 {
-                    if (raidRuleInfo.Unit.Character.Health.ValueRatio < buffEntry.Buff.SingleParam)
+                    if (raidRuleInfo.Unit.Character.HealthRatio < buffEntry.Buff.SingleParam)
                         RevertBuff(buffEntry);
                     else
                         ApplyBuff(buffEntry);
                 }
                 else
                 {
-                    if (raidRuleInfo.Unit.Character.Health.ValueRatio < buffEntry.Buff.SingleParam)
+                    if (raidRuleInfo.Unit.Character.HealthRatio < buffEntry.Buff.SingleParam)
                         ApplyBuff(buffEntry);
                     else
                         RevertBuff(buffEntry);
@@ -1410,12 +1504,42 @@ public class Character
         }
     }
 
+
+    public virtual int Heal(float healAmount, bool includeModifier)
+    {
+        int heal = includeModifier
+            ? Mathf.CeilToInt(healAmount * (1 + this[AttributeType.HpHealReceivedPercent].ModifiedValue))
+            : Mathf.CeilToInt(healAmount);
+
+        this[AttributeType.HitPoints, true].IncreaseValue(heal);
+        return heal;
+    }
+
+    public int HealPercent(float healPercent, bool includeModifier)
+    {
+        return Heal(this[AttributeType.HitPoints, true].ModifiedValue * healPercent, includeModifier);
+    }
+
+    public int TakeDamage(float damageAmount)
+    {
+        int damage = Mathf.RoundToInt(damageAmount);
+        GetPairedAttribute(AttributeType.HitPoints).DecreaseValue(damage);
+        return damage;
+    }
+
+    public int TakeDamagePercent(float damagePercent)
+    {
+        return TakeDamage(this[AttributeType.HitPoints, true].ModifiedValue * damagePercent);
+    }
+
+
     public void AddBuff(BuffInfo newBuffInfo)
     {
         buffInfo.Add(newBuffInfo);
         if(newBuffInfo.Buff.RuleType == BuffRule.Always)
             ApplyBuff(newBuffInfo);
     }
+
     public bool ContainsBuff(Buff buff, BuffSourceType sourceType)
     {
         return buffInfo.Find(item => item.Buff == buff && item.SourceType == sourceType) != null;
@@ -1427,12 +1551,14 @@ public class Character
         if (revertBuffInfo != null)
             RemoveBuff(revertBuffInfo);
     }
+
     public void RemoveCombatDebuffs()
     {
         for (int i = buffInfo.Count - 1; i >= 0; i--)
             if (buffInfo[i].SourceType == BuffSourceType.Adventure && buffInfo[i].Buff.IsPositive() == false)
                 RemoveBuff(buffInfo[i]);
     }
+
     public void RemoveAllBuffsWithSource(BuffSourceType sourceType)
     {
         for (int i = buffInfo.Count - 1; i >= 0; i--)
@@ -1440,17 +1566,20 @@ public class Character
                 RemoveBuff(buffInfo[i]);
     }
 
+
     public void ApplySingleBuffRule(RaidRuleInfo raidRuleInfo, BuffRule rule)
     {
         for (int i = 0; i < buffInfo.Count; i++)
             if(buffInfo[i].Buff.RuleType == rule)
                 ApplyBuffRule(buffInfo[i], raidRuleInfo);
     }
+
     public void ApplyAllBuffRules(RaidRuleInfo raidRuleInfo)
     {
         for (int i = 0; i < buffInfo.Count; i++)
             ApplyBuffRule(buffInfo[i], raidRuleInfo);
     }
+
 
     public SingleAttribute GetSingleAttribute(AttributeType stat)
     {
@@ -1459,6 +1588,7 @@ public class Character
         else
             return null;
     }
+
     public PairedAttribute GetPairedAttribute(AttributeType stat)
     {
         if (pairedAttributes.ContainsKey(stat))
@@ -1466,6 +1596,7 @@ public class Character
         else
             return null;
     }
+
     public BaseAttribute GetAttribute(AttributeType stat)
     {
         if (singleAttributes.ContainsKey(stat))
@@ -1478,10 +1609,12 @@ public class Character
             return null;
         }
     }
+
     public StatusEffect GetStatusEffect(StatusType type)
     {
         return statusEffects[type];
     }
+
 
     public StatusEffect this[StatusType type]
     {
@@ -1493,6 +1626,7 @@ public class Character
                 return null;
         }
     }
+
     public SingleAttribute this[AttributeType stat]
     {
         get
@@ -1503,6 +1637,7 @@ public class Character
                 return null;
         }
     }
+
     public PairedAttribute this[AttributeType stat, bool paired]
     {
         get
@@ -1521,12 +1656,13 @@ public class Character
         }
     }
 
+
     public virtual void UpdateSaveData(FormationUnitSaveData saveUnitData)
     {
         saveUnitData.IsHero = false;
         saveUnitData.Class = Class;
         saveUnitData.Name = Name;
-        saveUnitData.CurrentHp = Health.CurrentValue;
+        saveUnitData.CurrentHp = CurrentHealth;
         saveUnitData.Buffs = buffInfo;
         saveUnitData.Statuses = statusEffects;
     }

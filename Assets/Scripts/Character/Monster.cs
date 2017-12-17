@@ -237,7 +237,7 @@ public class Monster : Character
         saveUnitData.IsHero = false;
         saveUnitData.Class = Class;
         saveUnitData.Name = Name;
-        saveUnitData.CurrentHp = Health.CurrentValue;
+        saveUnitData.CurrentHp = CurrentHealth;
         saveUnitData.Buffs = buffInfo;
         saveUnitData.Statuses = statusEffects;
     }

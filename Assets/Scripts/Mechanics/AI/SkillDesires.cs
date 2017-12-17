@@ -227,7 +227,7 @@ public class SkillSelectionHeal : SkillSelectionDesire
             decision.Decision = BrainDecisionType.Perform;
             decision.SelectedSkill = availableSkills[Random.Range(0, availableSkills.Count)];
             decision.TargetInfo.Targets = BattleSolver.GetSkillAvailableTargets(performer, decision.SelectedSkill).
-                FindAll(target => target.Character.Health.ValueRatio < HpRatioThreshold);
+                FindAll(target => target.Character.HealthRatio < HpRatioThreshold);
             if (decision.TargetInfo.Targets.Count == 0)
                 return false;
 

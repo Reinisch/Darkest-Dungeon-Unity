@@ -76,7 +76,7 @@ public class MonsterTooltip : MonoBehaviour
             System.Math.Round((double)monster.Protection, 3));
         monsterSpeed.text = string.Format(LocalizationManager.GetString("monster_tooltip_speed_format"), monster.Speed);
         monsterHealth.text = string.Format(LocalizationManager.GetString("monster_tooltip_hp_format"),
-            Mathf.RoundToInt(monster.Health.CurrentValue), Mathf.RoundToInt(monster.Health.ModifiedValue));
+            Mathf.RoundToInt(monster.CurrentHealth), Mathf.RoundToInt(monster.MaxHealth));
 
         int monsterTypesCounter = Mathf.Min(monsterTypes.Count, monster.Data.EnemyTypes.Count);
         for (int i = 0; i < monsterTypesCounter; i++)
@@ -125,7 +125,7 @@ public class MonsterTooltip : MonoBehaviour
             System.Math.Round((double)hero.Protection, 3));
         monsterSpeed.text = string.Format(LocalizationManager.GetString("monster_tooltip_speed_format"), hero.Speed);
         monsterHealth.text = string.Format(LocalizationManager.GetString("monster_tooltip_hp_format"),
-            Mathf.RoundToInt(hero.Health.CurrentValue), Mathf.RoundToInt(hero.Health.ModifiedValue));
+            Mathf.RoundToInt(hero.CurrentHealth), Mathf.RoundToInt(hero.MaxHealth));
 
         int monsterTypesCounter = Mathf.Min(monsterTypes.Count, 1);
         for (int i = 0; i < monsterTypesCounter; i++)

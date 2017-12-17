@@ -1859,21 +1859,15 @@ public class HealEffect : SubEffect
         if(performer != null)
             initialHeal *= (1 + performer.Character.GetSingleAttribute(AttributeType.HpHealPercent).ModifiedValue);
 
-        int heal = Mathf.RoundToInt(initialHeal * (1 +
-                target.Character.GetSingleAttribute(AttributeType.HpHealReceivedPercent).ModifiedValue));
-        if (heal < 1) heal = 1;
-        if (target.Character.AtDeathsDoor)
-            (target.Character as Hero).RevertDeathsDoor();
         if (performer != null && RandomSolver.CheckSuccess(performer.Character.Crit))
         {
-            int critHeal = Mathf.RoundToInt(heal * 1.5f);
-            target.Character.Health.IncreaseValue(critHeal);
+            int critHeal = target.Character.Heal(initialHeal * 1.5f, true);
             target.OverlaySlot.healthBar.UpdateHealth(target.Character);
             RaidSceneManager.RaidEvents.ShowPopupMessage(target, PopupMessageType.CritHeal, critHeal.ToString());
         }
         else
         {
-            target.Character.Health.IncreaseValue(heal);
+            int heal = target.Character.Heal(initialHeal, true);
             target.OverlaySlot.healthBar.UpdateHealth(target.Character);
             RaidSceneManager.RaidEvents.ShowPopupMessage(target, PopupMessageType.Heal, heal.ToString());
         }
@@ -1892,15 +1886,9 @@ public class HealEffect : SubEffect
         if(performer != null)
             initialHeal *= (1 + performer.Character.GetSingleAttribute(AttributeType.HpHealPercent).ModifiedValue);
 
-        int heal = Mathf.RoundToInt(initialHeal * (1 +
-                target.Character.GetSingleAttribute(AttributeType.HpHealReceivedPercent).ModifiedValue));
-        if (heal < 1) heal = 1;
-        if (target.Character.AtDeathsDoor)
-            (target.Character as Hero).RevertDeathsDoor();
         if (performer != null && RandomSolver.CheckSuccess(performer.Character.Crit))
         {
-            int critHeal = Mathf.RoundToInt(heal * 1.5f);
-            target.Character.Health.IncreaseValue(critHeal);
+            int critHeal = target.Character.Heal(initialHeal * 1.5f, true);
             RaidSceneManager.RaidEvents.ShowPopupMessage(target, PopupMessageType.CritHeal, critHeal.ToString());
             if(target.Character is Hero)
                 FMODUnity.RuntimeManager.PlayOneShot("event:/general/status/heal_ally_crit");
@@ -1912,7 +1900,7 @@ public class HealEffect : SubEffect
         }
         else
         {
-            target.Character.Health.IncreaseValue(heal);
+            int heal = target.Character.Heal(initialHeal, true);
             RaidSceneManager.RaidEvents.ShowPopupMessage(target, PopupMessageType.Heal, heal.ToString());
             if(target.Character is Hero)
                 FMODUnity.RuntimeManager.PlayOneShot("event:/general/status/heal_ally");
@@ -2811,7 +2799,7 @@ public class KillEffect : SubEffect
         if (target == null)
             return false;
 
-        target.Character.Health.CurrentValue = 0;
+        target.Character.TakeDamagePercent(1.0f);
         target.CombatInfo.MarkedForDeath = true;
         return true;
     }
@@ -2883,7 +2871,7 @@ public class KillEnemyTypeEffect : SubEffect
         {
             if ((target.Character as Monster).Types.Contains(EnemyType))
             {
-                target.Character.Health.CurrentValue = 0;
+                target.Character.TakeDamagePercent(1.0f);
                 target.CombatInfo.MarkedForDeath = true;
                 return true;
             }

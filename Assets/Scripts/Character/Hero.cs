@@ -260,7 +260,7 @@ public class Hero : Character
             statusEntry.Value.ResetStatus();
 
         Status = HeroStatus.Available;
-        Health.ValueRatio = 1;
+        Heal(MaxHealth, false);
 
         if (Trait != null && Trait.Type == OverstressType.Virtue)
             RevertTrait();
@@ -1088,13 +1088,22 @@ public class Hero : Character
                 ApplyTrait(heroTrait);
         }
 
-        Health.CurrentValue = saveHeroData.CurrentHp;
+        GetPairedAttribute(AttributeType.HitPoints).CurrentValue = saveHeroData.CurrentHp;
+    }
+
+
+    public override int Heal(float healAmount, bool includeModifier)
+    {
+        RevertDeathsDoor();
+
+        return base.Heal(healAmount, includeModifier);
     }
 
     public void UpdateResolve()
     {
         base.UpdateResolve(Resolve.Level, HeroClass);
     }
+
     public void UpdateSaveData(SaveHeroData saveHeroData)
     {
         saveHeroData.Status = Status;
@@ -1107,7 +1116,7 @@ public class Hero : Character
         saveHeroData.HeroClass = HeroClass.StringId;
         saveHeroData.ResolveLevel = Resolve.Level;
         saveHeroData.ResolveXP = Resolve.CurrentXP;
-        saveHeroData.CurrentHp = Health.CurrentValue;
+        saveHeroData.CurrentHp = CurrentHealth;
         saveHeroData.StressLevel = Stress.CurrentValue;
         saveHeroData.WeaponLevel = Weapon.UpgradeLevel;
         saveHeroData.ArmorLevel = Armor.UpgradeLevel;
@@ -1130,13 +1139,14 @@ public class Hero : Character
                 saveHeroData.SelectedCampingSkillIndexes.Add(i);
         }
     }
+
     public override void UpdateSaveData(FormationUnitSaveData saveUnitData)
     {
         saveUnitData.IsHero = true;
         saveUnitData.RosterId = RosterId;
         saveUnitData.Class = Class;
         saveUnitData.Name = Name;
-        saveUnitData.CurrentHp = Health.CurrentValue;
+        saveUnitData.CurrentHp = CurrentHealth;
         saveUnitData.Buffs = buffInfo;
         saveUnitData.Statuses = statusEffects;
     }

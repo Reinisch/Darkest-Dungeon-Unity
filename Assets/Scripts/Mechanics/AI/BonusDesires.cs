@@ -51,9 +51,9 @@ public class BonusInitiativeHpRatio : BonusInitiativeDesire
             if (HeroesMax.Value < RaidSceneManager.BattleGround.HeroNumber)
                 return false;
 
-        if (IsUnderThreshold && performer.Character.Health.ValueRatio <= Threshold)
+        if (IsUnderThreshold && performer.Character.HealthRatio <= Threshold)
             return true;
-        if (!IsUnderThreshold && performer.Character.Health.ValueRatio >= Threshold)
+        if (!IsUnderThreshold && performer.Character.HealthRatio >= Threshold)
             return true;
 
         return false;
@@ -117,7 +117,7 @@ public class BonusInitiativeDeath : BonusInitiativeDesire
 
     public override bool CheckBonusInitiative(FormationUnit performer)
     {
-        if (Mathf.RoundToInt(performer.Character.Health.CurrentValue) == 0)
+        if (performer.Character.HasZeroHealth)
             return true;
 
         return false;

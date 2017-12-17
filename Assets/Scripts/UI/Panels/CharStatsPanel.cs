@@ -14,7 +14,7 @@ public class CharStatsPanel : MonoBehaviour
 
     public void UpdateStats(Character character)
     {
-        maxHealth.text = string.Format("{0}", Mathf.CeilToInt(character.Health.ModifiedValue));
+        maxHealth.text = string.Format("{0}", Mathf.CeilToInt(character.MaxHealth));
         dodge.text = string.Format("{0:#.#%;-#.#%;0%}", System.Math.Round(character.Dodge, 3));
         prot.text = string.Format("{0:#.#%;-#.#%;0%}", System.Math.Round(character.Protection, 3));
         speed.text = string.Format("{0}", character.Speed);

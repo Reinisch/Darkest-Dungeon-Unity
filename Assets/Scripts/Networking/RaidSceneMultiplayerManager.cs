@@ -252,12 +252,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
 
             yield return StartCoroutine(ExecuteEffectEvents(false));
             yield return new WaitForSeconds(0.3f);
-
-            if (HeroParty.Units.Count == 0)
-            {
-                StartCoroutine(RaidResultsEvent());
-                yield break;
-            }
+            yield return ProcessRaidFailure();
         }
         else if (transitionType == RoomTransitionType.Teleport && room.HasActiveBattle)
         {

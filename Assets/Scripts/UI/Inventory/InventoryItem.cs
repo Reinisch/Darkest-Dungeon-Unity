@@ -286,7 +286,7 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                     break;
                 case "provision":
                     if (RaidSceneManager.RaidPanel.SelectedHero != null && 
-                        RaidSceneManager.RaidPanel.SelectedHero.Health.ValueRatio < 1)
+                        RaidSceneManager.RaidPanel.SelectedHero.HealthRatio < 1)
                         Deactivated = false;
                     else
                         Deactivated = true;

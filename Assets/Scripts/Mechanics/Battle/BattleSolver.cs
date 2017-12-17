@@ -89,8 +89,7 @@ public static class BattleSolver
                 return true;
         }
     }
-    public static bool IsPerformerSkillTargetable(CombatSkill skill,
-        BattleFormation allies, BattleFormation enemies, FormationUnit performer)
+    public static bool IsPerformerSkillTargetable(CombatSkill skill, BattleFormation allies, BattleFormation enemies, FormationUnit performer)
     {
         if (skill.TargetRanks.IsSelfTarget)
         {
@@ -141,16 +140,15 @@ public static class BattleSolver
 
         return false;
     }
-    public static void GetTargetsForCampEffect(FormationUnit performer,
-        FormationUnit target, CampEffect effect, List<FormationUnit> finalTargets)
+    public static void FindTargets(FormationUnit performer, FormationUnit primaryTarget, CampEffect effect, List<FormationUnit> finalTargets)
     {
         finalTargets.Clear();
 
         switch (effect.Selection)
         {
             case CampTargetType.Individual:
-                if (target != null)
-                    finalTargets.Add(target);
+                if (primaryTarget != null)
+                    finalTargets.Add(primaryTarget);
                 break;
             case CampTargetType.PartyOther:
                 for (int j = 0; j < RaidSceneManager.HeroParty.Units.Count; j++)
@@ -337,20 +335,14 @@ public static class BattleSolver
             if (skill.Heal != null)
             {
                 float initialHeal = RandomSolver.Next(skill.Heal.MinAmount, skill.Heal.MaxAmount + 1) *
-                            (1 + performer.GetSingleAttribute(AttributeType.HpHealPercent).ModifiedValue);
-
-                int heal = Mathf.CeilToInt(initialHeal * (1 + target[AttributeType.HpHealReceivedPercent].ModifiedValue));
-                if (heal < 1) heal = 1;
-                if (target.AtDeathsDoor)
-                    (target as Hero).RevertDeathsDoor();
+                    (1 + performer.GetSingleAttribute(AttributeType.HpHealPercent).ModifiedValue);
 
                 if (skill.IsCritValid)
                 {
                     float critChance = performer[AttributeType.CritChance].ModifiedValue + skill.CritMod / 100;
                     if (RandomSolver.CheckSuccess(critChance))
                     {
-                        int critHeal = Mathf.CeilToInt(heal * 1.5f);
-                        target.Health.IncreaseValue(critHeal);
+                        int critHeal = target.Heal(initialHeal * 1.5f, true);
                         targetUnit.OverlaySlot.healthBar.UpdateHealth(target);
                         SkillResult.AddResultEntry(new SkillResultEntry(targetUnit, critHeal, SkillResultType.CritHeal));
                         
@@ -360,7 +352,8 @@ public static class BattleSolver
                         return;
                     }
                 }
-                target.Health.IncreaseValue(heal);
+
+                int heal = target.Heal(initialHeal, true);
                 targetUnit.OverlaySlot.healthBar.UpdateHealth(target);
 
                 SkillResult.AddResultEntry(new SkillResultEntry(targetUnit, heal, SkillResultType.Heal));
@@ -412,11 +405,10 @@ public static class BattleSolver
                 float critChance = performer.GetSingleAttribute(AttributeType.CritChance).ModifiedValue + skill.CritMod;
                 if (RandomSolver.CheckSuccess(critChance))
                 {
-                    int critDamage = Mathf.CeilToInt(damage * 1.5f);
-                    target.Health.DecreaseValue(critDamage);
+                    int critDamage = target.TakeDamage(damage * 1.5f);
                     targetUnit.OverlaySlot.healthBar.UpdateHealth(target);
 
-                    if (Mathf.CeilToInt(target.Health.CurrentValue) == 0)
+                    if (target.HasZeroHealth)
                         SkillResult.AddResultEntry(new SkillResultEntry(targetUnit, critDamage, true, SkillResultType.Crit));
                     else
                         SkillResult.AddResultEntry(new SkillResultEntry(targetUnit, critDamage, SkillResultType.Crit));
@@ -427,9 +419,9 @@ public static class BattleSolver
                     return;
                 }
             }
-            target.Health.DecreaseValue(damage);
+            damage = target.TakeDamage(damage);
             targetUnit.OverlaySlot.healthBar.UpdateHealth(target);
-            if (Mathf.CeilToInt(target.Health.CurrentValue) == 0)
+            if (target.HasZeroHealth)
                 SkillResult.AddResultEntry(new SkillResultEntry(targetUnit, damage, true, SkillResultType.Hit));
             else
                 SkillResult.AddResultEntry(new SkillResultEntry(targetUnit, damage, SkillResultType.Hit));
