@@ -3,14 +3,18 @@ using UnityEngine.EventSystems;
 
 public class QuickTip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    public RectTransform tipTarget;
-    public string tipEntry;
-    public ToolTipSize tipSize;
-    public ToolTipStyle tipStyle;
+    [SerializeField]
+    private RectTransform tipTarget;
+    [SerializeField]
+    private string tipEntry;
+    [SerializeField]
+    private ToolTipSize tipSize;
+    [SerializeField]
+    private ToolTipStyle tipStyle;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        ToolTipManager.Instanse.Show(LocalizationManager.GetString(tipEntry), eventData, tipTarget, tipStyle, tipSize);
+        ToolTipManager.Instanse.Show(LocalizationManager.GetString(tipEntry), tipTarget, tipStyle, tipSize);
     }
 
     public void OnPointerExit(PointerEventData eventData)

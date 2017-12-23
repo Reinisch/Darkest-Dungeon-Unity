@@ -5,93 +5,97 @@ using System.Collections.Generic;
 
 public class GlossaryRecord : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    public Text termLabel;
-    public Text termDefinitionLabel;
+    [SerializeField]
+    private Text termLabel;
+    [SerializeField]
+    private Text termDefinitionLabel;
 
-    public GlossaryWindow Window { get; set; }
+    public GlossaryWindow Window { private get; set; }
 
-    bool hovered;
-    int pressed = 20;
+    private bool hovered;
+    private int pressed = 20;
+    private RectTransform tooltip;
 
-    RectTransform tooltip;
-    void Awake()
+    private void Awake()
     {
         var objRect = gameObject.transform.Find("MouseOver");
         if(objRect != null)
             tooltip = objRect.GetComponent<RectTransform>();
     }
-    void Update()
+
+    private void Update()
     {
         if (pressed > 0)
             pressed--;
-        if(hovered)
+
+        if (!hovered)
+            return;
+
+        if (!Input.GetKey(KeyCode.F))
+            return;
+
+        if (pressed > 0)
+            return;
+
+        pressed = 20;
+
+        Debug.Log("Mouse: " + Input.mousePosition);
+        Vector2 localMouse;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(GetComponent<RectTransform>(), 
+            Input.mousePosition, Window.MainCamera, out localMouse);
+        Debug.Log("Local mouse: " + localMouse);
+
+
+        List<UILineInfo> lines = new List<UILineInfo>();
+        termDefinitionLabel.cachedTextGenerator.GetLines(lines);
+        bool insideTerm = false;
+        for(int lineIndex = 0; lineIndex < lines.Count; lineIndex++)
         {
-            if(Input.GetKey(KeyCode.F))
+            int currentWidth = 0;
+            int currentRect = 0;
+            var line = lines[lineIndex];
+            var lastCharIndex = lineIndex + 1 == lines.Count ?
+                termDefinitionLabel.text.Length : lines[lineIndex + 1].startCharIdx;
+            for(int i = line.startCharIdx; i < lastCharIndex; i++)
             {
-                if (pressed > 0)
-                    return;
-                else
-                    pressed = 20;
-
-                Debug.Log("Mouse: " + Input.mousePosition.ToString());
-                Vector2 localMouse = Vector2.zero;
-                RectTransformUtility.ScreenPointToLocalPointInRectangle(GetComponent<RectTransform>(), 
-                    Input.mousePosition, Window.mainCamera, out localMouse);
-                Debug.Log("Local mouse: " + localMouse.ToString());
-
-
-                List<UILineInfo> lines = new List<UILineInfo>();
-                termDefinitionLabel.cachedTextGenerator.GetLines(lines);
-                bool insideTerm = false;
-                for(int lineIndex = 0; lineIndex < lines.Count; lineIndex++)
+                CharacterInfo charInfo;
+                termDefinitionLabel.font.GetCharacterInfo(termDefinitionLabel.text[i],
+                    out charInfo, termDefinitionLabel.font.fontSize);
+                if(insideTerm)
                 {
-                    int currentWidth = 0;
-                    int currentRect = 0;
-                    var line = lines[lineIndex];
-                    var lastCharIndex = lineIndex + 1 == lines.Count ?
-                        termDefinitionLabel.text.Length : lines[lineIndex + 1].startCharIdx;
-                    for(int i = line.startCharIdx; i < lastCharIndex; i++)
+                    if (termDefinitionLabel.text[i] == '\"')
                     {
-                        CharacterInfo charInfo;
-                        termDefinitionLabel.font.GetCharacterInfo(termDefinitionLabel.text[i],
-                            out charInfo, termDefinitionLabel.font.fontSize);
-                        if(insideTerm)
-                        {
-                            if (termDefinitionLabel.text[i] == '\"')
-                            {
-                                currentWidth += charInfo.advance;
-                                currentRect += charInfo.advance;
-                                tooltip.sizeDelta = new Vector2(currentRect, GetComponent<RectTransform>().sizeDelta.y/lines.Count);
-                                currentRect = 0;
-                                insideTerm = false;
-                            }
-                            else
-                            {
-                                currentWidth += charInfo.advance;
-                                currentRect += charInfo.advance;
-                            }
-                        }
-                        else
-                        {
-                            if (termDefinitionLabel.text[i] == '\"')
-                            {
-                                tooltip.localPosition = new Vector2(currentWidth,
-                                    -GetComponent<RectTransform>().sizeDelta.y / lines.Count * lineIndex);
-                                currentWidth += charInfo.advance;
-                                currentRect = charInfo.advance;
-                                insideTerm = true;
-                            }
-                            else
-                            {
-                                currentWidth += charInfo.advance;
-                            }
-                        }
+                        currentWidth += charInfo.advance;
+                        currentRect += charInfo.advance;
+                        tooltip.sizeDelta = new Vector2(currentRect, GetComponent<RectTransform>().sizeDelta.y/lines.Count);
+                        currentRect = 0;
+                        insideTerm = false;
                     }
-                    if(insideTerm)
+                    else
                     {
-                        tooltip.sizeDelta = new Vector2(currentRect, termDefinitionLabel.font.lineHeight);
+                        currentWidth += charInfo.advance;
+                        currentRect += charInfo.advance;
                     }
                 }
+                else
+                {
+                    if (termDefinitionLabel.text[i] == '\"')
+                    {
+                        tooltip.localPosition = new Vector2(currentWidth,
+                            -GetComponent<RectTransform>().sizeDelta.y / lines.Count * lineIndex);
+                        currentWidth += charInfo.advance;
+                        currentRect = charInfo.advance;
+                        insideTerm = true;
+                    }
+                    else
+                    {
+                        currentWidth += charInfo.advance;
+                    }
+                }
+            }
+            if(insideTerm)
+            {
+                tooltip.sizeDelta = new Vector2(currentRect, termDefinitionLabel.font.lineHeight);
             }
         }
     }

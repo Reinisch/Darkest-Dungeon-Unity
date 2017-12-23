@@ -1,55 +1,18 @@
 ﻿using System.IO;
-
-public enum BuffDurationType
-{
-    Undefined,
-    Permanent,
-    Round,
-    Combat,
-    Camp,
-    Raid,
-    Activity,
-    QuestComplete,
-    IdleTownVisit
-}
-
-public enum BuffSourceType
-{
-    Estate,
-    Quirk,
-    Trinket,
-    Adventure,
-    Condition,
-    Trait,
-    DeathsDoor,
-    Mortality,
-    Light
-}
+using UnityEngine;
 
 public class BuffInfo : IBinarySaveData
 {
+    public Buff Buff { get; private set; }
     public BuffDurationType DurationType { get; private set; }
     public BuffSourceType SourceType { get; private set; }
     public int Duration { get; set; }
     public bool IsApplied { get; set; }
 
-    public float ModifierValue
-    {
-        get
-        {
-            return OverridenValue == 0 ? Buff.ModifierValue : OverridenValue;
-        }
-    }
+    public float ModifierValue { get { return Mathf.Approximately(OverridenValue, 0.0f) ? Buff.ModifierValue : OverridenValue; } }
+    public bool IsMeetingSaveCriteria { get { return SourceType.IsSaveData(); } }
 
-    private float OverridenValue
-    {
-        get;
-        set;
-    }
-
-    public Buff Buff { get; private set; }
-    public bool IsMeetingSaveCriteria {  get { return SourceType.IsSaveData(); } }
-
+    private float OverridenValue { get; set; }
 
     public BuffInfo()
     {
@@ -80,7 +43,6 @@ public class BuffInfo : IBinarySaveData
         SourceType = sourceType;
         Duration = buff.DurationAmount;
     }
-
 
     public void Write(BinaryWriter bw)
     {

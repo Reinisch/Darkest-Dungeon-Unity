@@ -4,10 +4,33 @@ using System.Collections.Generic;
 
 public class MonsterSkillSlot : MonoBehaviour
 {
-    public Text skillLabel;
-    public List<Image> skillAttributeIcons;
+    [SerializeField]
+    private Text skillLabel;
+    [SerializeField]
+    private List<Image> skillAttributeIcons;
 
-    void UpdateAttributes(CombatSkill skill)
+    public void UpdateSkill(CombatSkill skill)
+    {
+        gameObject.SetActive(true);
+        skillLabel.text = LocalizationManager.GetString("str_monster_skill_" + skill.Id);
+
+        UpdateAttributes(skill);
+    }
+
+    public void UpdateHeroSkill(Hero hero, CombatSkill skill)
+    {
+        gameObject.SetActive(true);
+
+        skillLabel.text = LocalizationManager.GetString("combat_skill_name_" + hero.Class + "_" + skill.Id);
+        UpdateAttributes(skill);
+    }
+
+    public void ResetSkill()
+    {
+        gameObject.SetActive(false);
+    }
+
+    private void UpdateAttributes(CombatSkill skill)
     {
         int freeIconIndex = skillAttributeIcons.Count - 1;
         if (skill.Heal != null)
@@ -89,7 +112,7 @@ public class MonsterSkillSlot : MonoBehaviour
                                 }
                             }
                             break;
-                        #endregion
+                            #endregion
                         case EffectSubType.StatBuff:
                             #region Stat Buff and Debuff
                             CombatStatBuffEffect statBuffEffect = skill.Effects[i].SubEffects[j] as CombatStatBuffEffect;
@@ -112,9 +135,7 @@ public class MonsterSkillSlot : MonoBehaviour
                                 freeIconIndex--;
                             }
                             break;
-                        #endregion
-                        default:
-                            break;
+                            #endregion
                     }
                 }
                 else
@@ -124,26 +145,5 @@ public class MonsterSkillSlot : MonoBehaviour
 
         for (int i = freeIconIndex; i >= 0; i--)
             skillAttributeIcons[i].enabled = false;
-    }
-
-    public void UpdateSkill(CombatSkill skill)
-    {
-        gameObject.SetActive(true);
-        skillLabel.text = LocalizationManager.GetString("str_monster_skill_" + skill.Id);
-
-        UpdateAttributes(skill);
-    }
-
-    public void UpdateHeroSkill(Hero hero, CombatSkill skill)
-    {
-        gameObject.SetActive(true);
-
-        skillLabel.text = LocalizationManager.GetString("combat_skill_name_" + hero.Class + "_" + skill.Id);
-        UpdateAttributes(skill);
-    }
-
-    public void ResetSkill()
-    {
-        gameObject.SetActive(false);
     }
 }

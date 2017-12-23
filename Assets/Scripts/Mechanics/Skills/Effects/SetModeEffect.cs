@@ -25,7 +25,7 @@
         target.SetCombatAnimation(true);
 
         if (RaidSceneManager.RaidInterface.RaidPanel.SelectedUnit == target)
-            RaidSceneManager.RaidInterface.RaidPanel.bannerPanel.skillPanel.UpdateSkillPanel();
+            RaidSceneManager.RaidInterface.RaidPanel.BannerPanel.SkillPanel.UpdateSkillPanel();
 
         return true;
     }

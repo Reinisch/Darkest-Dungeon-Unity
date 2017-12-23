@@ -1,46 +1,33 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Linq;
 
-public enum LootEventType { Curio, Battle, Quest, Camp }
-public enum LootResultType { Waiting, Discard, TakeAll, NotEnoughSpace }
+public enum LootResultType { Waiting, Discard, NotEnoughSpace }
 
 public class ScrollEventLoot : MonoBehaviour
 {
-    public Text title;
-    public Text description;
+    [SerializeField]
+    private Text title;
+    [SerializeField]
+    private Text description;
+    [SerializeField]
+    private Button takeAllButton;
+    [SerializeField]
+    private Button passButton;
+    [SerializeField]
+    private PartyInventory partyInventory;
 
-    public Button takeAllButton;
-    public Button passButton;
-
-    public event ScrollEvent onScrollOpened;
-    public event ScrollEvent onScrollClosed;
-
-    public LootEventType LootType { get; private set; }
     public LootResultType ActionType { get; private set; }
     public bool KeepLoot { get; private set; }
-
-    public PartyInventory partyInventory;
+    public bool HasSomething { get { return partyInventory.HasSomething(); } }
 
     public void Initialize()
     {
         partyInventory.Initialize();
+        partyInventory.Configuration = InventoryConfiguration.LootInventory;
     }
 
-    public void ScrollOpened()
-    {
-        if (onScrollOpened != null)
-            onScrollOpened();
-    }
-    public void ScrollClosed()
-    {
-        gameObject.SetActive(false);
-        partyInventory.DiscardAll();
-
-        if (onScrollClosed != null)
-            onScrollClosed();
-    }
-    
     public void LoadSingleLoot(string code, int amount)
     {
         KeepLoot = false;
@@ -48,7 +35,6 @@ public class ScrollEventLoot : MonoBehaviour
         passButton.gameObject.SetActive(true);
         partyInventory.SetActivated();
 
-        LootType = LootEventType.Camp;
         ActionType = LootResultType.Waiting;
 
         gameObject.SetActive(true);
@@ -62,11 +48,10 @@ public class ScrollEventLoot : MonoBehaviour
         title.text = LocalizationManager.GetString("str_overlay_loot_chest_title");
         description.text = LocalizationManager.GetString("str_overlay_loot_chest_description");
 
-        if (partyInventory.HasSomething())
-            ScrollOpened();
-        else
+        if (!partyInventory.HasSomething())
             Close();
     }
+
     public void LoadBattleLoot(List<LootDefinition> battleLoot)
     {
         KeepLoot = false;
@@ -74,7 +59,6 @@ public class ScrollEventLoot : MonoBehaviour
         passButton.gameObject.SetActive(true);
         partyInventory.SetActivated();
 
-        LootType = LootEventType.Battle;
         ActionType = LootResultType.Waiting;
 
         gameObject.SetActive(true);
@@ -88,11 +72,10 @@ public class ScrollEventLoot : MonoBehaviour
         title.text = LocalizationManager.GetString("str_overlay_loot_battle_title");
         description.text = LocalizationManager.GetString("str_overlay_loot_battle_description");
 
-        if (partyInventory.HasSomething())
-            ScrollOpened();
-        else
+        if (!partyInventory.HasSomething())
             Close();
     }
+
     public void LoadCurioLoot(Curio curio, CurioInteraction interaction, CurioResult curioResult, RaidInfo raid, bool keepLoot)
     {
         KeepLoot = keepLoot;
@@ -109,7 +92,6 @@ public class ScrollEventLoot : MonoBehaviour
             partyInventory.SetActivated();
         }
 
-        LootType = LootEventType.Curio;
         ActionType = LootResultType.Waiting;
 
         gameObject.SetActive(true);
@@ -118,9 +100,7 @@ public class ScrollEventLoot : MonoBehaviour
         if(curio.IsQuestCurio)
         {
             if(curioResult != null)
-            {
                 partyInventory.DistributeItem(new ItemDefinition("quest_item", curioResult.Item, 1));
-            }
         }
         else
         {
@@ -131,10 +111,9 @@ public class ScrollEventLoot : MonoBehaviour
                         foreach (var item in RaidSolver.GenerateLoot(result, raid))
                             partyInventory.DistributeItem(item);
             }
-            else
-                if(curioResult.Item != "Nothing")
-                    foreach (var item in RaidSolver.GenerateLoot(curioResult, raid))
-                        partyInventory.DistributeItem(item);
+            else if(curioResult.Item != "Nothing")
+                foreach (var item in RaidSolver.GenerateLoot(curioResult, raid))
+                    partyInventory.DistributeItem(item);
 
             if(RaidSceneManager.RaidPanel.SelectedHero != null)
             {
@@ -150,11 +129,10 @@ public class ScrollEventLoot : MonoBehaviour
         title.text = LocalizationManager.GetString("str_overlay_loot_chest_title");
         description.text = LocalizationManager.GetString("str_overlay_loot_chest_description");
 
-        if (partyInventory.HasSomething())
-            ScrollOpened();
-        else
+        if (!partyInventory.HasSomething())
             Close();
     }
+
     public void ResetWaiting()
     {
         ActionType = LootResultType.Waiting;
@@ -175,16 +153,12 @@ public class ScrollEventLoot : MonoBehaviour
         }
         partyInventory.DeactivateEmptySlots();
 
-        if (partyInventory.InventorySlots.Find(item => item.HasItem) == null)
-        {
-            ActionType = LootResultType.TakeAll;
-            ScrollClosed();
-        }
+        if (!partyInventory.InventorySlots.Any(item => item.HasItem))
+            Close();
         else
-        {
             ActionType = LootResultType.NotEnoughSpace;
-        }
     }
+
     public void Close()
     {
         if (partyInventory.ContaintItemType("quest_item"))
@@ -192,6 +166,7 @@ public class ScrollEventLoot : MonoBehaviour
 
         ActionType = LootResultType.Discard;
 
-        ScrollClosed();
+        gameObject.SetActive(false);
+        partyInventory.DiscardAll();
     }
 }

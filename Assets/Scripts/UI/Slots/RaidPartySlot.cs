@@ -1,40 +1,24 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System;
-
-public delegate void RaidPartySlotEvent(HeroSlot heroSlot);
-public delegate bool RaidPartySlotCheck(HeroSlot heroSlot);
 
 public class RaidPartySlot : MonoBehaviour, IDropHandler, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerEnterHandler
 {
-    public Image slotFrame;
-    public Image heroFrame;
+    [SerializeField]
+    private Image heroFrame;
 
-    public int SlotId { get; set; }
     public Animator SlotAnimator { get; private set; }
-    public RectTransform RectTransform { get; private set; }
-    public HeroSlot SelectedHero { get; set; }
-    public int SelectedHeroId
+    public HeroSlot SelectedHero { get; private set; }
+
+    private bool isDragging;
+
+    public event Action<HeroSlot> EventDropOut;
+    public event Action<HeroSlot> EventDropIn;
+    public Func<HeroSlot, bool> CompatibilityCheck;
+
+    private void Awake()
     {
-        get 
-        {
-            if (SelectedHero == null)
-                return 0;
-            else
-                return SelectedHero.Hero.RosterId;
-        }
-    }
-
-    public event RaidPartySlotEvent onDropOut;
-    public event RaidPartySlotEvent onDropIn;
-    public RaidPartySlotCheck compatibilityCheck;
-
-    bool isDragging = false;
-
-    void Awake()
-    {
-        RectTransform = GetComponent<RectTransform>();
         SlotAnimator = GetComponent<Animator>();
     }
 
@@ -46,6 +30,7 @@ public class RaidPartySlot : MonoBehaviour, IDropHandler, IDragHandler, IBeginDr
                 SlotAnimator.SetBool("marked", true);
         }
     }
+
     public void UnmarkSlots(RaidPartySlot partySlot, HeroSlot heroSlot)
     {
         SlotAnimator.SetBool("marked", false);
@@ -58,11 +43,12 @@ public class RaidPartySlot : MonoBehaviour, IDropHandler, IDragHandler, IBeginDr
         SlotAnimator.SetBool("empty", false);
         SlotAnimator.SetBool("marked", false);
         SlotAnimator.SetBool("locked", false);
-        heroFrame.sprite = heroSlot.portrait.sprite;
+        heroFrame.sprite = heroSlot.Portrait.sprite;
         heroSlot.SetStatus(HeroStatus.RaidParty);
-        if (onDropIn != null)
-            onDropIn(heroSlot);
+        if (EventDropIn != null)
+            EventDropIn(heroSlot);
     }
+
     public void ItemDroppedOut(HeroSlot heroSlot)
     {
         SelectedHero = null;
@@ -71,16 +57,17 @@ public class RaidPartySlot : MonoBehaviour, IDropHandler, IDragHandler, IBeginDr
         SlotAnimator.SetBool("marked", false);
         SlotAnimator.SetBool("locked",false);
         heroSlot.SetStatus(HeroStatus.Available);
-        if (onDropOut != null)
-            onDropOut(heroSlot);
+        if (EventDropOut != null)
+            EventDropOut(heroSlot);
 
         DarkestSoundManager.PlayOneShot("event:/ui/town/character_remove");
     }
+
     public void ItemSwapped(HeroSlot heroSlot)
     {
         SelectedHero = heroSlot;
         heroSlot.PartySlot = this;
-        heroFrame.sprite = heroSlot.portrait.sprite;
+        heroFrame.sprite = heroSlot.Portrait.sprite;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -95,6 +82,7 @@ public class RaidPartySlot : MonoBehaviour, IDropHandler, IDragHandler, IBeginDr
         Debug.Log("Begin Drag from panel.");
         DragManager.Instanse.StartDragging(SelectedHero, eventData, true);
     }
+
     public void OnDrag(PointerEventData eventData)
     {
         if (!isDragging)
@@ -104,6 +92,7 @@ public class RaidPartySlot : MonoBehaviour, IDropHandler, IDragHandler, IBeginDr
             return;
         DragManager.Instanse.OnDrag(SelectedHero, eventData);
     }
+
     public void OnEndDrag(PointerEventData eventData)
     {
         if (!isDragging)
@@ -128,7 +117,7 @@ public class RaidPartySlot : MonoBehaviour, IDropHandler, IDragHandler, IBeginDr
             return;
         }
 
-        if (!compatibilityCheck(DragManager.Instanse.HeroItem))
+        if (!CompatibilityCheck(DragManager.Instanse.HeroItem))
         {
             // Implement bark
             return;

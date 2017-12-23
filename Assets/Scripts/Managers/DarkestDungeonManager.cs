@@ -1,156 +1,67 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
 using SceneManager = UnityEngine.SceneManagement.SceneManager;
 
 public class DarkestDungeonManager : MonoBehaviour
 {
-    public ScreenFader screenFader;
-    public MainMenuWindow mainMenu;
+    [SerializeField]
+    private ScreenFader screenFader;
+    [SerializeField]
+    private MainMenuWindow mainMenu;
 
-    public Material sharedHighlight;
-    public Material sharedGrayscale;
-    public Material sharedGrayhighlight;
-    public Material sharedGrayDark;
-    public Material sharedFullDark;
-    public Material sharedDeactivated;
-    public Material sharedDeactHighlight;
+    [SerializeField]
+    private Material sharedHighlight;
+    [SerializeField]
+    private Material sharedGrayscale;
+    [SerializeField]
+    private Material sharedGrayhighlight;
+    [SerializeField]
+    private Material sharedGrayDark;
+    [SerializeField]
+    private Material sharedFullDark;
+    [SerializeField]
+    private Material sharedDeactivated;
+    [SerializeField]
+    private Material sharedDeactHighlight;
 
     public static bool SkipTransactions { get; set; }
     public static bool GamePaused { get; set; }
 
-    public static DarkestDungeonManager Instanse
-    {
-        get;
-        private set;
-    }
+    public static DarkestDungeonManager Instanse { get; private set; }
 
-    public static Material HighlightMaterial
-    {
-        get
-        {
-            return Instanse.sharedHighlight;
-        }
-    }
-    public static Material GrayMaterial
-    {
-        get
-        {
-            return Instanse.sharedGrayscale;
-        }
-    }
-    public static Material GrayHighlightMaterial
-    {
-        get
-        {
-            return Instanse.sharedGrayhighlight;
-        }
-    }
-    public static Material GrayDarkMaterial
-    {
-        get
-        {
-            return Instanse.sharedGrayDark;
-        }
-    }
-    public static Material FullGrayDarkMaterial
-    {
-        get
-        {
-            return Instanse.sharedFullDark;
-        }
-    }
-    public static Material DeactivatedMaterial
-    {
-        get
-        {
-            return Instanse.sharedDeactivated;
-        }
-    }
-    public static Material DeactivatedHighlightedMaterial
-    {
-        get
-        {
-            return Instanse.sharedDeactHighlight;
-        }
-    }
+    public static Material HighlightMaterial { get { return Instanse.sharedHighlight; } }
+    public static Material GrayMaterial { get { return Instanse.sharedGrayscale; } }
+    public static Material GrayHighlightMaterial { get { return Instanse.sharedGrayhighlight; } }
+    public static Material GrayDarkMaterial { get { return Instanse.sharedGrayDark; } }
+    public static Material FullGrayDarkMaterial { get { return Instanse.sharedFullDark; } }
+    public static Material DeactivatedMaterial { get { return Instanse.sharedDeactivated; } }
+    public static Material DeactivatedHighlightedMaterial { get { return Instanse.sharedDeactHighlight; } }
 
-    public static Campaign Campaign
-    {
-        get
-        {
-            return Instanse.campaign;
-        }
-    }
-    public static DarkestDatabase Data
-    {
-        get
-        {
-            return Instanse.database;
-        }
-    }
-    public static ScreenFader ScreenFader
-    {
-        get
-        {
-            return Instanse.screenFader;
-        }
-    }
-    public static RaidManager RaidManager
-    {
-        get
-        {
-            return Instanse.RaidingManager;
-        }
-    }
-    public static HeroSpriteDatabase HeroSprites
-    {
-        get
-        {
-            return Instanse.database.HeroSprites;
-        }
-    }
-    public static LoadingScreenInfo LoadingInfo
-    {
-        get
-        {
-            return Instanse.nextSceneInfo;
-        }
-    }
-    public static MainMenuWindow MainMenu
-    {
-        get
-        {
-            return Instanse.mainMenu;
-        }
-    }
+    public static Campaign Campaign { get { return Instanse.campaign; } }
+    public static DarkestDatabase Data { get { return Instanse.database; } }
+    public static ScreenFader ScreenFader { get { return Instanse.screenFader; } }
+    public static RaidManager RaidManager { get { return Instanse.RaidingManager; } }
+    public static HeroSpriteDatabase HeroSprites { get { return Instanse.database.HeroSprites; } }
+    public static LoadingScreenInfo LoadingInfo { get { return Instanse.nextSceneInfo; } }
+    public static MainMenuWindow MainMenu { get { return Instanse.mainMenu; } }
+    public static float RandomBarkChance { get; private set; }
+    public RaidManager RaidingManager { get; private set; }
+    public Camera MainUICamera { get; private set; }
+
     public static SaveCampaignData SaveData
     {
-        get
-        {
-            return Instanse.loadedSaveData;
-        }
-        set
-        {
-            Instanse.loadedSaveData = value;
-        }
+        get { return Instanse.loadedSaveData; }
+        set { Instanse.loadedSaveData = value; }
     }
 
-    public static float RandomBarkChance { get; set; }
-
-    public Canvas MainMenuUI { get; set; }
-    public Camera MainUICamera { get; set; }
-
-    public DragManager DragManager { get; private set; }
-    public RaidManager RaidingManager { get; private set; }
-    public ToolTipManager ToolTipManager { get; private set; }
-    public LocalizationManager LocalizationManager { get; private set; }
+    private Canvas MainMenuUI { get; set; }
+    private DragManager DragManager { get; set; }
 
     private Campaign campaign;
     private DarkestDatabase database;
     private SaveCampaignData loadedSaveData;
-    private LoadingScreenInfo nextSceneInfo = new LoadingScreenInfo();
+    private readonly LoadingScreenInfo nextSceneInfo = new LoadingScreenInfo();
 
-    void Awake()
+    private void Awake()
     {
         if (Instanse == null)
         {
@@ -160,9 +71,7 @@ public class DarkestDungeonManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
 
             RaidingManager = GetComponent<RaidManager>();
-            ToolTipManager = GetComponent<ToolTipManager>();
             DragManager = GetComponent<DragManager>();
-            LocalizationManager = GetComponent<LocalizationManager>();
 
             MainMenuUI = GetComponentInChildren<Canvas>();
             MainUICamera = GameObject.FindGameObjectWithTag("Main UI Camera").GetComponent<Camera>();
@@ -183,18 +92,14 @@ public class DarkestDungeonManager : MonoBehaviour
             if (SaveData.InRaid == false)
             {
                 var raidPanel = FindObjectOfType<RaidPanel>();
-                raidPanel.inventoryPanel.partyInventory.Initialize();
-                Instanse.RaidingManager.QuickStart(raidPanel.inventoryPanel.partyInventory);
+                raidPanel.InventoryPanel.PartyInventory.Initialize();
+                Instanse.RaidingManager.QuickStart(raidPanel.InventoryPanel.PartyInventory);
             }
         }
         else if (SceneManager.GetActiveScene().name == "EstateManagement")
         {
             LoadSave();
         }
-    }
-
-    void Start()
-    {
     }
 
     public void LoadSave()
@@ -208,15 +113,15 @@ public class DarkestDungeonManager : MonoBehaviour
         campaign = new Campaign();
         campaign.Load(SaveData);
     }
+
     public void SaveGame()
     {
         SaveLoadManager.WriteSave(SaveData);
     }
+
     public void UpdateSceneOverlay(Camera screenOverlayCam)
     {
         var screenOverlayRect = MainMenuUI.GetComponent<RectTransform>();
-        ToolTipManager.OverlayCamera = screenOverlayCam;
-        ToolTipManager.OverlayRect = screenOverlayRect;
 
         DragManager.OverlayCamera = screenOverlayCam;
         DragManager.OverlayRect = screenOverlayRect;

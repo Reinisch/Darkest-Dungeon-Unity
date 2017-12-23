@@ -1,53 +1,56 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
-
-public delegate void WindowEvent();
 
 public class CharacterWindow : MonoBehaviour
 {
-    public Text heroName;
-    public Text heroClassName;
+    [SerializeField]
+    private Text heroName;
+    [SerializeField]
+    private Text heroClassName;
+    [SerializeField]
+    private Image heroGuildHeader;
 
-    public Button renameButton;
-    public Button dismissButton;
+    [SerializeField]
+    private StressPanel stressPanel;
+    [SerializeField]
+    private ResolveBar resolveBar;
+    [SerializeField]
+    private QuirksPanel quirksPanel;
+    [SerializeField]
+    private DiseasePanel diseasePanel;
+    [SerializeField]
+    private CharStatsPanel charStatsPanel;
+    [SerializeField]
+    private ResistancesPanel resistancesPanel;
+    [SerializeField]
+    private CharEquipmentPanel charEquipmentPanel;
+    [SerializeField]
+    private CharCombatSkillPanel charCombatSkillPanel;
+    [SerializeField]
+    private CharCampingSkillPanel charCampingSkillPanel;
+    [SerializeField]
+    private HeroDisplayPanel displayPanel;
+    [SerializeField]
+    private Text weaponLevel;
+    [SerializeField]
+    private Text armorLevel;
 
-    public Image heroGuildHeader;
+    public Hero CurrentHero { get; private set; }
+    public bool IsOpened { get { return gameObject.activeSelf; } }
 
-    public StressPanel stressPanel;
-    public ResolveBar resolveBar;
-    public QuirksPanel quirksPanel;
-    public DiseasePanel diseasePanel;
-    public CharStatsPanel charStatsPanel;
-    public ResistancesPanel resistancesPanel;
-    public CharEquipmentPanel charEquipmentPanel;
-    public CharCombatSkillPanel charCombatSkillPanel;
-    public CharCampingSkillPanel charCampingSkillPanel;
-    public HeroDisplayPanel displayPanel;
+    private bool interactable;
 
-    public Text weaponLevel;
-    public Text armorLevel;
+    public event Action EventWindowClosed;
+    public event Action EventNextButtonClicked;
+    public event Action EventPreviousButtonClick;
 
-    public Hero CurrentHero { get; set; }
-
-    bool interactable;
-
-    public event WindowEvent onWindowClose;
-    public event WindowEvent onNextButtonClick;
-    public event WindowEvent onPreviousButtonClick;
-
-    public bool IsOpened
+    private void Awake()
     {
-        get
-        {
-            return gameObject.activeSelf;
-        }
+        charEquipmentPanel.EventPanelChanged += UpdateAttributes;
     }
 
-    void Awake()
-    {
-        charEquipmentPanel.onPanelChanged += UpdateAttributes;
-    }
-    void Update()
+    private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Q))
             PreviousButtonClicked();
@@ -64,7 +67,8 @@ public class CharacterWindow : MonoBehaviour
 
         stressPanel.UpdateStress(CurrentHero.GetPairedAttribute(AttributeType.Stress).ValueRatio);
     }
-    public void UpdateClassInfo(bool interactable)
+
+    public void UpdateClassInfo(bool isInteractable)
     {
         heroName.text = CurrentHero.HeroName;
         heroClassName.text = LocalizationManager.GetString("hero_class_name_" + CurrentHero.ClassStringId);
@@ -75,18 +79,19 @@ public class CharacterWindow : MonoBehaviour
 
         resolveBar.UpdateResolve(CurrentHero);
 
-        charCombatSkillPanel.UpdateCombatSkillPanel(CurrentHero, interactable);
-        charCampingSkillPanel.UpdateCampingSkillPanel(CurrentHero, interactable);
+        charCombatSkillPanel.UpdateCombatSkillPanel(CurrentHero, isInteractable);
+        charCampingSkillPanel.UpdateCampingSkillPanel(CurrentHero, isInteractable);
         displayPanel.UpdateDisplay(CurrentHero);
     }
-    public void UpdateTrinkets(bool interactable)
+
+    public void UpdateTrinkets(bool isInteractable)
     {
-        if (interactable)
+        if (isInteractable)
             charEquipmentPanel.SetActive();
         else
             charEquipmentPanel.SetDisabled();
 
-        charEquipmentPanel.UpdateEquipmentPanel(CurrentHero, interactable);
+        charEquipmentPanel.UpdateEquipmentPanel(CurrentHero, isInteractable);
     }
 
     public void UpdateCharacterInfo()
@@ -96,6 +101,7 @@ public class CharacterWindow : MonoBehaviour
 
         UpdateCharacterInfo(CurrentHero, interactable, true);
     }
+
     public void UpdateCharacterInfo(Hero updateHero, bool interactionAllowed, bool forced = false)
     {
         interactable = interactionAllowed;
@@ -107,12 +113,10 @@ public class CharacterWindow : MonoBehaviour
             UpdateTrinkets(interactable);
         }
     }
+
     public void UpdateRaidCharacterInfo(Hero updateHero, bool interactionAllowed)
     {
-        if (RaidSceneManager.SceneState == DungeonSceneState.Hall)
-            displayPanel.Light.enabled = true;
-        else
-            displayPanel.Light.enabled = false;
+        displayPanel.Light.enabled = RaidSceneManager.SceneState == DungeonSceneState.Hall;
 
         interactable = interactionAllowed;
         if (CurrentHero == null || CurrentHero.RosterId != updateHero.RosterId)
@@ -123,6 +127,7 @@ public class CharacterWindow : MonoBehaviour
             UpdateTrinkets(false);
         }
     }
+
     public void DismissButtonClicked()
     {
         if (CurrentHero == null || EstateSceneManager.Instanse == null)
@@ -136,28 +141,32 @@ public class CharacterWindow : MonoBehaviour
             return;
 
         DarkestDungeonManager.Campaign.DismissHero(CurrentHero);
-        EstateSceneManager.Instanse.rosterPanel.DestroySlot(CurrentHero);
+        EstateSceneManager.Instanse.RosterPanel.DestroySlot(CurrentHero);
         DarkestSoundManager.ExecuteNarration("dismiss_hero", NarrationPlace.Town);
         WindowClosed();
     }
+
     public void NextButtonClicked()
     {
-        if (onNextButtonClick != null)
-            onNextButtonClick();
+        if (EventNextButtonClicked != null)
+            EventNextButtonClicked();
     }
+
     public void PreviousButtonClicked()
     {
-        if (onPreviousButtonClick != null)
-            onPreviousButtonClick();
+        if (EventPreviousButtonClick != null)
+            EventPreviousButtonClick();
     }
+
     public void WindowOpened()
     {
         gameObject.SetActive(true);
     }
+
     public void WindowClosed()
     {
-        if (onWindowClose != null)
-            onWindowClose();
+        if (EventWindowClosed != null)
+            EventWindowClosed();
 
         gameObject.SetActive(false);
         CurrentHero = null;

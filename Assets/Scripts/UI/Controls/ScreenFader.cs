@@ -1,17 +1,16 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
-
-public delegate void ScreenTransitionEvent();
 
 public class ScreenFader : MonoBehaviour
 {
-    RawImage rawImage;
-    Animator screenAnimator;
+    private RawImage rawImage;
+    private Animator screenAnimator;
 
-    public event ScreenTransitionEvent onFadeEnded;
-    public event ScreenTransitionEvent onAppearEnded;
+    public event Action EventFadeEnded;
+    public event Action EventAppearEnded;
 
-    void Awake()
+    private void Awake()
     {
         screenAnimator = GetComponent<Animator>();
         rawImage = GetComponent<RawImage>();
@@ -23,17 +22,20 @@ public class ScreenFader : MonoBehaviour
         rawImage.enabled = true;
         screenAnimator.SetTrigger("initial_fade");
     }
+
     public void Fade(float speed = 1)
     {
         rawImage.enabled = true;
         screenAnimator.SetBool("fade", true);
         screenAnimator.speed = speed;
     }
+
     public void Appear(float speed = 1)
     {
         screenAnimator.SetBool("appear", true);
         screenAnimator.speed = speed;
     }
+
     public void Reset()
     {
         screenAnimator.speed = 1;
@@ -46,15 +48,16 @@ public class ScreenFader : MonoBehaviour
     {
         screenAnimator.SetBool("fade", false);
 
-        if (onFadeEnded != null)
-            onFadeEnded();
+        if (EventFadeEnded != null)
+            EventFadeEnded();
     }
+
     public void AppearEnded()
     {
         screenAnimator.SetBool("appear", false);
         rawImage.enabled = false;
 
-        if (onAppearEnded != null)
-            onAppearEnded();
+        if (EventAppearEnded != null)
+            EventAppearEnded();
     }
 }

@@ -1,22 +1,22 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 
 public class RaidParty
 {
     public bool IsMovingLeft { get; set; }
-
-    public List<RaidHeroInfo> HeroInfo { get; set; }
+    public List<RaidHeroInfo> HeroInfo { get; private set; }
 
     public RaidParty(PhotonPlayer photonPlayer)
     {
-        List<Hero> MultiplayerHeroes = new List<Hero>();
-        MultiplayerHeroes.Add(new Hero(1, photonPlayer));
-        MultiplayerHeroes.Add(new Hero(2, photonPlayer));
-        MultiplayerHeroes.Add(new Hero(3, photonPlayer));
-        MultiplayerHeroes.Add(new Hero(4, photonPlayer));
+        List<Hero> multiplayerHeroes = new List<Hero>
+        {
+            new Hero(1, photonPlayer),
+            new Hero(2, photonPlayer),
+            new Hero(3, photonPlayer),
+            new Hero(4, photonPlayer)
+        };
 
         HeroInfo = new List<RaidHeroInfo>();
-        foreach (var hero in MultiplayerHeroes)
+        foreach (var hero in multiplayerHeroes)
             HeroInfo.Add(new RaidHeroInfo(hero));
     }
 
@@ -25,20 +25,20 @@ public class RaidParty
         IsMovingLeft = saveData.IsMovingLeft;
 
         HeroInfo = new List<RaidHeroInfo>();
-        for(int i = 0; i < saveData.HeroInfo.Count; i++)
+        foreach (RaidPartyHeroInfoSaveData saveInfo in saveData.HeroInfo)
         {
             var hero = DarkestDungeonManager.Campaign.Heroes.Find(campaignHero => 
-                campaignHero.RosterId == saveData.HeroInfo[i].HeroRosterId);
-            RaidHeroInfo newInfo = new RaidHeroInfo(hero);
-            newInfo.IsAlive = saveData.HeroInfo[i].IsAlive;
-            if(saveData.HeroInfo[i].IsAlive == false)
+                campaignHero.RosterId == saveInfo.HeroRosterId);
+            RaidHeroInfo newInfo = new RaidHeroInfo(hero) {IsAlive = saveInfo.IsAlive};
+
+            if(saveInfo.IsAlive == false)
             {
                 newInfo.DeathRecord = new DeathRecord()
                 {
-                    Factor = saveData.HeroInfo[i].Factor,
+                    Factor = saveInfo.Factor,
                     HeroClassIndex = hero.ClassIndexId,
                     HeroName = hero.HeroName,
-                    KillerName = saveData.HeroInfo[i].Killer,
+                    KillerName = saveInfo.Killer,
                     ResolveLevel = hero.Resolve.Level,
                 };
             }

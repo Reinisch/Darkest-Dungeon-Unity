@@ -1,16 +1,14 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
-using System.Collections;
 
 public class RaidInventoryPanel : MonoBehaviour
 {
-    public PartyInventory partyInventory;
+    [SerializeField]
+    private PartyInventory partyInventory;
 
-    public Button switchButton;
+    public PartyInventory PartyInventory { get { return partyInventory; } }
+    public RectTransform RectTransform { get; private set; }
 
-    public RectTransform RectTransform { get; set; }
-
-    void Awake()
+    private void Awake()
     {
         RectTransform = GetComponent<RectTransform>();
     }

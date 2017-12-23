@@ -3,20 +3,21 @@ using System.Collections.Generic;
 
 public class FormationRanks : MonoBehaviour
 {
-    public const int SlotNumber = 4;
     public const int SlotSize = 140;
 
-    public bool facingRight = true;
+    [SerializeField]
+    private bool facingRight = true;
 
-    public RectTransform RectTransform { get; set; }
-    public List<FormationRanksSlot> Slots { get; set; }
+    public bool FacingRight { get { return facingRight; } }
+    public RectTransform RectTransform { get; private set; }
+    private List<FormationRanksSlot> Slots { get; set; }
 
-    void Awake()
+    private void Awake()
     {
         RectTransform = GetComponent<RectTransform>();
         Slots = new List<FormationRanksSlot>(GetComponentsInChildren<FormationRanksSlot>());
 
-        if (facingRight)
+        if (FacingRight)
             Slots.Reverse();
     }
 
@@ -31,6 +32,7 @@ public class FormationRanks : MonoBehaviour
         foreach (var slot in Slots)
             slot.UpdateSlot();
     }
+
     public void RedistributeParty(FormationParty party)
     {
         for (int i = 0; i < Slots.Count; i++)
@@ -41,6 +43,7 @@ public class FormationRanks : MonoBehaviour
                 Slots[i].ClearSlot();
         }
     }
+
     public void DistributeParty(FormationParty party)
     {
         for (int i = 0; i < Slots.Count; i++)
@@ -51,7 +54,7 @@ public class FormationRanks : MonoBehaviour
                 Slots[i].ClearSlot();
         }
 
-        if (!facingRight)
+        if (!FacingRight)
             for (int i = 0; i < party.Units.Count; i++)
                 party.Units[i].InstantFlip();
 

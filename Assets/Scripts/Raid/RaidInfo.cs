@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 
-public enum CampingPhase { None, Meal, Skill }
-
 public class RaidInfo
 {
     public bool QuestCompleted { get; set; }
@@ -18,25 +16,23 @@ public class RaidInfo
     public int ExploredRoomCount { get; set; }
     public Area CurrentLocation { get; set; }
     public DungeonRoom LastRoom { get; set; }
-    public HallSector PreviousLastSector { get; set; }
     public HallSector LastSector { get; set; }
 
-    public List<string> KilledMonsters { get; set; }
-    public List<string> InvestigatedCurios { get; set; }
+    public HallSector PreviousLastSector { get; private set; }
+    public List<string> KilledMonsters { get; private set; }
+    public List<string> InvestigatedCurios { get; private set; }
 
-    public float ElapsedTime { get; set; }
     public int AncestorTalk { get; set; }
 
     private int defaultHungerCooldown = 18;
 
     public RaidInfo()
     {
-        ElapsedTime = 0;
-
         KilledMonsters = new List<string>();
         InvestigatedCurios = new List<string>();
         HungerCooldown = defaultHungerCooldown;
     }
+
     public RaidInfo(SaveCampaignData saveData)
     {
         QuestCompleted = saveData.QuestCompleted;
@@ -81,15 +77,18 @@ public class RaidInfo
     {
         return Quest.Goal.QuestData.IsQuestCompleted();
     }
+
     public void ResetHungerCooldown()
     {
         HungerCooldown = defaultHungerCooldown;
     }
+
     public void ResetRoundSector(HallSector targetSector)
     {
         PreviousLastSector = targetSector;
         LastSector = targetSector;
     }
+
     public void EnteredSector(HallSector enterSector)
     {
         if(PreviousLastSector == null)

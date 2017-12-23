@@ -13,6 +13,7 @@
     {
         return --Amount <= 0;
     }
+
     public SkillCooldown Copy()
     {
         return new SkillCooldown(SkillId, Amount);

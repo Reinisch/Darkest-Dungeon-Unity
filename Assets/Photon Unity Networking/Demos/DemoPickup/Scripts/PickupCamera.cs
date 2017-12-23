@@ -244,5 +244,4 @@ public class PickupCamera : Photon.MonoBehaviour
     {
         return centerOffset;
     }
-
 }

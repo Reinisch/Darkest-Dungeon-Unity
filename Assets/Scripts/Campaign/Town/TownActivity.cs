@@ -1,13 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public interface IActivity
-{
-    string TreeId { get; set; }
-    List<ActivitySlot> ActivitySlots { get; set; }
-}
-
-public class TownActivity : IActivity
+public class TownActivity
 {
     public string Id { get; set; }
     public string TreeId { get; set; }
@@ -16,31 +10,17 @@ public class TownActivity : IActivity
     public int BaseSlots { get; set; }
     public int BaseStressHeal { get; set; }
     public CurrencyCost BaseCost { get; set; }
-    public float BaseAfflictionCure { get; set; }
-
     public int NumberOfSlots { get; set; }
     public int StressHealAmount { get; set; }
     public CurrencyCost ActivityCost { get; set; }
-    public float AfflictionCureChance { get; set; }
-
     public float SideEffectChance { get; set; }
     public List<TownEffect> SideEffects { get; set; }
     public List<string> IncompatiableQuirks { get; set; }
-    public bool CareTakerFriendly { get; set; }
 
     public List<CostUpgrade> CostUpgrades { get; set; }
     public List<SlotUpgrade> SlotUpgrades { get; set; }
     public List<StressUpgrade> StressUpgrades { get; set; }
-    public List<ChanceUpgrade> AfflictionCureUpgrades { get; set; }
-
     public List<ActivitySlot> ActivitySlots { get; set; }
-
-    void LogActivity(ActivityEffectType effectType, Hero hero, string effectInfo)
-    {
-        var log = DarkestDungeonManager.Campaign.CurrentLog();
-        if(log != null)
-            log.HeroRecords.Add(new ActorActivityRecord(ActivityType, effectType, hero, effectInfo, StressHealAmount));
-    }
 
     public TownActivity(string treeId)
     {
@@ -77,7 +57,6 @@ public class TownActivity : IActivity
         CostUpgrades = new List<CostUpgrade>();
         SlotUpgrades = new List<SlotUpgrade>();
         StressUpgrades = new List<StressUpgrade>();
-        AfflictionCureUpgrades = new List<ChanceUpgrade>();
         ActivitySlots = new List<ActivitySlot>();
     }
 
@@ -102,12 +81,12 @@ public class TownActivity : IActivity
                     activitySlot.Hero.GetPairedAttribute(AttributeType.Stress).DecreaseValue(StressHealAmount);
                     if(RandomSolver.CheckSuccess(SideEffectChance))
                     {
-                        var effect = RandomSolver.ChooseByRandom<TownEffect>(SideEffects);
+                        var effect = RandomSolver.ChooseByRandom(SideEffects);
                         switch(effect.Type)
                         {
                             case TownEffectType.GoMissing:
                                 var missingEffect = effect as MissingTownEffect;
-                                var duration = RandomSolver.ChooseByRandom<MissingDuration>(missingEffect.Durations);
+                                var duration = RandomSolver.ChooseByRandom(missingEffect.Durations);
 
                                 LogActivity(ActivityEffectType.Missing, activitySlot.Hero, "None");
 
@@ -122,7 +101,7 @@ public class TownActivity : IActivity
                                 break;
                             case TownEffectType.AddQuirk:
                                 var addQuirkEffect = effect as AddQuirkTownEffect;
-                                var activityQuirk = RandomSolver.ChooseByRandom<TownActivityQuirk>(addQuirkEffect.QuirkSet);
+                                var activityQuirk = RandomSolver.ChooseByRandom(addQuirkEffect.QuirkSet);
                                 if(activityQuirk != null)
                                 {
                                     var quirk = DarkestDungeonManager.Data.Quirks[activityQuirk.QuirkName];
@@ -178,7 +157,7 @@ public class TownActivity : IActivity
                                 break;
                             case TownEffectType.ApplyBuff:
                                 var addBuffTownEffect = effect as AddBuffTownEffect;
-                                var activityBuff = RandomSolver.ChooseByRandom<TownActivityBuff>(addBuffTownEffect.BuffSets);
+                                var activityBuff = RandomSolver.ChooseByRandom(addBuffTownEffect.BuffSets);
                                 if(activityBuff != null)
                                 {
                                     foreach(var buffName in activityBuff.BuffNames)
@@ -195,7 +174,7 @@ public class TownActivity : IActivity
                                 break;
                             case TownEffectType.ChangeCurrency:
                                 var changeCurrencyEffect = effect as CurrencyTownEffect;
-                                var change = RandomSolver.ChooseByRandom<TownActivityCurrency>(changeCurrencyEffect.Changes);
+                                var change = RandomSolver.ChooseByRandom(changeCurrencyEffect.Changes);
                                 if(change != null)
                                 {
                                     if (change.Amount > 0)
@@ -225,19 +204,17 @@ public class TownActivity : IActivity
                         activitySlot.Hero = null;
                     }
                     break;
-                default:
-                    break;
             }
             
         }
     }
+
     public void Reset()
     {
         ActivitySlots = new List<ActivitySlot>();
         NumberOfSlots = BaseSlots;
         StressHealAmount = BaseStressHeal;
         ActivityCost = BaseCost;
-        AfflictionCureChance = BaseAfflictionCure;
     }
 
     public ITownUpgrade GetUpgradeByCode(string code)
@@ -250,5 +227,12 @@ public class TownActivity : IActivity
             return upgrade;
         upgrade = StressUpgrades.Find(item => item.UpgradeCode == code);
         return upgrade;
+    }
+
+    private void LogActivity(ActivityEffectType effectType, Hero hero, string effectInfo)
+    {
+        var log = DarkestDungeonManager.Campaign.CurrentLog();
+        if (log != null)
+            log.HeroRecords.Add(new ActorActivityRecord(ActivityType, effectType, hero, effectInfo, StressHealAmount));
     }
 }

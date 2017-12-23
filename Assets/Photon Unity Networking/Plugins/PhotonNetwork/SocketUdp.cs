@@ -224,6 +224,5 @@ namespace ExitGames.Client.Photon
             this.Disconnect();
         }
     } //class
-
 }
 #endif

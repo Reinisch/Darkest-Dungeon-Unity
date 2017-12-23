@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
@@ -9,24 +10,29 @@ public delegate void HeroResurrectionEvent(DeathRecord record);
 
 public class HeroRosterPanel : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDropHandler
 {
-    Transform rosterSlots;
+    [SerializeField]
+    private GameObject heroSlotTemplate;
+    [SerializeField]
+    private HeroSlot placeHolder;
+    [SerializeField]
+    private Text capacityLabel;
+    [SerializeField]
+    private RectTransform rosterLive;
 
-    public GameObject heroSlotTemplate;
-    public HeroSlot placeHolder;
-    public Text capacityLabel;
-    public RectTransform rosterLive;
-
-    public int CurrentRosterCount { get; set; }
+    public HeroSlot PlaceHolder { get { return placeHolder; } }
+    public RectTransform RosterLive { get { return rosterLive; } }
     public List<HeroSlot> HeroSlots { get; private set; }
-    public bool Hovered { get; set; }
-    public bool Dragging { get; set; }
+    public bool Hovered { get; private set; }
+    public bool Dragging { private get; set; }
 
-    public event HeroInspectEvent onHeroInspect;
-    public event HeroSlotEvent onHeroSlotBeginDragging;
-    public event HeroSlotEvent onHeroSlotEndDragging;
-    public event HeroResurrectionEvent onHeroResurrection;
+    private Transform rosterSlots;
 
-    void Awake()
+    public event HeroInspectEvent EventHeroInspected;
+    public event HeroSlotEvent EventHeroSlotBeginDragging;
+    public event HeroSlotEvent EventHeroSlotEndDragging;
+    public event HeroResurrectionEvent EventHeroResurrected;
+
+    private void Awake()
     {
         rosterSlots = transform.Find("RosterScroll").Find("Viewport").Find("RosterSlots");
 #if !(UNITY_ANDROID || UNITY_IOS)
@@ -34,25 +40,15 @@ public class HeroRosterPanel : MonoBehaviour, IPointerEnterHandler, IPointerExit
         scrollRect.verticalScrollbar.gameObject.SetActive(false);
 #endif
     }
-    void Start()
+
+    private void Start()
     {
-        placeHolder.slotController.SetTrigger("hide");
-        placeHolder.slotController.SetBool("isHidden", true);
-        placeHolder.HeroRoster = this;
-        placeHolder.RectTransform.SetAsLastSibling();
+        PlaceHolder.SlotController.SetTrigger("hide");
+        PlaceHolder.SlotController.SetBool("isHidden", true);
+        PlaceHolder.HeroRoster = this;
+        PlaceHolder.RectTransform.SetAsLastSibling();
     }
 
-    HeroSlot CreateSlot(Hero hero)
-    {
-        GameObject gameObject = Instantiate(heroSlotTemplate);
-        gameObject.transform.SetParent(rosterSlots, false);
-        HeroSlot heroSlot = gameObject.GetComponent<HeroSlot>();
-        heroSlot.HeroRoster = this;
-        heroSlot.Hero = hero;
-        heroSlot.UpdateSlot();
-        HeroSlots.Add(heroSlot);
-        return heroSlot;
-    }
     public HeroSlot CreateSlot(RecruitSlot recruitSlot, HeroSlot heroSlot)
     {
         if (DarkestDungeonManager.Campaign.Heroes.Count >= DarkestDungeonManager.Campaign.Estate.StageCoach.RosterSlots)
@@ -67,8 +63,8 @@ public class HeroRosterPanel : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
         DarkestSoundManager.ExecuteNarration("recruit_hero", NarrationPlace.Town, recruitSlot.Hero.Class);
 
-        if (deathRecord != null && onHeroResurrection != null)
-            onHeroResurrection(deathRecord);
+        if (deathRecord != null && EventHeroResurrected != null)
+            EventHeroResurrected(deathRecord);
         else
         {
             DarkestSoundManager.PlayOneShot("event:/town/stage_coach_purchase");
@@ -81,16 +77,19 @@ public class HeroRosterPanel : MonoBehaviour, IPointerEnterHandler, IPointerExit
         UpdateCapacity();
         return newSlot;
     }
+
     public void HeroSlotBeginDragging(HeroSlot slot)
     {
-        if (onHeroSlotBeginDragging != null)
-            onHeroSlotBeginDragging(slot);
+        if (EventHeroSlotBeginDragging != null)
+            EventHeroSlotBeginDragging(slot);
     }
+
     public void HeroSlotEndDragging(HeroSlot slot)
     {
-        if (onHeroSlotEndDragging != null)
-            onHeroSlotEndDragging(slot);
+        if (EventHeroSlotEndDragging != null)
+            EventHeroSlotEndDragging(slot);
     }
+
     public void DestroySlot(Hero hero)
     {
         var targetSlot = HeroSlots.Find(slot => slot.Hero == hero);
@@ -102,14 +101,16 @@ public class HeroRosterPanel : MonoBehaviour, IPointerEnterHandler, IPointerExit
         UpdateCapacity();
     }
 
+    #region Roster Panel Actions
+
     public void SortByBuilding()
     {
         DarkestSoundManager.PlayOneShot("event:/ui/town/sort_by");
 
-        System.Comparison<Hero> sorting = (x, y) =>
+        Comparison<Hero> sorting = (x, y) =>
         {
             int result = -x.Status.CompareTo(y.Status);
-            return result == 0 ? x.Name.CompareTo(y.Name) : result;
+            return result == 0 ? string.Compare(x.Name, y.Name, StringComparison.Ordinal) : result;
         };
 
         DarkestDungeonManager.Campaign.Heroes.Sort(sorting);
@@ -118,14 +119,15 @@ public class HeroRosterPanel : MonoBehaviour, IPointerEnterHandler, IPointerExit
         for (int i = 0; i < HeroSlots.Count; i++)
             HeroSlots[i].RectTransform.SetSiblingIndex(i);
     }
+
     public void SortByClass()
     {
         DarkestSoundManager.PlayOneShot("event:/ui/town/sort_by");
 
-        System.Comparison<Hero> sorting = (x, y) =>
+        Comparison<Hero> sorting = (x, y) =>
         {
-            int result = x.Class.CompareTo(y.Class);
-            return result == 0 ? x.Name.CompareTo(y.Name) : result;
+            int result = string.Compare(x.Class, y.Class, StringComparison.Ordinal);
+            return result == 0 ? string.Compare(x.Name, y.Name, StringComparison.Ordinal) : result;
         };
 
         DarkestDungeonManager.Campaign.Heroes.Sort(sorting);
@@ -134,14 +136,15 @@ public class HeroRosterPanel : MonoBehaviour, IPointerEnterHandler, IPointerExit
         for (int i = 0; i < HeroSlots.Count; i++)
             HeroSlots[i].RectTransform.SetSiblingIndex(i);
     }
+
     public void SortByStress()
     {
         DarkestSoundManager.PlayOneShot("event:/ui/town/sort_by");
 
-        System.Comparison<Hero> sorting = (x, y) =>
+        Comparison<Hero> sorting = (x, y) =>
         {
             int result = x.Stress.CurrentValue.CompareTo(y.Stress.CurrentValue);
-            return result == 0 ? x.Name.CompareTo(y.Name) : result;
+            return result == 0 ? string.Compare(x.Name, y.Name, StringComparison.Ordinal) : result;
         };
 
         DarkestDungeonManager.Campaign.Heroes.Sort(sorting);
@@ -150,14 +153,15 @@ public class HeroRosterPanel : MonoBehaviour, IPointerEnterHandler, IPointerExit
         for (int i = 0; i < HeroSlots.Count; i++)
             HeroSlots[i].RectTransform.SetSiblingIndex(i);
     }
+
     public void SortByLevel()
     {
         DarkestSoundManager.PlayOneShot("event:/ui/town/sort_by");
 
-        System.Comparison<Hero> sorting = (x, y) =>
+        Comparison<Hero> sorting = (x, y) =>
         {
             int result = -x.Resolve.Level.CompareTo(y.Resolve.Level);
-            return result == 0 ? x.Name.CompareTo(y.Name) : result;
+            return result == 0 ? string.Compare(x.Name, y.Name, StringComparison.Ordinal) : result;
         };
 
         DarkestDungeonManager.Campaign.Heroes.Sort(sorting);
@@ -166,6 +170,8 @@ public class HeroRosterPanel : MonoBehaviour, IPointerEnterHandler, IPointerExit
         for (int i = 0; i < HeroSlots.Count; i++)
             HeroSlots[i].RectTransform.SetSiblingIndex(i);
     }
+
+    #endregion
 
     public void UpdateCapacity()
     {
@@ -175,6 +181,7 @@ public class HeroRosterPanel : MonoBehaviour, IPointerEnterHandler, IPointerExit
             capacityLabel.text = DarkestDungeonManager.Campaign.Heroes.Count.ToString() + 
                 "/" + DarkestDungeonManager.Campaign.Estate.StageCoach.RosterSlots.ToString();
     }
+
     public void InitializeRoster()
     {
         HeroSlots = new List<HeroSlot>();
@@ -182,49 +189,62 @@ public class HeroRosterPanel : MonoBehaviour, IPointerEnterHandler, IPointerExit
             CreateSlot(DarkestDungeonManager.Campaign.Heroes[i]);
         UpdateCapacity();
     }
+
     public void UpdateRoster()
     {
         for (int i = 0; i < HeroSlots.Count; i++)
             HeroSlots[i].UpdateSlot();
     }
+
     public void HeroSlotClicked(HeroSlot heroSlot)
     {
-        if (onHeroInspect != null)
-            onHeroInspect(heroSlot.Hero, true);
+        if (EventHeroInspected != null)
+            EventHeroInspected(heroSlot.Hero, true);
     }
+
     public void RecruitSlotClicked(RecruitSlot recruitSlot)
     {
-        if (onHeroInspect != null)
-            onHeroInspect(recruitSlot.Hero, false);
+        if (EventHeroInspected != null)
+            EventHeroInspected(recruitSlot.Hero, false);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
         Hovered = true;
         if(Dragging)
-            placeHolder.slotController.SetBool("isHidden", false);
+            PlaceHolder.SlotController.SetBool("isHidden", false);
     }
+
     public void OnPointerExit(PointerEventData eventData)
     {
         Hovered = false;
         if(Dragging)
-            placeHolder.slotController.SetBool("isHidden", true);
+            PlaceHolder.SlotController.SetBool("isHidden", true);
     }
 
     public void OnDrop(PointerEventData eventData)
     {
-        if (eventData.pointerDrag.tag == "Recruit")
+        if (!eventData.pointerDrag.CompareTag("Recruit"))
+            return;
+
+        var recruitSlot = eventData.pointerDrag.GetComponent<RecruitSlot>();
+        if (CreateSlot(recruitSlot, null) != null)
         {
-            var recruitSlot = eventData.pointerDrag.GetComponent<RecruitSlot>();
-            if (CreateSlot(recruitSlot, null) != null)
-            {
-                recruitSlot.OnEndDrag(eventData);
-                recruitSlot.RemoveSlot();
-            }
-            else
-            {
-                //recruitSlot.OnEndDrag(eventData);
-            }
+            recruitSlot.OnEndDrag(eventData);
+            recruitSlot.RemoveSlot();
         }
+    }
+
+    private HeroSlot CreateSlot(Hero hero)
+    {
+        GameObject newSlotObject = Instantiate(heroSlotTemplate);
+        newSlotObject.transform.SetParent(rosterSlots, false);
+
+        HeroSlot heroSlot = newSlotObject.GetComponent<HeroSlot>();
+        heroSlot.HeroRoster = this;
+        heroSlot.Hero = hero;
+        heroSlot.UpdateSlot();
+        HeroSlots.Add(heroSlot);
+        return heroSlot;
     }
 }

@@ -1,4 +1,12 @@
-﻿public enum ActivitySlotStatus { Available, Caretaken, Crierd, Paid, Blocked, Checkout }
+﻿public enum ActivitySlotStatus
+{
+    Available,
+    Caretaken,
+    Crierd,
+    Paid,
+    Blocked,
+    Checkout
+}
 
 public class ActivitySlot
 {
@@ -13,6 +21,7 @@ public class ActivitySlot
         IsUnlocked = false;
         Hero = null;
     }
+
     public ActivitySlot(bool isUnlocked, int baseCost)
     {
         IsUnlocked = isUnlocked;

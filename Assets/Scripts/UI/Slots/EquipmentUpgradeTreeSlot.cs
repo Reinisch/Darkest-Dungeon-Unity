@@ -3,14 +3,17 @@ using System.Collections.Generic;
 
 public class EquipmentUpgradeTreeSlot : MonoBehaviour
 {
-    const int connectorWidthPerSlot = 75;
+    [SerializeField]
+    private RectTransform connector;
+    [SerializeField]
+    private EquipmentSlot currentEquipment;
+    [SerializeField]
+    private List<EquipmentUpgradeSlot> upgrades;
 
-    public RectTransform connector;
-    public RectTransform treeIconRect;
+    public EquipmentSlot CurrentEquipment { get { return currentEquipment; } set { currentEquipment = value; } }
+    public List<EquipmentUpgradeSlot> Upgrades { get { return upgrades; } set { upgrades = value; } }
 
-    public EquipmentSlot currentEquipment;
-
-    public List<EquipmentUpgradeSlot> upgrades;
+    private const int ConnectorWidthPerSlot = 75;
 
     public void UpdateConnector(int lastPurchasedIndex)
     {
@@ -18,11 +21,10 @@ public class EquipmentUpgradeTreeSlot : MonoBehaviour
             connector.sizeDelta = new Vector2(0, connector.sizeDelta.y);
         else
         {
-            if (lastPurchasedIndex >= upgrades.Count)
-                lastPurchasedIndex = upgrades.Count - 1;
+            if (lastPurchasedIndex >= Upgrades.Count)
+                lastPurchasedIndex = Upgrades.Count - 1;
 
-            connector.sizeDelta = new Vector2(connectorWidthPerSlot * (lastPurchasedIndex + 1), connector.sizeDelta.y);
+            connector.sizeDelta = new Vector2(ConnectorWidthPerSlot * (lastPurchasedIndex + 1), connector.sizeDelta.y);
         }
-
     }
 }

@@ -984,7 +984,6 @@ using ExitGames.Client.Photon;
         /// (32741) Server will react with this error if invalid encryption parameters provided by token
         /// </summary>
         public const int InvalidEncryptionParameters = 32741; // 0x7FFF - 24,
-
 }
 
 

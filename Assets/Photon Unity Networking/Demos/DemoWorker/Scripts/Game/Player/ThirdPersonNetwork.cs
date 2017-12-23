@@ -75,5 +75,4 @@ public class ThirdPersonNetwork : Photon.MonoBehaviour
             transform.rotation = Quaternion.Lerp(transform.rotation, correctPlayerRot, Time.deltaTime * 5);
         }
     }
-
 }

@@ -4,6 +4,33 @@ using System.Linq;
 
 public static class QuestGenerator
 {
+    private class DungeonQuestInfo
+    {
+        public string Dungeon { get; set; }
+        public List<Quest> Quests { get; private set; }
+        public List<GeneratedQuestType> GeneratedTypes { get; set; }
+
+        public DungeonQuestInfo()
+        {
+            Quests = new List<Quest>();
+            GeneratedTypes = new List<GeneratedQuestType>();
+        }
+    }
+
+    private class QuestGenerationInfo
+    {
+        public int DungeonCount;
+        public int QuestCount;
+        public int MaxPerDungeon;
+
+        public readonly List<DungeonQuestInfo> DungeonQuests;
+
+        public QuestGenerationInfo()
+        {
+            DungeonQuests = new List<DungeonQuestInfo>();
+        }
+    }
+
     public static List<Quest> GenerateQuests(Campaign campaign, int seed = 0)
     {
         if (seed != 0)
@@ -15,19 +42,19 @@ public static class QuestGenerator
         QuestGenerationInfo questGenerationInfo = GetQuestInfo(genData, campaign);
 
         DistributeQuests(questGenerationInfo, genData, campaign);
-        DistributeQuestTypes(questGenerationInfo, questData);
+        DistributeQuestTypes(questGenerationInfo);
         DistributeQuestGoals(questGenerationInfo, questData);
         DistributeQuestRewards(questGenerationInfo, questData);
 
         List<Quest> generatedQuests = new List<Quest>();
-        foreach (var info in questGenerationInfo.dungeonQuests)
+        foreach (var info in questGenerationInfo.DungeonQuests)
             foreach (var quest in info.Quests)
                 generatedQuests.Add(quest);
 
         return generatedQuests;
     }
 
-    static QuestGenerationInfo GetQuestInfo(QuestGenerationData genData, Campaign campaign)
+    private static QuestGenerationInfo GetQuestInfo(QuestGenerationData genData, Campaign campaign)
     {
         QuestGenerationInfo questInfo = new QuestGenerationInfo();
         foreach (var dungeon in genData.Dungeons.Values)
@@ -38,17 +65,18 @@ public static class QuestGenerator
                 dungeonInfo.Dungeon = dungeon.Id;
                 dungeonInfo.GeneratedTypes = genData.QuestTypes[dungeonInfo.Dungeon].
                     QuestTypeSets[campaign.Dungeons[dungeon.Id].MasteryLevel];
-                questInfo.dungeonQuests.Add(dungeonInfo);
+                questInfo.DungeonQuests.Add(dungeonInfo);
             }
         }
-        questInfo.dungeonCount = questInfo.dungeonQuests.Count;
-        questInfo.maxPerDungeon = genData.MaxQuestsPerDungeon;
-        questInfo.questCount = GetQuestNumber(genData, campaign);
+        questInfo.DungeonCount = questInfo.DungeonQuests.Count;
+        questInfo.MaxPerDungeon = genData.MaxQuestsPerDungeon;
+        questInfo.QuestCount = GetQuestNumber(genData, campaign);
         return questInfo;
     }
-    static int GetQuestNumber(QuestGenerationData genData, Campaign campaign)
+
+    private static int GetQuestNumber(QuestGenerationData genData, Campaign campaign)
     {
-        int questNumberState = 0;
+        int questNumberState;
         if (campaign.QuestsComleted <= 2)
             questNumberState = 0;
         else if (campaign.QuestsComleted <= 3)
@@ -66,15 +94,16 @@ public static class QuestGenerator
         else
             questNumberState = 7;
         return genData.QuestsPerVisit[questNumberState];
-    }    
-    static void DistributeQuests(QuestGenerationInfo questInfo, QuestGenerationData genData, Campaign campaign)
-    {
-        if (questInfo.dungeonCount * questInfo.maxPerDungeon < questInfo.questCount)
-            questInfo.questCount = questInfo.dungeonCount * questInfo.maxPerDungeon;
-        if (questInfo.dungeonCount > questInfo.questCount)
-            questInfo.questCount = questInfo.dungeonCount;
+    }
 
-        int questsLeft = questInfo.questCount;
+    private static void DistributeQuests(QuestGenerationInfo questInfo, QuestGenerationData genData, Campaign campaign)
+    {
+        if (questInfo.DungeonCount * questInfo.MaxPerDungeon < questInfo.QuestCount)
+            questInfo.QuestCount = questInfo.DungeonCount * questInfo.MaxPerDungeon;
+        if (questInfo.DungeonCount > questInfo.QuestCount)
+            questInfo.QuestCount = questInfo.DungeonCount;
+
+        int questsLeft = questInfo.QuestCount;
 
         float difOneAvailable = campaign.Heroes.FindAll(hero => 
             genData.Difficulties[0].ResolveLevels.Contains(hero.Resolve.Level)).Count;
@@ -103,14 +132,14 @@ public static class QuestGenerator
         for (int i = 0; i < difThrees; i++)
             difficulties.Add(5);
 
-        for (int i = 0; i < questInfo.dungeonQuests.Count; i++)
+        for (int i = 0; i < questInfo.DungeonQuests.Count; i++)
         {
             Quest quest = new Quest();
             int difIndex = Random.Range(0, difficulties.Count);
-            quest.Dungeon = questInfo.dungeonQuests[i].Dungeon;
+            quest.Dungeon = questInfo.DungeonQuests[i].Dungeon;
             quest.Difficulty = difficulties[difIndex];
             difficulties.RemoveAt(difIndex);
-            questInfo.dungeonQuests[i].Quests.Add(quest);
+            questInfo.DungeonQuests[i].Quests.Add(quest);
             questsLeft--;
 
             if (questsLeft == 0)
@@ -119,12 +148,12 @@ public static class QuestGenerator
 
         while (questsLeft > 0)
         {
-            foreach (var dungeonInfo in questInfo.dungeonQuests)
+            foreach (var dungeonInfo in questInfo.DungeonQuests)
             {
                 if (questsLeft == 0)
                     break;
 
-                if (dungeonInfo.Quests.Count < questInfo.maxPerDungeon)
+                if (dungeonInfo.Quests.Count < questInfo.MaxPerDungeon)
                 {
                     if (Random.Range(0, 2) == 0)
                     {
@@ -145,7 +174,7 @@ public static class QuestGenerator
             var plotMastery = dungeon.Value.CurrentPlotQuest;
             if (plotMastery != null)
             {
-                DungeonQuestInfo dungeonQuest = questInfo.dungeonQuests.Find(item => item.Dungeon == dungeon.Value.DungeonName);
+                DungeonQuestInfo dungeonQuest = questInfo.DungeonQuests.Find(item => item.Dungeon == dungeon.Value.DungeonName);
                 if (dungeonQuest != null)
                 {
                     dungeonQuest.Quests.Add(plotMastery.Copy());
@@ -154,7 +183,7 @@ public static class QuestGenerator
                 {
                     dungeonQuest = new DungeonQuestInfo() { Dungeon = plotMastery.Dungeon };
                     dungeonQuest.Quests.Add(plotMastery.Copy());
-                    questInfo.dungeonQuests.Add(dungeonQuest);
+                    questInfo.DungeonQuests.Add(dungeonQuest);
                 }
             }
         }
@@ -168,7 +197,7 @@ public static class QuestGenerator
 
                 if(plotQuest != null && !campaign.CompletedPlot.Contains(plotQuest.Id))
                 {
-                    DungeonQuestInfo dungeonQuest = questInfo.dungeonQuests.Find(item => item.Dungeon == plotQuest.Dungeon);
+                    DungeonQuestInfo dungeonQuest = questInfo.DungeonQuests.Find(item => item.Dungeon == plotQuest.Dungeon);
                     if (dungeonQuest != null)
                     {
                         dungeonQuest.Quests.Add(plotQuest.Copy());
@@ -177,16 +206,16 @@ public static class QuestGenerator
                     {
                         dungeonQuest = new DungeonQuestInfo() { Dungeon = plotQuest.Dungeon };
                         dungeonQuest.Quests.Add(plotQuest.Copy());
-                        questInfo.dungeonQuests.Add(dungeonQuest);
+                        questInfo.DungeonQuests.Add(dungeonQuest);
                     }
                 }
             }
-
         }
     }
-    static void DistributeQuestTypes(QuestGenerationInfo questInfo, QuestDatabase questData)
+
+    private static void DistributeQuestTypes(QuestGenerationInfo questInfo)
     {
-        foreach(var dungeonInfo in questInfo.dungeonQuests)
+        foreach(var dungeonInfo in questInfo.DungeonQuests)
         {
             foreach(var quest in dungeonInfo.Quests)
             {
@@ -198,18 +227,17 @@ public static class QuestGenerator
             }
         }
     }
-    static void DistributeQuestGoals(QuestGenerationInfo questInfo, QuestDatabase questData)
+
+    private static void DistributeQuestGoals(QuestGenerationInfo questInfo, QuestDatabase questData)
     {
         List<string> availableGoals = new List<string>();
 
-        foreach (var dungeonInfo in questInfo.dungeonQuests)
+        foreach (var dungeonInfo in questInfo.DungeonQuests)
         {
             foreach (var quest in dungeonInfo.Quests)
             {
                 if (quest.IsPlotQuest)
-                {
                     continue;
-                }
 
                 QuestType questType = questData.QuestTypes[quest.Type];
 
@@ -228,17 +256,18 @@ public static class QuestGenerator
             }
         }
     }
-    static void DistributeQuestRewards(QuestGenerationInfo questInfo, QuestDatabase questData)
+
+    private static void DistributeQuestRewards(QuestGenerationInfo questInfo, QuestDatabase questData)
     {
         var trinketList = DarkestDungeonManager.Data.Items["trinket"].Values.Cast<Trinket>().ToList();
 
-        foreach (var dungeonInfo in questInfo.dungeonQuests)
+        foreach (var dungeonInfo in questInfo.DungeonQuests)
         {
             foreach (var quest in dungeonInfo.Quests)
             {
                 if (quest.IsPlotQuest)
                 {
-                    var plotQuest = quest as PlotQuest;
+                    var plotQuest = (PlotQuest)quest;
                     if(plotQuest.PlotTrinket != null)
                     {
                         var rarityTrinketList = trinketList.FindAll(item => item.RarityId == plotQuest.PlotTrinket.Rarity);
@@ -250,6 +279,7 @@ public static class QuestGenerator
                     }
                     continue;
                 }
+
                 CompletionReward reward = new CompletionReward();
                 quest.Reward = reward;
                 reward.ResolveXP = questData.QuestGeneration.ResolveXpReward[quest.Difficulty][quest.Length];
@@ -265,50 +295,22 @@ public static class QuestGenerator
                 heirloomTwo.Id = questData.QuestGeneration.HeirloomTypes[quest.Dungeon][1];
                 heirloomTwo.Amount = questData.QuestGeneration.HeirloomAmounts[heirloomOne.Id][quest.Difficulty][quest.Length];
                 reward.ItemDefinitions.Add(heirloomTwo);
-
                 reward.ItemDefinitions.Add(questData.QuestGeneration.ItemTable[quest.Difficulty][quest.Length][0]);
 
                 foreach (var trinketInfo in questData.QuestGeneration.TrinketChances)
                 {
-                    if(trinketInfo.Value[quest.Difficulty][quest.Length] == 1)
-                    {
-                        var rarityTrinketList = trinketList.FindAll(item => item.RarityId == trinketInfo.Key);
-                        ItemDefinition trinket = new ItemDefinition();
-                        trinket.Type = "trinket";
-                        trinket.Amount = 1;
-                        trinket.Id = rarityTrinketList[Random.Range(0, rarityTrinketList.Count)].Id;
-                        reward.ItemDefinitions.Add(trinket);
-                        break;
-                    }
+                    if (trinketInfo.Value[quest.Difficulty][quest.Length] != 1)
+                        continue;
+
+                    var rarityTrinketList = trinketList.FindAll(item => item.RarityId == trinketInfo.Key);
+                    ItemDefinition trinket = new ItemDefinition();
+                    trinket.Type = "trinket";
+                    trinket.Amount = 1;
+                    trinket.Id = rarityTrinketList[Random.Range(0, rarityTrinketList.Count)].Id;
+                    reward.ItemDefinitions.Add(trinket);
+                    break;
                 }
             }
         }
-    }
-}
-
-class DungeonQuestInfo
-{
-    public string Dungeon { get; set; }
-    public List<Quest> Quests { get; set; }
-    public List<GeneratedQuestType> GeneratedTypes { get; set; }
-
-    public DungeonQuestInfo()
-    {
-        Quests = new List<Quest>();
-        GeneratedTypes = new List<GeneratedQuestType>();
-    }
-}
-
-class QuestGenerationInfo
-{
-    public int dungeonCount;
-    public int questCount;
-    public int maxPerDungeon;
-
-    public List<DungeonQuestInfo> dungeonQuests;
-
-    public QuestGenerationInfo()
-    {
-        dungeonQuests = new List<DungeonQuestInfo>();
     }
 }

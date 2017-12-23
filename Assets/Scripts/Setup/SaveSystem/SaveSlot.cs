@@ -1,69 +1,35 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Events;
-
-using System.Collections;
-using System.IO;
-using System.Xml;
-using System.Xml.Serialization;
 using System;
 
 public class SaveSlot : MonoBehaviour
 {
-    Button saveSlotButton;
+    [SerializeField]
+    private int slotId;
 
-    Text title;
-    InputField titleInput;
-    Text location;
-    Text currentWeek;
+    public SaveSelector SaveSelector { private get; set; }
 
-    RectTransform nukeFrame;
-    Button nukeSaveButton;
+    private Button saveSlotButton;
+    private Text title;
+    private InputField titleInput;
+    private Text location;
+    private Text currentWeek;
+    private RectTransform nukeFrame;
+    private Button nukeSaveButton;
+    private Animator saveEnvelopeAnimator;
 
-    Animator saveEnvelopeAnimator;
+    private SaveCampaignData saveData;
 
-    SaveCampaignData saveData;
-    public int slotId;
-
-    public SaveSelector SaveSelector { get; set; }
-
-    void Awake()
+    private void Awake()
     {
         saveSlotButton = transform.Find("Save").GetComponent<Button>();
         title = saveSlotButton.transform.Find("Title").GetComponent<Text>();
         titleInput = saveSlotButton.transform.Find("Title").GetComponent<InputField>();
-
         location = saveSlotButton.transform.Find("Current Location").GetComponent<Text>();
         currentWeek = saveSlotButton.transform.Find("Current Week").GetComponent<Text>();
-
         nukeFrame = transform.Find("NukeSaveFrame").GetComponent<RectTransform>();
         nukeSaveButton = nukeFrame.GetComponentInChildren<Button>();
-
         saveEnvelopeAnimator = transform.Find("SaveEnvelope").GetComponent<Animator>();
-    }
-
-    void FillEmptySave()
-    {
-        saveData = null;
-        Color color;
-        ColorUtility.TryParseHtmlString("#323232FF", out color);
-        title.color = color;
-        title.text = "Click here to begin campaign...";
-        location.text = "";
-        currentWeek.text = "";
-        saveEnvelopeAnimator.SetBool("Opened", false);
-        nukeFrame.gameObject.SetActive(false);
-    }
-    void FillPopulatedSave()
-    {
-        Color color;
-        ColorUtility.TryParseHtmlString("#FFDB77FF", out color);
-        title.color = color;
-        title.text = saveData.HamletTitle;
-        location.text = String.Format("In: {0}", saveData.LocationName);
-        currentWeek.text = String.Format("Week {0}", saveData.CurrentWeek);
-        saveEnvelopeAnimator.SetBool("Opened", true);
-        nukeFrame.gameObject.SetActive(true);
     }
 
     public void LoadSaveFrame()
@@ -75,6 +41,7 @@ public class SaveSlot : MonoBehaviour
         else
             FillPopulatedSave();
     }
+
     public void SaveButtonClick()
     {
         if(saveData == null)
@@ -105,6 +72,7 @@ public class SaveSlot : MonoBehaviour
             SaveSelector.FadeToLoadingScreen();
         }
     }
+
     public void NukeButtonClick()
     {
         SaveLoadManager.DeleteSave(slotId);
@@ -144,10 +112,36 @@ public class SaveSlot : MonoBehaviour
         if(nukeFrame.gameObject.activeSelf)
             nukeSaveButton.interactable = true;
     }
+
     public void DisableInteraction()
     {
         saveSlotButton.interactable = false;
         if (nukeFrame.gameObject.activeSelf)
             nukeSaveButton.interactable = false;
+    }
+
+    private void FillEmptySave()
+    {
+        saveData = null;
+        Color color;
+        ColorUtility.TryParseHtmlString("#323232FF", out color);
+        title.color = color;
+        title.text = "Click here to begin campaign...";
+        location.text = "";
+        currentWeek.text = "";
+        saveEnvelopeAnimator.SetBool("Opened", false);
+        nukeFrame.gameObject.SetActive(false);
+    }
+
+    private void FillPopulatedSave()
+    {
+        Color color;
+        ColorUtility.TryParseHtmlString("#FFDB77FF", out color);
+        title.color = color;
+        title.text = saveData.HamletTitle;
+        location.text = String.Format("In: {0}", saveData.LocationName);
+        currentWeek.text = String.Format("Week {0}", saveData.CurrentWeek);
+        saveEnvelopeAnimator.SetBool("Opened", true);
+        nukeFrame.gameObject.SetActive(true);
     }
 }

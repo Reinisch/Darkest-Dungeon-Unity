@@ -1,100 +1,70 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 public class ActivityLogWindow : MonoBehaviour
 {
-    public GameObject heroActivitySlot;
-    public LayoutElement topHolder;
-    public LayoutElement botHolder;
+    [SerializeField]
+    private GameObject heroActivitySlot;
+    [SerializeField]
+    private LayoutElement topHolder;
+    [SerializeField]
+    private LayoutElement botHolder;
 
-    public Font generatorFont;
-    public Scrollbar scrollbar;
-    public RectTransform scrollRectTransform;
-    public List<WeekLogSlot> VisibleSlots;
+    [SerializeField]
+    private Font generatorFont;
+    [SerializeField]
+    private Scrollbar scrollbar;
+    [SerializeField]
+    private RectTransform scrollRectTransform;
+    [SerializeField]
+    private List<WeekLogSlot> visibleSlots;
 
-    public RectTransform questGoalBlock;
-    public RectTransform rosterGoalBlock;
-    public List<LogQuestGoal> PlotGoals { get; set; }
-    public List<LogQuestGoal> RosterGoals { get; set; }
+    [SerializeField]
+    private RectTransform questGoalBlock;
+    [SerializeField]
+    private RectTransform rosterGoalBlock;
 
-    public event WindowEvent onWindowClose;
+    private List<LogQuestGoal> PlotGoals { get; set; }
+    private List<LogQuestGoal> RosterGoals { get; set; }
+    private TextGenerator TextGenerator { get; set; }
+    private TextGenerationSettings PartySettings { get; set; }
+    private TextGenerationSettings RecordSettings { get; set; }
 
-    public WeekLogSlot GenerationSlot { get; private set; }
-    public TextGenerator TextGenerator { get; private set; }
-    public TextGenerationSettings PartySettings { get; private set; }
-    public TextGenerationSettings RecordSettings { get; private set; }
+    private float ViewHeight { get { return scrollRectTransform.sizeDelta.y; } }
+    private float ContentHeight { get; set; }
 
-    private Dictionary<int, float> SlotSizes = new Dictionary<int, float>();
-    private float ViewHeight
-    {
-        get
-        {
-            return scrollRectTransform.sizeDelta.y;
-        }
-    }
-    private float ContentHeight
-    {
-        get;
-        set;
-    }
-    public bool Initialized { get; set; }
+    public GameObject HeroActivitySlot { get { return heroActivitySlot; } }
 
+    private readonly Dictionary<int, float> slotSizes = new Dictionary<int, float>();
     private float holderTop;
     private float focusMax;
     private float focusMin;
+    private float cachedSize;
     private float lastValue = -1;
-    private float cachedSize = 0;
 
-    void OnEnable()
+    public event Action EventWindowClosed;
+
+    private void OnEnable()
     {
         CheckVisible();
     }
-    void OnDisable()
+
+    private void OnDisable()
     {
         lastValue = -1;
     }
-    void Update()
+
+    private void Update()
     {
-        if (lastValue != scrollbar.value)
+        if (!Mathf.Approximately(lastValue, scrollbar.value))
             CheckVisible();
-    }
-
-    void DisableUnused(int currentIndex)
-    {
-        for (int i = currentIndex; i < VisibleSlots.Count; i++)
-            VisibleSlots[i].gameObject.SetActive(false);
-    }
-    float CalculatePrefferedLogHeight(WeekActivityLog log)
-    {
-        float height = 100;
-
-        if (log.ReturnRecord != null)
-        {
-            height += 190 + Mathf.Max(30, TextGenerator.GetPreferredHeight(log.ReturnRecord.Description, PartySettings));
-        }
-
-        if (log.HeroRecords.Count > 0)
-        {
-            for (int i = 0; i < log.HeroRecords.Count; i++)
-                height += Mathf.Max(130, TextGenerator.GetPreferredHeight(log.HeroRecords[i].Description, RecordSettings)) * 1.0056f;
-
-            if (log.HeroRecords.Count > 1)
-                height += 20 * (log.HeroRecords.Count - 1);
-        }
-
-        if (log.EmbarkRecord != null)
-        {
-            height += 160 + Mathf.Max(30, TextGenerator.GetPreferredHeight(log.EmbarkRecord.Description, PartySettings));
-        }
-        return height;
     }
 
     public void Initialize()
     {
-        Initialized = true;
         TextGenerator = new TextGenerator();
         PartySettings = new TextGenerationSettings()
         {
@@ -137,23 +107,21 @@ public class ActivityLogWindow : MonoBehaviour
             verticalOverflow = VerticalWrapMode.Overflow,
         };
 
-        int initVisible = Mathf.Min(VisibleSlots.Count, DarkestDungeonManager.Campaign.Logs.Count);
+        int initVisible = Mathf.Min(visibleSlots.Count, DarkestDungeonManager.Campaign.Logs.Count);
         int lastIndex = DarkestDungeonManager.Campaign.Logs.Count - initVisible;
-
-        for (int i = 0; i < VisibleSlots.Count; i++)
-            VisibleSlots[i].Window = this;
+        visibleSlots.ForEach(slot => slot.Window = this);
 
         for (int i = 0; i < initVisible; i++)
         {
             var log = DarkestDungeonManager.Campaign.Logs[lastIndex + i];
-            VisibleSlots[i].UpdateWeekLog(log);
+            visibleSlots[i].UpdateWeekLog(log);
         }
 
         for (int i = DarkestDungeonManager.Campaign.Logs.Count - 1; i >= 0; i--)
         {
             var log = DarkestDungeonManager.Campaign.Logs[i];
             float newSize = CalculatePrefferedLogHeight(log);
-            SlotSizes.Add(log.WeekNumber, newSize);
+            slotSizes.Add(log.WeekNumber, newSize);
             cachedSize += newSize;
         }
         RecalculateHeight();
@@ -202,28 +170,50 @@ public class ActivityLogWindow : MonoBehaviour
             }
         }
     }
+
     public void ProgressWeek()
     {
         var log = DarkestDungeonManager.Campaign.Logs[DarkestDungeonManager.Campaign.Logs.Count - 1];
         float newSize = CalculatePrefferedLogHeight(log);
-        SlotSizes.Add(log.WeekNumber, newSize);
+        slotSizes.Add(log.WeekNumber, newSize);
         cachedSize += newSize;
     }
-    public void CheckVisible()
+
+    public void RecalculateHeight()
+    {
+        cachedSize -= slotSizes[DarkestDungeonManager.Campaign.CurrentWeek];
+        slotSizes[DarkestDungeonManager.Campaign.CurrentWeek] = CalculatePrefferedLogHeight(DarkestDungeonManager.Campaign.CurrentLog());
+        cachedSize += slotSizes[DarkestDungeonManager.Campaign.CurrentWeek];
+        ContentHeight = cachedSize;
+    }
+
+    public void WindowClosed()
+    {
+        if (EventWindowClosed != null)
+            EventWindowClosed();
+    }
+
+    private void DisableUnused(int currentIndex)
+    {
+        for (int i = currentIndex; i < visibleSlots.Count; i++)
+            visibleSlots[i].gameObject.SetActive(false);
+    }
+
+    private void CheckVisible()
     {
         lastValue = scrollbar.value;
         holderTop = 0;
 
         focusMin = ViewHeight > ContentHeight ? -20 :
                 (ContentHeight - ViewHeight) * (1 - scrollbar.value) - 20;
-        focusMax = focusMin + ViewHeight + 20; 
+        focusMax = focusMin + ViewHeight + 20;
 
         int currentIndex = 0;
-        if(DarkestDungeonManager.Campaign.Logs.Count < VisibleSlots.Count)
+        if (DarkestDungeonManager.Campaign.Logs.Count < visibleSlots.Count)
         {
             for (int i = DarkestDungeonManager.Campaign.Logs.Count - 1; i >= 0; i--)
             {
-                VisibleSlots[currentIndex++].UpdateWeekLog(DarkestDungeonManager.Campaign.Logs[i]);
+                visibleSlots[currentIndex++].UpdateWeekLog(DarkestDungeonManager.Campaign.Logs[i]);
             }
             topHolder.preferredHeight = 0;
             botHolder.preferredHeight = 0;
@@ -233,40 +223,47 @@ public class ActivityLogWindow : MonoBehaviour
 
         for (int i = DarkestDungeonManager.Campaign.Logs.Count; i >= 1; i--)
         {
-            holderTop += SlotSizes[i];
+            holderTop += slotSizes[i];
             if (holderTop >= focusMin)
             {
-                holderTop -= SlotSizes[i];
+                holderTop -= slotSizes[i];
                 topHolder.preferredHeight = holderTop;
                 botHolder.preferredHeight = ContentHeight - holderTop;
 
-                int lastWeek = i > VisibleSlots.Count ? i - VisibleSlots.Count + 1 : 1;
+                int lastWeek = i > visibleSlots.Count ? i - visibleSlots.Count + 1 : 1;
                 for (int j = i; j >= lastWeek; j--)
                 {
-                    VisibleSlots[currentIndex++].UpdateWeekLog(DarkestDungeonManager.Campaign.Logs[j - 1]);
+                    visibleSlots[currentIndex++].UpdateWeekLog(DarkestDungeonManager.Campaign.Logs[j - 1]);
                     if (holderTop > focusMax) break;
-                    holderTop += SlotSizes[j];
+                    holderTop += slotSizes[j];
                 }
                 break;
             }
         }
 
-        for(int i = 0; i < currentIndex; i++)
-            botHolder.preferredHeight -= SlotSizes[VisibleSlots[i].WeekLog.WeekNumber];
+        for (int i = 0; i < currentIndex; i++)
+            botHolder.preferredHeight -= slotSizes[visibleSlots[i].WeekLog.WeekNumber];
 
         DisableUnused(currentIndex);
     }
-    public void RecalculateHeight()
-    {
-        cachedSize -= SlotSizes[DarkestDungeonManager.Campaign.CurrentWeek];
-        SlotSizes[DarkestDungeonManager.Campaign.CurrentWeek] = CalculatePrefferedLogHeight(DarkestDungeonManager.Campaign.CurrentLog());
-        cachedSize += SlotSizes[DarkestDungeonManager.Campaign.CurrentWeek];
-        ContentHeight = cachedSize;
-    }
 
-    public void WindowClosed()
+    private float CalculatePrefferedLogHeight(WeekActivityLog log)
     {
-        if (onWindowClose != null)
-            onWindowClose();
+        float height = 100;
+
+        if (log.ReturnRecord != null)
+            height += 190 + Mathf.Max(30, TextGenerator.GetPreferredHeight(log.ReturnRecord.Description, PartySettings));
+
+        if (log.HeroRecords.Count > 0)
+        {
+            height += log.HeroRecords.Sum(t => Mathf.Max(130, TextGenerator.GetPreferredHeight(t.Description, RecordSettings)) * 1.0056f);
+
+            if (log.HeroRecords.Count > 1)
+                height += 20 * (log.HeroRecords.Count - 1);
+        }
+
+        if (log.EmbarkRecord != null)
+            height += 160 + Mathf.Max(30, TextGenerator.GetPreferredHeight(log.EmbarkRecord.Description, PartySettings));
+        return height;
     }
 }

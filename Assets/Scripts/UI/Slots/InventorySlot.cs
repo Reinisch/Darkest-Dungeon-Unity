@@ -1,42 +1,23 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System.Collections.Generic;
-using System.Collections;
-
-public delegate void InventorySlotEvent(InventorySlot slot, InventoryItem item);
-public delegate void InventorySlotActivationEvent(InventorySlot slot);
 
 public class InventorySlot : BaseSlot, IDropHandler
 {
-    public Image overlayIcon;
+    [SerializeField]
+    private Image overlayIcon;
 
-    public IInventory Inventory { get; set; }
-    public InventoryItem SlotItem { get; set; }
+    public IInventory Inventory { get; private set; }
+    public InventoryItem SlotItem { get; private set; }
+    public bool InteractionDisabled { private get; set; }
+    public Image OverlayIcon { get { return overlayIcon; } set { overlayIcon = value; } }
+    public bool HasItem { get { return SlotItem.IsNotEmpty; } }
 
-    public bool InteractionDisabled
-    { 
-        get;
-        set;
-    }
-    public bool HasItem
-    {
-        get
-        {
-            return SlotItem.IsNotEmpty;
-        }
-    }
-    public bool IsFullyStacked
-    {
-        get
-        {
-            return SlotItem.IsFull;
-        }
-    }
-    public bool HasFreeSpaceForItem(ItemDefinition item)
-    {
-        return SlotItem.HasFreeSpaceForItem(item);
-    }
+    public event Action<InventorySlot, InventoryItem> EventDropOut;
+    public event Action<InventorySlot, InventoryItem> EventDropIn;
+    public event Action<InventorySlot, InventoryItem> EventSwap;
+    public event Action<InventorySlot> EventActivate;
 
     public void Initialize(IInventory inventory)
     {
@@ -45,20 +26,11 @@ public class InventorySlot : BaseSlot, IDropHandler
         SlotItem.Initialize(this);
     }
 
-    public event InventorySlotEvent onDropOut;
-    public event InventorySlotEvent onDropIn;
-    public event InventorySlotEvent onSwap;
-
-    public event InventorySlotActivationEvent onActivate;
-    public event InventorySlotActivationEvent onAlternativeActivate;
-
-    public void CreateItem(ItemDefinition itemDefinition)
+    public bool HasFreeSpaceForItem(ItemDefinition item)
     {
-        SlotItem.gameObject.SetActive(true);
-        SlotItem.Create(itemDefinition.Type, itemDefinition.Id, itemDefinition.Amount);
-        if (Inventory != null && Inventory.Configuration == InventoryConfiguration.RaidInventory)
-            UpdateState();
+        return SlotItem.HasFreeSpaceForItem(item);
     }
+
     public void CreateItem(string itemType, string itemId, int amount)
     {
         SlotItem.gameObject.SetActive(true);
@@ -66,6 +38,7 @@ public class InventorySlot : BaseSlot, IDropHandler
         if (Inventory != null && Inventory.Configuration == InventoryConfiguration.RaidInventory)
             UpdateState();
     }
+
     public void CreateItem(Trinket trinket)
     {
         SlotItem.gameObject.SetActive(true);
@@ -73,6 +46,7 @@ public class InventorySlot : BaseSlot, IDropHandler
         if (Inventory != null && Inventory.Configuration == InventoryConfiguration.RaidInventory)
             UpdateState();
     }
+
     public void CreateItem(InventorySlotData slotData)
     {
         SlotItem.Create(slotData);
@@ -80,26 +54,39 @@ public class InventorySlot : BaseSlot, IDropHandler
             UpdateState();
     }
 
+    public void DeleteItem()
+    {
+        SlotItem.gameObject.SetActive(false);
+        SlotItem.Delete();
+    }
+
+    #region Inventory States
+
     public void SetActiveState(bool active)
     {
         SlotItem.SetActive(active);
     }
+
     public void SetPeacfulState(bool looting)
     {
         SlotItem.SetPeacefulState(looting);
     }
+
     public void SetCombatState()
     {
         SlotItem.SetCombatState();
     }
+
     public void SetObstacleState()
     {
         SlotItem.SetObstacleState();
     }
+
     public void SetInteractionState(bool questInteraction)
     {
         SlotItem.SetInteractionState(questInteraction);
     }
+
     public void UpdateState()
     {
         switch(Inventory.State)
@@ -128,33 +115,36 @@ public class InventorySlot : BaseSlot, IDropHandler
             case InventoryState.Obstacle:
                 SlotItem.SetObstacleState();
                 break;
-            default:
-                break;
         }
     }
-    public void DeleteItem()
+
+    #endregion
+
+    public void SlotActivated()
     {
-        SlotItem.gameObject.SetActive(false);
-        SlotItem.Delete();
+        if (EventActivate != null)
+            EventActivate(this);
     }
 
-    public void ItemDroppedIn(InventorySlot slot, InventoryItem itemDroppedIn)
+    public void ItemDroppedIn(InventoryItem itemDroppedIn)
     {
-        if (onDropIn != null)
-            onDropIn(this, itemDroppedIn);
-    }
-    public void ItemDroppedOut(InventorySlot slot, InventoryItem itemDroppedOut)
-    {
-        if (onDropOut != null)
-            onDropOut(this, itemDroppedOut);
-    }
-    public void ItemSwapped(InventorySlot slot, InventoryItem incomingItem)
-    {
-        if (onSwap != null)
-            onSwap(this, incomingItem);
+        if (EventDropIn != null)
+            EventDropIn(this, itemDroppedIn);
     }
 
-    public virtual void OnDrop(PointerEventData eventData)
+    public void ItemDroppedOut(InventoryItem itemDroppedOut)
+    {
+        if (EventDropOut != null)
+            EventDropOut(this, itemDroppedOut);
+    }
+
+    public void ItemSwapped(InventoryItem incomingItem)
+    {
+        if (EventSwap != null)
+            EventSwap(this, incomingItem);
+    }
+
+    public void OnDrop(PointerEventData eventData)
     {
         if (InteractionDisabled)
             return;
@@ -163,7 +153,8 @@ public class InventorySlot : BaseSlot, IDropHandler
             CheckDrop(DragManager.Instanse.PartySlotItem);
         }
     }
-    public virtual void CheckDrop(InventoryItem movingItem)
+
+    private void CheckDrop(InventoryItem movingItem)
     {
         InventorySlot fromSlot = movingItem.Slot;
 
@@ -195,12 +186,10 @@ public class InventorySlot : BaseSlot, IDropHandler
                         if (HasItem && SlotItem.Deactivated)
                             return;
                     break;
-                default:
-                    break;
             }
         }
 
-        if (SlotItem.IsNotEmpty == true)
+        if (SlotItem.IsNotEmpty)
         {         
             if (movingItem.Slot != null)
             {
@@ -239,7 +228,7 @@ public class InventorySlot : BaseSlot, IDropHandler
         fromSlot.UpdateState();
     }
 
-    void RepositionItem(InventoryItem slotItem)
+    private void RepositionItem(InventoryItem slotItem)
     {
         InventorySlot toSlot = this;
         InventorySlot fromSlot = slotItem.Slot;
@@ -251,15 +240,16 @@ public class InventorySlot : BaseSlot, IDropHandler
         fromSlotItem.Slot = toSlot;
         fromSlotItem.RectTransform.SetParent(toSlot.RectTransform, false);
         fromSlotItem.RectTransform.SetAsFirstSibling();
-        toSlot.ItemDroppedIn(toSlot, fromSlotItem);
+        toSlot.ItemDroppedIn(fromSlotItem);
 
         fromSlot.SlotItem = toSlotItem;
         toSlotItem.Slot = fromSlot;
         toSlotItem.RectTransform.SetParent(fromSlot.RectTransform, false);
         toSlotItem.RectTransform.SetAsFirstSibling();
-        fromSlot.ItemDroppedOut(fromSlot, fromSlotItem);
+        fromSlot.ItemDroppedOut(fromSlotItem);
     }
-    void SwapItems(InventoryItem slotItem)
+
+    private void SwapItems(InventoryItem slotItem)
     {
         InventorySlot toSlot = this;
         InventorySlot fromSlot = slotItem.Slot;
@@ -271,24 +261,17 @@ public class InventorySlot : BaseSlot, IDropHandler
         fromSlotItem.Slot = toSlot;
         fromSlotItem.RectTransform.SetParent(toSlot.RectTransform, false);
         fromSlotItem.RectTransform.SetAsFirstSibling();
-        toSlot.ItemSwapped(toSlot, fromSlotItem);
+        toSlot.ItemSwapped(fromSlotItem);
 
         fromSlot.SlotItem = toSlotItem;
         toSlotItem.Slot = fromSlot;
         toSlotItem.RectTransform.SetParent(fromSlot.RectTransform, false);
         toSlotItem.RectTransform.SetAsFirstSibling();
-        fromSlot.ItemSwapped(fromSlot, toSlotItem);
+        fromSlot.ItemSwapped(toSlotItem);
     }
-    void MergeItems(InventoryItem slotItem)
+
+    private void MergeItems(InventoryItem slotItem)
     {
         SlotItem.MergeItems(slotItem);
-    }
-
-    public void SlotActivated()
-    {
-        if (onActivate != null)
-            onActivate(this);
-        else if (onAlternativeActivate != null)
-            onAlternativeActivate(this);
     }
 }

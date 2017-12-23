@@ -1,10 +1,8 @@
-﻿using System.IO;
-using NUnit.Framework;
+﻿using UnityEngine.Assertions;
 
 public class HallSector : Area
 {
     public Hallway Hallway { get; set; }
-
 
     public HallSector()
     {
@@ -46,7 +44,7 @@ public class HallSector : Area
                 Prop = DarkestDungeonManager.Data.Obstacles[propId];
                 break;
             default:
-                Assert.Fail("Trying to initialize prop of invalid area type! AreaType: " + areaType);
+                Assert.IsTrue(false, "Trying to initialize prop of invalid area type! AreaType: " + areaType);
                 break;
         }
     }

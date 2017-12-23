@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
-using System.Collections;
 
 public enum AnnouncmentPosition
 {
@@ -10,36 +8,24 @@ public enum AnnouncmentPosition
 
 public class RaidAnnouncment : MonoBehaviour
 {
-    public Text title;
-    public Animator animator;
+    [SerializeField]
+    private Text title;
+    [SerializeField]
+    private Animator animator;
 
-    //public event ScrollEvent onScrollOpened;
-    //public event ScrollEvent onScrollClosed;
+    public Animator Animator { get { return animator; } }
 
-    RectTransform rectTransform;
-    public RectTransform RectTransform
+    private RectTransform rectTransform;
+    private RectTransform RectTransform
     {
         get
         {
             if (rectTransform != null)
                 return rectTransform;
-            else
-            {
-                rectTransform = GetComponent<RectTransform>();
-                return rectTransform;
-            }
-        }
-    }
 
-    public void ScrollOpened()
-    {
-        //if (onScrollOpened != null)
-        //    onScrollOpened();
-    }
-    public void ScrollClosed()
-    {
-        //if (onScrollClosed != null)
-        //    onScrollClosed();
+            rectTransform = GetComponent<RectTransform>();
+            return rectTransform;
+        }
     }
 
     public void ShowAnnouncment(string message, AnnouncmentPosition position = AnnouncmentPosition.Top)
@@ -55,14 +41,27 @@ public class RaidAnnouncment : MonoBehaviour
 
         title.text = message;
         gameObject.SetActive(true);
-        animator.SetTrigger("appear");
+        Animator.SetTrigger("appear");
 
         ScrollOpened();
     }
+
     public void HideAnnouncment()
     {
-        animator.SetTrigger("disappear");
+        Animator.SetTrigger("disappear");
         ScrollClosed();
+    }
+
+    public void ScrollOpened()
+    {
+        //if (onScrollOpened != null)
+        //    onScrollOpened();
+    }
+
+    public void ScrollClosed()
+    {
+        //if (onScrollClosed != null)
+        //    onScrollClosed();
     }
 
     public void HideCompleted()

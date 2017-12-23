@@ -1,28 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public enum SkillResultType { Hit, Miss, Crit, Dodge, Heal, CritHeal, Utility }
-public enum SkillTargetType { Self, Party, Enemy }
-
 public static class BattleSolver
 {
-    public static SkillResult SkillResult
-    { 
-        get
-        {
-            return skillResult;
-        }
-    }
-    public static HeroActionInfo HeroActionInfo
-    {
-        get
-        {
-            return heroActionInfo;
-        }
-    }
+    public static SkillResult SkillResult { get { return SkillExecutionResult; } }
+    public static HeroActionInfo HeroActionInfo { get { return HeroSkillExecutionInfo; } }
 
-    private static SkillResult skillResult = new SkillResult();
-    private static HeroActionInfo heroActionInfo = new HeroActionInfo();
+    private static readonly SkillResult SkillExecutionResult = new SkillResult();
+    private static readonly HeroActionInfo HeroSkillExecutionInfo = new HeroActionInfo();
 
     public static bool IsSkillUsable(FormationUnit performer, CombatSkill skill)
     {
@@ -42,6 +27,7 @@ public static class BattleSolver
         return skill.LaunchRanks.IsLaunchableFrom(performer.Rank, performer.Size) &&
             skill.HasAvailableTargets(performer, friends, enemies);
     }
+
     public static bool IsCampingSkillUsable(FormationUnit performer, CampingSkill skill)
     {
         int skillUsageCount = 0;
@@ -66,13 +52,12 @@ public static class BattleSolver
                     if (RaidSceneManager.HeroParty.Units.Count > 1)
                         return true;
                     break;
-                default:
-                    break;
             }
         }
 
         return false;
     }
+
     public static bool IsRequirementFulfilled(FormationUnit target, CampEffectRequirement requirement)
     {
         switch(requirement)
@@ -89,6 +74,7 @@ public static class BattleSolver
                 return true;
         }
     }
+
     public static bool IsPerformerSkillTargetable(CombatSkill skill, BattleFormation allies, BattleFormation enemies, FormationUnit performer)
     {
         if (skill.TargetRanks.IsSelfTarget)
@@ -118,28 +104,29 @@ public static class BattleSolver
                     return true;
             }
 
-            for (int i = 0; i < allies.party.Units.Count; i++)
+            for (int i = 0; i < allies.Party.Units.Count; i++)
             {
                 if (skill.Heal != null && performer.CombatInfo.BlockedHealUnitIds.
-                    Contains(allies.party.Units[i].CombatInfo.CombatId))
+                    Contains(allies.Party.Units[i].CombatInfo.CombatId))
                     continue;
                 if (skill.IsBuffSkill && performer.CombatInfo.BlockedBuffUnitIds.
-                    Contains(allies.party.Units[i].CombatInfo.CombatId))
+                    Contains(allies.Party.Units[i].CombatInfo.CombatId))
                     continue;
 
-                if (allies.party.Units[i] != performer && skill.TargetRanks.IsTargetableUnit(allies.party.Units[i]))
+                if (allies.Party.Units[i] != performer && skill.TargetRanks.IsTargetableUnit(allies.Party.Units[i]))
                     return true;
             }
         }
         else
         {
-            for (int i = 0; i < enemies.party.Units.Count; i++)
-                if (skill.TargetRanks.IsTargetableUnit(enemies.party.Units[i]))
+            for (int i = 0; i < enemies.Party.Units.Count; i++)
+                if (skill.TargetRanks.IsTargetableUnit(enemies.Party.Units[i]))
                     return true;
         }
 
         return false;
     }
+
     public static void FindTargets(FormationUnit performer, FormationUnit primaryTarget, CampEffect effect, List<FormationUnit> finalTargets)
     {
         finalTargets.Clear();
@@ -158,8 +145,6 @@ public static class BattleSolver
             case CampTargetType.Self:
                 finalTargets.Add(performer);
                 break;
-            default:
-                break;
         }
     }
 
@@ -172,6 +157,7 @@ public static class BattleSolver
             return skill.GetAvailableTargets(performer, RaidSceneManager.BattleGround.MonsterParty,
                 RaidSceneManager.BattleGround.HeroParty);
     }
+
     public static MonsterBrainDecision UseMonsterBrain(FormationUnit performer, string combatSkillOverride = null)
     {
         if (performer.Character.IsMonster)
@@ -202,7 +188,7 @@ public static class BattleSolver
             {
                 var availableSkill = monster.Data.CombatSkills.Find(skill => skill.Id == combatSkillOverride);
 
-                if (availableSkill != null && BattleSolver.IsSkillUsable(performer, availableSkill))
+                if (availableSkill != null && IsSkillUsable(performer, availableSkill))
                 {
                     var monsterBrainDecision = new MonsterBrainDecision(BrainDecisionType.Pass);
                     monsterBrainDecision.Decision = BrainDecisionType.Perform;
@@ -233,7 +219,7 @@ public static class BattleSolver
 
             var availableSkills = hero.Mode == null ? new List<CombatSkill>(hero.CurrentCombatSkills).FindAll(skill =>
                 skill != null && IsSkillUsable(performer, skill)) : new List<CombatSkill>(hero.CurrentCombatSkills).FindAll(skill =>
-                skill.ValidModes.Contains(hero.CurrentMode.Id) && skill != null && IsSkillUsable(performer, skill));
+                skill.ValidModes.Contains(hero.CurrentMode.Id) && IsSkillUsable(performer, skill));
 
             if (availableSkills.Count != 0)
             {
@@ -268,6 +254,7 @@ public static class BattleSolver
             return new MonsterBrainDecision(BrainDecisionType.Pass);
         }
     }
+
     public static SkillTargetInfo SelectSkillTargets(FormationUnit performer, FormationUnit primaryTarget, CombatSkill skill)
     {
         if (skill.TargetRanks.IsSelfTarget)
@@ -311,6 +298,7 @@ public static class BattleSolver
                 return new SkillTargetInfo(primaryTarget, SkillTargetType.Enemy);
         }
     }
+
     public static void ExecuteSkill(FormationUnit performerUnit, FormationUnit targetUnit, CombatSkill skill, SkillArtInfo artInfo)
     {
         SkillResult.Skill = skill;
@@ -332,6 +320,7 @@ public static class BattleSolver
         if (skill.Category == SkillCategory.Heal || skill.Category == SkillCategory.Support)
         {
             #region Heal
+
             if (skill.Heal != null)
             {
                 float initialHeal = RandomSolver.Next(skill.Heal.MinAmount, skill.Heal.MaxAmount + 1) *
@@ -343,7 +332,7 @@ public static class BattleSolver
                     if (RandomSolver.CheckSuccess(critChance))
                     {
                         int critHeal = target.Heal(initialHeal * 1.5f, true);
-                        targetUnit.OverlaySlot.healthBar.UpdateHealth(target);
+                        targetUnit.OverlaySlot.UpdateOverlay();
                         SkillResult.AddResultEntry(new SkillResultEntry(targetUnit, critHeal, SkillResultType.CritHeal));
                         
                         ApplyEffects(performerUnit, targetUnit, skill);
@@ -354,7 +343,7 @@ public static class BattleSolver
                 }
 
                 int heal = target.Heal(initialHeal, true);
-                targetUnit.OverlaySlot.healthBar.UpdateHealth(target);
+                targetUnit.OverlaySlot.UpdateOverlay();
 
                 SkillResult.AddResultEntry(new SkillResultEntry(targetUnit, heal, SkillResultType.Heal));
                 ApplyEffects(performerUnit, targetUnit, skill);
@@ -364,11 +353,13 @@ public static class BattleSolver
                 SkillResult.AddResultEntry(new SkillResultEntry(targetUnit, SkillResultType.Utility));
                 ApplyEffects(performerUnit, targetUnit, skill);
             }
+
             #endregion
         }
         else
         {
             #region Damage
+
             float accuracy = skill.Accuracy + performer.Accuracy;
             float hitChance = Mathf.Clamp(accuracy - target.Dodge, 0, 0.95f);
             float roll = (float)RandomSolver.NextDouble();
@@ -406,7 +397,7 @@ public static class BattleSolver
                 if (RandomSolver.CheckSuccess(critChance))
                 {
                     int critDamage = target.TakeDamage(damage * 1.5f);
-                    targetUnit.OverlaySlot.healthBar.UpdateHealth(target);
+                    targetUnit.OverlaySlot.UpdateOverlay();
 
                     if (target.HasZeroHealth)
                         SkillResult.AddResultEntry(new SkillResultEntry(targetUnit, critDamage, true, SkillResultType.Crit));
@@ -420,27 +411,25 @@ public static class BattleSolver
                 }
             }
             damage = target.TakeDamage(damage);
-            targetUnit.OverlaySlot.healthBar.UpdateHealth(target);
+            targetUnit.OverlaySlot.UpdateOverlay();
             if (target.HasZeroHealth)
                 SkillResult.AddResultEntry(new SkillResultEntry(targetUnit, damage, true, SkillResultType.Hit));
             else
                 SkillResult.AddResultEntry(new SkillResultEntry(targetUnit, damage, SkillResultType.Hit));
 
             ApplyEffects(performerUnit, targetUnit, skill);
-            return;
+
             #endregion
         }
     }
-    public static HeroActionInfo CalculateSkillPotential(FormationUnit performerUnit, FormationUnit targetUnit, CombatSkill skill)
+
+    public static void CalculateSkillPotential(FormationUnit performerUnit, FormationUnit targetUnit, CombatSkill skill)
     {
         var target = targetUnit.Character;
         var performer = performerUnit.Character;
 
         if (skill.Category == SkillCategory.Heal || skill.Category == SkillCategory.Support)
-        {
             HeroActionInfo.UpdateInfo(false, 0, 0, 0, 0);
-            return HeroActionInfo;
-        }
         else
         {
             ApplyConditions(performerUnit, targetUnit, skill);
@@ -478,20 +467,19 @@ public static class BattleSolver
             RemoveConditions(performerUnit);
             RemoveConditions(targetUnit);
             HeroActionInfo.UpdateInfo(true, hitChance, critChance, minDamage, maxDamage);
-            return HeroActionInfo;
         }
     }
 
     public static void ApplyEffects(FormationUnit performerUnit, FormationUnit targetUnit, CombatSkill skill)
     {
         if(skill.ValidModes.Count > 1 && performerUnit.Character.Mode != null)
-        {
             foreach (var effect in skill.ModeEffects[performerUnit.Character.Mode.Id])
                 effect.Apply(performerUnit, targetUnit, SkillResult);
-        }
+
         foreach (var effect in skill.Effects)
             effect.Apply(performerUnit, targetUnit, SkillResult);
     }
+
     public static void ApplyConditions(FormationUnit performerUnit, FormationUnit targetUnit, CombatSkill skill)
     {
         performerUnit.Character.ApplyAllBuffRules(RaidSceneManager.Rules.
@@ -502,6 +490,7 @@ public static class BattleSolver
         foreach (var effect in skill.Effects)
             effect.ApplyTargetConditions(performerUnit, targetUnit);
     }
+
     public static void RemoveConditions(FormationUnit targetUnit)
     {
         targetUnit.Character.ApplyAllBuffRules(RaidSceneManager.Rules.GetIdleUnitRules(targetUnit));

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 public class QuestRewardPanel : MonoBehaviour
 {
-    public List<RewardSlot> RewardSlots { get; set; }
+    public List<RewardSlot> RewardSlots { get; private set; }
 
-    void Awake()
+    private void Awake()
     {
         RewardSlots = new List<RewardSlot>(transform.Find("RewardItems").GetComponentsInChildren<RewardSlot>());
     }

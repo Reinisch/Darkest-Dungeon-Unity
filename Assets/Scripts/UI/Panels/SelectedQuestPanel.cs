@@ -3,14 +3,20 @@ using UnityEngine.UI;
 
 public class SelectedQuestPanel : MonoBehaviour
 {
-    public Text questTitle;
-    public Text questDescription;
-    public Text questLength;
-    public Text campfireAmount;
-    public Text questDifficulty;
-    public Text questGoals;
-
-    public QuestRewardPanel questRewardPanel;
+    [SerializeField]
+    private Text questTitle;
+    [SerializeField]
+    private Text questDescription;
+    [SerializeField]
+    private Text questLength;
+    [SerializeField]
+    private Text campfireAmount;
+    [SerializeField]
+    private Text questDifficulty;
+    [SerializeField]
+    private Text questGoals;
+    [SerializeField]
+    private QuestRewardPanel questRewardPanel;
 
     public void SetSelectedQuest(Quest quest)
     {
@@ -21,7 +27,7 @@ public class SelectedQuestPanel : MonoBehaviour
             questTitle.text = LocalizationManager.GetString("town_quest_name_" + plotQuest.Id);
             questDescription.text = LocalizationManager.GetString("town_quest_description_" + plotQuest.Id);
             questLength.text = plotQuest.Length.ToString();
-            campfireAmount.text = "x" + (quest.Length - 1).ToString();
+            campfireAmount.text = "x" + (quest.Length - 1);
             questLength.text = LocalizationManager.GetString("town_quest_length_" + plotQuest.Length.ToString());
             questDifficulty.text = LocalizationManager.GetString("town_quest_difficulty_" + plotQuest.Difficulty.ToString());
             questGoals.text = LocalizationManager.GetString("town_quest_goals") + "\n";
@@ -31,11 +37,11 @@ public class SelectedQuestPanel : MonoBehaviour
         else
         {
             questTitle.text = LocalizationManager.GetString("town_quest_name_" + quest.Type +
-                "+" + quest.Length.ToString() + "+" + quest.Dungeon + "+" + quest.Goal.Id);
+                "+" + quest.Length + "+" + quest.Dungeon + "+" + quest.Goal.Id);
             questDescription.text = LocalizationManager.GetString("town_quest_description_" +
-                quest.Type + "+" + quest.Length.ToString() + "+" + quest.Dungeon + "+" + quest.Goal.Id);
+                quest.Type + "+" + quest.Length + "+" + quest.Dungeon + "+" + quest.Goal.Id);
             questLength.text = quest.Length.ToString();
-            campfireAmount.text = "x" + (quest.Length - 1).ToString();
+            campfireAmount.text = "x" + (quest.Length - 1);
             questLength.text = LocalizationManager.GetString("town_quest_length_" + quest.Length.ToString());
             questDifficulty.text = LocalizationManager.GetString("town_quest_difficulty_" + quest.Difficulty.ToString());
             questGoals.text = LocalizationManager.GetString("town_quest_goals") + "\n";

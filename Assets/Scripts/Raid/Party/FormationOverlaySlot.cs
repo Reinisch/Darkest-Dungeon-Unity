@@ -1,79 +1,64 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using System.Collections;
-using System.Collections.Generic;
 
 public delegate void UnitOverlayEvent(FormationOverlaySlot slot);
 
 public class FormationOverlaySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
-    public Image selectorOverlay;
-    public HealthBar healthBar;
-    public StressOverlayPanel stressBar;
-    public TrayPanel trayBar;
-    public Image selectorPlus;
-    public PopupDialog dialogPopup;
+    [SerializeField]
+    private Image selectorOverlay;
+    [SerializeField]
+    private HealthBar healthBar;
+    [SerializeField]
+    private StressOverlayPanel stressBar;
+    [SerializeField]
+    private TrayPanel trayBar;
+    [SerializeField]
+    private Image selectorPlus;
+    [SerializeField]
+    private PopupDialog dialogPopup;
+    [SerializeField]
+    private RectTransform leftEdge;
+    [SerializeField]
+    private RectTransform rightEdge;
 
-    public RectTransform leftEdge;
-    public RectTransform rightEdge;
+    public FormationUnit TargetUnit { get; private set; }
+    public FormationOverlay Overlay { private get; set; }
+    public RectTransform RectTransform { get; private set; }
+    public Animator SlotAnimator { get; private set; }
+    private Animator SelectorAnimator { get; set; }
+    private Character Character { get { return TargetUnit.Character; } }
 
-    public FormationUnit TargetUnit { get; set; }
-    public FormationOverlay Overlay { get; set; }
-    public Animator SlotAnimator { get; set; }
-    public Animator SelectorAnimator { get; set; }
-    public RectTransform RectTransform { get; set; }
-    public Character Character
-    {
-        get
-        {
-            return TargetUnit.Character;
-        }
-    }
+    public bool IsSelectionLocked { get; private set; }
+    public bool IsHovered { get; private set; }
+    public bool IsDoingDialog { get { return dialogPopup.IsActive; } }
 
-    public bool IsSelectionLocked
-    {
-        get;
-        set;
-    }
-    public bool IsHovered
-    {
-        get;
-        private set;
-    }
-    public bool IsDoingDialog
-    {
-        get
-        {
-            return dialogPopup.IsActive;
-        }
-    }
-
-    public event UnitOverlayEvent onHeroSelected;
-    public event UnitOverlayEvent onSkillTargetSelected;
+    public event UnitOverlayEvent HeroSelected;
+    public event UnitOverlayEvent SkillTargetSelected;
 
     private int baseWidth = 140;
 
 #if UNITY_ANDROID || UNITY_IOS
     float doubleTapTimer = 0f;
     float doubleTapTime = 0.2f;
+
+    private void Update()
+    {
+        if (doubleTapTimer > 0)
+            doubleTapTimer -= Time.deltaTime;
+    }
 #endif
 
-    void Awake()
+    private void Awake()
     {
         RectTransform = GetComponent<RectTransform>();
         SlotAnimator = GetComponent<Animator>();
         SelectorAnimator = RectTransform.Find("SelectionFrame").GetComponent<Animator>();
         gameObject.SetActive(false);
     }
-#if UNITY_ANDROID || UNITY_IOS
-    void Update()
-    {
-        if (doubleTapTimer > 0)
-            doubleTapTimer -= Time.deltaTime;
-    }
-#endif
-    void LateUpdate()
+
+    private void LateUpdate()
     {
         Vector3 screenPoint = RaidSceneManager.DungeonPositionToScreen(TargetUnit.RectTransform.position);
 
@@ -85,6 +70,7 @@ public class FormationOverlaySlot : MonoBehaviour, IPointerClickHandler, IPointe
         FMODUnity.RuntimeManager.PlayOneShot("event:/ui/shared/text_popup");
         dialogPopup.SetCurrentDialog(dialogText, skipable);
     }
+
     public void LockOnUnit(FormationUnit unit)
     {
         TargetUnit = unit;
@@ -108,40 +94,27 @@ public class FormationOverlaySlot : MonoBehaviour, IPointerClickHandler, IPointe
         }
 
         if (unit.Character.HealthbarModifier != null && unit.Character.HealthbarModifier.Type == "corpse")
-            healthBar.healthImage.material = DarkestDungeonManager.GrayHighlightMaterial;
+            healthBar.HealthImage.material = DarkestDungeonManager.GrayHighlightMaterial;
         else
-            healthBar.healthImage.material = healthBar.healthImage.defaultMaterial;
+            healthBar.HealthImage.material = healthBar.HealthImage.defaultMaterial;
 
         trayBar.UpdatePanel(TargetUnit);
         unit.OverlaySlot = this;
         gameObject.SetActive(true);
     }
+
     public void UpdateUnit()
     {
         healthBar.SetSize(TargetUnit.Character);
-        healthBar.UpdateHealth(TargetUnit.Character);
-        trayBar.UpdatePanel(TargetUnit);
-        selectorPlus.gameObject.SetActive(false);
-        if (TargetUnit.Character.IsMonster)
-        {
-            if (TargetUnit.Character.SharedHealth != null)
-            {
-                RaidSceneManager.BattleGround.SharedHealth.UpdateOverlay();
-                healthBar.gameObject.SetActive(false);
-            }
-            else
-                healthBar.gameObject.SetActive(true);
 
-            stressBar.gameObject.SetActive(false);
-        }
-        else
-            stressBar.UpdateStress(TargetUnit.Character.Stress.ValueRatio);
+        UpdateOverlay();
 
         if (TargetUnit.Character.HealthbarModifier != null && TargetUnit.Character.HealthbarModifier.Type == "corpse")
-            healthBar.healthImage.material = DarkestDungeonManager.GrayHighlightMaterial;
+            healthBar.HealthImage.material = DarkestDungeonManager.GrayHighlightMaterial;
         else
-            healthBar.healthImage.material = healthBar.healthImage.defaultMaterial;
+            healthBar.HealthImage.material = healthBar.HealthImage.defaultMaterial;
     }
+
     public void UpdateOverlay()
     {
         healthBar.UpdateHealth(TargetUnit.Character);
@@ -162,6 +135,7 @@ public class FormationOverlaySlot : MonoBehaviour, IPointerClickHandler, IPointe
         else
             stressBar.UpdateStress(TargetUnit.Character.Stress.ValueRatio);
     }
+
     public void ClearTarget()
     {
         TargetUnit = null;
@@ -169,27 +143,32 @@ public class FormationOverlaySlot : MonoBehaviour, IPointerClickHandler, IPointe
         selectorPlus.gameObject.SetActive(false);
         gameObject.SetActive(false);
     }
+
     public void Relocate()
     {
         if (isActiveAndEnabled)
             RectTransform.position = TargetUnit.RectTransform.position;
     }
 
+    #region Slot states
+
     public void SetFriendly()
     {
-        selectorOverlay.sprite = Overlay.friendSizeSprites[Character.Size - 1];
+        selectorOverlay.sprite = Overlay.FriendSizeSprites[Character.Size - 1];
         selectorOverlay.SetNativeSize();
         selectorPlus.gameObject.SetActive(false);
     }
+
     public void SetMovable()
     {
-        selectorOverlay.sprite = Overlay.moveSprite;
+        selectorOverlay.sprite = Overlay.MoveSprite;
         selectorOverlay.SetNativeSize();
         selectorPlus.gameObject.SetActive(false);
     }
+
     public void SetEnemy(bool combined = false)
     {
-        selectorOverlay.sprite = Overlay.enemySizeSprites[Character.Size - 1];
+        selectorOverlay.sprite = Overlay.EnemySizeSprites[Character.Size - 1];
         selectorOverlay.SetNativeSize();
         if (combined)
         {
@@ -209,9 +188,10 @@ public class FormationOverlaySlot : MonoBehaviour, IPointerClickHandler, IPointe
         else
             selectorPlus.gameObject.SetActive(false);
     }
+
     public void SetSelected()
     {
-        selectorOverlay.sprite = Overlay.selectionSizeSprites[Character.Size - 1];
+        selectorOverlay.sprite = Overlay.SelectionSizeSprites[Character.Size - 1];
         selectorOverlay.SetNativeSize();
         selectorPlus.gameObject.SetActive(false);
     }
@@ -221,11 +201,13 @@ public class FormationOverlaySlot : MonoBehaviour, IPointerClickHandler, IPointe
         SlotAnimator.SetBool("Selected", true);
         SelectorAnimator.SetTrigger("Selected");
     }
+
     public void SetStatic()
     {
         SlotAnimator.SetBool("Selected", true);
         SelectorAnimator.SetTrigger("Available");
     }
+
     public void SetDeselected()
     {
         SlotAnimator.SetBool("Selected", false);
@@ -233,11 +215,14 @@ public class FormationOverlaySlot : MonoBehaviour, IPointerClickHandler, IPointe
         selectorPlus.gameObject.SetActive(false);
     }
 
+    #endregion
+
     public void Show()
     {
         if(isActiveAndEnabled)
             SlotAnimator.SetBool("Hidden", false);
     }
+
     public void Hide()
     {
         if (isActiveAndEnabled)
@@ -248,6 +233,7 @@ public class FormationOverlaySlot : MonoBehaviour, IPointerClickHandler, IPointe
     {
         IsSelectionLocked = true;
     }
+
     public void UnlockSelection()
     {
         IsSelectionLocked = false;
@@ -255,9 +241,10 @@ public class FormationOverlaySlot : MonoBehaviour, IPointerClickHandler, IPointe
 
     public void UnitSelected()
     {
-        if (onHeroSelected != null)
-            onHeroSelected(this);
+        if (HeroSelected != null)
+            HeroSelected(this);
     }
+
     public void OnPointerClick(PointerEventData eventData)
     {
 #if UNITY_ANDROID || UNITY_IOS
@@ -278,8 +265,8 @@ public class FormationOverlaySlot : MonoBehaviour, IPointerClickHandler, IPointe
 
         if (TargetUnit.IsTargetable)
         {
-            if (onSkillTargetSelected != null)
-                onSkillTargetSelected(this);
+            if (SkillTargetSelected != null)
+                SkillTargetSelected(this);
 
             return;
         }
@@ -287,6 +274,7 @@ public class FormationOverlaySlot : MonoBehaviour, IPointerClickHandler, IPointe
         if(!IsSelectionLocked)
             UnitSelected();
     }
+
     public void OnPointerEnter(PointerEventData eventData)
     {
         IsHovered = true;
@@ -303,6 +291,7 @@ public class FormationOverlaySlot : MonoBehaviour, IPointerClickHandler, IPointe
             }
         }
     }
+
     public void OnPointerExit(PointerEventData eventData)
     {
         IsHovered = false;

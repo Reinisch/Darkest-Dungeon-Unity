@@ -6,7 +6,6 @@ public class CurioInteraction : IProportionValue
     public List<CurioResult> Results { get; set; }
     public int Chance { get; set; }
 
-
     public CurioInteraction()
     {
         Results = new List<CurioResult>();

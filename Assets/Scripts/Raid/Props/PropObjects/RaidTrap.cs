@@ -17,16 +17,18 @@ public class RaidTrap : RaidProp, IPointerEnterHandler, IPointerExitHandler
         PropType = PropType.Trap;
         Activated = false;
     }
+
     public override void Activate()
     {
         Activated = true;
     }
+
     public override void SetSortingOrder(int order)
     {
         SkeletonAnimation.MeshRenderer.sortingOrder = order;
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (!Activated)
             RaidSceneManager.Instanse.ActivateTrap(AreaView as RaidHallSector, false);
@@ -40,6 +42,7 @@ public class RaidTrap : RaidProp, IPointerEnterHandler, IPointerExitHandler
             SkeletonAnimation.state.SetAnimation(0, "active", false);
         }
     }
+
     public void OnPointerExit(PointerEventData eventData)
     {
         if (!Activated)

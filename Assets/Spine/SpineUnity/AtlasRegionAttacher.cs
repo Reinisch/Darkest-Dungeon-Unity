@@ -76,5 +76,4 @@ public class AtlasRegionAttacher : MonoBehaviour {
 			slot.Attachment = regionAttachment;
 		}
 	}
-
 }

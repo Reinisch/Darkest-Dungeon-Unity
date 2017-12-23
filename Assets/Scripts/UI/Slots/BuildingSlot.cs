@@ -1,21 +1,19 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System.Collections.Generic;
 
 public class BuildingSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    public string building;
+    [SerializeField]
+    private Image labelBackground;
+    [SerializeField]
+    private Text nameLabel;
+    [SerializeField]
+    private Text buildingDescription;
+    [SerializeField]
+    private SkeletonAnimation currentState;
 
-    public Button buildingButton;
-    public Image labelBackground;
-    public Text nameLabel;
-    public Text buildingDescription;
-
-    public List<SkeletonAnimation> states;
-    public SkeletonAnimation currentState;
-
-    public TownManager TownManager { get; set; }
+    public TownManager TownManager { private get; set; }
 
     public void BuildingSelected()
     {

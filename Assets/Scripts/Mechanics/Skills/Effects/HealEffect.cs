@@ -24,13 +24,13 @@
         if (performer != null && RandomSolver.CheckSuccess(performer.Character.Crit))
         {
             int critHeal = target.Character.Heal(initialHeal * 1.5f, true);
-            target.OverlaySlot.healthBar.UpdateHealth(target.Character);
+            target.OverlaySlot.UpdateOverlay();
             RaidSceneManager.RaidEvents.ShowPopupMessage(target, PopupMessageType.CritHeal, critHeal.ToString());
         }
         else
         {
             int heal = target.Character.Heal(initialHeal, true);
-            target.OverlaySlot.healthBar.UpdateHealth(target.Character);
+            target.OverlaySlot.UpdateOverlay();
             RaidSceneManager.RaidEvents.ShowPopupMessage(target, PopupMessageType.Heal, heal.ToString());
         }
         return true;

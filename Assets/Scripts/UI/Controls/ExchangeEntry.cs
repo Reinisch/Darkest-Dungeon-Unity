@@ -1,33 +1,36 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System.Collections;
-using System;
 
 public class ExchangeEntry : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    public Image entryFrame;
-    public Image toHeirloom;
-    public Text toAmount;
-    public Button confirmButton;
+    [SerializeField]
+    private Image entryFrame;
+    [SerializeField]
+    private Image toHeirloom;
+    [SerializeField]
+    private Text toAmount;
+    [SerializeField]
+    private Button confirmButton;
 
-    public HeirloomExchange CurrentExchange { get; set; }
-    public int ExchangeIndex { get; set; }
-    public int CurrentAmount { get; set; }
-    public HeirloomArrowEvent ConnectArrow { get; set; }
-    public HeirloomArrowEvent DisconnectArrow { get; set; }
+    public int ExchangeIndex { private get; set; }
+    public HeirloomArrowEvent ConnectArrow { private get; set; }
+    public HeirloomArrowEvent DisconnectArrow { private get; set; }
+
+    private HeirloomExchange CurrentExchange { get; set; }
+    private int CurrentAmount { get; set; }
 
     public void ConfirmButtonClicked()
     {
         int fromAmount = CurrentAmount / CurrentExchange.ToAmount * CurrentExchange.FromAmount;
-        if(DarkestDungeonManager.Campaign.Estate.Currencies[CurrentExchange.FromType].amount >= fromAmount)
+        if(DarkestDungeonManager.Campaign.Estate.Currencies[CurrentExchange.FromType] >= fromAmount)
         {
-            DarkestDungeonManager.Campaign.Estate.Currencies[CurrentExchange.FromType].amount -= fromAmount;
-            DarkestDungeonManager.Campaign.Estate.Currencies[CurrentExchange.ToType].amount += CurrentAmount;
+            DarkestDungeonManager.Campaign.Estate.Currencies[CurrentExchange.FromType] -= fromAmount;
+            DarkestDungeonManager.Campaign.Estate.Currencies[CurrentExchange.ToType] += CurrentAmount;
             DarkestSoundManager.PlayOneShot("event:/ui/town/heirloom_exchange_confirm");
             DarkestSoundManager.PlayOneShot("event:/ui/town/button_click");
             EstateSceneManager.Instanse.OnHeirloomExchange();
-            EstateSceneManager.Instanse.currencyPanel.UpdateCurrency();
+            EstateSceneManager.Instanse.CurrencyPanel.UpdateCurrency();
         }
     }
 
@@ -39,10 +42,7 @@ public class ExchangeEntry : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         CurrentAmount = (fromAmount / exchange.FromAmount) * exchange.ToAmount;
 
         toAmount.text = CurrentAmount.ToString();
-        if (CurrentAmount == 0)
-            confirmButton.gameObject.SetActive(false);
-        else
-            confirmButton.gameObject.SetActive(true);
+        confirmButton.gameObject.SetActive(CurrentAmount != 0);
     }
 
     public void OnPointerEnter(PointerEventData eventData)

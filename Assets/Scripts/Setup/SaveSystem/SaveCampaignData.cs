@@ -3,8 +3,11 @@
 public class SaveCampaignData
 {
     public int SaveId;
+    public bool InBattle;
+    public readonly BattleGroundSaveData BattleGroundSaveData = new BattleGroundSaveData();
 
     #region Estate
+
     public bool IsFirstStart;
     public string HamletTitle;
     public string LocationName;
@@ -47,9 +50,11 @@ public class SaveCampaignData
     public Dictionary<string, int> TownNarrations;
     public Dictionary<string, int> RaidNarrations;
     public Dictionary<string, int> CampaignNarrations;
+
     #endregion
     
     #region Raid
+
     public bool InRaid { get; set; }
     public bool QuestCompleted { get; set; }
     public Quest Quest { get; set; }
@@ -78,11 +83,8 @@ public class SaveCampaignData
 
     public BattleFormationSaveData HeroFormationData { get; set; }
     public List<InventorySlotData> InventoryItems { get; set; }
+
     #endregion
-
-    public bool InBattle;
-    public BattleGroundSaveData BattleGroundSaveData = new BattleGroundSaveData();
-
 
     public SaveCampaignData()
     {
@@ -127,7 +129,6 @@ public class SaveCampaignData
         SaveId = newSaveId;
         HamletTitle = newEstateName;
     }
-
 
     public void SetEstateInfo(bool firstStart, string locationName, int questsCompleted, int currentWeek, int gold, int busts, int deeds, int portraits, int crests)
     {
@@ -287,7 +288,7 @@ public class SaveCampaignData
         ModifiedMaxTorch = -1;
 
         HeroFormationData = new BattleFormationSaveData();
-        HeroFormationData.unitData.Add(new FormationUnitSaveData()
+        HeroFormationData.UnitData.Add(new FormationUnitSaveData()
         {
             IsHero = true,
             RosterId = 1,
@@ -297,7 +298,7 @@ public class SaveCampaignData
                 CombatId = 1,
             }
         });
-        HeroFormationData.unitData.Add(new FormationUnitSaveData()
+        HeroFormationData.UnitData.Add(new FormationUnitSaveData()
         {
             IsHero = true,
             RosterId = 2,
@@ -364,11 +365,11 @@ public class SaveCampaignData
         QuestsCompleted = campaign.QuestsComleted;
         CurrentWeek = campaign.CurrentWeek;
 
-        GoldAmount = campaign.Estate.Currencies["gold"].amount;
-        BustsAmount = campaign.Estate.Currencies["bust"].amount;
-        DeedsAmount = campaign.Estate.Currencies["deed"].amount;
-        PortraitsAmount = campaign.Estate.Currencies["portrait"].amount;
-        CrestsAmount = campaign.Estate.Currencies["crest"].amount;
+        GoldAmount = campaign.Estate.Currencies["gold"];
+        BustsAmount = campaign.Estate.Currencies["bust"];
+        DeedsAmount = campaign.Estate.Currencies["deed"];
+        PortraitsAmount = campaign.Estate.Currencies["portrait"];
+        CrestsAmount = campaign.Estate.Currencies["crest"];
 
         InventoryTrinkets.Clear();
         for (int i = 0; i < campaign.RealmInventory.Trinkets.Count; i++)
@@ -515,7 +516,7 @@ public class SaveCampaignData
         ModifiedMinTorch = RaidSceneManager.TorchMeter.Modifier == null ? -1 : RaidSceneManager.TorchMeter.Modifier.Min;
         ModifiedMaxTorch = RaidSceneManager.TorchMeter.Modifier == null ? -1 : RaidSceneManager.TorchMeter.Modifier.Max;
 
-        HeroFormationData.UpdateFormation(RaidSceneManager.Formations.heroes);
+        HeroFormationData.UpdateFormation(RaidSceneManager.Formations.Heroes);
         InventoryItems = RaidSceneManager.Inventory.SaveInventorySlotData();
 
         if (RaidSceneManager.BattleGround.BattleStatus == BattleStatus.Fighting)
@@ -526,7 +527,6 @@ public class SaveCampaignData
         else
             InBattle = false;
     }
-
 
     private static void SetEmptySlots(List<List<SaveActivitySlot>> activities, int activityCount, int activitySlots)
     {

@@ -4,11 +4,14 @@ using System.Collections.Generic;
 
 public class StressOverlayPanel : MonoBehaviour
 {
-    public Sprite normalPip;
-    public Sprite stressedPip;
-    public Sprite overstressedPip;
-
-    public List<Image> stressPips;
+    [SerializeField]
+    private Sprite normalPip;
+    [SerializeField]
+    private Sprite stressedPip;
+    [SerializeField]
+    private Sprite overstressedPip;
+    [SerializeField]
+    private List<Image> stressPips;
 
     public void UpdateStress(float stressPercentage)
     {

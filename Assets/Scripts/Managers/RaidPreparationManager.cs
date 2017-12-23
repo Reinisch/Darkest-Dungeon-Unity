@@ -4,57 +4,18 @@ using System.Linq;
 
 public class RaidPreparationManager : MonoBehaviour
 {
-    public RectTransform dungeonPanels;
-    public SelectedQuestPanel selectedQuestPanel;
-    public RaidPartyPanel raidPartyPanel;
+    [SerializeField]
+    private RectTransform dungeonPanels;
+    [SerializeField]
+    private SelectedQuestPanel selectedQuestPanel;
+    [SerializeField]
+    private RaidPartyPanel raidPartyPanel;
 
-    public QuestSlot SelectedQuestSlot { get; set; }
-    public List<DungeonPanel> DungeonPanels { get; private set; }
+    public RaidPartyPanel RaidPartyPanel { get { return raidPartyPanel; } }
+    public QuestSlot SelectedQuestSlot { get; private set; }
+    private List<DungeonPanel> DungeonPanels { get; set; }
 
-    bool initialized = false;
-
-    void DistributeQuests()
-    {
-        if (!DarkestDungeonManager.Campaign.AreQuestsReady)
-        {
-            List<Quest> quests = DarkestDungeonManager.Campaign.Quests;
-            quests = quests.OrderBy(quest => quest.Difficulty).ToList();
-            foreach (var panel in DungeonPanels)
-                panel.DistributeQuests(quests);
-            DarkestDungeonManager.Campaign.AreQuestsReady = true;
-        }
-    }
-    void SelectAnyQuest()
-    {
-        for (int i = 0; i < DungeonPanels.Count; i++)
-        {
-            for (int j = 0; j < DungeonPanels[i].QuestSlots.Count; j++)
-            {
-                if (DungeonPanels[i].QuestSlots[j].Quest != null)
-                {
-                    DungeonPanels[i].QuestSlots[j].QuestButtonClicked();
-                    return;
-                }
-            }
-        }
-    }
-    void RaidManager_onQuestSelected(QuestSlot questSlot)
-    {
-        for (int i = 0; i < DungeonPanels.Count; i++)
-        {
-            for (int j = 0; j < DungeonPanels[i].QuestSlots.Count; j++)
-            {
-                if (DungeonPanels[i].QuestSlots[j].isActiveAndEnabled)
-                    DungeonPanels[i].QuestSlots[j].Selected = false;
-            }
-        }
-        questSlot.Selected = true;
-        SelectedQuestSlot = questSlot;
-        selectedQuestPanel.SetSelectedQuest(questSlot.Quest);
-        DarkestDungeonManager.RaidManager.Quest = SelectedQuestSlot.Quest;
-
-        raidPartyPanel.CheckRestrictions();
-    }
+    private bool initialized;
 
     public void Initialize()
     {
@@ -65,7 +26,7 @@ public class RaidPreparationManager : MonoBehaviour
         for (int i = 0; i < DungeonPanels.Count; i++)
         {
             DungeonPanels[i].Initialize();
-            DungeonPanels[i].onQuestSelected += RaidManager_onQuestSelected;
+            DungeonPanels[i].EventQuestSelected += DungeonPanelQuestSelected;
         }
         initialized = true;
     }
@@ -81,5 +42,50 @@ public class RaidPreparationManager : MonoBehaviour
             selectedQuestPanel.SetSelectedQuest(SelectedQuestSlot.Quest);
             SelectedQuestSlot.Selected = true;
         }
+    }
+
+    private void DistributeQuests()
+    {
+        if (!DarkestDungeonManager.Campaign.AreQuestsReady)
+        {
+            List<Quest> quests = DarkestDungeonManager.Campaign.Quests;
+            quests = quests.OrderBy(quest => quest.Difficulty).ToList();
+            foreach (var panel in DungeonPanels)
+                panel.DistributeQuests(quests);
+            DarkestDungeonManager.Campaign.AreQuestsReady = true;
+        }
+    }
+
+    private void SelectAnyQuest()
+    {
+        for (int i = 0; i < DungeonPanels.Count; i++)
+        {
+            for (int j = 0; j < DungeonPanels[i].QuestSlots.Count; j++)
+            {
+                if (DungeonPanels[i].QuestSlots[j].Quest != null)
+                {
+                    DungeonPanels[i].QuestSlots[j].QuestButtonClicked();
+                    return;
+                }
+            }
+        }
+    }
+
+    private void DungeonPanelQuestSelected(QuestSlot questSlot)
+    {
+        for (int i = 0; i < DungeonPanels.Count; i++)
+        {
+            for (int j = 0; j < DungeonPanels[i].QuestSlots.Count; j++)
+            {
+                if (DungeonPanels[i].QuestSlots[j].isActiveAndEnabled)
+                    DungeonPanels[i].QuestSlots[j].Selected = false;
+            }
+        }
+        questSlot.Selected = true;
+        SelectedQuestSlot = questSlot;
+        selectedQuestPanel.SetSelectedQuest(questSlot.Quest);
+        DarkestDungeonManager.RaidManager.Quest = SelectedQuestSlot.Quest;
+
+        raidPartyPanel.CheckRestrictions();
     }
 }

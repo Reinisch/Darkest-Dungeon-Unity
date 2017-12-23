@@ -4,39 +4,42 @@ using UnityEngine.UI;
 
 public class BlacksmithWindow : BuildingWindow
 {
-    public Text dragHeroLabel;
-    public BlacksmithHeroWindow heroOverview;
-    public HeroObserverSlot heroSlot;
+    [SerializeField]
+    private Text dragHeroLabel;
+    [SerializeField]
+    private BlacksmithHeroWindow heroOverview;
+    [SerializeField]
+    private HeroObserverSlot heroSlot;
 
-    public UpgradeButton upgradeSwitch;
-    public UpgradeWindow upgradeWindow;
-
-    public Button closeButton;
+    [SerializeField]
+    private UpgradeButton upgradeSwitch;
+    [SerializeField]
+    private UpgradeWindow upgradeWindow;
 
     public override TownManager TownManager { get; set; }
-    public Blacksmith Blacksmith { get; private set; }
+    private Blacksmith Blacksmith { get; set; }
 
-    void Awake()
+    private void Awake()
     {
-        heroSlot.OnHeroDropped += heroSlot_OnHeroDropped;
-        heroSlot.OnHeroRemoved += heroSlot_OnHeroRemoved;
+        heroSlot.EventHeroDropped += HeroObserverSlotHeroDropped;
+        heroSlot.EventHeroRemoved += HeroObserverSlotHeroRemoved;
     }
 
-    void heroSlot_OnHeroDropped(Hero hero)
+    private void HeroObserverSlotHeroDropped(Hero hero)
     {
         heroOverview.gameObject.SetActive(true);
         heroOverview.LoadHeroOverview(hero);
         dragHeroLabel.enabled = false;
     }
 
-    void heroSlot_OnHeroRemoved(Hero hero)
+    private void HeroObserverSlotHeroRemoved(Hero hero)
     {
         heroOverview.gameObject.SetActive(false);
         heroOverview.ResetWindow();
         dragHeroLabel.enabled = true;
     }
 
-    void BlacksmithWindow_onUpgradeClick(BuildingUpgradeSlot slot)
+    private void BuildingUpgradeSlotClicked(BuildingUpgradeSlot slot)
     {
         var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(slot.Tree.Id, slot.UpgradeInfo);
         if (status == UpgradeStatus.Available)
@@ -52,7 +55,7 @@ public class BlacksmithWindow : BuildingWindow
 
             if (DarkestDungeonManager.Campaign.Estate.BuyUpgrade(slot.Tree.Id, slot.UpgradeInfo, isFree))
             {
-                TownManager.EstateSceneManager.currencyPanel.UpdateCurrency();
+                TownManager.EstateSceneManager.CurrencyPanel.UpdateCurrency();
                 UpdateUpgradeTrees(true);
             }
         }
@@ -67,24 +70,24 @@ public class BlacksmithWindow : BuildingWindow
 
         Blacksmith = DarkestDungeonManager.Campaign.Estate.Blacksmith;
         float ratio = DarkestDungeonManager.Campaign.Estate.GetBuildingUpgradeRatio(BuildingType.Blacksmith);
-        upgradeWindow.upgradedValue.text = Mathf.RoundToInt(ratio * 100).ToString() + "%";
+        upgradeWindow.UpgradedValue.text = Mathf.RoundToInt(ratio * 100) + "%";
 
-        foreach (var tree in upgradeWindow.upgradeTrees)
+        foreach (var tree in upgradeWindow.UpgradeTrees)
         {
-            var currentUpgrades = DarkestDungeonManager.Data.UpgradeTrees[tree.treeId].Upgrades;
+            var currentUpgrades = DarkestDungeonManager.Data.UpgradeTrees[tree.TreeId].Upgrades;
             int lastPurchaseIndex = -1;
-            for (int i = 0; i < tree.upgrades.Count; i++)
+            for (int i = 0; i < tree.Upgrades.Count; i++)
             {
-                tree.upgrades[i].Tree = DarkestDungeonManager.Data.UpgradeTrees[tree.treeId];
-                tree.upgrades[i].UpgradeInfo = currentUpgrades[i];
-                if (tree.treeId == "blacksmith.cost")
+                tree.Upgrades[i].Tree = DarkestDungeonManager.Data.UpgradeTrees[tree.TreeId];
+                tree.Upgrades[i].UpgradeInfo = currentUpgrades[i];
+                if (tree.TreeId == "blacksmith.cost")
                 {
-                    tree.upgrades[i].TownUpgrades = new List<ITownUpgrade>(new ITownUpgrade[] {
+                    tree.Upgrades[i].TownUpgrades = new List<ITownUpgrade>(new [] {
                         Blacksmith.GetUpgradeByCode(currentUpgrades[i].Code) });
                 }
-                tree.upgrades[i].onClick += BlacksmithWindow_onUpgradeClick;
-                var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(tree.treeId, currentUpgrades[i]);
-                TownManager.UpdateUpgradeSlot(status, tree.upgrades[i]);
+                tree.Upgrades[i].EventClicked += BuildingUpgradeSlotClicked;
+                var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(tree.TreeId, currentUpgrades[i]);
+                TownManager.UpdateUpgradeSlot(status, tree.Upgrades[i]);
                 if (status == UpgradeStatus.Purchased)
                     lastPurchaseIndex = i;
             }
@@ -96,19 +99,19 @@ public class BlacksmithWindow : BuildingWindow
     {
         Blacksmith.UpdateBuilding(DarkestDungeonManager.Campaign.Estate.TownPurchases);
         float ratio = DarkestDungeonManager.Campaign.Estate.GetBuildingUpgradeRatio(BuildingType.Blacksmith);
-        upgradeWindow.upgradedValue.text = Mathf.RoundToInt(ratio * 100).ToString() + "%";
+        upgradeWindow.UpgradedValue.text = Mathf.RoundToInt(ratio * 100).ToString() + "%";
 
         if (afterPurchase && Mathf.Approximately(ratio, 1))
             DarkestSoundManager.PlayOneShot("event:/town/purchase_upgrade_last");
 
-        foreach (var tree in upgradeWindow.upgradeTrees)
+        foreach (var tree in upgradeWindow.UpgradeTrees)
         {
-            var currentUpgrades = DarkestDungeonManager.Data.UpgradeTrees[tree.treeId].Upgrades;
+            var currentUpgrades = DarkestDungeonManager.Data.UpgradeTrees[tree.TreeId].Upgrades;
             int lastPurchaseIndex = -1;
-            for (int i = 0; i < tree.upgrades.Count; i++)
+            for (int i = 0; i < tree.Upgrades.Count; i++)
             {
-                var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(tree.treeId, currentUpgrades[i]);
-                TownManager.UpdateUpgradeSlot(status, tree.upgrades[i]);
+                var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(tree.TreeId, currentUpgrades[i]);
+                TownManager.UpdateUpgradeSlot(status, tree.Upgrades[i]);
                 if (status == UpgradeStatus.Purchased)
                     lastPurchaseIndex = i;
             }
@@ -150,13 +153,13 @@ public class BlacksmithWindow : BuildingWindow
         }
         else
         {
-            foreach (var tree in upgradeWindow.upgradeTrees)
+            foreach (var tree in upgradeWindow.UpgradeTrees)
             {
-                for (int i = 0; i < tree.upgrades.Count; i++)
+                for (int i = 0; i < tree.Upgrades.Count; i++)
                 {
-                    var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(tree.treeId, tree.upgrades[i].UpgradeInfo);
+                    var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(tree.TreeId, tree.Upgrades[i].UpgradeInfo);
                     if (status == UpgradeStatus.Available)
-                        TownManager.UpdateUpgradeSlot(status, tree.upgrades[i]);
+                        TownManager.UpdateUpgradeSlot(status, tree.Upgrades[i]);
                 }
             }
             upgradeSwitch.SwitchUpgrades();

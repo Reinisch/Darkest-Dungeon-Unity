@@ -3,14 +3,14 @@ using UnityEngine.UI;
 
 public class ScrollBarResizer : MonoBehaviour
 {
-    Scrollbar scrollBar;
+    private Scrollbar scrollBar;
 
-    void Awake()
+    private void Awake()
     {
         scrollBar = GetComponent<Scrollbar>();
     }
 
-    void LateUpdate()
+    private void LateUpdate()
     {
         scrollBar.size = 0;
     }

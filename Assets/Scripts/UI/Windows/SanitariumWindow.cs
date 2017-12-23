@@ -1,156 +1,44 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine.UI;
 
 public class SanitariumWindow : BuildingWindow
 {
-    public Text buildingLabel;
-    public Text treatmentLabel;
-    public Text treatmentDescription;
-    public Text medicalLabel;
-    public Text medicalDescription;
-
-    public UpgradeButton upgradeSwitch;
-    public UpgradeWindow upgradeWindow;
-
-    public Button closeButton;
-
-    public List<TreatmentHeroSlot> quirkSlots;
-    public List<TreatmentHeroSlot> diseaseSlots;
-
-    public SanitariumQuirkWindow quirkWindow;
-    public SanitariumDiseaseWindow diseaseWindow;
+    [SerializeField]
+    private UpgradeButton upgradeSwitch;
+    [SerializeField]
+    private UpgradeWindow upgradeWindow;
+    [SerializeField]
+    private List<TreatmentHeroSlot> quirkSlots;
+    [SerializeField]
+    private List<TreatmentHeroSlot> diseaseSlots;
+    [SerializeField]
+    private SanitariumQuirkWindow quirkWindow;
+    [SerializeField]
+    private SanitariumDiseaseWindow diseaseWindow;
 
     public override TownManager TownManager { get; set; }
-    public Sanitarium Sanitarium { get; private set; }
+    private Sanitarium Sanitarium { get; set; }
 
-    void SanitariumWindow_onQuirkHeroDropped(TreatmentHeroSlot slot)
-    {
-        quirkWindow.LoadHeroOverview(slot);
-        for (int i = 0; i < 3; i++)
-        {
-            quirkSlots[i].buttonIcon.gameObject.SetActive(false);
-            diseaseSlots[i].buttonIcon.gameObject.SetActive(false);
-        }
-    }
-    void SanitariumWindow_onQuirkHeroRemoved(TreatmentHeroSlot slot)
-    {
-        for (int i = 0; i < 3; i++)
-        {
-            quirkSlots[i].UpdateSlot();
-            diseaseSlots[i].UpdateSlot();
-        }
-        quirkWindow.ResetWindow();
-    }
-    void SanitariumWindow_onDiseaseHeroDropped(TreatmentHeroSlot slot)
-    {
-        diseaseWindow.LoadHeroOverview(slot);
-        for (int i = 0; i < 3; i++)
-        {
-            quirkSlots[i].buttonIcon.gameObject.SetActive(false);
-            diseaseSlots[i].buttonIcon.gameObject.SetActive(false);
-        }
-    }
-    void SanitariumWindow_onDiseaseHeroRemoved(TreatmentHeroSlot slot)
-    {
-        for (int i = 0; i < 3; i++)
-        {
-            quirkSlots[i].UpdateSlot();
-            diseaseSlots[i].UpdateSlot();
-        }
-        diseaseWindow.ResetWindow();
-    }
-    void SanitariumWindow_onUpgradeClick(BuildingUpgradeSlot slot)
-    {
-        var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(slot.Tree.Id, slot.UpgradeInfo);
-        if (status == UpgradeStatus.Available)
-        {
-            bool isFree = false;
-            for (int i = 0; i < slot.Tree.Tags.Count; i++)
-                if (DarkestDungeonManager.Campaign.EventModifiers.HasFreeUpgrade(slot.Tree.Tags[i]))
-                {
-                    isFree = true;
-                    DarkestDungeonManager.Campaign.EventModifiers.RemoveUpgradeTag(slot.Tree.Tags[i]);
-                    break;
-                }
-
-            if (DarkestDungeonManager.Campaign.Estate.BuyUpgrade(slot.Tree.Id, slot.UpgradeInfo, isFree))
-            {
-                TownManager.EstateSceneManager.currencyPanel.UpdateCurrency();
-                UpdateUpgradeTrees(true);
-            }
-        }
-        else if (status == UpgradeStatus.Locked)
-            DarkestSoundManager.PlayOneShot("event:/ui/town/button_click_locked");
-    }
-    void SanitariumWindow_onTreatmentButtonClick(TreatmentHeroSlot slot)
-    {
-        if (slot.TreatmentSlot.Status == ActivitySlotStatus.Paid)
-        {
-            TownManager.GetHeroSlot(slot.TreatmentSlot.Hero).SetStatus(HeroStatus.Available);
-            slot.SetStatus(ActivitySlotStatus.Available);
-        }
-    }
-
-    void rosterPanel_onHeroSlotBeginDragging(HeroSlot heroSlot)
-    {
-        if (quirkWindow.isActiveAndEnabled)
-            quirkWindow.ResetWindow();
-        if (diseaseWindow.isActiveAndEnabled)
-            diseaseWindow.ResetWindow();
-
-        for (int i = 0; i < 3; i++)
-        {
-            quirkSlots[i].UpdateHeroAvailable(heroSlot.Hero);
-            diseaseSlots[i].UpdateHeroAvailable(heroSlot.Hero);
-            quirkSlots[i].buttonIcon.gameObject.SetActive(false);
-            diseaseSlots[i].buttonIcon.gameObject.SetActive(false);
-        }
-    }
-    void rosterPanel_onHeroSlotEndDragging(HeroSlot heroSlot)
-    {
-        for (int i = 0; i < 3; i++)
-        {
-            quirkSlots[i].UpdateSlot();
-            diseaseSlots[i].UpdateSlot();
-            if(quirkWindow.isActiveAndEnabled || diseaseWindow.isActiveAndEnabled)
-            {
-                quirkSlots[i].buttonIcon.gameObject.SetActive(false);
-                diseaseSlots[i].buttonIcon.gameObject.SetActive(false);
-            }
-        }
-    }
-
-    public void UpdateSlots()
-    {
-        Sanitarium.UpdateBuilding(DarkestDungeonManager.Campaign.Estate.TownPurchases);
-
-        for (int i = 0; i < 3; i++)
-        {
-            quirkSlots[i].UpdateSlot();
-            diseaseSlots[i].UpdateSlot();
-        }
-    }
     public override void Initialize()
     {
         quirkWindow.Initialize(TownManager);
         diseaseWindow.Initialize(TownManager);
         Sanitarium = DarkestDungeonManager.Campaign.Estate.Sanitarium;
         float ratio = DarkestDungeonManager.Campaign.Estate.GetBuildingUpgradeRatio(BuildingType.Sanitarium);
-        upgradeWindow.upgradedValue.text = Mathf.RoundToInt(ratio * 100).ToString() + "%";
+        upgradeWindow.UpgradedValue.text = Mathf.RoundToInt(ratio * 100) + "%";
 
-        foreach (var tree in upgradeWindow.upgradeTrees)
+        foreach (var tree in upgradeWindow.UpgradeTrees)
         {
-            var currentUpgrades = DarkestDungeonManager.Data.UpgradeTrees[tree.treeId].Upgrades;
+            var currentUpgrades = DarkestDungeonManager.Data.UpgradeTrees[tree.TreeId].Upgrades;
             int lastPurchaseIndex = -1;
-            for (int i = 0; i < tree.upgrades.Count; i++)
+            for (int i = 0; i < tree.Upgrades.Count; i++)
             {
-                tree.upgrades[i].Tree = DarkestDungeonManager.Data.UpgradeTrees[tree.treeId];
-                tree.upgrades[i].UpgradeInfo = currentUpgrades[i];
-                tree.upgrades[i].TownUpgrades = Sanitarium.GetUpgrades(tree.treeId, currentUpgrades[i].Code);
-                tree.upgrades[i].onClick += SanitariumWindow_onUpgradeClick;
-                var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(tree.treeId, currentUpgrades[i]);
-                TownManager.UpdateUpgradeSlot(status, tree.upgrades[i]);
+                tree.Upgrades[i].Tree = DarkestDungeonManager.Data.UpgradeTrees[tree.TreeId];
+                tree.Upgrades[i].UpgradeInfo = currentUpgrades[i];
+                tree.Upgrades[i].TownUpgrades = Sanitarium.GetUpgrades(tree.TreeId, currentUpgrades[i].Code);
+                tree.Upgrades[i].EventClicked += BuildingUpgradeSlotClicked;
+                var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(tree.TreeId, currentUpgrades[i]);
+                TownManager.UpdateUpgradeSlot(status, tree.Upgrades[i]);
                 if (status == UpgradeStatus.Purchased)
                     lastPurchaseIndex = i;
             }
@@ -160,13 +48,13 @@ public class SanitariumWindow : BuildingWindow
         for (int i = 0; i < 3; i++)
         {
             quirkSlots[i].Initialize(Sanitarium.QuirkActivity.TreatmentSlots[i]);
-            quirkSlots[i].onHeroDropped += SanitariumWindow_onQuirkHeroDropped;
-            quirkSlots[i].onHeroRemoved += SanitariumWindow_onQuirkHeroRemoved;
-            quirkSlots[i].onTreatmentButtonClick += SanitariumWindow_onTreatmentButtonClick;
+            quirkSlots[i].EventHeroDropped += TreatmentHeroSlotQuirkHeroDropped;
+            quirkSlots[i].EventHeroRemoved += TreatmentHeroSlotQuirkHeroRemoved;
+            quirkSlots[i].EventTreatmentButtonClick += TreatmentHeroSlotButtonClicked;
             diseaseSlots[i].Initialize(Sanitarium.DiseaseActivity.TreatmentSlots[i]);
-            diseaseSlots[i].onHeroDropped += SanitariumWindow_onDiseaseHeroDropped;
-            diseaseSlots[i].onHeroRemoved += SanitariumWindow_onDiseaseHeroRemoved;
-            diseaseSlots[i].onTreatmentButtonClick += SanitariumWindow_onTreatmentButtonClick;
+            diseaseSlots[i].EventHeroDropped += TreatmentHeroSlotDiseaseHeroDropped;
+            diseaseSlots[i].EventHeroRemoved += TreatmentHeroSlotDiseaseHeroRemoved;
+            diseaseSlots[i].EventTreatmentButtonClick += TreatmentHeroSlotButtonClicked;
         }
     }
 
@@ -174,19 +62,19 @@ public class SanitariumWindow : BuildingWindow
     {
         Sanitarium.UpdateBuilding(DarkestDungeonManager.Campaign.Estate.TownPurchases);
         float ratio = DarkestDungeonManager.Campaign.Estate.GetBuildingUpgradeRatio(BuildingType.Sanitarium);
-        upgradeWindow.upgradedValue.text = Mathf.RoundToInt(ratio * 100).ToString() + "%";
+        upgradeWindow.UpgradedValue.text = Mathf.RoundToInt(ratio * 100).ToString() + "%";
 
         if (afterPurchase && Mathf.Approximately(ratio, 1))
             DarkestSoundManager.PlayOneShot("event:/town/purchase_upgrade_last");
 
-        foreach (var tree in upgradeWindow.upgradeTrees)
+        foreach (var tree in upgradeWindow.UpgradeTrees)
         {
-            var currentUpgrades = DarkestDungeonManager.Data.UpgradeTrees[tree.treeId].Upgrades;
+            var currentUpgrades = DarkestDungeonManager.Data.UpgradeTrees[tree.TreeId].Upgrades;
             int lastPurchaseIndex = -1;
-            for (int i = 0; i < tree.upgrades.Count; i++)
+            for (int i = 0; i < tree.Upgrades.Count; i++)
             {
-                var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(tree.treeId, currentUpgrades[i]);
-                TownManager.UpdateUpgradeSlot(status, tree.upgrades[i]);
+                var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(tree.TreeId, currentUpgrades[i]);
+                TownManager.UpdateUpgradeSlot(status, tree.Upgrades[i]);
                 if (status == UpgradeStatus.Purchased)
                     lastPurchaseIndex = i;
             }
@@ -207,40 +95,20 @@ public class SanitariumWindow : BuildingWindow
             diseaseWindow.UpdateHeroOverview();
         }
     }
-    public void UpgradeSwitchClicked()
-    {
-        if (upgradeSwitch.IsOpened)
-        {
-            upgradeSwitch.SwitchUpgrades();
-            upgradeWindow.gameObject.SetActive(false);
-        }
-        else
-        {
-            foreach (var tree in upgradeWindow.upgradeTrees)
-            {
-                for (int i = 0; i < tree.upgrades.Count; i++)
-                {
-                    var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(tree.treeId, tree.upgrades[i].UpgradeInfo);
-                    if (status == UpgradeStatus.Available)
-                        TownManager.UpdateUpgradeSlot(status, tree.upgrades[i]);
-                }
-            }
-            upgradeSwitch.SwitchUpgrades();
-            upgradeWindow.gameObject.SetActive(true);
-        }
-    }
+
     public override void WindowOpened()
     {
         if (!TownManager.AnyWindowsOpened)
         {
             gameObject.SetActive(true);
             TownManager.BuildingWindowActive = true;
-            TownManager.EstateSceneManager.rosterPanel.onHeroSlotBeginDragging += rosterPanel_onHeroSlotBeginDragging;
-            TownManager.EstateSceneManager.rosterPanel.onHeroSlotEndDragging += rosterPanel_onHeroSlotEndDragging;
+            TownManager.EstateSceneManager.RosterPanel.EventHeroSlotBeginDragging += RosterPanelHeroSlotBeginDragging;
+            TownManager.EstateSceneManager.RosterPanel.EventHeroSlotEndDragging += RosterPanelHeroSlotEndDragging;
             DarkestSoundManager.ExecuteNarration("enter_building", NarrationPlace.Town, "sanitarium");
             DarkestSoundManager.PlayOneShot("event:/town/enter_sanitarium");
         }
     }
+
     public override void WindowClosed()
     {
         if (upgradeSwitch.IsOpened)
@@ -248,8 +116,8 @@ public class SanitariumWindow : BuildingWindow
             upgradeSwitch.SwitchUpgrades();
             upgradeWindow.gameObject.SetActive(false);
         }
-        TownManager.EstateSceneManager.rosterPanel.onHeroSlotBeginDragging -= rosterPanel_onHeroSlotBeginDragging;
-        TownManager.EstateSceneManager.rosterPanel.onHeroSlotEndDragging -= rosterPanel_onHeroSlotEndDragging;
+        TownManager.EstateSceneManager.RosterPanel.EventHeroSlotBeginDragging -= RosterPanelHeroSlotBeginDragging;
+        TownManager.EstateSceneManager.RosterPanel.EventHeroSlotEndDragging -= RosterPanelHeroSlotEndDragging;
         gameObject.SetActive(false);
         for (int i = 0; i < 3; i++)
         {
@@ -266,5 +134,142 @@ public class SanitariumWindow : BuildingWindow
         }
         TownManager.BuildingWindowActive = false;
         DarkestSoundManager.PlayOneShot("event:/ui/town/building_zoomout");
+    }
+
+    public void UpdateSlots()
+    {
+        Sanitarium.UpdateBuilding(DarkestDungeonManager.Campaign.Estate.TownPurchases);
+
+        for (int i = 0; i < 3; i++)
+        {
+            quirkSlots[i].UpdateSlot();
+            diseaseSlots[i].UpdateSlot();
+        }
+    }
+
+    public void UpgradeSwitchClicked()
+    {
+        if (upgradeSwitch.IsOpened)
+        {
+            upgradeSwitch.SwitchUpgrades();
+            upgradeWindow.gameObject.SetActive(false);
+        }
+        else
+        {
+            foreach (var tree in upgradeWindow.UpgradeTrees)
+            {
+                for (int i = 0; i < tree.Upgrades.Count; i++)
+                {
+                    var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(tree.TreeId, tree.Upgrades[i].UpgradeInfo);
+                    if (status == UpgradeStatus.Available)
+                        TownManager.UpdateUpgradeSlot(status, tree.Upgrades[i]);
+                }
+            }
+            upgradeSwitch.SwitchUpgrades();
+            upgradeWindow.gameObject.SetActive(true);
+        }
+    }
+
+    private void TreatmentHeroSlotQuirkHeroDropped(TreatmentHeroSlot slot)
+    {
+        quirkWindow.LoadHeroOverview(slot);
+        for (int i = 0; i < 3; i++)
+        {
+            quirkSlots[i].ButtonIcon.gameObject.SetActive(false);
+            diseaseSlots[i].ButtonIcon.gameObject.SetActive(false);
+        }
+    }
+
+    private void TreatmentHeroSlotQuirkHeroRemoved(TreatmentHeroSlot slot)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            quirkSlots[i].UpdateSlot();
+            diseaseSlots[i].UpdateSlot();
+        }
+        quirkWindow.ResetWindow();
+    }
+
+    private void TreatmentHeroSlotDiseaseHeroDropped(TreatmentHeroSlot slot)
+    {
+        diseaseWindow.LoadHeroOverview(slot);
+        for (int i = 0; i < 3; i++)
+        {
+            quirkSlots[i].ButtonIcon.gameObject.SetActive(false);
+            diseaseSlots[i].ButtonIcon.gameObject.SetActive(false);
+        }
+    }
+
+    private void TreatmentHeroSlotDiseaseHeroRemoved(TreatmentHeroSlot slot)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            quirkSlots[i].UpdateSlot();
+            diseaseSlots[i].UpdateSlot();
+        }
+        diseaseWindow.ResetWindow();
+    }
+
+    private void BuildingUpgradeSlotClicked(BuildingUpgradeSlot slot)
+    {
+        var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(slot.Tree.Id, slot.UpgradeInfo);
+        if (status == UpgradeStatus.Available)
+        {
+            bool isFree = false;
+            for (int i = 0; i < slot.Tree.Tags.Count; i++)
+                if (DarkestDungeonManager.Campaign.EventModifiers.HasFreeUpgrade(slot.Tree.Tags[i]))
+                {
+                    isFree = true;
+                    DarkestDungeonManager.Campaign.EventModifiers.RemoveUpgradeTag(slot.Tree.Tags[i]);
+                    break;
+                }
+
+            if (DarkestDungeonManager.Campaign.Estate.BuyUpgrade(slot.Tree.Id, slot.UpgradeInfo, isFree))
+            {
+                TownManager.EstateSceneManager.CurrencyPanel.UpdateCurrency();
+                UpdateUpgradeTrees(true);
+            }
+        }
+        else if (status == UpgradeStatus.Locked)
+            DarkestSoundManager.PlayOneShot("event:/ui/town/button_click_locked");
+    }
+
+    private void TreatmentHeroSlotButtonClicked(TreatmentHeroSlot slot)
+    {
+        if (slot.TreatmentSlot.Status == ActivitySlotStatus.Paid)
+        {
+            TownManager.GetHeroSlot(slot.TreatmentSlot.Hero).SetStatus(HeroStatus.Available);
+            slot.SetStatus(ActivitySlotStatus.Available);
+        }
+    }
+
+    private void RosterPanelHeroSlotBeginDragging(HeroSlot heroSlot)
+    {
+        if (quirkWindow.isActiveAndEnabled)
+            quirkWindow.ResetWindow();
+        if (diseaseWindow.isActiveAndEnabled)
+            diseaseWindow.ResetWindow();
+
+        for (int i = 0; i < 3; i++)
+        {
+            quirkSlots[i].UpdateHeroAvailable();
+            diseaseSlots[i].UpdateHeroAvailable();
+            quirkSlots[i].ButtonIcon.gameObject.SetActive(false);
+            diseaseSlots[i].ButtonIcon.gameObject.SetActive(false);
+        }
+    }
+
+    private void RosterPanelHeroSlotEndDragging(HeroSlot heroSlot)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            quirkSlots[i].UpdateSlot();
+            diseaseSlots[i].UpdateSlot();
+            if (quirkWindow.isActiveAndEnabled || diseaseWindow.isActiveAndEnabled)
+            {
+                quirkSlots[i].ButtonIcon.gameObject.SetActive(false);
+                diseaseSlots[i].ButtonIcon.gameObject.SetActive(false);
+            }
+        }
     }
 }

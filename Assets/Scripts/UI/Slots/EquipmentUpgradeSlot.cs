@@ -1,36 +1,33 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public delegate void EquipmentUpgradeSlotEvent(EquipmentUpgradeSlot slot);
-
 public class EquipmentUpgradeSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    RectTransform rectTransform;
+    [SerializeField]
+    private BuildCostFrame costFrame;
+    [SerializeField]
+    private Image background;
+    [SerializeField]
+    private Image icon;
 
-    public BuildCostFrame costFrame;
+    public BuildCostFrame CostFrame { get { return costFrame; } }
+    public Image Background { get { return background; } }
+    public Image Icon { get { return icon; } }
+    public UpgradeTree Tree { get; private set; }
+    public HeroUpgrade Upgrade { get; private set; }
+    public Hero Hero { get; private set; }
 
-    public Image background;
-    public Image icon;
+    private Equipment Equipment { get; set; }
 
-    public UpgradeTree Tree { get; set; }
-    public HeroUpgrade Upgrade { get; set; }
-    public Hero Hero { get; set; }
-    public Equipment Equipment { get; set; }
+    private RectTransform rectTransform;
 
-    public event EquipmentUpgradeSlotEvent onClick;
+    public event Action<EquipmentUpgradeSlot> EventClicked;
 
-    void Awake()
+    private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
-    }
-
-    public void Initialize(Hero hero, UpgradeTree tree, HeroUpgrade upgrade, Equipment equipment)
-    {
-        Hero = hero;
-        Tree = tree;
-        Upgrade = upgrade;
-        Equipment = equipment;
     }
 
     public void Reset()
@@ -42,36 +39,43 @@ public class EquipmentUpgradeSlot : MonoBehaviour, IPointerEnterHandler, IPointe
         Equipment = null;
     }
 
+    public void Initialize(Hero hero, UpgradeTree tree, HeroUpgrade upgrade, Equipment equipment)
+    {
+        Hero = hero;
+        Tree = tree;
+        Upgrade = upgrade;
+        Equipment = equipment;
+    }
+
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (Hero == null)
             return;
 
-        icon.material = DarkestDungeonManager.HighlightMaterial;
+        Icon.material = DarkestDungeonManager.HighlightMaterial;
         if(DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(Tree.Id, Hero, Upgrade) == UpgradeStatus.Locked)
         {
             DarkestSoundManager.PlayOneShot("event:/ui/town/button_mouse_over_2");
             ToolTipManager.Instanse.Show(Equipment.Tooltip + "\n" +
-                Upgrade.PrerequisitesTooltip(Hero, DarkestDungeonManager.Campaign.Estate),
-                eventData, rectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
+                Upgrade.PrerequisitesTooltip(Hero, DarkestDungeonManager.Campaign.Estate), rectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
         }
         else
         {
             DarkestSoundManager.PlayOneShot("event:/ui/town/button_mouse_over");
-            ToolTipManager.Instanse.Show(Equipment.Tooltip, eventData, rectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
+            ToolTipManager.Instanse.Show(Equipment.Tooltip, rectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
         }
 
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        icon.material = icon.defaultMaterial;
+        Icon.material = Icon.defaultMaterial;
         ToolTipManager.Instanse.Hide();
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (onClick != null)
-            onClick(this);
+        if (EventClicked != null)
+            EventClicked(this);
     }
 }

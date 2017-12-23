@@ -9,39 +9,53 @@ public enum EstateSceneState { EstateScreen, QuestScreen, ProvisionScreen }
 
 public class EstateSceneManager : MonoBehaviour
 {
-    public static EstateSceneManager Instanse { get; set; }
+    public static EstateSceneManager Instanse { get; private set; }
 
-    public GameObject estateUI;
-    public GameObject questUI;
-    public GameObject provisionUI;
+    [SerializeField]
+    private GameObject estateUI;
+    [SerializeField]
+    private GameObject questUI;
+    [SerializeField]
+    private GameObject provisionUI;
+    [SerializeField]
+    private CanvasGroup sharedUICanvasGroup;
 
-    public CanvasGroup sharedUICanvasGroup;
+    [SerializeField]
+    private Text estateTitle;
+    [SerializeField]
+    private CharacterWindow characterWindow;
+    [SerializeField]
+    private ActivityLogWindow activityLogWindow;
+    [SerializeField]
+    private GlossaryWindow glossaryWindow;
+    [SerializeField]
+    private RealmInventoryWindow realmInventoryWindow;
+    [SerializeField]
+    private TownEventWindow townEventWindow;
 
-    public Text estateTitle;
-    public CharacterWindow characterWindow;
-    public ActivityLogWindow activityLogWindow;
-    public GlossaryWindow glossaryWindow;
-    public RealmInventoryWindow realmInventoryWindow;
-    public TownEventWindow townEventWindow;
+    [SerializeField]
+    private EstateCurrencyPanel currencyPanel;
+    [SerializeField]
+    private HeroRosterPanel rosterPanel;
+    [SerializeField]
+    private EstateBottomPanel bottomPanel;
+    [SerializeField]
+    private EstateTopPanel topPanel;
+    [SerializeField]
+    private RaidPartyPanel raidPartyPanel;
+    [SerializeField]
+    private HeirloomExchangePanel exchangePanel;
 
-    public EstateCurrencyPanel currencyPanel;
-    public HeroRosterPanel rosterPanel;
-    public EstateBottomPanel bottomPanel;
-    public EstateTopPanel topPanel;
-    public RaidPartyPanel raidPartyPanel;
-    public HeirloomExchangePanel exchangePanel;
+    [SerializeField]
+    private RaidPreparationManager raidPreparationManager;
+    [SerializeField]
+    private ShopManager shopManager;
+    [SerializeField]
+    private TownManager townManager;
 
-    public RaidPreparationManager raidPreparationManager;
-    public ShopManager shopManager;
-    public TownManager townManager;
-
-    bool menuOpened = false;
-    bool realmInventoryOpened = false;
-    bool activityLogOpened = false;
-    bool characterWindowOpened = false;
-    bool transitionsEnabled = true;
-
-    public EstateSceneState EstateSceneState { get; set; }
+    public CharacterWindow CharacterWindow { get { return characterWindow; } }
+    public EstateCurrencyPanel CurrencyPanel { get { return currencyPanel; } }
+    public HeroRosterPanel RosterPanel { get { return rosterPanel; } }
 
     public bool AnyWindowsOpened
     {
@@ -52,7 +66,63 @@ public class EstateSceneManager : MonoBehaviour
         }
     }
 
-    void Awake()
+    private EstateSceneState EstateSceneState { get; set; }
+
+    private bool menuOpened;
+    private bool realmInventoryOpened;
+    private bool activityLogOpened;
+    private bool characterWindowOpened;
+    private bool transitionsEnabled = true;
+
+    #region Quik Start Generation Options
+
+    public List<string> Difficulties = new List<string> { "1", "3", "5", "6" };
+
+    public List<string> Lengths = new List<string> { "1", "2", "3" };
+
+    public List<string> Dungeons = new List<string>
+    {
+        "crypts",
+        "weald",
+        "warrens",
+        "cove",
+    };
+
+    public List<string> Types = new List<string>
+    {
+        "explore", "explore", "explore", "explore", "explore", "explore", "explore", "explore", "explore",
+        "cleanse", "cleanse", "cleanse", "cleanse", "cleanse", "cleanse", "cleanse", "cleanse", "cleanse",
+        "gather", "gather", "gather", "gather", "gather", "gather", "gather", "gather", "gather", "gather",
+        "inventory_activate","inventory_activate","inventory_activate","inventory_activate","inventory_activate",
+        "plot_kill_necromancer_1",
+        "plot_kill_necromancer_2",
+        "plot_kill_necromancer_3",
+        "plot_kill_hag_1",
+        "plot_kill_hag_2",
+        "plot_kill_hag_3",
+        "plot_kill_swine_prince_1",
+        "plot_kill_swine_prince_2",
+        "plot_kill_swine_prince_3",
+        "plot_kill_prophet_1",
+        "plot_kill_prophet_2",
+        "plot_kill_prophet_3",
+        "plot_kill_brigand_cannon_1",
+        "plot_kill_brigand_cannon_2",
+        "plot_kill_brigand_cannon_3",
+        "plot_kill_formless_flesh_1",
+        "plot_kill_formless_flesh_2",
+        "plot_kill_formless_flesh_3",
+        "plot_kill_siren_1",
+        "plot_kill_siren_2",
+        "plot_kill_siren_3",
+        "plot_kill_drowned_crew_1",
+        "plot_kill_drowned_crew_2",
+        "plot_kill_drowned_crew_3",
+    };
+
+    #endregion
+
+    private void Awake()
     {
         if (Instanse == null)
         {
@@ -64,41 +134,42 @@ public class EstateSceneManager : MonoBehaviour
             return;
         }
 
-        shopManager.partyInventory.Initialize();
+        shopManager.PartyInventory.Initialize();
         DarkestDungeonManager.SkipTransactions = false;
-        (townManager.buildingWindows[8] as NomadWagonWindow).wagonInventory.onTrinketSell += realmInventoryWindow.AddTrinket;
+        ((NomadWagonWindow) townManager.BuildingWindows[8]).Inventory.EventTrinketSell += realmInventoryWindow.AddTrinket;
 
-        characterWindow.onWindowClose += RosterCharacterInfoClose;
-        activityLogWindow.onWindowClose += ActivityLogClose;
-        realmInventoryWindow.onWindowClose += RealmInventoryClose;
-        rosterPanel.onHeroResurrection += RosterPanel_onHeroResurrection;
+        CharacterWindow.EventWindowClosed += RosterCharacterInfoClose;
+        activityLogWindow.EventWindowClosed += ActivityLogClose;
+        realmInventoryWindow.EventWindowClosed += RealmInventoryClose;
+        RosterPanel.EventHeroResurrected += RosterPanelHeroResurrected;
 
-        DarkestDungeonManager.MainMenu.onWindowClose += MainMenuClose;
+        DarkestDungeonManager.MainMenu.EventWindowClosed += MainMenuClose;
 
-        rosterPanel.onHeroInspect += CharacterWindowSwitch;
+        RosterPanel.EventHeroInspected += CharacterWindowSwitch;
 
-        bottomPanel.onActivityIconClick += ActivityLogClick;
-        bottomPanel.onRealmInventoryIconClick += RealmInventoryClick;
-        bottomPanel.onMainMenuIconClick += MainMenuClick;
-        bottomPanel.onGlossaryIconClick += GlossaryClick;
-        bottomPanel.onTownEventIconClick += TownEventClick;
+        bottomPanel.EventActivityIconClick += ActivityLogClick;
+        bottomPanel.EventRealmInventoryIconClick += RealmInventoryClick;
+        bottomPanel.EventMainMenuIconClick += MainMenuClick;
+        bottomPanel.EventGlossaryIconClick += GlossaryClick;
+        bottomPanel.EventTownEventIconClick += TownEventClick;
 
-        bottomPanel.onPrepareEmbarkButtonClick += EmbarkButtonClick;
-        bottomPanel.onProvisionButtonClick += ProvisionClick;
-        bottomPanel.onFinalEmbarkButtonClick += FinalEmbarkClick;
+        bottomPanel.EventPrepareEmbarkButtonClick += EmbarkButtonClick;
+        bottomPanel.EventProvisionButtonClick += ProvisionClick;
+        bottomPanel.EventFinalEmbarkButtonClick += FinalEmbarkClick;
 
-        topPanel.onReturnButtonClick += ReturnButtonClick;
+        topPanel.EventReturnButtonClick += ReturnButtonClick;
 
-        raidPartyPanel.onPartyAssembled += EnableEmbarkToProvision;
-        raidPartyPanel.onPartyDisassembled += DisableEmbarkToProvision;
+        raidPartyPanel.EventPartyAssembled += EnableEmbarkToProvision;
+        raidPartyPanel.EventPartyDisassembled += DisableEmbarkToProvision;
 
-        currencyPanel.onCurrencyIncreased += exchangePanel.CurrencyUpdated;
-        currencyPanel.onCurrencyDecreased += exchangePanel.CurrencyUpdated;
+        CurrencyPanel.EventCurrencyIncreased += exchangePanel.CurrencyUpdated;
+        CurrencyPanel.EventCurrencyDecreased += exchangePanel.CurrencyUpdated;
 
         DarkestDungeonManager.Instanse.UpdateSceneOverlay(GameObject.FindGameObjectWithTag("Main UI Camera").GetComponent<Camera>());
-        DarkestDungeonManager.Instanse.mainMenu.uiCanvasGroup = GameObject.Find("UI_Shared").GetComponent<CanvasGroup>();
+        DarkestDungeonManager.MainMenu.UICanvasGroup = GameObject.Find("UI_Shared").GetComponent<CanvasGroup>();
     }
-    void Start()
+
+    private void Start()
     {
         if (Instanse != this)
             return;
@@ -152,7 +223,7 @@ public class EstateSceneManager : MonoBehaviour
                         "Screen/loading_screen." + DarkestDungeonManager.SaveData.Quest.Dungeon + "_0");
                 else
                     DarkestDungeonManager.LoadingInfo.SetNextScene("Dungeon",
-                        "Screen/loading_screen.plot_" + (DarkestDungeonManager.SaveData.Quest as PlotQuest).Id);
+                        "Screen/loading_screen.plot_" + ((PlotQuest) DarkestDungeonManager.SaveData.Quest).Id);
 
                 SceneManager.LoadScene("LoadingScreen", LoadSceneMode.Single);
                 return;
@@ -167,15 +238,15 @@ public class EstateSceneManager : MonoBehaviour
         activityLogWindow.Initialize();
 
         if (DarkestDungeonManager.Campaign.TriggeredEvent == null)
-            bottomPanel.townEventButton.gameObject.SetActive(false);
+            bottomPanel.TownEventButton.gameObject.SetActive(false);
         else
         {
-            bottomPanel.townEventButton.gameObject.SetActive(true);
+            bottomPanel.TownEventButton.gameObject.SetActive(true);
             townEventWindow.UpdateEvent(DarkestDungeonManager.Campaign.TriggeredEvent);
         }
 
-        currencyPanel.UpdateCurrency();
-        rosterPanel.InitializeRoster();
+        CurrencyPanel.UpdateCurrency();
+        RosterPanel.InitializeRoster();
         realmInventoryWindow.Populate();
         estateTitle.text = string.Format(LocalizationManager.GetString("estate_title_format"),
             DarkestDungeonManager.Campaign.Estate.EstateTitle);
@@ -193,92 +264,52 @@ public class EstateSceneManager : MonoBehaviour
 
         DarkestSoundManager.StartTownSoundtrack();
     }
-    void OnDestroy()
-    {
-        DarkestDungeonManager.MainMenu.onWindowClose -= MainMenuClose;
 
-        currencyPanel.onCurrencyIncreased -= exchangePanel.CurrencyUpdated;
-        currencyPanel.onCurrencyDecreased -= exchangePanel.CurrencyUpdated;
+    private void OnDestroy()
+    {
+        DarkestDungeonManager.MainMenu.EventWindowClosed -= MainMenuClose;
+
+        CurrencyPanel.EventCurrencyIncreased -= exchangePanel.CurrencyUpdated;
+        CurrencyPanel.EventCurrencyDecreased -= exchangePanel.CurrencyUpdated;
     }
 
-    IEnumerator LoadEstateEvent()
+    private IEnumerator LoadEstateEvent()
     {
         sharedUICanvasGroup.blocksRaycasts = false;
-        DarkestDungeonManager.Instanse.screenFader.StartFaded();
+        DarkestDungeonManager.ScreenFader.StartFaded();
         yield return new WaitForEndOfFrame();
-        DarkestDungeonManager.Instanse.screenFader.Appear(2);
+        DarkestDungeonManager.ScreenFader.Appear(2);
         yield return new WaitForSeconds(0.5f);
         sharedUICanvasGroup.blocksRaycasts = true;
     }
 
-    void EnableEmbarkToProvision()
+    private void EnableEmbarkToProvision()
     {
-        bottomPanel.provisionButton.interactable = true;
-    }
-    void DisableEmbarkToProvision()
-    {
-        bottomPanel.provisionButton.interactable = false;
-    }
-    
-    void RosterPanel_onHeroResurrection(DeathRecord record)
-    {
-        (townManager.buildingWindows[2] as GraveyardWindow).HeroResurrected(record);
-        townEventWindow.eventRecruits.UpdateRecruitPanel(DarkestDungeonManager.Campaign.Estate.StageCoach.EventHeroes);
-        DarkestSoundManager.PlayOneShot("event:/town/graveyard_resurrect");
+        bottomPanel.ProvisionButton.interactable = true;
     }
 
-    #region Quik Start Generation Options
-    public List<string> Difficulties = new List<string>() { "1", "3", "5", "6" };
-    public List<string> Lengths = new List<string>() { "1", "2", "3" };
-    public List<string> Dungeons = new List<string>()
+    private void DisableEmbarkToProvision()
     {
-        "crypts",
-        "weald",
-        "warrens",
-        "cove",
-    };
-    public List<string> Types = new List<string>()
+        bottomPanel.ProvisionButton.interactable = false;
+    }
+
+    private void RosterPanelHeroResurrected(DeathRecord record)
     {
-        "explore", "explore", "explore", "explore", "explore", "explore", "explore", "explore", "explore", 
-        "cleanse", "cleanse", "cleanse", "cleanse", "cleanse", "cleanse", "cleanse", "cleanse", "cleanse",
-        "gather", "gather", "gather", "gather", "gather", "gather", "gather", "gather", "gather", "gather", 
-        "inventory_activate","inventory_activate","inventory_activate","inventory_activate","inventory_activate",
-        "plot_kill_necromancer_1",
-        "plot_kill_necromancer_2",
-        "plot_kill_necromancer_3",
-        "plot_kill_hag_1",
-        "plot_kill_hag_2",
-        "plot_kill_hag_3",
-        "plot_kill_swine_prince_1",
-        "plot_kill_swine_prince_2",
-        "plot_kill_swine_prince_3",
-        "plot_kill_prophet_1",
-        "plot_kill_prophet_2",
-        "plot_kill_prophet_3",
-        "plot_kill_brigand_cannon_1",
-        "plot_kill_brigand_cannon_2",
-        "plot_kill_brigand_cannon_3",
-        "plot_kill_formless_flesh_1",
-        "plot_kill_formless_flesh_2",
-        "plot_kill_formless_flesh_3",
-        "plot_kill_siren_1",
-        "plot_kill_siren_2",
-        "plot_kill_siren_3",
-        "plot_kill_drowned_crew_1",
-        "plot_kill_drowned_crew_2",
-        "plot_kill_drowned_crew_3",
-    };
-    #endregion
+        ((GraveyardWindow) townManager.BuildingWindows[2]).HeroResurrected(record);
+        townEventWindow.EventRecruits.UpdateRecruitPanel(DarkestDungeonManager.Campaign.Estate.StageCoach.EventHeroes);
+        DarkestSoundManager.PlayOneShot("event:/town/graveyard_resurrect");
+    }
 
     public void OnHeirloomExchange()
     {
         if (townManager.BuildingWindowActive)
         {
-            BuildingWindow openedWindow = townManager.buildingWindows.Find(window => window.gameObject.activeSelf);
+            BuildingWindow openedWindow = townManager.BuildingWindows.Find(window => window.gameObject.activeSelf);
             if (openedWindow != null)
                 openedWindow.UpdateUpgradeTrees(true);
         }
     }
+
     public void OnSceneLeave(bool embarking = false)
     {
         DarkestSoundManager.StopTownSoundtrack();
@@ -298,10 +329,10 @@ public class EstateSceneManager : MonoBehaviour
     public void QuickStart()
     {
         DarkestDungeonManager.SkipTransactions = true;
-        DarkestDungeonManager.Instanse.RaidingManager.QuickStart(shopManager.partyInventory);
+        DarkestDungeonManager.Instanse.RaidingManager.QuickStart(shopManager.PartyInventory);
         if(DarkestDungeonManager.Instanse.RaidingManager.Quest.IsPlotQuest)
             DarkestDungeonManager.LoadingInfo.SetNextScene("Dungeon", "Screen/loading_screen.plot_" +
-                (DarkestDungeonManager.Instanse.RaidingManager.Quest as PlotQuest).Id);
+                ((PlotQuest) DarkestDungeonManager.Instanse.RaidingManager.Quest).Id);
         else
             DarkestDungeonManager.LoadingInfo.SetNextScene("Dungeon", "Screen/loading_screen." +
                 DarkestDungeonManager.Instanse.RaidingManager.Quest.Dungeon + "_0");
@@ -310,10 +341,11 @@ public class EstateSceneManager : MonoBehaviour
         OnSceneLeave();
         SceneManager.LoadScene("LoadingScreen", LoadSceneMode.Single);
     }
+
     public void QuickProgress()
     {
         if (characterWindowOpened)
-            characterWindow.WindowClosed();
+            CharacterWindow.WindowClosed();
         if (activityLogOpened)
             activityLogWindow.WindowClosed();
         if (realmInventoryOpened)
@@ -338,36 +370,25 @@ public class EstateSceneManager : MonoBehaviour
         DarkestDungeonManager.Campaign.AdvanceNextWeek();
         activityLogWindow.ProgressWeek();
 
-        (townManager.buildingWindows[0] as AbbeyWindow).UpdateSlots();
-        (townManager.buildingWindows[3] as SanitariumWindow).UpdateSlots();
-        (townManager.buildingWindows[4] as TavernWindow).UpdateSlots();
-        (townManager.buildingWindows[8] as NomadWagonWindow).wagonInventory.UpdateShop();
-        (townManager.buildingWindows[9] as StageCoachWindow).recruitPanel.
-            UpdateRecruitPanel(DarkestDungeonManager.Campaign.Estate.StageCoach.Heroes);
+        UpdateTownInfo();
 
-        rosterPanel.UpdateRoster();
-
-
-        var returnRecord = new PartyActivityRecord(partyRecord,
-            new bool[] { Random.value > 0.05f ? true : false,
-                    Random.value > 0.05f ? true : false,
-                    Random.value > 0.05f ? true : false,
-                    Random.value > -1 ? true : false, },
-                Random.value > 0.3f ? true : false);
+        var returnRecord = new PartyActivityRecord(partyRecord, new[] { Random.value > 0.05f,
+            Random.value > 0.05f, Random.value > 0.05f, Random.value > -1, }, Random.value > 0.3f);
 
         DarkestDungeonManager.Campaign.CurrentLog().ReturnRecord = returnRecord;
         activityLogWindow.RecalculateHeight();
 
         if (DarkestDungeonManager.Campaign.TriggeredEvent == null)
-            bottomPanel.townEventButton.gameObject.SetActive(false);
+            bottomPanel.TownEventButton.gameObject.SetActive(false);
         else
         {
-            bottomPanel.townEventButton.gameObject.SetActive(true);
+            bottomPanel.TownEventButton.gameObject.SetActive(true);
             townEventWindow.UpdateEvent(DarkestDungeonManager.Campaign.TriggeredEvent);
         }
 
         //ProgressLoop();
     }
+
     public void ProgressLoop()
     {
         for (int i = 0; i < 10000; i++)
@@ -383,31 +404,36 @@ public class EstateSceneManager : MonoBehaviour
             DarkestDungeonManager.Campaign.ExecuteProgress();
             activityLogWindow.ProgressWeek();
 
-            var returnRecord = new PartyActivityRecord(partyRecord,
-                new bool[] { Random.value > 0.05f ? true : false,
-                    Random.value > 0.05f ? true : false,
-                    Random.value > 0.05f ? true : false,
-                    Random.value > -1 ? true : false, },
-                    Random.value > 0.3f ? true : false);
+            var returnRecord = new PartyActivityRecord(partyRecord, new[] { Random.value > 0.05f,
+                    Random.value > 0.05f, Random.value > 0.05f, Random.value > -1, }, Random.value > 0.3f);
 
             DarkestDungeonManager.Campaign.CurrentLog().ReturnRecord = returnRecord;
             activityLogWindow.RecalculateHeight();
         }
-        (townManager.buildingWindows[0] as AbbeyWindow).UpdateSlots();
-        (townManager.buildingWindows[3] as SanitariumWindow).UpdateSlots();
-        (townManager.buildingWindows[4] as TavernWindow).UpdateSlots();
-        (townManager.buildingWindows[8] as NomadWagonWindow).wagonInventory.UpdateShop();
-        (townManager.buildingWindows[9] as StageCoachWindow).recruitPanel.
+
+        UpdateTownInfo();
+    }
+
+    private void UpdateTownInfo()
+    {
+        ((AbbeyWindow)townManager.BuildingWindows[0]).UpdateSlots();
+        ((SanitariumWindow)townManager.BuildingWindows[3]).UpdateSlots();
+        ((TavernWindow)townManager.BuildingWindows[4]).UpdateSlots();
+        ((NomadWagonWindow)townManager.BuildingWindows[8]).Inventory.UpdateShop();
+        ((StageCoachWindow)townManager.BuildingWindows[9]).Panel.
             UpdateRecruitPanel(DarkestDungeonManager.Campaign.Estate.StageCoach.Heroes);
 
-        rosterPanel.UpdateRoster();
+        RosterPanel.UpdateRoster();
     }
+
+    #region Estate Window Actions
 
     public void RosterCharacterInfoClose()
     {
         characterWindowOpened = false;
-        characterWindow.gameObject.SetActive(false);
+        CharacterWindow.gameObject.SetActive(false);
     }
+
     public void RealmInventoryClose()
     {
         realmInventoryOpened = false;
@@ -415,6 +441,7 @@ public class EstateSceneManager : MonoBehaviour
         bottomPanel.RealmInventoryAnimator.state.SetAnimation(0, "idle", false);
         realmInventoryWindow.gameObject.SetActive(realmInventoryOpened);
     }
+
     public void ActivityLogClose()
     {
         activityLogOpened = false;
@@ -422,17 +449,20 @@ public class EstateSceneManager : MonoBehaviour
         activityLogWindow.gameObject.SetActive(activityLogOpened);
         DarkestSoundManager.PlayOneShot("event:/ui/town/page_close");
     }
+
     public void MainMenuClose()
     {
         menuOpened = false;
         bottomPanel.SettingsAnimator.state.SetAnimation(0, "idle_loop", true);
     }
+
     public void GlossaryClose()
     {
         bottomPanel.GlossaryAnimator.state.SetAnimation(0, "idle", false);
         glossaryWindow.gameObject.SetActive(false);
         DarkestSoundManager.PlayOneShot("event:/ui/town/page_close");
     }
+
     public void TownEventClose()
     {
         bottomPanel.TownEventAnimator.state.SetAnimation(0, "idle", false);
@@ -448,16 +478,17 @@ public class EstateSceneManager : MonoBehaviour
         DarkestSoundManager.PlayOneShot("event:/ui/town/page_open");
 
         if (characterWindowOpened)
-            characterWindow.UpdateCharacterInfo(hero, interactable);
+            CharacterWindow.UpdateCharacterInfo(hero, interactable);
         else
         {
             characterWindowOpened = true;
-            characterWindow.gameObject.SetActive(true);
-            characterWindow.UpdateCharacterInfo(hero, interactable);
+            CharacterWindow.gameObject.SetActive(true);
+            CharacterWindow.UpdateCharacterInfo(hero, interactable);
             if (activityLogOpened)
                 ActivityLogClose();
         }
     }
+
     public void RealmInventoryClick()
     {
         realmInventoryOpened = !realmInventoryOpened;
@@ -479,6 +510,7 @@ public class EstateSceneManager : MonoBehaviour
             ActivityLogClose();
         }
     }
+
     public void MainMenuClick()
     {
         menuOpened = !menuOpened;
@@ -495,6 +527,7 @@ public class EstateSceneManager : MonoBehaviour
         }
 
     }
+
     public void ActivityLogClick()
     {
         activityLogOpened = !activityLogOpened;
@@ -517,6 +550,7 @@ public class EstateSceneManager : MonoBehaviour
                 RosterCharacterInfoClose();
         }
     }
+
     public void GlossaryClick()
     {
         if (townManager.BuildingWindowActive)
@@ -535,6 +569,7 @@ public class EstateSceneManager : MonoBehaviour
             DarkestSoundManager.PlayOneShot("event:/ui/town/page_open");
         }
     }
+
     public void TownEventClick()
     {
         if (townManager.BuildingWindowActive)
@@ -554,24 +589,66 @@ public class EstateSceneManager : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region Raid Preparation Transitions
+
     public void EmbarkButtonClick()
     {
         if (transitionsEnabled && !townManager.BuildingWindowActive)
         {
             transitionsEnabled = false;
-            DarkestDungeonManager.ScreenFader.onFadeEnded += EmbarkTransitionFadeComplete;
-            DarkestDungeonManager.ScreenFader.onAppearEnded += EmbarkTransitionAppearComplete;
+            DarkestDungeonManager.ScreenFader.EventFadeEnded += EmbarkTransitionFadeEnded;
+            DarkestDungeonManager.ScreenFader.EventAppearEnded += EmbarkTransitionAppearEnded;
             DarkestDungeonManager.ScreenFader.Fade();
             DarkestSoundManager.PlayOneShot("event:/ui/town/embark_button");
     }
     }
-    void EmbarkTransitionFadeComplete()
+
+    public void ProvisionClick()
+    {
+        if (transitionsEnabled)
+        {
+            transitionsEnabled = false;
+            DarkestDungeonManager.ScreenFader.EventFadeEnded += ProvisionFadeEnded;
+            DarkestDungeonManager.ScreenFader.EventAppearEnded += ProvisionAppearEnded;
+            DarkestDungeonManager.ScreenFader.Fade();
+            DarkestSoundManager.PlayOneShot("event:/ui/town/provision_button");
+        }
+    }
+
+    public void FinalEmbarkClick()
+    {
+        if (transitionsEnabled)
+        {
+            transitionsEnabled = false;
+            DarkestDungeonManager.ScreenFader.EventFadeEnded += FinalEmbarkFadeEnded;
+            DarkestDungeonManager.ScreenFader.Fade();
+            DarkestDungeonManager.Instanse.RaidingManager.DeployFromPreparation(raidPreparationManager, shopManager);
+            DarkestSoundManager.PlayOneShot("event:/ui/town/set_off_button");
+            OnSceneLeave(true);
+        }
+    }
+
+    public void ReturnButtonClick()
+    {
+        if (transitionsEnabled)
+        {
+            transitionsEnabled = false;
+            DarkestDungeonManager.ScreenFader.EventFadeEnded += ReturnFadeEnded;
+            DarkestDungeonManager.ScreenFader.EventAppearEnded += ReturnAppearEnded;
+            DarkestDungeonManager.ScreenFader.Fade();
+            DarkestSoundManager.PlayOneShot("event:/ui/town/button_click_back");
+        }
+    }
+
+    private void EmbarkTransitionFadeEnded()
     {
         provisionUI.SetActive(false);
         estateUI.SetActive(false);
         questUI.SetActive(true);
 
-        bottomPanel.activityLogButton.interactable = false;
+        bottomPanel.ActivityLogButton.interactable = false;
         raidPartyPanel.ActivateDragManagerBehaviour();
         
         if (raidPartyPanel.IsPartyPrepared)
@@ -586,35 +663,25 @@ public class EstateSceneManager : MonoBehaviour
         EstateSceneState = EstateSceneState.QuestScreen;
         DarkestDungeonManager.ScreenFader.Appear();
     }
-    void EmbarkTransitionAppearComplete()
+
+    private void EmbarkTransitionAppearEnded()
     {
-        DarkestDungeonManager.ScreenFader.onFadeEnded -= EmbarkTransitionFadeComplete;
-        DarkestDungeonManager.ScreenFader.onAppearEnded -= EmbarkTransitionAppearComplete;
+        DarkestDungeonManager.ScreenFader.EventFadeEnded -= EmbarkTransitionFadeEnded;
+        DarkestDungeonManager.ScreenFader.EventAppearEnded -= EmbarkTransitionAppearEnded;
         DarkestSoundManager.ExecuteNarration("enter_quest_select", NarrationPlace.Town);
         transitionsEnabled = true;
         raidPartyPanel.CheckComposition();
     }
 
-    public void ProvisionClick()
-    {
-        if (transitionsEnabled)
-        {
-            transitionsEnabled = false;
-            DarkestDungeonManager.ScreenFader.onFadeEnded += ProvisionFadeComplete;
-            DarkestDungeonManager.ScreenFader.onAppearEnded += ProvisionAppearComplete;
-            DarkestDungeonManager.ScreenFader.Fade();
-            DarkestSoundManager.PlayOneShot("event:/ui/town/provision_button");
-        }
-    }
-    void ProvisionFadeComplete()
+    private void ProvisionFadeEnded()
     {
         estateUI.SetActive(false);
         questUI.SetActive(false);
         provisionUI.SetActive(true);
 
         raidPartyPanel.DeactivateDragManagerBehaviour();
-        bottomPanel.activityLogButton.interactable = false;
-        bottomPanel.realmInventoryButton.interactable = false;
+        bottomPanel.ActivityLogButton.interactable = false;
+        bottomPanel.RealmInventoryButton.interactable = false;
 
         RosterCharacterInfoClose();
         RealmInventoryClose();
@@ -622,36 +689,25 @@ public class EstateSceneManager : MonoBehaviour
 
 
         ToolTipManager.Instanse.Hide();
-        shopManager.LoadInitialSetup(raidPreparationManager.SelectedQuestSlot.Quest, raidPreparationManager.raidPartyPanel);
+        shopManager.LoadInitialSetup(raidPreparationManager.SelectedQuestSlot.Quest, raidPreparationManager.RaidPartyPanel);
         shopManager.ActivateShopBehaviour();
 
         EstateSceneState = EstateSceneState.ProvisionScreen;
         DarkestDungeonManager.ScreenFader.Appear();
     }
-    void ProvisionAppearComplete()
+
+    private void ProvisionAppearEnded()
     {
-        DarkestDungeonManager.ScreenFader.onFadeEnded -= ProvisionFadeComplete;
-        DarkestDungeonManager.ScreenFader.onAppearEnded -= ProvisionAppearComplete;
+        DarkestDungeonManager.ScreenFader.EventFadeEnded -= ProvisionFadeEnded;
+        DarkestDungeonManager.ScreenFader.EventAppearEnded -= ProvisionAppearEnded;
         DarkestSoundManager.ExecuteNarration("enter_provision_select", NarrationPlace.Town);
         transitionsEnabled = true;
     }
 
-    public void FinalEmbarkClick()
-    {
-        if (transitionsEnabled)
-        {
-            transitionsEnabled = false;
-            DarkestDungeonManager.ScreenFader.onFadeEnded += FinalEmbarkFadeComplete;
-            DarkestDungeonManager.ScreenFader.Fade();
-            DarkestDungeonManager.Instanse.RaidingManager.DeployFromPreparation(raidPreparationManager, shopManager);
-            DarkestSoundManager.PlayOneShot("event:/ui/town/set_off_button");
-            OnSceneLeave(true);
-        }
-    }
-    void FinalEmbarkFadeComplete()
+    private void FinalEmbarkFadeEnded()
     {
         DarkestDungeonManager.ScreenFader.Appear();
-        DarkestDungeonManager.ScreenFader.onFadeEnded -= FinalEmbarkFadeComplete;
+        DarkestDungeonManager.ScreenFader.EventFadeEnded -= FinalEmbarkFadeEnded;
         transitionsEnabled = true;
         shopManager.DeactivateShopBehaviour();
         ToolTipManager.Instanse.Hide();
@@ -660,7 +716,7 @@ public class EstateSceneManager : MonoBehaviour
 
         if (DarkestDungeonManager.Instanse.RaidingManager.Quest.IsPlotQuest)
             DarkestDungeonManager.LoadingInfo.SetNextScene("Dungeon", "Screen/loading_screen." +
-                (DarkestDungeonManager.Instanse.RaidingManager.Quest as PlotQuest).Id);
+                ((PlotQuest)DarkestDungeonManager.Instanse.RaidingManager.Quest).Id);
         else
             DarkestDungeonManager.LoadingInfo.SetNextScene("Dungeon", "Screen/loading_screen." + 
                 DarkestDungeonManager.Instanse.RaidingManager.Quest.Dungeon + "_0");
@@ -671,25 +727,14 @@ public class EstateSceneManager : MonoBehaviour
         SceneManager.LoadScene("LoadingScreen", LoadSceneMode.Single);
     }
 
-    public void ReturnButtonClick()
-    {
-        if (transitionsEnabled)
-        {
-            transitionsEnabled = false;
-            DarkestDungeonManager.ScreenFader.onFadeEnded += ReturnFadeComplete;
-            DarkestDungeonManager.ScreenFader.onAppearEnded += ReturnAppearComplete;
-            DarkestDungeonManager.ScreenFader.Fade();
-            DarkestSoundManager.PlayOneShot("event:/ui/town/button_click_back");
-        }
-    }
-    void ReturnFadeComplete()
+    private void ReturnFadeEnded()
     {
         switch (EstateSceneState)
         {
             case EstateSceneState.QuestScreen:
                 estateUI.SetActive(true);
                 questUI.SetActive(false);
-                bottomPanel.activityLogButton.interactable = true;
+                bottomPanel.ActivityLogButton.interactable = true;
                 raidPartyPanel.DeactivateDragManagerBehaviour();
                 ToolTipManager.Instanse.Hide();
                 break;
@@ -707,14 +752,15 @@ public class EstateSceneManager : MonoBehaviour
                     DisableEmbarkToProvision();
 
                 raidPreparationManager.UpdateUI();
-                bottomPanel.activityLogButton.interactable = true;
-                bottomPanel.realmInventoryButton.interactable = true;
+                bottomPanel.ActivityLogButton.interactable = true;
+                bottomPanel.RealmInventoryButton.interactable = true;
                 ToolTipManager.Instanse.Hide();
                 break;
         }
         DarkestDungeonManager.ScreenFader.Appear();
     }
-    void ReturnAppearComplete()
+
+    private void ReturnAppearEnded()
     {
         switch (EstateSceneState)
         {
@@ -726,8 +772,10 @@ public class EstateSceneManager : MonoBehaviour
                 raidPartyPanel.CheckComposition();
                 break;
         }
-        DarkestDungeonManager.ScreenFader.onFadeEnded -= ReturnFadeComplete;
-        DarkestDungeonManager.ScreenFader.onAppearEnded -= ReturnAppearComplete;
+        DarkestDungeonManager.ScreenFader.EventFadeEnded -= ReturnFadeEnded;
+        DarkestDungeonManager.ScreenFader.EventAppearEnded -= ReturnAppearEnded;
         transitionsEnabled = true;
     }
+
+    #endregion
 }

@@ -1,36 +1,29 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class RaidPanel : MonoBehaviour
 {
-    public RaidBannerPanel bannerPanel;
-    public RaidHeroPanel heroPanel;
+    [SerializeField]
+    private RaidBannerPanel bannerPanel;
+    [SerializeField]
+    private RaidHeroPanel heroPanel;
+    [SerializeField]
+    private RaidMapPanel mapPanel;
+    [SerializeField]
+    private RaidInventoryPanel inventoryPanel;
 
-    bool isMapActive = true;
-    public RaidMapPanel mapPanel;
-    public RaidInventoryPanel inventoryPanel;
-
+    public RaidBannerPanel BannerPanel { get { return bannerPanel; } }
+    public RaidHeroPanel HeroPanel { get { return heroPanel; } }
+    public RaidMapPanel MapPanel { get { return mapPanel; } }
+    public RaidInventoryPanel InventoryPanel { get { return inventoryPanel; } }
     public FormationUnit SelectedUnit { get; private set; }
     public Hero SelectedHero { get; private set; }
-
-    public RaidCombatSkillsPanel SkillPanel
-    {
-        get
-        {
-            return bannerPanel.skillPanel;
-        }
-    }
-
-    public bool IsMapActive
-    {
-        get
-        {
-            return isMapActive;
-        }
-    }
+    public RaidCombatSkillsPanel SkillPanel { get { return BannerPanel.SkillPanel; } }
+    public bool IsMapActive { get { return isMapActive; } }
     public bool SwitchBlocked { get; set; }
 
-    void Start()
+    private bool isMapActive = true;
+
+    private void Start()
     {
         isMapActive = true;
         RightPanelSwitched(true);
@@ -38,35 +31,40 @@ public class RaidPanel : MonoBehaviour
 
     public void UpdateSelection()
     {
-        bannerPanel.UpdateHero();
-        heroPanel.UpdateHero();
+        BannerPanel.UpdateHero();
+        HeroPanel.UpdateHero();
     }
+
     public void SelectHeroUnit(FormationUnit heroUnit)
     {
         SelectedUnit = heroUnit;
         SelectedHero = heroUnit.Character as Hero;
-        bannerPanel.UpdateHero();
-        heroPanel.UpdateHero();
+        BannerPanel.UpdateHero();
+        HeroPanel.UpdateHero();
     }
 
     public void SetCombatState()
     {
-        bannerPanel.SetCombatReady();
+        BannerPanel.SetCombatReady();
     }
+
     public void SetDisabledState()
     {
-        bannerPanel.SetDisabledState();
+        BannerPanel.SetDisabledState();
     }
+
     public void SetPeacefulState()
     {
-        bannerPanel.SetPeacefulState();
+        BannerPanel.SetPeacefulState();
     }
+
     public void LockOnMap()
     {
         SwitchBlocked = true;
         if (!IsMapActive)
             RightPanelSwitched(true);
     }
+
     public void RightPanelSwitched(bool forced = false)
     {
         if (SwitchBlocked && forced == false)
@@ -76,9 +74,9 @@ public class RaidPanel : MonoBehaviour
 
         if(isMapActive)
         {
-            inventoryPanel.RectTransform.SetAsFirstSibling();
+            InventoryPanel.RectTransform.SetAsFirstSibling();
         }
         else
-            inventoryPanel.RectTransform.SetAsLastSibling();
+            InventoryPanel.RectTransform.SetAsLastSibling();
     }
 }

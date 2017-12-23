@@ -5,67 +5,45 @@ using UnityEngine.EventSystems;
 public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
     IDragHandler, IBeginDragHandler, IEndDragHandler, IDropHandler, IPointerClickHandler
 {
-    public Image itemIcon;
-    public Image rarityIcon;
-    public Text amountText;
+    [SerializeField]
+    private Image itemIcon;
+    [SerializeField]
+    private Image rarityIcon;
+    [SerializeField]
+    private Text amountText;
 
-    public string ItemType
-    {
-        get
-        {
-            return Item.Type;
-        }
-    }
-    public int Amount
-    {
-        get
-        {
-            return Item.Amount;
-        }
-    }
-    public int GoldPrice
-    {
-        get
-        {
-            return Item.Amount * ItemData.PurchasePrice;
-        }
-    }
+    public string ItemType { get { return Item.Type; } }
+    public int Amount { get { return Item.Amount; } }
+    public bool IsNotEmpty { get { return !isEmpty; } }
+    public bool IsFull { get { return Amount >= ItemData.StackLimit; } }
+    public bool Deactivated { get; private set; }
+    public InventorySlot Slot { get; set; }
+    public ItemDefinition Item { get; private set; }
+    public ItemData ItemData { get; private set; }
+    public RectTransform RectTransform { get; private set; }
 
-    public bool IsNotEmpty
-    {
-        get
-        { 
-            return !isEmpty;
-        }
-    }
-    public bool IsFull
-    {
-        get
-        {
-            if (Amount >= ItemData.StackLimit)
-                return true;
+    private bool Highlighted { get; set; }
 
-            return false;
-        }
-    }
-    public bool Deactivated
+    private bool isDragged;
+    private bool isEmpty;
+    private bool isUnavailable;
+
+#if UNITY_ANDROID || UNITY_IOS
+    float doubleTapTimer = 0f;
+    float doubleTapTime = 0.2f;
+
+    private void Update()
     {
-        get;
-        set;
+        if (doubleTapTimer > 0)
+            doubleTapTimer -= Time.deltaTime;
     }
-    public bool Highlighted
-    {
-        get;
-        set;
-    }
+#endif
 
     public bool IsSameItem(ItemDefinition compareItem)
     {
-        if (isEmpty)
-            return false;
-
-        return Item.IsSameItem(compareItem);
+        return !isEmpty && Item.IsSameItem(compareItem);
     }
+
     public bool HasFreeSpaceForItem(ItemDefinition compareItem)
     {
         if (isEmpty)
@@ -75,73 +53,6 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             return Item.Amount < ItemData.StackLimit;
 
         return false;
-    }
-
-    public ItemDefinition Item { get; set; }
-    public ItemData ItemData { get; set; }
-    public InventorySlot Slot { get; set; }
-    public RectTransform RectTransform { get; set; }
-
-    bool isDragged;
-    bool isEmpty;
-    bool isUnavailable;
-#if UNITY_ANDROID || UNITY_IOS
-    float doubleTapTimer = 0f;
-    float doubleTapTime = 0.2f;
-
-    void Update()
-    {
-        if (doubleTapTimer > 0)
-            doubleTapTimer -= Time.deltaTime;
-    }
-#endif
-    void LoadItem()
-    {
-        ItemData = DarkestDungeonManager.Data.Items[Item.Type][Item.Id];
-        if(Item.Type == "trinket")
-        {
-            LoadTrinket(ItemData as Trinket);
-            return;
-        }
-        else if (Item.Type == "journal_page")
-        {
-            itemIcon.sprite = DarkestDungeonManager.Data.Sprites["inv_journal_page"];
-        }
-        else if (Item.Type == "gold" || Item.Type == "provision")
-        {
-            int thresholdIndex = Mathf.Clamp(Mathf.RoundToInt((float)Item.Amount / ItemData.StackLimit / 0.25f), 0, 3);
-            itemIcon.sprite = DarkestDungeonManager.Data.Sprites["inv_" + Item.Type + "+" + Item.Id + "_" + thresholdIndex];
-        }
-        else
-            itemIcon.sprite = DarkestDungeonManager.Data.Sprites["inv_" + Item.Type + "+" + Item.Id];
-
-        UpdateAmount();
-
-        gameObject.SetActive(true);
-    }
-    void LoadTrinket(Trinket trinket)
-    {
-        ItemData = trinket;
-
-        itemIcon.sprite = DarkestDungeonManager.Data.Sprites["inv_" + Item.Type + "+" + Item.Id];
-        rarityIcon.sprite = DarkestDungeonManager.Data.Sprites["rarity_" + trinket.RarityId];
-
-        UpdateAmount();
-
-        gameObject.SetActive(true);
-    }
-    void UpdateAmount()
-    {
-        if (Item.Amount > 1)
-            amountText.text = Amount.ToString();
-        else
-            amountText.text = "";
-
-        if (Item.Type == "gold" || Item.Type == "provision")
-        {
-            int thresholdIndex = Mathf.Clamp(Mathf.RoundToInt((float)Item.Amount / ItemData.StackLimit / 0.2f) - 1, 0, 3);
-            itemIcon.sprite = DarkestDungeonManager.Data.Sprites["inv_" + Item.Type + "+" + Item.Id + "_" + thresholdIndex];
-        }
     }
 
     public void Initialize(InventorySlot inventorySlot)
@@ -156,6 +67,125 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
         gameObject.SetActive(false);
     }
+
+    public void Create(string itemType, string itemId, int amount)
+    {
+        isEmpty = false;
+        Item.Type = itemType;
+        Item.Id = itemId;
+        Item.Amount = amount;
+        LoadItem();
+    }
+
+    public void Create(Trinket trinket)
+    {
+        isEmpty = false;
+        Item.Type = trinket.Type;
+        Item.Id = trinket.Id;
+        Item.Amount = 1;
+        LoadTrinket(trinket);
+    }
+
+    public void Create(InventorySlotData slotData)
+    {
+        isEmpty = slotData.ItemData == null;
+        if (isEmpty)
+            Delete();
+        else
+        {
+            Item.Type = slotData.Item.Type;
+            Item.Id = slotData.Item.Id;
+            Item.Amount = slotData.Item.Amount;
+            LoadItem();
+        }
+    }
+
+    public void Delete()
+    {
+        if (isDragged)
+            OnEndDrag(null);
+
+        isEmpty = true;
+
+        Item.Type = "";
+        Item.Id = "";
+        Item.Amount = 0;
+
+        ItemData = null;
+
+        gameObject.SetActive(false);
+    }
+
+    public int AddItems(int addAmount)
+    {
+        if (addAmount == 0)
+            return 0;
+        if (Amount == ItemData.StackLimit)
+            return addAmount;
+
+        int itemsLeft;
+        if (Item.Amount + addAmount > ItemData.StackLimit)
+        {
+            itemsLeft = addAmount - (ItemData.StackLimit - Item.Amount);
+            Item.Amount = ItemData.StackLimit;
+        }
+        else
+        {
+            itemsLeft = 0;
+            Item.Amount += addAmount;
+        }
+
+        UpdateAmount();
+
+        return itemsLeft;
+    }
+
+    public void RemoveItems(int remAmount)
+    {
+        if (remAmount > Item.Amount)
+            Item.Amount = 0;
+        else
+            Item.Amount -= remAmount;
+
+        if (Item.Amount == 0)
+            Delete();
+        else
+            UpdateAmount();
+    }
+
+    public void MergeItems(InventoryItem itemSource)
+    {
+        int stackLimit = ItemData.StackLimit;
+
+        int transferAmount = Mathf.Min(stackLimit - Amount, itemSource.Item.Amount);
+
+        Item.Amount += transferAmount;
+        UpdateAmount();
+
+        itemSource.Item.Amount -= transferAmount;
+        if (itemSource.Item.Amount == 0)
+            itemSource.Delete();
+        else
+            itemSource.UpdateAmount();
+
+    }
+
+    public void CopyToDragItem(DragItemHolder dragItem)
+    {
+        if (Item.Type == "trinket")
+        {
+            dragItem.BackIcon.enabled = true;
+            dragItem.BackIcon.sprite = rarityIcon.sprite;
+            dragItem.ItemIcon.sprite = itemIcon.sprite;
+        }
+        else
+        {
+            dragItem.BackIcon.enabled = false;
+            dragItem.ItemIcon.sprite = itemIcon.sprite;
+        }
+    }
+
+    #region Inventory states
 
     public void SetActive(bool active)
     {
@@ -192,6 +222,7 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             }
         }
     }
+
     public void SetPeacefulState(bool looting)
     {
         if (RaidSceneManager.Instanse == null)
@@ -301,6 +332,7 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
         SetActive(!Deactivated);
     }
+
     public void SetCombatState()
     {
         if (RaidSceneManager.Instanse == null)
@@ -411,6 +443,7 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
         SetActive(!Deactivated);
     }
+
     public void SetObstacleState()
     {
         if (RaidSceneManager.Instanse == null)
@@ -436,6 +469,7 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
         SetActive(!Deactivated);
     }
+
     public void SetInteractionState(bool questInteraction)
     {
         if (RaidSceneManager.Instanse == null)
@@ -476,171 +510,35 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void SetDropUnavailable()
     {
-        if (Slot.overlayIcon != null)
+        if (Slot.OverlayIcon != null)
         {
             isUnavailable = true;
-            Slot.overlayIcon.enabled = true;
-            Slot.overlayIcon.sprite = DarkestDungeonManager.Data.Sprites["eqp_unavailable_mouseover"];
+            Slot.OverlayIcon.enabled = true;
+            Slot.OverlayIcon.sprite = DarkestDungeonManager.Data.Sprites["eqp_unavailable_mouseover"];
         }
     }
+
     public void SetOverlayDefault()
     {
-        if (Slot.overlayIcon != null)
+        if (Slot.OverlayIcon != null)
         {
             isUnavailable = false;
-            Slot.overlayIcon.enabled = false;
+            Slot.OverlayIcon.enabled = false;
         }
     }
 
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        Highlighted = true;
-        DarkestSoundManager.PlayOneShot("event:/ui/town/button_mouse_over");
+    #endregion
 
-        SetActive(!Deactivated);
+    #region Input Events
 
-        if(Slot.Inventory != null && Slot.Inventory.Configuration == InventoryConfiguration.RaidInventory && Item.Type != "quest_item"
-            && (Slot.Inventory.State == InventoryState.Peaceful || Slot.Inventory.State == InventoryState.PeacefulLooting))
-            ToolTipManager.Instanse.Show(Item.ToolTipDiscard, eventData, RectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
-        else
-            ToolTipManager.Instanse.Show(Item.ToolTip, eventData, RectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
-    }
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        Highlighted = false;
-        if (Slot.overlayIcon != null && !isUnavailable)
-            Slot.overlayIcon.enabled = false;
-        SetActive(!Deactivated);
-        ToolTipManager.Instanse.Hide();
-    }
-
-    public void Create(string itemType, string itemId, int amount)
-    {
-        isEmpty = false;
-        Item.Type = itemType;
-        Item.Id = itemId;
-        Item.Amount = amount;
-        LoadItem();
-    }
-    public void Create(ItemDefinition item)
-    {
-        isEmpty = false;
-        Item.Type = item.Type;
-        Item.Id = item.Id;
-        Item.Amount = item.Amount;
-        LoadItem();
-    }
-    public void Create(Trinket trinket)
-    {
-        isEmpty = false;
-        Item.Type = trinket.Type;
-        Item.Id = trinket.Id;
-        Item.Amount = 1;
-        LoadTrinket(trinket);
-    }
-    public void Create(InventorySlotData slotData)
-    {
-        isEmpty = slotData.ItemData == null;
-        if (isEmpty)
-            Delete();
-        else
-        {
-            Item.Type = slotData.Item.Type;
-            Item.Id = slotData.Item.Id;
-            Item.Amount = slotData.Item.Amount;
-            LoadItem();
-        }
-    }
-    public void Delete()
-    {
-        if (isDragged)
-            OnEndDrag(null);
-
-        isEmpty = true;
-
-        Item.Type = "";
-        Item.Id = "";
-        Item.Amount = 0;
-
-        ItemData = null;
-        
-        gameObject.SetActive(false);
-    }
-
-    public int AddItems(int addAmount)
-    {
-        if (addAmount == 0)
-            return 0;
-        if (Amount == ItemData.StackLimit)
-            return addAmount;
-
-        int itemsLeft = addAmount;
-        if (Item.Amount + addAmount > ItemData.StackLimit)
-        {
-            itemsLeft = addAmount - (ItemData.StackLimit - Item.Amount);
-            Item.Amount = ItemData.StackLimit;
-        }
-        else
-        {
-            itemsLeft = 0;
-            Item.Amount += addAmount;
-        }
-
-        UpdateAmount();
-
-        return itemsLeft;
-    }
-    public void RemoveItems(int remAmount)
-    {
-        if (remAmount > Item.Amount)
-            Item.Amount = 0;
-        else
-            Item.Amount -= remAmount;
-
-        if (Item.Amount == 0)
-            Delete();
-        else
-            UpdateAmount();
-    }
-    public void MergeItems(InventoryItem itemSource)
-    {
-        int stackLimit = ItemData.StackLimit;
-
-        int transferAmount = Mathf.Min(stackLimit - Amount, itemSource.Item.Amount);
-
-        Item.Amount += transferAmount;
-        UpdateAmount();
-
-        itemSource.Item.Amount -= transferAmount;
-        if (itemSource.Item.Amount == 0)
-            itemSource.Delete();
-        else
-            itemSource.UpdateAmount();
-
-    }
-
-    public virtual void CopyToDragItem(DragItemHolder dragItem)
-    {
-        if (Item.Type == "trinket")
-        {
-            dragItem.backIcon.enabled = true;
-            dragItem.backIcon.sprite = rarityIcon.sprite;
-            dragItem.itemIcon.sprite = itemIcon.sprite;
-        }
-        else
-        {
-            dragItem.backIcon.enabled = false;
-            dragItem.itemIcon.sprite = itemIcon.sprite;
-        }
-    }
-
-    public virtual void OnDrag(PointerEventData eventData)
+    public void OnDrag(PointerEventData eventData)
     {
         if (!isDragged)
             return;
         DragManager.Instanse.OnDrag(this, eventData);
     }
-    public virtual void OnBeginDrag(PointerEventData eventData)
+
+    public void OnBeginDrag(PointerEventData eventData)
     {
         if ((Slot.Inventory.Configuration == InventoryConfiguration.Equipment &&
             Slot.Inventory.State == InventoryState.Disabled) || eventData.button == PointerEventData.InputButton.Right)
@@ -660,7 +558,8 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         isDragged = true;
         DragManager.Instanse.StartDragging(this, eventData);
     }
-    public virtual void OnEndDrag(PointerEventData eventData)
+
+    public void OnEndDrag(PointerEventData eventData)
     {
         if (!isDragged)
             return;
@@ -668,7 +567,8 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         DragManager.Instanse.EndDragging(this, eventData);
         isDragged = false;
     }
-    public virtual void OnDrop(PointerEventData eventData)
+
+    public void OnDrop(PointerEventData eventData)
     {
         if (isDragged)
             return;
@@ -691,10 +591,10 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                     if (!EstateSceneManager.Instanse || Deactivated)
                         return;
 
-                    Slot.ItemDroppedOut(Slot, this);
+                    Slot.ItemDroppedOut(this);
                     DarkestDungeonManager.Campaign.Estate.AddGold(Mathf.RoundToInt(ItemData.PurchasePrice * 0.15f));
-                    EstateSceneManager.Instanse.currencyPanel.CurrencyIncreased("gold");
-                    EstateSceneManager.Instanse.currencyPanel.UpdateCurrency();
+                    EstateSceneManager.Instanse.CurrencyPanel.CurrencyIncreased("gold");
+                    EstateSceneManager.Instanse.CurrencyPanel.UpdateCurrency();
                     Delete();
                 }
 
@@ -719,5 +619,78 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         if (eventData.button == PointerEventData.InputButton.Right)
             RaidSceneManager.Instanse.HeroItemActivated(Slot);
 #endif
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        Highlighted = true;
+        DarkestSoundManager.PlayOneShot("event:/ui/town/button_mouse_over");
+
+        SetActive(!Deactivated);
+
+        if (Slot.Inventory != null && Slot.Inventory.Configuration == InventoryConfiguration.RaidInventory && Item.Type != "quest_item"
+            && (Slot.Inventory.State == InventoryState.Peaceful || Slot.Inventory.State == InventoryState.PeacefulLooting))
+            ToolTipManager.Instanse.Show(Item.ToolTipDiscard, RectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
+        else
+            ToolTipManager.Instanse.Show(Item.ToolTip, RectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        Highlighted = false;
+        if (Slot.OverlayIcon != null && !isUnavailable)
+            Slot.OverlayIcon.enabled = false;
+        SetActive(!Deactivated);
+        ToolTipManager.Instanse.Hide();
+    }
+
+    #endregion
+
+    private void LoadItem()
+    {
+        ItemData = DarkestDungeonManager.Data.Items[Item.Type][Item.Id];
+        if (Item.Type == "trinket")
+        {
+            LoadTrinket(ItemData as Trinket);
+            return;
+        }
+        else if (Item.Type == "journal_page")
+        {
+            itemIcon.sprite = DarkestDungeonManager.Data.Sprites["inv_journal_page"];
+        }
+        else if (Item.Type == "gold" || Item.Type == "provision")
+        {
+            int thresholdIndex = Mathf.Clamp(Mathf.RoundToInt((float)Item.Amount / ItemData.StackLimit / 0.25f), 0, 3);
+            itemIcon.sprite = DarkestDungeonManager.Data.Sprites["inv_" + Item.Type + "+" + Item.Id + "_" + thresholdIndex];
+        }
+        else
+            itemIcon.sprite = DarkestDungeonManager.Data.Sprites["inv_" + Item.Type + "+" + Item.Id];
+
+        UpdateAmount();
+
+        gameObject.SetActive(true);
+    }
+
+    private void LoadTrinket(Trinket trinket)
+    {
+        ItemData = trinket;
+
+        itemIcon.sprite = DarkestDungeonManager.Data.Sprites["inv_" + Item.Type + "+" + Item.Id];
+        rarityIcon.sprite = DarkestDungeonManager.Data.Sprites["rarity_" + trinket.RarityId];
+
+        UpdateAmount();
+
+        gameObject.SetActive(true);
+    }
+
+    private void UpdateAmount()
+    {
+        amountText.text = Item.Amount > 1 ? Amount.ToString() : "";
+
+        if (Item.Type == "gold" || Item.Type == "provision")
+        {
+            int thresholdIndex = Mathf.Clamp(Mathf.RoundToInt((float)Item.Amount / ItemData.StackLimit / 0.2f) - 1, 0, 3);
+            itemIcon.sprite = DarkestDungeonManager.Data.Sprites["inv_" + Item.Type + "+" + Item.Id + "_" + thresholdIndex];
+        }
     }
 }

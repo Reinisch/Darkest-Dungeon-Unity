@@ -1,19 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 
-public enum TrinketSlot : byte { Left = 0, Right }
-public enum Rarity : int
-{
-    Trophy, DarkestDungeon, AncestralShambler, Ancestral, Collector, Madman,
-    VeryRare, Rare, Uncommon, Common, VeryCommon, KickStarter,
-}
-
 public class Trinket : ItemData
 {
-    private string rarityId;
-
-    public List<Buff> Buffs { get; set; }
+    public string OriginDungeon { get; set; }
+    public int EquipLimit { get; set; }
     public List<string> ClassRequirements { get; set; }
+
+    public Rarity Rarity { get; private set; }
+    public List<Buff> Buffs { get; private set; }
+    
     public string RarityId
     {
         get
@@ -26,11 +22,10 @@ public class Trinket : ItemData
             Rarity = CharacterHelper.StringToRarity(value);
         }
     }
-    public Rarity Rarity { get; set; }
-    public int EquipLimit { get; set; }
-    public string OriginDungeon { get; set; }
 
-    public Trinket():base("trinket", "", 1, 0, 0)
+    private string rarityId;
+
+    public Trinket():base("trinket", "", 1, 0)
     {
         Buffs = new List<Buff>();
         ClassRequirements = new List<string>();

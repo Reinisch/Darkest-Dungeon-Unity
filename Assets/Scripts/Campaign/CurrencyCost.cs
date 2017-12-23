@@ -5,13 +5,6 @@
 
     public CurrencyCost()
     {
-
-    }
-
-    public CurrencyCost(CurrencyCost clone)
-    {
-        Type = clone.Type;
-        Amount = clone.Amount;
     }
 
     public CurrencyCost(string type, int amount)

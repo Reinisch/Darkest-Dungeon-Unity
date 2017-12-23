@@ -1,79 +1,41 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System;
 
 public class PhotonGameManager : Photon.PunBehaviour
 {
-    #region Public Static Variables
-
-    /// <summary>
-    /// Singletone instance for network manager.
-    /// </summary>
     public static PhotonGameManager Instanse { get; private set; }
-
-    /// <summary>
-    /// Number of players who are combat ready
-    /// </summary>
-    public static int PlayersPreparedCount { get; set; }
-
-    public static List<BarkMessage> BarkMessages
-    {
-        get
-        {
-            return barkMessages;
-        }
-    }
-
+    public static int PlayersPreparedCount { private get; set; }
+    public static List<BarkMessage> BarkMessages { get { return barkMessages; } }
     public static bool SkipMessagesOnClick { get; set; }
-    #endregion
-
-    #region Private variables
 
     private static List<BarkMessage> barkMessages = new List<BarkMessage>();
 
-    #endregion
-
-    #region Private Methods
-
-    void LoadArena()
-    {
-        if (!PhotonNetwork.isMasterClient)
-        {
-            Debug.LogError("PhotonNetwork : Trying to Load a level but we are not the master Client");
-            return;
-        }
-        Debug.Log("PhotonNetwork : Loading Level : Dungeon Multiplayer");
-        PhotonNetwork.LoadLevel("DungeonMultiplayer");
-    }
-
-    #endregion
-
-    #region MonoBehavior callbacks
-
-    /// <summary>
-    /// MonoBehaviour method called during early initialization phase.
-    /// </summary>
-    void Awake()
+    private void Awake()
     {
         if (Instanse == null)
-        {
             Instanse = this;
-        }
         else
             Destroy(gameObject);
     }
 
-    #endregion
+    public static IEnumerator PreparationCheck()
+    {
+        while (DarkestSoundManager.NarrationQueue.Count > 0 || DarkestSoundManager.CurrentNarration != null)
+            yield return null;
 
-    #region Photon Messages
+        Instanse.photonView.RPC("PlayerLoaded", PhotonTargets.All);
 
-    /// <summary>
-    /// Called when the local player left the room. We need to load the selector scene.
-    /// </summary>
+        while (PlayersPreparedCount < PhotonNetwork.room.PlayerCount)
+            yield return null;
+        PreparationCheckPassed();
+    }
+
+    private static void PreparationCheckPassed()
+    {
+        PlayersPreparedCount = 0;
+    }
+
     public override void OnLeftRoom()
     {
         //SceneManager.LoadScene("CampaignSelection");
@@ -83,7 +45,7 @@ public class PhotonGameManager : Photon.PunBehaviour
 
     public override void OnPhotonPlayerConnected(PhotonPlayer other)
     {
-        Debug.Log("OnPhotonPlayerConnected() " + other.name); // not seen if you're the player connecting
+        Debug.Log("OnPhotonPlayerConnected() " + other.NickName); // not seen if you're the player connecting
 
         RaidSceneManager.Instanse.OnSceneLeave();
 
@@ -97,7 +59,7 @@ public class PhotonGameManager : Photon.PunBehaviour
 
     public override void OnPhotonPlayerDisconnected(PhotonPlayer other)
     {
-        Debug.Log("OnPhotonPlayerDisconnected() " + other.name); // seen when other disconnects
+        Debug.Log("OnPhotonPlayerDisconnected() " + other.NickName); // seen when other disconnects
 
 
         RaidSceneManager.Instanse.OnSceneLeave();
@@ -110,36 +72,21 @@ public class PhotonGameManager : Photon.PunBehaviour
         }
     }
 
-    #endregion
-
-    #region Public Methods
-
-    public static void PreparationCheckPassed()
-    {
-        PlayersPreparedCount = 0;
-    }
-
-    public static IEnumerator PreparationCheck()
-    {
-        while (DarkestSoundManager.NarrationQueue.Count > 0 || DarkestSoundManager.CurrentNarration != null)
-            yield return null;
-
-        Instanse.photonView.RPC("PlayerLoaded", PhotonTargets.All);
-
-        while (PlayersPreparedCount < PhotonNetwork.room.playerCount)
-            yield return null;
-        PreparationCheckPassed();
-        yield break;
-    }
-
     public void LeaveRoom()
     {
         PhotonNetwork.LeaveRoom();
     }
 
-    #endregion
-
-    #region Remote Calls
+    private void LoadArena()
+    {
+        if (!PhotonNetwork.isMasterClient)
+        {
+            Debug.LogError("PhotonNetwork : Trying to Load a level but we are not the master Client");
+            return;
+        }
+        Debug.Log("PhotonNetwork : Loading Level : Dungeon Multiplayer");
+        PhotonNetwork.LoadLevel("DungeonMultiplayer");
+    }
 
     [PunRPC]
     public void ExecuteBarkMessage(int team, string message)
@@ -200,6 +147,4 @@ public class PhotonGameManager : Photon.PunBehaviour
     {
         RaidSceneMultiplayerManager.Instanse.HeroMoveDeselected();
     }
-
-    #endregion
 }

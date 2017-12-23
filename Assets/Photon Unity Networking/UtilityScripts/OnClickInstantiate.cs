@@ -37,6 +37,4 @@ public class OnClickInstantiate : MonoBehaviour
             GUILayout.EndArea();
         }
     }
-
-
 }

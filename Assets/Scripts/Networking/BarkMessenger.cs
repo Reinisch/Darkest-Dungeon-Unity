@@ -1,28 +1,30 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 
 public class BarkMessenger : MonoBehaviour
 {
-    public InputField chatInputField;
-    public Button sendButton;
-    public Text buttonText;
-    public Image sendIcon;
+    [SerializeField]
+    private InputField chatInputField;
+    [SerializeField]
+    private Button sendButton;
+    [SerializeField]
+    private Text buttonText;
+    [SerializeField]
+    private Image checkBoxImage;
 
-    public Image checkBoxImage;
-    public bool IsChecked { get; set; }
+    private float chatCooldown = 2f;
+    private float currentChatCooldown;
 
-    float chatCooldown = 2f;
-    float currentChatCooldown = 0;
+    private bool IsChecked { get; set; }
 
-    void Start()
+    private void Start()
     {
         IsChecked = false;
         checkBoxImage.enabled = false;
         PhotonGameManager.SkipMessagesOnClick = false;
     }
 
-    void Update()
+    private void Update()
     {
         if(currentChatCooldown > 0)
         {

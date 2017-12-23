@@ -2,13 +2,38 @@
 using System.Collections.Generic;
 using System.Text;
 
-public enum SkillCategory { Damage, Heal, Support }
-
 public class CombatSkill : Skill
 {
-    public int Level { get; set; }
-    public string Type { get; set; }
-    public SkillCategory Category { get; set; }
+    public int Level { get; private set; }
+    public string Type { get; private set; }
+    public SkillCategory Category { get; private set; }
+
+    public float Accuracy { get; private set; }
+    public float DamageMin { get; private set; }
+    public float DamageMax { get; private set; }
+    public float DamageMod { get; private set; }
+    public float CritMod { get; private set; }
+
+    public bool IsCritValid { get; private set; }
+    public bool IsSelfValid { get; private set; }
+    public bool IsGenerationGuaranteed { get; private set; }
+    public bool? IsKnowledgeable { get; private set; }
+    public bool? CanMiss { get; private set; }
+    public float ExtraTargetsChance { get; private set; }
+
+    public HealComponent Heal { get; private set; }
+    public MoveComponent Move { get; private set; }
+    public List<Effect> Effects { get; private set; }
+    public FormationSet LaunchRanks { get; private set; }
+    public FormationSet TargetRanks { get; private set; }
+
+    public List<string> ValidModes { get; private set; }
+    public Dictionary<string, List<Effect>> ModeEffects { get; private set; }
+
+    public bool IsContinueTurn { get; private set; }
+    public int? LimitPerTurn { get; private set; }
+    public int? LimitPerBattle { get; private set; }
+
     public bool IsBuffSkill
     {
         get
@@ -18,37 +43,6 @@ public class CombatSkill : Skill
         }
     }
 
-    public float Accuracy { get; set; }
-    public float DamageMin { get; set; }
-    public float DamageMax { get; set; }
-    public float DamageMod { get; set; }
-    public float CritMod { get; set; }
-
-    public bool IsCritValid { get; set; }
-    public bool IsSelfValid { get; set; }
-    public bool IsGenerationGuaranteed { get; set; }
-    public bool? IsKnowledgeable { get; set; }
-
-    public bool? IsUserSelectedTarget { get; set; }
-    public bool? CanMiss { get; set; }
-
-    public int ExtraTargetsCount { get; set; }
-    public float ExtraTargetsChance { get; set; }
-
-    public HealComponent Heal { get; set; }
-    public MoveComponent Move { get; set; }
-    public List<Effect> Effects { get; set; }
-
-    public FormationSet LaunchRanks { get; set; }
-    public FormationSet TargetRanks { get; set; }
-
-    public List<string> ValidModes { get; set; }
-    public Dictionary<string, List<Effect>> ModeEffects { get; set; }
-
-    public bool IsContinueTurn { get; set; }
-    public int? LimitPerTurn { get; set; }
-    public int? LimitPerBattle { get; set; }
-    
     public CombatSkill(List<string> data, bool isHeroSkill)
     {
         Level = 0;
@@ -66,17 +60,17 @@ public class CombatSkill : Skill
     public List<FormationUnit> GetAvailableTargets(FormationUnit performer, FormationParty friends, FormationParty enemies)
     {
         if (TargetRanks.IsSelfTarget)
-            return new List<FormationUnit>(new FormationUnit[] { performer });
+            return new List<FormationUnit>(new[] { performer });
 
         if (TargetRanks.IsSelfFormation)
             return friends.Units.FindAll(unit =>
-                (((unit == performer) && TargetRanks.IsTargetableUnit(unit) && IsSelfValid) ||
-                ((unit != performer) && TargetRanks.IsTargetableUnit(unit))) && (unit.Character.BattleModifiers == null ||
-                unit.Character.BattleModifiers.IsValidFriendlyTarget != false));
-        else
-            return enemies.Units.FindAll(unit =>
-                ((unit != performer) && TargetRanks.IsTargetableUnit(unit)));
+                ((unit == performer && TargetRanks.IsTargetableUnit(unit) && IsSelfValid) ||
+                (unit != performer && TargetRanks.IsTargetableUnit(unit))) && (unit.Character.BattleModifiers == null ||
+                unit.Character.BattleModifiers.IsValidFriendlyTarget));
+
+        return enemies.Units.FindAll(unit => unit != performer && TargetRanks.IsTargetableUnit(unit));
     }
+
     public bool HasAvailableTargets(FormationUnit performer, FormationParty friends, FormationParty enemies)
     {
         if (TargetRanks.IsSelfTarget)
@@ -101,156 +95,12 @@ public class CombatSkill : Skill
         return false;
     }
 
-    public void LoadData(List<string> data, bool isHeroSkill)
-    {
-        for (int i = 1; i < data.Count; i++)
-        {
-            switch (data[i])
-            {
-                case ".id":
-                    Id = data[++i];
-                    break;
-                case ".level":
-                    Level = int.Parse(data[++i]);
-                    break;
-                case ".type":
-                    Type = data[++i];
-                    break;
-                case ".atk":
-                    Accuracy = float.Parse(data[++i]) / 100;
-                    break;
-                case ".dmg":
-                    if(isHeroSkill)
-                        DamageMod = float.Parse(data[++i]) / 100;
-                    else
-                    {
-                        DamageMin = float.Parse(data[++i]);
-                        DamageMax = float.Parse(data[++i]);
-                    }
-                    break;
-                case ".crit":
-                    CritMod = float.Parse(data[++i]) / 100;
-                    break;
-                case ".launch":
-                    LaunchRanks = new FormationSet(data[++i]);
-                    break;
-                case ".target":
-                    if (++i < data.Count && data[i--][0] != '.')
-                        TargetRanks = new FormationSet(data[++i]);
-                    else
-                        TargetRanks = new FormationSet("");
-                    break;
-                case ".is_crit_valid":
-                    IsCritValid = bool.Parse(data[++i].ToLower());
-                    break;
-                case ".self_target_valid":
-                    IsSelfValid = bool.Parse(data[++i].ToLower());
-                    break;
-                case ".extra_targets_count":
-                    ExtraTargetsCount = int.Parse(data[++i]);
-                    break;
-                case ".extra_targets_chance":
-                    ExtraTargetsChance = float.Parse(data[++i]);
-                    break;
-                case ".is_user_selected_targets":
-                    IsUserSelectedTarget = bool.Parse(data[++i].ToLower());
-                    break;
-                case ".can_miss":
-                    CanMiss = bool.Parse(data[++i].ToLower());
-                    break;
-                case ".is_continue_turn":
-                    IsContinueTurn = bool.Parse(data[++i].ToLower());
-                    break;
-                case ".per_turn_limit":
-                    LimitPerTurn = int.Parse(data[++i]);
-                    break;
-                case ".per_battle_limit":
-                    LimitPerBattle = int.Parse(data[++i]);
-                    break;
-                case ".valid_modes":
-                    while (++i < data.Count && data[i--][0] != '.')
-                    {
-                        if (data[++i].Length < 2)
-                            continue;
-
-                        ValidModes.Add(data[i]);
-                    }
-                    break;
-                case ".human_effects":
-                    var humanEffects = new List<Effect>();
-                    ModeEffects.Add("human", humanEffects);
-                    while (++i < data.Count && data[i--][0] != '.')
-                    {
-                        if (data[++i].Length < 2)
-                            continue;
-
-                        if (DarkestDungeonManager.Data.Effects.ContainsKey(data[i]))
-                            humanEffects.Add(DarkestDungeonManager.Data.Effects[data[i]]);
-                        else
-                            Debug.LogError("Missing effect " + data[i] + " in skill " + Id);
-                    }
-                    break;
-                case ".beast_effects":
-                    var beastEffects = new List<Effect>();
-                    ModeEffects.Add("beast", beastEffects);
-                    while (++i < data.Count && data[i--][0] != '.')
-                    {
-                        if (data[++i].Length < 2)
-                            continue;
-
-                        if (DarkestDungeonManager.Data.Effects.ContainsKey(data[i]))
-                            beastEffects.Add(DarkestDungeonManager.Data.Effects[data[i]]);
-                        else
-                            Debug.LogError("Missing effect " + data[i] + " in skill " + Id);
-                    }
-                    break;
-                case ".effect":
-                    while (++i < data.Count && data[i--][0] != '.')
-                    {
-                        if (data[++i].Length < 2)
-                            continue;
-
-                        if(DarkestDungeonManager.Data.Effects.ContainsKey(data[i]))
-                            Effects.Add(DarkestDungeonManager.Data.Effects[data[i]]);
-                        else
-                            Debug.LogError("Missing effect " + data[i] + " in skill " + Id);
-                    }
-                    break;
-                case ".generation_guaranteed":
-                    IsGenerationGuaranteed = bool.Parse(data[++i].ToLower());
-                    break;
-                case ".is_knowledgeable":
-                    IsKnowledgeable = bool.Parse(data[++i].ToLower());
-                    break;
-                case ".heal":
-                    Heal = new HealComponent(int.Parse(data[++i]), int.Parse(data[++i]));
-                    break;
-                case ".move":
-                    Move = new MoveComponent(int.Parse(data[++i]), int.Parse(data[++i]));
-                    break;
-                case "combat_skill:":
-                    break;
-                default:
-                    Debug.LogError("Unexpected token in combat skill: " + data[i]);
-                    break;
-            }
-        }
-        if (Accuracy == 0 || TargetRanks.IsSelfFormation || TargetRanks.IsSelfTarget)
-        {
-            if (Heal == null)
-                Category = SkillCategory.Support;
-            else
-                Category = SkillCategory.Heal;
-        }
-    }
-
     public string HeroSkillTooltip(Hero hero)
     {
         StringBuilder sb = ToolTipManager.TipBody;
         sb.AppendFormat("<color={0}>", DarkestDungeonManager.Data.HexColors["notable"]);
         sb.Append(LocalizationManager.GetString(ToolTipManager.GetConcat("combat_skill_name_", hero.HeroClass.StringId, "_", Id)));
         sb.AppendFormat("</color><color={0}>", DarkestDungeonManager.Data.HexColors["neutral"]);
-        
         
         if(TargetRanks.IsRandomTarget)
         {
@@ -261,9 +111,6 @@ public class CombatSkill : Skill
         {
             sb.Append("\n" + LocalizationManager.GetString("str_" + Type));
         }
-
-
-
 
         if (Heal != null)
         {
@@ -355,8 +202,6 @@ public class CombatSkill : Skill
                             sb.Append("\n" + LocalizationManager.GetString("effect_tooltip_party_other"));
                             hasPartyOtherLabel = true;
                             break;
-                        default:
-                            break;
                     }
                     string effectTooltip = effect.Tooltip();
                     if (effectTooltip.Length > 0)
@@ -406,8 +251,6 @@ public class CombatSkill : Skill
                     sb.Append("\n" + LocalizationManager.GetString("effect_tooltip_party_other"));
                     hasPartyOtherLabel = true;
                     break;
-                default:
-                    break;
             }
             string effectTooltip = effect.Tooltip();
             if(effectTooltip.Length > 0)
@@ -418,7 +261,147 @@ public class CombatSkill : Skill
         sb.Append("</color>");
         return sb.ToString();
     }
+
+    private void LoadData(List<string> data, bool isHeroSkill)
+    {
+        for (int i = 1; i < data.Count; i++)
+        {
+            switch (data[i])
+            {
+                case ".id":
+                    Id = data[++i];
+                    break;
+                case ".level":
+                    Level = int.Parse(data[++i]);
+                    break;
+                case ".type":
+                    Type = data[++i];
+                    break;
+                case ".atk":
+                    Accuracy = float.Parse(data[++i]) / 100;
+                    break;
+                case ".dmg":
+                    if (isHeroSkill)
+                        DamageMod = float.Parse(data[++i]) / 100;
+                    else
+                    {
+                        DamageMin = float.Parse(data[++i]);
+                        DamageMax = float.Parse(data[++i]);
+                    }
+                    break;
+                case ".crit":
+                    CritMod = float.Parse(data[++i]) / 100;
+                    break;
+                case ".launch":
+                    LaunchRanks = new FormationSet(data[++i]);
+                    break;
+                case ".target":
+                    if (++i < data.Count && data[i--][0] != '.')
+                        TargetRanks = new FormationSet(data[++i]);
+                    else
+                        TargetRanks = new FormationSet("");
+                    break;
+                case ".is_crit_valid":
+                    IsCritValid = bool.Parse(data[++i].ToLower());
+                    break;
+                case ".self_target_valid":
+                    IsSelfValid = bool.Parse(data[++i].ToLower());
+                    break;
+                case ".extra_targets_count":
+                    ++i;
+                    break;
+                case ".extra_targets_chance":
+                    ExtraTargetsChance = float.Parse(data[++i]);
+                    break;
+                case ".is_user_selected_targets":
+                    ++i;
+                    break;
+                case ".can_miss":
+                    CanMiss = bool.Parse(data[++i].ToLower());
+                    break;
+                case ".is_continue_turn":
+                    IsContinueTurn = bool.Parse(data[++i].ToLower());
+                    break;
+                case ".per_turn_limit":
+                    LimitPerTurn = int.Parse(data[++i]);
+                    break;
+                case ".per_battle_limit":
+                    LimitPerBattle = int.Parse(data[++i]);
+                    break;
+                case ".valid_modes":
+                    while (++i < data.Count && data[i--][0] != '.')
+                    {
+                        if (data[++i].Length < 2)
+                            continue;
+
+                        ValidModes.Add(data[i]);
+                    }
+                    break;
+                case ".human_effects":
+                    var humanEffects = new List<Effect>();
+                    ModeEffects.Add("human", humanEffects);
+                    while (++i < data.Count && data[i--][0] != '.')
+                    {
+                        if (data[++i].Length < 2)
+                            continue;
+
+                        if (DarkestDungeonManager.Data.Effects.ContainsKey(data[i]))
+                            humanEffects.Add(DarkestDungeonManager.Data.Effects[data[i]]);
+                        else
+                            Debug.LogError("Missing effect " + data[i] + " in skill " + Id);
+                    }
+                    break;
+                case ".beast_effects":
+                    var beastEffects = new List<Effect>();
+                    ModeEffects.Add("beast", beastEffects);
+                    while (++i < data.Count && data[i--][0] != '.')
+                    {
+                        if (data[++i].Length < 2)
+                            continue;
+
+                        if (DarkestDungeonManager.Data.Effects.ContainsKey(data[i]))
+                            beastEffects.Add(DarkestDungeonManager.Data.Effects[data[i]]);
+                        else
+                            Debug.LogError("Missing effect " + data[i] + " in skill " + Id);
+                    }
+                    break;
+                case ".effect":
+                    while (++i < data.Count && data[i--][0] != '.')
+                    {
+                        if (data[++i].Length < 2)
+                            continue;
+
+                        if (DarkestDungeonManager.Data.Effects.ContainsKey(data[i]))
+                            Effects.Add(DarkestDungeonManager.Data.Effects[data[i]]);
+                        else
+                            Debug.LogError("Missing effect " + data[i] + " in skill " + Id);
+                    }
+                    break;
+                case ".generation_guaranteed":
+                    IsGenerationGuaranteed = bool.Parse(data[++i].ToLower());
+                    break;
+                case ".is_knowledgeable":
+                    IsKnowledgeable = bool.Parse(data[++i].ToLower());
+                    break;
+                case ".heal":
+                    Heal = new HealComponent(int.Parse(data[++i]), int.Parse(data[++i]));
+                    break;
+                case ".move":
+                    Move = new MoveComponent(int.Parse(data[++i]), int.Parse(data[++i]));
+                    break;
+                case "combat_skill:":
+                    break;
+                default:
+                    Debug.LogError("Unexpected token in combat skill: " + data[i]);
+                    break;
+            }
+        }
+        if (Accuracy == 0 || TargetRanks.IsSelfFormation || TargetRanks.IsSelfTarget)
+        {
+            if (Heal == null)
+                Category = SkillCategory.Support;
+            else
+                Category = SkillCategory.Heal;
+        }
+    }
 }
-
-
-

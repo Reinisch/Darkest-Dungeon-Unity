@@ -3,11 +3,15 @@ using UnityEngine.UI;
 
 public class RaidMapHallSectorSlot : MonoBehaviour
 {
-    public Image hallSectorIcon;
-    public Image marker;
-    public RectTransform rectTransform;
+    [SerializeField]
+    private Image hallSectorIcon;
+    [SerializeField]
+    private Image marker;
+    [SerializeField]
+    private RectTransform rectTransform;
 
-    public HallSector Sector { get; set; }
+    public HallSector Sector { get; private set; }
+    public RectTransform RectTransform { get { return rectTransform; } }
 
     public void SetSector(HallSector sector)
     {
@@ -17,9 +21,10 @@ public class RaidMapHallSectorSlot : MonoBehaviour
 
     public void SetIndicator(RectTransform indicator)
     {
-        indicator.position = rectTransform.position;
+        indicator.position = RectTransform.position;
         indicator.gameObject.SetActive(true);
     }
+
     public void RemoveIndicator(RectTransform indicator)
     {
         indicator.gameObject.SetActive(false);

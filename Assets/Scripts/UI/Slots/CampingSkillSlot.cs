@@ -1,32 +1,33 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine.EventSystems;
-
-public delegate void CampingSkillSlotEvent(CampingSkillSlot slot);
 
 public class CampingSkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
-    public Image skillIcon;
-    public Image lockedIcon;
-    public Image selectorIcon;
+    [SerializeField]
+    private Image skillIcon;
+    [SerializeField]
+    private Image lockedIcon;
+    [SerializeField]
+    private Image selectorIcon;
 
-    public CampingSkill Skill { get; set; }
-    public RectTransform RectTransform { get; set; }
+    public Image SkillIcon { get { return skillIcon; } }
+    public bool Selected { get; private set; }
+    public bool Locked { get; private set; }
+    public bool Highlighted { get; private set; }
+    public bool Available { private get; set; }
+    public bool Interactable { private get; set; }
 
-    public bool Selected { get; set; }
-    public bool Locked { get; set; }
-    public bool Available { get; set; }
-    public bool Interactable { get; set; }
-    public bool Highlighted { get; set; }
+    private CampingSkill Skill { get; set; }
+    private RectTransform RectTransform { get; set; }
 
-    protected Hero currentHero;
+    private Hero currentHero;
 
-    public event CampingSkillSlotEvent onSkillSelected;
-    public event CampingSkillSlotEvent onSkillDeselected;
+    public event Action<CampingSkillSlot> EventSkillSelected;
+    public event Action<CampingSkillSlot> EventSkillDeselected;
 
-    void Awake()
+    private void Awake()
     {
         lockedIcon.enabled = false;
         RectTransform = GetComponent<RectTransform>();
@@ -37,6 +38,7 @@ public class CampingSkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnt
         Locked = true;
         lockedIcon.enabled = true;
     }
+
     public void Unlock()
     {
         Locked = false;
@@ -48,23 +50,24 @@ public class CampingSkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnt
         Selected = true;
         selectorIcon.enabled = true;
 
-        if (onSkillSelected != null)
-            onSkillSelected(this);
+        if (EventSkillSelected != null)
+            EventSkillSelected(this);
     }
+
     public void Deselect()
     {
         Selected = false;
         selectorIcon.enabled = false;
 
-        if (onSkillDeselected != null)
-            onSkillDeselected(this);
+        if (EventSkillDeselected != null)
+            EventSkillDeselected(this);
     }
 
-    public virtual void UpdateSkill(Hero hero, int skillIndex)
+    public void UpdateSkill(Hero hero, int skillIndex)
     {
         currentHero = hero;
         Skill = hero.HeroClass.CampingSkills[skillIndex];
-        skillIcon.sprite = DarkestDungeonManager.Data.Sprites["camp_skill_" + Skill.Id];
+        SkillIcon.sprite = DarkestDungeonManager.Data.Sprites["camp_skill_" + Skill.Id];
 
         if (hero.CurrentCampingSkills[skillIndex] != null)
         {
@@ -88,7 +91,8 @@ public class CampingSkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnt
             selectorIcon.enabled = false;
         }
     }
-    public virtual void ResetSkill()
+
+    public void ResetSkill()
     {
         currentHero = null;
         Skill = null;
@@ -100,7 +104,7 @@ public class CampingSkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnt
         Highlighted = false;
     }
 
-    public virtual void OnPointerClick(PointerEventData eventData)
+    public void OnPointerClick(PointerEventData eventData)
     {
         if (!Interactable || Locked)
         {
@@ -112,16 +116,14 @@ public class CampingSkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnt
         {
             if (!currentHero.SelectedCampingSkills.Remove(Skill))
                 Debug.LogError("Deselected camping skill not found.");
+
             Deselect();
             DarkestSoundManager.PlayOneShot("event:/ui/town/character_unequip");
         }
         else
         {
             if (currentHero.SelectedCampingSkills.Count == 4)
-            {
                 DarkestSoundManager.PlayOneShot("event:/ui/town/button_invalid");
-                return;
-            }
             else
             {
                 currentHero.SelectedCampingSkills.Add(Skill);
@@ -131,25 +133,26 @@ public class CampingSkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnt
         }
     }
 
-    public virtual void OnPointerEnter(PointerEventData eventData)
+    public void OnPointerEnter(PointerEventData eventData)
     {
         Highlighted = true;
 
         if (!Available || Locked)
-            skillIcon.material = DarkestDungeonManager.GrayHighlightMaterial;
+            SkillIcon.material = DarkestDungeonManager.GrayHighlightMaterial;
         else
-            skillIcon.material = DarkestDungeonManager.HighlightMaterial;
+            SkillIcon.material = DarkestDungeonManager.HighlightMaterial;
 
         if (Skill != null)
-            ToolTipManager.Instanse.Show(Skill.Tooltip(), eventData, RectTransform, ToolTipStyle.FromBottom, ToolTipSize.Normal);
+            ToolTipManager.Instanse.Show(Skill.Tooltip(), RectTransform, ToolTipStyle.FromBottom, ToolTipSize.Normal);
     }
-    public virtual void OnPointerExit(PointerEventData eventData)
+
+    public void OnPointerExit(PointerEventData eventData)
     {
         Highlighted = false;
         if (!Available || Locked)
-            skillIcon.material = DarkestDungeonManager.GrayMaterial;
+            SkillIcon.material = DarkestDungeonManager.GrayMaterial;
         else
-            skillIcon.material = skillIcon.defaultMaterial;
+            SkillIcon.material = SkillIcon.defaultMaterial;
         ToolTipManager.Instanse.Hide();
     }
 }

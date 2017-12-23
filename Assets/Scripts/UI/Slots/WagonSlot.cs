@@ -1,21 +1,23 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public delegate void WagonSlotEvent(WagonSlot slot);
-
 public class WagonSlot : BaseSlot, IPointerEnterHandler, IPointerExitHandler
 {
-    public Image itemIcon;
-    public Image rarityIcon;
-    public Text costText;
+    [SerializeField]
+    private Image itemIcon;
+    [SerializeField]
+    private Image rarityIcon;
+    [SerializeField]
+    private Text costText;
 
-    public Trinket Trinket { get; set; }
-    public int Cost { get; set; }
+    public Trinket Trinket { get; private set; }
+    public int Cost { get; private set; }
 
-    public event WagonSlotEvent onSlotPurchase;
+    private bool hasGeneratedTooltip;
 
-    bool hasGeneratedTooltip = false;
+    public event Action<WagonSlot> EventSlotPurchase;
 
     public void SetTrinket(Trinket newTrinket, float discount)
     {
@@ -25,12 +27,14 @@ public class WagonSlot : BaseSlot, IPointerEnterHandler, IPointerExitHandler
         Cost = Mathf.RoundToInt(Trinket.PurchasePrice * (1 - discount));
         costText.text = Cost.ToString();
     }
+
     public void EmptySlot()
     {
         Trinket = null;
         OnPointerExit(null);
         gameObject.SetActive(false);
     }
+
     public void UpdatePrice(float discount)
     {
         if (Trinket != null)
@@ -51,10 +55,11 @@ public class WagonSlot : BaseSlot, IPointerEnterHandler, IPointerExitHandler
         itemIcon.material = DarkestDungeonManager.HighlightMaterial;
         if (Trinket != null)
         {
-            ToolTipManager.Instanse.Show(Trinket.ToolTip(), eventData, RectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
+            ToolTipManager.Instanse.Show(Trinket.ToolTip(), RectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
             hasGeneratedTooltip = true;
         }
     }
+
     public void OnPointerExit(PointerEventData eventData)
     {
         if (hasGeneratedTooltip)
@@ -68,7 +73,7 @@ public class WagonSlot : BaseSlot, IPointerEnterHandler, IPointerExitHandler
 
     public void SlotClicked()
     {
-        if (onSlotPurchase != null)
-            onSlotPurchase(this);
+        if (EventSlotPurchase != null)
+            EventSlotPurchase(this);
     }
 }

@@ -6,7 +6,6 @@ using System.Linq;
 public class DarkestSoundManager : MonoBehaviour
 {
     public static DarkestSoundManager Instanse { get; private set; }
-    public static FMOD.Studio.System Studio { get; private set; }
 
     public static FMOD.Studio.EventInstance DungeonInstanse { get; private set; }
     public static FMOD.Studio.EventInstance BattleInstanse { get; private set; }
@@ -15,22 +14,22 @@ public class DarkestSoundManager : MonoBehaviour
     public static FMOD.Studio.EventInstance TownInstanse { get; private set; }
     public static FMOD.Studio.EventInstance TownMusicInstanse { get; private set; }
     public static FMOD.Studio.EventInstance TitleMusicInstanse { get; private set; }
-    public static FMOD.Studio.EventInstance StatueAudioInstanse { get; private set; }
 
     public static List<FMOD.Studio.EventInstance> NarrationQueue { get; private set; }
     public static FMOD.Studio.EventInstance CurrentNarration { get; private set; }
+
     private static FMOD.Studio.PLAYBACK_STATE narrationState;
 
-    void Awake()
+    private void Awake()
     {
         if (Instanse == null)
         {
-            Studio = RuntimeManager.StudioSystem;
             NarrationQueue = new List<FMOD.Studio.EventInstance>();
             Instanse = this;
         }
     }
-    void Update()
+
+    private void Update()
     {
         if (CurrentNarration == null)
         {
@@ -128,6 +127,7 @@ public class DarkestSoundManager : MonoBehaviour
                 goto case NarrationPlace.Campaign;
         }
     }
+
     public static void PlayStatueAudioEntry(string id)
     {
         if (CurrentNarration != null && NarrationQueue.Count > 0)
@@ -137,6 +137,7 @@ public class DarkestSoundManager : MonoBehaviour
         if (narrationInstanse != null)
             NarrationQueue.Add(narrationInstanse);
     }
+
     public static void SilenceNarrator()
     {
         if (CurrentNarration != null)
@@ -152,6 +153,7 @@ public class DarkestSoundManager : MonoBehaviour
     {
         RuntimeManager.PlayOneShot(eventId);
     }
+
     public static void PlayTitleMusic(bool isIntro)
     {
         StopTitleMusic();
@@ -164,6 +166,7 @@ public class DarkestSoundManager : MonoBehaviour
         if (TitleMusicInstanse != null)
             TitleMusicInstanse.start();
     }
+
     public static void StopTitleMusic()
     {
         if (TitleMusicInstanse != null)
@@ -185,6 +188,7 @@ public class DarkestSoundManager : MonoBehaviour
         if (DungeonInstanse != null)
             DungeonInstanse.start();
     }
+
     public static void ContinueDungeonSoundtrack(string dungeonName)
     {
         if (DungeonInstanse != null)
@@ -192,11 +196,13 @@ public class DarkestSoundManager : MonoBehaviour
         else
             StartDungeonSoundtrack(dungeonName);
     }
+
     public static void PauseDungeonSoundtrack()
     {
         if (DungeonInstanse != null)
             DungeonInstanse.setPaused(true);
     }
+
     public static void StopDungeonSoundtrack()
     {
         if (DungeonInstanse != null)
@@ -215,6 +221,7 @@ public class DarkestSoundManager : MonoBehaviour
         if (BattleInstanse != null)
             BattleInstanse.start();
     }
+
     public static void StopBattleSoundtrack()
     {
         if (BattleInstanse != null)
@@ -235,6 +242,7 @@ public class DarkestSoundManager : MonoBehaviour
         if (CampingMusicInstanse != null)
             CampingMusicInstanse.start();
     }
+
     public static void StopCampingSoundtrack()
     {
         if (CampingInstanse != null)
@@ -260,6 +268,7 @@ public class DarkestSoundManager : MonoBehaviour
         if (TownMusicInstanse != null)
             TownMusicInstanse.start();
     }
+
     public static void StopTownSoundtrack()
     {
         if (TownInstanse != null)

@@ -3,7 +3,8 @@ using UnityEngine.EventSystems;
 
 public class ItemSellbackPanel : MonoBehaviour, IDropHandler
 {
-    public ShopInventory shop;
+    [SerializeField]
+    private ShopInventory shop;
 
     public void OnDrop(PointerEventData eventData)
     {

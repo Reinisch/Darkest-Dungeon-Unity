@@ -1,24 +1,36 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public enum ResultWindowState { Items, Heroes }
+public enum ResultWindowState
+{
+    Items,
+    Heroes
+}
 
 public class RaidResultWindow : MonoBehaviour
 {
-    public CanvasGroup canvasGroup;
-    public Image background;
-    public Image resultFrame;
-    public Text resultLabel;
-    public Text goalLabel;
-    public Text nextButtonLabel;
-    public ResultItemWindow itemWindow;
-    public ResultHeroWindow heroWindow;
+    [SerializeField]
+    private CanvasGroup canvasGroup;
+    [SerializeField]
+    private Image resultFrame;
+    [SerializeField]
+    private Text resultLabel;
+    [SerializeField]
+    private Text goalLabel;
+    [SerializeField]
+    private Text nextButtonLabel;
+    [SerializeField]
+    private ResultItemWindow itemWindow;
+    [SerializeField]
+    private ResultHeroWindow heroWindow;
+    [SerializeField]
+    private Sprite completedFrame;
+    [SerializeField]
+    private Sprite escapeFrame;
+    [SerializeField]
+    private Sprite defeatFrame;
 
-    public Sprite completedFrame;
-    public Sprite escapeFrame;
-    public Sprite defeatFrame;
-
-    public ResultWindowState State { get; set; }
+    public ResultWindowState State { get; private set; }
 
     public void ProceedToHeroes()
     {
@@ -71,6 +83,7 @@ public class RaidResultWindow : MonoBehaviour
     {
         canvasGroup.blocksRaycasts = false;
     }
+
     public void EnableInteraction()
     {
         canvasGroup.blocksRaycasts = true;

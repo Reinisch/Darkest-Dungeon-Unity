@@ -2,11 +2,10 @@
 
 public abstract class BuildingWindow : MonoBehaviour
 {
-    abstract public TownManager TownManager { get; set; }
-    abstract public void Initialize();
+    public abstract TownManager TownManager { get; set; }
 
-    abstract public void UpdateUpgradeTrees(bool afterPurchase = false);
-
-    abstract public void WindowOpened();
-    abstract public void WindowClosed();
+    public abstract void Initialize();
+    public abstract void UpdateUpgradeTrees(bool afterPurchase = false);
+    public abstract void WindowOpened();
+    public abstract void WindowClosed();
 }

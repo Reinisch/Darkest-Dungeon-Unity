@@ -1,79 +1,129 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.EventSystems;
 
 public class MonsterTooltip : MonoBehaviour
 {
-    public Animator animator;
+    [SerializeField]
+    private Animator animator;
 
-    public Text monsterLabel;
-    public Text monsterDodge;
-    public Text monsterProt;
-    public Text monsterSpeed;
-    public Text monsterHealth;
-    public List<Text> monsterTypes;
+    [SerializeField]
+    private Text monsterLabel;
+    [SerializeField]
+    private Text monsterDodge;
+    [SerializeField]
+    private Text monsterProt;
+    [SerializeField]
+    private Text monsterSpeed;
+    [SerializeField]
+    private Text monsterHealth;
+    [SerializeField]
+    private List<Text> monsterTypes;
 
-    public Text heroHitLabel;
-    public Text heroCritLabel;
-    public Text heroDmgLabel;
+    [SerializeField]
+    private Text heroHitLabel;
+    [SerializeField]
+    private Text heroCritLabel;
+    [SerializeField]
+    private Text heroDmgLabel;
 
-    public Text stunAmountLabel;
-    public Text blightAmountLabel;
-    public Text bleedAmountLabel;
-    public Text debuffAmountLabel;
-    public Text moveAmountLabel;
+    [SerializeField]
+    private Text stunAmountLabel;
+    [SerializeField]
+    private Text blightAmountLabel;
+    [SerializeField]
+    private Text bleedAmountLabel;
+    [SerializeField]
+    private Text debuffAmountLabel;
+    [SerializeField]
+    private Text moveAmountLabel;
 
-    public List<MonsterSkillSlot> monsterSkills;
+    [SerializeField]
+    private List<MonsterSkillSlot> monsterSkills;
+    [SerializeField]
+    private RectTransform monsterIndicator;
 
-    public RectTransform monsterIndicator;
+    public FormationOverlaySlot Slot { get; private set; }
 
     public bool IsDisabled
     {
-        get
+        private get
         {
             return isDisabled;
         }
         set
         {
-            if (Slot != null && Slot.IsHovered && isDisabled == true && value == false)
-            {
-                isDisabled = false;
+            if (Slot != null && Slot.IsHovered && isDisabled && value == false)
                 Slot.OnPointerEnter(null);
-            }
-            else
-                isDisabled = value;
+
+            isDisabled = value;
         }
     }
-    public FormationOverlaySlot Slot { get; set; }
 
-    private float velocity = 0;
+    private float velocity;
     private float targetPosition;
     private bool isDisabled;
 
-    void Awake()
+    private void Awake()
     {
         targetPosition = monsterIndicator.position.x;
     }
 
-    void Update()
+    private void Update()
     {
-        if (targetPosition != monsterIndicator.position.x)
+        if (!Mathf.Approximately(targetPosition, monsterIndicator.position.x))
             monsterIndicator.position = new Vector3(Mathf.SmoothDamp(monsterIndicator.position.x,
                 targetPosition, ref velocity, 0.2f), monsterIndicator.position.y, monsterIndicator.position.z);
     }
 
-
-    void UpdateMonsterTooltip(FormationUnit monsterUnit)
+    public void Show(FormationUnit monsterUnit)
     {
-        Monster monster = monsterUnit.Character as Monster;
+        Slot = monsterUnit.OverlaySlot;
+
+        if (IsDisabled)
+            return;
+
+        Vector3 screenPoint = RaidSceneManager.DungeonPositionToScreen(monsterUnit.RectTransform.position);
+        if (monsterUnit.Team == Team.Monsters)
+            targetPosition = screenPoint.x;
+
+        animator.SetBool("IsActive", true);
+
+        if (RaidSceneManager.BattleGround.Round.TurnType == TurnType.HeroTurn)
+        {
+            if (Slot.TargetUnit.IsTargetable && RaidSceneManager.RaidPanel.SelectedUnit != null)
+            {
+                var combatSkill = (CombatSkill)RaidSceneManager.RaidPanel.BannerPanel.SkillPanel.SelectedSkill;
+                if (combatSkill != null)
+                {
+                    BattleSolver.CalculateSkillPotential(RaidSceneManager.RaidPanel.SelectedUnit, monsterUnit, combatSkill);
+                    if (BattleSolver.HeroActionInfo.IsValid)
+                    {
+                        UpdateTooltip(monsterUnit, BattleSolver.HeroActionInfo.ChanceToHit, BattleSolver.HeroActionInfo.ChanceToCrit,
+                            BattleSolver.HeroActionInfo.MinDamage, BattleSolver.HeroActionInfo.MaxDamage);
+                        return;
+                    }
+                }
+            }
+        }
+
+        UpdateTooltiop(monsterUnit);
+    }
+
+    public void Hide()
+    {
+        animator.SetBool("IsActive", false);
+    }
+
+    private void UpdateMonsterTooltip(FormationUnit monsterUnit)
+    {
+        Monster monster = (Monster)monsterUnit.Character;
 
         monsterLabel.text = LocalizationManager.GetString("str_monstername_" + monster.Data.StringId);
         monsterDodge.text = string.Format(LocalizationManager.GetString("monster_tooltip_dodge_format"),
-            System.Math.Round((double)monster.Dodge, 3));
+            System.Math.Round(monster.Dodge, 3));
         monsterProt.text = string.Format(LocalizationManager.GetString("monster_tooltip_prot_format"),
-            System.Math.Round((double)monster.Protection, 3));
+            System.Math.Round(monster.Protection, 3));
         monsterSpeed.text = string.Format(LocalizationManager.GetString("monster_tooltip_speed_format"), monster.Speed);
         monsterHealth.text = string.Format(LocalizationManager.GetString("monster_tooltip_hp_format"),
             Mathf.RoundToInt(monster.CurrentHealth), Mathf.RoundToInt(monster.MaxHealth));
@@ -114,15 +164,15 @@ public class MonsterTooltip : MonoBehaviour
             monsterSkills[i].ResetSkill();
     }
 
-    void UpdateHeroTooltip(FormationUnit heroUnit)
+    private void UpdateHeroTooltip(FormationUnit heroUnit)
     {
-        Hero hero = heroUnit.Character as Hero;
+        Hero hero = (Hero)heroUnit.Character;
 
         monsterLabel.text = hero.Name;
         monsterDodge.text = string.Format(LocalizationManager.GetString("monster_tooltip_dodge_format"),
-            System.Math.Round((double)hero.Dodge, 3));
+            System.Math.Round(hero.Dodge, 3));
         monsterProt.text = string.Format(LocalizationManager.GetString("monster_tooltip_prot_format"),
-            System.Math.Round((double)hero.Protection, 3));
+            System.Math.Round(hero.Protection, 3));
         monsterSpeed.text = string.Format(LocalizationManager.GetString("monster_tooltip_speed_format"), hero.Speed);
         monsterHealth.text = string.Format(LocalizationManager.GetString("monster_tooltip_hp_format"),
             Mathf.RoundToInt(hero.CurrentHealth), Mathf.RoundToInt(hero.MaxHealth));
@@ -163,8 +213,7 @@ public class MonsterTooltip : MonoBehaviour
             monsterSkills[i].ResetSkill();
     }
 
-
-    public void UpdateTooltiop(FormationUnit monsterUnit)
+    private void UpdateTooltiop(FormationUnit monsterUnit)
     {
         if (monsterUnit.Character.IsMonster)
             UpdateMonsterTooltip(monsterUnit);
@@ -172,7 +221,7 @@ public class MonsterTooltip : MonoBehaviour
             UpdateHeroTooltip(monsterUnit);
     }
 
-    public void UpdateTooltip(FormationUnit monsterUnit, float hitChance, float critChance, int minDamage, int maxDamage)
+    private void UpdateTooltip(FormationUnit monsterUnit, float hitChance, float critChance, int minDamage, int maxDamage)
     {
         if (monsterUnit.Character.IsMonster)
         {
@@ -190,47 +239,5 @@ public class MonsterTooltip : MonoBehaviour
             heroCritLabel.text = LocalizationManager.GetString("str_ui_hero_crit") + string.Format(": {0:#.#%;0.#%}", critChance);
             heroDmgLabel.text = LocalizationManager.GetString("str_ui_hero_dmg") + string.Format(": {0} - {1}", minDamage, maxDamage);
         }
-    }
-
-    public void Show(FormationUnit monsterUnit)
-    {
-        Slot = monsterUnit.OverlaySlot;
-
-        if (IsDisabled)
-            return;
-
-        Vector3 screenPoint = RaidSceneManager.DungeonPositionToScreen(monsterUnit.RectTransform.position);
-        if(monsterUnit.Team == Team.Monsters)
-            targetPosition = screenPoint.x;
-
-        animator.SetBool("IsActive", true);
-
-        if(RaidSceneManager.BattleGround.Round.TurnType == TurnType.HeroTurn)
-        {
-            if(Slot.TargetUnit.IsTargetable && RaidSceneManager.RaidPanel.SelectedUnit != null)
-            {
-                var combatSkill = (CombatSkill)RaidSceneManager.RaidPanel.bannerPanel.skillPanel.SelectedSkill;
-                if(combatSkill != null)
-                {
-                    BattleSolver.CalculateSkillPotential(RaidSceneManager.RaidPanel.SelectedUnit, monsterUnit, combatSkill);
-                    if (BattleSolver.HeroActionInfo.IsValid)
-                    {
-                        UpdateTooltip(monsterUnit, BattleSolver.HeroActionInfo.ChanceToHit, BattleSolver.HeroActionInfo.ChanceToCrit,
-                            BattleSolver.HeroActionInfo.MinDamage, BattleSolver.HeroActionInfo.MaxDamage);
-                        return;
-                    }
-                }
-            }
-        }
-
-        UpdateTooltiop(monsterUnit);
-    }
-    public bool IsActive()
-    {
-        return animator.GetBool("IsActive");
-    }
-    public void Hide()
-    {
-        animator.SetBool("IsActive", false);
     }
 }

@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using System.Text;
@@ -48,16 +46,24 @@ public class TorchMeter : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         }
     }
 
-    public RectTransform leftRect;
-    public RectTransform rightRect;
-    public RectTransform torchRect;
+    [SerializeField]
+    private RectTransform leftRect;
+    [SerializeField]
+    private RectTransform rightRect;
+    [SerializeField]
+    private RectTransform torchRect;
 
-    public SkeletonAnimation torchSwitch;
-    public SkeletonAnimation torchFlame;
-    public SkeletonAnimation torchSparks;
+    [SerializeField]
+    private SkeletonAnimation torchSwitch;
+    [SerializeField]
+    private SkeletonAnimation torchFlame;
+    [SerializeField]
+    private SkeletonAnimation torchSparks;
 
-    public Animator torchAnimator;
-    public CanvasGroup canvasGroup;
+    [SerializeField]
+    private Animator torchAnimator;
+    [SerializeField]
+    private CanvasGroup canvasGroup;
 
     public List<TorchRange> Ranges { get; private set; }
     public TorchRange CurrentRange { get; private set; }
@@ -65,38 +71,22 @@ public class TorchMeter : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public int TorchAmount { get; private set; }
     public int MaxAmount { get; private set; }
     public TorchlightModifier Modifier { get; private set; }
-    
-    public bool IsActive { get; set; }
 
-    private const int baseLength = 450;
-    private int currentLength = baseLength;
-    private int targetLength = baseLength;
-    private int lastValue = 0;
+    private const int BaseLength = 450;
+    private int currentLength = BaseLength;
+    private int targetLength = BaseLength;
+    private int lastValue;
 
-    private float velocity = 0;
-#if UNITY_ANDROID || UNITY_IOS || UNITY_EDITOR
-    float doubleTapTimer = 0f;
+    private float velocity;
+
+#if UNITY_ANDROID || UNITY_IOS
+    float doubleTapTimer;
     float doubleTapTime = 0.2f;
 #endif
 
-    public void Show()
+    private void Update()
     {
-        torchAnimator.SetBool("IsActive", true);
-    }
-    public void Hide()
-    {
-        torchAnimator.SetBool("IsActive", false);
-
-        if(ToolTipManager.Instanse.CurrentTooltip != null)
-        {
-            if (ToolTipManager.Instanse.CurrentTooltip.SenderRect == torchRect)
-                ToolTipManager.Instanse.Hide();
-        }
-    }
-
-    void Update()
-    {
-#if UNITY_ANDROID || UNITY_IOS || UNITY_EDITOR
+#if UNITY_ANDROID || UNITY_IOS
         if (doubleTapTimer > 0)
             doubleTapTimer -= Time.deltaTime;
 #endif
@@ -105,8 +95,8 @@ public class TorchMeter : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             torchSwitch.skeleton.A = canvasGroup.alpha;
             torchSparks.skeleton.A = canvasGroup.alpha;
             torchFlame.skeleton.A = canvasGroup.alpha;
-            RaidSceneManager.RaidEvents.RoundIndicator.indicator.skeleton.A = canvasGroup.alpha;
-            RaidSceneManager.RaidEvents.RoundIndicator.canvasGroup.alpha = canvasGroup.alpha;
+            RaidSceneManager.RaidEvents.RoundIndicator.Indicator.skeleton.A = canvasGroup.alpha;
+            RaidSceneManager.RaidEvents.RoundIndicator.CanvasGroup.alpha = canvasGroup.alpha;
         }
 
         if(targetLength != currentLength)
@@ -114,73 +104,6 @@ public class TorchMeter : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             currentLength = Mathf.RoundToInt(Mathf.SmoothDamp(currentLength, targetLength, ref velocity, 0.5f));
             leftRect.sizeDelta = new Vector2(currentLength, leftRect.sizeDelta.y);
             rightRect.sizeDelta = new Vector2(currentLength, rightRect.sizeDelta.y);
-        }
-    }
-    void UpdateTorch()
-    {
-        RaidSceneManager.Inventory.UpdateState();
-        targetLength = MaxAmount != 0 ? Mathf.RoundToInt((float)baseLength * TorchAmount / MaxAmount) : 0;
-
-        for (int i = 0; i < Ranges.Count; i++)
-        {
-            if (Ranges[i].InRange(TorchAmount))
-            {
-                if (CurrentRange != Ranges[i])
-                {
-                    if(CurrentRange.Min < Ranges[i].Min)
-                        torchSwitch.state.SetAnimation(0, "ignite", false);
-                    else
-                        torchSwitch.state.SetAnimation(0, "extinguish", false);
-
-                    CurrentRange = Ranges[i];
-                    if(CurrentRange.RangeType == TorchRangeType.Out)
-                        DarkestSoundManager.ExecuteNarration("torchlight_out", NarrationPlace.Raid);
-                    else if (CurrentRange.RangeType == TorchRangeType.Radiant && TorchAmount > 90)
-                        DarkestSoundManager.ExecuteNarration("torchlight_full", NarrationPlace.Raid);
-
-                    ApplyBuffs();
-                    torchFlame.state.SetAnimation(0, CurrentRange.AnimationId, true);
-                    break;
-                }
-                else
-                    break;
-            }
-        }
-
-        RaidSceneManager.Formations.heroes.UpdateBuffRule(BuffRule.LightAbove);
-        RaidSceneManager.Formations.heroes.UpdateBuffRule(BuffRule.LightBelow);
-    }
-    void ApplyBuffs()
-    {
-        for (int j = 0; j < RaidSceneManager.Formations.heroes.party.Units.Count; j++)
-        {
-            RaidSceneManager.Formations.heroes.party.Units[j].Character.RemoveLightBuffs();
-            for (int k = 0; k < CurrentRange.HeroBuffs.Count; k++)
-                RaidSceneManager.Formations.heroes.party.Units[j].Character.AddBuff(
-                    new BuffInfo(CurrentRange.HeroBuffs[k], BuffDurationType.Permanent, BuffSourceType.Light));
-
-            if (RaidSceneManager.RaidPanel.SelectedUnit == RaidSceneManager.Formations.heroes.party.Units[j])
-                RaidSceneManager.RaidPanel.heroPanel.UpdateHero();
-        }
-
-        if (RaidSceneManager.BattleGround.BattleStatus == BattleStatus.Fighting)
-        {
-            for (int j = 0; j < RaidSceneManager.Formations.monsters.party.Units.Count; j++)
-            {
-                RaidSceneManager.Formations.monsters.party.Units[j].Character.RemoveLightBuffs();
-                if (RaidSceneManager.Formations.monsters.party.Units[j].Character.IsMonster)
-                {
-                    for (int k = 0; k < CurrentRange.MonsterBuffs.Count; k++)
-                        RaidSceneManager.Formations.monsters.party.Units[j].Character.AddBuff(
-                            new BuffInfo(CurrentRange.MonsterBuffs[k], BuffDurationType.Permanent, BuffSourceType.Light));
-                }
-                else
-                {
-                    for (int k = 0; k < CurrentRange.HeroBuffs.Count; k++)
-                        RaidSceneManager.Formations.monsters.party.Units[j].Character.AddBuff(
-                            new BuffInfo(CurrentRange.HeroBuffs[k], BuffDurationType.Permanent, BuffSourceType.Light));
-                }
-            }
         }
     }
 
@@ -267,14 +190,28 @@ public class TorchMeter : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         UpdateTorch();
     }
 
+    public void Show()
+    {
+        torchAnimator.SetBool("IsActive", true);
+    }
+
+    public void Hide()
+    {
+        torchAnimator.SetBool("IsActive", false);
+
+        if (ToolTipManager.Instanse.CurrentTooltip != null)
+        {
+            if (ToolTipManager.Instanse.CurrentTooltip.SenderRect == torchRect)
+                ToolTipManager.Instanse.Hide();
+        }
+    }
+
     public void ApplyBuffsForUnit(FormationUnit newUnit)
     {
         newUnit.Character.RemoveLightBuffs();
         if (newUnit.Character.IsMonster)
-        {
-            for (int k = 0; k < CurrentRange.MonsterBuffs.Count; k++)
-                newUnit.Character.AddBuff(new BuffInfo(CurrentRange.MonsterBuffs[k], BuffDurationType.Permanent, BuffSourceType.Light));
-        }
+            foreach (Buff buff in CurrentRange.MonsterBuffs)
+                newUnit.Character.AddBuff(new BuffInfo(buff, BuffDurationType.Permanent, BuffSourceType.Light));
     }
 
     public void IncreaseTorch(int value)
@@ -288,6 +225,7 @@ public class TorchMeter : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
         UpdateTorch();
     }
+
     public void DecreaseTorch(int value)
     {
         if (Modifier != null)
@@ -300,6 +238,7 @@ public class TorchMeter : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         
         UpdateTorch();
     }
+
     public void Modify(TorchlightModifier modifier)
     {
         Modifier = modifier;
@@ -307,6 +246,7 @@ public class TorchMeter : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         TorchAmount = Mathf.Clamp(TorchAmount, Modifier.Min, Modifier.Max);
         UpdateTorch();
     }
+
     public void ClearModifier()
     {
         if (Modifier != null)
@@ -423,8 +363,9 @@ public class TorchMeter : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         sb.AppendLine();
         sb.Append(LocalizationManager.GetString("str_snuff_torch_tip"));
         sb.Append("</color>");
-        ToolTipManager.Instanse.Show(sb.ToString(), eventData, torchRect, ToolTipStyle.FromBottom, ToolTipSize.Normal);
+        ToolTipManager.Instanse.Show(sb.ToString(), torchRect, ToolTipStyle.FromBottom, ToolTipSize.Normal);
     }
+
     public void OnPointerExit(PointerEventData eventData)
     {
         ToolTipManager.Instanse.Hide();
@@ -451,14 +392,72 @@ public class TorchMeter : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 #else
         if (Input.GetKey(KeyCode.LeftShift))
         {
-            if (Input.GetKey(KeyCode.LeftControl))
-                DecreaseTorch(100);
-            else
-                DecreaseTorch(10);
+            DecreaseTorch(Input.GetKey(KeyCode.LeftControl) ? 100 : 10);
 
-            if (ToolTipManager.Instanse.toolTip.isActiveAndEnabled)
+            if (ToolTipManager.Instanse.ToolTip.isActiveAndEnabled)
                 OnPointerEnter(eventData);
         }
 #endif
+    }
+
+    private void UpdateTorch()
+    {
+        RaidSceneManager.Inventory.UpdateState();
+        targetLength = MaxAmount != 0 ? Mathf.RoundToInt((float)BaseLength * TorchAmount / MaxAmount) : 0;
+
+        for (int i = 0; i < Ranges.Count; i++)
+        {
+            if (Ranges[i].InRange(TorchAmount))
+            {
+                if (CurrentRange != Ranges[i])
+                {
+                    torchSwitch.state.SetAnimation(0, CurrentRange.Min < Ranges[i].Min ? "ignite" : "extinguish", false);
+
+                    CurrentRange = Ranges[i];
+                    if (CurrentRange.RangeType == TorchRangeType.Out)
+                        DarkestSoundManager.ExecuteNarration("torchlight_out", NarrationPlace.Raid);
+                    else if (CurrentRange.RangeType == TorchRangeType.Radiant && TorchAmount > 90)
+                        DarkestSoundManager.ExecuteNarration("torchlight_full", NarrationPlace.Raid);
+
+                    ApplyBuffs();
+                    torchFlame.state.SetAnimation(0, CurrentRange.AnimationId, true);
+                    break;
+                }
+                else
+                    break;
+            }
+        }
+
+        RaidSceneManager.Formations.Heroes.UpdateBuffRule(BuffRule.LightAbove);
+        RaidSceneManager.Formations.Heroes.UpdateBuffRule(BuffRule.LightBelow);
+    }
+
+    private void ApplyBuffs()
+    {
+        for (int j = 0; j < RaidSceneManager.Formations.Heroes.Party.Units.Count; j++)
+        {
+            RaidSceneManager.Formations.Heroes.Party.Units[j].Character.RemoveLightBuffs();
+            for (int k = 0; k < CurrentRange.HeroBuffs.Count; k++)
+                RaidSceneManager.Formations.Heroes.Party.Units[j].Character.AddBuff(
+                    new BuffInfo(CurrentRange.HeroBuffs[k], BuffDurationType.Permanent, BuffSourceType.Light));
+
+            if (RaidSceneManager.RaidPanel.SelectedUnit == RaidSceneManager.Formations.Heroes.Party.Units[j])
+                RaidSceneManager.RaidPanel.HeroPanel.UpdateHero();
+        }
+
+        if (RaidSceneManager.BattleGround.BattleStatus == BattleStatus.Fighting)
+        {
+            for (int j = 0; j < RaidSceneManager.Formations.Monsters.Party.Units.Count; j++)
+            {
+                RaidSceneManager.Formations.Monsters.Party.Units[j].Character.RemoveLightBuffs();
+                if (RaidSceneManager.Formations.Monsters.Party.Units[j].Character.IsMonster)
+                    foreach (Buff buff in CurrentRange.MonsterBuffs)
+                        RaidSceneManager.Formations.Monsters.Party.Units[j].Character.AddBuff(
+                            new BuffInfo(buff, BuffDurationType.Permanent, BuffSourceType.Light));
+                else foreach (Buff buff in CurrentRange.HeroBuffs)
+                    RaidSceneManager.Formations.Monsters.Party.Units[j].Character.AddBuff(
+                        new BuffInfo(buff, BuffDurationType.Permanent, BuffSourceType.Light));
+            }
+        }
     }
 }

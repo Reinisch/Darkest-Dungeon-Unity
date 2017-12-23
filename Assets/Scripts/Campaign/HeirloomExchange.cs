@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public class HeirloomExchange
+﻿public class HeirloomExchange
 {
     public string FromType { get; set; }
     public int FromAmount { get; set; }

@@ -1,20 +1,22 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
 public class DungeonPanel : MonoBehaviour
 {
-    public Text dangeonName;
-    public Slider dangeonProgress;
-    public Text dangeonProgressLevel;
-
-    public string dungeon;
+    [SerializeField]
+    private Slider dangeonProgress;
+    [SerializeField]
+    private Text dangeonProgressLevel;
+    [SerializeField]
+    private string dungeon;
 
     public List<QuestSlot> QuestSlots { get; private set; }
 
-    public event QuestSelectionEvent onQuestSelected;
-
     private DungeonProgress dungeonProgressData;
+
+    public event Action<QuestSlot> EventQuestSelected;
 
     public void Initialize()
     {
@@ -23,7 +25,7 @@ public class DungeonPanel : MonoBehaviour
         for (int i = 0; i < QuestSlots.Count; i++)
         {
             QuestSlots[i].Initialize();
-            QuestSlots[i].onQuestSelected += DungeonPanel_onQuestSelected;
+            QuestSlots[i].EventQuestSelected += DungeonPanelQuestSelected;
         }
 
         dungeonProgressData = DarkestDungeonManager.Campaign.Dungeons[dungeon];
@@ -54,12 +56,11 @@ public class DungeonPanel : MonoBehaviour
 
         for (int i = currentSlot; i < QuestSlots.Count; i++)
             QuestSlots[i].gameObject.SetActive(false);
-
     }
 
-    void DungeonPanel_onQuestSelected(QuestSlot questSlot)
+    private void DungeonPanelQuestSelected(QuestSlot questSlot)
     {
-        if (onQuestSelected != null)
-            onQuestSelected(questSlot);
+        if (EventQuestSelected != null)
+            EventQuestSelected(questSlot);
     }
 }

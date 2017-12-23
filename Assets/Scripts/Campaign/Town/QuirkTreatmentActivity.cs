@@ -5,33 +5,20 @@ public class QuirkTreatmentActivity
 {
     public string Id { get; set; }
 
-    #region Activity Parameters
     public float QuirkTreatmentChance { get; set; }
-
     public CurrencyCost BasePositiveQuirkCost { get; set; }
     public CurrencyCost BaseNegativeQuirkCost { get; set; }
     public CurrencyCost BasePermNegativeCost { get; set; }
     public int BaseQuirkSlots { get; set; }
-
     public CurrencyCost PositiveQuirkCost { get; set; }
     public CurrencyCost NegativeQuirkCost { get; set; }
     public CurrencyCost PermNegativeQuirkCost { get; set; }
     public int QuirkSlots { get; set; }
-    #endregion
 
-    #region Activity Upgrades
     public List<CostUpgrade> PositiveQuirkUpgrades { get; set; }
     public List<CostUpgrade> NegativeQuirkUpgrades { get; set; }
     public List<CostUpgrade> PermNegativeUpgrades { get; set; }
     public List<SlotUpgrade> SlotUpgrades { get; set; }
-    #endregion
-
-    void LogActivity(ActivityType type, Hero hero, params string[] quirks)
-    {
-        var log = DarkestDungeonManager.Campaign.CurrentLog();
-        if (log != null)
-            log.HeroRecords.Add(new ActorActivityRecord(type, hero, quirks));
-    }
 
     public List<TreatmentSlot> TreatmentSlots { get; set; }
 
@@ -55,6 +42,7 @@ public class QuirkTreatmentActivity
 
         TreatmentSlots = new List<TreatmentSlot>();
     }
+
     public void InitializeActivity(Dictionary<string, UpgradePurchases> purchases)
     {
         Reset();
@@ -112,6 +100,7 @@ public class QuirkTreatmentActivity
                         (int)(PositiveQuirkCost.Amount * costModifier), (int)(PermNegativeQuirkCost.Amount * costModifier), 0));
         }
     }
+
     public void ProvideActivity()
     {
         foreach (var treatmentSlot in TreatmentSlots)
@@ -151,8 +140,6 @@ public class QuirkTreatmentActivity
                     treatmentSlot.Hero.Status = HeroStatus.Available;
                     treatmentSlot.Status = ActivitySlotStatus.Available;
                     treatmentSlot.Hero = null;
-                    break;
-                default:
                     break;
             }
         }
@@ -213,6 +200,7 @@ public class QuirkTreatmentActivity
                         (int)(PositiveQuirkCost.Amount * costModifier), (int)(PermNegativeQuirkCost.Amount * costModifier), 0);
         }
     }
+
     public void UpdateActivitySlots(SaveCampaignData saveData)
     {
         bool isActivityFree = DarkestDungeonManager.Campaign.EventModifiers.IsActivityFree(Id);
@@ -249,6 +237,7 @@ public class QuirkTreatmentActivity
                        (int)(PositiveQuirkCost.Amount * costModifier), (int)(PermNegativeQuirkCost.Amount * costModifier), 0);
         }
     }
+
     public List<ITownUpgrade> GetUpgrades(string treeId, string code)
     {
         List<ITownUpgrade> foundUpgrades = new List<ITownUpgrade>();
@@ -265,5 +254,12 @@ public class QuirkTreatmentActivity
         if (upgrade != null)
             foundUpgrades.Add(upgrade);
         return foundUpgrades;
+    }
+
+    private void LogActivity(ActivityType type, Hero hero, params string[] quirks)
+    {
+        var log = DarkestDungeonManager.Campaign.CurrentLog();
+        if (log != null)
+            log.HeroRecords.Add(new ActorActivityRecord(type, hero, quirks));
     }
 }

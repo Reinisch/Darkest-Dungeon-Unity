@@ -15,15 +15,21 @@ public enum TargetSelectParameter
 
 public abstract class TargetSelectionDesire : IProportionValue
 {
-    public string SpecificCombatSkillId { get; set; }
-    public bool IsExclusiveDesire { get; set; }
-    public bool IsEnemyTargetDesire { get; set; }
-    public bool IsFriendlyTargetDesire { get; set; }
+    protected string SpecificCombatSkillId { get; set; }
+    protected bool IsEnemyTargetDesire { get; set; }
+    protected bool IsFriendlyTargetDesire { get; set; }
 
-    public TargetDesireType Type { get; set; }
+    public TargetDesireType Type { get; protected set; }
     public int Chance { get; set; }
 
     protected Dictionary<TargetSelectParameter, bool?> Parameters { get; set; }
+
+    protected TargetSelectionDesire()
+    {
+        Parameters = new Dictionary<TargetSelectParameter, bool?>();
+        foreach (TargetSelectParameter selectionAttribute in System.Enum.GetValues(typeof(TargetSelectParameter)))
+            Parameters.Add(selectionAttribute, null);
+    }
 
     public abstract bool SelectTarget(FormationUnit performer, MonsterBrainDecision decision);
     public abstract void GenerateFromDataSet(Dictionary<string, object> dataSet);
@@ -31,22 +37,8 @@ public abstract class TargetSelectionDesire : IProportionValue
 
 public class TargetSelectionRandom : TargetSelectionDesire
 {
-    public TargetSelectionRandom()
-    {
-        Parameters = new Dictionary<TargetSelectParameter, bool?>();
-        foreach (TargetSelectParameter selectionAttribute
-            in System.Enum.GetValues(typeof(TargetSelectParameter)))
-            Parameters.Add(selectionAttribute, null);
-
-        Type = TargetDesireType.Random;
-    }
     public TargetSelectionRandom(Dictionary<string, object> dataSet)
     {
-        Parameters = new Dictionary<TargetSelectParameter, bool?>();
-        foreach (TargetSelectParameter selectionAttribute
-            in System.Enum.GetValues(typeof(TargetSelectParameter)))
-            Parameters.Add(selectionAttribute, null);
-
         Type = TargetDesireType.Random;
 
         GenerateFromDataSet(dataSet);
@@ -113,7 +105,8 @@ public class TargetSelectionRandom : TargetSelectionDesire
         }
         return false;
     }
-    public override void GenerateFromDataSet(Dictionary<string, object> dataSet)
+
+    public sealed override void GenerateFromDataSet(Dictionary<string, object> dataSet)
     {
         foreach (var token in dataSet)
         {
@@ -126,7 +119,6 @@ public class TargetSelectionRandom : TargetSelectionDesire
                     SpecificCombatSkillId = (string)dataSet["specific_combat_skill_id"];
                     break;
                 case "is_exclusive_desire":
-                    IsExclusiveDesire = (bool)dataSet[token.Key];
                     break;
                 case "is_enemy_target_desire":
                     IsEnemyTargetDesire = (bool)dataSet[token.Key];
@@ -159,22 +151,8 @@ public class TargetSelectionRandom : TargetSelectionDesire
 
 public class TargetSelectionMarked : TargetSelectionDesire
 {
-    public TargetSelectionMarked()
-    {
-        Parameters = new Dictionary<TargetSelectParameter, bool?>();
-        foreach (TargetSelectParameter selectionAttribute
-            in System.Enum.GetValues(typeof(TargetSelectParameter)))
-            Parameters.Add(selectionAttribute, null);
-
-        Type = TargetDesireType.Marked;
-    }
     public TargetSelectionMarked(Dictionary<string, object> dataSet)
     {
-        Parameters = new Dictionary<TargetSelectParameter, bool?>();
-        foreach (TargetSelectParameter selectionAttribute
-            in System.Enum.GetValues(typeof(TargetSelectParameter)))
-            Parameters.Add(selectionAttribute, null);
-
         Type = TargetDesireType.Marked;
 
         GenerateFromDataSet(dataSet);
@@ -247,7 +225,8 @@ public class TargetSelectionMarked : TargetSelectionDesire
         }
         return false;
     }
-    public override void GenerateFromDataSet(Dictionary<string, object> dataSet)
+
+    public sealed override void GenerateFromDataSet(Dictionary<string, object> dataSet)
     {
         foreach (var token in dataSet)
         {
@@ -260,7 +239,6 @@ public class TargetSelectionMarked : TargetSelectionDesire
                     SpecificCombatSkillId = (string)dataSet["specific_combat_skill_id"];
                     break;
                 case "is_exclusive_desire":
-                    IsExclusiveDesire = (bool)dataSet[token.Key];
                     break;
                 case "is_enemy_target_desire":
                     IsEnemyTargetDesire = (bool)dataSet[token.Key];
@@ -278,22 +256,8 @@ public class TargetSelectionMarked : TargetSelectionDesire
 
 public class TargetSelectionFillCaptor : TargetSelectionDesire
 {
-    public TargetSelectionFillCaptor()
-    {
-        Parameters = new Dictionary<TargetSelectParameter, bool?>();
-        foreach (TargetSelectParameter selectionAttribute
-            in System.Enum.GetValues(typeof(TargetSelectParameter)))
-            Parameters.Add(selectionAttribute, null);
-
-        Type = TargetDesireType.FillEmptyCaptor;
-    }
     public TargetSelectionFillCaptor(Dictionary<string, object> dataSet)
     {
-        Parameters = new Dictionary<TargetSelectParameter, bool?>();
-        foreach (TargetSelectParameter selectionAttribute
-            in System.Enum.GetValues(typeof(TargetSelectParameter)))
-            Parameters.Add(selectionAttribute, null);
-
         Type = TargetDesireType.FillEmptyCaptor;
 
         GenerateFromDataSet(dataSet);
@@ -355,7 +319,8 @@ public class TargetSelectionFillCaptor : TargetSelectionDesire
         }
         return false;
     }
-    public override void GenerateFromDataSet(Dictionary<string, object> dataSet)
+
+    public sealed override void GenerateFromDataSet(Dictionary<string, object> dataSet)
     {
         foreach (var token in dataSet)
         {
@@ -368,7 +333,6 @@ public class TargetSelectionFillCaptor : TargetSelectionDesire
                     SpecificCombatSkillId = (string)dataSet["specific_combat_skill_id"];
                     break;
                 case "is_exclusive_desire":
-                    IsExclusiveDesire = (bool)dataSet[token.Key];
                     break;
                 case "is_enemy_target_desire":
                     IsEnemyTargetDesire = (bool)dataSet[token.Key];
@@ -392,25 +356,10 @@ public class TargetSelectionFillCaptor : TargetSelectionDesire
 
 public class TargetSelectionHealth : TargetSelectionDesire
 {
-    public string AllyBaseClassId { get; set; }
-    public bool IsGreaterComparison { get; set; }
+    private string AllyBaseClassId { get; set; }
     
-    public TargetSelectionHealth()
-    {
-        Parameters = new Dictionary<TargetSelectParameter, bool?>();
-        foreach (TargetSelectParameter selectionAttribute
-            in System.Enum.GetValues(typeof(TargetSelectParameter)))
-            Parameters.Add(selectionAttribute, null);
-
-        Type = TargetDesireType.Health;
-    }
     public TargetSelectionHealth(Dictionary<string, object> dataSet)
     {
-        Parameters = new Dictionary<TargetSelectParameter, bool?>();
-        foreach (TargetSelectParameter selectionAttribute
-            in System.Enum.GetValues(typeof(TargetSelectParameter)))
-            Parameters.Add(selectionAttribute, null);
-
         Type = TargetDesireType.Health;
 
         GenerateFromDataSet(dataSet);
@@ -429,7 +378,7 @@ public class TargetSelectionHealth : TargetSelectionDesire
             return false;
 
         var availableTargets = new List<FormationUnit>(decision.TargetInfo.Targets);
-        if (AllyBaseClassId != null && AllyBaseClassId != "")
+        if (!string.IsNullOrEmpty(AllyBaseClassId))
             availableTargets.RemoveAll(target => target.Character.Class != AllyBaseClassId);
         if (availableTargets.Count == 0)
             return false;
@@ -481,7 +430,8 @@ public class TargetSelectionHealth : TargetSelectionDesire
         }
         return false;
     }
-    public override void GenerateFromDataSet(Dictionary<string, object> dataSet)
+
+    public sealed override void GenerateFromDataSet(Dictionary<string, object> dataSet)
     {
         foreach (var token in dataSet)
         {
@@ -494,7 +444,6 @@ public class TargetSelectionHealth : TargetSelectionDesire
                     SpecificCombatSkillId = (string)dataSet["specific_combat_skill_id"];
                     break;
                 case "is_exclusive_desire":
-                    IsExclusiveDesire = (bool)dataSet[token.Key];
                     break;
                 case "is_enemy_target_desire":
                     IsEnemyTargetDesire = (bool)dataSet[token.Key];
@@ -503,7 +452,6 @@ public class TargetSelectionHealth : TargetSelectionDesire
                     IsFriendlyTargetDesire = (bool)dataSet[token.Key];
                     break;
                 case "is_greater_comparison":
-                    IsGreaterComparison = (bool)dataSet[token.Key];
                     break;
                 case "ally_base_class_id":
                     AllyBaseClassId = (string)dataSet[token.Key];
@@ -518,24 +466,8 @@ public class TargetSelectionHealth : TargetSelectionDesire
 
 public class TargetSelectionStress : TargetSelectionDesire
 {
-    public bool IsGreaterComparison { get; set; }
-
-    public TargetSelectionStress()
-    {
-        Parameters = new Dictionary<TargetSelectParameter, bool?>();
-        foreach (TargetSelectParameter selectionAttribute
-            in System.Enum.GetValues(typeof(TargetSelectParameter)))
-            Parameters.Add(selectionAttribute, null);
-
-        Type = TargetDesireType.Stress;
-    }
     public TargetSelectionStress(Dictionary<string, object> dataSet)
     {
-        Parameters = new Dictionary<TargetSelectParameter, bool?>();
-        foreach (TargetSelectParameter selectionAttribute
-            in System.Enum.GetValues(typeof(TargetSelectParameter)))
-            Parameters.Add(selectionAttribute, null);
-
         Type = TargetDesireType.Stress;
 
         GenerateFromDataSet(dataSet);
@@ -602,7 +534,8 @@ public class TargetSelectionStress : TargetSelectionDesire
         }
         return false;
     }
-    public override void GenerateFromDataSet(Dictionary<string, object> dataSet)
+
+    public sealed override void GenerateFromDataSet(Dictionary<string, object> dataSet)
     {
         foreach (var token in dataSet)
         {
@@ -615,7 +548,6 @@ public class TargetSelectionStress : TargetSelectionDesire
                     SpecificCombatSkillId = (string)dataSet["specific_combat_skill_id"];
                     break;
                 case "is_exclusive_desire":
-                    IsExclusiveDesire = (bool)dataSet[token.Key];
                     break;
                 case "is_enemy_target_desire":
                     IsEnemyTargetDesire = (bool)dataSet[token.Key];
@@ -624,7 +556,6 @@ public class TargetSelectionStress : TargetSelectionDesire
                     IsFriendlyTargetDesire = (bool)dataSet[token.Key];
                     break;
                 case "is_greater_comparison":
-                    IsGreaterComparison = (bool)dataSet["is_greater_comparison"];
                     break;
                 case "can_target_not_overstressed":
                     Parameters[TargetSelectParameter.CanTargetNotOverstressed] = (bool)dataSet[token.Key];
@@ -645,24 +576,10 @@ public class TargetSelectionStress : TargetSelectionDesire
 
 public class TargetSelectionAllyClass : TargetSelectionDesire
 {
-    public string AllyBaseClass { get; set; }
+    private string AllyBaseClass { get; set; }
 
-    public TargetSelectionAllyClass()
-    {
-        Parameters = new Dictionary<TargetSelectParameter, bool?>();
-        foreach (TargetSelectParameter selectionAttribute
-            in System.Enum.GetValues(typeof(TargetSelectParameter)))
-            Parameters.Add(selectionAttribute, null);
-
-        Type = TargetDesireType.AllyClass;
-    }
     public TargetSelectionAllyClass(Dictionary<string, object> dataSet)
     {
-        Parameters = new Dictionary<TargetSelectParameter, bool?>();
-        foreach (TargetSelectParameter selectionAttribute
-            in System.Enum.GetValues(typeof(TargetSelectParameter)))
-            Parameters.Add(selectionAttribute, null);
-
         Type = TargetDesireType.AllyClass;
 
         GenerateFromDataSet(dataSet);
@@ -730,7 +647,8 @@ public class TargetSelectionAllyClass : TargetSelectionDesire
         }
         return false;
     }
-    public override void GenerateFromDataSet(Dictionary<string, object> dataSet)
+
+    public sealed override void GenerateFromDataSet(Dictionary<string, object> dataSet)
     {
         foreach (var token in dataSet)
         {
@@ -743,7 +661,6 @@ public class TargetSelectionAllyClass : TargetSelectionDesire
                     SpecificCombatSkillId = (string)dataSet["specific_combat_skill_id"];
                     break;
                 case "is_exclusive_desire":
-                    IsExclusiveDesire = (bool)dataSet[token.Key];
                     break;
                 case "is_enemy_target_desire":
                     IsEnemyTargetDesire = (bool)dataSet[token.Key];
@@ -764,25 +681,10 @@ public class TargetSelectionAllyClass : TargetSelectionDesire
 
 public class TargetSelectionResistance : TargetSelectionDesire
 {
-    public AttributeType ResistanceType { get; set; }
-    public bool IsGreaterComparison { get; set; }
+    private AttributeType ResistanceType { get; set; }
 
-    public TargetSelectionResistance()
-    {
-        Parameters = new Dictionary<TargetSelectParameter, bool?>();
-        foreach (TargetSelectParameter selectionAttribute
-            in System.Enum.GetValues(typeof(TargetSelectParameter)))
-            Parameters.Add(selectionAttribute, null);
-
-        Type = TargetDesireType.Resistance;
-    }
     public TargetSelectionResistance(Dictionary<string, object> dataSet)
     {
-        Parameters = new Dictionary<TargetSelectParameter, bool?>();
-        foreach (TargetSelectParameter selectionAttribute
-            in System.Enum.GetValues(typeof(TargetSelectParameter)))
-            Parameters.Add(selectionAttribute, null);
-
         Type = TargetDesireType.Resistance;
 
         GenerateFromDataSet(dataSet);
@@ -868,7 +770,8 @@ public class TargetSelectionResistance : TargetSelectionDesire
         }
         return false;
     }
-    public override void GenerateFromDataSet(Dictionary<string, object> dataSet)
+
+    public sealed override void GenerateFromDataSet(Dictionary<string, object> dataSet)
     {
         foreach (var token in dataSet)
         {
@@ -881,7 +784,6 @@ public class TargetSelectionResistance : TargetSelectionDesire
                     SpecificCombatSkillId = (string)dataSet["specific_combat_skill_id"];
                     break;
                 case "is_exclusive_desire":
-                    IsExclusiveDesire = (bool)dataSet[token.Key];
                     break;
                 case "is_enemy_target_desire":
                     IsEnemyTargetDesire = (bool)dataSet[token.Key];
@@ -890,7 +792,6 @@ public class TargetSelectionResistance : TargetSelectionDesire
                     IsFriendlyTargetDesire = (bool)dataSet[token.Key];
                     break;
                 case "is_greater_comparison":
-                    IsGreaterComparison = (bool)dataSet["is_greater_comparison"];
                     break;
                 case "can_target_deaths_door":
                     Parameters[TargetSelectParameter.CanTargetDeathsDoor] = (bool)dataSet[token.Key];
@@ -911,22 +812,8 @@ public class TargetSelectionResistance : TargetSelectionDesire
 
 public class TargetSelectionRank : TargetSelectionDesire
 {
-    public TargetSelectionRank()
-    {
-        Parameters = new Dictionary<TargetSelectParameter, bool?>();
-        foreach (TargetSelectParameter selectionAttribute
-            in System.Enum.GetValues(typeof(TargetSelectParameter)))
-            Parameters.Add(selectionAttribute, null);
-
-        Type = TargetDesireType.Rank;
-    }
     public TargetSelectionRank(Dictionary<string, object> dataSet)
     {
-        Parameters = new Dictionary<TargetSelectParameter, bool?>();
-        foreach (TargetSelectParameter selectionAttribute
-            in System.Enum.GetValues(typeof(TargetSelectParameter)))
-            Parameters.Add(selectionAttribute, null);
-
         Type = TargetDesireType.Rank;
 
         GenerateFromDataSet(dataSet);
@@ -945,7 +832,7 @@ public class TargetSelectionRank : TargetSelectionDesire
             return false;
 
         var availableTargets = new List<FormationUnit>(decision.TargetInfo.Targets);
-        availableTargets.RemoveAll(target => !target.Formation.rankHolder.MarkedRanks.Contains(target.Rank));
+        availableTargets.RemoveAll(target => !target.Formation.RankHolder.MarkedRanks.Contains(target.Rank));
 
         if (Parameters[TargetSelectParameter.CanTargetDeathsDoor].HasValue)
             if (!Parameters[TargetSelectParameter.CanTargetDeathsDoor].Value)
@@ -994,7 +881,8 @@ public class TargetSelectionRank : TargetSelectionDesire
         }
         return false;
     }
-    public override void GenerateFromDataSet(Dictionary<string, object> dataSet)
+
+    public sealed override void GenerateFromDataSet(Dictionary<string, object> dataSet)
     {
         foreach (var token in dataSet)
         {
@@ -1007,7 +895,6 @@ public class TargetSelectionRank : TargetSelectionDesire
                     SpecificCombatSkillId = (string)dataSet["specific_combat_skill_id"];
                     break;
                 case "is_exclusive_desire":
-                    IsExclusiveDesire = (bool)dataSet[token.Key];
                     break;
                 case "is_enemy_target_desire":
                     IsEnemyTargetDesire = (bool)dataSet[token.Key];

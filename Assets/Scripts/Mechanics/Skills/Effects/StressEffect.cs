@@ -42,7 +42,7 @@ public class StressEffect : SubEffect
             if (Mathf.Approximately(target.Character.Stress.CurrentValue, 200))
                 RaidSceneManager.Instanse.AddHeartAttackCheck(target);
         }
-        target.OverlaySlot.stressBar.UpdateStress(target.Character.Stress.ValueRatio);
+        target.OverlaySlot.UpdateOverlay();
         return true;
     }
 
@@ -78,7 +78,7 @@ public class StressEffect : SubEffect
                 RaidSceneManager.Instanse.AddHeartAttackCheck(target);
         }
 
-        target.OverlaySlot.stressBar.UpdateStress(target.Character.Stress.ValueRatio);
+        target.OverlaySlot.UpdateOverlay();
         RaidSceneManager.RaidEvents.ShowPopupMessage(target, PopupMessageType.Stress, damage.ToString());
         target.SetHalo("afflicted");
         return true;
@@ -104,7 +104,7 @@ public class StressEffect : SubEffect
                 RaidSceneManager.Instanse.AddHeartAttackCheck(target);
         }
 
-        target.OverlaySlot.stressBar.UpdateStress(target.Character.Stress.ValueRatio);
+        target.OverlaySlot.UpdateOverlay();
         RaidSceneManager.RaidEvents.ShowPopupMessage(target, PopupMessageType.Stress, fuseParameter.ToString());
         target.SetHalo("afflicted");
         return true;

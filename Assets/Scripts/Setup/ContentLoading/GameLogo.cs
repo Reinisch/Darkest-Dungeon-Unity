@@ -1,12 +1,11 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 #if !UNITY_WEBGL
 public class GameLogo : MonoBehaviour
 {
-    GameIntro gameIntro;
+    private GameIntro gameIntro;
 
-    void Awake()
+    private void Awake()
     {
         gameIntro = transform.GetComponentInParent<GameIntro>();
     }

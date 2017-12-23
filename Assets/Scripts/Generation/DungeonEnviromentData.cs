@@ -2,10 +2,6 @@
 
 public class DungeonEnviromentData
 {
-    public string Dungeon { get; set; }
-    public int Id { get; set; }
-    public bool IsReady { get; set; }
-
     public int HallVariations { get; set; }
     public List<string> RoomVariations { get; set; }
     public List<DungeonBattleMash> BattleMashes { get; set; }
@@ -53,7 +49,7 @@ public class DungeonBattleMash
 public class DungeonPropsEncounter : IProportionValue
 {
     public int Chance { get; set; }
-    public string PropName { get; set; }
+    public string PropName { get; private set; }
 
     public DungeonPropsEncounter(int chance, string prop)
     {
@@ -65,7 +61,7 @@ public class DungeonPropsEncounter : IProportionValue
 public class DungeonBattleEncounter : IProportionValue
 {
     public int Chance { get; set; }
-    public List<string> MonsterSet { get; set; }
+    public List<string> MonsterSet { get; private set; }
 
     public DungeonBattleEncounter()
     {

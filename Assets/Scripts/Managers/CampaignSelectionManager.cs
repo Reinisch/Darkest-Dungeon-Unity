@@ -1,34 +1,45 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public enum CampaignSelection { Singleplayer, Multiplayer }
+public enum CampaignSelection
+{
+    Singleplayer,
+    Multiplayer
+}
 
 public class CampaignSelectionManager : MonoBehaviour
 {
     public static CampaignSelectionManager Instanse { get; private set; }
 
-    public SaveSelector saveSelector;
-    public RoomSelector roomSelector;
-    public RectTransform titleRect;
-    public RectTransform overlayTitleRect;
+    [SerializeField]
+    private SaveSelector saveSelector;
+    [SerializeField]
+    private RoomSelector roomSelector;
+    [SerializeField]
+    private RectTransform titleRect;
+    [SerializeField]
+    private RectTransform overlayTitleRect;
+
+    public RoomSelector RoomSelector { get { return roomSelector; } }
+    public RectTransform TitleRect { get { return titleRect; } }
+    public RectTransform OverlayTitleRect { get { return overlayTitleRect; } }
 
     public static void OnSelectionStart(CampaignSelection selection)
     {
-        Instanse.saveSelector.startCampaignButton.interactable = false;
-        Instanse.saveSelector.returnButton.gameObject.SetActive(selection == CampaignSelection.Singleplayer);
-        Instanse.roomSelector.startCampaignButton.interactable = false;
-        Instanse.roomSelector.returnButton.gameObject.SetActive(selection == CampaignSelection.Multiplayer);
+        Instanse.saveSelector.StartCampaignButton.interactable = false;
+        Instanse.saveSelector.ReturnButton.gameObject.SetActive(selection == CampaignSelection.Singleplayer);
+        Instanse.RoomSelector.StartCampaignButton.interactable = false;
+        Instanse.RoomSelector.ReturnButton.gameObject.SetActive(selection == CampaignSelection.Multiplayer);
     }
 
     public static void OnSelectionReturn()
     {
-        Instanse.saveSelector.startCampaignButton.interactable = true;
-        Instanse.saveSelector.returnButton.gameObject.SetActive(false);
-        Instanse.roomSelector.startCampaignButton.interactable = true;
-        Instanse.roomSelector.returnButton.gameObject.SetActive(false);
+        Instanse.saveSelector.StartCampaignButton.interactable = true;
+        Instanse.saveSelector.ReturnButton.gameObject.SetActive(false);
+        Instanse.RoomSelector.StartCampaignButton.interactable = true;
+        Instanse.RoomSelector.ReturnButton.gameObject.SetActive(false);
     }
 
-    void Awake()
+    private void Awake()
     {
         if (Instanse == null)
             Instanse = this;
@@ -36,7 +47,7 @@ public class CampaignSelectionManager : MonoBehaviour
             Destroy(gameObject);
     }
 
-    void Start()
+    private void Start()
     {
         DarkestDungeonManager.Instanse.UpdateSceneOverlay(FindObjectOfType<Camera>());
     }

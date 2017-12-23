@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class RectLocker : MonoBehaviour
 {
-    public RectTransform target;
-    public RectTransform rect;
+    [SerializeField]
+    private RectTransform target;
+    [SerializeField]
+    private RectTransform rect;
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         rect.localPosition = target.localPosition;
     }

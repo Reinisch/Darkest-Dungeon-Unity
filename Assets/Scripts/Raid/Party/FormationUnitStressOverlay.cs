@@ -3,11 +3,10 @@ using System.Collections.Generic;
 
 public class FormationUnitStressOverlay : MonoBehaviour
 {
-    const int StressPipCount = 10;
+    private const int StressPipCount = 10;
+    private List<StressPip> stressPips;
 
-    List<StressPip> stressPips;
-
-    void Awake()
+    private void Awake()
     {
         stressPips = new List<StressPip>();
 

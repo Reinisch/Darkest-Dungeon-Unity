@@ -1,17 +1,20 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
-
-public delegate void QuestSelectionEvent(QuestSlot questSlot);
 
 public class QuestSlot : MonoBehaviour
 {
-    bool isSelected = false;
+    [SerializeField]
+    private Image selectedFrame;
+    [SerializeField]
+    private Image lengthFrame;
+    [SerializeField]
+    private Image typeFrame;
+
+    public Quest Quest { get; private set; }
+
     public bool Selected
     {
-        get
-        {
-            return isSelected; 
-        }
         set
         {
             isSelected = value;
@@ -21,16 +24,12 @@ public class QuestSlot : MonoBehaviour
         }
     }
 
-    public Button questSelectButton;
-    public Image selectedFrame;
-    public Image lengthFrame;
-    public Image typeFrame;
+    private RectTransform RectTransform { get; set; }
+    private Animator Animator { get; set; }
 
-    public RectTransform RectTransform { get; private set; }
-    public Animator Animator { get; private set; }
-    public Quest Quest { get; set;}
+    private bool isSelected;
 
-    public event QuestSelectionEvent onQuestSelected;
+    public event Action<QuestSlot> EventQuestSelected;
 
     public void Initialize()
     {
@@ -58,7 +57,7 @@ public class QuestSlot : MonoBehaviour
     {
         DarkestSoundManager.PlayOneShot("event:/ui/town/dungeon_select");
 
-        if (onQuestSelected != null)
-            onQuestSelected(this);
+        if (EventQuestSelected != null)
+            EventQuestSelected(this);
     }
 }

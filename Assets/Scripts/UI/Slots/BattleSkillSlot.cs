@@ -1,28 +1,28 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public delegate void BattleSkillSlotEvent(BattleSkillSlot slot);
-
 public class BattleSkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
-    public Image skillIcon;
-    public Image selectorIcon;
+    [SerializeField]
+    private Image skillIcon;
+    [SerializeField]
+    private Image selectorIcon;
 
-    public Hero Hero { get; private set; }
     public CombatSkill Skill { get; private set; }
-    public RectTransform RectTransform { get; private set; }
+    public bool IsEmpty { get; private set; }
+    public bool Selected { get; private set; }
 
-    public bool Selected { get; set; }
-    public bool Available { get; set; }
-    public bool Highlighted { get; set; }
-    public bool Selectable { get; set; }
-    public bool Deselectable { get; set; }
-    public bool IsEmpty { get; set; }
+    private Hero Hero { get; set; }
+    private RectTransform RectTransform { get; set; }
+    private bool Available { get; set; }
+    private bool Selectable { get; set; }
+    private bool Deselectable { get; set; }
 
-    public event BattleSkillSlotEvent onSkillSelected;
+    public event Action<BattleSkillSlot> EventSkillSelected;
 
-    void Awake()
+    private void Awake()
     {
         RectTransform = GetComponent<RectTransform>();
     }
@@ -32,9 +32,10 @@ public class BattleSkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnte
         Selected = true;
         selectorIcon.enabled = true;
 
-        if (onSkillSelected != null)
-            onSkillSelected(this);
+        if (EventSkillSelected != null)
+            EventSkillSelected(this);
     }
+
     public void Deselect()
     {
         Selected = false;
@@ -52,6 +53,7 @@ public class BattleSkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnte
 
         IsEmpty = false;
     }
+
     public void SetDisabledState()
     {
         selectorIcon.enabled = false;
@@ -65,6 +67,7 @@ public class BattleSkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnte
 
         IsEmpty = false;
     }
+
     public void SetEmptyState()
     {
         Hero = null;
@@ -77,11 +80,10 @@ public class BattleSkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnte
         Deselectable = false;
         Selected = false;
         Available = false;
-        Highlighted = false;
         IsEmpty = true;
     }
 
-    public virtual void UpdateSkill(Hero hero, CombatSkill combatSkill)
+    public void UpdateSkill(Hero hero, CombatSkill combatSkill)
     {
         Hero = hero;
         Skill = combatSkill;
@@ -95,12 +97,13 @@ public class BattleSkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnte
         else
             ResetSkill();
     }
-    public virtual void ResetSkill()
+
+    public void ResetSkill()
     {
         SetEmptyState();
     }
 
-    public virtual void OnPointerClick(PointerEventData eventData)
+    public void OnPointerClick(PointerEventData eventData)
     {
         if (!Available)
             return;
@@ -110,24 +113,18 @@ public class BattleSkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnte
         else if (!Selected && Selectable)
             Select();
     }
-    public virtual void OnPointerEnter(PointerEventData eventData)
+
+    public void OnPointerEnter(PointerEventData eventData)
     {
-        Highlighted = true;
-        if (!Available)
-            skillIcon.material = DarkestDungeonManager.GrayMaterial;
-        else
-            skillIcon.material = DarkestDungeonManager.HighlightMaterial;
+        skillIcon.material = !Available ? DarkestDungeonManager.GrayMaterial : DarkestDungeonManager.HighlightMaterial;
 
         if (Skill != null)
-            ToolTipManager.Instanse.ShowSkillTooltip(Hero, Skill, eventData, RectTransform, ToolTipStyle.FromTop, ToolTipSize.Normal);
+            ToolTipManager.Instanse.ShowSkillTooltip(Hero, Skill, RectTransform, ToolTipStyle.FromTop, ToolTipSize.Normal);
     }
-    public virtual void OnPointerExit(PointerEventData eventData)
+
+    public void OnPointerExit(PointerEventData eventData)
     {
-        Highlighted = false;
-        if (!Available)
-            skillIcon.material = DarkestDungeonManager.FullGrayDarkMaterial;
-        else
-            skillIcon.material = skillIcon.defaultMaterial;
+        skillIcon.material = !Available ? DarkestDungeonManager.FullGrayDarkMaterial : skillIcon.defaultMaterial;
         ToolTipManager.Instanse.Hide();
     }
 }

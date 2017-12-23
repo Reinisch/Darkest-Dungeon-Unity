@@ -1,11 +1,11 @@
 ﻿public class EffectEvent
 {
-    public FormationUnit Performer { get; private set; }
-    public FormationUnit Target { get; private set; }
-    public Effect Effect { get; private set; }
     public SubEffect SubEffect { get; private set; }
 
-    public int StackParameter { get; set; }
+    private FormationUnit Performer { get; set; }
+    private FormationUnit Target { get; set; }
+    private Effect Effect { get; set; }
+    private int StackParameter { get; set; }
 
     public EffectEvent(FormationUnit performer, FormationUnit target, Effect effect, SubEffect subEffect)
     {
@@ -19,10 +19,12 @@
     {
         StackParameter += nextEvent.SubEffect.Fuse(nextEvent.Performer, nextEvent.Target, nextEvent.Effect);
     }
+
     public void FuseSelf()
     {
         StackParameter = SubEffect.Fuse(Performer, Target, Effect);
     }
+
     public void Execute()
     {
         if (StackParameter > 0)

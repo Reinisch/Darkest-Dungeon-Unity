@@ -4,9 +4,12 @@ using System.Collections.Generic;
 
 public class PartyCompositionPanel : MonoBehaviour
 {
-    public Text partyName;
-    public Animator partyAnimator;
-    public SkeletonAnimation compAnimation;
+    [SerializeField]
+    private Text partyName;
+    [SerializeField]
+    private Animator partyAnimator;
+    [SerializeField]
+    private SkeletonAnimation compAnimation;
 
     public void UpdateComposition(List<string> partyClasses)
     {

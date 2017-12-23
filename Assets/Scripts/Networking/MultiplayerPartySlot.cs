@@ -1,21 +1,13 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System;
 
 public class MultiplayerPartySlot : MonoBehaviour, IPointerEnterHandler
 {
-    public Image slotFrame;
-    public Image heroFrame;
+    [SerializeField]
+    private Image heroFrame;
 
-    public int SlotId { get; set; }
-    public Hero SelectedHero { get; set; }
-    public RectTransform RectTransform { get; private set; }
-
-    void Awake()
-    {
-        RectTransform = GetComponent<RectTransform>();
-    }
+    public Hero SelectedHero { get; private set; }
 
     public void UpdateHero(Hero hero)
     {

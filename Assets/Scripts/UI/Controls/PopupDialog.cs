@@ -4,21 +4,23 @@ using System.Text;
 
 public class PopupDialog : MonoBehaviour
 {
-    public Animator dialogAnimator;
-    public RectTransform textRectTransform;
-    public Text dialogText;
+    [SerializeField]
+    private Animator dialogAnimator;
+    [SerializeField]
+    private Text dialogText;
 
-    public string Speech { get; private set; }
     public bool IsActive { get; private set; }
-    public bool Skipable { get; set; }
 
-    StringBuilder currentText = new StringBuilder("", 100);
-    float additionalShowTime = 1f;
-    float charPerSec = 30;
-    float charTime = 0;
-    int currentIndex = 0;
+    private string Speech { get; set; }
+    private bool Skipable { get; set; }
 
-    void Update()
+    private readonly StringBuilder currentText = new StringBuilder("", 100);
+    private float additionalShowTime = 1f;
+    private float charPerSec = 30;
+    private float charTime;
+    private int currentIndex;
+
+    private void Update()
     {
         if (IsActive)
         {
@@ -64,6 +66,7 @@ public class PopupDialog : MonoBehaviour
         currentText.Append("</color>");
         dialogAnimator.SetBool("IsShown", true);
     }
+
     public void DeactivateDialog()
     {
         IsActive = false;

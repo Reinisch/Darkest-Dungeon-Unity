@@ -6,14 +6,16 @@ using System;
 
 public class ScreenLoader : MonoBehaviour
 {
-    AsyncOperation async;
+    [SerializeField]
+    private Image loadingImage;
+    [SerializeField]
+    private Text title;
+    [SerializeField]
+    private Text description;
 
-    public Image loadingImage;
-    public Text title;
-    public Text description;
-    public Text continueText;
+    private AsyncOperation async;
 
-    void Awake()
+    private void Awake()
     {
         DarkestDungeonManager.ScreenFader.StartFaded();
 
@@ -60,20 +62,20 @@ public class ScreenLoader : MonoBehaviour
         else
             SceneManager.LoadScene(DarkestDungeonManager.LoadingInfo.NextScene);
     }
-	void Start()
+
+    private void Start()
     {
         if (!DarkestDungeonManager.SkipTransactions)
-        {
             StartCoroutine(SceneLoading());
-        }
 	}
 
-    IEnumerator SceneLoading()
+    private IEnumerator SceneLoading()
     {
         Resources.UnloadUnusedAssets();
         GC.Collect();
+
         yield return new WaitForEndOfFrame();
-        DarkestDungeonManager.ScreenFader.Appear(1);
+        DarkestDungeonManager.ScreenFader.Appear();
         yield return new WaitForSeconds(1f);
         async = SceneManager.LoadSceneAsync(DarkestDungeonManager.LoadingInfo.NextScene);
         async.allowSceneActivation = false;
@@ -89,7 +91,7 @@ public class ScreenLoader : MonoBehaviour
         while (DarkestSoundManager.NarrationQueue.Count > 0)
             yield return null;
 
-        DarkestDungeonManager.ScreenFader.Fade(1);
+        DarkestDungeonManager.ScreenFader.Fade();
         yield return new WaitForSeconds(1f);
         async.allowSceneActivation = true;
     }

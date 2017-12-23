@@ -3,45 +3,45 @@ using System.Collections.Generic;
 
 public class CharCampingSkillPanel : MonoBehaviour
 {
-    public List<CampingSkillSlot> skillSlots;
+    [SerializeField]
+    private List<CampingSkillSlot> skillSlots;
 
-    Hero currentHero;
-    bool interactable;
+    private Hero currentHero;
+    private bool interactable;
 
-    void Awake()
+    private void Awake()
     {
         for (int i = 0; i < skillSlots.Count; i++)
         {
-            skillSlots[i].onSkillSelected += CharCampingSkillPanel_onSkillSelected;
-            skillSlots[i].onSkillDeselected += CharCampingSkillPanel_onSkillDeselected;
+            skillSlots[i].EventSkillSelected += CharCampingSkillPanelSkillSelected;
+            skillSlots[i].EventSkillDeselected += CharCampingSkillPanelSkillDeselected;
         }
     }
 
-    void CharCampingSkillPanel_onSkillDeselected(CampingSkillSlot slot)
+    private void CharCampingSkillPanelSkillDeselected(CampingSkillSlot slot)
     {
         if (currentHero.SelectedCampingSkills.Count == 3)
             for (int i = 0; i < skillSlots.Count; i++)
                 if (!skillSlots[i].Selected && !skillSlots[i].Locked)
                 {
                     skillSlots[i].Available = true;
-                    if (skillSlots[i].Highlighted)
-                        skillSlots[i].skillIcon.material = DarkestDungeonManager.HighlightMaterial;
-                    else
-                        skillSlots[i].skillIcon.material = skillSlots[i].skillIcon.defaultMaterial;
+                    skillSlots[i].SkillIcon.material = skillSlots[i].Highlighted ?
+                        DarkestDungeonManager.HighlightMaterial : skillSlots[i].SkillIcon.defaultMaterial;
                 }
     }
-    void CharCampingSkillPanel_onSkillSelected(CampingSkillSlot slot)
+
+    private void CharCampingSkillPanelSkillSelected(CampingSkillSlot slot)
     {
-        if (currentHero.SelectedCampingSkills.Count == 4)
-            for (int i = 0; i < skillSlots.Count; i++)
-                if (!skillSlots[i].Selected)
-                {
-                    skillSlots[i].Available = false;
-                    if (skillSlots[i].Highlighted)
-                        skillSlots[i].skillIcon.material = DarkestDungeonManager.GrayHighlightMaterial;
-                    else
-                        skillSlots[i].skillIcon.material = DarkestDungeonManager.GrayMaterial;
-                }
+        if (currentHero.SelectedCampingSkills.Count != 4)
+            return;
+
+        for (int i = 0; i < skillSlots.Count; i++)
+            if (!skillSlots[i].Selected)
+            {
+                skillSlots[i].Available = false;
+                skillSlots[i].SkillIcon.material = skillSlots[i].Highlighted ?
+                    DarkestDungeonManager.GrayHighlightMaterial : DarkestDungeonManager.GrayMaterial;
+            }
     }
 
     public void UpdateCampingSkillPanel(Hero hero, bool allowedInteraction)
@@ -57,42 +57,26 @@ public class CharCampingSkillPanel : MonoBehaviour
         }
 
         if (currentHero.SelectedCampingSkills.Count == 4)
-            for (int i = 0; i < skillSlots.Count; i++)
+            foreach (CampingSkillSlot slot in skillSlots)
             {
-                if (!skillSlots[i].Selected)
+                if (!slot.Selected)
                 {
-                    skillSlots[i].Available = false;
-                    if (skillSlots[i].Highlighted)
-                        skillSlots[i].skillIcon.material = DarkestDungeonManager.GrayHighlightMaterial;
-                    else
-                        skillSlots[i].skillIcon.material = DarkestDungeonManager.GrayMaterial;
+                    slot.Available = false;
+                    slot.SkillIcon.material = slot.Highlighted ? DarkestDungeonManager.GrayHighlightMaterial : DarkestDungeonManager.GrayMaterial;
                 }
                 else
                 {
-                    skillSlots[i].Available = true;
-                    if (skillSlots[i].Highlighted)
-                        skillSlots[i].skillIcon.material = DarkestDungeonManager.HighlightMaterial;
-                    else
-                        skillSlots[i].skillIcon.material = skillSlots[i].skillIcon.defaultMaterial;
+                    slot.Available = true;
+                    slot.SkillIcon.material = slot.Highlighted ? DarkestDungeonManager.HighlightMaterial : slot.SkillIcon.defaultMaterial;
                 }
-
             }
         else
-            for (int i = 0; i < skillSlots.Count; i++)
+            foreach (CampingSkillSlot slot in skillSlots)
             {
-                if (!skillSlots[i].Locked)
-                {
-                    if (skillSlots[i].Highlighted)
-                        skillSlots[i].skillIcon.material = DarkestDungeonManager.HighlightMaterial;
-                    else
-                        skillSlots[i].skillIcon.material = skillSlots[i].skillIcon.defaultMaterial;
-                }
+                if (!slot.Locked)
+                    slot.SkillIcon.material = slot.Highlighted ? DarkestDungeonManager.HighlightMaterial : slot.SkillIcon.defaultMaterial;
                 else
-                    if (skillSlots[i].Highlighted)
-                        skillSlots[i].skillIcon.material = DarkestDungeonManager.GrayHighlightMaterial;
-                    else
-                        skillSlots[i].skillIcon.material = DarkestDungeonManager.GrayMaterial;
-
+                    slot.SkillIcon.material = slot.Highlighted ? DarkestDungeonManager.GrayHighlightMaterial : DarkestDungeonManager.GrayMaterial;
             }
     }
 }

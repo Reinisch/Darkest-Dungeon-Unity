@@ -3,47 +3,39 @@ using System.Collections.Generic;
 
 public class FormationOverlay : MonoBehaviour
 {
-    public Sprite moveSprite;
-    public List<Sprite> selectionSizeSprites;
-    public List<Sprite> friendSizeSprites;
-    public List<Sprite> enemySizeSprites;
+    [SerializeField]
+    private Sprite moveSprite;
+    [SerializeField]
+    private List<Sprite> selectionSizeSprites;
+    [SerializeField]
+    private List<Sprite> friendSizeSprites;
+    [SerializeField]
+    private List<Sprite> enemySizeSprites;
 
-    public List<FormationOverlaySlot> OverlaySlots { get; set; }
-    
-    void Awake()
+    public List<FormationOverlaySlot> OverlaySlots { get; private set; }
+    public FormationOverlaySlot FreeSlot { get { return OverlaySlots.Find(slot => slot.TargetUnit == null); } }
+    public List<Sprite> SelectionSizeSprites { get { return selectionSizeSprites; } }
+    public List<Sprite> FriendSizeSprites { get { return friendSizeSprites; } }
+    public List<Sprite> EnemySizeSprites { get { return enemySizeSprites; } }
+    public Sprite MoveSprite { get { return moveSprite; } }
+
+    private void Awake()
     {
         OverlaySlots = new List<FormationOverlaySlot>(GetComponentsInChildren<FormationOverlaySlot>(true));
         for (int i = 0; i < OverlaySlots.Count; i++)
         {
-            OverlaySlots[i].onHeroSelected += UnitSelected;
-            OverlaySlots[i].onSkillTargetSelected += RaidSceneManager.Instanse.HeroSkillTargetSelected;
+            OverlaySlots[i].HeroSelected += UnitSelected;
+            OverlaySlots[i].SkillTargetSelected += RaidSceneManager.Instanse.HeroSkillTargetSelected;
             OverlaySlots[i].Overlay = this;
         }
     }
-    void UnitSelected(FormationOverlaySlot slot)
+
+    private void OnDestroy()
     {
         for (int i = 0; i < OverlaySlots.Count; i++)
-            if(OverlaySlots[i] != slot && OverlaySlots[i].TargetUnit != null)
-                OverlaySlots[i].TargetUnit.SetDeactivatedStatus();
-
-        if(slot.TargetUnit.OverlaySlot.IsSelectionLocked && RaidSceneManager.Raid.CampingPhase != CampingPhase.None)
-            slot.TargetUnit.SetDeactivatedStatus();
-        else
-            slot.TargetUnit.SetPerformerStatus();
-    }
-
-    public bool HasFreeSlot
-    {
-        get
         {
-            return OverlaySlots.Find(slot => slot.TargetUnit == null) == null;
-        }
-    }
-    public FormationOverlaySlot FreeSlot
-    {
-        get
-        {
-            return OverlaySlots.Find(slot => slot.TargetUnit == null);
+            OverlaySlots[i].HeroSelected -= UnitSelected;
+            OverlaySlots[i].SkillTargetSelected -= RaidSceneManager.Instanse.HeroSkillTargetSelected;
         }
     }
 
@@ -58,6 +50,7 @@ public class FormationOverlay : MonoBehaviour
         }
             
     }
+
     public void UpdateOverlay()
     {
         for (int i = 0; i < OverlaySlots.Count; i++)
@@ -79,6 +72,7 @@ public class FormationOverlay : MonoBehaviour
             if (OverlaySlots[i].TargetUnit != null && OverlaySlots[i].TargetUnit != unit)
                 OverlaySlots[i].TargetUnit.SetDeactivatedStatus();
     }
+
     public void ResetSelections()
     {
         for(int i = 0; i < OverlaySlots.Count; i++)
@@ -91,6 +85,7 @@ public class FormationOverlay : MonoBehaviour
         for (int i = 0; i < OverlaySlots.Count; i++)
             OverlaySlots[i].Show();
     }
+
     public void Hide()
     {
         for (int i = 0; i < OverlaySlots.Count; i++)
@@ -102,9 +97,22 @@ public class FormationOverlay : MonoBehaviour
         for(int i = 0; i < OverlaySlots.Count; i++)
             OverlaySlots[i].LockSelection();
     }
+
     public void UnlockSelection()
     {
         for (int i = 0; i < OverlaySlots.Count; i++)
             OverlaySlots[i].UnlockSelection();
+    }
+
+    private void UnitSelected(FormationOverlaySlot slot)
+    {
+        for (int i = 0; i < OverlaySlots.Count; i++)
+            if (OverlaySlots[i] != slot && OverlaySlots[i].TargetUnit != null)
+                OverlaySlots[i].TargetUnit.SetDeactivatedStatus();
+
+        if (slot.TargetUnit.OverlaySlot.IsSelectionLocked && RaidSceneManager.Raid.CampingPhase != CampingPhase.None)
+            slot.TargetUnit.SetDeactivatedStatus();
+        else
+            slot.TargetUnit.SetPerformerStatus();
     }
 }

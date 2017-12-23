@@ -1,11 +1,13 @@
-﻿using UnityEngine.UI;
+﻿using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public class EquipmentSlot : BaseSlot, IPointerEnterHandler, IPointerExitHandler
 {
-    public Image equipFrame;
+    [SerializeField]
+    private Image equipFrame;
 
-    Equipment Equipment { get; set; }
+    private Equipment Equipment { get; set; }
 
     public void UpdateEquipment(Equipment newEquipment , Hero hero)
     {
@@ -21,8 +23,9 @@ public class EquipmentSlot : BaseSlot, IPointerEnterHandler, IPointerExitHandler
     public void OnPointerEnter(PointerEventData eventData)
     {
         if(Equipment != null)
-            ToolTipManager.Instanse.Show(Equipment.Tooltip, eventData, RectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
+            ToolTipManager.Instanse.Show(Equipment.Tooltip, RectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
     }
+
     public void OnPointerExit(PointerEventData eventData)
     {
         if(Equipment != null)

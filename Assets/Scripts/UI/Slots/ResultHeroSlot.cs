@@ -3,13 +3,16 @@ using UnityEngine.UI;
 
 public class ResultHeroSlot : MonoBehaviour
 {
-    public Text heroLabel;
-    public Text expLabel;
-    public Image portrait;
-    public StressOverlayPanel stressPanel;
-    public ResolveBar resolveBar;
-    public SkeletonAnimation revealer;
-    public SkeletonAnimation resolvePulse;
+    [SerializeField]
+    private Text heroLabel;
+    [SerializeField]
+    private Text expLabel;
+    [SerializeField]
+    private Image portrait;
+    [SerializeField]
+    private StressOverlayPanel stressPanel;
+    [SerializeField]
+    private ResolveBar resolveBar;
 
     public void UpdateResult(RaidHeroInfo heroInfo)
     {
@@ -40,6 +43,7 @@ public class ResultHeroSlot : MonoBehaviour
             resolveBar.UpdateResolve(heroInfo.Hero);
         }
     }
+
     public void SetEmpty()
     {
         heroLabel.text = "";

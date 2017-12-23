@@ -5,37 +5,27 @@ public enum HungerResultType { Wait, Eat, Starve }
 
 public class ScrollHungerEvent : MonoBehaviour
 {
-    public Text title;
-    public Text description;
-
-    public QuickParameterTip eatTip;
-    public QuickParameterTip starveTip;
-    public Button eatButton;
+    [SerializeField]
+    private QuickParameterTip eatTip;
+    [SerializeField]
+    private QuickParameterTip starveTip;
+    [SerializeField]
+    private Button eatButton;
 
     public HungerResultType ActionType { get; private set; }
     public int MealAmount { get; private set; }
 
     public void Show()
     {
-    }
-    public void Hide()
-    {
+        gameObject.SetActive(true);
     }
 
-    public void EatSelected()
+    public void Hide()
     {
-        if (ActionType == HungerResultType.Wait)
-        {
-            ActionType = HungerResultType.Eat;
-        }
+        gameObject.SetActive(false);
+        ToolTipManager.Instanse.Hide();
     }
-    public void StarveSelected()
-    {
-        if (ActionType == HungerResultType.Wait)
-        {
-            ActionType = HungerResultType.Starve;
-        }
-    }
+
     public void LoadHungerEventMeal()
     {
         ActionType = HungerResultType.Wait;
@@ -50,22 +40,23 @@ public class ScrollHungerEvent : MonoBehaviour
         else
             eatButton.interactable = false;
 
-        eatTip.ParamCount = 2;
-        eatTip.ParamOne = MealAmount;
-        eatTip.ParamTwo = 0.05f;
-
-        starveTip.ParamCount = 1;
-        starveTip.ParamOne = 0.2f;
-
-        ScrollOpened();
+        eatTip.SetParams(MealAmount, 0.05f);
+        starveTip.SetParams(0.2f);
     }
-    public void ScrollOpened()
+
+    public void EatSelected()
     {
-        gameObject.SetActive(true);
+        if (ActionType == HungerResultType.Wait)
+        {
+            ActionType = HungerResultType.Eat;
+        }
     }
-    public void ScrollClosed()
+
+    public void StarveSelected()
     {
-        gameObject.SetActive(false);
-        ToolTipManager.Instanse.Hide();
+        if (ActionType == HungerResultType.Wait)
+        {
+            ActionType = HungerResultType.Starve;
+        }
     }
 }

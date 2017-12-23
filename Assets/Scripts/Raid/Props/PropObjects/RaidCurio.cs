@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System.Collections;
 
 public class RaidCurio : RaidProp, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
@@ -19,12 +17,14 @@ public class RaidCurio : RaidProp, IPointerEnterHandler, IPointerExitHandler, IP
         PropType = PropType.Curio;
         Investigated = false;
     }
+
     public override void Activate()
     {
         SkeletonAnimation.state.ClearTracks();
         SkeletonAnimation.state.SetAnimation(0, "investigate", false);
         Investigated = true;
     }
+
     public override void SetSortingOrder(int order)
     {
         SkeletonAnimation.MeshRenderer.sortingOrder = order;
@@ -38,6 +38,7 @@ public class RaidCurio : RaidProp, IPointerEnterHandler, IPointerExitHandler, IP
             SkeletonAnimation.state.SetAnimation(0, "active", true);          
         }
     }
+
     public void OnPointerExit(PointerEventData eventData)
     {
         if (!Investigated)

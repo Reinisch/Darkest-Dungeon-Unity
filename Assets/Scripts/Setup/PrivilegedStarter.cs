@@ -1,13 +1,12 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class PrivilegedStarter : MonoBehaviour {
-
-	void Start () {
-	
+public class PrivilegedStarter : MonoBehaviour
+{
+	private void Start()
+    {
 	}
-	
-	void Update () {
-	
+
+    private void Update()
+    {
 	}
 }

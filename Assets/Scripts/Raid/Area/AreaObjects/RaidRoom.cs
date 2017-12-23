@@ -4,17 +4,14 @@ using UnityEngine.EventSystems;
 
 public class RaidRoom : MonoBehaviour, IRaidArea
 {
-    public Image roomWall;
+    [SerializeField]
+    private Image roomWall;
+
     public RaidProp Prop { get; set; }
+    public RectTransform RectTransform { get; private set; }
+    public Area Area { get; private set; }
 
-    public RectTransform RectTransform { get; set; }
-    public Area Area
-    {
-        get;
-        private set;
-    }
-
-    void Awake()
+    private void Awake()
     {
         RectTransform = GetComponent<RectTransform>();
     }
@@ -30,12 +27,11 @@ public class RaidRoom : MonoBehaviour, IRaidArea
                     Destroy(Prop.gameObject);
 
                 RaidCurio questCurio;
-                GameObject questCurioObject = Resources.Load("Prefabs/Props/SpineCurios/"
-                    + (Area.Prop as Curio).StringId) as GameObject;
+                GameObject questCurioObject = Resources.Load("Prefabs/Props/SpineCurios/" + Area.Prop.StringId) as GameObject;
 
                 if (questCurioObject == null)
                 {
-                    Debug.LogError("Curio: " + (Area.Prop as Curio).StringId + " not found.");
+                    Debug.LogError("Curio: " + Area.Prop.StringId + " not found.");
                     questCurio = Instantiate(Resources.Load("Prefabs/Props/SpineCurios/_template")
                         as GameObject).GetComponent<RaidCurio>();
                 }
@@ -54,12 +50,11 @@ public class RaidRoom : MonoBehaviour, IRaidArea
                     Destroy(Prop.gameObject);
 
                 RaidCurio curio;
-                GameObject curioObject = Resources.Load("Prefabs/Props/SpineCurios/"
-                    + (Area.Prop as Curio).StringId) as GameObject;
+                GameObject curioObject = Resources.Load("Prefabs/Props/SpineCurios/" + Area.Prop.StringId) as GameObject;
 
                 if (curioObject == null)
                 {
-                    Debug.LogError("Curio: " + (Area.Prop as Curio).StringId + " not found.");
+                    Debug.LogError("Curio: " + Area.Prop.StringId + " not found.");
                     curio = Instantiate(Resources.Load("Prefabs/Props/SpineCurios/_template")
                         as GameObject).GetComponent<RaidCurio>();
                 }
@@ -80,12 +75,11 @@ public class RaidRoom : MonoBehaviour, IRaidArea
                 if(Area.Prop != null && Area.Prop.Type == AreaType.Curio)
                 {
                     RaidCurio questBossCurio;
-                    GameObject questBossObject = Resources.Load("Prefabs/Props/SpineCurios/"
-                        + (Area.Prop as Curio).StringId) as GameObject;
+                    GameObject questBossObject = Resources.Load("Prefabs/Props/SpineCurios/" + Area.Prop.StringId) as GameObject;
 
                     if (questBossObject == null)
                     {
-                        Debug.LogError("Curio: " + (Area.Prop as Curio).StringId + " not found.");
+                        Debug.LogError("Curio: " + Area.Prop.StringId + " not found.");
                         questBossCurio = Instantiate(Resources.Load("Prefabs/Props/SpineCurios/_template")
                             as GameObject).GetComponent<RaidCurio>();
                     }
@@ -98,7 +92,7 @@ public class RaidRoom : MonoBehaviour, IRaidArea
                     if (Area.Knowledge == Knowledge.Completed)
                     {
                         questBossCurio.Activate();
-                        if((Area.Prop as Curio).StringId == "beacon" || (Area.Prop as Curio).StringId == "teleporter")
+                        if(Area.Prop.StringId == "beacon" || Area.Prop.StringId == "teleporter")
                             questBossCurio.SkeletonAnimation.state.SetAnimation(0, "disturbed", true);
                     }
                 }
@@ -134,12 +128,10 @@ public class RaidRoom : MonoBehaviour, IRaidArea
         Area.Knowledge = Knowledge.Completed;
         RaidSceneManager.MapPanel.UpdateArea(Area);
     }
+
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (Prop != null && Prop.PropType == PropType.Curio)
-        {
-            if (!(Prop as RaidCurio).Investigated)
-                RaidSceneManager.Instanse.ActivateCurio(this);
-        }
+        if (Prop != null && Prop.PropType == PropType.Curio && !((RaidCurio)Prop).Investigated)
+            RaidSceneManager.Instanse.ActivateCurio(this);
     }
 }

@@ -3,13 +3,19 @@ using UnityEngine.UI;
 
 public class RoundIndicator : MonoBehaviour
 {
-    public SkeletonAnimation indicator;
-    public Text roundNumber;
-    public CanvasGroup canvasGroup;
+    [SerializeField]
+    private SkeletonAnimation indicator;
+    [SerializeField]
+    private Text roundNumber;
+    [SerializeField]
+    private CanvasGroup canvasGroup;
 
-    void Awake()
+    public SkeletonAnimation Indicator { get { return indicator; } }
+    public CanvasGroup CanvasGroup { get { return canvasGroup; } }
+
+    private void Awake()
     {
-        indicator.Reset();
+        Indicator.Reset();
         gameObject.SetActive(false);
     }
 
@@ -17,21 +23,21 @@ public class RoundIndicator : MonoBehaviour
     {
         gameObject.SetActive(true);
         roundNumber.text = "1";
-        indicator.state.SetAnimation(0, "start", false);
-        indicator.state.AddAnimation(0, "idle", true, 1.333f);
+        Indicator.state.SetAnimation(0, "start", false);
+        Indicator.state.AddAnimation(0, "idle", true, 1.333f);
     }
 
     public void UpdateRound(int number)
     {
         roundNumber.text = number.ToString();
-        indicator.state.SetAnimation(0, "update", false);
-        indicator.state.AddAnimation(0, "idle", true, 0.933f);
+        Indicator.state.SetAnimation(0, "update", false);
+        Indicator.state.AddAnimation(0, "idle", true, 0.933f);
     }
 
     public void End()
     {
         roundNumber.text = "";
-        indicator.state.SetAnimation(0, "end", false);
+        Indicator.state.SetAnimation(0, "end", false);
     }
 
     public void Disappear()

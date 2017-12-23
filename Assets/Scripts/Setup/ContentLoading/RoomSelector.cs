@@ -2,33 +2,52 @@
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.SceneManagement;
+
+// ReSharper disable PossibleLossOfFraction
 
 public class RoomSelector : MonoBehaviour
 {
-    public List<MultiplayerRoomSlot> roomSlots;
-    public Button startCampaignButton;
-    public Button returnButton;
-    public Button refreshButton;
+    [SerializeField]
+    private List<MultiplayerRoomSlot> roomSlots;
+    [SerializeField]
+    private Button startCampaignButton;
+    [SerializeField]
+    private Button returnButton;
+    [SerializeField]
+    private Button refreshButton;
+    [SerializeField]
+    private RectTransform saveFrame;
+    [SerializeField]
+    private RectTransform sceneryRect;
+    [SerializeField]
+    private Text versionLabel;
+    [SerializeField]
+    private Text regionLabel;
 
-    public RectTransform saveFrame;
+    [SerializeField]
+    private Button playButton;
+    [SerializeField]
+    private InputField nicknameField;
+    [SerializeField]
+    private Image progressPanel;
+    [SerializeField]
+    private Text progressLabel;
 
-    public RectTransform sceneryRect;
-    public RectTransform rect;
-    public Text versionLabel;
+    public Button StartCampaignButton { get { return startCampaignButton; } }
+    public Button ReturnButton { get { return returnButton; } }
+    public Text RegionLabel { get { return regionLabel; } }
+    public Image ProgressPanel { get { return progressPanel; } }
+    public Text ProgressLabel { get { return progressLabel; } }
 
-    public Text regionLabel;
+    private List<MultiplayerRoomSlot> RoomSlots { get { return roomSlots; } }
+    private Button PlayButton { get { return playButton; } }
+    private InputField NicknameField { get { return nicknameField; } }
+    private Button RefreshButton { get { return refreshButton; } }
+    private RectTransform SaveFrame { get { return saveFrame; } }
+    private RectTransform SceneryRect { get { return sceneryRect; } }
+    private Text VersionLabel { get { return versionLabel; } }
 
-    #region Multiplayer Launcher UI
-
-    public Button playButton;
-    public InputField nicknameField;
-    public Image progressPanel;
-    public Text progressLabel;
-
-    #endregion
-
-    static List<string> roomNameTemplates = new List<string>()
+    private static readonly List<string> RoomNameTemplates = new List<string>
     {
         "Lepoundmaster", "Lepersader", "Leprusader", "Cruleper",
         "Crusoundmaster", "Crusaster", "Lepster", "Jesleper",
@@ -40,154 +59,50 @@ public class RoomSelector : MonoBehaviour
         "Abomisader", "Grabomination", "Vestalnation", "Arbalestal",
     };
 
-    bool isSelecting = false;
+    private bool isSelecting;
+    private MultiplayerRoomSlot selectedRoomSlot;
 
-    MultiplayerRoomSlot selectedRoomSlot;
+    private IEnumerator sliderCoroutine;
+    private IEnumerator slideBackCoroutine;
+    private IEnumerator fadeCoroutine;
 
-    IEnumerator sliderCoroutine;
-    IEnumerator slideBackCoroutine;
-    IEnumerator fadeCoroutine;
-
-    void Awake()
+    private void Awake()
     {
         Random.InitState(GetInstanceID() + System.DateTime.Now.Millisecond);
 
-        for (int i = 0; i < roomSlots.Count; i++)
-            roomSlots[i].RoomSelector = this;
+        foreach (MultiplayerRoomSlot slot in RoomSlots)
+            slot.RoomSelector = this;
 
-        versionLabel.text = DarkestPhotonLauncher.GameVersion;
-    }
-    void Start()
-    {
-        saveFrame.gameObject.SetActive(false);
-    }
-    void Update()
-    {
-        if (isSelecting == true)
-        {
-            if (selectedRoomSlot != null)
-            {
-                if (Input.GetMouseButtonDown(0))
-                {
-                    selectedRoomSlot.RefocusInput();
-                }
-            }
-            else if (Input.GetKeyUp(KeyCode.Escape) && fadeCoroutine == null)
-            {
-                isSelecting = false;
-                StopAllCoroutines();
-                slideBackCoroutine = SliderBack();
-                StartCoroutine(slideBackCoroutine);
-            }
-        }
+        VersionLabel.text = DarkestPhotonLauncher.GameVersion;
     }
 
-    IEnumerator SceneSlider()
+    private void Start()
     {
-        DarkestSoundManager.PlayOneShot("event:/general/title_screen/campaign_button");
-        if(PhotonNetwork.connected)
-            progressLabel.text = "Connected!";
-        else
-            progressLabel.text = "Disconnected!";
-
-        DisableInteraction();
-
-        while (true)
-        {
-            if (470 < sceneryRect.offsetMax.y)
-                break;
-
-            Vector2 offsetMax = sceneryRect.offsetMax;
-            offsetMax.y += Time.deltaTime * 800;
-            sceneryRect.offsetMax = offsetMax;
-            Vector2 offsetMin = sceneryRect.offsetMin;
-            offsetMin.y += Time.deltaTime * 800;
-            sceneryRect.offsetMin = offsetMin;
-            yield return null;
-        }
-
-        DarkestPhotonLauncher.Instanse.ConnectToMaster();
-        yield return new WaitForSeconds(1f);
-        isSelecting = true;
-
-        RefreshRoomList();
-        EnableInteraction();
-        yield break;
+        SaveFrame.gameObject.SetActive(false);
     }
-    IEnumerator SliderBack()
+
+    private void Update()
     {
-        PhotonNetwork.Disconnect();
-        saveFrame.gameObject.SetActive(false);
-        returnButton.gameObject.SetActive(false);
+        if (!isSelecting)
+            return;
 
-        while (true)
+        if (selectedRoomSlot != null)
         {
-            if (sceneryRect.offsetMax.y <= 0 || sceneryRect.offsetMin.y <= 0)
-            {
-                sceneryRect.offsetMax = Vector2.zero;
-                sceneryRect.offsetMin = Vector2.zero;
-                break;
-            }
-
-            Vector2 offsetMax = sceneryRect.offsetMax;
-            offsetMax.y -= Time.deltaTime * 1200;
-            sceneryRect.offsetMax = offsetMax;
-            Vector2 offsetMin = sceneryRect.offsetMin;
-            offsetMin.y -= Time.deltaTime * 1200;
-            sceneryRect.offsetMin = offsetMin;
-            yield return 0;
+            if (Input.GetMouseButtonDown(0))
+                selectedRoomSlot.RefocusInput();
         }
-        isSelecting = false;
-        CampaignSelectionManager.OnSelectionReturn();
-        yield break;
-    }
-    IEnumerator SceneFade(float seconds, float speed)
-    {
-        float titleVolume = 0;
-        CampaignSelectionManager.Instanse.titleRect.SetParent(sceneryRect, false);
-
-        Vector2 localPoint;
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(sceneryRect,
-            new Vector2(Screen.width / 2, Screen.height), DarkestDungeonManager.Instanse.MainUICamera, out localPoint);
-        CampaignSelectionManager.Instanse.titleRect.localPosition = localPoint;
-
-        if (DarkestSoundManager.TitleMusicInstanse != null)
+        else if (Input.GetKeyUp(KeyCode.Escape) && fadeCoroutine == null)
         {
-            DarkestSoundManager.TitleMusicInstanse.getVolume(out titleVolume);
-
-            for (float nextVolume = titleVolume; nextVolume >= 0; nextVolume -= Time.deltaTime * 3f)
-            {
-                DarkestSoundManager.TitleMusicInstanse.setVolume(nextVolume);
-                yield return null;
-            }
+            isSelecting = false;
+            StopAllCoroutines();
+            slideBackCoroutine = SliderBack();
+            StartCoroutine(slideBackCoroutine);
         }
-
-        DarkestSoundManager.StopTitleMusic();
-        DarkestSoundManager.PlayOneShot("event:/general/title_screen/start_game");
-
-        while (true)
-        {
-            if (seconds <= 0)
-                break;
-            else
-                seconds -= Time.deltaTime;
-
-            Vector2 offsetMax = sceneryRect.offsetMax;
-            offsetMax.y += Time.deltaTime * speed;
-            sceneryRect.offsetMax = offsetMax;
-            Vector2 offsetMin = sceneryRect.offsetMin;
-            offsetMin.y += Time.deltaTime * speed;
-            sceneryRect.offsetMin = offsetMin;
-            yield return 0;
-        }
-
-        PhotonNetwork.LoadLevel("DungeonMultiplayer");
-        yield break;
     }
 
     public string GenerateRoomName()
     {
-        return roomNameTemplates[Random.Range(0, roomNameTemplates.Count)]
+        return RoomNameTemplates[Random.Range(0, RoomNameTemplates.Count)]
             + "#" + Random.Range(1, 1000).ToString().PadLeft(3, '0');
     }
 
@@ -198,13 +113,13 @@ public class RoomSelector : MonoBehaviour
         if (PhotonNetwork.insideLobby)
         {
             var roomList = PhotonNetwork.GetRoomList();
-            int roomsUpdated = Mathf.Min(roomSlots.Count, roomList.Length);
+            int roomsUpdated = Mathf.Min(RoomSlots.Count, roomList.Length);
 
             for (int i = 0; i < roomsUpdated; i++)
-                roomSlots[i].LoadSaveFrame(roomList[i]);
+                RoomSlots[i].LoadSaveFrame(roomList[i]);
 
-            for (int i = roomsUpdated; i < roomSlots.Count; i++)
-                roomSlots[i].LoadSaveFrame(null);
+            for (int i = roomsUpdated; i < RoomSlots.Count; i++)
+                RoomSlots[i].LoadSaveFrame(null);
         }
         else
         {
@@ -214,8 +129,8 @@ public class RoomSelector : MonoBehaviour
 
     public void CleanRoomList()
     {
-        for (int i = 0; i < roomSlots.Count; i++)
-            roomSlots[i].LoadSaveFrame(null);
+        foreach (MultiplayerRoomSlot slot in RoomSlots)
+            slot.LoadSaveFrame(null);
     }
 
     public void FadeToLoadingScreen()
@@ -228,7 +143,7 @@ public class RoomSelector : MonoBehaviour
     public void SaveSelectionStart()
     {
         CampaignSelectionManager.OnSelectionStart(CampaignSelection.Multiplayer);
-        saveFrame.gameObject.SetActive(true);
+        SaveFrame.gameObject.SetActive(true);
 
         sliderCoroutine = SceneSlider();
         StartCoroutine(sliderCoroutine);
@@ -237,7 +152,7 @@ public class RoomSelector : MonoBehaviour
     public void SaveNamingStart(MultiplayerRoomSlot namingSaveSlot)
     {
         DarkestSoundManager.PlayOneShot("event:/general/title_screen/letter_open");
-        namingSaveSlot.titleInput.text = GenerateRoomName();
+        namingSaveSlot.TitleInput.text = GenerateRoomName();
         selectedRoomSlot = namingSaveSlot;
         DisableInteraction();
     }
@@ -259,28 +174,125 @@ public class RoomSelector : MonoBehaviour
 
     public void DisableInteraction()
     {
-        for (int i = 0; i < roomSlots.Count; i++)
-            roomSlots[i].DisableInteraction();
+        RoomSlots.ForEach(slot => slot.DisableInteraction());
 
-        playButton.interactable = false;
-        nicknameField.interactable = false;
-        returnButton.interactable = false;
-        refreshButton.interactable = false;
+        PlayButton.interactable = false;
+        NicknameField.interactable = false;
+        ReturnButton.interactable = false;
+        RefreshButton.interactable = false;
     }
 
     public void EnableInteraction()
     {
-        for (int i = 0; i < roomSlots.Count; i++)
-            roomSlots[i].EnableInteraction();
+        RoomSlots.ForEach(slot => slot.EnableInteraction());
 
-        playButton.interactable = true;
-        nicknameField.interactable = true;
-        returnButton.interactable = true;
-        refreshButton.interactable = true;
+        PlayButton.interactable = true;
+        NicknameField.interactable = true;
+        ReturnButton.interactable = true;
+        RefreshButton.interactable = true;
     }
 
     public void PlayButtonClicked()
     {
         DarkestPhotonLauncher.Instanse.RandomConnect();
+    }
+
+    private IEnumerator SceneSlider()
+    {
+        DarkestSoundManager.PlayOneShot("event:/general/title_screen/campaign_button");
+        ProgressLabel.text = PhotonNetwork.connected ? "Connected!" : "Disconnected!";
+
+        DisableInteraction();
+
+        while (true)
+        {
+            if (470 < SceneryRect.offsetMax.y)
+                break;
+
+            Vector2 offsetMax = SceneryRect.offsetMax;
+            offsetMax.y += Time.deltaTime * 800;
+            SceneryRect.offsetMax = offsetMax;
+            Vector2 offsetMin = SceneryRect.offsetMin;
+            offsetMin.y += Time.deltaTime * 800;
+            SceneryRect.offsetMin = offsetMin;
+            yield return null;
+        }
+
+        DarkestPhotonLauncher.Instanse.ConnectToMaster();
+        yield return new WaitForSeconds(1f);
+        isSelecting = true;
+
+        RefreshRoomList();
+        EnableInteraction();
+    }
+
+    private IEnumerator SliderBack()
+    {
+        PhotonNetwork.Disconnect();
+        SaveFrame.gameObject.SetActive(false);
+        ReturnButton.gameObject.SetActive(false);
+
+        while (true)
+        {
+            if (SceneryRect.offsetMax.y <= 0 || SceneryRect.offsetMin.y <= 0)
+            {
+                SceneryRect.offsetMax = Vector2.zero;
+                SceneryRect.offsetMin = Vector2.zero;
+                break;
+            }
+
+            Vector2 offsetMax = SceneryRect.offsetMax;
+            offsetMax.y -= Time.deltaTime * 1200;
+            SceneryRect.offsetMax = offsetMax;
+            Vector2 offsetMin = SceneryRect.offsetMin;
+            offsetMin.y -= Time.deltaTime * 1200;
+            SceneryRect.offsetMin = offsetMin;
+            yield return 0;
+        }
+        isSelecting = false;
+        CampaignSelectionManager.OnSelectionReturn();
+    }
+
+    private IEnumerator SceneFade(float seconds, float speed)
+    {
+        CampaignSelectionManager.Instanse.TitleRect.SetParent(SceneryRect, false);
+
+        Vector2 localPoint;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(SceneryRect,
+            new Vector2(Screen.width / 2, Screen.height), DarkestDungeonManager.Instanse.MainUICamera, out localPoint);
+        CampaignSelectionManager.Instanse.TitleRect.localPosition = localPoint;
+
+        if (DarkestSoundManager.TitleMusicInstanse != null)
+        {
+            float titleVolume;
+            DarkestSoundManager.TitleMusicInstanse.getVolume(out titleVolume);
+
+            for (float nextVolume = titleVolume; nextVolume >= 0; nextVolume -= Time.deltaTime * 3f)
+            {
+                DarkestSoundManager.TitleMusicInstanse.setVolume(nextVolume);
+                yield return null;
+            }
+        }
+
+        DarkestSoundManager.StopTitleMusic();
+        DarkestSoundManager.PlayOneShot("event:/general/title_screen/start_game");
+
+        while (true)
+        {
+            if (seconds <= 0)
+                break;
+
+            seconds -= Time.deltaTime;
+
+            Vector2 offsetMax = SceneryRect.offsetMax;
+            offsetMax.y += Time.deltaTime * speed;
+            SceneryRect.offsetMax = offsetMax;
+            Vector2 offsetMin = SceneryRect.offsetMin;
+            offsetMin.y += Time.deltaTime * speed;
+            SceneryRect.offsetMin = offsetMin;
+            yield return null;
+        }
+
+        PhotonNetwork.LoadLevel("DungeonMultiplayer");
     }
 }

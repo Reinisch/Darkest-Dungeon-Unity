@@ -536,5 +536,4 @@ public class RpsCore : PunBehaviour, IPunTurnManagerCallbacks
     {
         this.DisconnectedPanel.gameObject.SetActive(true);
     }
-
 }

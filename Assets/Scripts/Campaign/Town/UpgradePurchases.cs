@@ -3,11 +3,10 @@ using System.IO;
 
 public class UpgradePurchases : IBinarySaveData
 {
-    public string TreeId { get; set; }
+    public string TreeId { get; private set; }
     public List<string> PurchasedUpgrades { get; private set; }
 
     public bool IsMeetingSaveCriteria { get { return true; } }
-
 
     public UpgradePurchases()
     {
@@ -31,7 +30,6 @@ public class UpgradePurchases : IBinarySaveData
         TreeId = treeId;
         PurchasedUpgrades = new List<string>();
     }
-
 
     public void Write(BinaryWriter bw)
     {

@@ -2,12 +2,12 @@
 
 public class RaidHallwayPassage : MonoBehaviour
 {
-    public RectTransform leftWall;
-    public RectTransform rightWall;
+    public RectTransform LeftWall;
+    public RectTransform RightWall;
 
     public RectTransform RectTransform { get; set; }
 
-    void Awake()
+    private void Awake()
     {
         RectTransform = GetComponent<RectTransform>();
     }

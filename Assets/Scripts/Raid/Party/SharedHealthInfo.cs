@@ -4,21 +4,24 @@ using System.Linq;
 
 public class SharedHealthInfo : MonoBehaviour
 {
-    public Animator healthAnimator;
-    public HealthBar healthBar;
-    public RectTransform rectTransform;
+    [SerializeField]
+    private Animator healthAnimator;
+    [SerializeField]
+    private HealthBar healthBar;
+    [SerializeField]
+    private RectTransform rectTransform;
 
     public bool IsActive { get; private set; }
-    public string SharedId { get; private set; }
     public PairedAttribute Health { get; private set; }
     public List<FormationUnit> SharedUnits { get; private set; }
 
-    void Awake()
+    private void Awake()
     {
-        Health = new PairedAttribute(AttributeCategory.CombatStat);
+        Health = new PairedAttribute();
         SharedUnits = new List<FormationUnit>();
     }
-    void LateUpdate()
+
+    private void LateUpdate()
     {
         if (SharedUnits.Count == 0 || SharedUnits[0] == null)
             return;
@@ -32,15 +35,18 @@ public class SharedHealthInfo : MonoBehaviour
         if (isActiveAndEnabled)
             healthAnimator.SetBool("Hidden", false);
     }
+
     public void Hide()
     {
         if (isActiveAndEnabled)
             healthAnimator.SetBool("Hidden", true);
     }
+
     public void SetSelected()
     {
         healthAnimator.SetBool("Selected", true);
     }
+
     public void SetDeselected()
     {
         healthAnimator.SetBool("Selected", false);
@@ -54,18 +60,19 @@ public class SharedHealthInfo : MonoBehaviour
     public void Initialize(List<FormationUnit> sharedUnits, SharedHealth healthComponent)
     {
         IsActive = true;
-        SharedId = healthComponent.SharedId;
         Health.RawValue = sharedUnits.Sum(unit => unit.Character.MaxHealth);
         Health.ValueRatio = 1;
         SharedUnits.AddRange(sharedUnits);
-        for (int i = 0; i < SharedUnits.Count; i++)
-            SharedUnits[i].Character[AttributeType.HitPoints, true] = Health;
+
+        foreach (FormationUnit unit in SharedUnits)
+            unit.Character[AttributeType.HitPoints, true] = Health;
+
         Show();
     }
+
     public void Reset()
     {
         IsActive = false;
-        SharedId = null;
         SharedUnits.Clear();
         Hide();
     }

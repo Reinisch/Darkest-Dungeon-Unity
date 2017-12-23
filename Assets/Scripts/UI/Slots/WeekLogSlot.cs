@@ -4,18 +4,19 @@ using System.Collections.Generic;
 
 public class WeekLogSlot: MonoBehaviour
 {
-    public Text weekTitle;
-    public Image raidBanner;
-    public RectTransform rectTransform;
-    public RectTransform eventsTransform;
+    [SerializeField]
+    private Text weekTitle;
+    [SerializeField]
+    private Image raidBanner;
+    [SerializeField]
+    private RectTransform eventsTransform;
 
     public PartyActivityRecordSlot EmbarkSlot;
     public PartyActivityRecordSlot ReturnSlot;
     public List<ActivityRecordSlot> SimpleSlots;
 
-    public float CachedHeight { get; set; }
-    public ActivityLogWindow Window { get; set; }
-    public WeekActivityLog WeekLog { get; set; }
+    public ActivityLogWindow Window { private get; set; }
+    public WeekActivityLog WeekLog { get; private set; }
 
     public void UpdateWeekLog(WeekActivityLog weekLog)
     {
@@ -27,10 +28,9 @@ public class WeekLogSlot: MonoBehaviour
         if (weekLog.ReturnRecord != null)
         {
             raidBanner.rectTransform.parent.gameObject.SetActive(true);
-            if(weekLog.ReturnRecord.IsSuccessfull)
-                raidBanner.sprite = DarkestDungeonManager.Data.Sprites["raid_success_banner"];
-            else
-                raidBanner.sprite = DarkestDungeonManager.Data.Sprites["raid_failure_banner"];
+            raidBanner.sprite = weekLog.ReturnRecord.IsSuccessfull ?
+                DarkestDungeonManager.Data.Sprites["raid_success_banner"] :
+                DarkestDungeonManager.Data.Sprites["raid_failure_banner"];
 
             ReturnSlot.UpdatePartyActivity(weekLog.ReturnRecord);
         }
@@ -47,9 +47,9 @@ public class WeekLogSlot: MonoBehaviour
 
         for (int i = lastRecordIndex; i < weekLog.HeroRecords.Count; i++)
         {
-            var heroSlot = Instantiate(Window.heroActivitySlot).GetComponent<ActivityRecordSlot>();
-            heroSlot.rectTransform.SetParent(eventsTransform, false);
-            heroSlot.rectTransform.SetAsLastSibling();
+            var heroSlot = Instantiate(Window.HeroActivitySlot).GetComponent<ActivityRecordSlot>();
+            heroSlot.RectTransform.SetParent(eventsTransform, false);
+            heroSlot.RectTransform.SetAsLastSibling();
             heroSlot.UpdateActivityRecord(weekLog.HeroRecords[i]);
             SimpleSlots.Add(heroSlot);
         }
@@ -67,6 +67,7 @@ public class WeekLogSlot: MonoBehaviour
         WeekLog.EmbarkRecord = partyRecord;
         EmbarkSlot.UpdatePartyActivity(partyRecord);
     }
+
     public void UpdateReturnPartyLog(PartyActivityRecord partyRecord)
     {
         WeekLog.ReturnRecord = partyRecord;

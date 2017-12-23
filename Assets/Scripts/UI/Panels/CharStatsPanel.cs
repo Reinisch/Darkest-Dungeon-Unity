@@ -1,16 +1,22 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 
 public class CharStatsPanel : MonoBehaviour
 {
-    public Text maxHealth;
-    public Text dodge;
-    public Text prot;
-    public Text speed;
-    public Text accuracyMod;
-    public Text crit;
-    public Text damage;
+    [SerializeField]
+    private Text maxHealth;
+    [SerializeField]
+    private Text dodge;
+    [SerializeField]
+    private Text prot;
+    [SerializeField]
+    private Text speed;
+    [SerializeField]
+    private Text accuracyMod;
+    [SerializeField]
+    private Text crit;
+    [SerializeField]
+    private Text damage;
 
     public void UpdateStats(Character character)
     {

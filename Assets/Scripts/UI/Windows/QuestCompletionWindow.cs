@@ -1,17 +1,20 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 
-public enum CompletionAction { Waiting, Return, Continue }
+public enum CompletionAction
+{
+    Waiting,
+    Return,
+    Continue
+}
 
 public class QuestCompletionWindow : MonoBehaviour
 {
-    public Animator completionAnimator;
-    public SkeletonAnimation completionCrest;
-    public Text completionText;
-    public Button returnButton;
-    public Button continueButton;
+    [SerializeField]
+    private Animator completionAnimator;
+    [SerializeField]
+    private SkeletonAnimation completionCrest;
 
-    public CompletionAction Action { get; set; }
+    public CompletionAction Action { get; private set; }
 
     public void Appear()
     {
@@ -19,11 +22,13 @@ public class QuestCompletionWindow : MonoBehaviour
         completionCrest.state.SetAnimation(0, "appear", false);
         completionCrest.state.AddAnimation(0, "idle", true, 0.4f);
     }
+
     public void Disappear()
     {
         completionAnimator.SetBool("IsClosed", true);
         completionCrest.state.SetAnimation(0, "disappear", false);
     }
+
     public void Disappeared()
     {
         ToolTipManager.Instanse.Hide();
@@ -35,6 +40,7 @@ public class QuestCompletionWindow : MonoBehaviour
         Action = CompletionAction.Return;
         Disappear();
     }
+
     public void ContinueButtonClick()
     {
         Action = CompletionAction.Continue;

@@ -2,7 +2,6 @@
 {
     public string ItemId { get; set; }
 
-
     public ItemInteraction()
     {
         Chance = 1;
@@ -14,7 +13,6 @@
         ItemId = itemId;
         ResultType = resultType;
     }
-
 
     public override string ResultString()
     {

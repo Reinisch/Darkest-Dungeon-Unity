@@ -2,51 +2,35 @@
 
 public class ShopManager : MonoBehaviour
 {
-    public ShopInventory shopInventory;
-    public PartyInventory partyInventory;
-    public ItemSellbackPanel sellBackPanel;
+    [SerializeField]
+    private ShopInventory shopInventory;
+    [SerializeField]
+    private PartyInventory partyInventory;
+    [SerializeField]
+    private ItemSellbackPanel sellBackPanel;
+
+    public PartyInventory PartyInventory { get { return partyInventory; } }
+
+    private void Awake()
+    {
+        shopInventory.EventPurchase += ShopInventoryPurchase;
+        shopInventory.EventSellBackSlot += ShopInventorySellBackSlot;
+    }
 
     public void ActivateShopBehaviour()
     {
-        DragManager.Instanse.onStartDraggingInventorySlot += ActivateSellbackPanel;
-        DragManager.Instanse.onEndDraggingInventorySlot += DeactivateSellbackPanel;
+        DragManager.Instanse.EventStartDraggingInventorySlot += ActivateSellbackPanel;
+        DragManager.Instanse.EventEndDraggingInventorySlot += DeactivateSellbackPanel;
         foreach(var slot in partyInventory.InventorySlots)
-            slot.onActivate += SellSingleItem;
+            slot.EventActivate += SellSingleItem;
     }
+
     public void DeactivateShopBehaviour()
     {
-        DragManager.Instanse.onStartDraggingInventorySlot -= ActivateSellbackPanel;
-        DragManager.Instanse.onEndDraggingInventorySlot -= DeactivateSellbackPanel;
+        DragManager.Instanse.EventStartDraggingInventorySlot -= ActivateSellbackPanel;
+        DragManager.Instanse.EventEndDraggingInventorySlot -= DeactivateSellbackPanel;
         foreach (var slot in partyInventory.InventorySlots)
-            slot.onActivate -= SellSingleItem;
-    }
-
-    void SellSingleItem(InventorySlot slot)
-    {
-        if (shopInventory.SellSingeItem(slot))
-            partyInventory.DiscardSingleItem(slot);
-    }
-
-    void ActivateSellbackPanel(InventorySlot slot)
-    {
-        sellBackPanel.gameObject.SetActive(true);
-    }
-    void DeactivateSellbackPanel(InventorySlot slot)
-    {
-        sellBackPanel.gameObject.SetActive(false);
-    }
-
-    void ShopInventoryPurchase(ShopSlot slot, InventorySlot dropSlot)
-    {
-        if (shopInventory.BuyShopSlot(slot, partyInventory))
-            partyInventory.DistributeFromShopItem(slot, dropSlot);
-    }
-    void ShopInventorySellBackSlot(InventorySlot slot)
-    {
-        int itemsSold = shopInventory.SellSlotBack(slot);
-
-        if (itemsSold != 0)
-            slot.SlotItem.RemoveItems(itemsSold);
+            slot.EventActivate -= SellSingleItem;
     }
 
     public void SellOutEverything()
@@ -60,15 +44,39 @@ public class ShopManager : MonoBehaviour
         }
     }
 
-    void Awake()
-    {
-        shopInventory.onPurchase += ShopInventoryPurchase;
-        shopInventory.onSellBackSlot += ShopInventorySellBackSlot;
-    }
-
     public void LoadInitialSetup(Quest quest, RaidPartyPanel raidParty)
     {
         shopInventory.UpdateShop(quest);
         partyInventory.LoadInitialSetup(quest, raidParty);
+    }
+
+    private void SellSingleItem(InventorySlot slot)
+    {
+        if (shopInventory.SellSingeItem(slot))
+            partyInventory.DiscardSingleItem(slot);
+    }
+
+    private void ActivateSellbackPanel(InventorySlot slot)
+    {
+        sellBackPanel.gameObject.SetActive(true);
+    }
+
+    private void DeactivateSellbackPanel(InventorySlot slot)
+    {
+        sellBackPanel.gameObject.SetActive(false);
+    }
+
+    private void ShopInventoryPurchase(ShopSlot slot, InventorySlot dropSlot)
+    {
+        if (shopInventory.BuyShopSlot(slot, partyInventory))
+            partyInventory.DistributeFromShopItem(slot, dropSlot);
+    }
+
+    private void ShopInventorySellBackSlot(InventorySlot slot)
+    {
+        int itemsSold = shopInventory.SellSlotBack(slot);
+
+        if (itemsSold != 0)
+            slot.SlotItem.RemoveItems(itemsSold);
     }
 }

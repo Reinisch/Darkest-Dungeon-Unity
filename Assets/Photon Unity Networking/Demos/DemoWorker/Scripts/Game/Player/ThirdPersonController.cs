@@ -472,6 +472,4 @@ public class ThirdPersonController : MonoBehaviour
     {
         gameObject.tag = "Player";
     }
-
-
 }

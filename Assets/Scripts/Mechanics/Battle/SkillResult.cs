@@ -5,6 +5,12 @@ public class SkillResult
     public CombatSkill Skill { get; set; }
     public SkillArtInfo ArtInfo { get; set; }
     public SkillResultEntry Current { get; set; }
+   
+    public bool HasHit { get; set; }
+    public bool HasZeroHealth { get; set; }
+    public List<Effect> AppliedEffects { get; private set; }
+    public List<SkillResultEntry> SkillEntries { get; private set; }
+
     public bool HasCritEffect
     {
         get
@@ -15,6 +21,7 @@ public class SkillResult
             return false;
         }
     }
+
     public bool HasDeadEffect
     {
         get
@@ -25,16 +32,13 @@ public class SkillResult
             return false;
         }
     }
-    public bool HasHit { get; set; }
-    public bool HasZeroHealth { get; set; }
-    public List<Effect> AppliedEffects { get; private set; }
-    public List<SkillResultEntry> SkillEntries { get; private set; }
 
     public SkillResult()
     {
         AppliedEffects = new List<Effect>();
         SkillEntries = new List<SkillResultEntry>();
     }
+
     public void Reset()
     {
         Current = null;
@@ -43,6 +47,7 @@ public class SkillResult
         AppliedEffects.Clear();
         SkillEntries.Clear();
     }
+
     public SkillResult Copy()
     {
         SkillResult copy = new SkillResult();
@@ -65,6 +70,7 @@ public class SkillResult
         if (entry.IsZeroed)
             HasZeroHealth = true;
     }
+
     public void AddEffectEntry(Effect entry)
     {
         AppliedEffects.Add(entry);

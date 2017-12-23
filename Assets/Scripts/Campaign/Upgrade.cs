@@ -49,7 +49,7 @@ public class HeroUpgrade : TownUpgrade
 {
     public int PrerequisiteResolveLevel { get; set; }
 
-    public HeroUpgrade():base()
+    public HeroUpgrade()
     {
         Cost = new List<CurrencyCost>();
         Prerequisites = new List<PrerequisiteReqirement>();
@@ -102,7 +102,6 @@ public class HeroUpgrade : TownUpgrade
     }
 }
 
-
 public interface ITownUpgrade
 {
     string UpgradeCode { get; set; }
@@ -149,7 +148,6 @@ public class RecruitUpgrade : ITownUpgrade
     public int ExtraNegativeQuirks { get; set; }
     public int ExtraCombatSkills { get; set; }
     public int ExtraCampingSkills { get; set; }
-    public List<int> GuaranteedWhenResolveDead { get; set; }
     public string TreeId { get; set; }
     public string UpgradeCode { get; set; }
 
@@ -272,8 +270,6 @@ public class DiscountUpgrade : ITownUpgrade
                     sb.AppendFormat(LocalizationManager.GetString(
                         "upgrade_tree_tooltip_description_reduces_cost_of_items_format"), Percent * 100);
                     break;
-                default:
-                    break;
             }
             sb.Append("</color>");
 
@@ -300,8 +296,6 @@ public class ChanceUpgrade : ITownUpgrade
                 case "sanitarium.disease_quirk_cost":
                     sb.AppendFormat(LocalizationManager.GetString(
                         "upgrade_tree_tooltip_description_disease_cure_all_chance_format"), Chance*100);
-                    break;
-                default:
                     break;
             }
             sb.Append("</color>");

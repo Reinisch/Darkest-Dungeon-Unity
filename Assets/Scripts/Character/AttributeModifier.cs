@@ -18,6 +18,7 @@
         else
             character.GetSingleAttribute(TargetAttribute).FlatAddition += ModifierValue;
     }
+
     public void RevertModifier(Character character)
     {
         if(IsPaired)

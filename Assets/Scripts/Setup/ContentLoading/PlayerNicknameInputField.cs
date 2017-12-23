@@ -1,36 +1,19 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
 using System.Linq;
 
-/// <summary>
-/// Player name input field.
-/// </summary>
 [RequireComponent(typeof(InputField))]
 public class PlayerNicknameInputField : MonoBehaviour
 {
-    #region Private Variables
-
     private static string playerNamePrefKey = "PlayerNickname";
-
     private InputField nicknameInputField;
 
-    #endregion
-
-    #region MonoBehaviour Callbacks
-
-    /// <summary>
-    /// MonoBehaviour method called on GameObject by Unity during early initialization phase.
-    /// </summary>
-    void Awake()
+    private void Awake()
     {
         nicknameInputField = GetComponent<InputField>();
     }
 
-    /// <summary>
-    /// MonoBehaviour method called on GameObject by Unity during initialization phase.
-    /// </summary>
-    void Start()
+    private void Start()
     {
         string defaultNickname = "";
         if(PlayerPrefs.HasKey(playerNamePrefKey))
@@ -48,10 +31,6 @@ public class PlayerNicknameInputField : MonoBehaviour
         nicknameInputField.text = defaultNickname;
     }
 
-    #endregion
-
-    #region Public Methods
-
     /// <summary>
     /// Sets the name of the player, and save it in the PlayerPrefs for future sessions.
     /// </summary>
@@ -61,6 +40,4 @@ public class PlayerNicknameInputField : MonoBehaviour
         PhotonNetwork.playerName = value + " ";
         PlayerPrefs.SetString(playerNamePrefKey, value);
     }
-
-    #endregion
 }

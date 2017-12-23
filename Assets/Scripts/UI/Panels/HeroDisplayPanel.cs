@@ -3,12 +3,14 @@ using System.Collections.Generic;
 
 public class HeroDisplayPanel : MonoBehaviour
 {
-    public List<SkeletonAnimation> heroes;
+    [SerializeField]
+    private List<SkeletonAnimation> heroes;
 
-    SkeletonAnimation currentDisplay = null;
-    public Light Light { get; set; }
+    public Light Light { get; private set; }
 
-    void Awake()
+    private SkeletonAnimation currentDisplay;
+
+    private void Awake()
     {
         Light = GetComponentInChildren<Light>();
         var canvas = GetComponentInParent<Canvas>();

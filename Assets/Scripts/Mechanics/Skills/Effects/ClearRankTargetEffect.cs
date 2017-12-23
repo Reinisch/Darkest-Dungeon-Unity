@@ -13,9 +13,9 @@
             return false;
 
         if (target.Team == Team.Heroes)
-            RaidSceneManager.BattleGround.MonsterFormation.rankHolder.ClearMarks();
+            RaidSceneManager.BattleGround.MonsterFormation.RankHolder.ClearMarks();
         else
-            RaidSceneManager.BattleGround.HeroFormation.rankHolder.ClearMarks();
+            RaidSceneManager.BattleGround.HeroFormation.RankHolder.ClearMarks();
 
         return true;
     }

@@ -1,140 +1,178 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 public class BattleFormation : MonoBehaviour
 {
-    public FormationRanks ranks;
-    public FormationParty party;
-    public FormationOverlay overlay;
-    public RankPlaceholders rankHolder;
+    [SerializeField]
+    private FormationRanks ranks;
+    [SerializeField]
+    private FormationParty party;
+    [SerializeField]
+    private FormationOverlay overlay;
+    [SerializeField]
+    private RankPlaceholders rankHolder;
 
-    public RectTransform RectTransform { get; set; }
+    public RectTransform RectTransform { get; private set; }
+    public FormationRanks Ranks { get { return ranks; } }
+    public FormationParty Party { get { return party; } }
+    public FormationOverlay Overlay { get { return overlay; } }
+    public RankPlaceholders RankHolder { get { return rankHolder; } }
+
+    #region Fomation Info
 
     public int AliveUnitsCount
     {
         get
         {
-            return party.Units.FindAll(unit => (unit.Character is Hero) ||
-                !(unit.Character as Monster).Types.Contains(MonsterType.Corpse)).Count;
+            return Party.Units.FindAll(unit => unit.Character is Hero ||
+                !((Monster)unit.Character).Types.Contains(MonsterType.Corpse)).Count;
         }
     }
+
     public int AvailableSummonSpace
     {
         get
         {
-            int freeSpace = 4;
-            for(int i = 0; i < party.Units.Count; i++)
-                if (!(party.Units[i].Character.IsMonster && party.Units[i].Character.BattleModifiers != null
-                    && party.Units[i].Character.BattleModifiers.CanBeSummonRank))
-                    freeSpace -= party.Units[i].Size;
-            return freeSpace;
+            return Party.Units.Where(unit => !unit.Character.IsMonster || unit.Character.BattleModifiers == null 
+                || !unit.Character.BattleModifiers.CanBeSummonRank).Aggregate(4, (current, unit) => current - unit.Size);
         }
     }
+
     public int AvailableFreeSpace
     {
         get
         {
-            int freeSpace = 4;
-            for (int i = 0; i < party.Units.Count; i++)
-                    freeSpace -= party.Units[i].Size;
-            return freeSpace;
+            return Party.Units.Aggregate(4, (current, unit) => current - unit.Size);
         }
     }
 
-    void Awake()
+    public bool IsStallingActive
+    {
+        get
+        {
+            if (Party.Units.Any(t => t.Character.BattleModifiers != null && t.Character.BattleModifiers.DisableStallPenalty))
+                return false;
+
+            return AliveUnitsCount <= 1;
+        }
+    }
+
+    public bool CanBeSurprised
+    {
+        get
+        {
+            return Party.Units.Any(unit => unit.Character.BattleModifiers.CanBeSurprised);
+        }
+    }
+
+    public bool AlwaysBeSurprised
+    {
+        get
+        {
+            return Party.Units.All(unit => unit.Character.BattleModifiers.AlwaysBeSurprised);
+        }
+    }
+
+    public bool CanSurprise
+    {
+        get
+        {
+            return Party.Units.Any(unit => unit.Character.BattleModifiers.CanSurprise);
+        }
+    }
+
+    public bool AlwaysSurprises
+    {
+        get
+        {
+            return Party.Units.Any(unit => unit.Character.BattleModifiers.AlwaysSurprise);
+        }
+    }
+
+    #endregion
+
+    private void Awake()
     {
         RectTransform = GetComponent<RectTransform>();
     }
 
-    void UpdateHero(FormationOverlaySlot unitSlot)
-    {
-        unitSlot.TargetUnit.Character.ApplyAllBuffRules(RaidSceneManager.Rules.GetIdleUnitRules(unitSlot.TargetUnit));
-        RaidSceneManager.RaidPanel.SelectHeroUnit(unitSlot.TargetUnit);
-        RaidSceneManager.Inventory.UpdateState();
-    }
+    #region Initialization
 
     public void LoadParty(RaidParty heroParty)
     {
-        party.CreateFormation(heroParty);
-        ranks.DistributeParty(party);
-        overlay.LockOnUnits(party);
-        overlay.UpdateOverlay();
+        Party.CreateFormation(heroParty);
+        Ranks.DistributeParty(Party);
+        Overlay.LockOnUnits(Party);
+        Overlay.UpdateOverlay();
 
-        foreach (var unit in party.Units)
+        foreach (var unit in Party.Units)
         {
-            unit.OverlaySlot.onHeroSelected += UpdateHero;
+            unit.OverlaySlot.HeroSelected += UpdateHero;
             unit.Formation = this;
         }
 
-        party.Units.Sort((x, y) => { if (x.Rank == y.Rank) return 0; if (x.Rank > y.Rank) return 1; else return -1; });
+        Party.Units.Sort((x, y) => { if (x.Rank == y.Rank) return 0; if (x.Rank > y.Rank) return 1; else return -1; });
 
-        party.Units[0].OverlaySlot.UnitSelected();
+        Party.Units[0].OverlaySlot.UnitSelected();
     }
 
     public void LoadParty(RaidParty heroParty, PhotonPlayer player)
     {
-        party.CreateFormation(heroParty, player);
-        ranks.DistributeParty(party);
-        overlay.LockOnUnits(party);
-        overlay.UpdateOverlay();
+        Party.CreateFormation(heroParty, player);
+        Ranks.DistributeParty(Party);
+        Overlay.LockOnUnits(Party);
+        Overlay.UpdateOverlay();
 
-        foreach (var unit in party.Units)
+        foreach (var unit in Party.Units)
         {
-            unit.OverlaySlot.onHeroSelected += UpdateHero;
+            unit.OverlaySlot.HeroSelected += UpdateHero;
             unit.Formation = this;
         }
 
-        party.Units.Sort((x, y) => { if (x.Rank == y.Rank) return 0; if (x.Rank > y.Rank) return 1; else return -1; });
+        Party.Units.Sort((x, y) => { if (x.Rank == y.Rank) return 0; if (x.Rank > y.Rank) return 1; else return -1; });
     }
 
     public void LoadParty(BattleEncounter encounter)
     {
-        party.CreateFormation(encounter);
-        ranks.DistributeParty(party);
+        Party.CreateFormation(encounter);
+        Ranks.DistributeParty(Party);
 
-        foreach (var unit in party.Units)
+        foreach (var unit in Party.Units)
             unit.Formation = this;
-        overlay.LockOnUnits(party);
+        Overlay.LockOnUnits(Party);
     }
 
     public void LoadParty(BattleFormationSaveData formationData, bool isHeroFormation)
     {
         if (isHeroFormation)
         {
-            party.CreateFormation(formationData);
-            ranks.DistributeParty(party);
-            overlay.LockOnUnits(party);
-            overlay.UpdateOverlay();
+            Party.CreateFormation(formationData);
+            Ranks.DistributeParty(Party);
+            Overlay.LockOnUnits(Party);
+            Overlay.UpdateOverlay();
 
-            foreach (var unit in party.Units)
+            foreach (var unit in Party.Units)
                 unit.Formation = this;
 
-            foreach (var overlaySlot in overlay.OverlaySlots)
-                overlaySlot.onHeroSelected += UpdateHero;
+            foreach (var overlaySlot in Overlay.OverlaySlots)
+                overlaySlot.HeroSelected += UpdateHero;
 
-            party.Units.Sort((x, y) => { if (x.Rank == y.Rank) return 0; if (x.Rank > y.Rank) return 1; else return -1; });
-            party.Units[0].OverlaySlot.UnitSelected();
+            Party.Units.Sort((x, y) => { if (x.Rank == y.Rank) return 0; if (x.Rank > y.Rank) return 1; else return -1; });
+            Party.Units[0].OverlaySlot.UnitSelected();
         }
         else
         {
-            party.CreateFormation(formationData);
-            ranks.DistributeParty(party);
+            Party.CreateFormation(formationData);
+            Ranks.DistributeParty(Party);
 
-            foreach (var unit in party.Units)
+            foreach (var unit in Party.Units)
                 unit.Formation = this;
-            overlay.LockOnUnits(party);
+            Overlay.LockOnUnits(Party);
         }
 
     }
 
-    public void UpdateBuffRule(BuffRule rule)
-    {
-        if (party == null || party.Units == null)
-            return;
-
-        for (int i = 0; i < party.Units.Count; i++)
-            party.Units[i].Character.ApplySingleBuffRule(RaidSceneManager.Rules.GetIdleUnitRules(party.Units[i]), rule);
-    }
-
+    #endregion
 
     public void SwapUnits(FormationUnit swapper, FormationUnit target)
     {
@@ -146,7 +184,7 @@ public class BattleFormation : MonoBehaviour
 
         swapper.RankSlot.Relocate(targetRank);
         target.RankSlot.Relocate(swapperRank);
-        party.Units.Sort((x, y) => { if (x.Rank == y.Rank) return 0; if (x.Rank > y.Rank) return 1; else return -1; });
+        Party.Units.Sort((x, y) => { if (x.Rank == y.Rank) return 0; if (x.Rank > y.Rank) return 1; else return -1; });
 
         swapper.Character.ApplySingleBuffRule(RaidSceneManager.Rules.GetIdleUnitRules(swapper), BuffRule.InRank);
         target.Character.ApplySingleBuffRule(RaidSceneManager.Rules.GetIdleUnitRules(target), BuffRule.InRank);
@@ -154,7 +192,7 @@ public class BattleFormation : MonoBehaviour
 
     public void SpawnCorpse(FormationUnit deadUnit, Monster corpse)
     {
-        if (!party.Units.Contains(deadUnit))
+        if (!Party.Units.Contains(deadUnit))
             return;
 
         deadUnit.Character = corpse;
@@ -166,17 +204,17 @@ public class BattleFormation : MonoBehaviour
 
     public void SpawnUnit(FormationUnit spawnUnit, int targetRank)
     {
-        party.AddUnit(spawnUnit, targetRank);
-        ranks.RedistributeParty(party);
-        overlay.FreeSlot.LockOnUnit(spawnUnit);
+        Party.AddUnit(spawnUnit, targetRank);
+        Ranks.RedistributeParty(Party);
+        Overlay.FreeSlot.LockOnUnit(spawnUnit);
     }
 
     public void DeleteUnit(FormationUnit deadUnit, bool destroy = true)
     {
-        if (!party.Units.Contains(deadUnit))
+        if (!Party.Units.Contains(deadUnit))
             return;
 
-        party.RemoveUnit(deadUnit);
+        Party.RemoveUnit(deadUnit);
         deadUnit.OverlaySlot.ClearTarget();
         deadUnit.RankSlot.ClearSlot();
         if(destroy)
@@ -185,66 +223,33 @@ public class BattleFormation : MonoBehaviour
 
     public void DeleteUnitDelayed(FormationUnit deadUnit, float delay)
     {
-        if (!party.Units.Contains(deadUnit))
+        if (!Party.Units.Contains(deadUnit))
             return;
 
-        party.RemoveUnit(deadUnit);
+        Party.RemoveUnit(deadUnit);
         deadUnit.OverlaySlot.ClearTarget();
         deadUnit.RankSlot.ClearSlot();
         Destroy(deadUnit.gameObject, delay);
     }
 
-
-    public bool IsStallingActive()
+    public void UpdateBuffRule(BuffRule rule)
     {
-        for (int i = 0; i < party.Units.Count; i++)
-            if (party.Units[i].Character.BattleModifiers != null && party.Units[i].Character.BattleModifiers.DisableStallPenalty)
-                return false;
+        if (Party == null || Party.Units == null)
+            return;
 
-        if (AliveUnitsCount > 1)
-            return false;
-
-        return true;
+        foreach (FormationUnit unit in Party.Units)
+            unit.Character.ApplySingleBuffRule(RaidSceneManager.Rules.GetIdleUnitRules(unit), rule);
     }
 
     public bool ContainsBaseClass(string baseClass)
     {
-        return party.Units.Find(unit => unit.Character.Class == baseClass) != null;
+        return Party.Units.Any(unit => unit.Character.Class == baseClass);
     }
 
-    public bool CanBeSurprised()
+    private void UpdateHero(FormationOverlaySlot unitSlot)
     {
-        for (int i = 0; i < party.Units.Count; i++)
-            if (party.Units[i].Character.BattleModifiers.CanBeSurprised)
-                return true;
-
-        return false;
-    }
-
-    public bool AlwaysBeSurprised()
-    {
-        for (int i = 0; i < party.Units.Count; i++)
-            if (party.Units[i].Character.BattleModifiers.AlwaysBeSurprised == false)
-                return false;
-
-        return true;
-    }
-
-    public bool CanSurprise()
-    {
-        for (int i = 0; i < party.Units.Count; i++)
-            if (party.Units[i].Character.BattleModifiers.CanSurprise)
-                return true;
-
-        return false;
-    }
-
-    public bool AlwaysSurprises()
-    {
-        for (int i = 0; i < party.Units.Count; i++)
-            if (party.Units[i].Character.BattleModifiers.AlwaysSurprise)
-                return true;
-
-        return false;
+        unitSlot.TargetUnit.Character.ApplyAllBuffRules(RaidSceneManager.Rules.GetIdleUnitRules(unitSlot.TargetUnit));
+        RaidSceneManager.RaidPanel.SelectHeroUnit(unitSlot.TargetUnit);
+        RaidSceneManager.Inventory.UpdateState();
     }
 }

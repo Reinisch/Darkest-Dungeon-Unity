@@ -5,6 +5,7 @@ public enum OverstressType
     Affliction,
     Virtue,
 }
+
 public enum StartTurnActType 
 {
     Nothing, BarkStress,
@@ -15,6 +16,7 @@ public enum StartTurnActType
     StressHealParty, BuffAlly,
     BuffParty, HealSelf,
 }
+
 public enum ReactionType
 {
     BlockMove, BlockHeal,
@@ -26,6 +28,7 @@ public enum ReactionType
     CommentCurioInteraction, CommentTrapTriggered,
     BlockEffect,
 }
+
 public class Trait
 {
     public string Id { get; set; }
@@ -53,6 +56,7 @@ public class CombatStartTurnActOut : IProportionValue
     public string StringParameter { get; set; }
     public int Chance { get; set; }
 }
+
 public class ReactionActOut
 {
     public ReactionType ActType { get; set; }

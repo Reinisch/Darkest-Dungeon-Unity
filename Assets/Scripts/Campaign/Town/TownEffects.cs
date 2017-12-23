@@ -1,7 +1,15 @@
 ﻿using System.Collections.Generic;
 
-public enum TownEffectType { ActivityLock, GoMissing, AddQuirk,
-    ApplyBuff, ChangeCurrency, AddTrinket, RemoveTrinket }
+public enum TownEffectType
+{
+    ActivityLock,
+    GoMissing,
+    AddQuirk,
+    ApplyBuff,
+    ChangeCurrency,
+    AddTrinket,
+    RemoveTrinket
+}
 
 public abstract class TownEffect : IProportionValue
 {

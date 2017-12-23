@@ -6,11 +6,6 @@
     public int MinDamage { get; private set; }
     public int MaxDamage { get; private set; }
 
-    public HeroActionInfo()
-    {
-
-    }
-
     public void UpdateInfo(bool valid, float hit, float crit, int minDamage, int maxDamage)
     {
         IsValid = valid;

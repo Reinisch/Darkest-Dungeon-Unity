@@ -16,6 +16,7 @@ public class RaidObstacle : RaidProp
         PropType = PropType.Obstacle;
         Removed = false;
     }
+
     public override void Activate()
     {
         Removed = true;
@@ -23,25 +24,26 @@ public class RaidObstacle : RaidProp
         if(SkeletonAnimation.gameObject.name.StartsWith("thorny_thicket"))
             SkeletonAnimation.state.GetCurrent(0).Time = 0.2f;
     }
+
     public override void SetSortingOrder(int order)
     {
-
-    }
-
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if(!Removed)
-            RaidSceneManager.Instanse.EncounterObstacle(AreaView as RaidHallSector);
-    }
-    void OnTriggerExit2D(Collider2D other)
-    {
-        if (!Removed)
-            RaidSceneManager.Instanse.LeaveObstacle(AreaView as RaidHallSector);
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
         if (!Removed)
             AreaView.OnPointerClick(eventData);
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if(!Removed)
+            RaidSceneManager.Instanse.EncounterObstacle(AreaView as RaidHallSector);
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (!Removed)
+            RaidSceneManager.Instanse.LeaveObstacle(AreaView as RaidHallSector);
     }
 }

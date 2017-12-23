@@ -1,12 +1,13 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class EstateTopPanel : MonoBehaviour
 {
-    public event WindowEvent onReturnButtonClick;
+    public event Action EventReturnButtonClick;
 
     public void ReturnButtonClicked()
     {
-        if (onReturnButtonClick != null)
-            onReturnButtonClick();
+        if (EventReturnButtonClick != null)
+            EventReturnButtonClick();
     }
 }

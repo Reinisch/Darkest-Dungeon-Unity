@@ -5,7 +5,6 @@ public class Door : Prop
     public string TargetArea { get; set; }
     public Direction Direction { get; set; }
 
-
     public Door()
     {
         Type = AreaType.Door;
@@ -17,7 +16,6 @@ public class Door : Prop
         TargetArea = targetAreaId;
         Direction = direction;
     }
-
 
     public override void Write(BinaryWriter bw)
     {

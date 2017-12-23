@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using NUnit.Compatibility;
 
 public interface IBinarySaveData
 {
@@ -161,7 +160,7 @@ public static class BinarySaveDataHelper
         var saveDataType = typeof(T);
         T newBinaryData = null;
 
-        if (typeof(Quest).IsCastableFrom(saveDataType))
+        if (typeof(Quest).IsAssignableFrom(saveDataType))
         {
             string plotGenId = br.ReadString();
             if (plotGenId == "tutorial")
@@ -171,7 +170,7 @@ public static class BinarySaveDataHelper
             else
                 newBinaryData = new Quest() as T;
         }
-        else if (typeof(Prop).IsCastableFrom(saveDataType))
+        else if (typeof(Prop).IsAssignableFrom(saveDataType))
         {
             AreaType propType = (AreaType)br.ReadInt32();
 

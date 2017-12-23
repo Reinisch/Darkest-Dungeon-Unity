@@ -2,7 +2,7 @@
 
 public class RaidDoor : RaidProp
 {
-    public SkeletonAnimation SkeletonAnimation { get; set; }
+    private SkeletonAnimation SkeletonAnimation { get; set; }
 
     public override void Initialize(IRaidArea areaView)
     {
@@ -13,20 +13,13 @@ public class RaidDoor : RaidProp
         SkeletonAnimation = GetComponent<SkeletonAnimation>();
         PropType = PropType.Door;
     }
-    public override void Activate()
-    {
-        base.Activate();
-    }
-    public override void SetSortingOrder(int order)
-    {
-
-    }
-
+    
     public void Open()
     {
         SkeletonAnimation.state.ClearTracks();
         SkeletonAnimation.state.SetAnimation(0, "open", false);
     }
+
     public void Close()
     {
         SkeletonAnimation.state.ClearTracks();

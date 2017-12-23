@@ -1,174 +1,129 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public delegate void ScrollEvent();
-
 public class RaidEvents : MonoBehaviour
 {
-    public PopupMessage popupText;
-    public ScrollEventLoot loot;
-    public ScrollMealEvent meal;
-    public ScrollHungerEvent hunger;
-    public ScrollCampEvent camp;
-    public ScrollEventInteraction itemInteraction;
-    public RaidAnnouncment announcment;
-    public RoundIndicator roundIndicator;
-    public CanvasGroup raidUiCanvasGroup;
+    [SerializeField]
+    private PopupMessage popupText;
+    [SerializeField]
+    private ScrollEventLoot loot;
+    [SerializeField]
+    private ScrollMealEvent meal;
+    [SerializeField]
+    private ScrollHungerEvent hunger;
+    [SerializeField]
+    private ScrollCampEvent camp;
+    [SerializeField]
+    private ScrollEventInteraction itemInteraction;
+    [SerializeField]
+    private RaidAnnouncment announcment;
+    [SerializeField]
+    private RoundIndicator roundIndicator;
+    [SerializeField]
+    private CanvasGroup raidUiCanvasGroup;
 
-    public SkeletonAnimation battleAnnouncment;
-    public RectTransform eventRect;
-    public MonsterTooltip monsterTooltip;
+    [SerializeField]
+    private SkeletonAnimation battleAnnouncment;
+    [SerializeField]
+    private RectTransform eventRect;
+    [SerializeField]
+    private MonsterTooltip monsterTooltip;
 
-    public PopupMessage PopupMessage
-    {
-        get
-        {
-            return popupText;
-        }
-    }
-    public ScrollCampEvent CampEvent
-    {
-        get
-        {
-            return camp;
-        }
-    }
-    public ScrollMealEvent MealEvent
-    {
-        get
-        {
-            return meal;
-        }
-    }
-    public ScrollHungerEvent HungerEvent
-    {
-        get
-        {
-            return hunger;
-        }
-    }
-    public ScrollEventLoot LootEvent
-    {
-        get
-        {
-            return loot;
-        }
-    }
-    public ScrollEventInteraction InteractionEvent
-    {
-        get
-        {
-            return itemInteraction;
-        }
-    }
-    public RaidAnnouncment Announcment
-    {
-        get
-        {
-            return announcment;
-        }
-    }
-    public RoundIndicator RoundIndicator
-    {
-        get
-        {
-            return roundIndicator;
-        }
-    }
-    public MonsterTooltip MonsterTooltip
-    {
-        get
-        {
-            return monsterTooltip;
-        }
-    }
+    public ScrollCampEvent CampEvent { get { return camp; } }
+    public ScrollMealEvent MealEvent { get { return meal; } }
+    public ScrollHungerEvent HungerEvent { get { return hunger; } }
+    public ScrollEventLoot LootEvent { get { return loot; } }
+    public ScrollEventInteraction InteractionEvent { get { return itemInteraction; } }
+    public RaidAnnouncment Announcment { get { return announcment; } }
+    public RoundIndicator RoundIndicator { get { return roundIndicator; } }
+    public MonsterTooltip MonsterTooltip { get { return monsterTooltip; } }
+    public CanvasGroup RaidUICanvasGroup { get { return raidUiCanvasGroup; } }
 
-    Dictionary<string, Color> PopupColors;
+    private Dictionary<string, Color> PopupColors { get; set; }
 
     public void Initialize()
     {
         #region Popup Colors
+
         PopupColors = new Dictionary<string, Color>()
         {
-            { "harmful", DarkestDungeonManager.Data.FromHexDatabase("harmful") },
-            { "notable", DarkestDungeonManager.Data.FromHexDatabase("notable") },
-            { "pop_text_stress_reduce", DarkestDungeonManager.Data.FromHexDatabase("pop_text_stress_reduce") },
-            { "pop_text_outline_stress_reduce", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_stress_reduce") },
-            { "pop_text_stress_damage", DarkestDungeonManager.Data.FromHexDatabase("pop_text_stress_damage") },
-            { "pop_text_outline_stress_damage", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_stress_damage") },
-            { "pop_text_miss", DarkestDungeonManager.Data.FromHexDatabase("pop_text_miss") },
-            { "pop_text_outline_miss", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_miss") },
-            { "pop_text_no_damage", DarkestDungeonManager.Data.FromHexDatabase("pop_text_no_damage") },
-            { "pop_text_outline_no_damage", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_no_damage") },
-            { "pop_text_crit_damage", DarkestDungeonManager.Data.FromHexDatabase("pop_text_crit_damage") },
-            { "pop_text_outline_crit_damage", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_crit_damage") },
-            { "pop_text_damage", DarkestDungeonManager.Data.FromHexDatabase("pop_text_damage") },
-            { "pop_text_outline_damage", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_damage") },
-            { "pop_text_deathblow", DarkestDungeonManager.Data.FromHexDatabase("pop_text_deathblow") },
-            { "pop_text_outline_deathblow", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_deathblow") },
-            { "pop_text_death_avoided", DarkestDungeonManager.Data.FromHexDatabase("pop_text_death_avoided") },
-            { "pop_text_outline_death_avoided", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_death_avoided") },
-            { "pop_text_disease_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_disease_resist") },
-            { "pop_text_outline_disease_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_disease_resist") },
-            { "pop_text_pass", DarkestDungeonManager.Data.FromHexDatabase("pop_text_pass") },
-            { "pop_text_outline_pass", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_pass") },
-            { "pop_text_heal", DarkestDungeonManager.Data.FromHexDatabase("pop_text_heal") },
-            { "pop_text_outline_heal", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_heal") },
-            { "pop_text_heal_crit", DarkestDungeonManager.Data.FromHexDatabase("pop_text_heal_crit") },
-            { "pop_text_outline_heal_crit", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_heal_crit") },
-            { "pop_text_buff", DarkestDungeonManager.Data.FromHexDatabase("pop_text_buff") },
-            { "pop_text_outline_buff", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_buff") }, 
-            { "pop_text_debuff", DarkestDungeonManager.Data.FromHexDatabase("pop_text_debuff") },
-            { "pop_text_outline_debuff", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_debuff") },
-            { "pop_text_stun", DarkestDungeonManager.Data.FromHexDatabase("pop_text_stun") },
-            { "pop_text_outline_stun", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_stun") },
-            { "pop_text_stun_clear", DarkestDungeonManager.Data.FromHexDatabase("pop_text_stun_clear") },
-            { "pop_text_outline_stun_clear", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_stun_clear") },
-            { "pop_text_poison", DarkestDungeonManager.Data.FromHexDatabase("pop_text_poison") },
-            { "pop_text_outline_poison", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_poison") },
-            { "pop_text_bleed", DarkestDungeonManager.Data.FromHexDatabase("pop_text_bleed") },
-            { "pop_text_outline_bleed", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_bleed") },
-            { "pop_text_cured", DarkestDungeonManager.Data.FromHexDatabase("pop_text_cured") },
-            { "pop_text_outline_cured", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_cured") },
-            { "pop_text_tagged", DarkestDungeonManager.Data.FromHexDatabase("pop_text_tagged") },
-            { "pop_text_outline_tagged", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_tagged") },
-            { "pop_text_riposte", DarkestDungeonManager.Data.FromHexDatabase("pop_text_riposte") },
-            { "pop_text_outline_riposte", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_riposte") },
-            { "pop_text_guard", DarkestDungeonManager.Data.FromHexDatabase("pop_text_guard") },
-            { "pop_text_outline_guard", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_guard") },
-            { "pop_text_full", DarkestDungeonManager.Data.FromHexDatabase("pop_text_full") },
-            { "pop_text_outline_full", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_full") },
-            { "pop_text_heart_attack", DarkestDungeonManager.Data.FromHexDatabase("pop_text_heart_attack") },
-            { "pop_text_outline_heart_attack", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_heart_attack") },
-            { "pop_text_move_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_move_resist") },
-            { "pop_text_outline_move_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_move_resist") },
-            { "pop_text_debuff_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_debuff_resist") },
-            { "pop_text_outline_debuff_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_debuff_resist") },
-            { "pop_text_stun_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_stun_resist") },
-            { "pop_text_outline_stun_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_stun_resist") },
-            { "pop_text_poison_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_poison_resist") },
-            { "pop_text_outline_poison_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_poison_resist") },
-            { "pop_text_bleed_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_bleed_resist") }, 
-            { "pop_text_outline_bleed_resist", DarkestDungeonManager.Data.FromHexDatabase("pop_text_outline_bleed_resist") },
+            { "harmful", "harmful".ToColor() },
+            { "notable", "notable".ToColor() },
+            { "pop_text_stress_reduce", "pop_text_stress_reduce".ToColor() },
+            { "pop_text_outline_stress_reduce", "pop_text_outline_stress_reduce".ToColor() },
+            { "pop_text_stress_damage", "pop_text_stress_damage".ToColor() },
+            { "pop_text_outline_stress_damage", "pop_text_outline_stress_damage".ToColor() },
+            { "pop_text_miss", "pop_text_miss".ToColor() },
+            { "pop_text_outline_miss", "pop_text_outline_miss".ToColor() },
+            { "pop_text_no_damage", "pop_text_no_damage".ToColor() },
+            { "pop_text_outline_no_damage", "pop_text_outline_no_damage".ToColor() },
+            { "pop_text_crit_damage", "pop_text_crit_damage".ToColor() },
+            { "pop_text_outline_crit_damage", "pop_text_outline_crit_damage".ToColor() },
+            { "pop_text_damage", "pop_text_damage".ToColor() },
+            { "pop_text_outline_damage", "pop_text_outline_damage".ToColor() },
+            { "pop_text_deathblow", "pop_text_deathblow".ToColor() },
+            { "pop_text_outline_deathblow", "pop_text_outline_deathblow".ToColor() },
+            { "pop_text_death_avoided", "pop_text_death_avoided".ToColor() },
+            { "pop_text_outline_death_avoided", "pop_text_outline_death_avoided".ToColor() },
+            { "pop_text_disease_resist", "pop_text_disease_resist".ToColor() },
+            { "pop_text_outline_disease_resist", "pop_text_outline_disease_resist".ToColor() },
+            { "pop_text_pass", "pop_text_pass".ToColor() },
+            { "pop_text_outline_pass", "pop_text_outline_pass".ToColor() },
+            { "pop_text_heal", "pop_text_heal".ToColor() },
+            { "pop_text_outline_heal", "pop_text_outline_heal".ToColor() },
+            { "pop_text_heal_crit", "pop_text_heal_crit".ToColor() },
+            { "pop_text_outline_heal_crit", "pop_text_outline_heal_crit".ToColor() },
+            { "pop_text_buff", "pop_text_buff".ToColor() },
+            { "pop_text_outline_buff", "pop_text_outline_buff".ToColor() }, 
+            { "pop_text_debuff", "pop_text_debuff".ToColor() },
+            { "pop_text_outline_debuff", "pop_text_outline_debuff".ToColor() },
+            { "pop_text_stun", "pop_text_stun".ToColor() },
+            { "pop_text_outline_stun", "pop_text_outline_stun".ToColor() },
+            { "pop_text_stun_clear", "pop_text_stun_clear".ToColor() },
+            { "pop_text_outline_stun_clear", "pop_text_outline_stun_clear".ToColor() },
+            { "pop_text_poison", "pop_text_poison".ToColor() },
+            { "pop_text_outline_poison", "pop_text_outline_poison".ToColor() },
+            { "pop_text_bleed", "pop_text_bleed".ToColor() },
+            { "pop_text_outline_bleed", "pop_text_outline_bleed".ToColor() },
+            { "pop_text_cured", "pop_text_cured".ToColor() },
+            { "pop_text_outline_cured", "pop_text_outline_cured".ToColor() },
+            { "pop_text_tagged", "pop_text_tagged".ToColor() },
+            { "pop_text_outline_tagged", "pop_text_outline_tagged".ToColor() },
+            { "pop_text_riposte", "pop_text_riposte".ToColor() },
+            { "pop_text_outline_riposte", "pop_text_outline_riposte".ToColor() },
+            { "pop_text_guard", "pop_text_guard".ToColor() },
+            { "pop_text_outline_guard", "pop_text_outline_guard".ToColor() },
+            { "pop_text_full", "pop_text_full".ToColor() },
+            { "pop_text_outline_full", "pop_text_outline_full".ToColor() },
+            { "pop_text_heart_attack", "pop_text_heart_attack".ToColor() },
+            { "pop_text_outline_heart_attack", "pop_text_outline_heart_attack".ToColor() },
+            { "pop_text_move_resist", "pop_text_move_resist".ToColor() },
+            { "pop_text_outline_move_resist", "pop_text_outline_move_resist".ToColor() },
+            { "pop_text_debuff_resist", "pop_text_debuff_resist".ToColor() },
+            { "pop_text_outline_debuff_resist", "pop_text_outline_debuff_resist".ToColor() },
+            { "pop_text_stun_resist", "pop_text_stun_resist".ToColor() },
+            { "pop_text_outline_stun_resist", "pop_text_outline_stun_resist".ToColor() },
+            { "pop_text_poison_resist", "pop_text_poison_resist".ToColor() },
+            { "pop_text_outline_poison_resist", "pop_text_outline_poison_resist".ToColor() },
+            { "pop_text_bleed_resist", "pop_text_bleed_resist".ToColor() }, 
+            { "pop_text_outline_bleed_resist", "pop_text_outline_bleed_resist".ToColor() },
         };
+
         #endregion
 
-        loot.partyInventory.Configuration = InventoryConfiguration.LootInventory;
         loot.Initialize();
         meal.Initialize();
         itemInteraction.Initialize();
-        itemInteraction.onScrollOpened += RaidSceneManager.Instanse.DisablePartyMovement;
+        itemInteraction.OnScrollOpened += RaidSceneManager.Instanse.DisablePartyMovement;
 
         battleAnnouncment.Reset();
     }
 
     public void ShowPopupMessage(FormationUnit unit, PopupMessageType type, string parameter = "", float ripOffset = 0)
     {
-        PopupMessage popupMessage = (Instantiate(popupText.gameObject) as GameObject).GetComponent<PopupMessage>();
-        popupMessage.rectTransform.SetParent(eventRect, false);
-        Spine.Bone bone = unit.CurrentState.Skeleton.FindBone("fxhead");
-        if (bone == null)
-            bone = unit.CurrentState.Skeleton.FindBone("fxskill");
+        PopupMessage popupMessage = Instantiate(popupText.gameObject).GetComponent<PopupMessage>();
+        popupMessage.RectTransform.SetParent(eventRect, false);
+        Spine.Bone bone = unit.CurrentState.Skeleton.FindBone("fxhead") ?? unit.CurrentState.Skeleton.FindBone("fxskill");
 
         switch(type)
         {
@@ -217,35 +172,35 @@ public class RaidEvents : MonoBehaviour
                 popupMessage.SetColor(PopupColors["pop_text_damage"], PopupColors["pop_text_outline_damage"]);
                 popupMessage.SetMessage(parameter);
                 popupMessage.SetOffset(new Vector3(0, ripOffset, 0));
-                popupMessage.skillMessage.fontSize = 70;
+                popupMessage.SkillMessage.fontSize = 70;
                 break;
             case PopupMessageType.CritDamage:
                 popupMessage.SetColor(PopupColors["pop_text_crit_damage"], PopupColors["pop_text_outline_crit_damage"]);
                 popupMessage.SetMessage(LocalizationManager.GetString("str_ui_crittxt") + "\n" + parameter);
                 popupMessage.SetOffset(new Vector3(0, ripOffset, 0));
-                popupMessage.skillMessage.fontSize = 72;
+                popupMessage.SkillMessage.fontSize = 72;
                 break;
             case PopupMessageType.Stress:
                 popupMessage.SetColor(PopupColors["pop_text_stress_damage"], PopupColors["pop_text_outline_stress_damage"]);
                 popupMessage.SetMessage(parameter);
                 FMODUnity.RuntimeManager.PlayOneShot("event:/general/status/stress_up");
-                popupMessage.skillMessage.fontSize = 70;
+                popupMessage.SkillMessage.fontSize = 70;
                 break;
             case PopupMessageType.StressHeal:
                 popupMessage.SetColor(PopupColors["pop_text_stress_reduce"], PopupColors["pop_text_outline_stress_reduce"]);
                 popupMessage.SetMessage(parameter);
                 FMODUnity.RuntimeManager.PlayOneShot("event:/general/status/stress_down");
-                popupMessage.skillMessage.fontSize = 70;
+                popupMessage.SkillMessage.fontSize = 70;
                 break;
             case PopupMessageType.Heal:
                 popupMessage.SetColor(PopupColors["pop_text_heal"], PopupColors["pop_text_outline_heal"]);
                 popupMessage.SetMessage(parameter);
-                popupMessage.skillMessage.fontSize = 70;
+                popupMessage.SkillMessage.fontSize = 70;
                 break;
             case PopupMessageType.CritHeal:
                 popupMessage.SetColor(PopupColors["pop_text_heal_crit"], PopupColors["pop_text_outline_heal_crit"]);
                 popupMessage.SetMessage(parameter);
-                popupMessage.skillMessage.fontSize = 72;
+                popupMessage.SkillMessage.fontSize = 72;
                 break;
             case PopupMessageType.Pass:
                 popupMessage.SetColor(PopupColors["pop_text_pass"], PopupColors["pop_text_outline_pass"]);
@@ -416,7 +371,7 @@ public class RaidEvents : MonoBehaviour
 
         Vector3 screenPosition = RaidSceneManager.DungeonPositionToScreen(
             unit.RectTransform.TransformPoint(bone.WorldX, bone.WorldY, 0));
-        popupMessage.rectTransform.position = new Vector3(screenPosition.x, screenPosition.y, 0);
+        popupMessage.RectTransform.position = new Vector3(screenPosition.x, screenPosition.y, 0);
         popupMessage.FollowXBone(bone, unit);
         popupMessage.gameObject.SetActive(true);
     }
@@ -439,14 +394,17 @@ public class RaidEvents : MonoBehaviour
             battleAnnouncment.state.SetAnimation(0, "start", false);
         }
     }
+
     public void HideBattleAnnouncment()
     {
         battleAnnouncment.gameObject.SetActive(false);
     }
+
     public void ShowAnnouncment(string message, AnnouncmentPosition position = AnnouncmentPosition.Top)
     {
         announcment.ShowAnnouncment(message, position);
     }
+
     public void HideAnnouncment()
     {
         announcment.HideAnnouncment();
@@ -456,30 +414,37 @@ public class RaidEvents : MonoBehaviour
     {
         meal.LoadCampingMeal();
     }
+
     public void LoadHungerMeal()
     {
         hunger.LoadHungerEventMeal();
     }
+
     public void LoadCampingSkillEvent()
     {
         camp.PrepareCamping();
     }
+
     public void LoadInteraction(Obstacle obstacle, RaidHallSector sector)
     {
         itemInteraction.LoadInteraction(obstacle, sector);
     }
+
     public void LoadInteraction(Curio curio, IRaidArea areaView)
     {
         itemInteraction.LoadInteraction(curio, areaView);
     }
+
     public void LoadCurioLoot(Curio curio, CurioInteraction interaction, CurioResult result, bool keepLoot = false)
     {
         loot.LoadCurioLoot(curio, interaction, result, RaidSceneManager.Raid, keepLoot);
     }
+
     public void LoadBattleLoot(List<LootDefinition> battleLoot)
     {
         loot.LoadBattleLoot(battleLoot);
     }
+
     public void LoadSingleLoot(string code, int amount)
     {
         loot.LoadSingleLoot(code, amount);

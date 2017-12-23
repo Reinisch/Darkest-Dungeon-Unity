@@ -1,26 +1,31 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public delegate void SkillUpgradeSlotEvent(SkillUpgradeSlot slot);
-
 public class SkillUpgradeSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    RectTransform rectTransform;
+    [SerializeField]
+    private BuildCostFrame costFrame;
+    [SerializeField]
+    private Image background;
+    [SerializeField]
+    private Image icon;
 
-    public BuildCostFrame costFrame;
+    public BuildCostFrame CostFrame { get { return costFrame; } }
+    public Image Background { get { return background; } }
+    public Image Icon { get { return icon; } }
 
-    public Image background;
-    public Image icon;
+    public UpgradeTree Tree { get; private set; }
+    public HeroUpgrade Upgrade { get; private set; }
+    public Hero Hero { get; private set; }
 
-    public UpgradeTree Tree { get; set; }
-    public HeroUpgrade Upgrade { get; set; }
-    public Hero Hero { get; set; }
-    public CombatSkill Skill { get; set; }
+    private CombatSkill Skill { get; set; }
+    private RectTransform rectTransform;
 
-    public event SkillUpgradeSlotEvent onClick;
+    public event Action<SkillUpgradeSlot> EventClicked;
 
-    void Awake()
+    private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
     }
@@ -49,25 +54,25 @@ public class SkillUpgradeSlot : MonoBehaviour, IPointerEnterHandler, IPointerExi
         if (Hero == null)
             return;
 
-        icon.material = DarkestDungeonManager.HighlightMaterial;
+        Icon.material = DarkestDungeonManager.HighlightMaterial;
         if (DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(Tree.Id, Hero, Upgrade) == UpgradeStatus.Locked)
             ToolTipManager.Instanse.ShowSkillTooltip(Skill.HeroSkillTooltip(Hero) + "\n" +
                 Upgrade.PrerequisitesTooltip(Hero, DarkestDungeonManager.Campaign.Estate),
-                Skill, eventData, rectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
+                Skill, rectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
         else
-            ToolTipManager.Instanse.ShowSkillTooltip(Hero, Skill, eventData, rectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
+            ToolTipManager.Instanse.ShowSkillTooltip(Hero, Skill, rectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
 
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        icon.material = icon.defaultMaterial;
+        Icon.material = Icon.defaultMaterial;
         ToolTipManager.Instanse.Hide();
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (onClick != null)
-            onClick(this);
+        if (EventClicked != null)
+            EventClicked(this);
     }
 }

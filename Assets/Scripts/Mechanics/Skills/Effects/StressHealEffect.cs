@@ -36,7 +36,7 @@ public class StressHealEffect : SubEffect
         target.Character.Stress.DecreaseValue(heal);
         if (Mathf.RoundToInt(hero.Stress.CurrentValue) == 0 && hero.IsAfflicted)
             hero.RevertTrait();
-        target.OverlaySlot.stressBar.UpdateStress(target.Character.Stress.ValueRatio);
+        target.OverlaySlot.UpdateOverlay();
         return true;
     }
 
@@ -65,7 +65,7 @@ public class StressHealEffect : SubEffect
         target.Character.Stress.DecreaseValue(heal);
         if (Mathf.RoundToInt(hero.Stress.CurrentValue) == 0 && hero.IsAfflicted)
             hero.RevertTrait();
-        target.OverlaySlot.stressBar.UpdateStress(target.Character.Stress.ValueRatio);
+        target.OverlaySlot.UpdateOverlay();
         RaidSceneManager.RaidEvents.ShowPopupMessage(target, PopupMessageType.StressHeal, heal.ToString());
         target.SetHalo("heroic");
         return true;
@@ -84,7 +84,7 @@ public class StressHealEffect : SubEffect
         target.Character.Stress.DecreaseValue(fuseParameter);
         if (Mathf.RoundToInt(hero.Stress.CurrentValue) == 0 && hero.IsAfflicted)
             hero.RevertTrait();
-        target.OverlaySlot.stressBar.UpdateStress(target.Character.Stress.ValueRatio);
+        target.OverlaySlot.UpdateOverlay();
         RaidSceneManager.RaidEvents.ShowPopupMessage(target, PopupMessageType.StressHeal, fuseParameter.ToString());
         target.SetHalo("heroic");
         return true;
@@ -115,8 +115,6 @@ public class StressHealEffect : SubEffect
 
     public override string Tooltip(Effect effect)
     {
-        string toolTip = string.Format(LocalizationManager.GetString(
-                        "effect_tooltip_stress_heal_format"), StressHealAmount);
-        return toolTip;
+        return string.Format(LocalizationManager.GetString("effect_tooltip_stress_heal_format"), StressHealAmount);
     }
 }

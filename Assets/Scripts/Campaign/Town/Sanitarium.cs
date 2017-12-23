@@ -10,11 +10,13 @@ public class Sanitarium : Building
         QuirkActivity.InitializeActivity(purchases);
         DiseaseActivity.InitializeActivity(purchases);
     }
+
     public void ProvideActivity()
     {
         QuirkActivity.ProvideActivity();
         DiseaseActivity.ProvideActivity();
     }
+
     public void UpdateBuilding(Dictionary<string, UpgradePurchases> purchases)
     {
         QuirkActivity.UpdateActivity(purchases);

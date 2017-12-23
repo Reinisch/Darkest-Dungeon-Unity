@@ -4,69 +4,66 @@ using UnityEngine.EventSystems;
 
 public class HeroSlot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDragHandler, IEndDragHandler, IDropHandler, IPointerEnterHandler
 {
-    public Image portrait;
-    public Image statusIcon;
-    public Image diseaseIcon;
-    public Text heroName;
-    public Text weaponLevel;
-    public Text armorLevel;
-    public StressOverlayPanel stressPanel;
-    public ResolveBar resolveBar;
-    public Image resolveRect;
-    public CanvasGroup canvasGroup;
-    public Animator slotController;
-
-    public int PartySlotId
-    {
-        get
-        {
-            if (PartySlot == null)
-                return 0;
-            else
-                return PartySlot.SlotId;
-        }
-    }
+    [SerializeField]
+    private Image portrait;
+    [SerializeField]
+    private Image statusIcon;
+    [SerializeField]
+    private Image diseaseIcon;
+    [SerializeField]
+    private Text heroName;
+    [SerializeField]
+    private Text weaponLevel;
+    [SerializeField]
+    private Text armorLevel;
+    [SerializeField]
+    private StressOverlayPanel stressPanel;
+    [SerializeField]
+    private ResolveBar resolveBar;
+    [SerializeField]
+    private Animator slotController;
 
     public Hero Hero { get; set; }
     public RaidPartySlot PartySlot { get; set; }
+    public RectTransform RectTransform { get; private set; }
+    public HeroRosterPanel HeroRoster { private get; set; }
+    public Image Portrait { get { return portrait; } }
+    public Animator SlotController { get { return slotController; } }
 
-    public RectTransform RectTransform { get; set; }
-    public HeroRosterPanel HeroRoster { get; set; }
 #if UNITY_ANDROID || UNITY_IOS
     float doubleTapTimer = 0f;
     float doubleTapTime = 0.2f;
 
-    void Update()
+    private void Update()
     {
         if (doubleTapTimer > 0)
             doubleTapTimer -= Time.deltaTime;
     }
 #endif
-    void Awake()
+
+    private void Awake()
     {
         RectTransform = GetComponent<RectTransform>();
     }
     
-
     public void CopyToDragItem(DragItemHolder heroHolder)
     {
-        heroHolder.itemIcon.sprite = portrait.sprite;
+        heroHolder.ItemIcon.sprite = Portrait.sprite;
     }
 
     public void UpdateSlot()
     {
-        portrait.sprite = DarkestDungeonManager.HeroSprites[Hero.ClassStringId]["A"].Portrait;
+        Portrait.sprite = DarkestDungeonManager.HeroSprites[Hero.ClassStringId]["A"].Portrait;
         heroName.text = Hero.HeroName;
         weaponLevel.text = Hero.WeaponLevel.ToString();
         armorLevel.text = Hero.ArmorLevel.ToString();
         stressPanel.UpdateStress(Hero.GetPairedAttribute(AttributeType.Stress).ValueRatio);
         resolveBar.UpdateResolve(Hero);
-        if (Hero.Diseases.Count > 0)
-            diseaseIcon.gameObject.SetActive(true);
-        else
-            diseaseIcon.gameObject.SetActive(false);
+        diseaseIcon.gameObject.SetActive(Hero.Diseases.Count > 0);
+
         SetStatus(Hero.Status);
     }
+
     public void SetStatus(HeroStatus status)
     {
         if (Hero == null)
@@ -83,37 +80,37 @@ public class HeroSlot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBegi
         switch (Hero.Status)
         {
             case HeroStatus.Abbey:
-                portrait.material = DarkestDungeonManager.GrayDarkMaterial;
+                Portrait.material = DarkestDungeonManager.GrayDarkMaterial;
                 statusIcon.gameObject.SetActive(true);
                 statusIcon.sprite = DarkestDungeonManager.Data.Sprites["abbey.icon_roster"];
                 break;
             case HeroStatus.Sanitarium:
-                portrait.material = DarkestDungeonManager.GrayDarkMaterial;
+                Portrait.material = DarkestDungeonManager.GrayDarkMaterial;
                 statusIcon.gameObject.SetActive(true);
                 statusIcon.sprite = DarkestDungeonManager.Data.Sprites["sanitarium.icon_roster"];
                 break;
             case HeroStatus.Tavern:
-                portrait.material = DarkestDungeonManager.GrayDarkMaterial;
+                Portrait.material = DarkestDungeonManager.GrayDarkMaterial;
                 statusIcon.gameObject.SetActive(true);
                 statusIcon.sprite = DarkestDungeonManager.Data.Sprites["tavern.icon_roster"];
                 break;
             case HeroStatus.Missing:
-                portrait.material = DarkestDungeonManager.GrayDarkMaterial;
+                Portrait.material = DarkestDungeonManager.GrayDarkMaterial;
                 statusIcon.gameObject.SetActive(true);
                 statusIcon.sprite = DarkestDungeonManager.Data.Sprites["missing.icon_roster"];
                 break;
             case HeroStatus.RaidParty:
-                portrait.material = portrait.defaultMaterial;
+                Portrait.material = Portrait.defaultMaterial;
                 statusIcon.gameObject.SetActive(true);
                 statusIcon.sprite = DarkestDungeonManager.Data.Sprites["party.icon_roster"];
                 break;
             case HeroStatus.Available:
-                portrait.material = portrait.defaultMaterial;
+                Portrait.material = Portrait.defaultMaterial;
                 statusIcon.gameObject.SetActive(false);
                 break;
             default:
                 statusIcon.gameObject.SetActive(false);
-                portrait.material = portrait.defaultMaterial;
+                Portrait.material = Portrait.defaultMaterial;
                 break;
         }
     }
@@ -133,80 +130,81 @@ public class HeroSlot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBegi
             HeroRoster.HeroSlotClicked(this);
 #endif
     }
+
     public void OnDrag(PointerEventData eventData)
     {
-        Vector3 globalMousePos;
-
         DragManager.Instanse.OnDrag(this, eventData);
 
         if (!HeroRoster.Hovered)
             return;
 
-        if (eventData.pointerCurrentRaycast.isValid)
+        if (!eventData.pointerCurrentRaycast.isValid)
+            return;
+
+        if (eventData.pointerCurrentRaycast.gameObject == HeroRoster.PlaceHolder.gameObject ||
+            eventData.pointerCurrentRaycast.gameObject == gameObject)
+            return;
+
+        var hoveredSlot = eventData.pointerCurrentRaycast.gameObject.GetComponent<HeroSlot>();
+        Vector3 globalMousePos;
+        if (hoveredSlot == null)
         {
-            if (eventData.pointerCurrentRaycast.gameObject == HeroRoster.placeHolder.gameObject ||
-                eventData.pointerCurrentRaycast.gameObject == gameObject)
-                return;
-
-            var hoveredSlot = eventData.pointerCurrentRaycast.gameObject.GetComponent<HeroSlot>();
-            if (hoveredSlot == null)
+            if (HeroRoster.gameObject == eventData.pointerCurrentRaycast.gameObject)
             {
-                if (HeroRoster.gameObject == eventData.pointerCurrentRaycast.gameObject)
-                {
-                    RectTransformUtility.ScreenPointToWorldPointInRectangle(DragManager.Instanse.OverlayRect,
-                        eventData.position, eventData.pressEventCamera, out globalMousePos);
+                RectTransformUtility.ScreenPointToWorldPointInRectangle(DragManager.Instanse.OverlayRect,
+                    eventData.position, eventData.pressEventCamera, out globalMousePos);
 
-                    bool shifted;
-                    int shifts = 10;
-                    while (shifts > 0)
+                int shifts = 10;
+                while (shifts > 0)
+                {
+                    var shifted = false;
+                    if (globalMousePos.y + HeroRoster.PlaceHolder.RectTransform.sizeDelta.y / 2 > 
+                        HeroRoster.PlaceHolder.RectTransform.position.y)
                     {
-                        shifted = false;
-                        if (globalMousePos.y + HeroRoster.placeHolder.RectTransform.sizeDelta.y / 2 > 
-                            HeroRoster.placeHolder.RectTransform.position.y)
-                        {
-                            HeroRoster.placeHolder.RectTransform.SetSiblingIndex(HeroRoster.placeHolder.RectTransform.GetSiblingIndex() - 1);
-                            if (HeroRoster.placeHolder.RectTransform.GetSiblingIndex() == 0)
-                                shifts = 0;
-                            shifted = true;
-                        }
-
-                        if (globalMousePos.y - HeroRoster.placeHolder.RectTransform.sizeDelta.y / 2 <
-                            HeroRoster.placeHolder.RectTransform.position.y)
-                        {
-                            HeroRoster.placeHolder.RectTransform.SetSiblingIndex(HeroRoster.placeHolder.RectTransform.GetSiblingIndex() + 1);
-                            if (HeroRoster.placeHolder.RectTransform.GetSiblingIndex() == HeroRoster.HeroSlots.Count)
-                                shifts = 0;
-                            shifted = true;
-                        }
-                        if (shifted)
-                            shifts--;
-                        else
+                        HeroRoster.PlaceHolder.RectTransform.SetSiblingIndex(HeroRoster.PlaceHolder.RectTransform.GetSiblingIndex() - 1);
+                        if (HeroRoster.PlaceHolder.RectTransform.GetSiblingIndex() == 0)
                             shifts = 0;
+                        shifted = true;
                     }
-                }
-                return;
-            }
-            RectTransformUtility.ScreenPointToWorldPointInRectangle(DragManager.Instanse.OverlayRect,
-                eventData.position, eventData.pressEventCamera, out globalMousePos);
 
-            if (hoveredSlot.RectTransform.position.y > HeroRoster.placeHolder.RectTransform.position.y)
-            {
-                if (globalMousePos.y > hoveredSlot.RectTransform.position.y)
-                {
-                    RectTransform.SetSiblingIndex(hoveredSlot.RectTransform.GetSiblingIndex());
-                    HeroRoster.placeHolder.RectTransform.SetSiblingIndex(RectTransform.GetSiblingIndex());
+                    if (globalMousePos.y - HeroRoster.PlaceHolder.RectTransform.sizeDelta.y / 2 <
+                        HeroRoster.PlaceHolder.RectTransform.position.y)
+                    {
+                        HeroRoster.PlaceHolder.RectTransform.SetSiblingIndex(HeroRoster.PlaceHolder.RectTransform.GetSiblingIndex() + 1);
+                        if (HeroRoster.PlaceHolder.RectTransform.GetSiblingIndex() == HeroRoster.HeroSlots.Count)
+                            shifts = 0;
+                        shifted = true;
+                    }
+                    if (shifted)
+                        shifts--;
+                    else
+                        shifts = 0;
                 }
             }
-            else if (hoveredSlot.RectTransform.position.y < HeroRoster.placeHolder.RectTransform.position.y)
+            return;
+        }
+
+        RectTransformUtility.ScreenPointToWorldPointInRectangle(DragManager.Instanse.OverlayRect,
+            eventData.position, eventData.pressEventCamera, out globalMousePos);
+
+        if (hoveredSlot.RectTransform.position.y > HeroRoster.PlaceHolder.RectTransform.position.y)
+        {
+            if (globalMousePos.y > hoveredSlot.RectTransform.position.y)
             {
-                if (globalMousePos.y < hoveredSlot.RectTransform.position.y)
-                {
-                    RectTransform.SetSiblingIndex(hoveredSlot.RectTransform.GetSiblingIndex());
-                    HeroRoster.placeHolder.RectTransform.SetSiblingIndex(RectTransform.GetSiblingIndex());
-                }               
+                RectTransform.SetSiblingIndex(hoveredSlot.RectTransform.GetSiblingIndex());
+                HeroRoster.PlaceHolder.RectTransform.SetSiblingIndex(RectTransform.GetSiblingIndex());
             }
         }
+        else if (hoveredSlot.RectTransform.position.y < HeroRoster.PlaceHolder.RectTransform.position.y)
+        {
+            if (globalMousePos.y < hoveredSlot.RectTransform.position.y)
+            {
+                RectTransform.SetSiblingIndex(hoveredSlot.RectTransform.GetSiblingIndex());
+                HeroRoster.PlaceHolder.RectTransform.SetSiblingIndex(RectTransform.GetSiblingIndex());
+            }               
+        }
     }
+
     public void OnBeginDrag(PointerEventData eventData)
     {
         if(eventData.button != PointerEventData.InputButton.Left || Hero == null)
@@ -225,32 +223,34 @@ public class HeroSlot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBegi
         }
 
         HeroRoster.Dragging = true;
-        HeroRoster.rosterLive.gameObject.SetActive(true);
+        HeroRoster.RosterLive.gameObject.SetActive(true);
         HeroRoster.HeroSlotBeginDragging(this);
         DragManager.Instanse.StartDragging(this, eventData);
 
         if (HeroRoster.Hovered)
         {
-            slotController.SetTrigger("hide");
-            HeroRoster.placeHolder.RectTransform.SetSiblingIndex(RectTransform.GetSiblingIndex());
-            HeroRoster.placeHolder.slotController.SetTrigger("show");
-            HeroRoster.placeHolder.slotController.SetBool("isHidden", false);
+            SlotController.SetTrigger("hide");
+            HeroRoster.PlaceHolder.RectTransform.SetSiblingIndex(RectTransform.GetSiblingIndex());
+            HeroRoster.PlaceHolder.SlotController.SetTrigger("show");
+            HeroRoster.PlaceHolder.SlotController.SetBool("isHidden", false);
         }
     }
+
     public void OnEndDrag(PointerEventData eventData)
     {
         HeroRoster.Dragging = false;
-        HeroRoster.rosterLive.gameObject.SetActive(false);
+        HeroRoster.RosterLive.gameObject.SetActive(false);
         HeroRoster.HeroSlotEndDragging(this);
         DragManager.Instanse.EndDragging(this, eventData);
 
-        HeroRoster.placeHolder.slotController.SetBool("isHidden", true);
-        HeroRoster.placeHolder.slotController.SetTrigger("hide");
-        slotController.SetTrigger("show");
+        HeroRoster.PlaceHolder.SlotController.SetBool("isHidden", true);
+        HeroRoster.PlaceHolder.SlotController.SetTrigger("hide");
+        SlotController.SetTrigger("show");
     }
+
     public void OnDrop(PointerEventData eventData)
     {
-        if(eventData.pointerDrag.tag == "Recruit")
+        if(eventData.pointerDrag.CompareTag("Recruit"))
         {
             var recruitSlot = eventData.pointerDrag.GetComponent<RecruitSlot>();
             if (HeroRoster.CreateSlot(recruitSlot, this) != null)

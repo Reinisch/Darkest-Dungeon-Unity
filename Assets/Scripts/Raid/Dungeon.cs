@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using NUnit.Framework;
-using UnityEngine;
+using UnityEngine.Assertions;
 
 public class Dungeon : IBinarySaveData
 {
@@ -35,10 +34,9 @@ public class Dungeon : IBinarySaveData
 
     public DungeonBattleMash SharedMash { get; set; }
     public DungeonBattleMash DungeonMash { get; set; }
-    public List<int> SharedMashExecutionIds { get; set; }
+    public List<int> SharedMashExecutionIds { get; private set; }
 
     public bool IsMeetingSaveCriteria { get { return true; } }
-
 
     public Dungeon()
     {
@@ -54,7 +52,6 @@ public class Dungeon : IBinarySaveData
         GridSizeY = gridSizeY;
         StartingRoomId = startingRoomId;
     }
-
 
     public void Initialize(Quest quest)
     {
@@ -96,7 +93,6 @@ public class Dungeon : IBinarySaveData
         SharedMashExecutionIds.Read(br);
     }
 
-
     private void InitializeQuestCurios(Area area, Quest quest)
     {
         var curio = area.Prop as Curio;
@@ -106,7 +102,7 @@ public class Dungeon : IBinarySaveData
 
         if (quest.Goal.Type == "activate")
         {
-            Assert.IsInstanceOf(typeof(QuestActivateData), quest.Goal.QuestData);
+            Assert.IsTrue(quest.Goal.QuestData is QuestActivateData);
 
             if (quest.Goal.StartingItems.Count > 0)
                 curio.ItemInteractions.Add(new ItemInteraction(1, quest.Goal.StartingItems[0].Id, "loot"));
@@ -115,7 +111,7 @@ public class Dungeon : IBinarySaveData
         }
         else if (quest.Goal.Type == "gather")
         {
-            Assert.IsInstanceOf(typeof(QuestGatherData), quest.Goal.QuestData);
+            Assert.IsTrue(quest.Goal.QuestData is QuestGatherData);
 
             var gatherData = (QuestGatherData)quest.Goal.QuestData;
             var curioInteraction = new CurioInteraction(1, "loot");

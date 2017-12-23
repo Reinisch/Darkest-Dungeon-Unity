@@ -4,13 +4,16 @@ using System.Collections.Generic;
 
 public class TrayPanel : MonoBehaviour
 {
-    public RectTransform rectTransform;
-    public GridLayoutGroup traySlotGrid;
-    public List<TraySlot> traySlots;
+    [SerializeField]
+    private RectTransform rectTransform;
+    [SerializeField]
+    private GridLayoutGroup traySlotGrid;
+    [SerializeField]
+    private List<TraySlot> traySlots;
 
-    public FormationUnit TargetUnit { get; set; }
+    public FormationUnit TargetUnit { get; private set; }
 
-    void Awake()
+    private void Awake()
     {
         for (int i = 0; i < traySlots.Count; i++)
             traySlots[i].TrayPanel = this;
@@ -24,9 +27,9 @@ public class TrayPanel : MonoBehaviour
         foreach (var traySlot in traySlots)
             traySlot.UpdateTraySlot();
     }
+
     public void ResetPanel()
     {
         TargetUnit = null;
     }
-
 }

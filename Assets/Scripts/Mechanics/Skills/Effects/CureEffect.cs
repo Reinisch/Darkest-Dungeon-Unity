@@ -7,8 +7,8 @@
         if (target == null)
             return false;
 
-        ((IDamageOverTimeEffect)target.Character.GetStatusEffect(StatusType.Poison)).RemoveDoT();
-        ((IDamageOverTimeEffect)target.Character.GetStatusEffect(StatusType.Bleeding)).RemoveDoT();
+        ((DamageOverTimeStatusEffect)target.Character[StatusType.Poison]).RemoveDoT();
+        ((DamageOverTimeStatusEffect)target.Character[StatusType.Bleeding]).RemoveDoT();
         return true;
     }
 

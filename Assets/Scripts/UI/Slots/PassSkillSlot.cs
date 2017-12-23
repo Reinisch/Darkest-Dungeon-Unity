@@ -1,22 +1,20 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Text;
 
-public delegate void PassSkillSlotEvent();
-
 public class PassSkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
-    public Image skillIcon;
+    [SerializeField]
+    private Image skillIcon;
 
-    public RectTransform RectTransform { get; private set; }
+    private RectTransform RectTransform { get; set; }
+    private bool Available { get; set; }
 
-    public bool Available { get; set; }
-    public bool Highlighted { get; set; }
+    public event Action EventPassPressed;
 
-    public event PassSkillSlotEvent onPassPressed;
-
-    void Awake()
+    private void Awake()
     {
         RectTransform = GetComponent<RectTransform>();
     }
@@ -28,6 +26,7 @@ public class PassSkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
 
         Available = true;
     }
+
     public void SetDisabledState()
     {
         skillIcon.enabled = true;
@@ -36,34 +35,28 @@ public class PassSkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         Available = false;
     }
 
-    public virtual void OnPointerClick(PointerEventData eventData)
+    public void OnPointerClick(PointerEventData eventData)
     {
         if (Available)
-            if (onPassPressed != null)
-                onPassPressed();
+            if (EventPassPressed != null)
+                EventPassPressed();
     }
-    public virtual void OnPointerEnter(PointerEventData eventData)
+
+    public void OnPointerEnter(PointerEventData eventData)
     {
-        Highlighted = true;
-        if (!Available)
-            skillIcon.material = DarkestDungeonManager.GrayMaterial;
-        else
-            skillIcon.material = DarkestDungeonManager.HighlightMaterial;
+        skillIcon.material = !Available ? DarkestDungeonManager.GrayMaterial : DarkestDungeonManager.HighlightMaterial;
 
         StringBuilder sb = ToolTipManager.TipBody;
         sb.AppendFormat("<color={0}>", DarkestDungeonManager.Data.HexColors["neutral"]);
         sb.Append(LocalizationManager.GetString("pass_ability_description"));
         sb.AppendFormat("</color>");
         
-        ToolTipManager.Instanse.Show(sb.ToString(), eventData, RectTransform, ToolTipStyle.FromBottom, ToolTipSize.Normal);
+        ToolTipManager.Instanse.Show(sb.ToString(), RectTransform, ToolTipStyle.FromBottom, ToolTipSize.Normal);
     }
-    public virtual void OnPointerExit(PointerEventData eventData)
+
+    public void OnPointerExit(PointerEventData eventData)
     {
-        Highlighted = false;
-        if (!Available)
-            skillIcon.material = DarkestDungeonManager.FullGrayDarkMaterial;
-        else
-            skillIcon.material = skillIcon.defaultMaterial;
+        skillIcon.material = !Available ? DarkestDungeonManager.FullGrayDarkMaterial : skillIcon.defaultMaterial;
         ToolTipManager.Instanse.Hide();
     }
 }

@@ -23,7 +23,6 @@ public class Trap : Prop
 
     public Dictionary<int, TrapVariation> Variations;
 
-
     public Trap()
     {
         Type = AreaType.Trap;
@@ -37,7 +36,6 @@ public class Trap : Prop
     {
         StringId = id;
     }
-
 
     public override void Write(BinaryWriter bw)
     {

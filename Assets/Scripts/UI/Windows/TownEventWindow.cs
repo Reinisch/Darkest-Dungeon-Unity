@@ -4,15 +4,24 @@ using System.Collections.Generic;
 
 public class TownEventWindow : MonoBehaviour
 {
-    public Image eventTone;
-    public Image eventImage;
-    public Text eventName;
-    public Text eventDescription;
-    public Text eventEffects;
-    public RecruitPanel eventRecruits;
+    [SerializeField]
+    private Image eventTone;
+    [SerializeField]
+    private Image eventImage;
+    [SerializeField]
+    private Text eventName;
+    [SerializeField]
+    private Text eventDescription;
+    [SerializeField]
+    private Text eventEffects;
+    [SerializeField]
+    private RecruitPanel eventRecruits;
+    [SerializeField]
+    private List<Sprite> tones;
+    [SerializeField]
+    private List<Sprite> eventImages;
 
-    public List<Sprite> tones;
-    public List<Sprite> eventImages;
+    public RecruitPanel EventRecruits { get { return eventRecruits; } }
 
     public void UpdateEvent(TownEvent townEvent)
     {
@@ -37,13 +46,13 @@ public class TownEventWindow : MonoBehaviour
 
         if(isRecruitEvent)
         {
-            eventRecruits.gameObject.SetActive(true);
-            eventRecruits.UpdateRecruitPanel(DarkestDungeonManager.Campaign.Estate.StageCoach.EventHeroes);
+            EventRecruits.gameObject.SetActive(true);
+            EventRecruits.UpdateRecruitPanel(DarkestDungeonManager.Campaign.Estate.StageCoach.EventHeroes);
             eventEffects.gameObject.SetActive(false);
         }
         else
         {
-            eventRecruits.gameObject.SetActive(false);
+            EventRecruits.gameObject.SetActive(false);
             eventEffects.gameObject.SetActive(true);
             eventEffects.text = townEvent.EffectTooltip;
         }

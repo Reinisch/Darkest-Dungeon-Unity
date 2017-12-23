@@ -1,136 +1,114 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.Assertions;
 
 public static class DungeonGenerator
 {
+    private class GenHall
+    {
+        public string Id;
+        public bool Exists;
+
+        public GenRoom RoomA;
+        public GenRoom RoomB;
+
+        public bool RoomsExist { get { return RoomA.Exists && RoomB.Exists; } }
+
+        public GenRoom GetOpposite(GenRoom room)
+        {
+            if (RoomA.Id == room.Id)
+                return RoomB;
+            if (RoomB.Id == room.Id)
+                return RoomA;
+
+            Assert.IsTrue(false, "Generated opposite room not found!");
+            return RoomA;
+        }
+
+        public GenHall()
+        {
+            Exists = false;
+        }
+    }
+
+    private class GenRoom
+    {
+        public string Id;
+        public bool Exists;
+        public int MinPath = int.MaxValue;
+
+        public readonly int GridX;
+        public readonly int GridY;
+
+        public GenHall Left;
+        public GenHall Right;
+        public GenHall Top;
+        public GenHall Bot;
+
+        public GenRoom LeftRoom { get { return Left == null ? null : Left.GetOpposite(this); } }
+        public GenRoom RightRoom { get { return Right == null ? null : Right.GetOpposite(this); } }
+        public GenRoom TopRoom { get { return Top == null ? null : Top.GetOpposite(this); } }
+        public GenRoom BotRoom { get { return Bot == null ? null : Bot.GetOpposite(this); } }
+
+        public int BorderingRooms
+        {
+            get
+            {
+                int conns = 0;
+                if (Left != null && Left.GetOpposite(this).Exists)
+                    conns++;
+                if (Right != null && Right.GetOpposite(this).Exists)
+                    conns++;
+                if (Top != null && Top.GetOpposite(this).Exists)
+                    conns++;
+                if (Bot != null && Bot.GetOpposite(this).Exists)
+                    conns++;
+                return conns;
+            }
+        }
+
+        public GenRoom(int x, int y)
+        {
+            GridX = x;
+            GridY = y;
+            Exists = false;
+        }
+    }
+
     public static Dungeon GenerateDungeon(Quest quest, int seed = 0)
     {
         if (seed != 0)
             Random.InitState(seed);
         
-        string[] lengthes = new string[]{"", "short", "medium", "long"};
+        string[] lengthes = {"", "short", "medium", "long"};
 
         Dungeon dungeon = new Dungeon();
         DungeonGenerationData genData = DarkestDungeonManager.Data.DungeonGenerationData.Find(item =>
-            item.Dungeon == quest.Dungeon &&
-            item.Length == lengthes[quest.Length] &&
-            item.QuestType == quest.Type);
+            item.Dungeon == quest.Dungeon && item.Length == lengthes[quest.Length] && item.QuestType == quest.Type);
         DungeonEnviromentData envData = DarkestDungeonManager.Data.DungeonEnviromentData[quest.Dungeon];
 
-        int RoomsLeft = genData.BaseRoomNumber;
-        int HallsLeft = genData.BaseCorridorNumber;
+        int roomsLeft = genData.BaseRoomNumber;
+        int hallsLeft = genData.BaseCorridorNumber;
         int xSize = genData.GridSizeX;
         int ySize = genData.GridSizeY;
         dungeon.GridSizeX = xSize;
         dungeon.GridSizeY = ySize;
 
-        List<GenRoom> Areas = new List<GenRoom>();
+        List<GenRoom> areas = new List<GenRoom>();
         GenRoom[,] areaGrid = new GenRoom[xSize, ySize];
 
-        GenerateRooms(Areas, areaGrid, RoomsLeft, xSize, ySize);
-        GenRoom hub = GetHub(Areas);
+        GenerateRooms(areas, areaGrid, roomsLeft, xSize, ySize);
+        GenRoom hub = FindMaxConnectivityRoom(areas);
 
-        List<GenRoom> ExistingRooms = ForceBorderRooms(Areas, hub, RoomsLeft);
-        List<GenHall> ExistingHalls = ForceHallConnection(Areas, hub, ExistingRooms, HallsLeft);
+        List<GenRoom> existingRooms = ForceBorderRooms(areas, hub, roomsLeft);
+        List<GenHall> existingHalls = ForceHallConnection(existingRooms, hallsLeft);
 
-        dungeon.Rooms = GetFinalRooms(ExistingRooms, genData);
-        dungeon.Hallways = GetFinalHallways(dungeon, ExistingHalls, genData);
+        dungeon.Rooms = CreateFinalRooms(existingRooms);
+        dungeon.Hallways = CreateFinalHallways(dungeon, existingHalls, genData);
 
         MarkEntrance(dungeon);
-        switch(quest.Goal.Type)
-        {
-            case "kill_monster":
-                if (quest.Goal.QuestData is QuestKillMonsterData)
-                {
-                    var bossData = quest.Goal.QuestData as QuestKillMonsterData;
-                    envData.BattleMashes.Find(mash => mash.BossEncounters.Find(encounter =>
-                        encounter.MonsterSet.Contains(bossData.MonsterNameIds[0])) != null);
-                    var bossGenRoom = LongestPathRoom(ExistingRooms.Find(room => room.Id == dungeon.StartingRoomId), ExistingRooms);
-                    var bossRoom = dungeon.Rooms[bossGenRoom.Id];
-                    bossRoom.Type = AreaType.Boss;
-                    var bossEncounter = envData.BattleMashes.Find(mash => mash.MashId == quest.Difficulty).
-                        BossEncounters.Find(encounter => encounter.MonsterSet.Contains(bossData.MonsterNameIds[0]));
-                    bossRoom.BattleEncounter = new BattleEncounter(bossEncounter.MonsterSet);
-                }
-                else
-                    Debug.LogError("Missing boss data in dungeon!");
-                break;
-            case "activate":
-                if (quest.Goal.QuestData is QuestActivateData)
-                {
-                    var activateData = quest.Goal.QuestData as QuestActivateData;
-                    var lastRoom = LongestPathRoom(ExistingRooms.Find(room => room.Id == dungeon.StartingRoomId), ExistingRooms);
-                    for(int i = 0; i < activateData.Amount; i++)
-                    {
-                        var availableRooms = ExistingRooms.FindAll(room =>
-                            room.MinPath >= (float)i / activateData.Amount * lastRoom.MinPath &&
-                            room.MinPath <= (float)(i + 1) / activateData.Amount * lastRoom.MinPath);
-                        int randomRoom = Random.Range(0, availableRooms.Count - 1);
-                        var questRoom = dungeon.Rooms[availableRooms[randomRoom].Id];
-                        if (questRoom.Type == AreaType.Empty)
-                        {
-                            var curio = new Curio(activateData.CurioName);
-                            curio.IsQuestCurio = true;
-
-                            if(quest.Goal.StartingItems.Count > 0)
-                            {
-                                curio.ItemInteractions.Add(new ItemInteraction()
-                                {
-                                    Chance = 1,
-                                    ItemId = quest.Goal.StartingItems[0].Id,
-                                    ResultType = "loot",
-                                    Results = new List<CurioResult>(),
-                                });
-                            }
-                            
-                            questRoom.Type = AreaType.Curio;
-                            questRoom.Prop = curio;
-                        }
-                        else
-                            i--;
-                    }
-                }
-                break;
-            case "gather":
-                if (quest.Goal.QuestData is QuestGatherData)
-                {
-                    var gatherData = quest.Goal.QuestData as QuestGatherData;
-                    var lastRoom = LongestPathRoom(ExistingRooms.Find(room => room.Id == dungeon.StartingRoomId), ExistingRooms);
-                    for(int i = 0; i < gatherData.Item.Amount; i++)
-                    {
-                        var availableRooms = ExistingRooms.FindAll(room =>
-                            room.MinPath >= (float)i / gatherData.Item.Amount * lastRoom.MinPath &&
-                            room.MinPath <= (float)(i + 1) / gatherData.Item.Amount * lastRoom.MinPath);
-                        int randomRoom = Random.Range(0, availableRooms.Count - 1);
-                        var questRoom = dungeon.Rooms[availableRooms[randomRoom].Id];
-                        if (questRoom.Type == AreaType.Empty)
-                        {
-                            var curio = new Curio(gatherData.CurioName);
-                            curio.IsQuestCurio = true;
-
-                            var curioInteraction = new CurioInteraction();
-                            curioInteraction.Chance = 1;
-                            curioInteraction.ResultType = "loot";
-                            curioInteraction.Results = new List<CurioResult>();
-                            curioInteraction.Results.Add(new CurioResult()
-                            {
-                                Chance = 1,
-                                Draws = 1,
-                                Item = gatherData.Item.Id,
-                            });
-                            curio.Results.Add(curioInteraction);
-                            questRoom.Type = AreaType.Curio;
-                            questRoom.Prop = curio;
-                        }
-                        else
-                            i--;
-                    }
-                }
-                break;
-            default:
-                break;
-        }
+        PopulateQuestGoals(dungeon, quest, existingRooms, envData);
         PopulateRooms(dungeon, genData);
         LoadRoomEnviroment(dungeon, envData, quest.Difficulty);
         PopulateHalls(dungeon, genData);
@@ -142,22 +120,22 @@ public static class DungeonGenerator
         dungeon.DungeonMash = envData.BattleMashes.Find(mash => mash.MashId == quest.Difficulty);
         dungeon.SharedMash = DarkestDungeonManager.Data.DungeonEnviromentData["shared"].
             BattleMashes.Find(mash => mash.MashId == quest.Difficulty);
+
         return dungeon;
     }
 
-    static void GenerateRooms(List<GenRoom> Areas, GenRoom[,] areaGrid, int RoomsLeft, int xSize, int ySize)
+    private static void GenerateRooms(List<GenRoom> areas, GenRoom[,] areaGrid, int roomsLeft, int xSize, int ySize)
     {
         for (int i = 0; i < xSize; i++)
             for (int j = 0; j < ySize; j++)
             {
-                areaGrid[i, j] = new GenRoom(i, j);
-                areaGrid[i, j].Id = string.Format("room{0}_{1}", i + 1, j + 1);
-                Areas.Add(areaGrid[i, j]);
+                areaGrid[i, j] = new GenRoom(i, j) {Id = string.Format("room{0}_{1}", i + 1, j + 1)};
+                areas.Add(areaGrid[i, j]);
             }
 
-        List<GenRoom> emptyAreas = new List<GenRoom>(Areas);
+        List<GenRoom> emptyAreas = new List<GenRoom>(areas);
 
-        for (int i = 0; i < RoomsLeft; i++)
+        for (int i = 0; i < roomsLeft; i++)
         {
             int index = Random.Range(0, emptyAreas.Count);
             emptyAreas[index].Exists = true;
@@ -169,11 +147,11 @@ public static class DungeonGenerator
             for (int i = 1; i < xSize; i++ )
             {
                 GenHall hall = new GenHall();
-                hall.roomA = areaGrid[i, j];
-                hall.roomB = areaGrid[i - 1, j];
-                hall.Id = string.Format("hall{0}_{1}", hall.roomA.Id, hall.roomB.Id);
-                areaGrid[i, j].left = hall;
-                areaGrid[i - 1, j].right = hall;
+                hall.RoomA = areaGrid[i, j];
+                hall.RoomB = areaGrid[i - 1, j];
+                hall.Id = string.Format("hall{0}_{1}", hall.RoomA.Id, hall.RoomB.Id);
+                areaGrid[i, j].Left = hall;
+                areaGrid[i - 1, j].Right = hall;
             }
         }
 
@@ -182,109 +160,66 @@ public static class DungeonGenerator
             for (int j = 1; j < ySize; j++)
             {
                 GenHall hall = new GenHall();
-                hall.roomA = areaGrid[i, j];
-                hall.roomB = areaGrid[i, j - 1];
-                hall.Id = string.Format("hall{0}_{1}", hall.roomA.Id, hall.roomB.Id);
-                areaGrid[i, j].bot = hall;
-                areaGrid[i, j - 1].top = hall;
+                hall.RoomA = areaGrid[i, j];
+                hall.RoomB = areaGrid[i, j - 1];
+                hall.Id = string.Format("hall{0}_{1}", hall.RoomA.Id, hall.RoomB.Id);
+                areaGrid[i, j].Bot = hall;
+                areaGrid[i, j - 1].Top = hall;
             }
         }
     }
-    static GenRoom GetHub(List<GenRoom> Areas)
+
+    private static GenRoom FindMaxConnectivityRoom(List<GenRoom> areas)
     {
         GenRoom room = null;
         int maxConnectivity = -1;
-        for(int i = 0; i < Areas.Count; i++)
+        foreach (GenRoom generatedRoom in areas)
         {
-            if (Areas[i].Exists)
-            {
-                if (Areas[i].BorderingRooms > maxConnectivity)
-                {
-                    room = Areas[i];
-                    maxConnectivity = Areas[i].BorderingRooms;
-                }
-            }
+            if (!generatedRoom.Exists)
+                continue;
+
+            if (generatedRoom.BorderingRooms <= maxConnectivity)
+                continue;
+
+            room = generatedRoom;
+            maxConnectivity = generatedRoom.BorderingRooms;
         }
         return room;
     }
 
-    static GenRoom LongestPathRoom(GenRoom entrance, List<GenRoom> Areas)
+    private static GenRoom FindLongestPathRoom(GenRoom entrance, List<GenRoom> areas)
     {
-        AdvancePath(entrance, 0);
+        CalculateMinPath(entrance, 0);
 
-        int maxPath = Areas.Max(area => area.MinPath);
-        var maxRooms = Areas.FindAll(area => area.MinPath == maxPath);
-        if (maxRooms.Count > 0)
-        {
-            return maxRooms[Random.Range(0, maxRooms.Count)];
-        }
-        else
-            return null;
-    }
-    static void AdvancePath(GenRoom room, int currentPath)
-    {
-        if (room == null || room.MinPath <= currentPath)
-            return;
-        else
-            room.MinPath = currentPath;
-
-        if(room.left != null && room.left.Exists)
-        AdvancePath(room.LeftRoom, currentPath + 1);
-        if (room.right != null && room.right.Exists)
-        AdvancePath(room.RightRoom, currentPath + 1);
-        if (room.top != null && room.top.Exists)
-        AdvancePath(room.TopRoom, currentPath + 1);
-        if (room.bot != null && room.bot.Exists)
-        AdvancePath(room.BotRoom, currentPath + 1);
+        int maxPath = areas.Max(area => area.MinPath);
+        var maxRooms = areas.FindAll(area => area.MinPath == maxPath);
+        return maxRooms.Count > 0 ? maxRooms[Random.Range(0, maxRooms.Count)] : null;
     }
 
-    static List<GenRoom> FindBorderPath(GenRoom hub)
+    private static List<GenRoom> FindBorderingRooms(GenRoom fromRoom, List<GenRoom> visited = null)
     {
-        List<GenRoom> visitedAreas = new List<GenRoom>();
-        AdvanceBorderPath(hub, visitedAreas);
-        return visitedAreas;
-    }
-    static void AdvanceBorderPath(GenRoom hub, List<GenRoom> visited)
-    {
-        if (hub != null && hub.Exists)
-        {
-            visited.Add(hub);
-            if (!visited.Contains(hub.LeftRoom))
-                AdvanceBorderPath(hub.LeftRoom, visited);
-            if (!visited.Contains(hub.RightRoom))
-                AdvanceBorderPath(hub.RightRoom, visited);
-            if (!visited.Contains(hub.TopRoom))
-                AdvanceBorderPath(hub.TopRoom, visited);
-            if (!visited.Contains(hub.BotRoom))
-                AdvanceBorderPath(hub.BotRoom, visited);
-        }
+        if (visited == null)
+            visited = new List<GenRoom>();
+
+        if (fromRoom == null || !fromRoom.Exists)
+            return visited;
+
+        visited.Add(fromRoom);
+        if (!visited.Contains(fromRoom.LeftRoom))
+            FindBorderingRooms(fromRoom.LeftRoom, visited);
+        if (!visited.Contains(fromRoom.RightRoom))
+            FindBorderingRooms(fromRoom.RightRoom, visited);
+        if (!visited.Contains(fromRoom.TopRoom))
+            FindBorderingRooms(fromRoom.TopRoom, visited);
+        if (!visited.Contains(fromRoom.BotRoom))
+            FindBorderingRooms(fromRoom.BotRoom, visited);
+
+        return visited;
     }
 
-    static List<GenRoom> FindHallWayPath(GenRoom hub)
+    private static List<GenRoom> ForceBorderRooms(List<GenRoom> areas, GenRoom hub, int roomNumber)
     {
-        List<GenRoom> visitedAreas = new List<GenRoom>();
-        AdvanceHallwayPath(hub, visitedAreas);
-        return visitedAreas;
-    }
-    static void AdvanceHallwayPath(GenRoom hub, List<GenRoom> visited)
-    {
-        if (hub != null && hub.Exists)
-        {
-            visited.Add(hub);
-            if (!visited.Contains(hub.LeftRoom))
-                AdvanceBorderPath(hub.LeftRoom, visited);
-            if (!visited.Contains(hub.RightRoom))
-                AdvanceBorderPath(hub.RightRoom, visited);
-            if (!visited.Contains(hub.TopRoom))
-                AdvanceBorderPath(hub.TopRoom, visited);
-            if (!visited.Contains(hub.BotRoom))
-                AdvanceBorderPath(hub.BotRoom, visited);
-        }
-    }
-
-    static List<GenRoom> ForceBorderRooms(List<GenRoom> areas, GenRoom hub, int roomNumber)
-    {
-        List<GenRoom> visitedAreas = FindBorderPath(hub);
+        List<GenRoom> visitedAreas = FindBorderingRooms(hub);
 
         while (visitedAreas.Count != roomNumber)
         {
@@ -299,45 +234,46 @@ public static class DungeonGenerator
                     break;
                 }
             }
-            visitedAreas = FindBorderPath(hub);
+            visitedAreas = FindBorderingRooms(hub);
         }
         return visitedAreas;
     }
-    static List<GenHall> ForceHallConnection(List<GenRoom> areas, GenRoom hub, List<GenRoom> existingRooms, int hallNumber)
+
+    private static List<GenHall> ForceHallConnection(List<GenRoom> existingRooms, int hallNumber)
     {
         List<GenHall> existingHalls = new List<GenHall>();
         foreach(var room in existingRooms)
         {
-            if(room.left != null && room.left.RoomsExist)
+            if(room.Left != null && room.Left.RoomsExist)
             {
-                if(!existingHalls.Contains(room.left))
+                if(!existingHalls.Contains(room.Left))
                 {
-                    room.left.Exists = true;
-                    existingHalls.Add(room.left);
+                    room.Left.Exists = true;
+                    existingHalls.Add(room.Left);
                 }
             }
-            if (room.right != null && room.right.RoomsExist)
+            if (room.Right != null && room.Right.RoomsExist)
             {
-                if (!existingHalls.Contains(room.right))
+                if (!existingHalls.Contains(room.Right))
                 {
-                    room.right.Exists = true;
-                    existingHalls.Add(room.right);
+                    room.Right.Exists = true;
+                    existingHalls.Add(room.Right);
                 }
             }
-            if (room.top != null && room.top.RoomsExist)
+            if (room.Top != null && room.Top.RoomsExist)
             {
-                if (!existingHalls.Contains(room.top))
+                if (!existingHalls.Contains(room.Top))
                 {
-                    room.top.Exists = true;
-                    existingHalls.Add(room.top);
+                    room.Top.Exists = true;
+                    existingHalls.Add(room.Top);
                 }
             }
-            if (room.bot != null && room.bot.RoomsExist)
+            if (room.Bot != null && room.Bot.RoomsExist)
             {
-                if (!existingHalls.Contains(room.bot))
+                if (!existingHalls.Contains(room.Bot))
                 {
-                    room.bot.Exists = true;
-                    existingHalls.Add(room.bot);
+                    room.Bot.Exists = true;
+                    existingHalls.Add(room.Bot);
                 }
             }
         }
@@ -346,41 +282,43 @@ public static class DungeonGenerator
         {
             if(existingHalls.Count > hallNumber)
             {
-                // if removed and path saved remove hall
+                // TODO: if after hall removal path is same then remove this hall
             }
             else if (existingHalls.Count < hallNumber)
             {
-                // move 1 connectivity room to max connectivity
+                // TODO: move 1 connectivity room to max connectivity
             }
             break;
         }
         return existingHalls;
     }
-    static Dictionary<string, DungeonRoom> GetFinalRooms(List<GenRoom> rooms, DungeonGenerationData genData)
+
+    private static Dictionary<string, DungeonRoom> CreateFinalRooms(List<GenRoom> rooms)
     {
         Dictionary<string, DungeonRoom> finalAreas = new Dictionary<string, DungeonRoom>();
         foreach (var genRoom in rooms)
         {
-            DungeonRoom room = new DungeonRoom(genRoom.Id, 1 + (genRoom.gridX - 1) * 7, 1 + (genRoom.gridY - 1) * 7);
+            DungeonRoom room = new DungeonRoom(genRoom.Id, 1 + (genRoom.GridX - 1) * 7, 1 + (genRoom.GridY - 1) * 7);
 
-            if(genRoom.left != null && genRoom.left.Exists)
-                room.Doors.Add(new Door(genRoom.Id, genRoom.left.Id, Direction.Left));
+            if(genRoom.Left != null && genRoom.Left.Exists)
+                room.Doors.Add(new Door(genRoom.Id, genRoom.Left.Id, Direction.Left));
 
-            if (genRoom.right != null && genRoom.right.Exists)
-                room.Doors.Add(new Door(genRoom.Id, genRoom.right.Id, Direction.Right));
+            if (genRoom.Right != null && genRoom.Right.Exists)
+                room.Doors.Add(new Door(genRoom.Id, genRoom.Right.Id, Direction.Right));
 
-            if (genRoom.top != null && genRoom.top.Exists)
-                room.Doors.Add(new Door(genRoom.Id, genRoom.top.Id, Direction.Top));
+            if (genRoom.Top != null && genRoom.Top.Exists)
+                room.Doors.Add(new Door(genRoom.Id, genRoom.Top.Id, Direction.Top));
 
-            if (genRoom.bot != null && genRoom.bot.Exists)
-                room.Doors.Add(new Door(genRoom.Id, genRoom.bot.Id, Direction.Bot));
+            if (genRoom.Bot != null && genRoom.Bot.Exists)
+                room.Doors.Add(new Door(genRoom.Id, genRoom.Bot.Id, Direction.Bot));
 
             finalAreas.Add(room.Id, room);
         }
 
         return finalAreas;
     }
-    static Dictionary<string, Hallway> GetFinalHallways(Dungeon dungeon, List<GenHall> halls, DungeonGenerationData genData)
+
+    private static Dictionary<string, Hallway> CreateFinalHallways(Dungeon dungeon, List<GenHall> halls, DungeonGenerationData genData)
     {
         Dictionary<string, Hallway> finalHallways = new Dictionary<string, Hallway>();
  
@@ -388,8 +326,8 @@ public static class DungeonGenerator
         {
             Hallway hallway = new Hallway(genHall.Id);
 
-            hallway.RoomA = dungeon.Rooms[genHall.roomA.Id];
-            hallway.RoomB = dungeon.Rooms[genHall.roomB.Id];
+            hallway.RoomA = dungeon.Rooms[genHall.RoomA.Id];
+            hallway.RoomB = dungeon.Rooms[genHall.RoomB.Id];
             int hallIncrementX = 0, hallIncrementY = 0;
             int hallGridX = hallway.RoomA.GridX, hallGridY = hallway.RoomA.GridY;
 
@@ -407,19 +345,19 @@ public static class DungeonGenerator
             hallGridY += hallIncrementY;
 
             hallway.Halls.Add(new HallSector(hallway.Id + "_0", hallGridX, hallGridY, hallway,
-                new Door(hallway.Id, genHall.roomA.Id, Direction.Left)));
+                new Door(hallway.Id, genHall.RoomA.Id, Direction.Left)));
 
             for (int i = 1; i <= genData.Spacing; i++)
             {
                 hallGridX += hallIncrementX;
                 hallGridY += hallIncrementY;
-                hallway.Halls.Add(new HallSector(hallway.Id + "_" + i.ToString(), hallGridX, hallGridY, hallway));
+                hallway.Halls.Add(new HallSector(hallway.Id + "_" + i, hallGridX, hallGridY, hallway));
             }
 
             hallGridX += hallIncrementX;
             hallGridY += hallIncrementY;
-            hallway.Halls.Add(new HallSector(hallway.Id + "_" + (genData.Spacing + 1).ToString(), hallGridX, hallGridY,
-                hallway, new Door(hallway.Id, genHall.roomB.Id, Direction.Right)));
+            hallway.Halls.Add(new HallSector(hallway.Id + "_" + (genData.Spacing + 1), hallGridX, hallGridY,
+                hallway, new Door(hallway.Id, genHall.RoomB.Id, Direction.Right)));
 
             finalHallways.Add(hallway.Id, hallway);
         }
@@ -427,7 +365,24 @@ public static class DungeonGenerator
         return finalHallways;
     }
 
-    static void MarkEntrance(Dungeon dungeon)
+    private static void CalculateMinPath(GenRoom room, int currentPath)
+    {
+        if (room == null || room.MinPath <= currentPath)
+            return;
+
+        room.MinPath = currentPath;
+
+        if (room.Left != null && room.Left.Exists)
+            CalculateMinPath(room.LeftRoom, currentPath + 1);
+        if (room.Right != null && room.Right.Exists)
+            CalculateMinPath(room.RightRoom, currentPath + 1);
+        if (room.Top != null && room.Top.Exists)
+            CalculateMinPath(room.TopRoom, currentPath + 1);
+        if (room.Bot != null && room.Bot.Exists)
+            CalculateMinPath(room.BotRoom, currentPath + 1);
+    }
+
+    private static void MarkEntrance(Dungeon dungeon)
     {
         int minConnections = 5;
         DungeonRoom entranceRoom = null;
@@ -449,14 +404,15 @@ public static class DungeonGenerator
         }
         if(entranceRoom == null)
         {
-            List<DungeonRoom> rooms = Enumerable.ToList(dungeon.Rooms.Values);
+            List<DungeonRoom> rooms = dungeon.Rooms.Values.ToList();
             entranceRoom = rooms[Random.Range(0, rooms.Count)];
         }
 
         entranceRoom.Type = AreaType.Entrance;
         dungeon.StartingRoomId = entranceRoom.Id;
     }
-    static void PopulateRooms(Dungeon dungeon, DungeonGenerationData genData)
+
+    private static void PopulateRooms(Dungeon dungeon, DungeonGenerationData genData)
     {
         List<DungeonRoom> rooms = Enumerable.ToList(dungeon.Rooms.Values).FindAll(item => item.Type == AreaType.Empty);
 
@@ -502,7 +458,8 @@ public static class DungeonGenerator
             rooms.RemoveAt(index);
         }
     }
-    static void PopulateHalls(Dungeon dungeon, DungeonGenerationData genData)
+
+    private static void PopulateHalls(Dungeon dungeon, DungeonGenerationData genData)
     {
         List<HallSector> hallSectors = new List<HallSector>();
         foreach (var hallway in dungeon.Hallways.Values)
@@ -571,7 +528,99 @@ public static class DungeonGenerator
         }
     }
 
-    static void LoadRoomEnviroment(Dungeon dungeon, DungeonEnviromentData envData, int mashIndex)
+    private static void PopulateQuestGoals(Dungeon dungeon, Quest quest, List<GenRoom> existingRooms, DungeonEnviromentData envData)
+    {
+        switch (quest.Goal.Type)
+        {
+            case "kill_monster":
+                var killData = quest.Goal.QuestData as QuestKillMonsterData;
+                if (killData != null)
+                {
+                    var bossGenRoom = FindLongestPathRoom(existingRooms.Find(room => room.Id == dungeon.StartingRoomId), existingRooms);
+                    var bossRoom = dungeon.Rooms[bossGenRoom.Id];
+
+                    bossRoom.Type = AreaType.Boss;
+                    var bossEncounter = envData.BattleMashes.Find(mash => mash.MashId == quest.Difficulty).
+                        BossEncounters.Find(encounter => encounter.MonsterSet.Contains(killData.MonsterNameIds[0]));
+                    bossRoom.BattleEncounter = new BattleEncounter(bossEncounter.MonsterSet);
+                }
+                else
+                    Debug.LogError("Missing boss data in dungeon!");
+                break;
+            case "activate":
+                var activateData = quest.Goal.QuestData as QuestActivateData;
+                if (activateData != null)
+                {
+                    var lastRoom = FindLongestPathRoom(existingRooms.Find(room => room.Id == dungeon.StartingRoomId), existingRooms);
+                    for (int i = 0; i < activateData.Amount; i++)
+                    {
+                        var availableRooms = existingRooms.FindAll(room =>
+                            room.MinPath >= (float)i / activateData.Amount * lastRoom.MinPath &&
+                            room.MinPath <= (float)(i + 1) / activateData.Amount * lastRoom.MinPath);
+                        int randomRoom = Random.Range(0, availableRooms.Count - 1);
+                        var questRoom = dungeon.Rooms[availableRooms[randomRoom].Id];
+                        if (questRoom.Type == AreaType.Empty)
+                        {
+                            var curio = new Curio(activateData.CurioName) { IsQuestCurio = true };
+
+                            if (quest.Goal.StartingItems.Count > 0)
+                            {
+                                curio.ItemInteractions.Add(new ItemInteraction()
+                                {
+                                    Chance = 1,
+                                    ItemId = quest.Goal.StartingItems[0].Id,
+                                    ResultType = "loot",
+                                    Results = new List<CurioResult>(),
+                                });
+                            }
+
+                            questRoom.Type = AreaType.Curio;
+                            questRoom.Prop = curio;
+                        }
+                        else
+                            i--;
+                    }
+                }
+                break;
+            case "gather":
+                if (quest.Goal.QuestData is QuestGatherData)
+                {
+                    var gatherData = quest.Goal.QuestData as QuestGatherData;
+                    var lastRoom = FindLongestPathRoom(existingRooms.Find(room => room.Id == dungeon.StartingRoomId), existingRooms);
+                    for (int i = 0; i < gatherData.Item.Amount; i++)
+                    {
+                        var availableRooms = existingRooms.FindAll(room =>
+                            room.MinPath >= (float)i / gatherData.Item.Amount * lastRoom.MinPath &&
+                            room.MinPath <= (float)(i + 1) / gatherData.Item.Amount * lastRoom.MinPath);
+                        int randomRoom = Random.Range(0, availableRooms.Count - 1);
+                        var questRoom = dungeon.Rooms[availableRooms[randomRoom].Id];
+                        if (questRoom.Type == AreaType.Empty)
+                        {
+                            var curio = new Curio(gatherData.CurioName) { IsQuestCurio = true };
+
+                            var curioInteraction = new CurioInteraction();
+                            curioInteraction.Chance = 1;
+                            curioInteraction.ResultType = "loot";
+                            curioInteraction.Results = new List<CurioResult>();
+                            curioInteraction.Results.Add(new CurioResult()
+                            {
+                                Chance = 1,
+                                Draws = 1,
+                                Item = gatherData.Item.Id,
+                            });
+                            curio.Results.Add(curioInteraction);
+                            questRoom.Type = AreaType.Curio;
+                            questRoom.Prop = curio;
+                        }
+                        else
+                            i--;
+                    }
+                }
+                break;
+        }
+    }
+
+    private static void LoadRoomEnviroment(Dungeon dungeon, DungeonEnviromentData envData, int mashIndex)
     {
         foreach(var room in dungeon.Rooms.Values)
         {
@@ -579,28 +628,31 @@ public static class DungeonGenerator
             switch (room.Type)
             {
                 case AreaType.Battle:
-                    var monsterBattleSet = RandomSolver.ChooseByRandom<DungeonBattleEncounter>(
-                        envData.BattleMashes.Find(mash => mash.MashId == mashIndex).RoomEncounters).MonsterSet;
+                    var monsterBattleSet = RandomSolver.ChooseByRandom(envData.BattleMashes.
+                        Find(mash => mash.MashId == mashIndex).RoomEncounters).MonsterSet;
+
                     room.BattleEncounter = new BattleEncounter(monsterBattleSet);
                     break;
                 case AreaType.BattleCurio:
                     if(room.Prop == null)
                     {
-                        string curioName = RandomSolver.ChooseByRandom<DungeonPropsEncounter>(envData.RoomTresures).PropName;
+                        string curioName = RandomSolver.ChooseByRandom(envData.RoomTresures).PropName;
                         room.Prop = DarkestDungeonManager.Data.Curios[curioName];
-                        var monsterCurioSet = RandomSolver.ChooseByRandom<DungeonBattleEncounter>(
-                            envData.BattleMashes.Find(mash => mash.MashId == mashIndex).RoomEncounters).MonsterSet;
+                        var monsterCurioSet = RandomSolver.ChooseByRandom(envData.BattleMashes.
+                            Find(mash => mash.MashId == mashIndex).RoomEncounters).MonsterSet;
+
                         room.BattleEncounter = new BattleEncounter(monsterCurioSet);
                     }
                     break;
                 case AreaType.BattleTresure:
                     if(room.Prop == null)
                     {
-                        string tresureName = RandomSolver.ChooseByRandom<DungeonPropsEncounter>(envData.RoomTresures).PropName;
+                        string tresureName = RandomSolver.ChooseByRandom(envData.RoomTresures).PropName;
                         room.Prop = DarkestDungeonManager.Data.Curios[tresureName];
                     }
-                    var monsterTreasureSet = RandomSolver.ChooseByRandom<DungeonBattleEncounter>(
-                        envData.BattleMashes.Find(mash => mash.MashId == mashIndex).RoomEncounters).MonsterSet;
+                    var monsterTreasureSet = RandomSolver.ChooseByRandom(envData.BattleMashes.Find(mash =>
+                        mash.MashId == mashIndex).RoomEncounters).MonsterSet;
+
                     room.BattleEncounter = new BattleEncounter(monsterTreasureSet);
                     break;
                 case AreaType.Empty:
@@ -609,12 +661,13 @@ public static class DungeonGenerator
                 case AreaType.Boss:
                     break;
                 default:
-                    Debug.LogError("Unexpected room type: " + room.Type.ToString());
+                    Assert.IsTrue(false, "Unexpected room type: " + room.Type);
                     break;
             }
         }
     }
-    static void LoadHallEnviroment(Dungeon dungeon, DungeonEnviromentData envData, int mashIndex)
+
+    private static void LoadHallEnviroment(Dungeon dungeon, DungeonEnviromentData envData, int mashIndex)
     {
         foreach (var hall in dungeon.Hallways.Values)
         {
@@ -624,163 +677,35 @@ public static class DungeonGenerator
                 switch(sector.Type)
                 {
                     case AreaType.Battle:
-                        var monsterBattleSet = RandomSolver.ChooseByRandom<DungeonBattleEncounter>(
+                        var monsterBattleSet = RandomSolver.ChooseByRandom(
                             envData.BattleMashes.Find(mash => mash.MashId == mashIndex).RoomEncounters).MonsterSet;
                         sector.BattleEncounter = new BattleEncounter(monsterBattleSet);
                         break;
                     case AreaType.Curio:
                         if(sector.Prop == null)
                         {
-                            string curioName = RandomSolver.ChooseByRandom<DungeonPropsEncounter>(envData.HallCurios).PropName;
+                            string curioName = RandomSolver.ChooseByRandom(envData.HallCurios).PropName;
                             sector.Prop = DarkestDungeonManager.Data.Curios[curioName];
                         }
                         break;                   
                     case AreaType.Hunger:
                         break;
                     case AreaType.Obstacle:
-                        string obstacleName = RandomSolver.ChooseByRandom<DungeonPropsEncounter>(envData.Obstacles).PropName;
+                        string obstacleName = RandomSolver.ChooseByRandom(envData.Obstacles).PropName;
                         sector.Prop = DarkestDungeonManager.Data.Obstacles[obstacleName];
                         break;
                     case AreaType.Trap:
-                        string trapName = RandomSolver.ChooseByRandom<DungeonPropsEncounter>(envData.Traps).PropName;
+                        string trapName = RandomSolver.ChooseByRandom(envData.Traps).PropName;
                         sector.Prop = DarkestDungeonManager.Data.Traps[trapName];
                         break;
                     case AreaType.Empty:
                     case AreaType.Door:
                         break;
                     default:
-                        Debug.LogError("Unexpected hall sector type: " + sector.Type.ToString());
+                        Assert.IsTrue(false, "Unexpected hall sector type: " + sector.Type);
                         break;
                 }
             }
         }
-    }
-}
-
-class GenHall
-{
-    public string Id;
-    public bool Exists;
-
-    public GenRoom roomA;
-    public GenRoom roomB;
-
-    public GenRoom GetOpposite(GenRoom room)
-    {
-        if (roomA.Id == room.Id)
-            return roomB;
-        else if (roomB.Id == room.Id)
-            return roomA;
-
-        Debug.LogError("Room not found.");
-        return null;
-    }
-    public bool RoomsExist
-    {
-        get
-        {
-            return roomA.Exists && roomB.Exists;
-        }
-    }
-    public GenHall()
-    {
-        Exists = false;
-    }
-}
-
-class GenRoom
-{
-    public string Id;
-    public bool Exists;
-
-    public int MinPath = 999;
-
-    public int gridX;
-    public int gridY;
-
-    public GenHall left;
-    public GenHall right;
-    public GenHall top;
-    public GenHall bot;
-
-    public int BorderingRooms
-    {
-        get
-        {
-            int conns = 0;
-            if (left != null && left.GetOpposite(this).Exists)
-                conns++;
-            if (right != null && right.GetOpposite(this).Exists)
-                conns++;
-            if (top != null && top.GetOpposite(this).Exists)
-                conns++;
-            if (bot != null && bot.GetOpposite(this).Exists)
-                conns++;
-            return conns;
-        }
-    }
-    public int ConnectedRooms
-    {
-        get
-        {
-            int conns = 0;
-            if (left != null && left.Exists)
-                conns++;
-            if (right != null && right.Exists)
-                conns++;
-            if (top != null && top.Exists)
-                conns++;
-            if (bot != null && bot.Exists)
-                conns++;
-            return conns;
-        }
-    }
-
-    public GenRoom LeftRoom
-    {
-        get
-        {
-            if (left == null)
-                return null;
-            else
-                return left.GetOpposite(this);
-        }
-    }
-    public GenRoom RightRoom
-    {
-        get
-        {
-            if (right == null)
-                return null;
-            else
-                return right.GetOpposite(this);
-        }
-    }
-    public GenRoom TopRoom
-    {
-        get
-        {
-            if (top == null)
-                return null;
-            else
-                return top.GetOpposite(this);
-        }
-    }
-    public GenRoom BotRoom
-    {
-        get
-        {
-            if (bot == null)
-                return null;
-            else
-                return bot.GetOpposite(this);
-        }
-    }
-
-    public GenRoom(int x, int y)
-    {
-        gridX = x;
-        gridY = y;
-        Exists = false;
     }
 }

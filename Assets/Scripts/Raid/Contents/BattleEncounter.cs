@@ -8,7 +8,6 @@ public class BattleEncounter : IBinarySaveData
 
     public bool IsMeetingSaveCriteria { get { return true; } }
 
-
     public BattleEncounter()
     {
         Monsters = new List<Monster>();
@@ -30,7 +29,6 @@ public class BattleEncounter : IBinarySaveData
         foreach (var monsterName in monsterNames)
             Monsters.Add(new Monster(DarkestDungeonManager.Data.Monsters[monsterName]));
     }
-
 
     public void Write(BinaryWriter bw)
     {

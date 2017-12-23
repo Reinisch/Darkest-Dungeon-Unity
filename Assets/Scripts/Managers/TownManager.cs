@@ -3,57 +3,50 @@ using System.Collections.Generic;
 
 public class TownManager : MonoBehaviour
 {
-    public List<BuildingSlot> buildingSlots;
-    public List<BuildingWindow> buildingWindows;
+    [SerializeField]
+    private List<BuildingSlot> buildingSlots;
+    [SerializeField]
+    private List<BuildingWindow> buildingWindows;
+    [SerializeField]
+    private Sprite purchasedUpgradeIcon;
+    [SerializeField]
+    private Sprite lockedUpgradeIcon;
+    [SerializeField]
+    private Sprite availableUpgradeIcon;
 
-    public Sprite purchasedUpgradeIcon; 
-    public Sprite lockedUpgradeIcon;
-    public Sprite availableUpgradeIcon;
-
-    public Sprite caretakenSlot;
-    public Sprite emptySlot;
-    public Sprite heroLockedSlot;
-    public Sprite lockedSlot;
-    public Sprite highlightedSlot;
-
-    public bool AnyWindowsOpened
-    {
-        get
-        {
-            return EstateSceneManager.AnyWindowsOpened || BuildingWindowActive;
-        }
-    }
-
-    public EstateSceneManager EstateSceneManager { get; set; }
     public bool BuildingWindowActive { get; set; }
+    public bool AnyWindowsOpened { get { return EstateSceneManager.AnyWindowsOpened || BuildingWindowActive; } }
+    public List<BuildingWindow> BuildingWindows { get { return buildingWindows; } }
+    public EstateSceneManager EstateSceneManager { get; private set; }
 
-    void Awake()
+    private void Awake()
     {
         EstateSceneManager = GetComponent<EstateSceneManager>();
         for (int i = 0; i < buildingSlots.Count; i++ )
         {
             buildingSlots[i].TownManager = this;
-            buildingWindows[i].TownManager = this;
+            BuildingWindows[i].TownManager = this;
         }
+    }
+
+    public HeroSlot GetHeroSlot(Hero hero)
+    {
+        return EstateSceneManager.RosterPanel.HeroSlots.Find(heroSlot => heroSlot.Hero == hero);
     }
 
     public void CloseBuildingWindow()
     {
-        for (int i = 0; i < buildingWindows.Count; i++)
-            if (buildingWindows[i].isActiveAndEnabled)
-                buildingWindows[i].WindowClosed();
+        foreach (BuildingWindow window in BuildingWindows)
+            if (window.isActiveAndEnabled)
+                window.WindowClosed();
     }
 
     public void InitializeBuildings()
     {
         for (int i = 0; i < buildingSlots.Count; i++)
         {
-            buildingWindows[i].Initialize();
+            BuildingWindows[i].Initialize();
         }
-    }
-    public HeroSlot GetHeroSlot(Hero hero)
-    {
-        return EstateSceneManager.rosterPanel.HeroSlots.Find(heroSlot => heroSlot.Hero == hero);
     }
 
     public void UpdateUpgradeSlot(UpgradeStatus status, SkillUpgradeSlot slot, float discount = 1)
@@ -71,6 +64,7 @@ public class TownManager : MonoBehaviour
                 break;
         }
     }
+
     public void UpdateUpgradeSlot(UpgradeStatus status, EquipmentUpgradeSlot slot, float discount = 1)
     {
         switch (status)
@@ -86,6 +80,7 @@ public class TownManager : MonoBehaviour
                 break;
         }
     }
+
     public void UpdateUpgradeSlot(UpgradeStatus status, BuildingUpgradeSlot slot)
     {
         switch(status)
@@ -102,17 +97,20 @@ public class TownManager : MonoBehaviour
         }
     }
 
-    public void SetUpgradeSlotPurchased(SkillUpgradeSlot slot)
+    #region Upgarade Info Helpers
+
+    private void SetUpgradeSlotPurchased(SkillUpgradeSlot slot)
     {
-        slot.background.gameObject.SetActive(true);
-        slot.icon.sprite = purchasedUpgradeIcon;
-        slot.costFrame.gameObject.SetActive(false);
+        slot.Background.gameObject.SetActive(true);
+        slot.Icon.sprite = purchasedUpgradeIcon;
+        slot.CostFrame.gameObject.SetActive(false);
     }
-    public void SetUpgradeSlotAvailable(SkillUpgradeSlot slot, float discount)
+
+    private void SetUpgradeSlotAvailable(SkillUpgradeSlot slot, float discount)
     {
-        slot.background.gameObject.SetActive(false);
-        slot.icon.sprite = availableUpgradeIcon;
-        slot.costFrame.gameObject.SetActive(true);
+        slot.Background.gameObject.SetActive(false);
+        slot.Icon.sprite = availableUpgradeIcon;
+        slot.CostFrame.gameObject.SetActive(true);
 
         bool isFree = false;
         for (int i = 0; i < slot.Tree.Tags.Count; i++)
@@ -120,36 +118,39 @@ public class TownManager : MonoBehaviour
                 isFree = true;
 
         if (isFree || DarkestDungeonManager.Campaign.Estate.CanPayPrice(slot.Upgrade.Cost[0], discount))
-            slot.costFrame.heirloomOneAmount.color = Color.white;
+            slot.CostFrame.HeirloomOneAmount.color = Color.white;
         else
-            slot.costFrame.heirloomOneAmount.color = Color.red;
+            slot.CostFrame.HeirloomOneAmount.color = Color.red;
 
         if (isFree)
         {
-            slot.costFrame.heirloomOneAmount.text = "0";
+            slot.CostFrame.HeirloomOneAmount.text = "0";
         }
         else
         {
-            slot.costFrame.heirloomOneAmount.text = Mathf.RoundToInt(slot.Upgrade.Cost[0].Amount * discount).ToString();
+            slot.CostFrame.HeirloomOneAmount.text = Mathf.RoundToInt(slot.Upgrade.Cost[0].Amount * discount).ToString();
         }
     }
-    public void SetUpgradeSlotLocked(SkillUpgradeSlot slot)
+
+    private void SetUpgradeSlotLocked(SkillUpgradeSlot slot)
     {
-        slot.background.gameObject.SetActive(false);
-        slot.icon.sprite = lockedUpgradeIcon;
-        slot.costFrame.gameObject.SetActive(false);
+        slot.Background.gameObject.SetActive(false);
+        slot.Icon.sprite = lockedUpgradeIcon;
+        slot.CostFrame.gameObject.SetActive(false);
     }
-    public void SetUpgradeSlotPurchased(EquipmentUpgradeSlot slot)
+
+    private void SetUpgradeSlotPurchased(EquipmentUpgradeSlot slot)
     {
-        slot.background.gameObject.SetActive(true);
-        slot.icon.sprite = purchasedUpgradeIcon;
-        slot.costFrame.gameObject.SetActive(false);
+        slot.Background.gameObject.SetActive(true);
+        slot.Icon.sprite = purchasedUpgradeIcon;
+        slot.CostFrame.gameObject.SetActive(false);
     }
-    public void SetUpgradeSlotAvailable(EquipmentUpgradeSlot slot, float discount)
+
+    private void SetUpgradeSlotAvailable(EquipmentUpgradeSlot slot, float discount)
     {
-        slot.background.gameObject.SetActive(false);
-        slot.icon.sprite = availableUpgradeIcon;
-        slot.costFrame.gameObject.SetActive(true);
+        slot.Background.gameObject.SetActive(false);
+        slot.Icon.sprite = availableUpgradeIcon;
+        slot.CostFrame.gameObject.SetActive(true);
 
         bool isFree = false;
         for (int i = 0; i < slot.Tree.Tags.Count; i++)
@@ -157,36 +158,39 @@ public class TownManager : MonoBehaviour
                 isFree = true;
 
         if (isFree || DarkestDungeonManager.Campaign.Estate.CanPayPrice(slot.Upgrade.Cost[0], discount))
-            slot.costFrame.heirloomOneAmount.color = Color.white;
+            slot.CostFrame.HeirloomOneAmount.color = Color.white;
         else
-            slot.costFrame.heirloomOneAmount.color = Color.red;
+            slot.CostFrame.HeirloomOneAmount.color = Color.red;
 
         if(isFree)
         {
-            slot.costFrame.heirloomOneAmount.text = "0";
+            slot.CostFrame.HeirloomOneAmount.text = "0";
         }
         else
         {
-            slot.costFrame.heirloomOneAmount.text = Mathf.RoundToInt(slot.Upgrade.Cost[0].Amount * discount).ToString();
+            slot.CostFrame.HeirloomOneAmount.text = Mathf.RoundToInt(slot.Upgrade.Cost[0].Amount * discount).ToString();
         }
     }
-    public void SetUpgradeSlotLocked(EquipmentUpgradeSlot slot)
+
+    private void SetUpgradeSlotLocked(EquipmentUpgradeSlot slot)
     {
-        slot.background.gameObject.SetActive(false);
-        slot.icon.sprite = lockedUpgradeIcon;
-        slot.costFrame.gameObject.SetActive(false);
+        slot.Background.gameObject.SetActive(false);
+        slot.Icon.sprite = lockedUpgradeIcon;
+        slot.CostFrame.gameObject.SetActive(false);
     }
-    public void SetUpgradeSlotPurchased(BuildingUpgradeSlot slot)
+
+    private void SetUpgradeSlotPurchased(BuildingUpgradeSlot slot)
     {
-        slot.background.gameObject.SetActive(true);
-        slot.icon.sprite = purchasedUpgradeIcon;
-        slot.costFrame.gameObject.SetActive(false);
+        slot.Background.gameObject.SetActive(true);
+        slot.Icon.sprite = purchasedUpgradeIcon;
+        slot.CostFrame.gameObject.SetActive(false);
     }
-    public void SetUpgradeSlotAvailable(BuildingUpgradeSlot slot)
+
+    private void SetUpgradeSlotAvailable(BuildingUpgradeSlot slot)
     {
-        slot.background.gameObject.SetActive(false);
-        slot.icon.sprite = availableUpgradeIcon;
-        slot.costFrame.gameObject.SetActive(true);
+        slot.Background.gameObject.SetActive(false);
+        slot.Icon.sprite = availableUpgradeIcon;
+        slot.CostFrame.gameObject.SetActive(true);
 
         bool isFree = false;
         for (int i = 0; i < slot.Tree.Tags.Count; i++)
@@ -194,36 +198,39 @@ public class TownManager : MonoBehaviour
                 isFree = true;
 
         if (isFree || DarkestDungeonManager.Campaign.Estate.CanPayPrice(slot.UpgradeInfo.Cost[1]))
-            slot.costFrame.heirloomOneAmount.color = Color.white;
+            slot.CostFrame.HeirloomOneAmount.color = Color.white;
         else
-            slot.costFrame.heirloomOneAmount.color = Color.red;
+            slot.CostFrame.HeirloomOneAmount.color = Color.red;
 
         if (isFree)
         {
-            slot.costFrame.heirloomOneAmount.text = "0";
+            slot.CostFrame.HeirloomOneAmount.text = "0";
         }
         else
         {
-            slot.costFrame.heirloomOneAmount.text = slot.UpgradeInfo.Cost[1].Amount.ToString();
+            slot.CostFrame.HeirloomOneAmount.text = slot.UpgradeInfo.Cost[1].Amount.ToString();
         }
 
-        if ( !(slot.costFrame.heirloomTwoIcon == null || slot.UpgradeInfo.Cost.Count < 3) )
+        if ( !(slot.CostFrame.HeirloomTwoIcon == null || slot.UpgradeInfo.Cost.Count < 3) )
         {
             if (DarkestDungeonManager.Campaign.Estate.CanPayPrice(slot.UpgradeInfo.Cost[2]))
-                slot.costFrame.heirloomTwoAmount.color = Color.white;
+                slot.CostFrame.HeirloomTwoAmount.color = Color.white;
             else
-                slot.costFrame.heirloomTwoAmount.color = Color.red;
+                slot.CostFrame.HeirloomTwoAmount.color = Color.red;
 
             if(isFree)
-                slot.costFrame.heirloomTwoAmount.text = "0";
+                slot.CostFrame.HeirloomTwoAmount.text = "0";
             else
-                slot.costFrame.heirloomTwoAmount.text = slot.UpgradeInfo.Cost[2].Amount.ToString();
+                slot.CostFrame.HeirloomTwoAmount.text = slot.UpgradeInfo.Cost[2].Amount.ToString();
         }
     }
-    public void SetUpgradeSlotLocked(BuildingUpgradeSlot slot)
+
+    private void SetUpgradeSlotLocked(BuildingUpgradeSlot slot)
     {
-        slot.background.gameObject.SetActive(false);
-        slot.icon.sprite = lockedUpgradeIcon;
-        slot.costFrame.gameObject.SetActive(false);
+        slot.Background.gameObject.SetActive(false);
+        slot.Icon.sprite = lockedUpgradeIcon;
+        slot.CostFrame.gameObject.SetActive(false);
     }
+
+    #endregion
 }

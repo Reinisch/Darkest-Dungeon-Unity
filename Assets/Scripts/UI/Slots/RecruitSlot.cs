@@ -5,14 +5,20 @@ using UnityEngine.EventSystems;
 public class RecruitSlot : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     IDragHandler, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    public Image heroPortrait;
-    public Text nameLabel;
-    public Text classLabel;
-    public Image resolveIcon;
-    public Text resolveLabel;
+    [SerializeField]
+    private Image heroPortrait;
+    [SerializeField]
+    private Text nameLabel;
+    [SerializeField]
+    private Text classLabel;
+    [SerializeField]
+    private Image resolveIcon;
+    [SerializeField]
+    private Text resolveLabel;
 
-    public Hero Hero { get; set; }
-    public HeroRosterPanel HeroRoster { get; set; }
+    public Hero Hero { get; private set; }
+    public HeroRosterPanel HeroRoster { private get; set; }
+    public Image HeroPortrait { get { return heroPortrait; } }
 
     public void UpdateSlot(Hero hero)
     {
@@ -34,12 +40,13 @@ public class RecruitSlot : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
                 else
                     resolveIcon.sprite = DarkestDungeonManager.Data.Sprites["resolve_level_bar_number_background"];
             }
-            heroPortrait.sprite = DarkestDungeonManager.HeroSprites[Hero.ClassStringId]["A"].Portrait;
+            HeroPortrait.sprite = DarkestDungeonManager.HeroSprites[Hero.ClassStringId]["A"].Portrait;
 
             transform.parent.gameObject.SetActive(true);
         }
         
     }
+
     public void RemoveSlot()
     {
         Hero = null;
@@ -54,6 +61,7 @@ public class RecruitSlot : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         if (eventData.button == PointerEventData.InputButton.Right)
             HeroRoster.RecruitSlotClicked(this);
     }
+
     public void OnDrag(PointerEventData eventData)
     {
         DragManager.Instanse.OnDrag(this, eventData);
@@ -63,7 +71,7 @@ public class RecruitSlot : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
 
         if (eventData.pointerCurrentRaycast.isValid)
         {
-            if (eventData.pointerCurrentRaycast.gameObject == HeroRoster.placeHolder.gameObject ||
+            if (eventData.pointerCurrentRaycast.gameObject == HeroRoster.PlaceHolder.gameObject ||
                 eventData.pointerCurrentRaycast.gameObject == gameObject)
                 return;
 
@@ -74,48 +82,50 @@ public class RecruitSlot : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
             RectTransformUtility.ScreenPointToWorldPointInRectangle(DragManager.Instanse.OverlayRect,
                 eventData.position, eventData.pressEventCamera, out globalMousePos);
 
-            if (hoveredSlot.RectTransform.position.y > HeroRoster.placeHolder.RectTransform.position.y)
+            if (hoveredSlot.RectTransform.position.y > HeroRoster.PlaceHolder.RectTransform.position.y)
             {
                 if (globalMousePos.y > hoveredSlot.RectTransform.position.y)
                 {
-                    HeroRoster.placeHolder.RectTransform.SetSiblingIndex(hoveredSlot.RectTransform.GetSiblingIndex());
+                    HeroRoster.PlaceHolder.RectTransform.SetSiblingIndex(hoveredSlot.RectTransform.GetSiblingIndex());
                 }
             }
-            else if (hoveredSlot.RectTransform.position.y < HeroRoster.placeHolder.RectTransform.position.y)
+            else if (hoveredSlot.RectTransform.position.y < HeroRoster.PlaceHolder.RectTransform.position.y)
             {
                 if (globalMousePos.y < hoveredSlot.RectTransform.position.y)
                 {
-                    HeroRoster.placeHolder.RectTransform.SetSiblingIndex(hoveredSlot.RectTransform.GetSiblingIndex());
+                    HeroRoster.PlaceHolder.RectTransform.SetSiblingIndex(hoveredSlot.RectTransform.GetSiblingIndex());
                 }
             }
         }
     }
+
     public void OnBeginDrag(PointerEventData eventData)
     {      
         DragManager.Instanse.StartDragging(this, eventData);
 
         HeroRoster.Dragging = true;
-        HeroRoster.rosterLive.gameObject.SetActive(true);
-        heroPortrait.sprite = DarkestDungeonManager.Data.Sprites["hero_slot.background"];
+        HeroRoster.RosterLive.gameObject.SetActive(true);
+        HeroPortrait.sprite = DarkestDungeonManager.Data.Sprites["hero_slot.background"];
     }
+
     public void OnEndDrag(PointerEventData eventData)
     {
         DragManager.Instanse.EndDragging(this, eventData);
 
         HeroRoster.Dragging = false;
-        HeroRoster.rosterLive.gameObject.SetActive(false);
+        HeroRoster.RosterLive.gameObject.SetActive(false);
         if(Hero != null)
-            heroPortrait.sprite = DarkestDungeonManager.HeroSprites[Hero.ClassStringId]["A"].Portrait;
+            HeroPortrait.sprite = DarkestDungeonManager.HeroSprites[Hero.ClassStringId]["A"].Portrait;
 
-        HeroRoster.placeHolder.slotController.SetBool("isHidden", true);
-        HeroRoster.placeHolder.slotController.SetTrigger("hide");
+        HeroRoster.PlaceHolder.SlotController.SetBool("isHidden", true);
+        HeroRoster.PlaceHolder.SlotController.SetTrigger("hide");
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        ToolTipManager.Instanse.Show(LocalizationManager.GetString("str_hero_slot_unlocked_stagecoach_tt"),
-            eventData, (RectTransform)transform, ToolTipStyle.FromBottom, ToolTipSize.Small);
+        ToolTipManager.Instanse.Show(LocalizationManager.GetString("str_hero_slot_unlocked_stagecoach_tt"), (RectTransform)transform, ToolTipStyle.FromBottom, ToolTipSize.Small);
     }
+
     public void OnPointerExit(PointerEventData eventData)
     {
         ToolTipManager.Instanse.Hide();

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 
 public class RecruitPanel : MonoBehaviour
 {
-    public HeroRosterPanel rosterPanel;
-    public List<RecruitSlot> recruitSlots;
+    [SerializeField]
+    private HeroRosterPanel rosterPanel;
+    [SerializeField]
+    private List<RecruitSlot> recruitSlots;
 
-    void Awake()
+    private void Awake()
     {
         for(int i = 0; i < recruitSlots.Count; i++)
         {

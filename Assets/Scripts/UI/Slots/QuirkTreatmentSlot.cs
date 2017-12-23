@@ -1,24 +1,26 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public delegate void QuirkTreatmentSlotEvent(QuirkTreatmentSlot slot);
-
 public class QuirkTreatmentSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
-    public Text quirkText;
-    public Image highlightBackground;
-    public Image statusIcon;
+    [SerializeField]
+    private Text quirkText;
+    [SerializeField]
+    private Image highlightBackground;
+    [SerializeField]
+    private Image statusIcon;
 
-    public event QuirkTreatmentSlotEvent onSelect;
-    public event QuirkTreatmentSlotEvent onDeselect;
+    public event Action<QuirkTreatmentSlot> EventSelected;
+    public event Action<QuirkTreatmentSlot> EventDeselected;
 
-    public RectTransform RectTransform { get; set; }
-    public bool Selected { get; set; }
-    public bool HasQuirk { get; set; }
-    public QuirkInfo QuirkInfo { get; set; }
+    public bool Selected { get; private set; }
+    public QuirkInfo QuirkInfo { get; private set; }
 
-    void Awake()
+    private RectTransform RectTransform { get; set; }
+
+    private void Awake()
     {
         RectTransform = GetComponent<RectTransform>();
     }
@@ -34,9 +36,10 @@ public class QuirkTreatmentSlot : MonoBehaviour, IPointerClickHandler, IPointerE
             statusIcon.sprite = DarkestDungeonManager.Data.Sprites["lockquirk"];
         Selected = true;
 
-        if (onSelect != null)
-            onSelect(this);
+        if (EventSelected != null)
+            EventSelected(this);
     }
+
     public void Deselect()
     {
         highlightBackground.enabled = false;
@@ -52,8 +55,8 @@ public class QuirkTreatmentSlot : MonoBehaviour, IPointerClickHandler, IPointerE
             statusIcon.gameObject.SetActive(false);
         Selected = false;
 
-        if (onDeselect != null)
-            onDeselect(this);
+        if (EventDeselected != null)
+            EventDeselected(this);
     }
 
     public void UpdateQuirk(QuirkInfo quirkInfo)
@@ -62,7 +65,6 @@ public class QuirkTreatmentSlot : MonoBehaviour, IPointerClickHandler, IPointerE
 
         if (QuirkInfo != null)
         {
-            HasQuirk = true;
             gameObject.SetActive(true);
             quirkText.text = LocalizationManager.GetString("str_quirk_name_" + QuirkInfo.Quirk.Id);
             Selected = false;
@@ -94,10 +96,10 @@ public class QuirkTreatmentSlot : MonoBehaviour, IPointerClickHandler, IPointerE
         else
             ResetSlot();
     }
+
     public void ResetSlot()
     {
         Selected = false;
-        HasQuirk = false;
         gameObject.SetActive(false);
     }
 
@@ -111,11 +113,13 @@ public class QuirkTreatmentSlot : MonoBehaviour, IPointerClickHandler, IPointerE
         else
             Select();
     }
+
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (QuirkInfo != null)
-            ToolTipManager.Instanse.Show(QuirkInfo.Quirk.ToolTip(), eventData, RectTransform, ToolTipStyle.FromTop, ToolTipSize.Normal);
+            ToolTipManager.Instanse.Show(QuirkInfo.Quirk.ToolTip(), RectTransform, ToolTipStyle.FromTop, ToolTipSize.Normal);
     }
+
     public void OnPointerExit(PointerEventData eventData)
     {
         ToolTipManager.Instanse.Hide();

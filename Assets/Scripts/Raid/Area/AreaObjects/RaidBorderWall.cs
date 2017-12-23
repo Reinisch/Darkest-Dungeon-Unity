@@ -3,9 +3,7 @@ using UnityEngine.UI;
 
 public class RaidBorderWall : MonoBehaviour
 {
-    public Image borderWall;
-
-    public Image additionalWall;
-
-    public RectTransform rectTransform;
+    public Image BorderWall;
+    public Image AdditionalWall;
+    public RectTransform RectTransform;
 }

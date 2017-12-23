@@ -1,11 +1,8 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 public class RaidPartySaveData
 {
     public bool IsMovingLeft { get; set; }
-
     public List<RaidPartyHeroInfoSaveData> HeroInfo { get; set; }
 
     public RaidPartySaveData()
@@ -17,6 +14,7 @@ public class RaidPartySaveData
     {
         IsMovingLeft = raidParty.IsMovingLeft;
         HeroInfo.Clear();
+
         for(int i = 0; i < raidParty.HeroInfo.Count; i++)
         {
             var newHeroInfo = new RaidPartyHeroInfoSaveData();
@@ -28,18 +26,5 @@ public class RaidPartySaveData
                 "" : raidParty.HeroInfo[i].DeathRecord.KillerName;
             HeroInfo.Add(newHeroInfo);
         }
-    }
-}
-
-public class RaidPartyHeroInfoSaveData
-{
-    public bool IsAlive { get; set; }
-    public int HeroRosterId { get; set; }
-    public DeathFactor Factor { get; set; }
-    public string Killer { get; set; }
-
-    public RaidPartyHeroInfoSaveData()
-    {
-        Killer = "";
     }
 }

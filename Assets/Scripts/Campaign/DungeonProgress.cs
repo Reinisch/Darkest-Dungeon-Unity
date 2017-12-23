@@ -3,14 +3,10 @@ using UnityEngine;
 
 public class DungeonProgress : IBinarySaveData
 {
-    private const int MaxLevel = 7;
-
-    public string DungeonName { get; set; }
-    public int MasteryLevel { get; set; }
-    public int CurrentXP { get; set; }
-    public int NextLevelXP { get; set; }
-    public bool IsEvent { get; set; }
-    public bool IsUnlocked { get; set; }
+    public string DungeonName { get; private set; }
+    public int MasteryLevel { get; private set; }
+    public bool IsEvent { get; private set; }
+    public bool IsMeetingSaveCriteria { get { return true; } }
 
     public float XpRatio
     {
@@ -23,11 +19,6 @@ public class DungeonProgress : IBinarySaveData
         }
     }
 
-    public bool IsMeetingSaveCriteria
-    {
-        get { return true; }
-    }
-
     public PlotQuest CurrentPlotQuest
     {
         get
@@ -36,22 +27,27 @@ public class DungeonProgress : IBinarySaveData
                 item.Dungeon == DungeonName && item.DungeonLevel <= MasteryLevel);
             for(int i = 0; i < dungeonPlot.Count; i++)
             {
-                if (!DarkestDungeonManager.Campaign.CompletedPlot.Contains(dungeonPlot[i].Id))
+                if (DarkestDungeonManager.Campaign.CompletedPlot.Contains(dungeonPlot[i].Id))
+                    continue;
+
+                var plotDependency = dungeonPlot[i].PlotDependency;
+                if (plotDependency != null)
                 {
-                    var plotDependency = dungeonPlot[i].PlotDependency;
-                    if (plotDependency != null)
-                    {
-                        if (DarkestDungeonManager.Campaign.CompletedPlot.Contains(plotDependency))
-                            return dungeonPlot[i];
-                    }
-                    else
+                    if (DarkestDungeonManager.Campaign.CompletedPlot.Contains(plotDependency))
                         return dungeonPlot[i];
                 }
+                else
+                    return dungeonPlot[i];
             }
             return null;
         }
     }
 
+    private int CurrentXP { get; set; }
+    private int NextLevelXP { get; set; }
+    private bool IsUnlocked { get; set; }
+
+    private const int MaxLevel = 7;
 
     public DungeonProgress()
     {
@@ -67,7 +63,6 @@ public class DungeonProgress : IBinarySaveData
 
         UpdateNextLevelXP();
     }
-
 
     public void Write(BinaryWriter bw)
     {
@@ -123,7 +118,6 @@ public class DungeonProgress : IBinarySaveData
             }
         }
     }
-
 
     private void UpdateNextLevelXP()
     {

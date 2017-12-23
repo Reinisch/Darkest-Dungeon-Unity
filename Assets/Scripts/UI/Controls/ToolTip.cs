@@ -1,20 +1,28 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-using System;
 
 public class ToolTip : MonoBehaviour
 {
-    public RectTransform bounds;
-    public RectTransform textRectTransform;
-    public LayoutElement layoutElement;
-    public VerticalLayoutGroup layoutGroup;
-    public RectTransform SenderRect { get; set; }
-    public Text text;
+    [SerializeField]
+    private RectTransform bounds;
+    [SerializeField]
+    private LayoutElement layoutElement;
+    [SerializeField]
+    private VerticalLayoutGroup layoutGroup;
+    [SerializeField]
+    private Text text;
 
-    IEnumerator tipCoroutine;
+    public VerticalLayoutGroup LayoutGroup { get { return layoutGroup; } }
+    public RectTransform RectTransform { get; private set; }
+    public RectTransform SenderRect { get; private set; }
+    public string CurrentTip { private get; set; }
+    public float TipDelay { private get; set; }
+    private bool IsAlreadyTipping { get; set; }
 
-    void FixedUpdate()
+    private IEnumerator tipCoroutine;
+
+    private void FixedUpdate()
     {
         if (bounds.gameObject.activeSelf && (SenderRect == null || !SenderRect.gameObject.activeSelf))
         {
@@ -22,26 +30,12 @@ public class ToolTip : MonoBehaviour
         }
     }
 
-    public bool IsAlreadyTipping { get; set; }
-    public string CurrentTip { get; set; }
-    public float TipDelay { get; set; }
-    public RectTransform RectTransform { get; set; }
-
-    IEnumerator TipDelayer(float delay)
-    {
-        bounds.gameObject.SetActive(false);
-        yield return new WaitForSeconds(delay);
-        text.text = CurrentTip;
-        yield return new WaitForEndOfFrame();
-        bounds.gameObject.SetActive(true);
-        yield break;
-    }
-
     public virtual void Initialize()
     {
         IsAlreadyTipping = false;
         RectTransform = GetComponent<RectTransform>();
     }
+
     public void Show(RectTransform senderRect)
     {
         if (bounds.gameObject.activeSelf && SenderRect == senderRect)
@@ -66,6 +60,7 @@ public class ToolTip : MonoBehaviour
             StartCoroutine(tipCoroutine);
         }
     }
+
     public void Hide()
     {
         if (tipCoroutine != null)
@@ -76,6 +71,7 @@ public class ToolTip : MonoBehaviour
             gameObject.SetActive(false);
         }
     }
+
     public void UpdateSize(ToolTipSize size)
     {
         switch(size)
@@ -89,5 +85,14 @@ public class ToolTip : MonoBehaviour
                 layoutElement.preferredWidth = 220;
                 break;
         }
+    }
+
+    private IEnumerator TipDelayer(float delay)
+    {
+        bounds.gameObject.SetActive(false);
+        yield return new WaitForSeconds(delay);
+        text.text = CurrentTip;
+        yield return new WaitForEndOfFrame();
+        bounds.gameObject.SetActive(true);
     }
 }

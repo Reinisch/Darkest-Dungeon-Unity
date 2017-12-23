@@ -1,13 +1,16 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 
 public class RaidQuestPanel : MonoBehaviour
 {
-    public Text questTitle;
-    public Text questGoal;
-    public SkeletonAnimation completionSeal;
-    public Button retreatButton;
+    [SerializeField]
+    private Text questTitle;
+    [SerializeField]
+    private Text questGoal;
+    [SerializeField]
+    private SkeletonAnimation completionSeal;
+    [SerializeField]
+    private Button retreatButton;
 
     public void UpdateQuest(Quest quest, bool completed = false)
     {
@@ -43,10 +46,10 @@ public class RaidQuestPanel : MonoBehaviour
             return;
         }
 
-        questTitle.text = player.name;
-        questGoal.text = PhotonNetwork.room.playerCount > 1 ?
-            isPanelOwner ? "Defeat the " + PhotonNetwork.otherPlayers[0].name :
-            "Defeat the " + PhotonNetwork.player.name : "Defeat the opponent!";
+        questTitle.text = player.NickName;
+        questGoal.text = PhotonNetwork.room.PlayerCount > 1 ?
+            isPanelOwner ? "Defeat the " + PhotonNetwork.otherPlayers[0].NickName :
+            "Defeat the " + PhotonNetwork.player.NickName : "Defeat the opponent!";
     }
 
     public void CompleteQuest()
@@ -57,6 +60,7 @@ public class RaidQuestPanel : MonoBehaviour
         questGoal.text = "";
         questTitle.text = LocalizationManager.GetString("raid_quest_complete");
     }
+
     public void CompleteQuestClick()
     {
         RaidSceneManager.Instanse.AbandonButtonClicked();
@@ -67,6 +71,7 @@ public class RaidQuestPanel : MonoBehaviour
         if(RaidSceneManager.Raid.QuestCompleted)
             completionSeal.state.SetAnimation(0, "idle_combat", true);
     }
+
     public void SetPeacefulState()
     {
         if (RaidSceneManager.Raid.QuestCompleted)
@@ -82,6 +87,7 @@ public class RaidQuestPanel : MonoBehaviour
             retreatButton.interactable = true;
         }
     }
+
     public void UpdateEncounterRetreat()
     {
         if(RaidSceneManager.SceneState == DungeonSceneState.Room)
@@ -99,6 +105,7 @@ public class RaidQuestPanel : MonoBehaviour
                 retreatButton.interactable = false;
         }
     }
+
     public void UpdateCombatRetreat(bool setActive)
     {
         if (retreatButton.gameObject.activeSelf == false)
@@ -119,6 +126,7 @@ public class RaidQuestPanel : MonoBehaviour
                 retreatButton.interactable = setActive;
         }
     }
+
     public void DisableRetreat(bool removeButton)
     {
         if (removeButton)

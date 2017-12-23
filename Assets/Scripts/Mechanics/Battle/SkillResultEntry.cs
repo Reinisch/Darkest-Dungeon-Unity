@@ -15,9 +15,10 @@
         Target = target;
         IsTargetHit = Type != SkillResultType.Miss && Type != SkillResultType.Dodge;
         IsHarmful = Type == SkillResultType.Hit || Type == SkillResultType.Crit;
-        CanCritReleaf = target.Character.BattleModifiers == null ? false : target.Character.BattleModifiers.CanRelieveStressFromCrit;
-        CanKillReleaf = target.Character.BattleModifiers == null ? false : target.Character.BattleModifiers.CanRelieveStressFromKills;
+        CanCritReleaf = target.Character.BattleModifiers != null && target.Character.BattleModifiers.CanRelieveStressFromCrit;
+        CanKillReleaf = target.Character.BattleModifiers != null && target.Character.BattleModifiers.CanRelieveStressFromKills;
     }
+
     public SkillResultEntry(FormationUnit target, int skillDamage, SkillResultType result)
     {
         Amount = skillDamage;
@@ -25,9 +26,10 @@
         Target = target;
         IsTargetHit = Type != SkillResultType.Miss && Type != SkillResultType.Dodge;
         IsHarmful = Type == SkillResultType.Hit || Type == SkillResultType.Crit;
-        CanCritReleaf = target.Character.BattleModifiers == null ? false : target.Character.BattleModifiers.CanRelieveStressFromCrit;
-        CanKillReleaf = target.Character.BattleModifiers == null ? false : target.Character.BattleModifiers.CanRelieveStressFromKills;
+        CanCritReleaf = target.Character.BattleModifiers != null && target.Character.BattleModifiers.CanRelieveStressFromCrit;
+        CanKillReleaf = target.Character.BattleModifiers != null && target.Character.BattleModifiers.CanRelieveStressFromKills;
     }
+
     public SkillResultEntry(FormationUnit target, int skillDamage, bool isTargetZeroed, SkillResultType result)
     {
         Amount = skillDamage;

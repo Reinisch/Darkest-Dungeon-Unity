@@ -27,15 +27,24 @@ public enum PopupMessageType
 
 public class PopupMessage : MonoBehaviour
 {
-    public RectTransform rectTransform;
-    public Image popupIcon;
-    public Text skillMessage;
-    public Outline outlineEffect;
+    [SerializeField]
+    private RectTransform rectTransform;
+    [SerializeField]
+    private Image popupIcon;
+    [SerializeField]
+    private Text skillMessage;
+    [SerializeField]
+    private Outline outlineEffect;
+    [SerializeField]
+    private float speed;
+    [SerializeField]
+    private float smoothTime;
+    [SerializeField]
+    private PopupMovementType movementType;
 
-    public float speed;
-    public float smoothTime;
-    public PopupMovementType movementType;
-
+    public RectTransform RectTransform { get { return rectTransform; } }
+    public Text SkillMessage { get { return skillMessage; } }
+    
     private Vector3 targetPosition;
     private Vector3 velocity = Vector3.zero;
     private Vector3 offset = Vector3.zero;
@@ -43,55 +52,25 @@ public class PopupMessage : MonoBehaviour
     private Spine.Bone targetBone;
     private FormationUnit targetUnit;
 
-    public virtual void SetOffset(Vector3 messageOffset)
+    private void Awake()
     {
-        offset = messageOffset;
-    }
-    public virtual void SetIcon(string iconName)
-    {
-        popupIcon.enabled = true;
-        popupIcon.sprite = DarkestDungeonManager.Data.Sprites[iconName];
-    }
-    public virtual void SetMessage(string message)
-    {
-        skillMessage.text = message;
-    }
-    public virtual void SetColor(Color main, Color outline)
-    {
-        skillMessage.color = main;
-        outlineEffect.effectColor = outline;
-    }
-    public void SetRotation(Vector3 rotation)
-    {
-        rectTransform.localEulerAngles = rotation;
-    }
+        RectTransform.localPosition += offset;
 
-    public void FollowXBone(Spine.Bone bone, FormationUnit unit)
-    {
-        followBone = true;
-        targetBone = bone;
-        targetUnit = unit;
-    }
-
-    void Awake()
-    {
-        rectTransform.localPosition += offset;
-
-        if(rectTransform.anchoredPosition.y + speed * smoothTime > -rectTransform.sizeDelta.y)
-            rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x,
-                -rectTransform.sizeDelta.y - speed * smoothTime);
+        if(RectTransform.anchoredPosition.y + speed * smoothTime > -RectTransform.sizeDelta.y)
+            RectTransform.anchoredPosition = new Vector2(RectTransform.anchoredPosition.x,
+                -RectTransform.sizeDelta.y - speed * smoothTime);
 
         if (movementType == PopupMovementType.Top)
-            targetPosition = rectTransform.localPosition + new Vector3(0, speed * smoothTime, 0);
+            targetPosition = RectTransform.localPosition + new Vector3(0, speed * smoothTime, 0);
         else
-            targetPosition = rectTransform.localPosition - new Vector3(0, speed * smoothTime, 0);
+            targetPosition = RectTransform.localPosition - new Vector3(0, speed * smoothTime, 0);
 
         Destroy(gameObject, smoothTime);
     }
 
-    void Update()
+    private void Update()
     {
-        rectTransform.localPosition = Vector3.SmoothDamp(rectTransform.localPosition, targetPosition, ref velocity, smoothTime);
+        RectTransform.localPosition = Vector3.SmoothDamp(RectTransform.localPosition, targetPosition, ref velocity, smoothTime);
 
         if (followBone)
         {
@@ -99,8 +78,42 @@ public class PopupMessage : MonoBehaviour
             {
                 Vector3 screenPosition = RaidSceneManager.DungeonPositionToScreen
                     (targetUnit.RectTransform.TransformPoint(targetBone.WorldX, targetBone.WorldY, 0));
-                rectTransform.position = new Vector3(screenPosition.x, rectTransform.position.y, rectTransform.position.z);
+                RectTransform.position = new Vector3(screenPosition.x, RectTransform.position.y, RectTransform.position.z);
             }
         }
+    }
+
+    public void SetOffset(Vector3 messageOffset)
+    {
+        offset = messageOffset;
+    }
+
+    public void SetIcon(string iconName)
+    {
+        popupIcon.enabled = true;
+        popupIcon.sprite = DarkestDungeonManager.Data.Sprites[iconName];
+    }
+
+    public void SetMessage(string message)
+    {
+        SkillMessage.text = message;
+    }
+
+    public void SetColor(Color main, Color outline)
+    {
+        SkillMessage.color = main;
+        outlineEffect.effectColor = outline;
+    }
+
+    public void SetRotation(Vector3 rotation)
+    {
+        RectTransform.localEulerAngles = rotation;
+    }
+
+    public void FollowXBone(Spine.Bone bone, FormationUnit unit)
+    {
+        followBone = true;
+        targetBone = bone;
+        targetUnit = unit;
     }
 }

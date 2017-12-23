@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public enum RecruitResult { None, StageCoach, Bonus, Graveyard }
-
 public class Estate
 {
     public string EstateTitle { get; private set; }
@@ -21,24 +19,24 @@ public class Estate
 
     public Dictionary<int, Dictionary<string, UpgradePurchases>> HeroPurchases { get; private set; }
     public Dictionary<string, UpgradePurchases> TownPurchases { get; private set; }
-    public Dictionary<string, EstateCurrency> Currencies { get; private set; }
+    public Dictionary<string, int> Currencies { get; private set; }
 
-    List<int> rosterIds { get; set; }
+    private List<int> RosterIds { get; set; }
 
 	public Estate(SaveCampaignData saveData)
     {
-        rosterIds = new List<int>();
+        RosterIds = new List<int>();
         for (int i = 1; i < 100; i++)
-            rosterIds.Add(i);
+            RosterIds.Add(i);
 
         EstateTitle = saveData.HamletTitle;
 
-        Currencies = new Dictionary<string, EstateCurrency>();
-        Currencies.Add("gold", new EstateCurrency(saveData.GoldAmount, false));
-        Currencies.Add("bust", new EstateCurrency(saveData.BustsAmount, true));
-        Currencies.Add("deed", new EstateCurrency(saveData.DeedsAmount, true));
-        Currencies.Add("portrait", new EstateCurrency(saveData.PortraitsAmount, true));
-        Currencies.Add("crest", new EstateCurrency(saveData.CrestsAmount, true));
+        Currencies = new Dictionary<string, int>();
+        Currencies.Add("gold", saveData.GoldAmount);
+        Currencies.Add("bust", saveData.BustsAmount);
+        Currencies.Add("deed", saveData.DeedsAmount);
+        Currencies.Add("portrait", saveData.PortraitsAmount);
+        Currencies.Add("crest", saveData.CrestsAmount);
 
         HeroPurchases = saveData.InstancedPurchases;
         TownPurchases = saveData.BuildingUpgrades;
@@ -75,6 +73,7 @@ public class Estate
         if (availableSlots.Count > 0)
             availableSlots[Random.Range(0, availableSlots.Count)].Status = ActivitySlotStatus.Caretaken;
     }
+
     public void RedeployCrier()
     {
         var availableSlots = new List<ActivitySlot>();
@@ -85,6 +84,7 @@ public class Estate
         if (availableSlots.Count > 0)
             availableSlots[Random.Range(0, availableSlots.Count)].Status = ActivitySlotStatus.Crierd;
     }
+
     public void KickCrier()
     {
         foreach (var activity in Tavern.Activities.Concat(Abbey.Activities))
@@ -97,10 +97,11 @@ public class Estate
             }
         }
     }
+
     public void ExecuteProgress()
     {
         NomadWagon.RestockTrinkets();
-        StageCoach.RestockHeroes(rosterIds, this);
+        StageCoach.RestockHeroes(RosterIds, this);
 
         Abbey.ProvideActivity();
         Tavern.ProvideActivity();
@@ -108,39 +109,37 @@ public class Estate
 
         RedeployCaretaker();
     }
+
     public void RestockBonus(string bonusClass, int bonusAmount)
     {
-        StageCoach.RestockBonus(rosterIds, this, bonusClass, bonusAmount);
+        StageCoach.RestockBonus(RosterIds, this, bonusClass, bonusAmount);
     }
+
     public void RestockFromGrave(int bonusAmount)
     {
-        StageCoach.RestockFromGrave(rosterIds, this, bonusAmount);
+        StageCoach.RestockFromGrave(RosterIds, this, bonusAmount);
     }
 
     public void ReturnRosterId(int id)
     {
-        if (!rosterIds.Contains(id))
-            rosterIds.Add(id);
+        if (!RosterIds.Contains(id))
+            RosterIds.Add(id);
 
         if(HeroPurchases.ContainsKey(id))
             HeroPurchases.Remove(id);
     }
+
     public bool PickRosterId(int id)
     {
-        if(rosterIds.Contains(id))
+        if(RosterIds.Contains(id))
         {
-            rosterIds.Remove(id);
+            RosterIds.Remove(id);
             return true;
         }
         return false;
     }
-    public int PickRosterId()
-    {
-        int rosterId = rosterIds[Random.Range(0, rosterIds.Count)];
-        rosterIds.Remove(rosterId);
-        HeroPurchases.Add(rosterId, new Dictionary<string, UpgradePurchases>());
-        return rosterId;
-    }
+
+    #region Upgrade Helpers
 
     public float GetBuildingUpgradeRatio(BuildingType building)
     {
@@ -225,6 +224,7 @@ public class Estate
         }
         return false;
     }
+
     public bool IsRequirementMet(PrerequisiteReqirement requirement)
     {
         if (TownPurchases.ContainsKey(requirement.TreeId))
@@ -249,81 +249,33 @@ public class Estate
         }
         return 0;
     }
+
     public int GetUpgradedArmorLevel(int rosterId, string classId)
     {
         if(HeroPurchases.ContainsKey(rosterId))
             return HeroPurchases[rosterId][classId + ".armour"].PurchasedUpgrades.Count + 1;
         return 1;
     }
+
     public int GetUpgradedSkillLevel(int rosterId, string classId, string skillId)
     {
         if (HeroPurchases.ContainsKey(rosterId))
             return HeroPurchases[rosterId][classId + "." + skillId].PurchasedUpgrades.Count - 1;
         return -1;
     }
+
     public bool GetUpgradedCampingStatus(int rosterId, string skillId)
     {
         if (HeroPurchases.ContainsKey(rosterId))
             return HeroPurchases[rosterId][skillId].PurchasedUpgrades.Contains("0");
         return false;
     }
+
     public int GetUpgradedWeaponLevel(int rosterId, string classId)
     {
         if (HeroPurchases.ContainsKey(rosterId))
             return HeroPurchases[rosterId][classId + ".weapon"].PurchasedUpgrades.Count + 1;
         return 1;
-    }
-
-    public DeathRecord RecruitHero(Hero hero)
-    {
-        if (StageCoach.Heroes.Remove(hero))
-            return null;
-
-        if (StageCoach.EventHeroes.Contains(hero))
-        {
-            int removedIndex = StageCoach.EventHeroes.IndexOf(hero);
-            StageCoach.EventHeroes.Remove(hero);
-
-            if (StageCoach.GraveIndexes.Count > 0)
-            {
-                int deadRecordIndex = StageCoach.GraveIndexes[removedIndex];
-                var deathRecord = Graveyard.Records[deadRecordIndex];
-                Graveyard.Records.RemoveAt(deadRecordIndex);
-                StageCoach.ClearDeadRecruits(rosterIds, this);
-                return deathRecord;
-            }
-            return null;
-        }
-        return null;
-    }
-    public void ReequipHero(Hero hero)
-    {
-        Equipment weapon = hero.HeroClass.Weapons.Find(wep => 
-            wep.UpgradeLevel == GetUpgradedWeaponLevel(hero.RosterId, hero.HeroClass.StringId));
-        hero.Equip(weapon, HeroEquipmentSlot.Weapon);
-        Equipment armor = hero.HeroClass.Armors.Find(arm =>
-            arm.UpgradeLevel == GetUpgradedArmorLevel(hero.RosterId, hero.HeroClass.StringId));
-        hero.Equip(armor, HeroEquipmentSlot.Armor);
-    }
-    public void ReskillCombatHero(Hero hero)
-    {
-        for (int i = 0; i < hero.HeroClass.CombatSkills.Count; i++)
-        {
-            hero.CurrentCombatSkills[i] = hero.HeroClass.CombatSkillVariants.Find(skill => skill.Id == hero.HeroClass.CombatSkills[i].Id
-                && skill.Level == GetUpgradedSkillLevel(hero.RosterId, hero.ClassStringId, hero.HeroClass.CombatSkills[i].Id));
-        }
-
-        for(int i = 0; i < hero.SelectedCombatSkills.Count; i++)
-        {
-            hero.SelectedCombatSkills[i] = hero.CurrentCombatSkills[hero.HeroClass.CombatSkills
-                .FindIndex(skill => skill.Id == hero.SelectedCombatSkills[i].Id)];
-        }
-    }
-    public void ReskillCampingHero(Hero hero)
-    {
-        for (int i = 0; i < hero.HeroClass.CampingSkills.Count; i++)
-            hero.CurrentCampingSkills[i] = HeroPurchases[hero.RosterId][hero.HeroClass.CampingSkills[i].Id].PurchasedUpgrades.Contains("0")?
-                hero.HeroClass.CampingSkills[i] : null;
     }
 
     public UpgradeStatus GetUpgradeStatus(string treeId, Hero hero, HeroUpgrade upgrade)
@@ -339,11 +291,11 @@ public class Estate
         else
             return UpgradeStatus.Locked;
 
-        
+
 
         for (int i = 0; i < upgrade.Prerequisites.Count; i++)
         {
-            if(HeroPurchases[hero.RosterId].ContainsKey(upgrade.Prerequisites[i].TreeId))
+            if (HeroPurchases[hero.RosterId].ContainsKey(upgrade.Prerequisites[i].TreeId))
             {
                 if (!HeroPurchases[hero.RosterId][upgrade.Prerequisites[i].TreeId].PurchasedUpgrades.
                     Contains(upgrade.Prerequisites[i].RequirementCode))
@@ -354,16 +306,17 @@ public class Estate
                 if (!TownPurchases[upgrade.Prerequisites[i].TreeId].PurchasedUpgrades.
                     Contains(upgrade.Prerequisites[i].RequirementCode))
                     return UpgradeStatus.Locked;
-            }           
+            }
         }
         return UpgradeStatus.Available;
     }
+
     public UpgradeStatus GetUpgradeStatus(string treeId, TownUpgrade upgrade)
     {
         if (TownPurchases[treeId].PurchasedUpgrades.Contains(upgrade.Code))
             return UpgradeStatus.Purchased;
 
-        for(int i = 0; i < upgrade.Prerequisites.Count; i++)
+        for (int i = 0; i < upgrade.Prerequisites.Count; i++)
         {
             if (!TownPurchases[upgrade.Prerequisites[i].TreeId].PurchasedUpgrades.
                 Contains(upgrade.Prerequisites[i].RequirementCode))
@@ -399,6 +352,7 @@ public class Estate
         DarkestSoundManager.PlayOneShot("event:/ui/town/buy");
         return true;
     }
+
     public bool BuyUpgrade(CampingSkill skill, Hero hero, float discount)
     {
         if (!CanPayPrice(skill.CurrencyCost, discount))
@@ -419,6 +373,7 @@ public class Estate
         DarkestSoundManager.PlayOneShot("event:/ui/town/buy");
         return true;
     }
+
     public bool BuyUpgrade(string treeId, TownUpgrade upgrade, bool isFree)
     {
         if (!isFree && !CanPayPrice(upgrade.Cost))
@@ -436,11 +391,11 @@ public class Estate
             TownPurchases[treeId].PurchasedUpgrades.Add(upgrade.Code);
         }
 
-        if(!isFree)
+        if (!isFree)
         {
             RemoveCurrency(upgrade.Cost);
             if (upgrade.Cost.Find(cost => cost.Type != "gold" && cost.Amount > 0) != null)
-                EstateSceneManager.Instanse.currencyPanel.CurrencyDecreased("heirloom");
+                EstateSceneManager.Instanse.CurrencyPanel.CurrencyDecreased("heirloom");
         }
 
         if (DarkestDungeonManager.Data.UpgradeTrees.ContainsKey(treeId))
@@ -451,78 +406,149 @@ public class Estate
         return true;
     }
 
+    #endregion
+
+    public DeathRecord RecruitHero(Hero hero)
+    {
+        if (StageCoach.Heroes.Remove(hero))
+            return null;
+
+        if (StageCoach.EventHeroes.Contains(hero))
+        {
+            int removedIndex = StageCoach.EventHeroes.IndexOf(hero);
+            StageCoach.EventHeroes.Remove(hero);
+
+            if (StageCoach.GraveIndexes.Count > 0)
+            {
+                int deadRecordIndex = StageCoach.GraveIndexes[removedIndex];
+                var deathRecord = Graveyard.Records[deadRecordIndex];
+                Graveyard.Records.RemoveAt(deadRecordIndex);
+                StageCoach.ClearDeadRecruits(RosterIds, this);
+                return deathRecord;
+            }
+            return null;
+        }
+        return null;
+    }
+
+    public void ReequipHero(Hero hero)
+    {
+        Equipment weapon = hero.HeroClass.Weapons.Find(wep => 
+            wep.UpgradeLevel == GetUpgradedWeaponLevel(hero.RosterId, hero.HeroClass.StringId));
+        hero.Equip(weapon, HeroEquipmentSlot.Weapon);
+        Equipment armor = hero.HeroClass.Armors.Find(arm =>
+            arm.UpgradeLevel == GetUpgradedArmorLevel(hero.RosterId, hero.HeroClass.StringId));
+        hero.Equip(armor, HeroEquipmentSlot.Armor);
+    }
+
+    public void ReskillCombatHero(Hero hero)
+    {
+        for (int i = 0; i < hero.HeroClass.CombatSkills.Count; i++)
+        {
+            hero.CurrentCombatSkills[i] = hero.HeroClass.CombatSkillVariants.Find(skill => skill.Id == hero.HeroClass.CombatSkills[i].Id
+                && skill.Level == GetUpgradedSkillLevel(hero.RosterId, hero.ClassStringId, hero.HeroClass.CombatSkills[i].Id));
+        }
+
+        for(int i = 0; i < hero.SelectedCombatSkills.Count; i++)
+        {
+            hero.SelectedCombatSkills[i] = hero.CurrentCombatSkills[hero.HeroClass.CombatSkills
+                .FindIndex(skill => skill.Id == hero.SelectedCombatSkills[i].Id)];
+        }
+    }
+
+    public void ReskillCampingHero(Hero hero)
+    {
+        for (int i = 0; i < hero.HeroClass.CampingSkills.Count; i++)
+            hero.CurrentCampingSkills[i] = HeroPurchases[hero.RosterId][hero.HeroClass.CampingSkills[i].Id].PurchasedUpgrades.Contains("0")?
+                hero.HeroClass.CampingSkills[i] : null;
+    }
+
+    #region Currency Helpers
+
     public bool CanPayPrice(IEnumerable<CurrencyCost> currencies, float discount)
     {
         foreach (var cost in currencies)
         {
-            if (Currencies[cost.Type].amount < cost.Amount * discount)
+            if (Currencies[cost.Type] < cost.Amount * discount)
                 return false;
         }
         return true;
     }
+
     public bool CanPayPrice(IEnumerable<CurrencyCost> currencies)
     {
         foreach(var cost in currencies)
         {
-            if (Currencies[cost.Type].amount < cost.Amount)
+            if (Currencies[cost.Type] < cost.Amount)
                 return false;
         }
         return true;
     }
+
     public bool CanPayPrice(CurrencyCost cost, float discount)
     {
-        return Currencies[cost.Type].amount >= cost.Amount * discount;
+        return Currencies[cost.Type] >= cost.Amount * discount;
     }
+
     public bool CanPayPrice(CurrencyCost cost)
     {
-        return Currencies[cost.Type].amount >= cost.Amount;
+        return Currencies[cost.Type] >= cost.Amount;
     }
+
     public bool CanPayGold(int goldAmount)
     {
-        return Currencies["gold"].amount >= goldAmount;
+        return Currencies["gold"] >= goldAmount;
     }
 
     public bool RemoveCurrency(IEnumerable<CurrencyCost> currencies)
     {
         foreach(var cost in currencies)
         {
-            Currencies[cost.Type].amount -= cost.Amount;
+            Currencies[cost.Type] -= cost.Amount;
         }
             
         return true;
     }
+
     public bool RemoveCurrency(IEnumerable<CurrencyCost> currencies, float discount)
     {
         foreach (var cost in currencies)
         {
-            Currencies[cost.Type].amount -= Mathf.RoundToInt(cost.Amount * discount);
+            Currencies[cost.Type] -= Mathf.RoundToInt(cost.Amount * discount);
         }
         return true;
     }
+
     public bool RemoveCurrency(CurrencyCost cost)
     {
-        Currencies[cost.Type].amount -= cost.Amount;
+        Currencies[cost.Type] -= cost.Amount;
         return true;
     }
+
     public bool RemoveCurrency(CurrencyCost cost, float discount)
     {
-        Currencies[cost.Type].amount -= Mathf.RoundToInt(cost.Amount * discount);
+        Currencies[cost.Type] -= Mathf.RoundToInt(cost.Amount * discount);
         return true;
     }
+
     public void AddHeirlooms(int crest, int deed, int portrait, int bust)
     {
-        Currencies["crest"].amount = Mathf.Clamp(Currencies["crest"].amount + crest, 0, int.MaxValue);
-        Currencies["deed"].amount = Mathf.Clamp(Currencies["deed"].amount + deed, 0, int.MaxValue);
-        Currencies["portrait"].amount = Mathf.Clamp(Currencies["portrait"].amount + portrait, 0, int.MaxValue);
-        Currencies["bust"].amount = Mathf.Clamp(Currencies["bust"].amount + bust, 0, int.MaxValue);
+        Currencies["crest"] = Mathf.Clamp(Currencies["crest"] + crest, 0, int.MaxValue);
+        Currencies["deed"] = Mathf.Clamp(Currencies["deed"] + deed, 0, int.MaxValue);
+        Currencies["portrait"] = Mathf.Clamp(Currencies["portrait"] + portrait, 0, int.MaxValue);
+        Currencies["bust"] = Mathf.Clamp(Currencies["bust"] + bust, 0, int.MaxValue);
     }
+
     public void AddGold(int goldAmount)
     {
-        Currencies["gold"].amount = Mathf.Clamp(Currencies["gold"].amount + goldAmount, 0, int.MaxValue);
+        Currencies["gold"] = Mathf.Clamp(Currencies["gold"] + goldAmount, 0, int.MaxValue);
     }
+
     public bool RemoveGold(int goldAmount)
     {
-        Currencies["gold"].amount = Mathf.Clamp(Currencies["gold"].amount - goldAmount, 0, int.MaxValue);
+        Currencies["gold"] = Mathf.Clamp(Currencies["gold"] - goldAmount, 0, int.MaxValue);
         return true;
     }
+
+    #endregion
 }

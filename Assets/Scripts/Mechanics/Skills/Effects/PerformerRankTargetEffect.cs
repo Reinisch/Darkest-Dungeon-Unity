@@ -12,7 +12,7 @@
         if (target == null || performer == null)
             return false;
 
-        target.Formation.rankHolder.MarkRank(target.Rank);
+        target.Formation.RankHolder.MarkRank(target.Rank);
         return false;
     }
 

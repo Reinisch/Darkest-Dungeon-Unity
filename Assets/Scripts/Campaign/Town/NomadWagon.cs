@@ -3,23 +3,17 @@ using System.Linq;
 
 public class NomadWagon : Building
 {
-    public float TrinketSellValue { get; set; }
-
-    public float BaseDiscount { get; set; }
     public float Discount { get; set; }
-
     public int BaseTrinketSlots { get; set; }
     public int TrinketSlots { get; set; }
 
-    public List<SlotUpgrade> TrinketSlotUpgrades { get; set; }
-    public List<DiscountUpgrade> DiscountUpgrades { get; set; }
     public List<GeneratedRarity> RarityTable { get; set; }
-
-    public List<Trinket> Trinkets { get; set; }
+    public List<SlotUpgrade> TrinketSlotUpgrades { get; private set; }
+    public List<DiscountUpgrade> DiscountUpgrades { get; private set; }
+    public List<Trinket> Trinkets { get; private set; }
 
     public NomadWagon()
     {
-        TrinketSellValue = 0.85f;
         TrinketSlotUpgrades = new List<SlotUpgrade>();
         DiscountUpgrades = new List<DiscountUpgrade>();
         Trinkets = new List<Trinket>();
@@ -55,7 +49,7 @@ public class NomadWagon : Building
 
     public void Reset()
     {
-        Discount = BaseDiscount;
+        Discount = 0.0f;
         TrinketSlots = BaseTrinketSlots;
     }
 
@@ -65,7 +59,7 @@ public class NomadWagon : Building
         var trinketList = DarkestDungeonManager.Data.Items["trinket"].Values.Cast<Trinket>().ToList();
         for(int i = 0; i < TrinketSlots; i++)
         {
-            var rarity = RandomSolver.ChooseByRandom<GeneratedRarity>(RarityTable).RarityId;
+            var rarity = RandomSolver.ChooseByRandom(RarityTable).RarityId;
             var rarityList = trinketList.FindAll(item => item.RarityId == rarity);
             Trinkets.Add(rarityList[UnityEngine.Random.Range(0, rarityList.Count)]);
         }
@@ -75,7 +69,7 @@ public class NomadWagon : Building
     public Trinket GenerateTrinket()
     {
         var trinketList = DarkestDungeonManager.Data.Items["trinket"].Values.Cast<Trinket>().ToList();
-        var rarity = RandomSolver.ChooseByRandom<GeneratedRarity>(RarityTable).RarityId;
+        var rarity = RandomSolver.ChooseByRandom(RarityTable).RarityId;
         var rarityList = trinketList.FindAll(item => item.RarityId == rarity);
         return rarityList[UnityEngine.Random.Range(0, rarityList.Count)];
     }
@@ -133,10 +127,4 @@ public class NomadWagon : Building
             return TrinketSlotUpgrades.Find(item => item.UpgradeCode == code && item.TreeId == treeId);
         return upgrade;
     }
-}
-
-public class GeneratedRarity : IProportionValue
-{
-    public string RarityId { get; set; }
-    public int Chance { get; set; }
 }

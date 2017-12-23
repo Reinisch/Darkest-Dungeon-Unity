@@ -2,9 +2,9 @@
 
 public class ProvisionDatabase
 {
-    public List<List<ItemDefinition>> StartingLengthInventories { get; set; }
-    public Dictionary<string, List<ItemDefinition>> HeroClassItemList { get; set; }
-    public List<List<ItemDefinition>> ShopLengthInventories { get; set; }
+    public List<List<ItemDefinition>> StartingLengthInventories { get; private set; }
+    public Dictionary<string, List<ItemDefinition>> HeroClassItemList { get; private set; }
+    public List<List<ItemDefinition>> ShopLengthInventories { get; private set; }
 
     public ProvisionDatabase()
     {

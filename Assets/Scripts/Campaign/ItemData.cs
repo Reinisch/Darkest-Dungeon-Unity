@@ -23,9 +23,9 @@ public class ItemData
 
     public ItemData()
     {
-
     }
-    public ItemData(string type, string id, int limit, int goldValue, int sellValue)
+
+    public ItemData(string type, string id, int limit, int goldValue)
     {
         Type = type;
         Id = id;
@@ -56,6 +56,7 @@ public class ItemData
         }
         return sb.ToString();
     }
+
     public virtual string ToolTip(int amount, bool discard = false)
     {
         StringBuilder sb = ToolTipManager.TipBody;
@@ -67,7 +68,6 @@ public class ItemData
         sb.Append("</color>");
         if (SellPrice != 0)
         {
-
             sb.AppendFormat("\n<color={0}>", DarkestDungeonManager.Data.HexColors["inventory_tooltip_gold_value"]);
             sb.AppendFormat(LocalizationManager.GetString("str_inventory_gold_value_format"), SellPrice);
             sb.Append("</color>");

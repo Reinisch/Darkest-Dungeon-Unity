@@ -13,7 +13,6 @@ public class DungeonRoom : Area
    
     public List<Door> Doors { get; set; }
 
-
     public DungeonRoom()
     {
         Type = AreaType.Empty;
@@ -47,7 +46,6 @@ public class DungeonRoom : Area
         BattleEncounter = null;
         Doors = new List<Door>();
     }
-
 
     public override void Write(BinaryWriter bw)
     {

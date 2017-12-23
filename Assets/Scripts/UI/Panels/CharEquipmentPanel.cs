@@ -1,62 +1,93 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
-using System.Collections;
-using System.Collections.Generic;
-
-public delegate void PanelChangedEvent();
+﻿using System;
+using UnityEngine;
 
 public class CharEquipmentPanel : MonoBehaviour, IInventory
 {
-    public EquipmentSlot weaponSlot;
-    public EquipmentSlot armorSlot;
-    public InventorySlot leftSlot;
-    public InventorySlot rightSlot;
+    [SerializeField]
+    private EquipmentSlot weaponSlot;
+    [SerializeField]
+    private EquipmentSlot armorSlot;
+    [SerializeField]
+    private InventorySlot leftSlot;
+    [SerializeField]
+    private InventorySlot rightSlot;
 
-    public Hero CurrentHero { get; set; }
-    public InventoryConfiguration Configuration
-    {
-        get
-        {
-            return InventoryConfiguration.Equipment;
-        }
-    }
-    public InventoryState State
-    {
-        get;
-        set;
-    }
+    public Hero CurrentHero { get; private set; }
+    public InventoryState State { get; private set; }
+    public InventoryConfiguration Configuration { get { return InventoryConfiguration.Equipment; } }
 
-    public event PanelChangedEvent onPanelChanged;
+    public event Action EventPanelChanged;
 
-    void Awake()
+    private void Awake()
     {
         leftSlot.Initialize(this);
         rightSlot.Initialize(this);
 
-        leftSlot.onDropOut += leftTrinketSlot_onDropOut;
-        rightSlot.onDropOut += rightTrinketSlot_onDropOut;
-        leftSlot.onDropIn += leftTrinketSlot_onDropIn;
-        rightSlot.onDropIn += rightTrinketSlot_onDropIn;
-        leftSlot.onSwap += leftTrinketSlot_onSwap;
-        rightSlot.onSwap += rightTrinketSlot_onSwap;
-        DragManager.Instanse.onStartDraggingInventorySlot += Instanse_onStartDraggingInventorySlot;
-        DragManager.Instanse.onEndDraggingInventorySlot += Instanse_onEndDraggingInventorySlot;
+        leftSlot.EventDropOut += LeftTrinketSlotDropOut;
+        rightSlot.EventDropOut += RightTrinketSlotDropOut;
+        leftSlot.EventDropIn += LeftTrinketSlotDropIn;
+        rightSlot.EventDropIn += RightTrinketSlotDropIn;
+        leftSlot.EventSwap += LeftTrinketSlotSwap;
+        rightSlot.EventSwap += RightTrinketSlotSwap;
+        DragManager.Instanse.EventStartDraggingInventorySlot += DragManagerStartDraggingInventorySlot;
+        DragManager.Instanse.EventEndDraggingInventorySlot += DragManagerEndDraggingInventorySlot;
     }
 
-    void OnDestroy()
+    private void OnDestroy()
     {
-        DragManager.Instanse.onStartDraggingInventorySlot -= Instanse_onStartDraggingInventorySlot;
-        DragManager.Instanse.onEndDraggingInventorySlot -= Instanse_onEndDraggingInventorySlot;
+        DragManager.Instanse.EventStartDraggingInventorySlot -= DragManagerStartDraggingInventorySlot;
+        DragManager.Instanse.EventEndDraggingInventorySlot -= DragManagerEndDraggingInventorySlot;
     }
 
-    void Instanse_onEndDraggingInventorySlot(InventorySlot slot)
+    public void UpdateEquipmentPanel(Hero hero, bool allowedInteraction)
+    {
+        CurrentHero = hero;
+
+        weaponSlot.UpdateEquipment(CurrentHero.Weapon, hero);
+        armorSlot.UpdateEquipment(CurrentHero.Armor, hero);
+        leftSlot.InteractionDisabled = !allowedInteraction;
+        rightSlot.InteractionDisabled = !allowedInteraction;
+
+        if (hero.LeftTrinket != null)
+            leftSlot.CreateItem(hero.LeftTrinket);
+        else
+            leftSlot.DeleteItem();
+
+        if (hero.RightTrinket != null)
+            rightSlot.CreateItem(hero.RightTrinket);
+        else
+            rightSlot.DeleteItem();
+    }
+
+    public void SetDisabled()
+    {
+        State = InventoryState.Disabled;
+    }
+
+    public void SetActive()
+    {
+        State = InventoryState.Peaceful;
+    }
+
+    public bool ContainsItem(ItemData itemData)
+    {
+        return leftSlot.SlotItem.ItemData == itemData || rightSlot.SlotItem.ItemData == itemData;
+    }
+
+    public bool CheckSingleInventorySpace(ItemDefinition item)
+    {
+        return false;
+    }
+
+    private void DragManagerEndDraggingInventorySlot(InventorySlot slot)
     {
         rightSlot.SetActiveState(true);
         leftSlot.SetActiveState(true);
         leftSlot.SlotItem.SetOverlayDefault();
         rightSlot.SlotItem.SetOverlayDefault();
     }
-    void Instanse_onStartDraggingInventorySlot(InventorySlot slot)
+
+    private void DragManagerStartDraggingInventorySlot(InventorySlot slot)
     {
         if (CurrentHero != null && DarkestDungeonManager.Campaign.Heroes.Contains(CurrentHero))
         {
@@ -94,7 +125,7 @@ public class CharEquipmentPanel : MonoBehaviour, IInventory
         }
     }
 
-    void rightTrinketSlot_onSwap(InventorySlot slot, InventoryItem item)
+    private void RightTrinketSlotSwap(InventorySlot slot, InventoryItem item)
     {
         if (item.ItemType == "trinket")
         {
@@ -108,7 +139,8 @@ public class CharEquipmentPanel : MonoBehaviour, IInventory
         }
         PanelChanged();
     }
-    void leftTrinketSlot_onSwap(InventorySlot slot, InventoryItem item)
+
+    private void LeftTrinketSlotSwap(InventorySlot slot, InventoryItem item)
     {
         if (item.ItemType == "trinket")
         {
@@ -123,15 +155,7 @@ public class CharEquipmentPanel : MonoBehaviour, IInventory
         PanelChanged();
     }
 
-    public bool ContainsItem(ItemData itemData)
-    {
-        if (leftSlot.SlotItem.ItemData == itemData || rightSlot.SlotItem.ItemData == itemData)
-            return true;
-
-        return false;
-    }
-
-    private void rightTrinketSlot_onDropIn(InventorySlot slot, InventoryItem item)
+    private void RightTrinketSlotDropIn(InventorySlot slot, InventoryItem item)
     {
         if (item.ItemType == "trinket")
         {
@@ -144,7 +168,8 @@ public class CharEquipmentPanel : MonoBehaviour, IInventory
         }
         PanelChanged();
     }
-    private void leftTrinketSlot_onDropIn(InventorySlot slot, InventoryItem item)
+
+    private void LeftTrinketSlotDropIn(InventorySlot slot, InventoryItem item)
     {
         if (item.ItemType == "trinket")
         {
@@ -157,7 +182,8 @@ public class CharEquipmentPanel : MonoBehaviour, IInventory
         }
         PanelChanged();
     }
-    private void rightTrinketSlot_onDropOut(InventorySlot slot, InventoryItem item)
+
+    private void RightTrinketSlotDropOut(InventorySlot slot, InventoryItem item)
     {
         if (item.ItemType == "trinket")
         {
@@ -171,7 +197,8 @@ public class CharEquipmentPanel : MonoBehaviour, IInventory
         }
         PanelChanged();
     }
-    private void leftTrinketSlot_onDropOut(InventorySlot slot, InventoryItem item)
+
+    private void LeftTrinketSlotDropOut(InventorySlot slot, InventoryItem item)
     {
         if (item.ItemType == "trinket")
         {
@@ -186,52 +213,9 @@ public class CharEquipmentPanel : MonoBehaviour, IInventory
         PanelChanged();
     }
 
-    public void PanelChanged()
+    private void PanelChanged()
     {
-        if (onPanelChanged != null)
-            onPanelChanged();
-    }
-
-    public void SetDisabled()
-    {
-        State = InventoryState.Disabled;
-    }
-    public void SetActive()
-    {
-        State = InventoryState.Peaceful;
-    }
-
-    public void UpdateEquipmentPanel(Hero hero, bool allowedInteraction)
-    {
-        CurrentHero = hero;
-
-        weaponSlot.UpdateEquipment(CurrentHero.Weapon, hero);
-        armorSlot.UpdateEquipment(CurrentHero.Armor, hero);
-        leftSlot.InteractionDisabled = !allowedInteraction;
-        rightSlot.InteractionDisabled = !allowedInteraction;
-
-        if(hero.LeftTrinket != null)
-            leftSlot.CreateItem(hero.LeftTrinket);
-        else
-            leftSlot.DeleteItem();
-
-        if (hero.RightTrinket != null)
-            rightSlot.CreateItem(hero.RightTrinket);
-        else
-            rightSlot.DeleteItem();
-    }
-
-    public List<InventorySlot> InventorySlots
-    {
-        get;
-        set;
-    }
-    public bool CheckSingleInventorySpace(ItemDefinition item)
-    {
-        return false;
-    }
-    public void DistributeFromShopItem(ShopSlot slot, InventorySlot dropSlot)
-    {
-        throw new System.NotImplementedException();
+        if (EventPanelChanged != null)
+            EventPanelChanged();
     }
 }

@@ -1,42 +1,32 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 
 public class SkillTooltip : ToolTip
 {
-    public GameObject targetRanksObject;
+    [SerializeField]
+    private GameObject targetRanksObject;
+    [SerializeField]
+    private Image[] launchRanks;
+    [SerializeField]
+    private Image[] targetRanks;
+    [SerializeField]
+    private RectTransform connectorRect;
 
-    public Image[] launchRanks;
-    public Image[] targetRanks;
+    private Color targetColor;
+    private Color launchColor;
+    private Color neutralColor;
 
-    public RectTransform connectorRect;
-
-    Color targetColor;
-    Color launchColor;
-    Color neutralColor;
-
-    int basicWidth = 14;
-    int startConnectorOffset = 8;
+    private int basicWidth = 14;
+    private int startConnectorOffset = 8;
 
     public override void Initialize()
     {
         base.Initialize();
 
         Color resultColor;
-        if (ColorUtility.TryParseHtmlString(DarkestDungeonManager.Data.HexColors["harmful"], out resultColor))
-            targetColor = resultColor;
-        else
-            targetColor = Color.red;
-
-        if (ColorUtility.TryParseHtmlString(DarkestDungeonManager.Data.HexColors["notable"], out resultColor))
-            launchColor = resultColor;
-        else
-            launchColor = Color.yellow;
-
-        if (ColorUtility.TryParseHtmlString(DarkestDungeonManager.Data.HexColors["neutral"], out resultColor))
-            neutralColor = resultColor;
-        else
-            neutralColor = Color.gray;
+        targetColor = ColorUtility.TryParseHtmlString(DarkestDungeonManager.Data.HexColors["harmful"], out resultColor) ? resultColor : Color.red;
+        launchColor = ColorUtility.TryParseHtmlString(DarkestDungeonManager.Data.HexColors["notable"], out resultColor) ? resultColor : Color.yellow;
+        neutralColor = ColorUtility.TryParseHtmlString(DarkestDungeonManager.Data.HexColors["neutral"], out resultColor) ? resultColor : Color.gray;
 
         connectorRect.GetComponent<Image>().color = targetColor;
     }
@@ -44,14 +34,7 @@ public class SkillTooltip : ToolTip
     public void UpdateSkillRanks(CombatSkill skill)
     {
         for (int i = 0; i < launchRanks.Length; i++)
-        {
-            if (skill.LaunchRanks.Ranks.Contains(i + 1))
-            {
-                launchRanks[i].color = launchColor;
-            }
-            else
-                launchRanks[i].color = neutralColor;
-        }
+            launchRanks[i].color = skill.LaunchRanks.Ranks.Contains(i + 1) ? launchColor : neutralColor;
 
         if(skill.TargetRanks.IsSelfFormation || skill.TargetRanks.IsSelfTarget)
             targetRanksObject.SetActive(false);

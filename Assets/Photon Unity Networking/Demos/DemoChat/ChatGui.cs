@@ -23,7 +23,6 @@ using UnityEngine.UI;
 /// </remarks>
 public class ChatGui : MonoBehaviour, IChatClientListener
 {
-
 	public string[] ChannelsToJoinOnConnect; // set in inspector. Demo channels to join automatically.
 	
 	public string[] FriendsList;

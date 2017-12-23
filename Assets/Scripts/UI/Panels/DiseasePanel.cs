@@ -3,7 +3,8 @@ using System.Collections.Generic;
 
 public class DiseasePanel : MonoBehaviour
 {
-    public List<QuirkSlot> diseaseQuirkSlots;
+    [SerializeField]
+    private List<QuirkSlot> diseaseQuirkSlots;
 
     public void UpdateDiseasePanel(Hero hero)
     {

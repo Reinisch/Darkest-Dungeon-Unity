@@ -1,31 +1,29 @@
 ﻿using UnityEngine.UI;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class StatueWindow : BuildingWindow
 {
-    public Button closeButton;
-    public Scrollbar scrollBar;
-
-    public List<StatueAudioEntry> audioEntries;
+    [SerializeField]
+    private Scrollbar scrollBar;
+    [SerializeField]
+    private List<StatueAudioEntry> audioEntries;
 
     public override TownManager TownManager { get; set; }
-    public Statue Statue { get; private set; }
 
-    void Update()
+    private void Update()
     {
         scrollBar.size = 0;
     }
 
     public override void Initialize()
     {
-        Statue = DarkestDungeonManager.Campaign.Estate.Statue;
         for(int i = 0; i < audioEntries.Count; i++)
             audioEntries[i].UpdateCondition();
     }
 
     public override void UpdateUpgradeTrees(bool afterPurchase = false)
     {
-
     }
 
     public override void WindowOpened()

@@ -393,5 +393,4 @@ namespace ExitGames.Client.Photon.Chat
         /// </summary>
         public const int CustomAuthenticationFailed = 0x7FFF - 12;
     }
-
 }

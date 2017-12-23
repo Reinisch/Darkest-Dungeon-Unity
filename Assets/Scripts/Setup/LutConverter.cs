@@ -4,19 +4,22 @@ public enum LutTextureOrientation { Horizontal, Vertical }
 
 public class LutConverter : MonoBehaviour
 {
-    public Material material;
+    [SerializeField]
+    private Material material;
+    [SerializeField]
+    private Texture2D firstGradeLookup;
+    [SerializeField]
+    private Texture2D secondGradeLookup;
+    [SerializeField]
+    private Texture2D defaultGradeLookup;
+    [SerializeField]
+    private LutTextureOrientation orientation;
 
-    public Texture2D firstGradeLookup;
-    public Texture2D secondGradeLookup;
-    public Texture2D defaultGradeLookup;
+    private Texture3D firstGrade3DLUT;
+    private Texture3D secondGrade3DLUT;
+    private Texture3D defaultGrade3DLUT;
 
-    public LutTextureOrientation orientation;
-
-    Texture3D firstGrade3DLUT;
-    Texture3D secondGrade3DLUT;
-    Texture3D defaultGrade3DLUT;
-
-    public void Start()
+    private void Start()
     {
         if (orientation == LutTextureOrientation.Vertical)
         {
@@ -41,16 +44,16 @@ public class LutConverter : MonoBehaviour
         }
     }
 
-    Texture3D ConvertVertical(Texture2D texture)
+    private Texture3D ConvertVertical(Texture2D texture)
     {
         int dim = 16;
         var c = texture.GetPixels();
         var newC = new Color[c.Length];
 
-        for (int z = 0; z < 16; z++)
-            for (int y = 0; y < 16; y++)
-                for (int x = 0; x < 16; x++)
-                    newC[z * 256 + y * 16 + x] = texture.GetPixel(x, 15 - y + (15 - z) * 16);
+        for (int z = 0; z < dim; z++)
+            for (int y = 0; y < dim; y++)
+                for (int x = 0; x < dim; x++)
+                    newC[z * dim * dim + y * dim + x] = texture.GetPixel(x, dim - 1 - y + (dim - 1 - z) * dim);
 
         Texture3D colorGradeLUT = new Texture3D(dim, dim, dim, TextureFormat.RGBA32, false);
         colorGradeLUT.SetPixels(newC);
@@ -58,20 +61,16 @@ public class LutConverter : MonoBehaviour
         return colorGradeLUT;
     }
 
-    Texture3D ConvertHorizontal(Texture2D texture)
+    private Texture3D ConvertHorizontal(Texture2D texture)
     {
         int dim = 16;
         var c = texture.GetPixels();
         var newC = new Color[c.Length];
 
-        for(int i = 0; i < dim; i++) {
-                    for(int j = 0; j < dim; j++) {
-                        for(int k = 0; k < dim; k++) {
-                            int j_ = dim-j-1;
-                            newC[i + (j*dim) + (k*dim*dim)] = c[k*dim+i+j_*dim*dim];
-                        }
-                    }
-                }
+        for(int i = 0; i < dim; i++)
+            for(int j = 0; j < dim; j++)
+                for(int k = 0; k < dim; k++)
+                    newC[i + (j * dim) + (k * dim * dim)] = c[k * dim + i + dim - j - 1 * dim * dim];
 
         Texture3D colorGradeLUT = new Texture3D(dim, dim, dim, TextureFormat.RGBA32, false);
         colorGradeLUT.SetPixels(newC);

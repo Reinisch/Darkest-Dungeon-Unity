@@ -7,46 +7,23 @@ public delegate void HeirloomArrowEvent(int exchangeIndex);
 
 public class HeirloomExchangePanel : MonoBehaviour
 {
-    public Text title;
+    [SerializeField]
+    private Image fromHeirloom;
+    [SerializeField]
+    private Text fromAmount;
+    [SerializeField]
+    private Animator exchangeAnimator;
+    [SerializeField]
+    private List<Image> toHeirloomArrows;
+    [SerializeField]
+    private List<ExchangeEntry> exchangeEntries;
 
-    public Image fromHeirloom;
-    public Text fromAmount;
-
-    public Button incAmountButton;
-    public Button decAmountButton;
-
-    public Animator exchangeAnimator;
-
-    public List<Image> toHeirloomArrows;
-    public List<ExchangeEntry> exchangeEntries;
-
-    public string CurrentHeirloom { get; set; }
-    public int CurrentAmount { get; set; }
-    public bool IsOpened
-    {
-        get
-        {
-            return exchangeAnimator.GetBool("IsOpened");
-        }
-    }
+    private string CurrentHeirloom { get; set; }
+    private int CurrentAmount { get; set; }
 
     private int typeCount = 3;
 
-    void UpdateExchangeArrows(int exchangeIndex)
-    {
-        for (int i = 0; i < toHeirloomArrows.Count; i++)
-            if (i != exchangeIndex)
-                toHeirloomArrows[i].enabled = false;
-            else
-                toHeirloomArrows[i].enabled = true;
-    }
-    void RemoveExchangeArrows(int exchangeIndex)
-    {
-        for (int i = 0; i < toHeirloomArrows.Count; i++)
-                toHeirloomArrows[i].enabled = false;
-    }
-
-    void Start()
+    private void Start()
     {
         for(int i = 0; i < exchangeEntries.Count; i++)
         {
@@ -64,12 +41,8 @@ public class HeirloomExchangePanel : MonoBehaviour
             UpdateExchanges();
     }
 
-    public void InitializeExchanges()
-    {
-        CurrentHeirloom = "bust";
-        fromHeirloom.sprite = DarkestDungeonManager.Data.Sprites[CurrentHeirloom];
-        UpdateExchanges(true);
-    }
+    #region Exchange Panel Actions
+
     public void ExchangeSwitched()
     {
         exchangeAnimator.SetBool("IsOpened", !exchangeAnimator.GetBool("IsOpened"));
@@ -89,6 +62,7 @@ public class HeirloomExchangePanel : MonoBehaviour
 
         UpdateExchanges(true);
     }
+
     public void DownTypeButtonClicked()
     {
         int currentIndex = DarkestDungeonManager.Data.HeirloomExchanges.FindIndex(entry => entry.FromType == CurrentHeirloom);
@@ -105,13 +79,14 @@ public class HeirloomExchangePanel : MonoBehaviour
 
     public void IncAmountButtonClicked()
     {
-        if (CurrentAmount < DarkestDungeonManager.Campaign.Estate.Currencies[CurrentHeirloom].amount)
+        if (CurrentAmount < DarkestDungeonManager.Campaign.Estate.Currencies[CurrentHeirloom])
         {
             CurrentAmount++;
             fromAmount.text = CurrentAmount.ToString();
             UpdateExchanges();
         }
     }
+
     public void DecAmountButtonClicked()
     {
         int minPossible = DarkestDungeonManager.Data.HeirloomExchanges.
@@ -126,17 +101,26 @@ public class HeirloomExchangePanel : MonoBehaviour
         }
     }
 
-    public void UpdateExchanges(bool trySetMinimum = false)
+    #endregion
+
+    private void InitializeExchanges()
+    {
+        CurrentHeirloom = "bust";
+        fromHeirloom.sprite = DarkestDungeonManager.Data.Sprites[CurrentHeirloom];
+        UpdateExchanges(true);
+    }
+
+    private void UpdateExchanges(bool trySetMinimum = false)
     {
         int minPossible = DarkestDungeonManager.Data.HeirloomExchanges.
             FindAll(ex => ex.FromType == CurrentHeirloom).
             Min(currentEx => currentEx.FromAmount);
 
-        if (trySetMinimum && DarkestDungeonManager.Campaign.Estate.Currencies[CurrentHeirloom].amount >= minPossible)
+        if (trySetMinimum && DarkestDungeonManager.Campaign.Estate.Currencies[CurrentHeirloom] >= minPossible)
             CurrentAmount = minPossible;
 
-        if (CurrentAmount > DarkestDungeonManager.Campaign.Estate.Currencies[CurrentHeirloom].amount)
-            CurrentAmount = DarkestDungeonManager.Campaign.Estate.Currencies[CurrentHeirloom].amount;
+        if (CurrentAmount > DarkestDungeonManager.Campaign.Estate.Currencies[CurrentHeirloom])
+            CurrentAmount = DarkestDungeonManager.Campaign.Estate.Currencies[CurrentHeirloom];
 
         fromAmount.text = CurrentAmount.ToString();
 
@@ -145,5 +129,20 @@ public class HeirloomExchangePanel : MonoBehaviour
 
         for (int i = 0; i < availableSlots; i++)
             exchangeEntries[i].UpdateExchange(possibleExchanges[i], CurrentAmount);
+    }
+
+    private void UpdateExchangeArrows(int exchangeIndex)
+    {
+        for (int i = 0; i < toHeirloomArrows.Count; i++)
+            if (i != exchangeIndex)
+                toHeirloomArrows[i].enabled = false;
+            else
+                toHeirloomArrows[i].enabled = true;
+    }
+
+    private void RemoveExchangeArrows(int exchangeIndex)
+    {
+        for (int i = 0; i < toHeirloomArrows.Count; i++)
+            toHeirloomArrows[i].enabled = false;
     }
 }

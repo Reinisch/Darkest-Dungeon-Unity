@@ -1,31 +1,39 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public delegate void TownHeroSlotEvent(TownHeroSlot slot);
-
 public class TownHeroSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDropHandler
 {
-    public string activityName;
+    [SerializeField]
+    private string activityName;
+    [SerializeField]
+    private Text heroLabel;
+    [SerializeField]
+    private Text costLabel;
 
-    public Text heroLabel;
-    public Text costLabel;
-    public Image costIcon;
+    [SerializeField]
+    private Image eventLockerIcon;
+    [SerializeField]
+    private Image lockerIcon;
+    [SerializeField]
+    private Image activeIcon;
+    [SerializeField]
+    private Image buttonIcon;
+    [SerializeField]
+    private Image freeIcon;
+    [SerializeField]
+    private Image slotIcon;
 
-    public Image eventLockerIcon;
-    public Image lockerIcon;
-    public Image activeIcon;
-    public Image buttonIcon;
-    public Image freeIcon;
-    public Image slotIcon;
+    public event Action<TownHeroSlot> EventTreatmentButtonClicked;
 
-    public event TownHeroSlotEvent onTreatmentButtonClick;
+    public string ActivityName { get { return activityName; } }
+    public ActivitySlot ActivitySlot { get; private set; }
 
-    public ActivitySlot ActivitySlot { get; set; }
-    public RectTransform RectTransform { get; set; }
-    public bool AllowedToDrop { get; set; }
+    private RectTransform RectTransform { get; set; }
+    private bool AllowedToDrop { get; set; }
 
-    void Awake()
+    private void Awake()
     {
         RectTransform = GetComponent<RectTransform>();
     }
@@ -68,12 +76,13 @@ public class TownHeroSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             }
         }
     }
+
     public void UpdateAvailable()
     {
-        if(ActivitySlot.IsUnlocked)
-            if (ActivitySlot.Status == ActivitySlotStatus.Available)
-                SetActivitySlotOpened();
+        if(ActivitySlot.IsUnlocked && ActivitySlot.Status == ActivitySlotStatus.Available)
+            SetActivitySlotOpened();
     }
+
     public void UpdateHeroAvailable(Hero hero, bool isAllowed)
     {
         if (ActivitySlot.IsUnlocked)
@@ -108,29 +117,59 @@ public class TownHeroSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             return;
 
         ActivitySlot.Status = status;
-        switch (ActivitySlot.Status)
-        {
-            case ActivitySlotStatus.Available:
-                ActivitySlot.Hero = null;
-                break;
-            case ActivitySlotStatus.Blocked:
-            case ActivitySlotStatus.Caretaken:
-            case ActivitySlotStatus.Crierd:
-            case ActivitySlotStatus.Checkout:
-            case ActivitySlotStatus.Paid:
-            default:
-                break;
-        }
+        if (ActivitySlot.Status == ActivitySlotStatus.Available)
+            ActivitySlot.Hero = null;
         UpdateSlot();
     }
 
     public void TreatmentButtonClicked()
     {
-        if (onTreatmentButtonClick != null)
-            onTreatmentButtonClick(this);
+        if (EventTreatmentButtonClicked != null)
+            EventTreatmentButtonClicked(this);
     }
 
-    public void SetActivitySlotOccupiedPaid()
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (ActivitySlot.Status == ActivitySlotStatus.Caretaken)
+            ToolTipManager.Instanse.Show(LocalizationManager.GetString("str_cant_place_hero_here_caretaker"),
+                RectTransform, ToolTipStyle.FromBottom, ToolTipSize.Small);
+        else if (ActivitySlot.Status == ActivitySlotStatus.Crierd)
+            ToolTipManager.Instanse.Show(LocalizationManager.GetString("str_cant_place_hero_here_crier"),
+                RectTransform, ToolTipStyle.FromBottom, ToolTipSize.Small);
+
+        DarkestSoundManager.PlayOneShot(ActivitySlot.IsUnlocked ?
+            "event:/ui/town/button_mouse_over_3" : "event:/ui/town/button_mouse_over_2");
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        ToolTipManager.Instanse.Hide();
+    }
+
+    public void OnDrop(PointerEventData eventData)
+    {
+        if (eventData.pointerDrag.CompareTag("Roster Hero Slot"))
+        {
+            if (ActivitySlot == null || !ActivitySlot.IsUnlocked || !AllowedToDrop)
+            {
+                DarkestSoundManager.PlayOneShot("event:/ui/town/button_invalid");
+                return;
+            }
+
+            if (ActivitySlot.Status == ActivitySlotStatus.Available)
+            {
+                var heroSlot = eventData.pointerDrag.GetComponent<HeroSlot>();
+                ActivitySlot.Status = ActivitySlotStatus.Checkout;
+                ActivitySlot.Hero = heroSlot.Hero;
+                UpdateSlot();
+                DarkestSoundManager.PlayOneShot("event:/ui/town/character_add");
+            }
+        }
+    }
+
+    #region Slots States
+
+    private void SetActivitySlotOccupiedPaid()
     {
         heroLabel.text = ActivitySlot.Hero.Name;
         costLabel.gameObject.SetActive(false);
@@ -145,7 +184,8 @@ public class TownHeroSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         if (ActivitySlot.Hero != null)
             slotIcon.sprite = DarkestDungeonManager.HeroSprites[ActivitySlot.Hero.ClassStringId]["A"].Portrait;
     }
-    public void SetActivitySlotOccupiedCheckout()
+
+    private void SetActivitySlotOccupiedCheckout()
     {
         heroLabel.text = ActivitySlot.Hero.Name;
 
@@ -171,7 +211,8 @@ public class TownHeroSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         if (ActivitySlot.Hero != null)
             slotIcon.sprite = DarkestDungeonManager.HeroSprites[ActivitySlot.Hero.ClassStringId]["A"].Portrait;
     }
-    public void SetActivitySlotOccupiedBlocked()
+
+    private void SetActivitySlotOccupiedBlocked()
     {
         heroLabel.text = ActivitySlot.Hero.Name;
         costLabel.gameObject.SetActive(false);
@@ -185,7 +226,8 @@ public class TownHeroSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         if (ActivitySlot.Hero != null)
             slotIcon.sprite = DarkestDungeonManager.HeroSprites[ActivitySlot.Hero.ClassStringId]["A"].Portrait;
     }
-    public void SetActivitySlotOccupiedCaretaken()
+
+    private void SetActivitySlotOccupiedCaretaken()
     {
         heroLabel.text = "";
         costLabel.gameObject.SetActive(false);
@@ -198,7 +240,8 @@ public class TownHeroSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
         slotIcon.sprite = DarkestDungeonManager.Data.Sprites["caretaker_portrait"];
     }
-    public void SetActivitySlotOccupiedCrierd()
+
+    private void SetActivitySlotOccupiedCrierd()
     {
         heroLabel.text = "";
         costLabel.gameObject.SetActive(false);
@@ -212,22 +255,23 @@ public class TownHeroSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         slotIcon.sprite = DarkestDungeonManager.Data.Sprites["crier_portrait"];
     }
 
-    public void SetActivitySlotClosed()
+    private void SetActivitySlotClosed()
     {
         heroLabel.text = "";
         costLabel.gameObject.SetActive(false);
 
         buttonIcon.gameObject.SetActive(false);
         lockerIcon.gameObject.SetActive(true);
-        if(DarkestDungeonManager.Campaign.EventModifiers.ActivityLocks.ContainsKey(activityName) &&
-            DarkestDungeonManager.Campaign.EventModifiers.ActivityLocks[activityName] == true)
+        if (DarkestDungeonManager.Campaign.EventModifiers.ActivityLocks.ContainsKey(ActivityName) &&
+            DarkestDungeonManager.Campaign.EventModifiers.ActivityLocks[ActivityName])
             eventLockerIcon.gameObject.SetActive(true);
         else
             eventLockerIcon.gameObject.SetActive(false);
         freeIcon.gameObject.SetActive(false);
         activeIcon.gameObject.SetActive(false);
     }
-    public void SetActivitySlotOpened()
+
+    private void SetActivitySlotOpened()
     {
         heroLabel.text = "";
         costLabel.gameObject.SetActive(false);
@@ -236,8 +280,8 @@ public class TownHeroSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         lockerIcon.gameObject.SetActive(false);
         eventLockerIcon.gameObject.SetActive(false);
 
-        if (DarkestDungeonManager.Campaign.EventModifiers.FreeActivities.ContainsKey(activityName) &&
-            DarkestDungeonManager.Campaign.EventModifiers.FreeActivities[activityName] == true)
+        if (DarkestDungeonManager.Campaign.EventModifiers.FreeActivities.ContainsKey(ActivityName) &&
+            DarkestDungeonManager.Campaign.EventModifiers.FreeActivities[ActivityName])
             freeIcon.gameObject.SetActive(true);
         else
             freeIcon.gameObject.SetActive(false);
@@ -246,7 +290,7 @@ public class TownHeroSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         slotIcon.sprite = DarkestDungeonManager.Data.Sprites["hero_slot.background"];
     }
 
-    public void SetActivitySlotHeroLocked()
+    private void SetActivitySlotHeroLocked()
     {
         heroLabel.text = "";
         costLabel.gameObject.SetActive(false);
@@ -255,18 +299,19 @@ public class TownHeroSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         lockerIcon.gameObject.SetActive(false);
         eventLockerIcon.gameObject.SetActive(false);
         activeIcon.gameObject.SetActive(false);
-        if (DarkestDungeonManager.Campaign.EventModifiers.FreeActivities.ContainsKey(activityName) &&
-            DarkestDungeonManager.Campaign.EventModifiers.FreeActivities[activityName] == true)
+        if (DarkestDungeonManager.Campaign.EventModifiers.FreeActivities.ContainsKey(ActivityName) &&
+            DarkestDungeonManager.Campaign.EventModifiers.FreeActivities[ActivityName])
             freeIcon.gameObject.SetActive(true);
         else
             freeIcon.gameObject.SetActive(false);
 
         slotIcon.sprite = DarkestDungeonManager.Data.Sprites["hero_slot.locked_for_hero"];
     }
-    public void SetActivitySlotHighlighted()
+
+    private void SetActivitySlotHighlighted()
     {
         heroLabel.text = "";
-        if(ActivitySlot.BaseCost != 0)
+        if (ActivitySlot.BaseCost != 0)
         {
             costLabel.gameObject.SetActive(true);
             costLabel.text = ActivitySlot.BaseCost.ToString();
@@ -281,51 +326,13 @@ public class TownHeroSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         lockerIcon.gameObject.SetActive(false);
         eventLockerIcon.gameObject.SetActive(false);
         activeIcon.gameObject.SetActive(false);
-        if (DarkestDungeonManager.Campaign.EventModifiers.FreeActivities.ContainsKey(activityName) &&
-            DarkestDungeonManager.Campaign.EventModifiers.FreeActivities[activityName] == true)
+        if (DarkestDungeonManager.Campaign.EventModifiers.FreeActivities.ContainsKey(ActivityName) &&
+            DarkestDungeonManager.Campaign.EventModifiers.FreeActivities[ActivityName])
             freeIcon.gameObject.SetActive(true);
         else
             freeIcon.gameObject.SetActive(false);
         slotIcon.sprite = DarkestDungeonManager.Data.Sprites["hero_slot.backgroundhightlight"];
     }
 
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        if (ActivitySlot.Status == ActivitySlotStatus.Caretaken)
-            ToolTipManager.Instanse.Show(LocalizationManager.GetString("str_cant_place_hero_here_caretaker"),
-                eventData, RectTransform, ToolTipStyle.FromBottom, ToolTipSize.Small);
-        else if (ActivitySlot.Status == ActivitySlotStatus.Crierd)
-            ToolTipManager.Instanse.Show(LocalizationManager.GetString("str_cant_place_hero_here_crier"),
-                eventData, RectTransform, ToolTipStyle.FromBottom, ToolTipSize.Small);
-
-        if(ActivitySlot.IsUnlocked)
-            DarkestSoundManager.PlayOneShot("event:/ui/town/button_mouse_over_3");
-        else
-            DarkestSoundManager.PlayOneShot("event:/ui/town/button_mouse_over_2");
-    }
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        ToolTipManager.Instanse.Hide();
-    }
-
-    public void OnDrop(PointerEventData eventData)
-    {
-        if (eventData.pointerDrag.tag == "Roster Hero Slot")
-        {
-            if (ActivitySlot == null || !ActivitySlot.IsUnlocked || !AllowedToDrop)
-            {
-                DarkestSoundManager.PlayOneShot("event:/ui/town/button_invalid");
-                return;
-            }
-
-            if (ActivitySlot.Status == ActivitySlotStatus.Available)
-            {
-                var heroSlot = eventData.pointerDrag.GetComponent<HeroSlot>();
-                ActivitySlot.Status = ActivitySlotStatus.Checkout;
-                ActivitySlot.Hero = heroSlot.Hero;
-                UpdateSlot();
-                DarkestSoundManager.PlayOneShot("event:/ui/town/character_add");
-            }
-        }
-    }
+    #endregion
 }

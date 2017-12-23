@@ -11,7 +11,6 @@ public class QuirkInfo : IBinarySaveData
 
     public bool IsMeetingSaveCriteria { get { return true; } }
 
-
     public QuirkInfo()
     {
     }
@@ -40,7 +39,6 @@ public class QuirkInfo : IBinarySaveData
         IsNew = true;
     }
 
-
     public void Write(BinaryWriter bw)
     {
         bw.Write(Quirk.Id);
@@ -60,7 +58,6 @@ public class QuirkInfo : IBinarySaveData
         Longetivity = br.ReadInt32();
         ReplacedQuirk = br.ReadString();
     }
-
 
     public void ReplaceBy(Quirk newQuirk)
     {

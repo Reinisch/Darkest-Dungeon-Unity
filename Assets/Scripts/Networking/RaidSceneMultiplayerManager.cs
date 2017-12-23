@@ -1,29 +1,18 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 public class RaidSceneMultiplayerManager : RaidSceneManager
 {
-    public new static RaidSceneMultiplayerManager Instanse { get; set; }
+    [SerializeField]
+    private RaidQuestPanel invaderQuestPanel;
 
-    public RaidQuestPanel invaderQuestPanel;
+    public new static RaidSceneMultiplayerManager Instanse { get; private set; }
 
-    public static RaidQuestPanel InvaderQuestPanel
-    {
-        get
-        {
-            return Instanse.invaderQuestPanel;
-        }
-    }
+    private readonly List<FormationUnit> pvpDialogUnits = new List<FormationUnit>();
 
-    #region Multiplayer Setup
-    List<FormationUnit> pvpDialogUnits = new List<FormationUnit>();
-
-    Buff DeathsDoorSurvivalDebuff { get; set; }
-    #endregion
+    private Buff DeathsDoorSurvivalDebuff { get; set; }
 
     protected override void Awake()
     {
@@ -46,9 +35,9 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
             RandomSolver.SetRandomSeed(sessionSeed);
 
             RaidEvents.Initialize();
-            currentRaid = new RaidInfo();
+            CurrentRaid = new RaidInfo();
 
-            currentRaid.Quest = new PlotQuest()
+            CurrentRaid.Quest = new PlotQuest()
             {
                 IsPlotQuest = true,
                 Id = "tutorial",
@@ -69,15 +58,15 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                 RetreatKillCount = 0,
                 RosterBuffOnFailureMinimumPartyResolveLevel = 0,
             };
-            currentRaid.Dungeon = new Dungeon()
+            CurrentRaid.Dungeon = new Dungeon()
             {
                 GridSizeX = 1,
                 GridSizeY = 1,
-                Name = currentRaid.Quest.Dungeon,
-                DungeonMash = DarkestDungeonManager.Data.DungeonEnviromentData[currentRaid.Quest.Dungeon].
-                    BattleMashes.Find(mash => mash.MashId == currentRaid.Quest.Difficulty),
+                Name = CurrentRaid.Quest.Dungeon,
+                DungeonMash = DarkestDungeonManager.Data.DungeonEnviromentData[CurrentRaid.Quest.Dungeon].
+                    BattleMashes.Find(mash => mash.MashId == CurrentRaid.Quest.Difficulty),
                 SharedMash = DarkestDungeonManager.Data.DungeonEnviromentData["shared"].
-                    BattleMashes.Find(mash => mash.MashId == currentRaid.Quest.Difficulty),
+                    BattleMashes.Find(mash => mash.MashId == CurrentRaid.Quest.Difficulty),
                 Rooms = new Dictionary<string, DungeonRoom>()
                 {
                     { "room2_1", new DungeonRoom("room2_1", 1, 1)
@@ -89,14 +78,14 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                 },
                 StartingRoomId = "room2_1",
             };
-            currentRaid.RaidParty = new RaidParty(PhotonNetwork.masterClient);
+            CurrentRaid.RaidParty = new RaidParty(PhotonNetwork.masterClient);
 
             DarkestDungeonManager.ScreenFader.StartFaded();
-            DarkestDungeonManager.Data.LoadDungeon(currentRaid.Quest.Dungeon, currentRaid.Quest.Id);
-            Rules = new RaidRuleInfo(currentRaid.Quest.Dungeon, BattleGround, TorchMeter);
+            DarkestDungeonManager.Data.LoadDungeon(CurrentRaid.Quest.Dungeon, CurrentRaid.Quest.Id);
+            Rules = new RaidRuleInfo(CurrentRaid.Quest.Dungeon, BattleGround, TorchMeter);
 
             #if !(UNITY_ANDROID || UNITY_IOS)
-            escapeButton.gameObject.SetActive(false);
+            EscapeButton.gameObject.SetActive(false);
 #endif
             DeathsDoorSurvivalDebuff = new Buff()
             {
@@ -111,47 +100,49 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         else
             Destroy(Instanse.gameObject);
     }
+
     protected override void Start()
     {
         if (Instanse != this)
             return;
 
-        CharacterWindow.onWindowClose += CharacterWindow_onWindowClose;
-        CharacterWindow.onNextButtonClick += CharacterWindow_onNextButtonClick;
-        CharacterWindow.onPreviousButtonClick += CharacterWindow_onPreviousButtonClick;
+        CharacterWindow.EventWindowClosed += CharacterWindowClosed;
+        CharacterWindow.EventNextButtonClicked += CharacterWindowNextButtonClicked;
+        CharacterWindow.EventPreviousButtonClick += CharacterWindowPreviousButtonClicked;
 
         RaidInterface.UpdateRaidScene();
         Inventory.SetDeactivated();
-        RaidPanel.bannerPanel.skillPanel.SetMode(SkillPanelMode.Combat);
-        RaidPanel.bannerPanel.SetPeacefulState();
-        MapPanel.LoadDungeon(currentRaid.Dungeon);
-        QuestPanel.UpdateQuest(currentRaid.Quest, PhotonNetwork.masterClient, PhotonNetwork.isMasterClient);
+        RaidPanel.BannerPanel.SkillPanel.SetMode(SkillPanelMode.Combat);
+        RaidPanel.BannerPanel.SetPeacefulState();
+        MapPanel.LoadDungeon(CurrentRaid.Dungeon);
+        QuestPanel.UpdateQuest(CurrentRaid.Quest, PhotonNetwork.masterClient, PhotonNetwork.isMasterClient);
 
-        if (PhotonNetwork.room.playerCount < 2)
-            InvaderQuestPanel.gameObject.SetActive(false);
+        if (PhotonNetwork.room.PlayerCount < 2)
+            invaderQuestPanel.gameObject.SetActive(false);
         else if (PhotonNetwork.isMasterClient)
-            InvaderQuestPanel.UpdateQuest(currentRaid.Quest, PhotonNetwork.otherPlayers[0], false);
+            invaderQuestPanel.UpdateQuest(CurrentRaid.Quest, PhotonNetwork.otherPlayers[0]);
         else
-            InvaderQuestPanel.UpdateQuest(currentRaid.Quest, PhotonNetwork.player, true);
+            invaderQuestPanel.UpdateQuest(CurrentRaid.Quest, PhotonNetwork.player, true);
 
-        DarkestSoundManager.StartDungeonSoundtrack(currentRaid.Dungeon.Name);
+        DarkestSoundManager.StartDungeonSoundtrack(CurrentRaid.Dungeon.Name);
         TorchMeter.Initialize(100);
         Formations.Initialize();
 
         PhotonGameManager.PlayersPreparedCount = 0;
 
-        if (PhotonNetwork.room.playerCount < 2)
+        if (PhotonNetwork.room.PlayerCount < 2)
         {
             Raid.Dungeon.StartingRoom.BattleEncounter.Cleared = true;
             Raid.QuestCompleted = true;
             QuestPanel.CompleteQuest();
         }
 
-        currentEvent = RoomLoadingEvent(currentRaid.Dungeon.StartingRoom, RoomTransitionType.Entrance);
-        StartCoroutine(currentEvent);
+        CurrentEvent = RoomLoadingEvent(CurrentRaid.Dungeon.StartingRoom, RoomTransitionType.Entrance);
+        StartCoroutine(CurrentEvent);
 
         PhotonGameManager.BarkMessages.Clear();
     }
+
     protected override void Update()
     {
         if (Input.GetKeyUp(KeyCode.Escape))
@@ -162,11 +153,11 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
     {
         #region Set restrictions
         QuestPanel.DisableRetreat(false);
-        InvaderQuestPanel.DisableRetreat(false);
+        invaderQuestPanel.DisableRetreat(false);
         RaidPanel.SwitchBlocked = true;
         Inventory.SetDeactivated();
         Formations.LockSelections();
-        RaidPanel.heroPanel.equipmentPanel.SetDisabled();
+        RaidPanel.HeroPanel.EquipmentPanel.SetDisabled();
         RaidPanel.SetDisabledState();
         #endregion
 
@@ -176,8 +167,8 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         HallwayView.SetActive(false);
         RoomView.SetActive(true);
 
-        partyController.TranseferToPassage(RoomView.hallwayPassage);
-        Formations.TransferToRoom(roomView);
+        PartyController.TranseferToPassage(RoomView.HallwayPassage);
+        Formations.TransferToRoom(RoomView);
 
         Raid.CurrentLocation = room;
         if (Raid.LastRoom == null)
@@ -187,7 +178,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         else
             Raid.LastSector = null;
 
-        roomView.LoadRoom(room, fromRaidSector != null ?
+        RoomView.LoadRoom(room, fromRaidSector != null ?
             fromRaidSector.HallSector : null,
             (transitionType == RoomTransitionType.CombatLoad ||
             transitionType == RoomTransitionType.Teleport));
@@ -203,15 +194,15 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
 
         for (int i = 0; i < HeroParty.Units.Count; i++)
             HeroParty.Units[i].OverlaySlot.RectTransform.pivot = new Vector2(0.5f, 0);
-        for (int i = 0; i < Formations.monsters.overlay.OverlaySlots.Count; i++)
-            Formations.monsters.overlay.OverlaySlots[i].RectTransform.pivot = new Vector2(0.5f, 0f);
+        for (int i = 0; i < Formations.Monsters.Overlay.OverlaySlots.Count; i++)
+            Formations.Monsters.Overlay.OverlaySlots[i].RectTransform.pivot = new Vector2(0.5f, 0f);
         #endregion
 
         #region Load combat save
         if (transitionType == RoomTransitionType.CombatLoad)
         {
-            currentEvent = LoadEncounterEvent(RoomView.raidRoom);
-            StartCoroutine(currentEvent);
+            CurrentEvent = LoadEncounterEvent(RoomView.RaidRoom);
+            StartCoroutine(CurrentEvent);
             yield break;
         }
         #endregion
@@ -227,27 +218,27 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                 RaidPanel.SelectedUnit.OverlaySlot.UnitSelected();
 
             #region Execute Hero Transformations
-            for (int i = 0; i < Formations.heroes.party.Units.Count; i++)
+            for (int i = 0; i < Formations.Heroes.Party.Units.Count; i++)
             {
-                var hero = Formations.heroes.party.Units[i].Character as Hero;
-                if (Formations.heroes.party.Units[i].Character.Mode != null
-                    && Formations.heroes.party.Units[i].Character.Mode.AfflictionSkillId != null)
+                var hero = Formations.Heroes.Party.Units[i].Character as Hero;
+                if (Formations.Heroes.Party.Units[i].Character.Mode != null
+                    && Formations.Heroes.Party.Units[i].Character.Mode.AfflictionSkillId != null)
                 {
                     var battleFinishSkill = hero.SelectedCombatSkills.Find(skill => skill.Id ==
-                        Formations.heroes.party.Units[i].Character.Mode.BattleCompleteSkillId);
+                        Formations.Heroes.Party.Units[i].Character.Mode.BattleCompleteSkillId);
                     if (battleFinishSkill != null)
                     {
-                        SkillTargetInfo targetInfo = BattleSolver.SelectSkillTargets(Formations.heroes.party.Units[i],
-                            Formations.heroes.party.Units[i], battleFinishSkill).
-                            UpdateSkillInfo(Formations.heroes.party.Units[i], battleFinishSkill);
-                        yield return StartCoroutine(ExecuteHeroSkill(Formations.heroes.party.Units[i],
+                        SkillTargetInfo targetInfo = BattleSolver.SelectSkillTargets(Formations.Heroes.Party.Units[i],
+                            Formations.Heroes.Party.Units[i], battleFinishSkill).
+                            UpdateSkillInfo(Formations.Heroes.Party.Units[i], battleFinishSkill);
+                        yield return StartCoroutine(ExecuteHeroSkill(Formations.Heroes.Party.Units[i],
                             targetInfo, battleFinishSkill));
                     }
                 }
             }
             #endregion
 
-            foreach (var hero in Formations.heroes.party.Units)
+            foreach (var hero in Formations.Heroes.Party.Units)
                 hero.SetCombatAnimation(false);
 
             yield return StartCoroutine(ExecuteEffectEvents(false));
@@ -256,21 +247,21 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         }
         else if (transitionType == RoomTransitionType.Teleport && room.HasActiveBattle)
         {
-            currentEvent = EncounterEvent(RoomView.raidRoom);
-            StartCoroutine(currentEvent);
+            CurrentEvent = EncounterEvent(RoomView.RaidRoom);
+            StartCoroutine(CurrentEvent);
             yield break;
         }
         else
             yield return new WaitForSeconds(0.5f);
         #endregion
 
-        if (PhotonNetwork.room.playerCount < 2)
+        if (PhotonNetwork.room.PlayerCount < 2)
             RaidEvents.ShowAnnouncment("Waiting for opponent to join...");
 
         RaidPanel.SwitchBlocked = false;
         if (fromRaidSector == null)
         {
-            Formations.heroes.overlay.Show();
+            Formations.ShowHeroOverlay();
             yield return new WaitForEndOfFrame();
         }
         Formations.ShowHeroOverlay();
@@ -307,31 +298,34 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
 
         #region Remove restrictions
         QuestPanel.EnableRetreat();
-        InvaderQuestPanel.EnableRetreat();
+        invaderQuestPanel.EnableRetreat();
         MapPanel.ShowAvailableRooms(room);
         Inventory.SetPeacefulState(false);
-        RaidPanel.heroPanel.equipmentPanel.SetActive();
+        RaidPanel.HeroPanel.EquipmentPanel.SetActive();
         RaidPanel.SetDisabledState();
-        currentEvent = null;
+        CurrentEvent = null;
         #endregion
     }
+
     protected override IEnumerator EncounterEvent(IRaidArea areaView, bool campfireAmbush = false)
     {
         #region Set Combat States and Restrictions
+
         QuestPanel.UpdateEncounterRetreat();
         QuestPanel.SetCombatState();
-        InvaderQuestPanel.UpdateEncounterRetreat();
-        InvaderQuestPanel.SetCombatState();
+        invaderQuestPanel.UpdateEncounterRetreat();
+        invaderQuestPanel.SetCombatState();
         DisableEnviroment();
         DisablePartyMovement();
         Formations.LockSelections();
         Formations.ResetSelections();
         RaidPanel.SetDisabledState();
         Inventory.SetDeactivated();
-        RaidPanel.heroPanel.equipmentPanel.SetDisabled();
+        RaidPanel.HeroPanel.EquipmentPanel.SetDisabled();
 
-        foreach (var hero in Formations.heroes.party.Units)
+        foreach (var hero in Formations.Heroes.Party.Units)
             hero.SetCombatAnimation(true);
+
         #endregion
 
         #region Wait For Events
@@ -354,22 +348,21 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         #endregion
 
         #region Battle Loop
+
         BattleGround.InitiateBattle();
         yield return new WaitForSeconds(1f);
 
-        if(PhotonNetwork.room.playerCount < 2)
+        if(PhotonNetwork.room.PlayerCount < 2)
             BattleGround.SpawnEncounter(areaView.Area.BattleEncounter, campfireAmbush);
         else
-        {
-            if (PhotonNetwork.isMasterClient)
-                BattleGround.SpawnMultiplayerEncounter(PhotonNetwork.otherPlayers[0]);
-            else
-                BattleGround.SpawnMultiplayerEncounter(PhotonNetwork.player);
-        }
-        foreach (var hero in Formations.monsters.party.Units)
+            BattleGround.SpawnMultiplayerEncounter(PhotonNetwork.isMasterClient ?
+                PhotonNetwork.otherPlayers[0] :
+                PhotonNetwork.player);
+
+        foreach (var hero in Formations.Monsters.Party.Units)
             hero.SetCombatAnimation(true);
 
-        Formations.monsters.ranks.InstantRelocation();
+        Formations.Monsters.Ranks.InstantRelocation();
 
         #region Starting Sound Effects
         var oneShotStart = FMODUnity.RuntimeManager.CreateInstance("event:/general/combat/start");
@@ -419,33 +412,33 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
 
         yield return StartCoroutine(PhotonGameManager.PreparationCheck());
 
-        RaidEvents.roundIndicator.Appear();
+        RaidEvents.RoundIndicator.Appear();
         yield return StartCoroutine(BattleRound());
         if (BattleGround.Round.HeroAction == HeroTurnAction.Retreat)
             yield break;
         while (BattleGround.BattleStatus != BattleStatus.Finished)
         {
-            RaidEvents.roundIndicator.UpdateRound(BattleGround.NextRound());
+            RaidEvents.RoundIndicator.UpdateRound(BattleGround.NextRound());
             yield return StartCoroutine(BattleRound());
             if (BattleGround.Round.HeroAction == HeroTurnAction.Retreat)
                 yield break;
         }
 
         #region Execute Hero Transformations
-        for (int i = 0; i < Formations.heroes.party.Units.Count; i++)
+        for (int i = 0; i < Formations.Heroes.Party.Units.Count; i++)
         {
-            var hero = Formations.heroes.party.Units[i].Character as Hero;
-            if (Formations.heroes.party.Units[i].Character.Mode != null &&
-                Formations.heroes.party.Units[i].Character.Mode.AfflictionSkillId != null)
+            var hero = Formations.Heroes.Party.Units[i].Character as Hero;
+            if (Formations.Heroes.Party.Units[i].Character.Mode != null &&
+                Formations.Heroes.Party.Units[i].Character.Mode.AfflictionSkillId != null)
             {
                 var battleFinishSkill = hero.SelectedCombatSkills.Find(skill =>
-                skill.Id == Formations.heroes.party.Units[i].Character.Mode.BattleCompleteSkillId);
+                skill.Id == Formations.Heroes.Party.Units[i].Character.Mode.BattleCompleteSkillId);
                 if (battleFinishSkill != null)
                 {
-                    SkillTargetInfo targetInfo = BattleSolver.SelectSkillTargets(Formations.heroes.party.Units[i],
-                        Formations.heroes.party.Units[i], battleFinishSkill).
-                        UpdateSkillInfo(Formations.heroes.party.Units[i], battleFinishSkill);
-                    yield return StartCoroutine(ExecuteHeroSkill(Formations.heroes.party.Units[i], targetInfo, battleFinishSkill));
+                    SkillTargetInfo targetInfo = BattleSolver.SelectSkillTargets(Formations.Heroes.Party.Units[i],
+                        Formations.Heroes.Party.Units[i], battleFinishSkill).
+                        UpdateSkillInfo(Formations.Heroes.Party.Units[i], battleFinishSkill);
+                    yield return StartCoroutine(ExecuteHeroSkill(Formations.Heroes.Party.Units[i], targetInfo, battleFinishSkill));
                 }
             }
         }
@@ -459,18 +452,19 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         #endregion
 
         #region Check Game Over
+
         yield return new WaitForSeconds(0.5f);
        
         if (HeroParty.Units.Count == 0)
         {
             if (PhotonNetwork.isMasterClient)
             {
-                RaidEvents.ShowAnnouncment("Player " + PhotonNetwork.otherPlayers[0].name + " is victorious!");
+                RaidEvents.ShowAnnouncment("Player " + PhotonNetwork.otherPlayers[0].NickName + " is victorious!");
                 FMODUnity.RuntimeManager.PlayOneShot("event:/general/combat/retreat");
             }
             else
             {
-                RaidEvents.ShowAnnouncment("Player " + PhotonNetwork.player.name + " is victorious!");
+                RaidEvents.ShowAnnouncment("Player " + PhotonNetwork.player.NickName + " is victorious!");
                 DarkestSoundManager.ExecuteNarration("victory", NarrationPlace.Raid);
                 FMODUnity.RuntimeManager.PlayOneShot("event:/general/combat/victory");
             }
@@ -479,19 +473,19 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         {
             if (PhotonNetwork.isMasterClient)
             {
-                RaidEvents.ShowAnnouncment("Player " + PhotonNetwork.player.name + " is victorious!");
+                RaidEvents.ShowAnnouncment("Player " + PhotonNetwork.player.NickName + " is victorious!");
                 DarkestSoundManager.ExecuteNarration("victory", NarrationPlace.Raid);
                 FMODUnity.RuntimeManager.PlayOneShot("event:/general/combat/victory");
             }
             else
             {
-                RaidEvents.ShowAnnouncment("Player " + PhotonNetwork.masterClient.name + " is victorious!");
+                RaidEvents.ShowAnnouncment("Player " + PhotonNetwork.masterClient.NickName + " is victorious!");
                 FMODUnity.RuntimeManager.PlayOneShot("event:/general/combat/retreat");
             }
         }
         yield return new WaitForSeconds(1.5f);
         StartCoroutine(RaidResultsEvent());
-        yield break;
+
         #endregion
 
         #endregion
@@ -507,31 +501,31 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
 
         if (HeroParty.Units.Count > 0)
         {
-            if (!currentRaid.Quest.IsPlotQuest)
+            if (!CurrentRaid.Quest.IsPlotQuest)
                 DarkestSoundManager.ExecuteNarration("quest_end_completed", NarrationPlace.Raid,
-                    currentRaid.Quest.Type, currentRaid.Quest.Dungeon);
+                    CurrentRaid.Quest.Type, CurrentRaid.Quest.Dungeon);
         }
         else
         {
             DarkestSoundManager.ExecuteNarration("quest_end_not_completed", NarrationPlace.Raid,
-                currentRaid.Quest.Type, currentRaid.Quest.Dungeon);
+                CurrentRaid.Quest.Type, CurrentRaid.Quest.Dungeon);
         }
 
-        DarkestDungeonManager.ScreenFader.Fade(1);
+        DarkestDungeonManager.ScreenFader.Fade();
         yield return new WaitForSeconds(1f);
         PhotonGameManager.Instanse.LeaveRoom();
-        yield break;
     }
+
     protected override IEnumerator CompletionCrestEvent()
     {
         Raid.QuestCompleted = true;
-        completionWindow.Appear();
+        CompletionWindow.Appear();
         FMODUnity.RuntimeManager.PlayOneShot("event:/general/party/quest_goal_complete");
         DungeonCamera.SwitchBlur(true);
-        while (completionWindow.Action == CompletionAction.Waiting)
+        while (CompletionWindow.Action == CompletionAction.Waiting)
             yield return null;
 
-        if (completionWindow.Action == CompletionAction.Return)
+        if (CompletionWindow.Action == CompletionAction.Return)
         {
             yield return StartCoroutine(RaidResultsEvent());
             yield break;
@@ -550,19 +544,19 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
             yield return new WaitForSeconds(1f);
 
             #region LifeTime Activations
-            tempList.Clear();
-            for (int i = 0; i < battleGround.MonsterParty.Units.Count; i++)
-                if (battleGround.MonsterParty.Units[i].Character.LifeTime != null)
-                    tempList.Add(battleGround.MonsterParty.Units[i]);
+            TempList.Clear();
+            for (int i = 0; i < BattleGround.MonsterParty.Units.Count; i++)
+                if (BattleGround.MonsterParty.Units[i].Character.LifeTime != null)
+                    TempList.Add(BattleGround.MonsterParty.Units[i]);
 
-            if (tempList.Count > 0)
+            if (TempList.Count > 0)
             {
                 bool someoneExpired = false;
-                for (int i = 0; i < tempList.Count; i++)
+                for (int i = 0; i < TempList.Count; i++)
                 {
-                    if (tempList[i].Character.LifeTime.AliveRoundLimit <= tempList[i].CombatInfo.RoundsAlive)
+                    if (TempList[i].Character.LifeTime.AliveRoundLimit <= TempList[i].CombatInfo.RoundsAlive)
                     {
-                        PrepareDeath(tempList[i]);
+                        PrepareDeath(TempList[i]);
                         someoneExpired = true;
                     }
                 }
@@ -570,13 +564,13 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                 if (someoneExpired)
                 {
                     yield return new WaitForSeconds(1.2f);
-                    for (int i = 0; i < tempList.Count; i++)
+                    for (int i = 0; i < TempList.Count; i++)
                     {
-                        if (tempList[i].CombatInfo.IsDead)
-                            ExecuteDeath(tempList[i]);
+                        if (TempList[i].CombatInfo.IsDead)
+                            ExecuteDeath(TempList[i]);
                     }
                 }
-                tempList.Clear();
+                TempList.Clear();
             }
             #endregion
 
@@ -632,11 +626,11 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
             #endregion
 
             #region Round Start Desires
-            tempList.AddRange(battleGround.MonsterParty.Units);
-            while (tempList.Count > 0)
+            TempList.AddRange(BattleGround.MonsterParty.Units);
+            while (TempList.Count > 0)
             {
-                var monsterUnit = tempList[0];
-                tempList.RemoveAt(0);
+                var monsterUnit = TempList[0];
+                TempList.RemoveAt(0);
                 if (monsterUnit.Character is Hero)
                     continue;
                 var monster = monsterUnit.Character as Monster;
@@ -657,7 +651,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                     }
                 }
             }
-            tempList.Clear();
+            TempList.Clear();
             #endregion
 
             #region Mutation Activation
@@ -668,22 +662,22 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                     if (k > 0)
                         yield return new WaitForSeconds(0.2f);
 
-                    tempList.AddRange(battleGround.MonsterParty.Units.FindAll(unit => unit.Character.IsMonster
+                    TempList.AddRange(BattleGround.MonsterParty.Units.FindAll(unit => unit.Character.IsMonster
                         && (unit.Character as Monster).Data.Shapeshifter != null));
-                    if (tempList.Count > 0)
+                    if (TempList.Count > 0)
                     {
                         Formations.HideUnitOverlay();
                         yield return new WaitForSeconds(0.2f);
                         DungeonCamera.Zoom(50, 0.05f);
                         yield return new WaitForSeconds(0.05f);
                         DungeonCamera.SwitchBlur(true);
-                        foreach (var targetUnit in tempList)
+                        foreach (var targetUnit in TempList)
                             Formations.UnitBuffedIntro(targetUnit);
                         yield return new WaitForSeconds(0.05f);
                         List<string> mutations = new List<string>();
                         List<MonsterData> mutationData = new List<MonsterData>();
                         #region Transformation
-                        foreach (var targetUnit in tempList)
+                        foreach (var targetUnit in TempList)
                         {
                             var monster = targetUnit.Character as Monster;
                             List<int> summonPool = new List<int>();
@@ -714,12 +708,12 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                         }
                         #endregion
                         bool mutated = false;
-                        for (int i = 0; i < tempList.Count; i++)
+                        for (int i = 0; i < TempList.Count; i++)
                         {
-                            if (tempList[i].Character.Class != mutationData[i].TypeId)
+                            if (TempList[i].Character.Class != mutationData[i].TypeId)
                             {
-                                tempList[i].SetTargetEffect(tempList[i], "formless_mutate", "root",
-                                    tempList[i].Character.Class + "_to_" + mutations[i]);
+                                TempList[i].SetTargetEffect(TempList[i], "formless_mutate", "root",
+                                    TempList[i].Character.Class + "_to_" + mutations[i]);
                                 mutated = true;
                             }
                         }
@@ -727,24 +721,24 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                             FMODUnity.RuntimeManager.PlayOneShot("event:/char/enemy/_shared/formless_shared_mutate");
 
                         yield return new WaitForSeconds(0.01f);
-                        Formations.partyBuffPositions.SetUnitTargets(tempList, 0.05f, Vector2.zero);
+                        Formations.PartyBuffPositions.SetUnitTargets(TempList, 0.05f, Vector2.zero);
                         yield return new WaitForSeconds(0.05f);
-                        Formations.partyBuffPositions.SetSpacing(120, 1f);
-                        for (int i = 0; i < tempList.Count; i++)
-                            if (tempList[i].Character.Class != mutationData[i].TypeId)
-                                tempList[i].CurrentState.MeshRenderer.enabled = false;
+                        Formations.PartyBuffPositions.SetSpacing(120, 1f);
+                        for (int i = 0; i < TempList.Count; i++)
+                            if (TempList[i].Character.Class != mutationData[i].TypeId)
+                                TempList[i].CurrentState.MeshRenderer.enabled = false;
                         yield return new WaitForSeconds(1.2f);
                         DungeonCamera.Zoom(DungeonCamera.StandardFOV, 0.1f);
                         DungeonCamera.SwitchBlur(false);
-                        foreach (var targetUnit in tempList)
+                        foreach (var targetUnit in TempList)
                             Formations.UnitBuffedOutro(targetUnit);
                         #region Transformation
-                        for (int i = 0; i < tempList.Count; i++)
+                        for (int i = 0; i < TempList.Count; i++)
                         {
-                            if (tempList[i].Character.Class != mutationData[i].TypeId)
+                            if (TempList[i].Character.Class != mutationData[i].TypeId)
                             {
                                 GameObject summonObject = Resources.Load("Prefabs/Monsters/" + mutationData[i].TypeId) as GameObject;
-                                BattleGround.ReplaceUnit(mutationData[i], tempList[i], summonObject, true);
+                                BattleGround.ReplaceUnit(mutationData[i], TempList[i], summonObject, true);
                             }
                         }
                         #endregion
@@ -752,7 +746,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                         Formations.ShowUnitOverlay();
                         Formations.ResetSelections();
                     }
-                    tempList.Clear();
+                    TempList.Clear();
                 }
             }
             #endregion
@@ -809,7 +803,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                                 DungeonCamera.SwitchBlur(true);
                                 Formations.UnitSkillIntro(BattleGround.Captures[i].CaptorUnit, "release");
                                 yield return new WaitForSeconds(0.05f);
-                                Formations.partyBuffPositions.SetUnitTargets(BattleGround.Captures[i].CaptorUnit, 0.05f, Vector2.zero);
+                                Formations.PartyBuffPositions.SetUnitTargets(BattleGround.Captures[i].CaptorUnit, 0.05f, Vector2.zero);
                                 yield return new WaitForSeconds(1.2f);
                                 DungeonCamera.Zoom(DungeonCamera.StandardFOV, 0.1f);
                                 DungeonCamera.SwitchBlur(false);
@@ -819,7 +813,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                                 MonsterData emptyCaptorData = DarkestDungeonManager.Data.Monsters[(captureRelease.CaptorUnit.
                                     Character as Monster).Data.FullCaptor.EmptyMonsterClass];
                                 GameObject unitObject = Resources.Load("Prefabs/Monsters/" + emptyCaptorData.TypeId) as GameObject;
-                                RaidSceneManager.BattleGround.ReplaceUnit(emptyCaptorData, captureRelease.CaptorUnit, unitObject);
+                                BattleGround.ReplaceUnit(emptyCaptorData, captureRelease.CaptorUnit, unitObject);
                                 yield return new WaitForSeconds(0.175f);
                                 Formations.ShowUnitOverlay();
                                 Formations.ResetSelections();
@@ -943,11 +937,11 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                 break;
 
             #region Turn End Desires
-            tempList.AddRange(battleGround.MonsterParty.Units);
-            while (tempList.Count > 0)
+            TempList.AddRange(BattleGround.MonsterParty.Units);
+            while (TempList.Count > 0)
             {
-                var monsterUnit = tempList[0];
-                tempList.RemoveAt(0);
+                var monsterUnit = TempList[0];
+                TempList.RemoveAt(0);
                 if (monsterUnit.Character is Hero)
                     continue;
 
@@ -960,7 +954,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
 
                     if (currentDesire.CheckBonusInitiative(monsterUnit))
                     {
-                        yield return waitForOneTwo;
+                        yield return WaitForOneTwo;
 
                         if (currentDesire.CombatSkillOverride == "")
                             yield return StartCoroutine(MonsterTurn(monsterUnit));
@@ -970,21 +964,21 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                     }
                 }
             }
-            tempList.Clear();
+            TempList.Clear();
             #endregion
 
             if (BattleGround.IsBattleEnded())
                 break;
 
-            yield return waitForZeroThree;
+            yield return WaitForZeroThree;
         }
 
         #region Round Finish Desires
-        tempList.AddRange(battleGround.MonsterParty.Units);
-        while (tempList.Count > 0)
+        TempList.AddRange(BattleGround.MonsterParty.Units);
+        while (TempList.Count > 0)
         {
-            var monsterUnit = tempList[0];
-            tempList.RemoveAt(0);
+            var monsterUnit = TempList[0];
+            TempList.RemoveAt(0);
             if (monsterUnit.Character is Hero)
                 continue;
 
@@ -1005,13 +999,13 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                 }
             }
         }
-        tempList.Clear();
+        TempList.Clear();
         #endregion
 
         #region Idle units status effects
-        tempList.AddRange(BattleGround.MonsterParty.Units.FindAll(targetUnit => targetUnit.CombatInfo.TotalInitiatives == 0));
+        TempList.AddRange(BattleGround.MonsterParty.Units.FindAll(targetUnit => targetUnit.CombatInfo.TotalInitiatives == 0));
         bool hasIdleDamage = false, hasIdleDeath = false;
-        foreach (var idleUnit in tempList)
+        foreach (var idleUnit in TempList)
         {
             #region Status Effect and Buffs
             if (idleUnit.Character.GetStatusEffect(StatusType.Bleeding).IsApplied)
@@ -1081,19 +1075,18 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         if (hasIdleDeath)
         {
             yield return new WaitForSeconds(1.4f);
-            for (int i = 0; i < tempList.Count; i++)
-                ExecuteDeath(tempList[i]);
+            for (int i = 0; i < TempList.Count; i++)
+                ExecuteDeath(TempList[i]);
             yield return new WaitForSeconds(0.2f);
         }
         else if (hasIdleDamage)
         {
             yield return new WaitForSeconds(0.3f);
         }
-        tempList.Clear();
+        TempList.Clear();
         #endregion
-
-        yield break;
     }
+
     protected override IEnumerator HeroTurn(FormationUnit actionUnit, bool fromBattleSave = false)
     {
         yield return StartCoroutine(PhotonGameManager.PreparationCheck());
@@ -1108,11 +1101,11 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         actionUnit.OverlaySlot.UnitSelected();
 
         if (actionUnit.Team == Team.Heroes)
-            RaidEvents.ShowAnnouncment("Next turn: " + PhotonNetwork.masterClient.name);
+            RaidEvents.ShowAnnouncment("Next turn: " + PhotonNetwork.masterClient.NickName);
         else if (PhotonNetwork.isMasterClient && PhotonNetwork.otherPlayers.Length > 0)
-            RaidEvents.ShowAnnouncment("Next turn: " + PhotonNetwork.otherPlayers[0].name);
+            RaidEvents.ShowAnnouncment("Next turn: " + PhotonNetwork.otherPlayers[0].NickName);
         else if (!PhotonNetwork.isMasterClient)
-            RaidEvents.ShowAnnouncment("Next turn: " + PhotonNetwork.player.name);
+            RaidEvents.ShowAnnouncment("Next turn: " + PhotonNetwork.player.NickName);
 
         yield return new WaitForSeconds(1.5f);
         RaidEvents.HideAnnouncment();
@@ -1309,9 +1302,9 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                 if (Mathf.RoundToInt(actionUnit.Character.Stress.CurrentValue) == 200)
                     RaidSceneManager.Instanse.AddHeartAttackCheck(actionUnit);
             }
-            actionUnit.OverlaySlot.stressBar.UpdateStress(actionUnit.Character.Stress.ValueRatio);
+            actionUnit.OverlaySlot.UpdateOverlay();
 
-            RaidSceneManager.RaidEvents.ShowPopupMessage(actionUnit, PopupMessageType.Stress, damage.ToString());
+            RaidEvents.ShowPopupMessage(actionUnit, PopupMessageType.Stress, damage.ToString());
             actionUnit.SetHalo("afflicted");
 
             yield return new WaitForSeconds(1.2f);
@@ -1329,7 +1322,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                     MonsterData emptyCaptorData = DarkestDungeonManager.Data.Monsters[(captureRecord.CaptorUnit.
                                 Character as Monster).Data.FullCaptor.EmptyMonsterClass];
                     GameObject unitObject = Resources.Load("Prefabs/Monsters/" + emptyCaptorData.TypeId) as GameObject;
-                    RaidSceneManager.BattleGround.ReplaceUnit(emptyCaptorData, captureRecord.CaptorUnit, unitObject);
+                    BattleGround.ReplaceUnit(emptyCaptorData, captureRecord.CaptorUnit, unitObject);
                 }
             }
 
@@ -1339,13 +1332,13 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         #endregion
 
         #region Trait Start Turn Act Out
-        Hero actionHero = actionUnit.Character as Hero;
+        Hero actionHero = (Hero)actionUnit.Character;
         //if (actionHero.Trait == null || actionHero.Trait.Id != "selfish")
         //    actionHero.ApplyTrait(DarkestDangeonManager.Data.Traits.Find(trait => trait.Id == "selfish"));
 
         if (actionHero.Trait != null)
         {
-            var actOut = RandomSolver.ChooseByRandom<CombatStartTurnActOut>(actionHero.Trait.StartTurnActs);
+            var actOut = RandomSolver.ChooseByRandom(actionHero.Trait.StartTurnActs);
             switch (actOut.ActType)
             {
                 case StartTurnActType.AttackSelf:
@@ -1383,7 +1376,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                         yield return new WaitForSeconds(0.1f);
 
                         actionHero.Health.DecreaseValue(damageAmount);
-                        actionUnit.OverlaySlot.healthBar.UpdateHealth(actionHero);
+                        actionUnit.OverlaySlot.UpdateOverlay();
                         FMODUnity.RuntimeManager.PlayOneShot("event:/general/status/bleed_dot");
                         RaidEvents.ShowPopupMessage(actionUnit, PopupMessageType.Damage, damageAmount.ToString());
 
@@ -1403,11 +1396,11 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                     var barkStressEffect = DarkestDungeonManager.Data.Effects[actOut.StringParameter];
                     if (actionUnit.Party.Units.Count < 2) break;
                     yield return new WaitForSeconds(1f);
-                    tempList.Clear();
-                    tempList.AddRange(actionUnit.Party.Units);
-                    tempList.Remove(actionUnit);
-                    var barkTarget = tempList[RandomSolver.Next(tempList.Count)];
-                    tempList.Clear();
+                    TempList.Clear();
+                    TempList.AddRange(actionUnit.Party.Units);
+                    TempList.Remove(actionUnit);
+                    var barkTarget = TempList[RandomSolver.Next(TempList.Count)];
+                    TempList.Clear();
                     for (int i = 0; i < barkStressEffect.SubEffects.Count; i++)
                         barkStressEffect.SubEffects[i].Apply(actionUnit, barkTarget, barkStressEffect);
                     yield return new WaitForSeconds(0.1f);
@@ -1419,11 +1412,11 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                     var buffAllyEffect = DarkestDungeonManager.Data.Effects[actOut.StringParameter];
                     if (actionUnit.Party.Units.Count < 2) break;
                     yield return new WaitForSeconds(1f);
-                    tempList.Clear();
-                    tempList.AddRange(actionUnit.Party.Units);
-                    tempList.Remove(actionUnit);
-                    var buffAllyTarget = tempList[RandomSolver.Next(tempList.Count)];
-                    tempList.Clear();
+                    TempList.Clear();
+                    TempList.AddRange(actionUnit.Party.Units);
+                    TempList.Remove(actionUnit);
+                    var buffAllyTarget = TempList[RandomSolver.Next(TempList.Count)];
+                    TempList.Clear();
                     for (int i = 0; i < buffAllyEffect.SubEffects.Count; i++)
                         buffAllyEffect.SubEffects[i].Apply(actionUnit, buffAllyTarget, buffAllyEffect);
                     yield return new WaitForSeconds(0.1f);
@@ -1449,7 +1442,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                     if (actionUnit.Party.Units.Count < 2) break;
                     if (actionHero.Trait.Id == "masochistic" && actionUnit.Rank == 1) break;
                     if (actionHero.Trait.Id == "fearful" && actionUnit.Rank == actionUnit.Party.Units.Count) break;
-                    tempList.Clear();
+                    TempList.Clear();
                     for (int i = 0; i < actionUnit.Party.Units.Count; i++)
                     {
                         if (actionUnit.Party.Units[i] != actionUnit)
@@ -1457,23 +1450,23 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                             if (actionHero.Trait.Id == "masochistic")
                             {
                                 if (actionUnit.Party.Units[i].Rank < actionUnit.Rank)
-                                    tempList.Add(actionUnit.Party.Units[i]);
+                                    TempList.Add(actionUnit.Party.Units[i]);
                             }
                             else if (actionHero.Trait.Id == "fearful")
                             {
                                 if (actionUnit.Party.Units[i].Rank > actionUnit.Rank)
-                                    tempList.Add(actionUnit.Party.Units[i]);
+                                    TempList.Add(actionUnit.Party.Units[i]);
                             }
                             else if (Mathf.Abs(actionUnit.Party.Units[i].Rank - actionUnit.Rank) < 3)
-                                tempList.Add(actionUnit.Party.Units[i]);
+                                TempList.Add(actionUnit.Party.Units[i]);
                         }
                     }
-                    if (tempList.Count == 0) break;
+                    if (TempList.Count == 0) break;
                     yield return new WaitForSeconds(1f);
                     FMODUnity.RuntimeManager.PlayOneShot("event:/general/party/combat_move");
                     yield return new WaitForSeconds(0.1f);
-                    var shuffleRoll = tempList[RandomSolver.Next(tempList.Count)];
-                    tempList.Clear();
+                    var shuffleRoll = TempList[RandomSolver.Next(TempList.Count)];
+                    TempList.Clear();
 
                     if (shuffleRoll.Rank < actionUnit.Rank)
                         actionUnit.Pull(actionUnit.Rank - shuffleRoll.Rank);
@@ -1484,14 +1477,14 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                 #endregion
                 case StartTurnActType.HealSelf:
                     #region Heal Self
-                    if (actionHero.Health.ValueRatio == 11) break;
+                    if (actionHero.HealthRatio == 1) break;
                     yield return new WaitForSeconds(1f);
-                    float healAmount = Mathf.RoundToInt(actOut.NumberParameter * actionHero.Health.ModifiedValue);
+                    int healAmount = Mathf.RoundToInt(actOut.NumberParameter * actionHero.Health.ModifiedValue);
                     if (actionHero.AtDeathsDoor)
                         actionHero.RevertDeathsDoor();
                     actionHero.Health.IncreaseValue(healAmount);
 
-                    actionUnit.OverlaySlot.healthBar.UpdateHealth(actionHero);
+                    actionUnit.OverlaySlot.UpdateOverlay();
                     RaidEvents.ShowPopupMessage(actionUnit, PopupMessageType.Heal, healAmount.ToString());
                     FMODUnity.RuntimeManager.PlayOneShot("event:/general/status/heal_ally");
                     if (actionHero.AtDeathsDoor)
@@ -1543,8 +1536,6 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                     yield return StartCoroutine(ExecuteEffectEvents(false));
                     break;
                 #endregion
-                default:
-                    break;
             }
         }
         #endregion
@@ -1570,7 +1561,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
 
             #region Hero Action
             QuestPanel.UpdateCombatRetreat(true);
-            InvaderQuestPanel.UpdateCombatRetreat(true);
+            invaderQuestPanel.UpdateCombatRetreat(true);
 
             FormationUnit barkUnit;
             BarkMessage barkMessage;
@@ -1613,13 +1604,13 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
             }
 
             QuestPanel.UpdateCombatRetreat(false);
-            InvaderQuestPanel.UpdateCombatRetreat(false);
+            invaderQuestPanel.UpdateCombatRetreat(false);
             while (IsUnitEventInProgress)
                 yield return null;
 
             Inventory.SetDeactivated();
             var targetUnit = BattleGround.Round.SelectedTarget;
-            var usedSkill = RaidPanel.bannerPanel.skillPanel.SelectedSkill;
+            var usedSkill = RaidPanel.BannerPanel.SkillPanel.SelectedSkill;
             RaidPanel.SetDisabledState();
 
             yield return StartCoroutine(PhotonGameManager.PreparationCheck());
@@ -1658,7 +1649,6 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                             BattleGround.Round.PreHeroTurn(actionUnit);
                             yield return new WaitForEndOfFrame();
                             actionUnit.OverlaySlot.UnitSelected();
-                            usedSkill = null;
                             yield return StartCoroutine(PhotonGameManager.PreparationCheck());
                             continue;
                         }
@@ -1667,7 +1657,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                 #endregion
                 #region Pass
                 case HeroTurnAction.Pass:
-                    Formations.heroes.overlay.ResetSelectionsExcept(actionUnit);
+                    Formations.Heroes.Overlay.ResetSelectionsExcept(actionUnit);
                     RaidEvents.ShowPopupMessage(actionUnit, PopupMessageType.Pass);
                     yield return new WaitForSeconds(0.8f);
                     break;
@@ -1709,20 +1699,20 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                         DarkestSoundManager.ExecuteNarration("battle_retreat", NarrationPlace.Raid);
 
                         #region Execute Hero Transformations
-                        for (int i = 0; i < Formations.heroes.party.Units.Count; i++)
+                        for (int i = 0; i < Formations.Heroes.Party.Units.Count; i++)
                         {
-                            var hero = Formations.heroes.party.Units[i].Character as Hero;
-                            if (Formations.heroes.party.Units[i].Character.Mode != null
-                                && Formations.heroes.party.Units[i].Character.Mode.AfflictionSkillId != null)
+                            var hero = Formations.Heroes.Party.Units[i].Character as Hero;
+                            if (Formations.Heroes.Party.Units[i].Character.Mode != null
+                                && Formations.Heroes.Party.Units[i].Character.Mode.AfflictionSkillId != null)
                             {
                                 var battleFinishSkill = hero.SelectedCombatSkills.Find(skill => skill.Id ==
-                                    Formations.heroes.party.Units[i].Character.Mode.BattleCompleteSkillId);
+                                    Formations.Heroes.Party.Units[i].Character.Mode.BattleCompleteSkillId);
                                 if (battleFinishSkill != null)
                                 {
-                                    SkillTargetInfo targetInfo = BattleSolver.SelectSkillTargets(Formations.heroes.party.Units[i],
-                                        Formations.heroes.party.Units[i], battleFinishSkill).
-                                        UpdateSkillInfo(Formations.heroes.party.Units[i], battleFinishSkill);
-                                    yield return StartCoroutine(ExecuteHeroSkill(Formations.heroes.party.Units[i],
+                                    SkillTargetInfo targetInfo = BattleSolver.SelectSkillTargets(Formations.Heroes.Party.Units[i],
+                                        Formations.Heroes.Party.Units[i], battleFinishSkill).
+                                        UpdateSkillInfo(Formations.Heroes.Party.Units[i], battleFinishSkill);
+                                    yield return StartCoroutine(ExecuteHeroSkill(Formations.Heroes.Party.Units[i],
                                         targetInfo, battleFinishSkill));
                                 }
                             }
@@ -1738,14 +1728,14 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
 
                         #region Destroy Remains
                         Formations.HideMonsterOverlay();
-                        RaidEvents.roundIndicator.Disappear();
-                        RaidEvents.roundIndicator.End();
+                        RaidEvents.RoundIndicator.Disappear();
+                        RaidEvents.RoundIndicator.End();
                         BattleGround.RetreatFromBattle();
                         yield return new WaitForSeconds(0.2f);
                         #endregion
 
                         #region Reset Hero Statuses
-                        foreach (var hero in Formations.heroes.party.Units)
+                        foreach (var hero in Formations.Heroes.Party.Units)
                         {
                             hero.ResetHalo();
                             hero.Character.GetStatusEffect(StatusType.Stun).ResetStatus();
@@ -1757,7 +1747,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                         #endregion
 
                         #region Reset Animation and Selection
-                        foreach (var hero in Formations.heroes.party.Units)
+                        foreach (var hero in Formations.Heroes.Party.Units)
                             hero.SetCombatAnimation(false);
                         RaidEvents.MonsterTooltip.Hide();
                         #endregion
@@ -1765,7 +1755,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                         if (SceneState == DungeonSceneState.Hall)
                         {
                             HallwayView.CurrentSector.SetInside(false);
-                            currentEvent = RoomLoadingEvent(HallwayView.StartingRoom,
+                            CurrentEvent = RoomLoadingEvent(HallwayView.StartingRoom,
                                 RoomTransitionType.Retreat, HallwayView.CurrentSector);
                         }
                         else if (SceneState == DungeonSceneState.Room)
@@ -1773,18 +1763,18 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                             var currentRoom = Raid.CurrentLocation as DungeonRoom;
                             var targetDoor = currentRoom.Doors.Find(door => door.TargetArea == Raid.LastSector.Hallway.Id);
                             var direction = targetDoor.Direction.OppositeDirection();
-                            currentEvent = HallwayLoadingEvent(Raid.LastSector, HallTransitionType.Retreat, direction, currentRoom);
+                            CurrentEvent = HallwayLoadingEvent(Raid.LastSector, HallTransitionType.Retreat, direction, currentRoom);
                         }
 
                         #region Remove Combat States and Restrictions
                         QuestPanel.SetPeacefulState();
-                        InvaderQuestPanel.SetPeacefulState();
+                        invaderQuestPanel.SetPeacefulState();
                         Formations.ShowHeroOverlay();
                         RaidPanel.SetPeacefulState();
                         EnableEnviroment();
                         BattleGround.LeaveBattleGround();
                         Inventory.SetPeacefulState(false);
-                        StartCoroutine(currentEvent);
+                        StartCoroutine(CurrentEvent);
                         #endregion
                         yield break;
                     }
@@ -1797,6 +1787,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
 
         BattleGround.Round.PostHeroTurn();
     }
+
     protected override IEnumerator MonsterTurn(FormationUnit actionUnit)
     {
         yield return StartCoroutine(PhotonGameManager.PreparationCheck());
@@ -1987,6 +1978,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         if (BattleGround.Round.HeroAction != HeroTurnAction.Retreat)
             BattleGround.Round.PostMonsterTurn();
     }
+
     protected override IEnumerator MonsterOverriddenTurn(FormationUnit actionUnit, string combatSkillOverride)
     {
         FMODUnity.RuntimeManager.PlayOneShot("event:/general/char/enemy_turn");
@@ -2054,9 +2046,6 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                         RaidEvents.ShowPopupMessage(skillEntry.Target, PopupMessageType.CritHeal, skillEntry.Amount.ToString());
                         FMODUnity.RuntimeManager.PlayOneShot("event:/general/status/heal_ally_crit");
                         break;
-                    case SkillResultType.Utility:
-                    default:
-                        break;
                 }
 
                 if (skillEntry.IsTargetHit && skillEntry.Target.Character.SkillReaction != null &&
@@ -2082,6 +2071,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
 
         performer.OverlaySlot.UpdateOverlay();
     }
+
     protected override IEnumerator ExecuteHeroSkill(FormationUnit actionUnit, SkillTargetInfo targetInfo, CombatSkill skill)
     {
         RaidEvents.MonsterTooltip.IsDisabled = true;
@@ -2189,7 +2179,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                     if (!skillEntry.Target.Character.IsMonster && skillEntry.IsZeroed)
                     {
                         if (skillEntry.Type == SkillResultType.Hit || skillEntry.Type == SkillResultType.Crit)
-                            if (!skillEntry.Target.Character.AtDeathsDoor && !deathDoorEnterQueue.Contains(skillEntry.Target))
+                            if (!skillEntry.Target.Character.AtDeathsDoor && !DeathDoorEnterQueue.Contains(skillEntry.Target))
                                 PrepareDeath(skillEntry.Target);
                     }
                     
@@ -2222,9 +2212,6 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                         case SkillResultType.CritHeal:
                             RaidEvents.ShowPopupMessage(skillEntry.Target, PopupMessageType.CritHeal, skillEntry.Amount.ToString());
                             FMODUnity.RuntimeManager.PlayOneShot("event:/general/status/heal_ally_crit");
-                            break;
-                        case SkillResultType.Utility:
-                        default:
                             break;
                     }
                     if (skillEntry.Target.Character.IsMonster && skillEntry.IsZeroed)
@@ -2390,13 +2377,14 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         }
         #endregion
     }
+
     protected override IEnumerator ExecuteResolveChecks()
     {
-        while (resolveCheckQueue.Count > 0)
+        while (ResolveCheckQueue.Count > 0)
         {
-            var resolveUnit = resolveCheckQueue[0];
+            var resolveUnit = ResolveCheckQueue[0];
             var resolveHero = resolveUnit.Character as Hero;
-            resolveCheckQueue.RemoveAt(0);
+            ResolveCheckQueue.RemoveAt(0);
             float virtueChance = 0.25f + resolveUnit.Character[AttributeType.ResolveCheckPercent].ModifiedValue;
             virtueChance = Mathf.Clamp(virtueChance, 0.01f, 0.6f);
             bool isVirtue = resolveUnit.Character.Class == "abomination" ? false : RandomSolver.CheckSuccess(virtueChance);
@@ -2422,8 +2410,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                 }
             }
 
-            RaidEvents.ShowAnnouncment(string.Format(LocalizationManager.GetString("resolve_test"),
-                resolveUnit.Character.Name), AnnouncmentPosition.Top);
+            RaidEvents.ShowAnnouncment(string.Format(LocalizationManager.GetString("resolve_test"), resolveUnit.Character.Name));
 
             FMODUnity.RuntimeManager.PlayOneShot("event:/general/char/resolve_test");
             yield return new WaitForSeconds(1.6f);
@@ -2449,7 +2436,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
             }
 
             Formations.HeroResolveCheckIntro(resolveUnit, isVirtue);
-            Formations.partyBuffPositions.SetUnitTarget(resolveUnit, 0.05f, Vector2.zero);
+            Formations.PartyBuffPositions.SetUnitTarget(resolveUnit, 0.05f, Vector2.zero);
             RaidEvents.ShowAnnouncment(isVirtue ?
                 LocalizationManager.GetString("str_virtue_name_" + resolveTrait.Id) :
                 LocalizationManager.GetString("str_affliction_name_" + resolveTrait.Id), AnnouncmentPosition.Bottom);
@@ -2471,8 +2458,8 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
             Formations.ShowUnitOverlay();
             yield return new WaitForSeconds(0.15f);
         }
-        yield break;
     }
+
     protected override void ExecuteDeath(FormationUnit targetUnit)
     {
         if (targetUnit.CombatInfo.IsDead)
@@ -2528,9 +2515,9 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                     }
                     else
                     {
-                        unitEventQueue.RemoveAll(item => item == targetUnit);
+                        UnitEventQueue.RemoveAll(item => item == targetUnit);
                         BattleGround.UnitDestroyed(targetUnit);
-                        Formations.monsters.DeleteUnit(targetUnit);
+                        Formations.Monsters.DeleteUnit(targetUnit);
                     }
                 }
                 else if (monster.Data.DeathClass != null)
@@ -2539,13 +2526,13 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                     {
                         targetUnit.SetCorpseAnimation(true);
                         BattleGround.UnitCorpsed(targetUnit);
-                        Formations.monsters.SpawnCorpse(targetUnit,
+                        Formations.Monsters.SpawnCorpse(targetUnit,
                             new Monster(DarkestDungeonManager.Data.Monsters[monster.Data.DeathClass.CorpseClass]));
                     }
                     else
                     {
                         var deathClass = monster.Data.DeathClass;
-                        unitEventQueue.RemoveAll(item => item == targetUnit);
+                        UnitEventQueue.RemoveAll(item => item == targetUnit);
                         MonsterData replacementData = DarkestDungeonManager.Data.Monsters[monster.Data.DeathClass.CorpseClass];
                         GameObject unitObject = Resources.Load("Prefabs/Monsters/" + replacementData.TypeId) as GameObject;
                         var finalUnit = BattleGround.ReplaceUnit(replacementData, targetUnit, unitObject, false, 1);
@@ -2558,9 +2545,9 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                 }
                 else
                 {
-                    unitEventQueue.RemoveAll(item => item == targetUnit);
+                    UnitEventQueue.RemoveAll(item => item == targetUnit);
                     BattleGround.UnitDestroyed(targetUnit);
-                    Formations.monsters.DeleteUnit(targetUnit);
+                    Formations.Monsters.DeleteUnit(targetUnit);
 
                     if (BattleGround.SharedHealth.IsActive)
                         if (BattleGround.SharedHealth.SharedUnits.Contains(targetUnit))
@@ -2589,9 +2576,9 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                     }
                     else
                     {
-                        unitEventQueue.RemoveAll(item => item == targetUnit);
+                        UnitEventQueue.RemoveAll(item => item == targetUnit);
                         BattleGround.UnitDestroyed(targetUnit);
-                        Formations.monsters.DeleteUnit(targetUnit);
+                        Formations.Monsters.DeleteUnit(targetUnit);
                     }
                 }
                 var controlRecord = BattleGround.Controls.Find(control => control.PrisonerUnit == targetUnit);
@@ -2599,22 +2586,23 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                     BattleGround.Controls.Remove(controlRecord);
                 #endregion
 
-                unitEventQueue.RemoveAll(item => item == targetUnit);
-                resolveCheckQueue.RemoveAll(item => item == targetUnit);
-                heartAttackCheckQueue.RemoveAll(item => item == targetUnit);
-                deathDoorEnterQueue.RemoveAll(item => item == targetUnit);
+                UnitEventQueue.RemoveAll(item => item == targetUnit);
+                ResolveCheckQueue.RemoveAll(item => item == targetUnit);
+                HeartAttackCheckQueue.RemoveAll(item => item == targetUnit);
+                DeathDoorEnterQueue.RemoveAll(item => item == targetUnit);
                 BattleGround.UnitDestroyed(targetUnit);
                 targetUnit.Formation.DeleteUnit(targetUnit);
                 if (RaidPanel.SelectedUnit == targetUnit)
                 {
-                    if (Formations.heroes.party.Units.Count > 0)
-                        Formations.heroes.party.Units[0].OverlaySlot.UnitSelected();
+                    if (Formations.Heroes.Party.Units.Count > 0)
+                        Formations.Heroes.Party.Units[0].OverlaySlot.UnitSelected();
                 }
                 for (int i = 0; i < targetUnit.Party.Units.Count; i++)
                     DarkestDungeonManager.Data.Effects["Stress 3"].ApplyIndependent(targetUnit.Party.Units[i]);
             }
         }
     }
+
     protected override bool PrepareDeath(FormationUnit targetUnit, DeathFactor deathFactor = DeathFactor.AttackMonster, FormationUnit killer = null)
     {
         if (targetUnit.Character.IsMonster)
@@ -2706,7 +2694,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
             }
             else
             {
-                deathDoorEnterQueue.Add(targetUnit);
+                DeathDoorEnterQueue.Add(targetUnit);
                 return false;
             }
         }
@@ -2718,11 +2706,12 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
     {
         StartCoroutine(RaidResultsEvent());
     }
+
     public override void HeroPassButtonClicked()
     {
         PhotonGameManager.Instanse.photonView.RPC("HeroPassButtonClicked", PhotonTargets.All);
-        //BattleGround.Round.HeroActionSelected(HeroTurnAction.Pass, BattleGround.Round.SelectedUnit);
     }
+
     public override void HeroSkillTargetSelected(FormationOverlaySlot overlaySlot)
     {
         if (BattleGround.Round.SelectedUnit.Team == Team.Heroes && !PhotonNetwork.isMasterClient)
@@ -2735,16 +2724,10 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
 
         if (BattleGround.BattleStatus == BattleStatus.Fighting)
         {
-            if (RaidPanel.bannerPanel.skillPanel.SelectedSkill is MoveSkill)
-            {
+            if (RaidPanel.BannerPanel.SkillPanel.SelectedSkill is MoveSkill)
                 PhotonGameManager.Instanse.photonView.RPC("HeroMoveButtonClicked", PhotonTargets.All, primaryTarget.CombatInfo.CombatId);
-                //BattleGround.Round.HeroActionSelected(HeroTurnAction.Move, primaryTarget);
-            }
-            else if (RaidPanel.bannerPanel.skillPanel.SelectedSkill is CombatSkill)
-            {
+            else if (RaidPanel.BannerPanel.SkillPanel.SelectedSkill is CombatSkill)
                 PhotonGameManager.Instanse.photonView.RPC("HeroSkillButtonClicked", PhotonTargets.All, primaryTarget.CombatInfo.CombatId);
-                //BattleGround.Round.HeroActionSelected(HeroTurnAction.Skill, primaryTarget);
-            }
         }
         else if (Raid.CampingPhase == CampingPhase.Skill)
         {
@@ -2753,27 +2736,28 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         }
         else
         {
-            if (RaidPanel.bannerPanel.skillPanel.SelectedSkill is MoveSkill)
+            if (RaidPanel.BannerPanel.SkillPanel.SelectedSkill is MoveSkill)
             {
                 var swapper = RaidPanel.SelectedUnit;
                 var target = overlaySlot.TargetUnit;
                 FMODUnity.RuntimeManager.PlayOneShot("event:/general/party/combat_move");
-                Formations.heroes.SwapUnits(swapper, target);
+                Formations.Heroes.SwapUnits(swapper, target);
                 target.OverlaySlot.UnitSelected();
             }
-            RaidPanel.bannerPanel.skillPanel.moveSlot.Deselect();
+            RaidPanel.BannerPanel.SkillPanel.MoveSlot.Deselect();
         }
     }
 
     public override void HeroSkillSelected(BattleSkillSlot skillSlot)
     {
-        int slotIndex = RaidPanel.bannerPanel.skillPanel.skillSlots.IndexOf(skillSlot);
+        int slotIndex = RaidPanel.BannerPanel.SkillPanel.SkillSlots.IndexOf(skillSlot);
         PhotonGameManager.Instanse.photonView.RPC("HeroSkillSelected", PhotonTargets.All, slotIndex);
     }
+
     public void HeroSkillSelected(int skillSlotIndex)
     {
-        BattleSkillSlot skillSlot = RaidPanel.bannerPanel.skillPanel.skillSlots[skillSlotIndex];
-        RaidPanel.bannerPanel.skillPanel.SelectedSkill = skillSlot.Skill;
+        BattleSkillSlot skillSlot = RaidPanel.BannerPanel.SkillPanel.SkillSlots[skillSlotIndex];
+        RaidPanel.BannerPanel.SkillPanel.SelectedSkill = skillSlot.Skill;
 
         BattleFormation allies, enemies;
         if (BattleGround.Round.SelectedUnit.Team == Team.Heroes)
@@ -2789,18 +2773,18 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
 
         if (skillSlot.Skill.TargetRanks.IsSelfFormation || skillSlot.Skill.TargetRanks.IsSelfTarget)
         {
-            enemies.overlay.ResetSelections();
+            enemies.Overlay.ResetSelections();
 
             if (skillSlot.Skill.TargetRanks.IsSelfTarget)
             {
                 BattleGround.Round.SelectedUnit.SetFriendlyPerformerStatus(true);
-                allies.overlay.ResetSelectionsExcept(BattleGround.Round.SelectedUnit);
+                allies.Overlay.ResetSelectionsExcept(BattleGround.Round.SelectedUnit);
             }
             else
             {
-                for (int i = 0; i < allies.party.Units.Count; i++)
+                for (int i = 0; i < allies.Party.Units.Count; i++)
                 {
-                    if (allies.party.Units[i] == BattleGround.Round.SelectedUnit)
+                    if (allies.Party.Units[i] == BattleGround.Round.SelectedUnit)
                     {
                         if (skillSlot.Skill.IsSelfValid)
                         {
@@ -2819,49 +2803,49 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                     else
                     {
                         if (skillSlot.Skill.Heal != null && BattleGround.Round.SelectedUnit.CombatInfo.
-                            BlockedHealUnitIds.Contains(allies.party.Units[i].CombatInfo.CombatId))
-                            allies.party.Units[i].SetDeactivatedStatus();
+                            BlockedHealUnitIds.Contains(allies.Party.Units[i].CombatInfo.CombatId))
+                            allies.Party.Units[i].SetDeactivatedStatus();
                         else if (skillSlot.Skill.IsBuffSkill && BattleGround.Round.SelectedUnit.CombatInfo.
-                            BlockedBuffUnitIds.Contains(allies.party.Units[i].CombatInfo.CombatId))
-                            allies.party.Units[i].SetDeactivatedStatus();
-                        else if (skillSlot.Skill.TargetRanks.IsTargetableUnit(allies.party.Units[i]))
-                            allies.party.Units[i].SetFriendlyTargetStatus(true);
+                            BlockedBuffUnitIds.Contains(allies.Party.Units[i].CombatInfo.CombatId))
+                            allies.Party.Units[i].SetDeactivatedStatus();
+                        else if (skillSlot.Skill.TargetRanks.IsTargetableUnit(allies.Party.Units[i]))
+                            allies.Party.Units[i].SetFriendlyTargetStatus(true);
                         else
-                            allies.party.Units[i].SetDeactivatedStatus();
+                            allies.Party.Units[i].SetDeactivatedStatus();
                     }
                 }
             }
         }
         else
         {
-            allies.overlay.ResetSelectionsExcept(BattleGround.Round.SelectedUnit);
+            allies.Overlay.ResetSelectionsExcept(BattleGround.Round.SelectedUnit);
             if (BattleGround.Round.SelectedUnit.IsTargetable)
                 BattleGround.Round.SelectedUnit.SetPerformerStatus();
 
-            tempList.Clear();
+            TempList.Clear();
 
-            for (int i = 0; i < enemies.party.Units.Count; i++)
+            for (int i = 0; i < enemies.Party.Units.Count; i++)
             {
-                if (skillSlot.Skill.TargetRanks.IsTargetableUnit(enemies.party.Units[i]))
-                    tempList.Add(enemies.party.Units[i]);
+                if (skillSlot.Skill.TargetRanks.IsTargetableUnit(enemies.Party.Units[i]))
+                    TempList.Add(enemies.Party.Units[i]);
                 else
-                    enemies.party.Units[i].SetDeactivatedStatus();
+                    enemies.Party.Units[i].SetDeactivatedStatus();
             }
 
-            if (skillSlot.Skill.TargetRanks.IsMultitarget && tempList.Count > 0)
+            if (skillSlot.Skill.TargetRanks.IsMultitarget && TempList.Count > 0)
             {
                 if (BattleGround.Round.SelectedUnit.Team == Team.Heroes)
-                    for (int i = 0; i < tempList.Count; i++)
-                        tempList[i].SetEnemyTargetStatus(true, i != tempList.Count - 1);
+                    for (int i = 0; i < TempList.Count; i++)
+                        TempList[i].SetEnemyTargetStatus(true, i != TempList.Count - 1);
                 else
-                    for (int i = 0; i < tempList.Count; i++)
-                        tempList[i].SetEnemyTargetStatus(true, i != 0);
+                    for (int i = 0; i < TempList.Count; i++)
+                        TempList[i].SetEnemyTargetStatus(true, i != 0);
             }
             else
-                foreach (var target in tempList)
+                foreach (var target in TempList)
                     target.SetEnemyTargetStatus(true, false);
 
-            tempList.Clear();
+            TempList.Clear();
         }
     }
 
@@ -2869,10 +2853,11 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
     {
         PhotonGameManager.Instanse.photonView.RPC("HeroMoveSelected", PhotonTargets.All);
     }
+
     public void HeroMoveSelected()
     {
-        MoveSkillSlot skillSlot = RaidPanel.bannerPanel.skillPanel.moveSlot;
-        RaidPanel.bannerPanel.skillPanel.SelectedSkill = skillSlot.Skill;
+        MoveSkillSlot skillSlot = RaidPanel.BannerPanel.SkillPanel.MoveSlot;
+        RaidPanel.BannerPanel.SkillPanel.SelectedSkill = skillSlot.Skill;
 
         if (BattleGround.BattleStatus == BattleStatus.Fighting)
         {
@@ -2888,32 +2873,32 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                 enemies = BattleGround.HeroFormation;
             }
 
-            enemies.overlay.ResetSelections();
-            for (int i = 0; i < allies.party.Units.Count; i++)
+            enemies.Overlay.ResetSelections();
+            for (int i = 0; i < allies.Party.Units.Count; i++)
             {
-                if (allies.party.Units[i] == BattleGround.Round.SelectedUnit)
+                if (allies.Party.Units[i] == BattleGround.Round.SelectedUnit)
                     BattleGround.Round.SelectedUnit.SetPerformerStatus();
                 else
                 {
-                    int distance = BattleGround.Round.SelectedUnit.Rank - allies.party.Units[i].Rank;
+                    int distance = BattleGround.Round.SelectedUnit.Rank - allies.Party.Units[i].Rank;
                     if (BattleGround.Round.SelectedUnit.CombatInfo.BlockedMoveUnitIds.
-                        Contains(allies.party.Units[i].CombatInfo.CombatId))
+                        Contains(allies.Party.Units[i].CombatInfo.CombatId))
                     {
-                        allies.party.Units[i].SetDeactivatedStatus();
+                        allies.Party.Units[i].SetDeactivatedStatus();
                     }
                     else if (distance < 0)
                     {
-                        if (skillSlot.Skill.MoveBackward >= -distance && !allies.party.Units[i].CombatInfo.IsImmobilized)
-                            allies.party.Units[i].SetMoveTargetStatus(true);
+                        if (skillSlot.Skill.MoveBackward >= -distance && !allies.Party.Units[i].CombatInfo.IsImmobilized)
+                            allies.Party.Units[i].SetMoveTargetStatus(true);
                         else
-                            allies.party.Units[i].SetDeactivatedStatus();
+                            allies.Party.Units[i].SetDeactivatedStatus();
                     }
                     else
                     {
-                        if (skillSlot.Skill.MoveForward >= distance && !allies.party.Units[i].CombatInfo.IsImmobilized)
-                            allies.party.Units[i].SetMoveTargetStatus(true);
+                        if (skillSlot.Skill.MoveForward >= distance && !allies.Party.Units[i].CombatInfo.IsImmobilized)
+                            allies.Party.Units[i].SetMoveTargetStatus(true);
                         else
-                            allies.party.Units[i].SetDeactivatedStatus();
+                            allies.Party.Units[i].SetDeactivatedStatus();
                     }
                 }
             }
@@ -2924,14 +2909,15 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
     {
         PhotonGameManager.Instanse.photonView.RPC("HeroMoveDeselected", PhotonTargets.All);
     }
+
     public void HeroMoveDeselected()
     {
         if (BattleGround.BattleStatus == BattleStatus.Peace)
         {
-            for (int i = 0; i < Formations.heroes.party.Units.Count; i++)
+            for (int i = 0; i < Formations.Heroes.Party.Units.Count; i++)
             {
-                if (Formations.heroes.party.Units[i] != RaidPanel.SelectedUnit)
-                    Formations.heroes.party.Units[i].SetDeactivatedStatus();
+                if (Formations.Heroes.Party.Units[i] != RaidPanel.SelectedUnit)
+                    Formations.Heroes.Party.Units[i].SetDeactivatedStatus();
             }
         }
     }

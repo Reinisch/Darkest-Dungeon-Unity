@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
+// ReSharper disable CollectionNeverUpdated.Global
+// ReSharper disable InconsistentNaming
+
 namespace DarkestJson
 {
     #region Heirloom Trading

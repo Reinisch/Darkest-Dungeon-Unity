@@ -3,7 +3,8 @@ using System.Collections.Generic;
 
 public class ResultHeroWindow : MonoBehaviour
 {
-    public List<ResultHeroSlot> resultSlots;
+    [SerializeField]
+    private List<ResultHeroSlot> resultSlots;
 
     public void PreparePropotions()
     {

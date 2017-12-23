@@ -2,12 +2,28 @@
 
 public class RaidRoomView : MonoBehaviour
 {
-    public RaidHallwayPassage hallwayPassage;
-    public RectTransform startingPosition;
-    public RaidRoom raidRoom;
-    public CanvasGroup canvasGroup;
+    [SerializeField]
+    private RaidHallwayPassage hallwayPassage;
+    [SerializeField]
+    private RectTransform startingPosition;
+    [SerializeField]
+    private RaidRoom raidRoom;
+    [SerializeField]
+    private CanvasGroup canvasGroup;
 
-    public Hallway LastHallway { get; set; }
+    private Hallway LastHallway { get; set; }
+
+    public RaidRoom RaidRoom { get { return raidRoom; } }
+    public RectTransform StartingPosition { get { return startingPosition; } }
+    public RaidHallwayPassage HallwayPassage { get { return hallwayPassage; } }
+
+    public void LoadRoom(DungeonRoom room, HallSector fromSector, bool savedBattle = false)
+    {
+        RaidRoom.LoadRoom(room, savedBattle);
+        LastHallway = fromSector == null ? null : fromSector.Hallway;
+
+        RaidSceneManager.MapPanel.OnRoomEnter(room, LastHallway);
+    }
 
     public void SetActive(bool active)
     {
@@ -19,17 +35,10 @@ public class RaidRoomView : MonoBehaviour
         canvasGroup.interactable = true;
         canvasGroup.blocksRaycasts = true;
     }
+
     public void DisableInteraction()
     {
         canvasGroup.interactable = false;
         canvasGroup.blocksRaycasts = false;
-    }
-
-    public void LoadRoom(DungeonRoom room, HallSector fromSector, bool savedBattle = false)
-    {
-        raidRoom.LoadRoom(room, savedBattle);
-        LastHallway = fromSector == null ? null : fromSector.Hallway;
-
-        RaidSceneManager.MapPanel.OnRoomEnter(room, LastHallway);
     }
 }

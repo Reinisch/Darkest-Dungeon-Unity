@@ -3,41 +3,16 @@ using System.Collections.Generic;
 
 public class RaidHallway : MonoBehaviour
 {
-    const int borderRoomNumber = 2;
+    private const int BorderRoomNumber = 2;
 
-    public List<RaidHallSector> HallSectors { get; set; }
+    public List<RaidHallSector> HallSectors { get; private set; }
 
-    public int SectorCount
-    {
-        get
-        {
-            return HallSectors.Count;
-        }
-    }
-    public int ActiveSectorCount
-    {
-        get
-        {
-            return HallSectors.Count - borderRoomNumber * 2;
-        }
-    }
+    public int SectorCount { get { return HallSectors.Count; } }
+    public int ActiveSectorCount { get { return HallSectors.Count - BorderRoomNumber * 2; } }
+    public int StartDoorSector { get { return BorderRoomNumber; } }
+    public int EndDoorSector { get { return ActiveSectorCount + BorderRoomNumber - 1; } }
 
-    public int StartDoorSector
-    {
-        get
-        {
-            return borderRoomNumber;
-        }
-    }
-    public int EndDoorSector
-    {
-        get
-        {
-            return ActiveSectorCount + borderRoomNumber - 1;
-        }
-    }
-
-    void Awake()
+    private void Awake()
     {
         HallSectors = new List<RaidHallSector>(GetComponentsInChildren<RaidHallSector>());
     }

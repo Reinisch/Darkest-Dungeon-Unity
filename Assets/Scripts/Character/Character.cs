@@ -1,365 +1,54 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
-
-public enum AttributeType
-{
-    Undefined, HitPoints, Stress, HpHealAmount, HpHealPercent, DmgReceivedPercent, HpHealReceivedPercent,
-    StressDmgReceivedPercent, StressDmgPercent, StressHealPercent, StressHealReceivedPercent,
-    ResolveCheckPercent, ResolveXpPercent, StunChance, PoisonChance, BleedChance, MoveChance,
-    DebuffChance, ScoutingChance, PartySurpriseChance, MonsterSurpirseChance, RemoveQuirkChance,
-    FoodConsumption, StarvingDamagePercent, DefenseRating, ProtectionRating, SpeedRating,
-    AttackRating, CritChance, DamageLow, DamageHigh, ArmorDiscount, WeaponDiscount, Stun,
-    Poison, Disease, DeathBlow, Move, Bleed, Debuff, Trap,
-}
-
-public enum AttributeCategory
-{
-    Undefined, CombatStat, Modifier, Discount, Resistance
-}
+using UnityEngine.Assertions;
 
 public class Character
 {
-    protected List<BuffInfo> buffInfo;
-    protected Dictionary<StatusType, StatusEffect> statusEffects;
-    protected Dictionary<AttributeType, SingleAttribute> singleAttributes;
-    protected Dictionary<AttributeType, PairedAttribute> pairedAttributes;
-
-    #region Basic Stats
-    private static AttributeType[] SingleStats = new AttributeType[]
-    {
-        AttributeType.DefenseRating, AttributeType.ProtectionRating, AttributeType.SpeedRating,
-        AttributeType.AttackRating, AttributeType.CritChance, AttributeType.DamageLow, AttributeType.DamageHigh,
-    };
-    #endregion
-
-    #region Modifiers
-    private static AttributeType[] Modifiers = new AttributeType[]
-    {
-        AttributeType.HpHealAmount, AttributeType.HpHealPercent, AttributeType.MoveChance, AttributeType.DebuffChance,
-        AttributeType.StressHealPercent, AttributeType.DmgReceivedPercent, AttributeType.HpHealReceivedPercent,
-        AttributeType.StressDmgReceivedPercent, AttributeType.StressHealReceivedPercent, AttributeType.StunChance,
-        AttributeType.PoisonChance, AttributeType.BleedChance, AttributeType.ResolveCheckPercent, AttributeType.StressDmgPercent,
-        AttributeType.ScoutingChance, AttributeType.PartySurpriseChance, AttributeType.MonsterSurpirseChance,
-        AttributeType.RemoveQuirkChance, AttributeType.FoodConsumption, AttributeType.StarvingDamagePercent,
-    };
-    #endregion
-
-    #region Hero Discounts
-    private static AttributeType[] HeroDiscounts = new AttributeType[]
-    {
-        AttributeType.ArmorDiscount,
-        AttributeType.WeaponDiscount,
-    };
-    #endregion
-
-    #region Hero Resistances
-    private static AttributeType[] HeroResistances = new AttributeType[]
-    {
-        AttributeType.Stun, AttributeType.Poison, AttributeType.Disease,
-        AttributeType.DeathBlow, AttributeType.Move, AttributeType.Bleed,
-        AttributeType.Debuff, AttributeType.Trap,
-    };
-    #endregion
-
-    #region Monster Resistances
-    private static AttributeType[] MonsterResistances = new AttributeType[]
-    {
-        AttributeType.Stun, AttributeType.Poison, AttributeType.Move,
-        AttributeType.Bleed, AttributeType.Debuff,
-    };
-    #endregion
-
-    public virtual List<SkillArtInfo> SkillArtInfo
-    {
-        get
-        {
-            return new List<SkillArtInfo>();
-        }
-    }
-
-    public virtual CombatSkill RiposteSkill
-    {
-        get
-        {
-            return null;
-        }
-    }
-
-    public virtual int Size
-    {
-        get
-        {
-            return 1;
-        }
-    }
-
-    public virtual string Name
-    {
-        get
-        {
-            return "Character";
-        }
-    }
-
-    public virtual string Class
-    {
-        get
-        {
-            return "Class";
-        }
-    }
-
-    public virtual bool AtDeathsDoor
-    {
-        get
-        {
-            return false;
-        }
-    }
-
-    public virtual bool IsStressed
-    {
-        get
-        {
-            return false;
-        }
-    }
-
-    public virtual bool IsOverstressed
-    {
-        get
-        {
-            return false;
-        }
-    }
-
-    public virtual bool IsVirtued
-    {
-        get
-        {
-            return false;
-        }
-    }
-
-    public virtual bool IsAfflicted
-    {
-        get
-        {
-            return false;
-        }
-    }
-
-    public virtual bool IsMonster
-    {
-        get
-        {
-            return false;
-        }
-    }
-
-    public virtual int RenderRankOverride
-    {
-        get
-        {
-            return 0;
-        }
-    }
-
-    public virtual bool InMode
-    {
-        get
-        {
-            return false;
-        }
-    }
-
-    public virtual CharacterMode Mode
-    {
-        get
-        {
-            return null;
-        }
-    }
+    public virtual List<SkillArtInfo> SkillArtInfo { get { return new List<SkillArtInfo>(); } }
+    public virtual CombatSkill RiposteSkill { get { return null; } }
+    public virtual int Size { get { return 1; } }
+    public virtual string Name { get { return "Character"; } }
+    public virtual string Class { get { return "Class"; } }
+    public virtual bool AtDeathsDoor { get { return false; } }
+    public virtual bool IsStressed { get { return false; } }
+    public virtual bool IsOverstressed { get { return false; } }
+    public virtual bool IsVirtued { get { return false; } }
+    public virtual bool IsAfflicted { get { return false; } }
+    public virtual bool IsMonster { get { return false; } }
+    public virtual int RenderRankOverride { get { return 0; } }
+    public virtual bool InMode { get { return false; } }
+    public virtual CharacterMode Mode { get { return null; } }
+    public virtual CommonEffects CommonEffects { get { return null; } }
+    public virtual Initiative Initiative { get { return null; } }
+    public virtual DisplayModifier DisplayModifier { get { return null; } }
+    public virtual TorchlightModifier TorchlightModifier { get { return null; } }
+    public virtual HealthbarModifier HealthbarModifier { get { return null; } }
+    public virtual DeathClass DeathClass { get { return null; } }
+    public virtual DeathDamage DeathDamage { get { return null; } }
+    public virtual BattleModifier BattleModifiers { get { return null; } }
+    public virtual Companion Companion { get { return null; } }
+    public virtual EmptyCaptor EmptyCaptor { get { return null; } }
+    public virtual FullCaptor FullCaptor { get { return null; } }
+    public virtual Controller ControllerCaptor { get { return null; } }
+    public virtual LifeTime LifeTime { get { return null; } }
+    public virtual LifeLink LifeLink { get { return null; } }
+    public virtual SharedHealth SharedHealth { get { return null; } }
+    public virtual Shapeshifter Shapeshifter { get { return null; } }
+    public virtual Spawn Spawn { get { return null; } }
+    public virtual SkillReaction SkillReaction { get { return null; } }
+    public virtual List<MonsterType> MonsterTypes { get { return null; } }
+    public virtual List<LootDefinition> Loot { get { return null; } }
 
     public virtual Trait Trait
     {
-        get
-        {
-            return null;
-        }
-        protected set
-        {
-
-        }
-    }
-
-    public virtual CommonEffects CommonEffects
-    {
-        get
-        {
-            return null;
-        }
-    }
-
-    public virtual Initiative Initiative
-    {
-        get
-        {
-            return null;
-        }
-    }
-
-    public virtual DisplayModifier DisplayModifier
-    {
-        get
-        {
-            return null;
-        }
-    }
-
-    public virtual TorchlightModifier TorchlightModifier
-    {
-        get
-        {
-            return null;
-        }
-    }
-
-    public virtual HealthbarModifier HealthbarModifier
-    {
-        get
-        {
-            return null;
-        }
-    }
-
-    public virtual DeathClass DeathClass
-    {
-        get
-        {
-            return null;
-        }
-    }
-
-    public virtual DeathDamage DeathDamage
-    {
-        get
-        {
-            return null;
-        }
-    }
-
-    public virtual BattleModifier BattleModifiers
-    {
-        get
-        {
-            return null;
-        }
-    }
-
-    public virtual Companion Companion
-    {
-        get
-        {
-            return null;
-        }
-    }
-
-    public virtual EmptyCaptor EmptyCaptor
-    {
-        get
-        {
-            return null;
-        }
-    }
-
-    public virtual FullCaptor FullCaptor
-    {
-        get
-        {
-            return null;
-        }
-    }
-
-    public virtual Controller ControllerCaptor
-    {
-        get
-        {
-            return null;
-        }
-    }
-
-    public virtual LifeTime LifeTime
-    {
-        get
-        {
-            return null;
-        }
-    }
-
-    public virtual LifeLink LifeLink
-    {
-        get
-        {
-            return null;
-        }
-    }
-
-    public virtual SharedHealth SharedHealth
-    {
-        get
-        {
-            return null;
-        }
-    }
-
-    public virtual Shapeshifter Shapeshifter
-    {
-        get
-        {
-            return null;
-        }
-    }
-
-    public virtual Spawn Spawn
-    {
-        get
-        {
-            return null;
-        }
-    }
-
-    public virtual SkillReaction SkillReaction
-    {
-        get
-        {
-            return null;
-        }
-    }
-
-    public virtual List<MonsterType> MonsterTypes
-    {
-        get
-        {
-            return null;
-        }
-    }
-
-    public virtual List<LootDefinition> Loot
-    {
-        get
-        {
-            return null;
-        }
+        get { return null; }
+        protected set { Assert.IsTrue(false, "Only heroes have trait! Character: " + Name + " Trait: " + value); }
     }
 
     public bool ReadyForAfflictionCheck
     {
-        get
-        {
-            return !(IsVirtued || IsAfflicted) && IsOverstressed;
-        }
+        get { return !(IsVirtued || IsAfflicted) && IsOverstressed; }
     }
 
     public float FoodConsumption
@@ -490,6 +179,61 @@ public class Character
         get { return Mathf.RoundToInt(CurrentHealth) == 0; }
     }
 
+    public PairedAttribute Health
+    {
+        get { return GetPairedAttribute(AttributeType.HitPoints); }
+    }
+
+    public PairedAttribute Stress
+    {
+        get { return GetPairedAttribute(AttributeType.Stress); }
+    }
+
+    protected readonly List<BuffInfo> BuffInfo;
+    protected Dictionary<StatusType, StatusEffect> StatusEffects;
+
+    private readonly Dictionary<AttributeType, SingleAttribute> singleAttributes;
+    private readonly Dictionary<AttributeType, PairedAttribute> pairedAttributes;
+
+    #region Static Character Attribute Data
+
+    private static readonly AttributeType[] SingleStats = new AttributeType[]
+    {
+        AttributeType.DefenseRating, AttributeType.ProtectionRating, AttributeType.SpeedRating,
+        AttributeType.AttackRating, AttributeType.CritChance, AttributeType.DamageLow, AttributeType.DamageHigh,
+    };
+
+    private static readonly AttributeType[] Modifiers = new AttributeType[]
+    {
+        AttributeType.HpHealAmount, AttributeType.HpHealPercent, AttributeType.MoveChance, AttributeType.DebuffChance,
+        AttributeType.StressHealPercent, AttributeType.DmgReceivedPercent, AttributeType.HpHealReceivedPercent,
+        AttributeType.StressDmgReceivedPercent, AttributeType.StressHealReceivedPercent, AttributeType.StunChance,
+        AttributeType.PoisonChance, AttributeType.BleedChance, AttributeType.ResolveCheckPercent, AttributeType.StressDmgPercent,
+        AttributeType.ScoutingChance, AttributeType.PartySurpriseChance, AttributeType.MonsterSurpirseChance,
+        AttributeType.RemoveQuirkChance, AttributeType.FoodConsumption, AttributeType.StarvingDamagePercent,
+    };
+
+    private static readonly AttributeType[] HeroDiscounts = new AttributeType[]
+    {
+        AttributeType.ArmorDiscount,
+        AttributeType.WeaponDiscount,
+    };
+
+    private static readonly AttributeType[] HeroResistances = new AttributeType[]
+    {
+        AttributeType.Stun, AttributeType.Poison, AttributeType.Disease,
+        AttributeType.DeathBlow, AttributeType.Move, AttributeType.Bleed,
+        AttributeType.Debuff, AttributeType.Trap,
+    };
+
+    private static readonly AttributeType[] MonsterResistances = new AttributeType[]
+    {
+        AttributeType.Stun, AttributeType.Poison, AttributeType.Move,
+        AttributeType.Bleed, AttributeType.Debuff,
+    };
+
+    #endregion
+
     public static void InitializeBasicStatuses(Dictionary<StatusType, StatusEffect> targetDictionary)
     {
         targetDictionary.Clear();
@@ -505,212 +249,170 @@ public class Character
         targetDictionary.Add(StatusType.DeathRecovery, new DeathRecoveryStatusEffect());
     }
 
-    protected void AddSingleAttribute(AttributeType stat, SingleAttribute attribute)
+    protected Character(HeroClass heroClass, int level)
     {
-        singleAttributes.Add(stat, attribute);
-    }
-
-    protected void AddPairedAttribute(AttributeType stat, PairedAttribute attribute)
-    {
-        pairedAttributes.Add(stat, attribute);
-    }
-
-
-    public Character(HeroClass heroClass, int level)
-    {
-        buffInfo = new List<BuffInfo>();
+        BuffInfo = new List<BuffInfo>();
         pairedAttributes = new Dictionary<AttributeType, PairedAttribute>();
         singleAttributes = new Dictionary<AttributeType, SingleAttribute>();
-        statusEffects = new Dictionary<StatusType, StatusEffect>();
-        InitializeBasicStatuses(statusEffects);
+        StatusEffects = new Dictionary<StatusType, StatusEffect>();
+        InitializeBasicStatuses(StatusEffects);
 
-        AddPairedAttribute(AttributeType.HitPoints, new PairedAttribute(AttributeCategory.CombatStat));
+        AddPairedAttribute(AttributeType.HitPoints, new PairedAttribute());
 
         for (int i = 0; i < SingleStats.Length; i++)
-            AddSingleAttribute(SingleStats[i], new SingleAttribute(AttributeCategory.CombatStat));
+            AddSingleAttribute(SingleStats[i], new SingleAttribute());
 
         for (int i = 0; i < Modifiers.Length; i++)
-            AddSingleAttribute(Modifiers[i], new SingleAttribute(AttributeCategory.Modifier));
+            AddSingleAttribute(Modifiers[i], new SingleAttribute());
 
         for (int i = 0; i < HeroDiscounts.Length; i++)
-            AddSingleAttribute(HeroDiscounts[i], new SingleAttribute(AttributeCategory.Discount));
+            AddSingleAttribute(HeroDiscounts[i], new SingleAttribute());
 
         for (int i = 0; i < HeroResistances.Length; i++)
             if (HeroResistances[i] == AttributeType.DeathBlow)
                 AddSingleAttribute(HeroResistances[i],
-                    new SingleAttribute(heroClass.Resistanses[HeroResistances[i]], AttributeCategory.Resistance));
+                    new SingleAttribute(heroClass.Resistanses[HeroResistances[i]]));
             else
                 AddSingleAttribute(HeroResistances[i],
-                    new SingleAttribute(heroClass.Resistanses[HeroResistances[i]] + level * 0.1f, AttributeCategory.Resistance));
+                    new SingleAttribute(heroClass.Resistanses[HeroResistances[i]] + level * 0.1f));
     }
 
-    public Character(HeroClass heroClass)
+    protected Character(HeroClass heroClass)
     {
-        buffInfo = new List<BuffInfo>();
+        BuffInfo = new List<BuffInfo>();
         pairedAttributes = new Dictionary<AttributeType, PairedAttribute>();
         singleAttributes = new Dictionary<AttributeType, SingleAttribute>();
-        statusEffects = new Dictionary<StatusType, StatusEffect>();
-        InitializeBasicStatuses(statusEffects);
+        StatusEffects = new Dictionary<StatusType, StatusEffect>();
+        InitializeBasicStatuses(StatusEffects);
 
-        AddPairedAttribute(AttributeType.HitPoints, new PairedAttribute(AttributeCategory.CombatStat));
+        AddPairedAttribute(AttributeType.HitPoints, new PairedAttribute());
 
         for (int i = 0; i < SingleStats.Length; i++)
-            AddSingleAttribute(SingleStats[i], new SingleAttribute(AttributeCategory.CombatStat));
+            AddSingleAttribute(SingleStats[i], new SingleAttribute());
 
         for (int i = 0; i < Modifiers.Length; i++)
-            AddSingleAttribute(Modifiers[i], new SingleAttribute(AttributeCategory.Modifier));
+            AddSingleAttribute(Modifiers[i], new SingleAttribute());
 
         for (int i = 0; i < HeroDiscounts.Length; i++)
-            AddSingleAttribute(HeroDiscounts[i], new SingleAttribute(AttributeCategory.Discount));
+            AddSingleAttribute(HeroDiscounts[i], new SingleAttribute());
 
         for (int i = 0; i < HeroResistances.Length; i++)
             AddSingleAttribute(HeroResistances[i],
-                new SingleAttribute(heroClass.Resistanses[HeroResistances[i]], AttributeCategory.Resistance));
+                new SingleAttribute(heroClass.Resistanses[HeroResistances[i]]));
     }
 
-    public Character(SaveHeroData saveHeroData)
+    protected Character(SaveHeroData saveHeroData)
     {
-        buffInfo = saveHeroData.Buffs;
+        BuffInfo = saveHeroData.Buffs;
         pairedAttributes = new Dictionary<AttributeType, PairedAttribute>();
         singleAttributes = new Dictionary<AttributeType, SingleAttribute>();
-        statusEffects = new Dictionary<StatusType, StatusEffect>();
-        InitializeBasicStatuses(statusEffects);
+        StatusEffects = new Dictionary<StatusType, StatusEffect>();
+        InitializeBasicStatuses(StatusEffects);
 
         HeroClass heroClass = DarkestDungeonManager.Data.HeroClasses[saveHeroData.HeroClass];
 
-        AddPairedAttribute(AttributeType.HitPoints, new PairedAttribute(AttributeCategory.CombatStat));
+        AddPairedAttribute(AttributeType.HitPoints, new PairedAttribute());
 
         for (int i = 0; i < SingleStats.Length; i++)
-            AddSingleAttribute(SingleStats[i], new SingleAttribute(AttributeCategory.CombatStat));
+            AddSingleAttribute(SingleStats[i], new SingleAttribute());
 
         for (int i = 0; i < Modifiers.Length; i++)
-            AddSingleAttribute(Modifiers[i], new SingleAttribute(AttributeCategory.Modifier));
+            AddSingleAttribute(Modifiers[i], new SingleAttribute());
 
         for (int i = 0; i < HeroDiscounts.Length; i++)
-            AddSingleAttribute(HeroDiscounts[i], new SingleAttribute(AttributeCategory.Discount));
+            AddSingleAttribute(HeroDiscounts[i], new SingleAttribute());
 
         for (int i = 0; i < HeroResistances.Length; i++)
             if (HeroResistances[i] == AttributeType.DeathBlow)
                 AddSingleAttribute(HeroResistances[i],
-                    new SingleAttribute(heroClass.Resistanses[HeroResistances[i]], AttributeCategory.Resistance));
+                    new SingleAttribute(heroClass.Resistanses[HeroResistances[i]]));
             else
                 AddSingleAttribute(HeroResistances[i],
                     new SingleAttribute(heroClass.Resistanses[HeroResistances[i]]
-                    + saveHeroData.ResolveLevel * 0.1f, AttributeCategory.Resistance));
+                    + saveHeroData.ResolveLevel * 0.1f));
     }
 
-    public Character(MonsterData monsterData)
+    protected Character(MonsterData monsterData)
     {
-        buffInfo = new List<BuffInfo>();
+        BuffInfo = new List<BuffInfo>();
         pairedAttributes = new Dictionary<AttributeType, PairedAttribute>();
         singleAttributes = new Dictionary<AttributeType, SingleAttribute>();
-        statusEffects = new Dictionary<StatusType, StatusEffect>();
-        InitializeBasicStatuses(statusEffects);
+        StatusEffects = new Dictionary<StatusType, StatusEffect>();
+        InitializeBasicStatuses(StatusEffects);
 
         AddPairedAttribute(AttributeType.HitPoints, new PairedAttribute(monsterData.Attributes[AttributeType.HitPoints],
-            monsterData.Attributes[AttributeType.HitPoints], true, AttributeCategory.CombatStat));
+            monsterData.Attributes[AttributeType.HitPoints], true));
 
         for (int i = 0; i < SingleStats.Length; i++)
             if (monsterData.Attributes.ContainsKey(SingleStats[i]))
                 AddSingleAttribute(SingleStats[i],
-                    new SingleAttribute(monsterData.Attributes[SingleStats[i]], AttributeCategory.CombatStat));
+                    new SingleAttribute(monsterData.Attributes[SingleStats[i]]));
             else
-                AddSingleAttribute(SingleStats[i], new SingleAttribute(AttributeCategory.CombatStat));
+                AddSingleAttribute(SingleStats[i], new SingleAttribute());
 
         for (int i = 0; i < Modifiers.Length; i++)
-            AddSingleAttribute(Modifiers[i], new SingleAttribute(AttributeCategory.Modifier));
+            AddSingleAttribute(Modifiers[i], new SingleAttribute());
 
         for (int i = 0; i < MonsterResistances.Length; i++)
             AddSingleAttribute(MonsterResistances[i],
-                new SingleAttribute(monsterData.Attributes[MonsterResistances[i]], AttributeCategory.Resistance));
+                new SingleAttribute(monsterData.Attributes[MonsterResistances[i]]));
     }
 
-    public Character(FormationUnitSaveData unitSaveData, MonsterData monsterData)
+    protected Character(FormationUnitSaveData unitSaveData, MonsterData monsterData)
     {
-        buffInfo = unitSaveData.Buffs;
+        BuffInfo = unitSaveData.Buffs;
         pairedAttributes = new Dictionary<AttributeType, PairedAttribute>();
         singleAttributes = new Dictionary<AttributeType, SingleAttribute>();
-        statusEffects = unitSaveData.Statuses;
+        StatusEffects = unitSaveData.Statuses;
 
         AddPairedAttribute(AttributeType.HitPoints, new PairedAttribute(unitSaveData.CurrentHp,
-            monsterData.Attributes[AttributeType.HitPoints], true, AttributeCategory.CombatStat));
+            monsterData.Attributes[AttributeType.HitPoints], true));
 
         for (int i = 0; i < SingleStats.Length; i++)
             if (monsterData.Attributes.ContainsKey(SingleStats[i]))
                 AddSingleAttribute(SingleStats[i],
-                    new SingleAttribute(monsterData.Attributes[SingleStats[i]], AttributeCategory.CombatStat));
+                    new SingleAttribute(monsterData.Attributes[SingleStats[i]]));
             else
-                AddSingleAttribute(SingleStats[i], new SingleAttribute(AttributeCategory.CombatStat));
+                AddSingleAttribute(SingleStats[i], new SingleAttribute());
 
         for (int i = 0; i < Modifiers.Length; i++)
-            AddSingleAttribute(Modifiers[i], new SingleAttribute(AttributeCategory.Modifier));
+            AddSingleAttribute(Modifiers[i], new SingleAttribute());
 
         for (int i = 0; i < MonsterResistances.Length; i++)
             AddSingleAttribute(MonsterResistances[i],
-                new SingleAttribute(monsterData.Attributes[MonsterResistances[i]], AttributeCategory.Resistance));
-    }
-
-
-    protected void UpdateResolve(int level, HeroClass heroClass)
-    {
-        for (int i = 0; i < HeroResistances.Length; i++)
-            if (HeroResistances[i] == AttributeType.DeathBlow)
-                GetSingleAttribute(HeroResistances[i]).RawValue = heroClass.Resistanses[HeroResistances[i]];
-            else
-                GetSingleAttribute(HeroResistances[i]).RawValue = heroClass.Resistanses[HeroResistances[i]] + level * 0.1f;
-    }
-
-
-    public void LoadStatusEffects(Dictionary<StatusType, StatusEffect> newStatusEffects)
-    {
-        statusEffects = newStatusEffects;
-    }
-
-    public void UpdateDurations(BuffDurationType durationType)
-    {
-        foreach (var buffEntry in buffInfo.FindAll(roundBuff => roundBuff.DurationType == durationType))
-            if (--buffEntry.Duration <= 0)
-                RemoveBuff(buffEntry);
+                new SingleAttribute(monsterData.Attributes[MonsterResistances[i]]));
     }
 
     public void UpdateRound()
     {
-        foreach (var effect in statusEffects)
+        foreach (var effect in StatusEffects)
             effect.Value.UpdateNextTurn();
 
         UpdateDurations(BuffDurationType.Round);
     }
 
+    #region Buff Functions
 
-    public PairedAttribute Health
+    public void UpdateDurations(BuffDurationType durationType)
     {
-        get
-        {
-            return GetPairedAttribute(AttributeType.HitPoints);
-        }
-    }
-
-    public PairedAttribute Stress
-    {
-        get
-        {
-            return GetPairedAttribute(AttributeType.Stress);
-        }
+        foreach (var buffEntry in BuffInfo.FindAll(roundBuff => roundBuff.DurationType == durationType))
+            if (--buffEntry.Duration <= 0)
+                RemoveBuff(buffEntry);
     }
 
     public bool HasBuffs()
     {
-        return buffInfo.Find(info => info.SourceType == BuffSourceType.Adventure && info.Buff.IsPositive()) != null;
+        return BuffInfo.Find(info => info.SourceType == BuffSourceType.Adventure && info.Buff.IsPositive()) != null;
     }
 
     public bool HasDebuffs()
     {
-        return buffInfo.Find(info => info.SourceType == BuffSourceType.Adventure && !info.Buff.IsPositive()) != null;
+        return BuffInfo.Find(info => info.SourceType == BuffSourceType.Adventure && !info.Buff.IsPositive()) != null;
     }
 
     public bool HasEventBuffs()
     {
-        return buffInfo.Find(info => info.SourceType == BuffSourceType.Estate) != null;
+        return BuffInfo.Find(info => info.SourceType == BuffSourceType.Estate) != null;
     }
 
     public void ApplyStunRecovery()
@@ -718,9 +420,9 @@ public class Character
         var recoveryBuff = DarkestDungeonManager.Data.Buffs["STUNRECOVERYBUFF"];
         int recoveryStackCount = 0;
 
-        for (int i = 0; i < buffInfo.Count; i++)
+        for (int i = 0; i < BuffInfo.Count; i++)
         {
-            if (buffInfo[i].Buff == recoveryBuff)
+            if (BuffInfo[i].Buff == recoveryBuff)
                 recoveryStackCount++;
         }
 
@@ -732,37 +434,82 @@ public class Character
 
     public void RemoveConditionalBuffs()
     {
-        for (int i = buffInfo.Count - 1; i >= 0; i--)
+        for (int i = BuffInfo.Count - 1; i >= 0; i--)
         {
-            if (buffInfo[i].SourceType == BuffSourceType.Condition)
-                RemoveBuff(buffInfo[i]);
+            if (BuffInfo[i].SourceType == BuffSourceType.Condition)
+                RemoveBuff(BuffInfo[i]);
         }
     }
 
     public void RemoveCampingBuffs()
     {
-        for (int i = buffInfo.Count - 1; i >= 0; i--)
+        for (int i = BuffInfo.Count - 1; i >= 0; i--)
         {
-            if (buffInfo[i].DurationType == BuffDurationType.Camp)
-                RemoveBuff(buffInfo[i]);
+            if (BuffInfo[i].DurationType == BuffDurationType.Camp)
+                RemoveBuff(BuffInfo[i]);
         }
     }
 
     public void RemoveLightBuffs()
     {
-        for (int i = buffInfo.Count - 1; i >= 0; i--)
+        for (int i = BuffInfo.Count - 1; i >= 0; i--)
         {
-            if (buffInfo[i].SourceType == BuffSourceType.Light)
-                RemoveBuff(buffInfo[i]);
+            if (BuffInfo[i].SourceType == BuffSourceType.Light)
+                RemoveBuff(BuffInfo[i]);
         }
+    }    
+
+    public void AddBuff(BuffInfo newBuffInfo)
+    {
+        BuffInfo.Add(newBuffInfo);
+        if (newBuffInfo.Buff.RuleType == BuffRule.Always)
+            ApplyBuff(newBuffInfo);
     }
 
+    public bool ContainsBuff(Buff buff, BuffSourceType sourceType)
+    {
+        return BuffInfo.Find(item => item.Buff == buff && item.SourceType == sourceType) != null;
+    }
+
+    public void RemoveSourceBuff(Buff revertBuff, BuffSourceType sourceType)
+    {
+        var revertBuffInfo = BuffInfo.Find(item => item.Buff == revertBuff && item.SourceType == sourceType);
+        if (revertBuffInfo != null)
+            RemoveBuff(revertBuffInfo);
+    }
+
+    public void RemoveCombatDebuffs()
+    {
+        for (int i = BuffInfo.Count - 1; i >= 0; i--)
+            if (BuffInfo[i].SourceType == BuffSourceType.Adventure && BuffInfo[i].Buff.IsPositive() == false)
+                RemoveBuff(BuffInfo[i]);
+    }
+
+    public void RemoveAllBuffsWithSource(BuffSourceType sourceType)
+    {
+        for (int i = BuffInfo.Count - 1; i >= 0; i--)
+            if (BuffInfo[i].SourceType == sourceType)
+                RemoveBuff(BuffInfo[i]);
+    }
+
+    public void ApplySingleBuffRule(RaidRuleInfo raidRuleInfo, BuffRule rule)
+    {
+        for (int i = 0; i < BuffInfo.Count; i++)
+            if (BuffInfo[i].Buff.RuleType == rule)
+                ApplyBuffRule(BuffInfo[i], raidRuleInfo);
+    }
+
+    public void ApplyAllBuffRules(RaidRuleInfo raidRuleInfo)
+    {
+        for (int i = 0; i < BuffInfo.Count; i++)
+            ApplyBuffRule(BuffInfo[i], raidRuleInfo);
+    }
 
     public string DeathsDoorBuffsTooltip()
     {
         string toolTip = "";
 
-        var availableBuffs = buffInfo.FindAll(info => info.SourceType == BuffSourceType.DeathsDoor
+        var availableBuffs = BuffInfo.FindAll(info => info.SourceType == BuffSourceType.DeathsDoor
             && info.Buff.AttributeType != AttributeType.DamageLow);
         foreach (var buffEntry in availableBuffs)
             toolTip += "\n" + buffEntry.Buff.ToolTip;
@@ -773,7 +520,7 @@ public class Character
     {
         string toolTip = "";
 
-        var availableBuffs = buffInfo.FindAll(info => info.SourceType == BuffSourceType.Mortality
+        var availableBuffs = BuffInfo.FindAll(info => info.SourceType == BuffSourceType.Mortality
             && info.Buff.AttributeType != AttributeType.DamageLow);
         foreach (var buffEntry in availableBuffs)
             toolTip += "\n" + buffEntry.Buff.ToolTip;
@@ -784,7 +531,7 @@ public class Character
     {
         string toolTip = "";
 
-        var availableBuffs = buffInfo.FindAll(info => info.SourceType == BuffSourceType.Trait
+        var availableBuffs = BuffInfo.FindAll(info => info.SourceType == BuffSourceType.Trait
             && info.Buff.AttributeType != AttributeType.DamageLow);
         foreach (var buffEntry in availableBuffs)
             toolTip += "\n" + buffEntry.Buff.ToolTip;
@@ -795,9 +542,9 @@ public class Character
     {
         string toolTip = "";
 
-        var availableBuffs = buffInfo.FindAll(info => info.SourceType == BuffSourceType.Estate &&
+        var availableBuffs = BuffInfo.FindAll(info => info.SourceType == BuffSourceType.Estate &&
             info.ModifierValue != 0 && (info.DurationType == BuffDurationType.QuestComplete ||
-            info.DurationType == BuffDurationType.IdleTownVisit || info.DurationType == BuffDurationType.Raid) ).
+            info.DurationType == BuffDurationType.IdleTownVisit || info.DurationType == BuffDurationType.Raid)).
             OrderBy(info => info.Buff.AttributeType).ThenBy(info => info.Buff.RuleType).ToList();
         availableBuffs.RemoveAll(buff => buff.Buff.AttributeType == AttributeType.DamageLow);
 
@@ -820,7 +567,7 @@ public class Character
     {
         string toolTip = "";
 
-        var availableBuffs = buffInfo.FindAll(info => info.SourceType == BuffSourceType.Adventure &&
+        var availableBuffs = BuffInfo.FindAll(info => info.SourceType == BuffSourceType.Adventure &&
             info.ModifierValue != 0 && info.DurationType == BuffDurationType.Combat && info.Buff.IsPositive()).
             OrderBy(info => info.Buff.AttributeType).ThenBy(info => info.Buff.RuleType).ToList();
         availableBuffs.RemoveAll(buff => buff.Buff.AttributeType == AttributeType.DamageLow);
@@ -838,14 +585,13 @@ public class Character
             i -= sameBuffs.Count - 1;
         }
 
-        availableBuffs = buffInfo.FindAll(info => info.SourceType == BuffSourceType.Adventure &&
+        availableBuffs = BuffInfo.FindAll(info => info.SourceType == BuffSourceType.Adventure &&
             info.ModifierValue != 0 && info.DurationType == BuffDurationType.Camp && info.Buff.IsPositive()).
             OrderBy(info => info.Buff.AttributeType).ThenBy(info => info.Buff.RuleType).ToList();
         availableBuffs.RemoveAll(buff => buff.Buff.AttributeType == AttributeType.DamageLow);
 
         for (int i = availableBuffs.Count - 1; i >= 0; i--)
         {
-
             var sameBuffs = availableBuffs.FindAll(info => info.Buff.AttributeType == availableBuffs[i].Buff.AttributeType
                 && info.Buff.RuleType == availableBuffs[i].Buff.RuleType && info.Buff.IsFalseRule == availableBuffs[i].Buff.IsFalseRule);
             float modifierSum = sameBuffs.Sum(info => info.ModifierValue);
@@ -855,7 +601,7 @@ public class Character
             i -= sameBuffs.Count - 1;
         }
 
-        availableBuffs = buffInfo.FindAll(info => info.SourceType == BuffSourceType.Adventure &&
+        availableBuffs = BuffInfo.FindAll(info => info.SourceType == BuffSourceType.Adventure &&
             info.ModifierValue != 0 && info.DurationType == BuffDurationType.Round && info.Buff.IsPositive()).
             OrderBy(info => info.Buff.AttributeType).ThenBy(info => info.Buff.RuleType).ToList();
         availableBuffs.RemoveAll(buff => buff.Buff.AttributeType == AttributeType.DamageLow);
@@ -873,7 +619,7 @@ public class Character
             i -= sameBuffs.Count - 1;
         }
 
-        availableBuffs = buffInfo.FindAll(info => info.SourceType == BuffSourceType.Adventure &&
+        availableBuffs = BuffInfo.FindAll(info => info.SourceType == BuffSourceType.Adventure &&
             info.ModifierValue != 0 && info.DurationType == BuffDurationType.Raid && info.Buff.IsPositive()).
             OrderBy(info => info.Buff.AttributeType).ThenBy(info => info.Buff.RuleType).ToList();
         availableBuffs.RemoveAll(buff => buff.Buff.AttributeType == AttributeType.DamageLow);
@@ -896,7 +642,7 @@ public class Character
     {
         string toolTip = "";
 
-        var availableBuffs = buffInfo.FindAll(info => info.SourceType == BuffSourceType.Adventure &&
+        var availableBuffs = BuffInfo.FindAll(info => info.SourceType == BuffSourceType.Adventure &&
             info.ModifierValue != 0 && info.DurationType == BuffDurationType.Combat && !info.Buff.IsPositive()).
             OrderBy(info => info.Buff.AttributeType).ThenBy(info => info.Buff.RuleType).ToList();
         availableBuffs.RemoveAll(buff => buff.Buff.AttributeType == AttributeType.DamageLow);
@@ -914,7 +660,7 @@ public class Character
             i -= sameBuffs.Count - 1;
         }
 
-        availableBuffs = buffInfo.FindAll(info => info.SourceType == BuffSourceType.Adventure &&
+        availableBuffs = BuffInfo.FindAll(info => info.SourceType == BuffSourceType.Adventure &&
             info.ModifierValue != 0 && info.DurationType == BuffDurationType.Camp && !info.Buff.IsPositive()).
             OrderBy(info => info.Buff.AttributeType).ThenBy(info => info.Buff.RuleType).ToList();
         availableBuffs.RemoveAll(buff => buff.Buff.AttributeType == AttributeType.DamageLow);
@@ -930,7 +676,7 @@ public class Character
             i -= sameBuffs.Count - 1;
         }
 
-        availableBuffs = buffInfo.FindAll(info => info.SourceType == BuffSourceType.Adventure &&
+        availableBuffs = BuffInfo.FindAll(info => info.SourceType == BuffSourceType.Adventure &&
             info.ModifierValue != 0 && info.DurationType == BuffDurationType.Round && !info.Buff.IsPositive()).
             OrderBy(info => info.Buff.AttributeType).ThenBy(info => info.Buff.RuleType).ToList();
         availableBuffs.RemoveAll(buff => buff.Buff.AttributeType == AttributeType.DamageLow);
@@ -948,7 +694,7 @@ public class Character
             i -= sameBuffs.Count - 1;
         }
 
-        availableBuffs = buffInfo.FindAll(info => info.SourceType == BuffSourceType.Adventure &&
+        availableBuffs = BuffInfo.FindAll(info => info.SourceType == BuffSourceType.Adventure &&
             info.ModifierValue != 0 && info.DurationType == BuffDurationType.Raid && !info.Buff.IsPositive()).
             OrderBy(info => info.Buff.AttributeType).ThenBy(info => info.Buff.RuleType).ToList();
         availableBuffs.RemoveAll(buff => buff.Buff.AttributeType == AttributeType.DamageLow);
@@ -966,7 +712,6 @@ public class Character
         }
         return toolTip.TrimStart('\n');
     }
-
 
     protected void ApplyBuff(BuffInfo buffEntry)
     {
@@ -994,7 +739,7 @@ public class Character
 
     protected void RemoveBuff(BuffInfo buffEntry)
     {
-        buffInfo.Remove(buffEntry);
+        BuffInfo.Remove(buffEntry);
         RevertBuff(buffEntry);
     }
 
@@ -1499,11 +1244,17 @@ public class Character
                 }
                 break;
                 #endregion
-            default:
-                break;
         }
     }
 
+    #endregion
+
+    #region Attributes and Statuses
+
+    public void LoadStatusEffects(Dictionary<StatusType, StatusEffect> newStatusEffects)
+    {
+        StatusEffects = newStatusEffects;
+    }
 
     public virtual int Heal(float healAmount, bool includeModifier)
     {
@@ -1531,55 +1282,6 @@ public class Character
     {
         return TakeDamage(this[AttributeType.HitPoints, true].ModifiedValue * damagePercent);
     }
-
-
-    public void AddBuff(BuffInfo newBuffInfo)
-    {
-        buffInfo.Add(newBuffInfo);
-        if(newBuffInfo.Buff.RuleType == BuffRule.Always)
-            ApplyBuff(newBuffInfo);
-    }
-
-    public bool ContainsBuff(Buff buff, BuffSourceType sourceType)
-    {
-        return buffInfo.Find(item => item.Buff == buff && item.SourceType == sourceType) != null;
-    }
-
-    public void RemoveSourceBuff(Buff revertBuff, BuffSourceType sourceType)
-    {
-        var revertBuffInfo = buffInfo.Find(item => item.Buff == revertBuff && item.SourceType == sourceType);
-        if (revertBuffInfo != null)
-            RemoveBuff(revertBuffInfo);
-    }
-
-    public void RemoveCombatDebuffs()
-    {
-        for (int i = buffInfo.Count - 1; i >= 0; i--)
-            if (buffInfo[i].SourceType == BuffSourceType.Adventure && buffInfo[i].Buff.IsPositive() == false)
-                RemoveBuff(buffInfo[i]);
-    }
-
-    public void RemoveAllBuffsWithSource(BuffSourceType sourceType)
-    {
-        for (int i = buffInfo.Count - 1; i >= 0; i--)
-            if (buffInfo[i].SourceType == sourceType)
-                RemoveBuff(buffInfo[i]);
-    }
-
-
-    public void ApplySingleBuffRule(RaidRuleInfo raidRuleInfo, BuffRule rule)
-    {
-        for (int i = 0; i < buffInfo.Count; i++)
-            if(buffInfo[i].Buff.RuleType == rule)
-                ApplyBuffRule(buffInfo[i], raidRuleInfo);
-    }
-
-    public void ApplyAllBuffRules(RaidRuleInfo raidRuleInfo)
-    {
-        for (int i = 0; i < buffInfo.Count; i++)
-            ApplyBuffRule(buffInfo[i], raidRuleInfo);
-    }
-
 
     public SingleAttribute GetSingleAttribute(AttributeType stat)
     {
@@ -1612,16 +1314,15 @@ public class Character
 
     public StatusEffect GetStatusEffect(StatusType type)
     {
-        return statusEffects[type];
+        return StatusEffects[type];
     }
-
 
     public StatusEffect this[StatusType type]
     {
         get
         {
             if (type != StatusType.None)
-                return statusEffects[type];
+                return StatusEffects[type];
             else
                 return null;
         }
@@ -1656,6 +1357,26 @@ public class Character
         }
     }
 
+    protected void AddSingleAttribute(AttributeType stat, SingleAttribute attribute)
+    {
+        singleAttributes.Add(stat, attribute);
+    }
+
+    protected void AddPairedAttribute(AttributeType stat, PairedAttribute attribute)
+    {
+        pairedAttributes.Add(stat, attribute);
+    }
+
+    protected void UpdateResolve(int level, HeroClass heroClass)
+    {
+        for (int i = 0; i < HeroResistances.Length; i++)
+            if (HeroResistances[i] == AttributeType.DeathBlow)
+                GetSingleAttribute(HeroResistances[i]).RawValue = heroClass.Resistanses[HeroResistances[i]];
+            else
+                GetSingleAttribute(HeroResistances[i]).RawValue = heroClass.Resistanses[HeroResistances[i]] + level * 0.1f;
+    }
+
+    #endregion
 
     public virtual void UpdateSaveData(FormationUnitSaveData saveUnitData)
     {
@@ -1663,7 +1384,7 @@ public class Character
         saveUnitData.Class = Class;
         saveUnitData.Name = Name;
         saveUnitData.CurrentHp = CurrentHealth;
-        saveUnitData.Buffs = buffInfo;
-        saveUnitData.Statuses = statusEffects;
+        saveUnitData.Buffs = BuffInfo;
+        saveUnitData.Statuses = StatusEffects;
     }
 }

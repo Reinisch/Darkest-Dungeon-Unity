@@ -51,7 +51,6 @@ public class LootEntryTable : LootEntry
 
     public LootEntryTable():base(LootType.Table)
     {
-
     }
 }
 
@@ -63,7 +62,6 @@ public class LootEntryItem : LootEntry
 
     public LootEntryItem():base(LootType.Item)
     {
-
     }
 }
 
@@ -76,7 +74,6 @@ public class LootEntryJournal : LootEntry
     public LootEntryJournal()
         : base(LootType.Journal)
     {
-
     }
 }
 
@@ -86,6 +83,5 @@ public class LootEntryTrinket : LootEntry
 
     public LootEntryTrinket():base(LootType.Trinket)
     {
-
     }
 }

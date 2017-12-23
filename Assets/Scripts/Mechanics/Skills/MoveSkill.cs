@@ -2,12 +2,15 @@
 
 public class MoveSkill : Skill
 {
-    public string Type { get; set; }
-
     public int MoveForward { get; set; }
     public int MoveBackward { get; set; }
 
-    public FormationSet LaunchRanks { get; set; }
+    public MoveSkill(string id, int backward, int forward)
+    {
+        Id = id;
+        MoveBackward = backward;
+        MoveForward = forward;
+    }
 
     public string HeroSkillTooltip(Hero hero)
     {

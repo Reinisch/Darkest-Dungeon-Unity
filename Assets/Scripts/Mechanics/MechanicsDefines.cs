@@ -1,4 +1,58 @@
-﻿public enum EffectBoolParams : byte
+﻿public enum AttributeType
+{
+    Undefined,
+    HitPoints,
+    Stress,
+    HpHealAmount,
+    HpHealPercent,
+    DmgReceivedPercent,
+    HpHealReceivedPercent,
+    StressDmgReceivedPercent,
+    StressDmgPercent,
+    StressHealPercent,
+    StressHealReceivedPercent,
+    ResolveCheckPercent,
+    ResolveXpPercent,
+    StunChance,
+    PoisonChance,
+    BleedChance,
+    MoveChance,
+    DebuffChance,
+    ScoutingChance,
+    PartySurpriseChance,
+    MonsterSurpirseChance,
+    RemoveQuirkChance,
+    FoodConsumption,
+    StarvingDamagePercent,
+    DefenseRating,
+    ProtectionRating,
+    SpeedRating,
+    AttackRating,
+    CritChance,
+    DamageLow,
+    DamageHigh,
+    ArmorDiscount,
+    WeaponDiscount,
+    Stun,
+    Poison,
+    Disease,
+    DeathBlow,
+    Move,
+    Bleed,
+    Debuff,
+    Trap,
+}
+
+public enum AttributeCategory
+{
+    Undefined,
+    CombatStat,
+    Modifier,
+    Discount,
+    Resistance
+}
+
+public enum EffectBoolParams
 {
     OnHit,
     OnMiss,
@@ -11,7 +65,7 @@
     SpawnsLoot,
 }
 
-public enum EffectIntParams : byte
+public enum EffectIntParams
 {
     Chance,
     Duration,
@@ -22,7 +76,7 @@ public enum EffectIntParams : byte
     Item,
 }
 
-public enum EffectTargetType : byte
+public enum EffectTargetType
 {
     Target,
     Performer,
@@ -31,7 +85,7 @@ public enum EffectTargetType : byte
     TargetGroup,
 }
 
-public enum EffectSubType : byte
+public enum EffectSubType
 {
     None,
     Kill,
@@ -65,4 +119,146 @@ public enum EffectSubType : byte
     GuardAlly,
     Riposte,
     ClearGuard
+}
+
+public enum TrinketSlot
+{
+    Left = 0,
+    Right
+}
+
+public enum Rarity
+{
+    Trophy,
+    DarkestDungeon,
+    AncestralShambler,
+    Ancestral,
+    Collector,
+    Madman,
+    VeryRare,
+    Rare,
+    Uncommon,
+    Common,
+    VeryCommon,
+    KickStarter
+}
+
+public enum MonsterType
+{
+    None,
+    Unholy,
+    Man,
+    Eldritch,
+    Beast,
+    Corpse,
+    Carpentry,
+    Ironwork,
+    Cauldron,
+    Unknown,
+    Cosmic
+}
+
+public enum DeathClassType
+{
+    Replacement,
+    Corpse
+}
+
+public enum StatusType
+{
+    None,
+    Stun,
+    Bleeding,
+    Poison,
+    Marked,
+    Riposte,
+    Guard,
+    Guarded,
+    DeathsDoor,
+    DeathRecovery
+}
+
+public enum DurationType
+{
+    Round,
+    Combat
+}
+
+public enum HeroEquipmentSlot
+{
+    Weapon,
+    Armor
+}
+
+public enum CampingPhase
+{
+    None,
+    Meal,
+    Skill
+}
+
+public enum BuffDurationType
+{
+    Undefined,
+    Permanent,
+    Round,
+    Combat,
+    Camp,
+    Raid,
+    Activity,
+    QuestComplete,
+    IdleTownVisit
+}
+
+public enum BuffSourceType
+{
+    Estate,
+    Quirk,
+    Trinket,
+    Adventure,
+    Condition,
+    Trait,
+    DeathsDoor,
+    Mortality,
+    Light
+}
+
+public enum QuestVisitType
+{
+    Explore,
+    Battle
+}
+
+public enum SkillResultType
+{
+    Hit,
+    Miss,
+    Crit,
+    Dodge,
+    Heal,
+    CritHeal,
+    Utility
+}
+
+public enum SkillTargetType
+{
+    Self,
+    Party,
+    Enemy
+}
+
+public enum HeroTurnAction
+{
+    Waiting,
+    Skill,
+    Move,
+    Pass,
+    Retreat
+}
+
+public enum SkillCategory
+{
+    Damage,
+    Heal,
+    Support
 }

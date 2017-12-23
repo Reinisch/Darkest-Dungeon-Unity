@@ -8,11 +8,6 @@
     public string TargetNegativeQuirk { get; set; }
     public string TargetDiseaseQuirk { get; set; }
 
-    public TreatmentSlot():base()
-    {
-
-    }
-
     public TreatmentSlot(bool isUnlocked, int baseNegativeCost, int basePositiveCost, int basePermanentCost, int baseDiseaseCost)
         :base(isUnlocked, baseNegativeCost)
     {
@@ -29,5 +24,4 @@
         BasePermanentCost = basePermanentCost;
         BaseDiseaseCost = baseDiseaseCost;
     }
-
 }

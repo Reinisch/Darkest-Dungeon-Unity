@@ -1,31 +1,34 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public delegate void SkillSlotEvent(SkillSlot slot);
-
 public class SkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
-    public Image skillIcon;
-    public Image lockedIcon;
-    public Image selectorIcon;
-    public Text levelLabel;
+    [SerializeField]
+    private Image skillIcon;
+    [SerializeField]
+    private Image lockedIcon;
+    [SerializeField]
+    private Image selectorIcon;
+    [SerializeField]
+    private Text levelLabel;
 
-    public CombatSkill Skill { get; set; }
-    public RectTransform RectTransform { get; set; }
+    public Image SkillIcon { get { return skillIcon; } }
+    public bool Selected { get; private set; }
+    public bool Locked { get; private set; }
+    public bool Highlighted { get; protected set; }
+    public bool Available { private get; set; }
+    public bool Interactable { private get; set; }
 
-    public bool Selected { get; set; }
-    public bool Locked { get; set; }
-    public bool Available { get; set; }
-    public bool Interactable { get; set; }
-    public bool Highlighted { get; set; }
+    protected CombatSkill Skill { get; set; }
+    protected RectTransform RectTransform { get; private set; }
+    protected Hero CurrentHero;
 
-    protected Hero currentHero;
+    public event Action<SkillSlot> EventSkillSelected;
+    public event Action<SkillSlot> EventSkillDeselected;
 
-    public event SkillSlotEvent onSkillSelected;
-    public event SkillSlotEvent onSkillDeselected;
-
-    void Awake()
+    private void Awake()
     {
         lockedIcon.enabled = false;
         RectTransform = GetComponent<RectTransform>();
@@ -37,6 +40,7 @@ public class SkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandl
         lockedIcon.enabled = true;
         levelLabel.text = "";
     }
+
     public void Unlock()
     {
         Locked = false;
@@ -49,26 +53,27 @@ public class SkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandl
         Selected = true;
         selectorIcon.enabled = true;
 
-        if (onSkillSelected != null)
-            onSkillSelected(this);
+        if (EventSkillSelected != null)
+            EventSkillSelected(this);
     }
+
     public void Deselect()
     {
         Selected = false;
         selectorIcon.enabled = false;
 
-        if (onSkillDeselected != null)
-            onSkillDeselected(this);
+        if (EventSkillDeselected != null)
+            EventSkillDeselected(this);
     }
 
     public virtual void UpdateSkill(Hero hero, int skillIndex)
     {
-        currentHero = hero;
+        CurrentHero = hero;
         Skill = hero.CurrentCombatSkills[skillIndex];
 
         if(Skill != null)
         {
-            skillIcon.sprite = DarkestDungeonManager.Data.HeroSprites.GetCombatSkillIcon(hero, Skill);
+            SkillIcon.sprite = DarkestDungeonManager.Data.HeroSprites.GetCombatSkillIcon(hero, Skill);
             Unlock();
 
             if (hero.SelectedCombatSkills.Contains(Skill))
@@ -88,12 +93,13 @@ public class SkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandl
             Selected = false;
             selectorIcon.enabled = false;
             Skill = hero.HeroClass.CombatSkills[skillIndex];
-            skillIcon.sprite = DarkestDungeonManager.Data.HeroSprites.GetCombatSkillIcon(hero, Skill);
+            SkillIcon.sprite = DarkestDungeonManager.Data.HeroSprites.GetCombatSkillIcon(hero, Skill);
         }
     }
+
     public virtual void ResetSkill()
     {
-        currentHero = null;
+        CurrentHero = null;
         Skill = null;
 
         Selected = false;
@@ -113,45 +119,43 @@ public class SkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandl
 
         if (Selected)
         {
-            if (!currentHero.SelectedCombatSkills.Remove(Skill))
+            if (!CurrentHero.SelectedCombatSkills.Remove(Skill))
                 Debug.LogError("Deselected skill not found.");
             Deselect();
             DarkestSoundManager.PlayOneShot("event:/ui/town/character_unequip");
         }
         else
         {
-            if (currentHero.SelectedCombatSkills.Count == 4)
-            {
+            if (CurrentHero.SelectedCombatSkills.Count == 4)
                 DarkestSoundManager.PlayOneShot("event:/ui/town/button_invalid");
-                return;
-            }
             else
             {
-                currentHero.SelectedCombatSkills.Add(Skill);
+                CurrentHero.SelectedCombatSkills.Add(Skill);
                 Select();
                 DarkestSoundManager.PlayOneShot("event:/ui/town/character_equip");
             }
         }
     }
+
     public virtual void OnPointerEnter(PointerEventData eventData)
     {
         Highlighted = true;
         if (!Available || Locked)
-            skillIcon.material = DarkestDungeonManager.GrayHighlightMaterial;
+            SkillIcon.material = DarkestDungeonManager.GrayHighlightMaterial;
         else
-            skillIcon.material = DarkestDungeonManager.HighlightMaterial;
+            SkillIcon.material = DarkestDungeonManager.HighlightMaterial;
 
         if (Skill != null)
-            ToolTipManager.Instanse.ShowSkillTooltip(currentHero, Skill,
-                eventData, RectTransform, ToolTipStyle.FromBottom, ToolTipSize.Normal);
+            ToolTipManager.Instanse.ShowSkillTooltip(CurrentHero, Skill, RectTransform, ToolTipStyle.FromBottom, ToolTipSize.Normal);
     }
+
     public virtual void OnPointerExit(PointerEventData eventData)
     {
         Highlighted = false;
         if (!Available || Locked)
-            skillIcon.material = DarkestDungeonManager.GrayMaterial;
+            SkillIcon.material = DarkestDungeonManager.GrayMaterial;
         else
-            skillIcon.material = skillIcon.defaultMaterial;
+            SkillIcon.material = SkillIcon.defaultMaterial;
         ToolTipManager.Instanse.Hide();
     }
 }

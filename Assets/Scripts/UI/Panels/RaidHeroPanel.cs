@@ -3,30 +3,37 @@ using UnityEngine.UI;
 
 public class RaidHeroPanel : MonoBehaviour
 {
-    public CharEquipmentPanel equipmentPanel;
-    public RaidCharStatsPanel charStatsPanel;
+    [SerializeField]
+    private CharEquipmentPanel equipmentPanel;
+    [SerializeField]
+    private RaidCharStatsPanel charStatsPanel;
+    [SerializeField]
+    private Text weaponLevel;
+    [SerializeField]
+    private Text armorLevel;
 
-    public Text weaponLevel;
-    public Text armorLevel;
+    public CharEquipmentPanel EquipmentPanel {  get { return equipmentPanel; } }
+    public RaidCharStatsPanel CharStatsPanel { get { return charStatsPanel; } }
 
-    Hero SelectedHero;
+    private Hero selectedHero;
 
-    void Awake()
+    private void Awake()
     {
-        equipmentPanel.onPanelChanged += UpdateAttributes;
+        EquipmentPanel.EventPanelChanged += UpdateAttributes;
     }
-    void UpdateAttributes()
+
+    private void UpdateAttributes()
     {
-        charStatsPanel.UpdateStats(SelectedHero);
+        CharStatsPanel.UpdateStats(selectedHero);
     }
 
     public void UpdateHero()
     {
-        SelectedHero = RaidSceneManager.RaidPanel.SelectedHero;
+        selectedHero = RaidSceneManager.RaidPanel.SelectedHero;
 
-        weaponLevel.text = SelectedHero.WeaponLevel.ToString();
-        armorLevel.text = SelectedHero.ArmorLevel.ToString();
-        equipmentPanel.UpdateEquipmentPanel(SelectedHero, true);
-        charStatsPanel.UpdateStats(SelectedHero);
+        weaponLevel.text = selectedHero.WeaponLevel.ToString();
+        armorLevel.text = selectedHero.ArmorLevel.ToString();
+        EquipmentPanel.UpdateEquipmentPanel(selectedHero, true);
+        CharStatsPanel.UpdateStats(selectedHero);
     }
 }

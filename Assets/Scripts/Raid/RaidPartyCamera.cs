@@ -1,59 +1,46 @@
 ﻿using UnityEngine;
-using System.Diagnostics;
 using UnityStandardAssets.ImageEffects;
 
 public enum CameraMode { Static, Follow }
 
 public class RaidPartyCamera : MonoBehaviour
 {
-    public Transform target;
-    public float smoothTime = 0.7F;
-    public Light raidLight;
-    public CameraMode mode;
-    public RaidPartyController controller;
+    [SerializeField]
+    private Transform target;
+    [SerializeField]
+    private float smoothTime = 0.7F;
+    [SerializeField]
+    private Light raidLight;
+    [SerializeField]
+    private CameraMode mode;
 
     [SerializeField]
     private BlurOptimized blur;
     [SerializeField]
     private Camera blurCamera;
 
-    float velocityFOV = 0;
-    float frustumDistanceTarget = 0;
-    float frustumTargetWidth = 252.2945f;
-    Vector3 velocity = Vector3.zero;
+    private bool zooming;
+    private float velocityFOV;
+    private float frustumDistanceTarget;
+    private float frustumTargetWidth = 252.2945f;
+    private Vector3 velocity = Vector3.zero;
 
     public float StandardFOV { get; set; }
     public float TargetFOV { get; set; }
     public float SmoothTimeFOV { get; set; }
 
     public Camera Camera { get; set; }
-    public Stopwatch StopWatch { get; set; }
     public Transform Transform { get; set; }
-    public Vector3 ActionPosition
-    {
-        get
-        {
-            if(mode == CameraMode.Follow)
-                return new Vector3(RaidSceneManager.DungeonCamera.target.position.x,
-                    RaidSceneManager.DungeonCamera.Transform.position.y,
-                    RaidSceneManager.DungeonCamera.Transform.position.z);
-            else
-                return new Vector3(RaidSceneManager.DungeonCamera.Transform.position.x,
-                    RaidSceneManager.DungeonCamera.Transform.position.y,
-                    RaidSceneManager.DungeonCamera.Transform.position.z);
-        }
-    }
+    public Transform Target { get { return target; } set { target = value; } }
+    public CameraMode Mode { get { return mode; } set { mode = value; } }
 
-    bool zooming = false;
-
-    void Awake()
+    private void Awake()
     {
         Camera = GetComponent<Camera>();
         Transform = GetComponent<Transform>();
-        StopWatch = new Stopwatch();
     }
 
-    void Start()
+    private void Start()
     {
         SmoothTimeFOV = 0.1f;
         StandardFOV = 60;
@@ -61,10 +48,10 @@ public class RaidPartyCamera : MonoBehaviour
 
         Vector3 defaultRoomCameraPosition = new Vector3(-1069.303f, 0, -300);
         frustumDistanceTarget = Vector3.Distance(defaultRoomCameraPosition,
-            RaidSceneManager.RoomView.raidRoom.RectTransform.position);
+            RaidSceneManager.RoomView.RaidRoom.RectTransform.position);
     }
 
-    void LateUpdate()
+    private void LateUpdate()
     {
         if (!Mathf.Approximately(Camera.fieldOfView, TargetFOV))
         {
@@ -81,7 +68,7 @@ public class RaidPartyCamera : MonoBehaviour
             var frustumHeight = 2.0f * frustumDistanceTarget * Mathf.Tan(Camera.fieldOfView * 0.5f * Mathf.Deg2Rad);
             var frustumWidth = frustumHeight * Camera.aspect;
 
-            if (StandardFOV == TargetFOV && !zooming && !Mathf.Approximately(Mathf.Round(frustumWidth), Mathf.Round(frustumTargetWidth)))
+            if (Mathf.Approximately(StandardFOV, TargetFOV) && !zooming && !Mathf.Approximately(Mathf.Round(frustumWidth), Mathf.Round(frustumTargetWidth)))
             {
                 // change field of view to fit in default room/corridor view in every aspect ratio
                 StandardFOV = 2.0f * Mathf.Atan(frustumTargetWidth / Camera.aspect * 0.5f / frustumDistanceTarget) * Mathf.Rad2Deg;
@@ -100,7 +87,6 @@ public class RaidPartyCamera : MonoBehaviour
             transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
         }
     }
-
 
     public void SetCampingLight()
     {

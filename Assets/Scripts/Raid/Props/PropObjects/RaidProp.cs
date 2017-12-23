@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public enum PropType { Door, Curio, Obstacle, Trap }
 
@@ -15,11 +14,11 @@ public class RaidProp : MonoBehaviour
     public Animator Animator { get; set; }
     public PropType PropType { get; set; }
 
-    Vector3 velocity = Vector3.zero;
-    bool hasRectTarget;
-    RectTransform rectTarget;
+    private Vector3 velocity = Vector3.zero;
+    private bool hasRectTarget;
+    private RectTransform rectTarget;
 
-    void Update()
+    private void Update()
     {
         if (hasRectTarget)
             RectTransform.position = Vector3.SmoothDamp(RectTransform.position, rectTarget.position, ref velocity, TargetSmoothTime);
@@ -38,6 +37,7 @@ public class RaidProp : MonoBehaviour
         TargetPosition = target;
         HasTarget = true;
     }
+
     public void SetRectTarget(RectTransform target, float time)
     {
         HasTarget = false;
@@ -45,6 +45,7 @@ public class RaidProp : MonoBehaviour
         rectTarget = target;
         TargetSmoothTime = time;
     }
+
     public void Return(float smoothTime)
     {
         TargetSmoothTime = smoothTime;
@@ -61,12 +62,12 @@ public class RaidProp : MonoBehaviour
         RectTransform = GetComponent<RectTransform>();
         Animator = GetComponent<Animator>();
     }
+
     public virtual void Activate()
     {
-
     }
+
     public virtual void SetSortingOrder(int order)
     {
-
     }
 }

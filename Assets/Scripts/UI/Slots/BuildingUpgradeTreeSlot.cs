@@ -1,17 +1,19 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using System.Collections.Generic;
 
 public class BuildingUpgradeTreeSlot : MonoBehaviour
 {
-    const int connectorWidthPerSlot = 75;
-    public string treeId;
+    [SerializeField]
+    private string treeId;
+    [SerializeField]
+    private RectTransform connector;
+    [SerializeField]
+    private List<BuildingUpgradeSlot> upgrades;
 
-    public Text treeLabel;
-    public RectTransform connector;
-    public RectTransform treeIconRect;
+    public string TreeId { get { return treeId; } }
+    public List<BuildingUpgradeSlot> Upgrades { get { return upgrades; } }
 
-    public List<BuildingUpgradeSlot> upgrades;
+    private const int ConnectorWidthPerSlot = 75;
 
     public void UpdateConnector(int lastPurchasedIndex)
     {
@@ -19,10 +21,10 @@ public class BuildingUpgradeTreeSlot : MonoBehaviour
             connector.sizeDelta = new Vector2(0, connector.sizeDelta.y);
         else
         {
-            if (lastPurchasedIndex >= upgrades.Count)
-                lastPurchasedIndex = upgrades.Count - 1;
+            if (lastPurchasedIndex >= Upgrades.Count)
+                lastPurchasedIndex = Upgrades.Count - 1;
 
-            connector.sizeDelta = new Vector2(connectorWidthPerSlot*(lastPurchasedIndex + 1), connector.sizeDelta.y);
+            connector.sizeDelta = new Vector2(ConnectorWidthPerSlot*(lastPurchasedIndex + 1), connector.sizeDelta.y);
         }
 
     }

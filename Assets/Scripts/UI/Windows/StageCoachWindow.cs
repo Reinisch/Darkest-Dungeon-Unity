@@ -1,40 +1,41 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine.UI;
 
 public class StageCoachWindow : BuildingWindow
 {
-    public RecruitPanel recruitPanel;
-    public HeroRosterPanel rosterPanel;
-
-    public UpgradeButton upgradeSwitch;
-    public UpgradeWindow upgradeWindow;
-
-    public Button closeButton;
+    [SerializeField]
+    private RecruitPanel recruitPanel;
+    [SerializeField]
+    private HeroRosterPanel rosterPanel;
+    [SerializeField]
+    private UpgradeButton upgradeSwitch;
+    [SerializeField]
+    private UpgradeWindow upgradeWindow;
 
     public override TownManager TownManager { get; set; }
-    public StageCoach StageCoach { get; private set; }
+    private StageCoach StageCoach { get; set; }
+    public RecruitPanel Panel { get { return recruitPanel; } }
 
     public override void Initialize()
     {
         StageCoach = DarkestDungeonManager.Campaign.Estate.StageCoach;
-        recruitPanel.UpdateRecruitPanel(DarkestDungeonManager.Campaign.Estate.StageCoach.Heroes);
+        Panel.UpdateRecruitPanel(DarkestDungeonManager.Campaign.Estate.StageCoach.Heroes);
         float ratio = DarkestDungeonManager.Campaign.Estate.GetBuildingUpgradeRatio(BuildingType.StageCoach);
-        upgradeWindow.upgradedValue.text = Mathf.RoundToInt(ratio * 100).ToString() + "%";
+        upgradeWindow.UpgradedValue.text = Mathf.RoundToInt(ratio * 100) + "%";
 
-        foreach (var tree in upgradeWindow.upgradeTrees)
+        foreach (var tree in upgradeWindow.UpgradeTrees)
         {
-            var currentUpgrades = DarkestDungeonManager.Data.UpgradeTrees[tree.treeId].Upgrades;
+            var currentUpgrades = DarkestDungeonManager.Data.UpgradeTrees[tree.TreeId].Upgrades;
             int lastPurchaseIndex = -1;
-            for (int i = 0; i < tree.upgrades.Count; i++)
+            for (int i = 0; i < tree.Upgrades.Count; i++)
             {
-                tree.upgrades[i].Tree = DarkestDungeonManager.Data.UpgradeTrees[tree.treeId];
-                tree.upgrades[i].UpgradeInfo = currentUpgrades[i];
-                tree.upgrades[i].TownUpgrades = new List<ITownUpgrade>(new ITownUpgrade[] {
-                    StageCoach.GetUpgradeByCode(tree.treeId, currentUpgrades[i].Code) });
-                tree.upgrades[i].onClick += WagonWindow_onUpgradeClick;
-                var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(tree.treeId, currentUpgrades[i]);
-                TownManager.UpdateUpgradeSlot(status, tree.upgrades[i]);
+                tree.Upgrades[i].Tree = DarkestDungeonManager.Data.UpgradeTrees[tree.TreeId];
+                tree.Upgrades[i].UpgradeInfo = currentUpgrades[i];
+                tree.Upgrades[i].TownUpgrades = new List<ITownUpgrade>(new [] {
+                    StageCoach.GetUpgradeByCode(tree.TreeId, currentUpgrades[i].Code) });
+                tree.Upgrades[i].EventClicked += BuildingUpgradeSlotClicked;
+                var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(tree.TreeId, currentUpgrades[i]);
+                TownManager.UpdateUpgradeSlot(status, tree.Upgrades[i]);
                 if (status == UpgradeStatus.Purchased)
                     lastPurchaseIndex = i;
             }
@@ -42,47 +43,23 @@ public class StageCoachWindow : BuildingWindow
         }
     }
 
-    void WagonWindow_onUpgradeClick(BuildingUpgradeSlot slot)
-    {
-        var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(slot.Tree.Id, slot.UpgradeInfo);
-        if (status == UpgradeStatus.Available)
-        {
-            bool isFree = false;
-            for (int i = 0; i < slot.Tree.Tags.Count; i++)
-                if (DarkestDungeonManager.Campaign.EventModifiers.HasFreeUpgrade(slot.Tree.Tags[i]))
-                {
-                    isFree = true;
-                    DarkestDungeonManager.Campaign.EventModifiers.RemoveUpgradeTag(slot.Tree.Tags[i]);
-                    break;
-                }
-
-            if (DarkestDungeonManager.Campaign.Estate.BuyUpgrade(slot.Tree.Id, slot.UpgradeInfo, isFree))
-            {
-                TownManager.EstateSceneManager.currencyPanel.UpdateCurrency();
-                UpdateUpgradeTrees(true);
-            }
-        }
-        else if (status == UpgradeStatus.Locked)
-            DarkestSoundManager.PlayOneShot("event:/ui/town/button_click_locked");
-    }
-
     public override void UpdateUpgradeTrees(bool afterPurchase = false)
     {
         StageCoach.UpdateBuilding(DarkestDungeonManager.Campaign.Estate.TownPurchases);
         float ratio = DarkestDungeonManager.Campaign.Estate.GetBuildingUpgradeRatio(BuildingType.StageCoach);
-        upgradeWindow.upgradedValue.text = Mathf.RoundToInt(ratio * 100).ToString() + "%";
+        upgradeWindow.UpgradedValue.text = Mathf.RoundToInt(ratio * 100).ToString() + "%";
 
         if (afterPurchase && Mathf.Approximately(ratio, 1))
             DarkestSoundManager.PlayOneShot("event:/town/purchase_upgrade_last");
 
-        foreach (var tree in upgradeWindow.upgradeTrees)
+        foreach (var tree in upgradeWindow.UpgradeTrees)
         {
-            var currentUpgrades = DarkestDungeonManager.Data.UpgradeTrees[tree.treeId].Upgrades;
+            var currentUpgrades = DarkestDungeonManager.Data.UpgradeTrees[tree.TreeId].Upgrades;
             int lastPurchaseIndex = -1;
-            for (int i = 0; i < tree.upgrades.Count; i++)
+            for (int i = 0; i < tree.Upgrades.Count; i++)
             {
-                var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(tree.treeId, currentUpgrades[i]);
-                TownManager.UpdateUpgradeSlot(status, tree.upgrades[i]);
+                var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(tree.TreeId, currentUpgrades[i]);
+                TownManager.UpdateUpgradeSlot(status, tree.Upgrades[i]);
                 if (status == UpgradeStatus.Purchased)
                     lastPurchaseIndex = i;
             }
@@ -123,17 +100,41 @@ public class StageCoachWindow : BuildingWindow
         }
         else
         {
-            foreach (var tree in upgradeWindow.upgradeTrees)
+            foreach (var tree in upgradeWindow.UpgradeTrees)
             {
-                for (int i = 0; i < tree.upgrades.Count; i++)
+                for (int i = 0; i < tree.Upgrades.Count; i++)
                 {
-                    var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(tree.treeId, tree.upgrades[i].UpgradeInfo);
+                    var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(tree.TreeId, tree.Upgrades[i].UpgradeInfo);
                     if (status == UpgradeStatus.Available)
-                        TownManager.UpdateUpgradeSlot(status, tree.upgrades[i]);
+                        TownManager.UpdateUpgradeSlot(status, tree.Upgrades[i]);
                 }
             }
             upgradeSwitch.SwitchUpgrades();
             upgradeWindow.gameObject.SetActive(true);
         }
+    }
+
+    private void BuildingUpgradeSlotClicked(BuildingUpgradeSlot slot)
+    {
+        var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(slot.Tree.Id, slot.UpgradeInfo);
+        if (status == UpgradeStatus.Available)
+        {
+            bool isFree = false;
+            for (int i = 0; i < slot.Tree.Tags.Count; i++)
+                if (DarkestDungeonManager.Campaign.EventModifiers.HasFreeUpgrade(slot.Tree.Tags[i]))
+                {
+                    isFree = true;
+                    DarkestDungeonManager.Campaign.EventModifiers.RemoveUpgradeTag(slot.Tree.Tags[i]);
+                    break;
+                }
+
+            if (DarkestDungeonManager.Campaign.Estate.BuyUpgrade(slot.Tree.Id, slot.UpgradeInfo, isFree))
+            {
+                TownManager.EstateSceneManager.CurrencyPanel.UpdateCurrency();
+                UpdateUpgradeTrees(true);
+            }
+        }
+        else if (status == UpgradeStatus.Locked)
+            DarkestSoundManager.PlayOneShot("event:/ui/town/button_click_locked");
     }
 }

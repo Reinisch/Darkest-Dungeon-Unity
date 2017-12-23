@@ -21,8 +21,9 @@
     public void SetWalkingBack(bool isWalkingBack)
     {
         IsWalkingBack = isWalkingBack;
-        RaidSceneManager.Formations.heroes.UpdateBuffRule(BuffRule.WalkBack);
+        RaidSceneManager.Formations.Heroes.UpdateBuffRule(BuffRule.WalkBack);
     }
+
     public void SetCamping(bool isCamping)
     {
         IsDoingCamping = isCamping;
@@ -36,6 +37,7 @@
         Skill = null;
         return this;
     }
+
     public RaidRuleInfo GetCombatUnitRules(FormationUnit unit, FormationUnit target, CombatSkill skill, bool riposte)
     {
         Unit = unit;

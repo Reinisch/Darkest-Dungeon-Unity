@@ -3,9 +3,10 @@ using System.Collections.Generic;
 
 public class StressPanel : MonoBehaviour
 {
-    const int StressPipCount = 10;
+    [SerializeField]
+    private List<StressPip> stressPips;
 
-    public List<StressPip> stressPips;
+    private const int StressPipCount = 10;
 
     public void UpdateStress(float stressPercentage)
     {

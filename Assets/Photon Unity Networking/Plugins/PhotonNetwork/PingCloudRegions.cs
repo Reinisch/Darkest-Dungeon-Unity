@@ -89,7 +89,6 @@ public class PingMonoEditor : PhotonPing
         }
         sock = null;
     }
-
 }
 
 #endif

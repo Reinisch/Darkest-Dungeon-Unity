@@ -1,30 +1,15 @@
 ﻿using UnityEngine;
-using System.Collections;
-using UnityEngine.UI;
 using System.Linq;
 using System.Collections.Generic;
 
 public class MultiplayerPartyPanel : MonoBehaviour
 {
-    public Image eventOverlay;
-    public PartyCompositionPanel compositionPanel;
-
+    [SerializeField]
+    private PartyCompositionPanel compositionPanel;
     [SerializeField]
     private List<MultiplayerPartySlot> partySlots;
 
-    public List<MultiplayerPartySlot> PartySlots
-    {
-        get
-        {
-            return partySlots;
-        }
-    }
-
-    void Awake()
-    {
-        for (int i = 0; i < PartySlots.Count; i++)
-            PartySlots[i].SlotId = i + 1;
-    }
+    public List<MultiplayerPartySlot> PartySlots { get { return partySlots; } }
 
     public void LoadInitialComposition(List<Hero> heroParty)
     {
@@ -39,7 +24,7 @@ public class MultiplayerPartyPanel : MonoBehaviour
 
     public void SwapNextHero(int slotIndex)
     {
-        var heroPool = DarkestPhotonLauncher.Instanse.HeroPool;
+        var heroPool = DarkestPhotonLauncher.HeroPool;
         int targetIndex = heroPool.IndexOf(PartySlots[slotIndex].SelectedHero);
 
         while(true)
@@ -70,15 +55,15 @@ public class MultiplayerPartyPanel : MonoBehaviour
     {
         var currentHero = DarkestPhotonLauncher.CharacterWindow.CurrentHero;
         var currentSlot = PartySlots.Find(slot => slot.SelectedHero == currentHero);
-        int currentIndex = DarkestPhotonLauncher.Instanse.HeroPool.IndexOf(currentHero);
+        int currentIndex = DarkestPhotonLauncher.HeroPool.IndexOf(currentHero);
 
         int heroSeed = GetInstanceID() + System.DateTime.Now.Millisecond + (int)System.DateTime.Now.Ticks;
         RandomSolver.SetRandomSeed(heroSeed);
 
-        DarkestPhotonLauncher.Instanse.HeroSeeds[currentIndex] = heroSeed;
-        DarkestPhotonLauncher.Instanse.HeroPool[currentIndex] = new Hero(currentHero.ClassStringId, currentHero.Name);
+        DarkestPhotonLauncher.HeroSeeds[currentIndex] = heroSeed;
+        DarkestPhotonLauncher.HeroPool[currentIndex] = new Hero(currentHero.ClassStringId, currentHero.Name);
 
-        DarkestPhotonLauncher.CharacterWindow.UpdateCharacterInfo(DarkestPhotonLauncher.Instanse.HeroPool[currentIndex], true, true);
-        currentSlot.UpdateHero(DarkestPhotonLauncher.Instanse.HeroPool[currentIndex]);
+        DarkestPhotonLauncher.CharacterWindow.UpdateCharacterInfo(DarkestPhotonLauncher.HeroPool[currentIndex], true, true);
+        currentSlot.UpdateHero(DarkestPhotonLauncher.HeroPool[currentIndex]);
     }
 }

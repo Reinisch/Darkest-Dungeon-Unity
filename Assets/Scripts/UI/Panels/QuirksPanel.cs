@@ -3,13 +3,15 @@ using System.Collections.Generic;
 
 public class QuirksPanel : MonoBehaviour
 {
-    public RectTransform positiveQuirksRect;
-    public RectTransform negativeQuirksRect;
+    [SerializeField]
+    private RectTransform positiveQuirksRect;
+    [SerializeField]
+    private RectTransform negativeQuirksRect;
 
-    public List<QuirkSlot> PositiveQuirkSlots { get; set; }
-    public List<QuirkSlot> NegativeQuirkSlots { get; set; }
+    private List<QuirkSlot> PositiveQuirkSlots { get; set; }
+    private List<QuirkSlot> NegativeQuirkSlots { get; set; }
 
-    void Awake()
+    private void Awake()
     {
         PositiveQuirkSlots = new List<QuirkSlot>(positiveQuirksRect.GetComponentsInChildren<QuirkSlot>());
         NegativeQuirkSlots = new List<QuirkSlot>(negativeQuirksRect.GetComponentsInChildren<QuirkSlot>());

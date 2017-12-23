@@ -4,23 +4,20 @@ using System.Linq;
 
 public class StageCoach : Building
 {
-    string[] firstHeroClasses = new string[2] { "plague_doctor","vestal" };
-
     public int BaseRecruitSlots { get; set; }
     public int RecruitSlots { get; set; }
-
     public int BaseRosterSlots { get; set; }
     public int RosterSlots { get; set; }
-
-    public int CurrentRecruitMaxLevel { get; set; }
 
     public List<SlotUpgrade> RecruitSlotUpgrades { get; set; }
     public List<SlotUpgrade> RosterSlotUpgrades { get; set; }
     public List<RecruitUpgrade> RecruitExperienceUpgrades { get; set; }
-
     public List<Hero> Heroes { get; set; }
     public List<Hero> EventHeroes { get; set; }
     public List<int> GraveIndexes { get; set; }
+
+    private int CurrentRecruitMaxLevel { get; set; }
+    private readonly string[] firstHeroClasses = { "plague_doctor", "vestal" };
 
     public StageCoach()
     {
@@ -30,63 +27,6 @@ public class StageCoach : Building
         Heroes = new List<Hero>();
         EventHeroes = new List<Hero>();
         GraveIndexes = new List<int>();
-    }
-
-    void GeneratePurchaseInfo(Hero hero, Estate estate)
-    {
-        estate.HeroPurchases.Add(hero.RosterId, new Dictionary<string, UpgradePurchases>());
-        var trees = DarkestDungeonManager.Data.UpgradeTrees.Values.ToList().
-            FindAll(item => item.Id.StartsWith(hero.HeroClass.StringId));
-
-        foreach (var tree in trees)
-            estate.HeroPurchases[hero.RosterId].Add(tree.Id, new UpgradePurchases(tree.Id));
-        foreach (var skill in hero.HeroClass.CampingSkills)
-            estate.HeroPurchases[hero.RosterId].Add(skill.Id, new UpgradePurchases(skill.Id));
-
-        if(hero.Weapon.UpgradeLevel > 1)
-        {
-            var weaponPurchases = estate.HeroPurchases[hero.RosterId][hero.ClassStringId + ".weapon"];
-
-            for(int i = 0; i < hero.Weapon.UpgradeLevel - 1; i++)
-                weaponPurchases.PurchasedUpgrades.Add(i.ToString());
-        }
-        if (hero.Armor.UpgradeLevel > 1)
-        {
-            var armorPurchases = estate.HeroPurchases[hero.RosterId][hero.ClassStringId + ".armour"];
-
-            for (int i = 0; i < hero.Weapon.UpgradeLevel - 1; i++)
-                armorPurchases.PurchasedUpgrades.Add(i.ToString());
-        }
-        
-        for (int i = 0; i < hero.CurrentCombatSkills.Length; i++)
-        {
-            if (hero.CurrentCombatSkills[i] != null)
-            {
-                string treeName = hero.ClassStringId + "." + hero.CurrentCombatSkills[i].Id;
-                var skillTree = DarkestDungeonManager.Data.UpgradeTrees[treeName];
-
-                estate.HeroPurchases[hero.RosterId][treeName].PurchasedUpgrades.Add(skillTree.Upgrades[0].Code);
-                if (hero.Resolve.Level > 0)
-                {
-                    for(int j = 1; j < skillTree.Upgrades.Count; j++)
-                    {
-                        if((skillTree.Upgrades[j] as HeroUpgrade).PrerequisiteResolveLevel <= hero.Resolve.Level)
-                            estate.HeroPurchases[hero.RosterId][treeName].PurchasedUpgrades.Add(skillTree.Upgrades[j].Code);
-                    }
-                }
-            }
-        }
-        estate.ReskillCombatHero(hero);
-        for (int i = 0; i < hero.CurrentCampingSkills.Length; i++)
-            if (hero.CurrentCampingSkills[i] != null)
-                estate.HeroPurchases[hero.RosterId][hero.CurrentCampingSkills[i].Id].PurchasedUpgrades.Add("0");
-    }
-
-    public void Reset()
-    {
-        RecruitSlots = BaseRecruitSlots;
-        RosterSlots = BaseRosterSlots;
-        CurrentRecruitMaxLevel = 0;
     }
 
     public void RestockHeroes(List<int> rosterIds, Estate estate)
@@ -192,6 +132,7 @@ public class StageCoach : Building
         }
         #endregion
     }
+
     public void RestockBonus(List<int> rosterIds, Estate estate, string bonusClass, int bonusAmount)
     {
         EventHeroes.Clear();
@@ -243,6 +184,7 @@ public class StageCoach : Building
         }
         #endregion
     }
+
     public void RestockFromGrave(List<int> rosterIds, Estate estate, int bonusAmount)
     {
         EventHeroes.Clear();
@@ -284,6 +226,7 @@ public class StageCoach : Building
         }
         #endregion
     }
+
     public void ClearDeadRecruits(List<int> rosterIds, Estate estate)
     {
         EventHeroes.Clear();
@@ -383,5 +326,62 @@ public class StageCoach : Building
         if (upgrade == null)
             upgrade = RecruitExperienceUpgrades.Find(item => item.UpgradeCode == code && item.TreeId == treeId);
         return upgrade;
+    }
+
+    private void GeneratePurchaseInfo(Hero hero, Estate estate)
+    {
+        estate.HeroPurchases.Add(hero.RosterId, new Dictionary<string, UpgradePurchases>());
+        var trees = DarkestDungeonManager.Data.UpgradeTrees.Values.ToList().
+            FindAll(item => item.Id.StartsWith(hero.HeroClass.StringId));
+
+        foreach (var tree in trees)
+            estate.HeroPurchases[hero.RosterId].Add(tree.Id, new UpgradePurchases(tree.Id));
+        foreach (var skill in hero.HeroClass.CampingSkills)
+            estate.HeroPurchases[hero.RosterId].Add(skill.Id, new UpgradePurchases(skill.Id));
+
+        if (hero.Weapon.UpgradeLevel > 1)
+        {
+            var weaponPurchases = estate.HeroPurchases[hero.RosterId][hero.ClassStringId + ".weapon"];
+
+            for (int i = 0; i < hero.Weapon.UpgradeLevel - 1; i++)
+                weaponPurchases.PurchasedUpgrades.Add(i.ToString());
+        }
+        if (hero.Armor.UpgradeLevel > 1)
+        {
+            var armorPurchases = estate.HeroPurchases[hero.RosterId][hero.ClassStringId + ".armour"];
+
+            for (int i = 0; i < hero.Weapon.UpgradeLevel - 1; i++)
+                armorPurchases.PurchasedUpgrades.Add(i.ToString());
+        }
+
+        for (int i = 0; i < hero.CurrentCombatSkills.Length; i++)
+        {
+            if (hero.CurrentCombatSkills[i] != null)
+            {
+                string treeName = hero.ClassStringId + "." + hero.CurrentCombatSkills[i].Id;
+                var skillTree = DarkestDungeonManager.Data.UpgradeTrees[treeName];
+
+                estate.HeroPurchases[hero.RosterId][treeName].PurchasedUpgrades.Add(skillTree.Upgrades[0].Code);
+                if (hero.Resolve.Level > 0)
+                {
+                    for (int j = 1; j < skillTree.Upgrades.Count; j++)
+                    {
+                        if ((skillTree.Upgrades[j] as HeroUpgrade).PrerequisiteResolveLevel <= hero.Resolve.Level)
+                            estate.HeroPurchases[hero.RosterId][treeName].PurchasedUpgrades.Add(skillTree.Upgrades[j].Code);
+                    }
+                }
+            }
+        }
+        estate.ReskillCombatHero(hero);
+        for (int i = 0; i < hero.CurrentCampingSkills.Length; i++)
+            if (hero.CurrentCampingSkills[i] != null)
+                estate.HeroPurchases[hero.RosterId][hero.CurrentCampingSkills[i].Id].PurchasedUpgrades.Add("0");
+    }
+
+    private void Reset()
+    {
+        RecruitSlots = BaseRecruitSlots;
+        RosterSlots = BaseRosterSlots;
+        CurrentRecruitMaxLevel = 0;
     }
 }

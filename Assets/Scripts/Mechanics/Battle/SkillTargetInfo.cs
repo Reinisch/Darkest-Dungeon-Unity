@@ -28,12 +28,14 @@ public class SkillTargetInfo
         Targets = targets;
         Type = type;
     }
+
     public SkillTargetInfo(FormationUnit target, SkillTargetType type)
     {
         Targets = new List<FormationUnit>();
         Targets.Add(target);
         Type = type;
     }
+
     public SkillTargetInfo(SkillTargetType type)
     {
         Targets = new List<FormationUnit>();

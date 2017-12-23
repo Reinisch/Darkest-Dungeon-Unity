@@ -1,25 +1,26 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public delegate void HeroObserveEvent(Hero hero);
-
 public class HeroObserverSlot : MonoBehaviour, IDropHandler, IPointerClickHandler
 {
-    public Image slotIcon;
+    [SerializeField]
+    private Image slotIcon;
 
-    public event HeroObserveEvent OnHeroDropped;
-    public event HeroObserveEvent OnHeroRemoved;
+    private Hero ObservedHero { get; set; }
 
-    public Hero ObservedHero { get; set; }
+    public event Action<Hero> EventHeroDropped;
+    public event Action<Hero> EventHeroRemoved;
 
     public void ClearSlot()
     {
         slotIcon.sprite = DarkestDungeonManager.Data.Sprites["hero_slot.background"];
-        if (OnHeroRemoved != null)
-            OnHeroRemoved(ObservedHero);
+        if (EventHeroRemoved != null)
+            EventHeroRemoved(ObservedHero);
         ObservedHero = null;
     }
+
     public void OnDrop(PointerEventData eventData)
     {
         var heroSlot = eventData.pointerDrag.GetComponent<HeroSlot>();
@@ -28,8 +29,8 @@ public class HeroObserverSlot : MonoBehaviour, IDropHandler, IPointerClickHandle
 
         slotIcon.sprite = DarkestDungeonManager.HeroSprites[heroSlot.Hero.ClassStringId]["A"].Portrait;
         ObservedHero = heroSlot.Hero;
-        if (OnHeroDropped != null)
-            OnHeroDropped(heroSlot.Hero);
+        if (EventHeroDropped != null)
+            EventHeroDropped(heroSlot.Hero);
     }
 
     public void OnPointerClick(PointerEventData eventData)

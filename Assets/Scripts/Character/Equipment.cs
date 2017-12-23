@@ -1,23 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 
-public enum HeroEquipmentSlot
-{
-    Weapon = 0, Armor = 1
-}
-
 public class Equipment
 {
-    public string Name { get; set; }
+    public string Name { get; private set; }
+    public int UpgradeLevel { get; private set; }
+    public List<FlatModifier> EquipmentModifiers { get; private set; }
 
-    public int UpgradeLevel { get; set; }
-
-    public HeroEquipmentSlot Slot { get; set; }
-
-    public Equipment()
-    {
-
-    }
+    private HeroEquipmentSlot Slot { get; set; }
 
     public Equipment(string name, int level, HeroEquipmentSlot slot)
     {
@@ -26,8 +16,6 @@ public class Equipment
         Slot = slot;
         EquipmentModifiers = new List<FlatModifier>();
     }
-
-    public List<FlatModifier> EquipmentModifiers { get; set; }
 
     public void ApplyModifiers(Character character)
     {
@@ -51,7 +39,6 @@ public class Equipment
             sb.AppendFormat("</color>\n<color={0}>", DarkestDungeonManager.Data.HexColors["equipment_tooltip_body"]);
             for (int i = 0; i < EquipmentModifiers.Count; i++)
             {
-                
                 if(i == 0)
                 {
                     if(Slot == HeroEquipmentSlot.Weapon)

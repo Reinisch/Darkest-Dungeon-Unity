@@ -4,11 +4,14 @@ using UnityEngine.EventSystems;
 
 public class RewardSlot : BaseSlot, IPointerEnterHandler, IPointerExitHandler
 {
-    public Image rarityFrame;
-    public Image itemFrame;
-    public Text amountText;
+    [SerializeField]
+    private Image rarityFrame;
+    [SerializeField]
+    private Image itemFrame;
+    [SerializeField]
+    private Text amountText;
 
-    public ItemDefinition Item { get; set; }
+    public ItemDefinition Item { get; private set; }
 
     public void SetItem(ItemDefinition item)
     {
@@ -46,6 +49,7 @@ public class RewardSlot : BaseSlot, IPointerEnterHandler, IPointerExitHandler
         }
         
     }
+
     public void SetSingle(ItemDefinition item)
     {
         Item = item;
@@ -81,9 +85,10 @@ public class RewardSlot : BaseSlot, IPointerEnterHandler, IPointerExitHandler
         if (Item != null)
         {
             DarkestSoundManager.PlayOneShot("event:/ui/town/button_mouse_over");
-            ToolTipManager.Instanse.Show(Item.ToolTip, eventData, RectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
+            ToolTipManager.Instanse.Show(Item.ToolTip, RectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
         }
     }
+
     public void OnPointerExit(PointerEventData eventData)
     {
         ToolTipManager.Instanse.Hide();

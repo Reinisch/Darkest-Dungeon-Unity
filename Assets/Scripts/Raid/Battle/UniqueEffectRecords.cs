@@ -3,17 +3,12 @@
     public FormationUnit PrisonerUnit { get; set; }
     public FormationUnit CaptorUnit { get; set; }
     public bool RemoveFromParty { get; set; }
-    public FullCaptor Component
-    {
-        get
-        {
-            return CaptorUnit.Character.FullCaptor;
-        }
-    }
+    public FullCaptor Component { get { return CaptorUnit.Character.FullCaptor; } }
 
     public CaptureRecord()
     {
     }
+
     public CaptureRecord(FormationUnit prisoner, FormationUnit captor, bool removeFromParty)
     {
         PrisonerUnit = prisoner;
@@ -25,14 +20,17 @@
     {
         return PrisonerUnit.CombatInfo.CombatId * 100000 + CaptorUnit.CombatInfo.CombatId * 1000 + (RemoveFromParty ? 1 : 0);
     }
+
     public int GetHashPrisonerId(int hashCode)
     {
         return hashCode / 100000;
     }
+
     public int GetHashCaptorId(int hashCode)
     {
         return hashCode % 100000 / 1000;
     }
+
     public bool GetHashRemoveFromParty(int hashCode)
     {
         return hashCode % 2 == 1;
@@ -55,6 +53,7 @@ public class ControlRecord
     public ControlRecord()
     {
     }
+
     public ControlRecord(FormationUnit prisoner, FormationUnit controller, int duration)
     {
         PrisonerUnit = prisoner;
@@ -66,14 +65,17 @@ public class ControlRecord
     {
         return PrisonerUnit.CombatInfo.CombatId * 100000 + ControllUnit.CombatInfo.CombatId * 1000 + DurationLeft;
     }
+
     public int GetHashPrisonerId(int hashCode)
     {
         return hashCode / 100000;
     }
+
     public int GetHashControlId(int hashCode)
     {
         return hashCode % 100000 / 1000;
     }
+
     public int GetHashDurationLeft(int hashCode)
     {
         return hashCode % 1000;
@@ -95,6 +97,7 @@ public class CompanionRecord
     public CompanionRecord()
     {
     }
+
     public CompanionRecord(FormationUnit target, FormationUnit companion)
     {
         TargetUnit = target;
@@ -105,10 +108,12 @@ public class CompanionRecord
     {
         return TargetUnit.CombatInfo.CombatId * 1000 + CompanionUnit.CombatInfo.CombatId;
     }
+
     public int GetHashTargetId(int hashCode)
     {
         return hashCode / 1000;
     }
+
     public int GetHashCompanionId(int hashCode)
     {
         return hashCode % 1000;

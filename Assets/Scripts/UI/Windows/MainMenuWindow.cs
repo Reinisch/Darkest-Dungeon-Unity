@@ -1,27 +1,22 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using System;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class MainMenuWindow : MonoBehaviour
 {
-    public Button closeButton;
-    public CanvasGroup uiCanvasGroup;
+    [SerializeField]
+    private CanvasGroup uiCanvasGroup;
 
-    public event WindowEvent onWindowClose;
+    public CanvasGroup UICanvasGroup { private get { return uiCanvasGroup; } set { uiCanvasGroup = value; } }
+    public bool IsOpened { get { return gameObject.activeSelf; } }
 
-    public bool IsOpened
-    {
-        get
-        {
-            return gameObject.activeSelf;
-        }
-    }
+    public event Action EventWindowClosed;
 
     public void OpenMenu()
     {
         gameObject.SetActive(true);
         DarkestDungeonManager.GamePaused = true;
-        uiCanvasGroup.blocksRaycasts = false;
+        UICanvasGroup.blocksRaycasts = false;
     }
 
     public void WindowClosed()
@@ -29,9 +24,9 @@ public class MainMenuWindow : MonoBehaviour
         DarkestDungeonManager.GamePaused = false;
         gameObject.SetActive(false);
 
-        if (onWindowClose != null)
-            onWindowClose();
-        uiCanvasGroup.blocksRaycasts = true;
+        if (EventWindowClosed != null)
+            EventWindowClosed();
+        UICanvasGroup.blocksRaycasts = true;
     }
 
     public void ReturnToCampaignSelection()

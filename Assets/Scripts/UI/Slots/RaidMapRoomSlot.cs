@@ -4,39 +4,33 @@ using UnityEngine.EventSystems;
 
 public class RaidMapRoomSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    public Image roomIcon;
-    public Image marker;
-    public Image indicator;
+    [SerializeField]
+    private Image roomIcon;
+    [SerializeField]
+    private Image marker;
+    [SerializeField]
+    private RectTransform container;
+    [SerializeField]
+    private Animator animator;
 
-    public RectTransform container;
-    public Animator animator;
+    public RectTransform SlotRect { get { return slotRect ?? (slotRect = GetComponent<RectTransform>()); } }
+    public RectTransform Container { get { return container; } }
+    public Animator Animator { get { return animator; } }
+
+    private DungeonRoom Room { get; set; }
+    private bool MarkedForMove { get; set; }
 
     private RectTransform slotRect;
-
-    public DungeonRoom Room { get; set; }
-    public bool HasRoom { get; set; }
-    public bool MarkedForMove { get; set; }
-
-    public RectTransform SlotRect
-    {
-        get
-        {
-            if (slotRect == null)
-                slotRect = GetComponent<RectTransform>();
-            return slotRect;
-        }
-    }
 
     public void SetRoom(DungeonRoom room)
     {
         Room = room;
-        HasRoom = true;
         UpdateRoom();
     }
+
     public void SetEmpty()
     {
         Room = null;
-        HasRoom = false;
         roomIcon.enabled = false;
         marker.enabled = false;
     }
@@ -71,11 +65,13 @@ public class RaidMapRoomSlot : MonoBehaviour, IPointerEnterHandler, IPointerExit
             marker.enabled = false;
         }
     }
+
     public void SetMovable(bool movable)
     {
-        animator.SetBool("IsAvailable", movable);
+        Animator.SetBool("IsAvailable", movable);
         MarkedForMove = movable;
     }
+
     public void MarkRoom()
     {
         marker.enabled = true;
@@ -85,13 +81,14 @@ public class RaidMapRoomSlot : MonoBehaviour, IPointerEnterHandler, IPointerExit
     public void OnPointerEnter(PointerEventData eventData)
     {
         if(MarkedForMove)
-            ToolTipManager.Instanse.Show(LocalizationManager.GetString("str_move_to_this_room"),
-                eventData, SlotRect, ToolTipStyle.FromBottom, ToolTipSize.Small);
+            ToolTipManager.Instanse.Show(LocalizationManager.GetString("str_move_to_this_room"), SlotRect, ToolTipStyle.FromBottom, ToolTipSize.Small);
     }
+
     public void OnPointerExit(PointerEventData eventData)
     {
         ToolTipManager.Instanse.Hide();
     }
+
     public void OnPointerClick(PointerEventData eventData)
     {
         if(MarkedForMove)

@@ -1,34 +1,36 @@
-﻿using UnityEngine.UI;
+﻿using System;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Text;
-
-public delegate void MealSlotEvent(MealSlot slot);
+using UnityEngine;
 
 public class MealSlot : BaseSlot, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    public Image itemIcon;
-    public Text amountText;
+    [SerializeField]
+    private Image itemIcon;
+    [SerializeField]
+    private Text amountText;
 
     public int FoodRank { get; set; }
-    public int Amount { get; set; }
-    public bool Deactivated { get; set; }
-    public bool Highlighted { get; set; }
+    public int Amount { get; private set; }
 
-    public event MealSlotEvent onMealSelect;
+    private bool Deactivated { get; set; }
+    private bool Highlighted { get; set; }
+
+    public event Action<MealSlot> EventMealSelected;
 
     public void SetFoodAmount(int amount)
     {
         Amount = amount;
         amountText.text = amount.ToString();
     }
+
     public void SetAvailability()
     {
         Highlighted = false;
-        if (RaidSceneManager.Inventory.ContainsEnoughItems("provision", Amount))
-            SetActive(true);
-        else
-            SetActive(false);
+        SetActive(RaidSceneManager.Inventory.ContainsEnoughItems("provision", Amount));
     }
+
     public void SetActive(bool active)
     {
         Deactivated = !active;
@@ -97,19 +99,21 @@ public class MealSlot : BaseSlot, IPointerEnterHandler, IPointerExitHandler, IPo
             sb.AppendFormat(LocalizationManager.GetString("str_meal_stress_format"), 15);
         }
 
-        ToolTipManager.Instanse.Show(sb.ToString(), eventData, RectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
+        ToolTipManager.Instanse.Show(sb.ToString(), RectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
     }
+
     public void OnPointerExit(PointerEventData eventData)
     {
         Highlighted = false;
         SetActive(!Deactivated);
         ToolTipManager.Instanse.Hide();
     }
+
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (!Deactivated && onMealSelect != null)
+        if (!Deactivated && EventMealSelected != null)
         {
-            onMealSelect(this);
+            EventMealSelected(this);
             if (Highlighted)
                 OnPointerExit(eventData);
         }

@@ -419,5 +419,4 @@ public class SkeletonRagdoll2D : MonoBehaviour {
 			Gizmos.DrawWireSphere(newTransformPos, thickness * 1.2f);
 		}
 	}
-
 }

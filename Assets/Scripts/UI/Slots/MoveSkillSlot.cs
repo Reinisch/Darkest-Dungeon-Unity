@@ -1,28 +1,28 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public delegate void MoveSkillSlotEvent(MoveSkillSlot slot);
-
 public class MoveSkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
-    public Image skillIcon;
-    public Image selectorIcon;
+    [SerializeField]
+    private Image skillIcon;
+    [SerializeField]
+    private Image selectorIcon;
 
-    public Hero Hero { get; private set; }
     public MoveSkill Skill { get; private set; }
-    public RectTransform RectTransform { get; private set; }
 
-    public bool Selected { get; set; }
-    public bool Available { get; set; }
-    public bool Selectable { get; set; }
-    public bool Deselectable { get; set; }
-    public bool Highlighted { get; set; }
+    private RectTransform RectTransform { get; set; }
+    private Hero Hero { get; set; }
+    private bool Selected { get; set; }
+    private bool Available { get; set; }
+    private bool Selectable { get; set; }
+    private bool Deselectable { get; set; }
 
-    public event MoveSkillSlotEvent onSkillSelected;
-    public event MoveSkillSlotEvent onSkillDeselected;
+    public event Action<MoveSkillSlot> EventSkillSelected;
+    public event Action<MoveSkillSlot> EventSkillDeselected;
 
-    void Awake()
+    private void Awake()
     {
         RectTransform = GetComponent<RectTransform>();
     }
@@ -32,16 +32,17 @@ public class MoveSkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         Selected = true;
         selectorIcon.enabled = true;
 
-        if (onSkillSelected != null)
-            onSkillSelected(this);
+        if (EventSkillSelected != null)
+            EventSkillSelected(this);
     }
+
     public void Deselect()
     {
         Selected = false;
         selectorIcon.enabled = false;
 
-        if (onSkillDeselected != null)
-            onSkillDeselected(this);
+        if (EventSkillDeselected != null)
+            EventSkillDeselected(this);
     }
 
     public void SetCombatState()
@@ -53,6 +54,7 @@ public class MoveSkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         Selectable = true;
         Deselectable = false;
     }
+
     public void SetMovableState()
     {
         skillIcon.enabled = true;
@@ -62,6 +64,7 @@ public class MoveSkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         Selectable = true;
         Deselectable = true;
     }
+
     public void SetDisabledState()
     {
         skillIcon.enabled = true;
@@ -75,7 +78,7 @@ public class MoveSkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         selectorIcon.enabled = false;
     }
 
-    public virtual void UpdateSkill()
+    public void UpdateSkill()
     {
         if (RaidSceneManager.RaidPanel.SelectedHero.HeroClass.MoveSkill != null)
         {
@@ -88,17 +91,17 @@ public class MoveSkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         else
             ResetSkill();
     }
-    public virtual void ResetSkill()
+
+    public void ResetSkill()
     {
         Hero = null;
         Skill = null;
 
         Selected = false;
         Available = false;
-        Highlighted = false;
     }
 
-    public virtual void OnPointerClick(PointerEventData eventData)
+    public void OnPointerClick(PointerEventData eventData)
     {
         if (!Available)
             return;
@@ -108,25 +111,18 @@ public class MoveSkillSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         else if (!Selected && Selectable)
             Select();
     }
-    public virtual void OnPointerEnter(PointerEventData eventData)
-    {
-        Highlighted = true;
 
-        if (!Available)
-            skillIcon.material = DarkestDungeonManager.GrayMaterial;
-        else
-            skillIcon.material = DarkestDungeonManager.HighlightMaterial;
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        skillIcon.material = !Available ? DarkestDungeonManager.GrayMaterial : DarkestDungeonManager.HighlightMaterial;
 
         if (Skill != null)
-            ToolTipManager.Instanse.Show(Skill.HeroSkillTooltip(Hero), eventData, RectTransform, ToolTipStyle.FromBottom, ToolTipSize.Normal);
+            ToolTipManager.Instanse.Show(Skill.HeroSkillTooltip(Hero), RectTransform, ToolTipStyle.FromBottom, ToolTipSize.Normal);
     }
-    public virtual void OnPointerExit(PointerEventData eventData)
+
+    public void OnPointerExit(PointerEventData eventData)
     {
-        Highlighted = false;
-        if (!Available)
-            skillIcon.material = DarkestDungeonManager.FullGrayDarkMaterial;
-        else
-            skillIcon.material = skillIcon.defaultMaterial;
+        skillIcon.material = !Available ? DarkestDungeonManager.FullGrayDarkMaterial : skillIcon.defaultMaterial;
         ToolTipManager.Instanse.Hide();
     }
 }

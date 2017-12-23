@@ -3,38 +3,33 @@ using UnityEngine.UI;
 
 public class RaidHallwayView : MonoBehaviour
 {
-    public Image farBackground;
-    public Image midBackground;
+    [SerializeField]
+    private Image farBackground;
+    [SerializeField]
+    private Image midBackground;
 
-    public RaidBorderWall leftWall;
-    public RaidBorderWall rightWall;
+    [SerializeField]
+    private RaidBorderWall leftWall;
+    [SerializeField]
+    private RaidBorderWall rightWall;
 
-    public RaidHallway raidHallway;
-    public CanvasGroup canvasGroup;
-    public RaidHallwayPassage hallwayPassage;
+    [SerializeField]
+    private RaidHallway raidHallway;
+    [SerializeField]
+    private CanvasGroup canvasGroup;
+    [SerializeField]
+    private RaidHallwayPassage hallwayPassage;
+    [SerializeField]
+    private RectTransform startingPosition;
 
-    public RectTransform startingPosition;
-
-    public Hallway Hallway { get; set; }
     public RaidHallSector CurrentSector { get; set; }
-    public DungeonRoom StartingRoom { get; set; }
-    public DungeonRoom TargetRoom { get; set; }
 
-    public void SetActive(bool active)
-    {
-        gameObject.SetActive(active);
-    }
-
-    public void EnableInteraction()
-    {
-        canvasGroup.interactable = true;
-        canvasGroup.blocksRaycasts = true;
-    }
-    public void DisableInteraction()
-    {
-        canvasGroup.interactable = false;
-        canvasGroup.blocksRaycasts = false;
-    }
+    public Hallway Hallway { get; private set; }
+    public DungeonRoom StartingRoom { get; private set; }
+    public DungeonRoom TargetRoom { get; private set; }
+    public RaidHallway RaidHallway { get { return raidHallway; } }
+    public RaidHallwayPassage HallwayPassage { get { return hallwayPassage; } }
+    public RectTransform StartingPosition { get { return startingPosition; } }
 
     public void LoadHallway(Hallway hallway, Direction direction, DungeonRoom fromRoom, bool loadBattleSave = false)
     {
@@ -62,21 +57,38 @@ public class RaidHallwayView : MonoBehaviour
         RaidSceneManager.MapPanel.OnHallwayEnter(Hallway, StartingRoom, TargetRoom);
     }
 
-    public void UpdateEnviroment()
+    public void SetActive(bool active)
+    {
+        gameObject.SetActive(active);
+    }
+
+    public void EnableInteraction()
+    {
+        canvasGroup.interactable = true;
+        canvasGroup.blocksRaycasts = true;
+    }
+
+    public void DisableInteraction()
+    {
+        canvasGroup.interactable = false;
+        canvasGroup.blocksRaycasts = false;
+    }
+
+    private void UpdateEnviroment()
     {
         var sprites = DarkestDungeonManager.Data.DungeonSprites;
 
         farBackground.sprite = sprites[RaidSceneManager.Raid.Quest.Dungeon + ".corridor.back"];
         midBackground.sprite = sprites[RaidSceneManager.Raid.Quest.Dungeon + ".corridor.mid"];
 
-        leftWall.borderWall.sprite = sprites[RaidSceneManager.Raid.Quest.Dungeon + ".endhall.1"];
-        leftWall.additionalWall.sprite = leftWall.borderWall.sprite;
-        rightWall.borderWall.sprite = leftWall.borderWall.sprite;
-        rightWall.additionalWall.sprite = leftWall.borderWall.sprite;
+        leftWall.BorderWall.sprite = sprites[RaidSceneManager.Raid.Quest.Dungeon + ".endhall.1"];
+        leftWall.AdditionalWall.sprite = leftWall.BorderWall.sprite;
+        rightWall.BorderWall.sprite = leftWall.BorderWall.sprite;
+        rightWall.AdditionalWall.sprite = leftWall.BorderWall.sprite;
 
-        leftWall.rectTransform.localPosition = new Vector3(-raidHallway.ActiveSectorCount * 360 + 80,
-            leftWall.rectTransform.localPosition.y, leftWall.rectTransform.localPosition.z);
-        rightWall.rectTransform.localPosition = new Vector3(raidHallway.ActiveSectorCount * 360 - 80,
-            leftWall.rectTransform.localPosition.y, leftWall.rectTransform.localPosition.z);
+        leftWall.RectTransform.localPosition = new Vector3(-raidHallway.ActiveSectorCount * 360 + 80,
+            leftWall.RectTransform.localPosition.y, leftWall.RectTransform.localPosition.z);
+        rightWall.RectTransform.localPosition = new Vector3(raidHallway.ActiveSectorCount * 360 - 80,
+            leftWall.RectTransform.localPosition.y, leftWall.RectTransform.localPosition.z);
     }
 }

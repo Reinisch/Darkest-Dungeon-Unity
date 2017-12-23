@@ -1,25 +1,28 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public delegate void CampingSkillPurchaseSlotEvent(CampingSkillPurchaseSlot slot);
-
 public class CampingSkillPurchaseSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    RectTransform rectTransform;
+    [SerializeField]
+    private BuildCostFrame costFrame;
+    [SerializeField]
+    private Image icon;
+    [SerializeField]
+    private Image locker;
 
-    public BuildCostFrame costFrame;
-    public Image icon;
-    public Image locker;
+    public Hero Hero { get; private set; }
+    public CampingSkill Skill { get; private set; }
+    public bool Unlocked { get; private set; }
 
-    public Hero Hero { get; set; }
-    public CampingSkill Skill { get; set; }
-    public bool Unlocked { get; set; }
-    public bool Highlighted { get; set; }
+    private bool Highlighted { get; set; }
 
-    public event CampingSkillPurchaseSlotEvent onClick;
+    private RectTransform rectTransform;
 
-    void Awake()
+    public event Action<CampingSkillPurchaseSlot> EventClicked;
+
+    private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
     }
@@ -29,7 +32,7 @@ public class CampingSkillPurchaseSlot : MonoBehaviour, IPointerEnterHandler, IPo
         Hero = hero;
         Skill = hero.HeroClass.CampingSkills[skillIndex];
         icon.sprite = DarkestDungeonManager.Data.Sprites["camp_skill_" + Skill.Id];
-        costFrame.heirloomOneAmount.text = Mathf.RoundToInt(Skill.CurrencyCost.Amount * discount).ToString();
+        costFrame.HeirloomOneAmount.text = Mathf.RoundToInt(Skill.CurrencyCost.Amount * discount).ToString();
 
         if (hero.CurrentCampingSkills[skillIndex] == null)
             Lock();
@@ -47,7 +50,7 @@ public class CampingSkillPurchaseSlot : MonoBehaviour, IPointerEnterHandler, IPo
         else
             Unlock();
 
-        costFrame.heirloomOneAmount.text = Mathf.RoundToInt(Skill.CurrencyCost.Amount * discount).ToString();
+        costFrame.HeirloomOneAmount.text = Mathf.RoundToInt(Skill.CurrencyCost.Amount * discount).ToString();
     }
 
     public void Reset()
@@ -61,10 +64,7 @@ public class CampingSkillPurchaseSlot : MonoBehaviour, IPointerEnterHandler, IPo
         Unlocked = false;
         locker.enabled = true;
 
-        if (Highlighted)
-            icon.material = DarkestDungeonManager.GrayHighlightMaterial;
-        else
-            icon.material = DarkestDungeonManager.GrayMaterial;
+        icon.material = Highlighted ? DarkestDungeonManager.GrayHighlightMaterial : DarkestDungeonManager.GrayMaterial;
 
         costFrame.gameObject.SetActive(true);
     }
@@ -74,42 +74,37 @@ public class CampingSkillPurchaseSlot : MonoBehaviour, IPointerEnterHandler, IPo
         Unlocked = true;
         locker.enabled = false;
 
-        if (Highlighted)
-            icon.material = DarkestDungeonManager.HighlightMaterial;
-        else
-            icon.material = icon.defaultMaterial;
+        icon.material = Highlighted ? DarkestDungeonManager.HighlightMaterial : icon.defaultMaterial;
 
         costFrame.gameObject.SetActive(false);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        Highlighted = true;
+
         if (Hero == null)
             return;
 
-        if(Unlocked)
-            icon.material = DarkestDungeonManager.HighlightMaterial;
-        else
-            icon.material = DarkestDungeonManager.GrayHighlightMaterial;
+        icon.material = Unlocked ? DarkestDungeonManager.HighlightMaterial : DarkestDungeonManager.GrayHighlightMaterial;
 
         if(Skill != null)
-            ToolTipManager.Instanse.Show(Skill.Tooltip(), eventData, rectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
+            ToolTipManager.Instanse.Show(Skill.Tooltip(), rectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
 
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if(Unlocked)
-            icon.material = icon.material = icon.defaultMaterial;
-        else
-            icon.material = DarkestDungeonManager.GrayMaterial;
+        Highlighted = false;
+
+        icon.material = Unlocked ? icon.defaultMaterial : DarkestDungeonManager.GrayMaterial;
         
         ToolTipManager.Instanse.Hide();
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (onClick != null)
-            onClick(this);
+        if (EventClicked != null)
+            EventClicked(this);
     }
 }

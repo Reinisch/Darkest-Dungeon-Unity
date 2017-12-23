@@ -1,18 +1,23 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 
 public class StatueAudioEntry : MonoBehaviour
 {
-    public Sprite lockIcon;
-    public Sprite playIcon;
+    [SerializeField]
+    private Sprite lockIcon;
+    [SerializeField]
+    private Sprite playIcon;
+    [SerializeField]
+    private Image statusIcon;
+    [SerializeField]
+    private Button playButton;
+    [SerializeField]
+    private Text description;
 
-    public Image statusIcon;
-    public Button playButton;
-    public Text description;
-
-    public string audioEntryId;
-    public string plotCondition;
+    [SerializeField]
+    private string audioEntryId;
+    [SerializeField]
+    private string plotCondition;
 
     public void UpdateCondition()
     {
@@ -29,6 +34,7 @@ public class StatueAudioEntry : MonoBehaviour
             description.text = LocalizationManager.GetString("str_caretaker_goal_" + plotCondition);
         }
     }
+
     public void PlayButtonClicked()
     {
         DarkestSoundManager.PlayStatueAudioEntry(audioEntryId);

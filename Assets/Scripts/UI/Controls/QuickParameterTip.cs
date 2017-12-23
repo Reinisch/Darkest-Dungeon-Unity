@@ -3,29 +3,40 @@ using UnityEngine.EventSystems;
 
 public class QuickParameterTip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    public RectTransform tipTarget;
-    public string tipEntry;
-    public ToolTipSize tipSize;
-    public ToolTipStyle tipStyle;
+    [SerializeField]
+    private RectTransform tipTarget;
+    [SerializeField]
+    private string tipEntry;
+    [SerializeField]
+    private ToolTipSize tipSize;
+    [SerializeField]
+    private ToolTipStyle tipStyle;
 
-    public int ParamCount { get; set; }
-    public float ParamOne { get; set; }
-    public float ParamTwo { get; set; }
-    public float ParamThree { get; set; }
+    private int ParamCount { get; set; }
+    private float ParamOne { get; set; }
+    private float ParamTwo { get; set; }
+
+    public void SetParams(float paramOne)
+    {
+        ParamCount = 1;
+        ParamOne = paramOne;
+    }
+
+    public void SetParams(float paramOne, float paramTwo)
+    {
+        ParamCount = 2;
+        ParamOne = paramOne;
+        ParamTwo = paramTwo;
+    }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
         if(ParamCount == 1)
-            ToolTipManager.Instanse.Show(string.Format(LocalizationManager.GetString(tipEntry), ParamOne),
-                eventData, tipTarget, tipStyle, tipSize);
+            ToolTipManager.Instanse.Show(string.Format(LocalizationManager.GetString(tipEntry), ParamOne), tipTarget, tipStyle, tipSize);
         else if (ParamCount == 2)
-            ToolTipManager.Instanse.Show(string.Format(LocalizationManager.GetString(tipEntry), ParamOne, ParamTwo),
-                eventData, tipTarget, tipStyle, tipSize);
-        else if (ParamCount == 3)
-            ToolTipManager.Instanse.Show(string.Format(LocalizationManager.GetString(tipEntry), ParamOne, ParamTwo, ParamThree),
-                eventData, tipTarget, tipStyle, tipSize);
+            ToolTipManager.Instanse.Show(string.Format(LocalizationManager.GetString(tipEntry), ParamOne, ParamTwo), tipTarget, tipStyle, tipSize);
         else
-            ToolTipManager.Instanse.Show(LocalizationManager.GetString(tipEntry),eventData, tipTarget, tipStyle, tipSize);
+            ToolTipManager.Instanse.Show(LocalizationManager.GetString(tipEntry), tipTarget, tipStyle, tipSize);
     }
 
     public void OnPointerExit(PointerEventData eventData)

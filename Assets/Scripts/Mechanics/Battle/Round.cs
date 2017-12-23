@@ -1,8 +1,5 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-
-public enum HeroTurnAction { Waiting, Skill, Move, Pass, Retreat }
 
 public class Round
 {
@@ -16,7 +13,7 @@ public class Round
     public FormationUnit SelectedUnit { get; set; }
     public FormationUnit SelectedTarget { get; set; }
 
-    public List<FormationUnit> OrderedUnits { get; set; }
+    public List<FormationUnit> OrderedUnits { get; private set; }
 
     public Round()
     {
@@ -27,8 +24,8 @@ public class Round
     {
         RaidSceneManager.BattleGround.LastSkillUsed = null;
         heroUnit.CombatInfo.UpdateNextTurn();
-        TurnType = global::TurnType.HeroTurn;
-        TurnStatus = global::TurnStatus.PreTurn;
+        TurnType = TurnType.HeroTurn;
+        TurnStatus = TurnStatus.PreTurn;
 
         HeroAction = HeroTurnAction.Waiting;
         SelectedUnit = heroUnit;
@@ -36,24 +33,27 @@ public class Round
 
         OrderedUnits.Remove(heroUnit);
     }
+
     public void OnHeroTurn()
     {
-        TurnStatus = global::TurnStatus.Progress;
+        TurnStatus = TurnStatus.Progress;
     }
+
     public void PostHeroTurn()
     {
-        TurnStatus = global::TurnStatus.PostTurn;
+        TurnStatus = TurnStatus.PostTurn;
 
         HeroAction = HeroTurnAction.Waiting;
         SelectedUnit = null;
         SelectedTarget = null;
     }
+
     public void PreMonsterTurn(FormationUnit monsterUnit)
     {
         RaidSceneManager.BattleGround.LastSkillUsed = null;
         monsterUnit.CombatInfo.UpdateNextTurn();
-        TurnType = global::TurnType.HeroTurn;
-        TurnStatus = global::TurnStatus.PreTurn;
+        TurnType = TurnType.HeroTurn;
+        TurnStatus = TurnStatus.PreTurn;
 
         HeroAction = HeroTurnAction.Waiting;
         SelectedUnit = monsterUnit;
@@ -61,23 +61,27 @@ public class Round
 
         OrderedUnits.Remove(monsterUnit);
     }
+
     public void OnMonsterTurn()
     {
-        TurnStatus = global::TurnStatus.Progress;
+        TurnStatus = TurnStatus.Progress;
     }
+
     public void PostMonsterTurn()
     {
-        TurnStatus = global::TurnStatus.PostTurn;
+        TurnStatus = TurnStatus.PostTurn;
 
         HeroAction = HeroTurnAction.Waiting;
         SelectedUnit = null;
         SelectedTarget = null;
     }
+
     public void HeroActionSelected(HeroTurnAction actionType, FormationUnit selectedTarget)
     {
         HeroAction = actionType;
         SelectedTarget = selectedTarget;
     }
+
     public void HeroActionSelected(HeroTurnAction actionType, FormationUnit selectedTarget, int rngSeed)
     {
         HeroAction = actionType;
@@ -90,6 +94,7 @@ public class Round
         RoundNumber = 0;
         RoundNumber = NextRound(battleground);
     }
+
     public int NextRound(BattleGround battleground)
     {
         RoundStatus = RoundStatus.Start;
@@ -147,6 +152,7 @@ public class Round
 
         return ++RoundNumber;
     }
+
     public void InsertInitiativeRoll(FormationUnit unit)
     {
         if (unit.Character.Initiative == null || unit.Character.Initiative.NumberOfTurns < 1)

@@ -1,29 +1,28 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public delegate void BattleCampingSlotEvent(BattleCampingSlot slot);
-
 public class BattleCampingSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
-    public Image skillIcon;
-    public Image selectorIcon;
+    [SerializeField]
+    private Image skillIcon;
+    [SerializeField]
+    private Image selectorIcon;
 
-    public Hero Hero { get; private set; }
     public CampingSkill Skill { get; private set; }
-    public RectTransform RectTransform { get; private set; }
+    public bool Selected { get; private set; }
+    public bool IsEmpty { get; private set; }
 
-    public bool Selected { get; set; }
-    public bool Available { get; set; }
-    public bool Highlighted { get; set; }
-    public bool Selectable { get; set; }
-    public bool Deselectable { get; set; }
-    public bool IsEmpty { get; set; }
+    private RectTransform RectTransform { get; set; }
+    private bool Available { get; set; }
+    private bool Selectable { get; set; }
+    private bool Deselectable { get; set; }
 
-    public event BattleCampingSlotEvent onSkillSelected;
-    public event BattleCampingSlotEvent onSkillDeselected;
+    public event Action<BattleCampingSlot> EventSkillSelected;
+    public event Action<BattleCampingSlot> EventSkillDeselected;
 
-    void Awake()
+    private void Awake()
     {
         RectTransform = GetComponent<RectTransform>();
     }
@@ -33,17 +32,18 @@ public class BattleCampingSlot : MonoBehaviour, IPointerClickHandler, IPointerEn
         Selected = true;
         selectorIcon.enabled = true;
 
-        if (onSkillSelected != null)
-            onSkillSelected(this);
+        if (EventSkillSelected != null)
+            EventSkillSelected(this);
     }
+
     public void Deselect(bool clearDeselect = false)
     {
         Selected = false;
         selectorIcon.enabled = false;
 
         if(!clearDeselect)
-            if (onSkillDeselected != null)
-                onSkillDeselected(this);
+            if (EventSkillDeselected != null)
+                EventSkillDeselected(this);
     }
 
     public void SetCombatState()
@@ -57,6 +57,7 @@ public class BattleCampingSlot : MonoBehaviour, IPointerClickHandler, IPointerEn
 
         IsEmpty = false;
     }
+
     public void SetDisabledState()
     {
         selectorIcon.enabled = false;
@@ -70,9 +71,9 @@ public class BattleCampingSlot : MonoBehaviour, IPointerClickHandler, IPointerEn
 
         IsEmpty = false;
     }
+
     public void SetEmptyState()
     {
-        Hero = null;
         Skill = null;
 
         selectorIcon.enabled = false;
@@ -82,13 +83,11 @@ public class BattleCampingSlot : MonoBehaviour, IPointerClickHandler, IPointerEn
         Deselectable = false;
         Selected = false;
         Available = false;
-        Highlighted = false;
         IsEmpty = true;
     }
 
-    public virtual void UpdateSkill(Hero hero, CampingSkill campingSkill)
+    public void UpdateSkill(Hero hero, CampingSkill campingSkill)
     {
-        Hero = hero;
         Skill = campingSkill;
 
         if (hero.SelectedCampingSkills.Contains(campingSkill))
@@ -100,12 +99,13 @@ public class BattleCampingSlot : MonoBehaviour, IPointerClickHandler, IPointerEn
         else
             ResetSkill();
     }
-    public virtual void ResetSkill()
+
+    public void ResetSkill()
     {
         SetEmptyState();
     }
 
-    public virtual void OnPointerClick(PointerEventData eventData)
+    public void OnPointerClick(PointerEventData eventData)
     {
         if (RaidSceneManager.RaidEvents.CampEvent.ActionType != CampUsageResultType.Wait)
             return;
@@ -118,24 +118,18 @@ public class BattleCampingSlot : MonoBehaviour, IPointerClickHandler, IPointerEn
         else if (!Selected && Selectable)
             Select();
     }
-    public virtual void OnPointerEnter(PointerEventData eventData)
+
+    public void OnPointerEnter(PointerEventData eventData)
     {
-        Highlighted = true;
-        if (!Available)
-            skillIcon.material = DarkestDungeonManager.GrayMaterial;
-        else
-            skillIcon.material = DarkestDungeonManager.HighlightMaterial;
+        skillIcon.material = !Available ? DarkestDungeonManager.GrayMaterial : DarkestDungeonManager.HighlightMaterial;
 
         if (Skill != null)
-            ToolTipManager.Instanse.Show(Skill.Tooltip(), eventData, RectTransform, ToolTipStyle.FromTop, ToolTipSize.Normal);
+            ToolTipManager.Instanse.Show(Skill.Tooltip(), RectTransform, ToolTipStyle.FromTop, ToolTipSize.Normal);
     }
-    public virtual void OnPointerExit(PointerEventData eventData)
+
+    public void OnPointerExit(PointerEventData eventData)
     {
-        Highlighted = false;
-        if (!Available)
-            skillIcon.material = DarkestDungeonManager.FullGrayDarkMaterial;
-        else
-            skillIcon.material = skillIcon.defaultMaterial;
+        skillIcon.material = !Available ? DarkestDungeonManager.FullGrayDarkMaterial : skillIcon.defaultMaterial;
         ToolTipManager.Instanse.Hide();
     }
 }

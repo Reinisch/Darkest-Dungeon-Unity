@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Text;
 
 public enum TownEventTone
 {
     Good, Bad, Neutral
 }
+
 public enum TownEventDataType
 {
     EmbarkPartyBuff, IdleResolve, BonusRecruit, InActivityBuff,
@@ -208,16 +208,19 @@ public class TownEvent : ISingleProportion
                 activeCooldown--;
         }
     }
+
     public void SetDefaultState()
     {
         activeCooldown = 0;
         notRolledAmount = 0;
     }
+
     public void UpdateFromSave(SaveEventData eventData)
     {
         activeCooldown = eventData.ActiveCooldown;
         notRolledAmount = eventData.NotRolledAmount;
     }
+
     public SaveEventData GetSaveData()
     {
         SaveEventData eventData = new SaveEventData();

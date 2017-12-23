@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-
-public delegate void TriketDelegate(Trinket trinket);
+﻿using System;
+using System.Collections.Generic;
 
 public class RealmInventory
 {
@@ -8,7 +7,7 @@ public class RealmInventory
 
     public List<Trinket> Trinkets { get; set; }
 
-    public TriketDelegate TrinketAddAction { get; set; }
+    public Action<Trinket> TrinketAddAction { get; set; }
 
     public void AddTrinket(Trinket trinket)
     {

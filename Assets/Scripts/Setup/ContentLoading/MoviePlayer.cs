@@ -5,15 +5,16 @@ using System.Collections;
 #if !UNITY_WEBGL
 public class MoviePlayer : MonoBehaviour
 {
-    public MovieTexture movie;
+    [SerializeField]
+    private MovieTexture movie;
 
-    GameIntro gameIntro;
-    AudioSource audioSource;
-    IEnumerator videoCoroutine;
-    int skipFrames = 6;
-    float vol;
+    private GameIntro gameIntro;
+    private AudioSource audioSource;
+    private IEnumerator videoCoroutine;
+    private int skipFrames = 6;
+    private float vol;
 
-    void Awake()
+    private void Awake()
     {
         gameIntro = GetComponentInParent<GameIntro>();
         movie = (MovieTexture)GetComponent<RawImage>().mainTexture;
@@ -21,7 +22,7 @@ public class MoviePlayer : MonoBehaviour
         audioSource.clip = movie.audioClip;
     }
 
-    void Update()
+    private void Update()
     {
         if (Input.anyKey)
             FinishVideo();
@@ -29,6 +30,12 @@ public class MoviePlayer : MonoBehaviour
 
     public void Play()
     {
+        if (movie == null)
+        {
+            gameIntro.FinishIntro();
+            return;
+        }
+
         gameObject.SetActive(true);
         movie.Play();
         audioSource.Play();
@@ -40,7 +47,7 @@ public class MoviePlayer : MonoBehaviour
         StartCoroutine(videoCoroutine);
     }
 
-    void FinishVideo()
+    private void FinishVideo()
     {
         StopCoroutine(videoCoroutine);
         movie.Stop();
@@ -49,7 +56,7 @@ public class MoviePlayer : MonoBehaviour
         gameIntro.FinishIntro();
     }
 
-    IEnumerator VideoEnd()
+    private IEnumerator VideoEnd()
     {
         while (movie.isPlaying)
         {
@@ -66,7 +73,6 @@ public class MoviePlayer : MonoBehaviour
         }
 
         FinishVideo();
-        yield break;
     }
 }
 #endif

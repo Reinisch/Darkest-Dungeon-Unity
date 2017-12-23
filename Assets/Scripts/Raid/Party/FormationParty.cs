@@ -3,17 +3,8 @@ using System.Collections.Generic;
 
 public class FormationParty : MonoBehaviour
 {
-    public List<FormationUnit> Units { get; set; }
-    public FormationUnit LastUnit
-    {
-        get
-        {
-            if (Units.Count > 0)
-                return Units[Units.Count - 1];
-            else
-                return null;
-        }
-    }
+    public List<FormationUnit> Units { get; private set; }
+    public FormationUnit LastUnit { get { return Units.Count > 0 ? Units[Units.Count - 1] : null; } }
 
     public void AddUnit(FormationUnit unit, int targetRank)
     {
@@ -44,6 +35,7 @@ public class FormationParty : MonoBehaviour
         for(int i = 1; i < Units.Count; i++)
             Units[i].Rank = Units[i - 1].Rank + Units[i - 1].Size;
     }
+
     public void RemoveUnit(FormationUnit unit)
     {
         Units.Remove(unit);
@@ -55,6 +47,7 @@ public class FormationParty : MonoBehaviour
             Units[i].RankSlot.UpdateSlot();
         }
     }
+
     public void SortRanked()
     {
         Units.Sort((x, y) => { if (x.Rank == y.Rank) return 0; if (x.Rank > y.Rank) return 1; else return -1; });
@@ -82,6 +75,7 @@ public class FormationParty : MonoBehaviour
             }
         }
     }
+
     public void CreateFormation(RaidParty party, PhotonPlayer player)
     {
         Units = new List<FormationUnit>();
@@ -95,7 +89,7 @@ public class FormationParty : MonoBehaviour
 
                 unit.transform.SetParent(transform, false);
                 unit.Party = this;
-                unit.Initialize(party.HeroInfo[i].Hero, 4 - i, player.isMasterClient ? Team.Heroes : Team.Monsters);
+                unit.Initialize(party.HeroInfo[i].Hero, 4 - i, player.IsMasterClient ? Team.Heroes : Team.Monsters);
                 Units.Add(unit);
                 unit.ResetAnimations();
 
@@ -104,6 +98,7 @@ public class FormationParty : MonoBehaviour
             }
         }
     }
+
     public void CreateFormation(BattleEncounter encounter)
     {
         Units = new List<FormationUnit>();
@@ -125,10 +120,11 @@ public class FormationParty : MonoBehaviour
             unit.ResetAnimations();
         }
     }
+
     public void CreateFormation(BattleFormationSaveData formationSaveData)
     {
         Units = new List<FormationUnit>();
-        foreach (var unitSaveData in formationSaveData.unitData)
+        foreach (var unitSaveData in formationSaveData.UnitData)
         {
             if(unitSaveData.IsHero)
             {

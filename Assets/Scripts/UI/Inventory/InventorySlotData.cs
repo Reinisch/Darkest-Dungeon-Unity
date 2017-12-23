@@ -5,8 +5,8 @@
 
     public InventorySlotData()
     {
-
     }
+
     public InventorySlotData(ItemDefinition itemDefinition)
     {
         Item = itemDefinition;

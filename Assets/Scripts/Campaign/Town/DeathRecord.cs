@@ -28,7 +28,6 @@ public class DeathRecord : IBinarySaveData
 
     public bool IsMeetingSaveCriteria { get { return true; } }
 
-
     public void Write(BinaryWriter bw)
     {
         bw.Write(HeroName);

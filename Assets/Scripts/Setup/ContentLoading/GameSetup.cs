@@ -2,21 +2,22 @@
 
 public class GameSetup : MonoBehaviour
 {
-    public Texture2D arrowTexture;
+    [SerializeField]
+    private Texture2D arrowTexture;
 
-    void Awake()
+    private void Awake()
     {
         Cursor.SetCursor(arrowTexture, Vector2.zero, CursorMode.Auto);
         Application.targetFrameRate = 60;
         QualitySettings.vSyncCount = 0;
     }
 
-    void Start()
+    private void Start()
     {
         //FMODUnity.RuntimeManager.GetBus("bus:/").setFaderLevel(0.2f);
     }
 
-    void Update()
+    private void Update()
     {
         //if (Input.GetKey(KeyCode.M))
         //    Time.timeScale += 1;

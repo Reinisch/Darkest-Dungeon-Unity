@@ -3,23 +3,25 @@ using UnityEngine.UI;
 
 public class ResultItemWindow : MonoBehaviour
 {
-    public Text treasureLabel;
-    public Text heirloomLabel;
-    public Text questRewardLabel;
+    [SerializeField]
+    private QuestRewardPanel rewardPanel;
+    [SerializeField]
+    private Text goldAmount;
+    [SerializeField]
+    private Text crestAmount;
+    [SerializeField]
+    private Text deedAmount;
+    [SerializeField]
+    private Text portraitAmount;
+    [SerializeField]
+    private Text bustAmount;
 
-    public QuestRewardPanel rewardPanel;
-
-    public Text goldAmount;
-    public Text crestAmount;
-    public Text deedAmount;
-    public Text portraitAmount;
-    public Text bustAmount;
-
-    public GameObject lootSlot;
-    public RectTransform treasureSlots;
-    public RectTransform heirloomSlots;
-    public HorizontalLayoutGroup treasureLayout;
-    public HorizontalLayoutGroup heirloomLayout;
+    [SerializeField]
+    private GameObject lootSlot;
+    [SerializeField]
+    private RectTransform treasureSlots;
+    [SerializeField]
+    private RectTransform heirloomSlots;
 
     public void PrepareRewards()
     {
@@ -72,10 +74,7 @@ public class ResultItemWindow : MonoBehaviour
         int portrait = 0;
         int bust = 0;
 
-        int treasureCount = 0;
-        int heirloomCount = 0;
-
-        if (RaidSceneManager.Formations.heroes.party.Units.Count > 0)
+        if (RaidSceneManager.Formations.Heroes.Party.Units.Count > 0)
         {
             foreach (var slot in RaidSceneManager.Inventory.InventorySlots)
             {
@@ -99,7 +98,6 @@ public class ResultItemWindow : MonoBehaviour
                             rewSlot.SetSingle(slot.SlotItem.Item);
                             newSlot.transform.SetParent(heirloomSlots, false);
                             newSlot.transform.SetAsLastSibling();
-                            heirloomCount++;
                         }
 
                     }
@@ -111,7 +109,6 @@ public class ResultItemWindow : MonoBehaviour
                         rewSlot.SetItem(slot.SlotItem.Item);
                         newSlot.transform.SetParent(treasureSlots, false);
                         newSlot.transform.SetAsLastSibling();
-                        treasureCount++;
                     }
                     else if (slot.SlotItem.ItemData.SellPrice != 0)
                     {
@@ -124,7 +121,6 @@ public class ResultItemWindow : MonoBehaviour
                             rewSlot.SetSingle(slot.SlotItem.Item);
                             newSlot.transform.SetParent(treasureSlots, false);
                             newSlot.transform.SetAsLastSibling();
-                            treasureCount++;
                         }
                     }
                 }

@@ -3,14 +3,17 @@ using System.Collections.Generic;
 
 public class SkillUpgradeTreeSlot : MonoBehaviour
 {
-    const int connectorWidthPerSlot = 75;
+    private const int ConnectorWidthPerSlot = 75;
 
-    public RectTransform connector;
-    public RectTransform treeIconRect;
+    [SerializeField]
+    private RectTransform connector;
+    [SerializeField]
+    private SkillPurchaseSlot currentSkill;
+    [SerializeField]
+    private List<SkillUpgradeSlot> upgrades;
 
-    public SkillPurchaseSlot currentSkill;
-
-    public List<SkillUpgradeSlot> upgrades;
+    public SkillPurchaseSlot CurrentSkill { get { return currentSkill; } }
+    public List<SkillUpgradeSlot> Upgrades { get { return upgrades; } }
 
     public void UpdateConnector(int lastPurchasedIndex)
     {
@@ -18,11 +21,10 @@ public class SkillUpgradeTreeSlot : MonoBehaviour
             connector.sizeDelta = new Vector2(0, connector.sizeDelta.y);
         else
         {
-            if (lastPurchasedIndex >= upgrades.Count)
-                lastPurchasedIndex = upgrades.Count - 1;
+            if (lastPurchasedIndex >= Upgrades.Count)
+                lastPurchasedIndex = Upgrades.Count - 1;
 
-            connector.sizeDelta = new Vector2(connectorWidthPerSlot * (lastPurchasedIndex + 1), connector.sizeDelta.y);
+            connector.sizeDelta = new Vector2(ConnectorWidthPerSlot * (lastPurchasedIndex + 1), connector.sizeDelta.y);
         }
-
     }
 }

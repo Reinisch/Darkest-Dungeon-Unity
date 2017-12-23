@@ -3,30 +3,30 @@ using System.Collections;
 
 public class PreambleSkipper : MonoBehaviour
 {
-    RectTransform rect;
-    IEnumerator slideCoroutine;
-    bool isSliding = false;
+    private RectTransform rect;
+    private IEnumerator slideCoroutine;
+    private bool isSliding;
 
-    float waitForPreable = 3f;
-    float appearDelay = 1f;
+    private float waitForPreable = 3f;
+    private float appearDelay = 1f;
 
-    void Awake()
+    private void Awake()
     {
         rect = GetComponent<RectTransform>();
     }
 
-    void Start()
+    private void Start()
     {
         DarkestSoundManager.PlayTitleMusic(true);
     }
 
-    void Update()
+    private void Update()
     {
         if (appearDelay > 0)
         {
             appearDelay -= Time.deltaTime;
             if(appearDelay <= 0)
-                DarkestDungeonManager.ScreenFader.Appear(1);
+                DarkestDungeonManager.ScreenFader.Appear();
         }
         if (waitForPreable > 0)
         {
@@ -45,7 +45,7 @@ public class PreambleSkipper : MonoBehaviour
         }
     }
 
-    IEnumerator StartSceneSlider()
+    private IEnumerator StartSceneSlider()
     {
         float distance = rect.offsetMax.y/2;
 
@@ -76,7 +76,6 @@ public class PreambleSkipper : MonoBehaviour
             yield return 0;
         }
 
-        CampaignSelectionManager.Instanse.titleRect.SetParent(CampaignSelectionManager.Instanse.overlayTitleRect, false);
-        yield break;
+        CampaignSelectionManager.Instanse.TitleRect.SetParent(CampaignSelectionManager.Instanse.OverlayTitleRect, false);
     }
 }

@@ -5,41 +5,37 @@ using System.Linq;
 
 public class HeroClass
 {
-    public int IndexId { get; set; }
-    public int TargetRank { get; set; }
-    public string StringId { get; set; }
-    public int RenderingRankOverride { get; set; }
-    public CommonEffects CommonEffects { get; set; }
-    public List<SkillArtInfo> SkillArtInfo { get; set; }
+    public int IndexId { get; private set; }
+    public string StringId { get; private set; }
+    public int RenderingRankOverride { get; private set; }
+    public CommonEffects CommonEffects { get; private set; }
+    public List<SkillArtInfo> SkillArtInfo { get; private set; }
 
-    public Dictionary<AttributeType, float> Resistanses { get; set; }
-    public List<string> Tags { get; set; }
+    public Dictionary<AttributeType, float> Resistanses { get; private set; }
+    public List<string> Tags { get; private set; }
 
-    public List<Equipment> Weapons { get; set; }
-    public List<Equipment> Armors { get; set; }
+    public List<Equipment> Weapons { get; private set; }
+    public List<Equipment> Armors { get; private set; }
 
     public List<CombatSkill> CombatSkills { get; private set; }
     public List<CombatSkill> CombatSkillVariants { get; private set; }
     public List<CampingSkill> CampingSkills { get; private set; }
 
-    public MoveSkill MoveSkill { get; set; }
-    public CombatSkill RiposteSkill { get; set; }
-    public DeathDoor DeathDoor { get; set; }
-    public HeroGeneration Generation { get; set; }
-    public LootDefinition ExtraBattleLoot { get; set; }
-    public LootDefinition ExtraCurioLoot { get; set; }
-    public List<CharacterMode> Modes { get; set; }
+    public MoveSkill MoveSkill { get; private set; }
+    public CombatSkill RiposteSkill { get; private set; }
+    public DeathDoor DeathDoor { get; private set; }
+    public HeroGeneration Generation { get; private set; }
+    public LootDefinition ExtraBattleLoot { get; private set; }
+    public LootDefinition ExtraCurioLoot { get; private set; }
+    public List<CharacterMode> Modes { get; private set; }
 
-    public string ExtraStackLimit { get; set; }
-    public string IncompatiablePartyTag { get; set; }
-    public bool CanSelectCombatSkills { get; set; }
-    public int NumberOfSelectedCombatSkills { get; set; }
-
-    public Dictionary<CharacterComponentType, CharacterComponent> Components { get; private set; }
+    public string ExtraStackLimit { get; private set; }
+    public string IncompatiablePartyTag { get; private set; }
+    public bool CanSelectCombatSkills { get; private set; }
+    public int NumberOfSelectedCombatSkills { get; private set; }
 
     public HeroClass(List<string> data)
     {
-        Components = new Dictionary<CharacterComponentType, CharacterComponent>();
         Resistanses = new Dictionary<AttributeType, float>();
         Tags = new List<string>();
 
@@ -55,7 +51,7 @@ public class HeroClass
         CampingSkills = DarkestDungeonManager.Data.CampingSkills.FindAll(skill => skill.Classes.Contains(StringId));
     }
 
-    public void LoadData(List<string> heroData)
+    private void LoadData(List<string> heroData)
     {
         int index = 2;
         StringId = heroData[0].Split(' ')[1];
@@ -63,7 +59,8 @@ public class HeroClass
         while(heroData[index] != ".end")
         {
             List<string> data = heroData[index++].Replace("%", "").Replace("\"", "").
-                Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
             switch(data[0])
             {
                 case "rendering:":
@@ -93,7 +90,8 @@ public class HeroClass
         while (heroData[index] != ".end")
         {
             List<string> data = heroData[index++].Replace("%", "").Replace("\"", "").
-                Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                Split(new [] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
             switch (data[0])
             {
                 case "resistances:":
@@ -122,7 +120,7 @@ public class HeroClass
                     break;
                 case "combat_skill:":
                     List<string> combatData = new List<string>();
-                    data = heroData[index-1].Split(new char[] { '\"' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                    data = heroData[index - 1].Split(new [] { '\"' }, StringSplitOptions.RemoveEmptyEntries).ToList();
                     bool isEffectData = false;
                     foreach (var item in data)
                     {
@@ -138,7 +136,7 @@ public class HeroClass
                         }
 
                         string[] combatItems = item.Replace("%", "").Split(
-                            new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                            new [] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
                         if (combatItems[combatItems.Length - 1] == ".effect")
                             isEffectData = true;
                         combatData.AddRange(combatItems);
@@ -147,23 +145,18 @@ public class HeroClass
                     CombatSkillVariants.Add(new CombatSkill(combatData, true));
                     break;
                 case "combat_move_skill:":
-                    MoveSkill moveSkill = new MoveSkill();
-                    moveSkill.Id = data[2];
-                    moveSkill.Type = data[6];
-                    moveSkill.MoveBackward = int.Parse(data[8]);
-                    moveSkill.MoveForward = int.Parse(data[9]);
-                    MoveSkill = moveSkill;
+                    MoveSkill = new MoveSkill(data[2], int.Parse(data[8]), int.Parse(data[9]));
                     break;
                 case "riposte_skill:":
                     List<string> riposteData = new List<string>();
-                    data = heroData[index-1].Split(new char[] { '\"' }).ToList();
-                    bool isReposteEffect = false;
+                    data = heroData[index-1].Split('\"').ToList();
+                    bool isRiposteEffect = false;
                     foreach (var item in data)
                     {
-                        if (isReposteEffect)
+                        if (isRiposteEffect)
                         {
                             if (item.Trim(' ')[0] == '.')
-                                isEffectData = false;
+                                isRiposteEffect = false;
                             else
                             {
                                 riposteData.Add(item);
@@ -172,9 +165,9 @@ public class HeroClass
                         }
 
                         string[] combatItems = item.Replace("%", "").Split(
-                            new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                            new [] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
                         if (combatItems[combatItems.Length - 1] == ".effect")
-                            isEffectData = true;
+                            isRiposteEffect = true;
                         riposteData.AddRange(combatItems);
                     }
                     RiposteSkill = new CombatSkill(riposteData, true);
@@ -186,7 +179,6 @@ public class HeroClass
                     Tags.Add(data[2]);
                     break;
                 case "controlled:":
-                    TargetRank = int.Parse(data[2]);
                     break;
                 case "id_index:":
                     IndexId = int.Parse(data[2]);
@@ -195,48 +187,36 @@ public class HeroClass
                     CanSelectCombatSkills = bool.Parse(data[2]);
                     NumberOfSelectedCombatSkills = int.Parse(data[4]);
                     break;
-                #region Death Door
                 case "deaths_door:":
                     if (DeathDoor == null)
                         DeathDoor = new DeathDoor(data);
                     else
                         DeathDoor.LoadData(data);
                     break;
-                #endregion
-                #region Generation
                 case "generation:":
                     if (Generation == null)
                         Generation = new HeroGeneration(data);
                     else
                         Generation.LoadData(data);
                     break;
-                #endregion
-                #region Battle Loot
                 case "extra_battle_loot:":
                     if (ExtraBattleLoot == null)
                         ExtraBattleLoot = new LootDefinition(data);
                     else
                         ExtraBattleLoot.LoadData(data);
                     break;
-                #endregion
-                #region Curio Loot
                 case "extra_curio_loot:":
                     if (ExtraCurioLoot == null)
                         ExtraCurioLoot = new LootDefinition(data);
                     else
                         ExtraCurioLoot.LoadData(data);
                     break;
-                #endregion
-                #region Inventory Stack
                 case "extra_stack_limit:":
                     ExtraStackLimit = data[2];
                     break;
-                #endregion
-                #region Mode
                 case "mode:":
                     Modes.Add(new CharacterMode(data));
                     break;
-                #endregion
                 default:
                     Debug.LogError("Unknown info token " + data[0] + " in hero: " + StringId);
                     break;

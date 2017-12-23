@@ -1,16 +1,9 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 public static class RaidSolver
 {
-    public static LootDatabase LootDatabase
-    {
-        get
-        {
-            return DarkestDungeonManager.Data.LootDatabase;
-        }
-    }
+    private static LootDatabase LootDatabase { get { return DarkestDungeonManager.Data.LootDatabase; } }
 
     public static List<ItemDefinition> GenerateLoot(string code, int amount, RaidInfo raid)
     {
@@ -57,6 +50,7 @@ public static class RaidSolver
         }
         return lootItems;
     }
+
     public static List<ItemDefinition> GenerateLoot(List<LootDefinition> battleLoot, RaidInfo raid)
     {
         List<ItemDefinition> lootItems = new List<ItemDefinition>();
@@ -105,6 +99,7 @@ public static class RaidSolver
         }
         return lootItems;
     }
+
     public static List<ItemDefinition> GenerateLoot(CurioResult curioResult, RaidInfo raid)
     {
         List<ItemDefinition> lootItems = new List<ItemDefinition>();
@@ -151,16 +146,13 @@ public static class RaidSolver
         return lootItems;
     }
 
-    static LootEntry GetLootEntry(string tableId, RaidInfo raid)
+    private static LootEntry GetLootEntry(string tableId, RaidInfo raid)
     {
         LootTable lootTable = LootDatabase.LootTables[tableId.ToUpper()].
                 Find(table => ((table.Difficulty == raid.Quest.Difficulty) || (table.Difficulty == 0))
                         && ((table.Dungeon == raid.Dungeon.Name) || (table.Dungeon == "")));
 
-        LootEntry lootEntry = RandomSolver.ChooseBySingleRandom<LootEntry>(lootTable.Entries);
-        if (lootEntry.Type != LootType.Table)
-            return lootEntry;
-        else
-            return GetLootEntry(((LootEntryTable)lootEntry).TableId, raid);
+        LootEntry lootEntry = RandomSolver.ChooseBySingleRandom(lootTable.Entries);
+        return lootEntry.Type != LootType.Table ? lootEntry : GetLootEntry(((LootEntryTable)lootEntry).TableId, raid);
     }
 }

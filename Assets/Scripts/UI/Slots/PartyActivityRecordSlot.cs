@@ -4,11 +4,12 @@ using System.Collections.Generic;
 
 public class PartyActivityRecordSlot : MonoBehaviour
 {
-    public RectTransform rectTransform;
-
-    public List<Image> portraits;
-    public List<Text> names;
-    public Text description;
+    [SerializeField]
+    private List<Image> portraits;
+    [SerializeField]
+    private List<Text> names;
+    [SerializeField]
+    private Text description;
 
     public void UpdatePartyActivity(PartyActivityRecord record)
     {
@@ -16,10 +17,9 @@ public class PartyActivityRecordSlot : MonoBehaviour
         for (int i = 0; i < record.Classes.Count; i++)
         {
             portraits[i].gameObject.SetActive(true);
-            if (record.Alive[i])
-                portraits[i].sprite = DarkestDungeonManager.HeroSprites[record.Classes[i]]["A"].Portrait;
-            else
-                portraits[i].sprite = DarkestDungeonManager.Data.Sprites["deadhero_portrait"];
+            portraits[i].sprite = record.Alive[i] ? 
+                DarkestDungeonManager.HeroSprites[record.Classes[i]]["A"].Portrait :
+                DarkestDungeonManager.Data.Sprites["deadhero_portrait"];
 
             names[i].text = record.Names[i];
             index = i;
@@ -30,6 +30,7 @@ public class PartyActivityRecordSlot : MonoBehaviour
         description.text = record.Description;
         gameObject.SetActive(true);
     }
+
     public void ResetPartyActivity()
     {
         gameObject.SetActive(false);

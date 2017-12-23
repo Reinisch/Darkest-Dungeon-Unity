@@ -1,43 +1,30 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System.Collections.Generic;
 
 public interface IRaidArea : IPointerClickHandler
 {
-    RaidProp Prop { get; set; }
-    RectTransform RectTransform { get; }
+    RaidProp Prop { get; }
     Area Area { get; }
 
-    void UpdateEnviroment();
     void CompleteArea();
 }
 
 public class RaidHallSector : MonoBehaviour, IRaidArea
 {
-    bool isPartyInside = false;
+    [SerializeField]
+    private Image hallWall;
+    [SerializeField]
+    private Image hallFloor;
 
-    public Image hallWall;
-    public Image hallFloor;
+    private bool isPartyInside;
 
-    public BoxCollider2D activator;
+    public Area Area { get; private set; }
+    public RaidProp Prop { get; private set; }
+    public RectTransform RectTransform { get; private set; }
+    public HallSector HallSector { get { return Area as HallSector; } }
 
-    public RaidProp Prop { get; set; }
-    public RectTransform RectTransform { get; set; }
-    public HallSector HallSector
-    {
-        get
-        {
-            return Area as HallSector;
-        }
-    }
-    public Area Area
-    {
-        get;
-        private set;
-    }
-
-    void Awake()
+    private void Awake()
     {
         RectTransform = GetComponent<RectTransform>();
     }
@@ -50,7 +37,7 @@ public class RaidHallSector : MonoBehaviour, IRaidArea
             case AreaType.Door:
                 if(Prop == null)
                 {
-                    GameObject doorObject = null;
+                    GameObject doorObject;
                     if(RaidSceneManager.Raid.Quest.Dungeon == "darkestdungeon")
                         switch (RaidSceneManager.Raid.Quest.Id)
                         {
@@ -79,21 +66,18 @@ public class RaidHallSector : MonoBehaviour, IRaidArea
                     Prop.RectTransform.SetParent(hallWall.rectTransform, false);
                 }
                 else
-                {
-                    (Prop as RaidDoor).Close();
-                }
+                    ((RaidDoor)Prop).Close();
                 break;
             case AreaType.Curio:
                 if (Prop != null)
                     Destroy(Prop.gameObject);
 
                 RaidCurio curio;
-                GameObject curioObject = Resources.Load("Prefabs/Props/SpineCurios/"
-                    + (Area.Prop as Curio).StringId) as GameObject;
+                GameObject curioObject = Resources.Load("Prefabs/Props/SpineCurios/" + Area.Prop.StringId) as GameObject;
 
                 if (curioObject == null)
                 {
-                    Debug.LogError("Curio: " + (Area.Prop as Curio).StringId + " not found.");
+                    Debug.LogError("Curio: " + Area.Prop.StringId + " not found.");
                     curio = Instantiate(Resources.Load("Prefabs/Props/SpineCurios/_template")
                         as GameObject).GetComponent<RaidCurio>();
                 }
@@ -114,12 +98,11 @@ public class RaidHallSector : MonoBehaviour, IRaidArea
                     break;
 
                 RaidObstacle obstacle;
-                GameObject obstacleObject = Resources.Load("Prefabs/Props/SpineObstacles/"
-                    + (Area.Prop as Obstacle).StringId) as GameObject;
+                GameObject obstacleObject = Resources.Load("Prefabs/Props/SpineObstacles/" + Area.Prop.StringId) as GameObject;
 
                 if (obstacleObject == null)
                 {
-                    Debug.LogError("Obstacle: " + (Area.Prop as Obstacle).StringId + " not found.");
+                    Debug.LogError("Obstacle: " + Area.Prop.StringId + " not found.");
                     obstacle = Instantiate(Resources.Load("Prefabs/Props/SpineObstacles/_template") 
                         as GameObject).GetComponent<RaidObstacle>();
                 }
@@ -140,12 +123,11 @@ public class RaidHallSector : MonoBehaviour, IRaidArea
                     break;
 
                 RaidTrap trap;
-                GameObject trapObject = Resources.Load("Prefabs/Props/SpineTraps/"
-                    + (Area.Prop as Trap).StringId) as GameObject;
+                GameObject trapObject = Resources.Load("Prefabs/Props/SpineTraps/" + Area.Prop.StringId) as GameObject;
 
                 if (trapObject == null)
                 {
-                    Debug.LogError("Trap: " + (Area.Prop as Trap).StringId + " not found.");
+                    Debug.LogError("Trap: " + Area.Prop.StringId + " not found.");
                     trap = Instantiate(Resources.Load("Prefabs/Props/SpineTraps/_template")
                         as GameObject).GetComponent<RaidTrap>();
                 }
@@ -168,14 +150,63 @@ public class RaidHallSector : MonoBehaviour, IRaidArea
 
         UpdateEnviroment();
     }
+
     public void LeaveSector()
     {
         isPartyInside = false;
     }
-    public void UpdateEnviroment()
+
+    public void UpdateBorder()
     {
         var sprites = DarkestDungeonManager.Data.DungeonSprites;
-        if(Area.Type == AreaType.Door)
+        hallWall.sprite = sprites[RaidSceneManager.Raid.Quest.Dungeon + ".corridor_wall.1_0"];
+        hallFloor.sprite = sprites[RaidSceneManager.Raid.Quest.Dungeon + ".corridor_wall.1_1"];
+    }
+
+    public void SetInside(bool inside)
+    {
+        isPartyInside = inside;
+    }
+
+    public void CompleteArea()
+    {
+        if (Prop != null)
+        {
+            Prop.Activate();
+            if (Prop is RaidCurio)
+                RaidSceneManager.Raid.InvestigatedCurios.Add(Area.Prop.StringId);
+        }
+
+        Area.Knowledge = Knowledge.Completed;
+        RaidSceneManager.MapPanel.UpdateArea(Area);
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (isPartyInside)
+        {
+            if (Area.Type == AreaType.Door)
+            {
+                RaidSceneManager.Instanse.ActivateDoor(this);
+                isPartyInside = false;
+            }
+            else if (Area.Type == AreaType.Curio)
+            {
+                if (!((RaidCurio)Prop).Investigated)
+                    RaidSceneManager.Instanse.ActivateCurio(this);
+            }
+            else if (Area.Type == AreaType.Trap && (Area.Knowledge != Knowledge.Hidden))
+            {
+                if (Prop != null && !((RaidTrap)Prop).Activated)
+                    RaidSceneManager.Instanse.ActivateTrap(this, true);
+            }
+        }
+    }
+
+    private void UpdateEnviroment()
+    {
+        var sprites = DarkestDungeonManager.Data.DungeonSprites;
+        if (Area.Type == AreaType.Door)
         {
             hallWall.sprite = sprites[RaidSceneManager.Raid.Quest.Dungeon + ".corridor_door.basic_0"];
             hallFloor.sprite = sprites[RaidSceneManager.Raid.Quest.Dungeon + ".corridor_door.basic_1"];
@@ -186,18 +217,8 @@ public class RaidHallSector : MonoBehaviour, IRaidArea
             hallFloor.sprite = sprites[RaidSceneManager.Raid.Quest.Dungeon + ".corridor_wall." + Area.TextureId + "_1"];
         }
     }
-    public void UpdateBorder()
-    {
-        var sprites = DarkestDungeonManager.Data.DungeonSprites;
-        hallWall.sprite = sprites[RaidSceneManager.Raid.Quest.Dungeon + ".corridor_wall.1_0"];
-        hallFloor.sprite = sprites[RaidSceneManager.Raid.Quest.Dungeon + ".corridor_wall.1_1"];
-    }
-    public void SetInside(bool inside)
-    {
-        isPartyInside = inside;
-    }
 
-    void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (isPartyInside)
             return;
@@ -207,13 +228,8 @@ public class RaidHallSector : MonoBehaviour, IRaidArea
             if (Area.Type == AreaType.Curio)
                 DarkestSoundManager.ExecuteNarration("curio", NarrationPlace.Raid);
 
-            if (Area.Knowledge == Knowledge.Hidden)
-                RaidSceneManager.TorchMeter.DecreaseTorch(6);
-            else
-                RaidSceneManager.TorchMeter.DecreaseTorch(1);
-
+            RaidSceneManager.TorchMeter.DecreaseTorch(Area.Knowledge == Knowledge.Hidden ? 6 : 1);
             RaidSceneManager.Raid.EnteredSector(Area as HallSector);
-
             RaidSceneManager.Raid.CurrentLocation = Area;
             RaidSceneManager.HallwayView.CurrentSector = this;
 
@@ -223,7 +239,7 @@ public class RaidHallSector : MonoBehaviour, IRaidArea
                 RaidSceneManager.MapPanel.SetCurrentIndicator(Area as HallSector);
                 if (!Area.BattleEncounter.Cleared)
                 {
-                    if(RaidSceneManager.Raid.Dungeon.SharedMash != null)
+                    if (RaidSceneManager.Raid.Dungeon.SharedMash != null)
                     {
                         if (RaidSceneManager.TorchMeter.CurrentRange.RangeType == TorchRangeType.Out)
                         {
@@ -236,8 +252,8 @@ public class RaidHallSector : MonoBehaviour, IRaidArea
                                         SharedMash.HallEncounters[0].MonsterSet);
                             }
                         }
-                        
-                        if(RaidSceneManager.Inventory.PercentageFull >= 0.65f)
+
+                        if (RaidSceneManager.Inventory.PercentageFull >= 0.65f)
                         {
                             if (!RaidSceneManager.Raid.Dungeon.SharedMashExecutionIds.Contains(1))
                             {
@@ -263,17 +279,17 @@ public class RaidHallSector : MonoBehaviour, IRaidArea
             #region Force Curio Tag
             if (Area.Type == AreaType.Curio && (Area.Knowledge == Knowledge.Hidden || Area.Knowledge == Knowledge.Scouted))
             {
-                Curio curio = Area.Prop as Curio;
-                if(curio.IsQuestCurio == false)
+                Curio curio = (Curio)Area.Prop;
+                if (curio.IsQuestCurio == false)
                 {
-                    foreach(var triggeredHero in RaidSceneManager.Formations.heroes.party.Units)
+                    foreach (var triggeredHero in RaidSceneManager.Formations.Heroes.Party.Units)
                     {
-                        if(triggeredHero.Character.Trait != null)
+                        if (triggeredHero.Character.Trait != null)
                         {
-                            if(triggeredHero.Character.Trait.CurioTag == "All" ||
+                            if (triggeredHero.Character.Trait.CurioTag == "All" ||
                                 curio.Tags.Contains(triggeredHero.Character.Trait.CurioTag))
                             {
-                                if(RandomSolver.CheckSuccess(triggeredHero.Character.Trait.TagChance))
+                                if (RandomSolver.CheckSuccess(triggeredHero.Character.Trait.TagChance))
                                 {
                                     triggeredHero.OverlaySlot.UnitSelected();
                                     if (!(Prop as RaidCurio).Investigated)
@@ -283,9 +299,9 @@ public class RaidHallSector : MonoBehaviour, IRaidArea
                             }
                         }
                         var hero = triggeredHero.Character as Hero;
-                        foreach(var triggerQuirk in hero.Quirks)
+                        foreach (var triggerQuirk in hero.Quirks)
                         {
-                            if(triggerQuirk.Quirk.CurioTag == "All" || curio.Tags.Contains(triggerQuirk.Quirk.CurioTag))
+                            if (triggerQuirk.Quirk.CurioTag == "All" || curio.Tags.Contains(triggerQuirk.Quirk.CurioTag))
                             {
                                 if (RandomSolver.CheckSuccess(triggerQuirk.Quirk.CurioTagChance))
                                 {
@@ -297,7 +313,7 @@ public class RaidHallSector : MonoBehaviour, IRaidArea
                             }
                         }
                     }
-                    
+
                 }
 
             }
@@ -331,53 +347,19 @@ public class RaidHallSector : MonoBehaviour, IRaidArea
             RaidSceneManager.MapPanel.FocusTarget();
         }
     }
-    void OnTriggerExit2D(Collider2D other)
+
+    private void OnTriggerExit2D(Collider2D other)
     {
         isPartyInside = false;
 
         if (Area != null && Area.Type != AreaType.Door)
         {
-
             if (Area.Knowledge != Knowledge.Completed)
             {
-                if(Area.Type == AreaType.Empty)
+                if (Area.Type == AreaType.Empty)
                     Area.Knowledge = Knowledge.Completed;
 
                 RaidSceneManager.MapPanel.OnHallSectorEnter(Area as HallSector);
-            }
-        }
-    }
-
-    public void CompleteArea()
-    {
-        if (Prop != null)
-        {
-            Prop.Activate();
-            if (Prop is RaidCurio)
-                RaidSceneManager.Raid.InvestigatedCurios.Add(Area.Prop.StringId);
-        }
-
-        Area.Knowledge = Knowledge.Completed;
-        RaidSceneManager.MapPanel.UpdateArea(Area);
-    }
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        if (isPartyInside)
-        {
-            if (Area.Type == AreaType.Door)
-            {
-                RaidSceneManager.Instanse.ActivateDoor(this);
-                isPartyInside = false;
-            }
-            else if (Area.Type == AreaType.Curio)
-            {
-                if (!(Prop as RaidCurio).Investigated)
-                    RaidSceneManager.Instanse.ActivateCurio(this);
-            }
-            else if (Area.Type == AreaType.Trap && (Area.Knowledge != Knowledge.Hidden))
-            {
-                if (Prop != null && !(Prop as RaidTrap).Activated)
-                    RaidSceneManager.Instanse.ActivateTrap(this, true);
             }
         }
     }

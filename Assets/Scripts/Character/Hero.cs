@@ -11,8 +11,8 @@ public class Hero : Character
     public string InActivity { get; set; }
     public int MissingDuration { get; set; }
 
-    public int RosterId { get; set; }
-    public string HeroName { get; set; }
+    public int RosterId { get; private set; }
+    public string HeroName { get; private set; }
     public string ClassStringId { get; private set; }
     public int ClassIndexId { get; private set; }
     public Resolve Resolve { get; private set; }
@@ -34,140 +34,40 @@ public class Hero : Character
         get
         {
             var deathResist = GetSingleAttribute(AttributeType.DeathBlow);
-            if (deathResist != null)
-                return Mathf.Clamp(deathResist.ModifiedValue, 0.5f, 0.87f);
-            else
-                return 0.5f;
-        }
-    }
-    public override List<SkillArtInfo> SkillArtInfo
-    {
-        get
-        {
-            return HeroClass.SkillArtInfo;
-        }
-    }
-    public override CombatSkill RiposteSkill
-    {
-        get
-        {
-            return HeroClass.RiposteSkill;
+            return deathResist != null ? Mathf.Clamp(deathResist.ModifiedValue, 0.0f, 0.87f) : 0.5f;
         }
     }
 
-    public override bool AtDeathsDoor
-    {
-        get
-        {
-            return GetStatusEffect(StatusType.DeathsDoor).IsApplied;
-        }
-    }
-    public override bool IsStressed
-    {
-        get
-        {
-            return Stress.CurrentValue >= 50;
-        }
-    }
-    public override bool IsOverstressed
-    {
-        get
-        {
-            return Stress.CurrentValue >= 100;
-        }
-    }
-    public override bool IsVirtued
-    {
-        get
-        {
-            return Trait != null && Trait.Type == OverstressType.Virtue;
-        }
-    }
-    public override bool IsAfflicted
-    {
-        get
-        {
-            return Trait != null && Trait.Type == OverstressType.Affliction;
-        }
-    }
+    public override List<SkillArtInfo> SkillArtInfo { get { return HeroClass.SkillArtInfo; } }
+    public override CombatSkill RiposteSkill { get { return HeroClass.RiposteSkill; } }
+    public override bool AtDeathsDoor { get { return GetStatusEffect(StatusType.DeathsDoor).IsApplied; } }
+    public override bool IsStressed { get { return Stress.CurrentValue >= 50; } }
+    public override bool IsOverstressed { get { return Stress.CurrentValue >= 100; } }
+    public override bool IsVirtued { get { return Trait != null && Trait.Type == OverstressType.Virtue; } }
+    public override bool IsAfflicted { get { return Trait != null && Trait.Type == OverstressType.Affliction; } }
+    public override int RenderRankOverride { get { return HeroClass.RenderingRankOverride; } }
+    public override bool IsMonster { get { return false; } }
+    public override string Name { get { return HeroName; } }
+    public override string Class { get { return ClassStringId; } }
+    public override bool InMode { get { return CurrentMode != null; } }
+    public override CharacterMode Mode { get { return CurrentMode; } }
+    public override CommonEffects CommonEffects { get { return HeroClass.CommonEffects; } }
 
-    public override int RenderRankOverride
-    {
-        get
-        {
-            return HeroClass.RenderingRankOverride;
-        }
-    }
-    public override bool IsMonster
-    {
-        get
-        {
-            return false;
-        }
-    }
-    public override string Name
-    {
-        get
-        {
-            return HeroName;
-        }
-    }
-    public override string Class
-    {
-        get
-        {
-            return ClassStringId;
-        }
-    }
-    public override int Size
-    {
-        get
-        {
-            return base.Size;
-        }
-    }
-    public override bool InMode
-    {
-        get
-        {
-            return CurrentMode != null;
-        }
-    }
-
-    public override CharacterMode Mode
-    {
-        get
-        {
-            return CurrentMode;
-        }
-    }
-    public override CommonEffects CommonEffects
-    {
-        get
-        {
-            return HeroClass.CommonEffects;
-        }
-    }
-
-    public CombatSkill[] CurrentCombatSkills { get; set; }
-    public CampingSkill[] CurrentCampingSkills { get; set; }
-    public List<CombatSkill> SelectedCombatSkills { get; set; }
-    public List<CampingSkill> SelectedCampingSkills { get; set; }
+    public CombatSkill[] CurrentCombatSkills { get; private set; }
+    public CampingSkill[] CurrentCampingSkills { get; private set; }
+    public List<CombatSkill> SelectedCombatSkills { get; private set; }
+    public List<CampingSkill> SelectedCampingSkills { get; private set; }
 
     public ReadOnlyCollection<QuirkInfo> Quirks
     {
-        get
-        {
-            return quirkData.AsReadOnly();
-        }
+        get { return quirkData.AsReadOnly(); }
     }
+
     public ReadOnlyCollection<QuirkInfo> Diseases
     {
-        get
-        {
-            return quirkData.FindAll(quirkInfo => quirkInfo.Quirk.IsDisease).AsReadOnly();
-        }
+        get { return quirkData.FindAll(quirkInfo => quirkInfo.Quirk.IsDisease).AsReadOnly(); }
     }
+
     public ReadOnlyCollection<QuirkInfo> NegativeQuirks
     {
         get
@@ -175,407 +75,33 @@ public class Hero : Character
             return quirkData.FindAll(quirkInfo => !quirkInfo.Quirk.IsPositive && !quirkInfo.Quirk.IsDisease).AsReadOnly();
         }
     }
+
     public ReadOnlyCollection<QuirkInfo> PositiveQuirks
     {
-        get
-        {
-            return quirkData.FindAll(quirkInfo => quirkInfo.Quirk.IsPositive).AsReadOnly();
-        }
+        get { return quirkData.FindAll(quirkInfo => quirkInfo.Quirk.IsPositive).AsReadOnly(); }
     }
+
     public ReadOnlyCollection<QuirkInfo> LockedPositiveQuirks
     {
-        get
-        {
-            return quirkData.FindAll(quirkInfo => quirkInfo.Quirk.IsPositive && quirkInfo.IsLocked).AsReadOnly();
-        }
+        get { return quirkData.FindAll(quirkInfo => quirkInfo.Quirk.IsPositive && quirkInfo.IsLocked).AsReadOnly(); }
     }
 
-    private List<QuirkInfo> quirkData;
+    private readonly List<QuirkInfo> quirkData;
 
-    void ApplyQuirk(Quirk quirk)
-    {
-        for (int i = 0; i < quirk.Buffs.Count; i++)
-            AddBuff(new BuffInfo(quirk.Buffs[i], BuffDurationType.Permanent, BuffSourceType.Quirk));
-    }
-    void RevertQuirk(Quirk quirk)
-    {
-        for (int i = 0; i < quirk.Buffs.Count; i++)
-            RemoveSourceBuff(quirk.Buffs[i], BuffSourceType.Quirk);
-    }
-    
-    public void ApplyDeathDoor()
-    {
-        var deathDoorStatus = GetStatusEffect(StatusType.DeathsDoor) as DeathsDoorStatusEffect;
-        if (deathDoorStatus.IsApplied)
-            return;
-        else
-            deathDoorStatus.AtDeathsDoor = true;
-
-        RevertMortality();
-
-        for(int i = 0; i < HeroClass.DeathDoor.Buffs.Count; i++)
-            AddBuff(new BuffInfo(DarkestDungeonManager.Data.Buffs[HeroClass.DeathDoor.Buffs[i]],
-                BuffDurationType.Permanent, BuffSourceType.DeathsDoor));
-    }
-    public void RevertDeathsDoor()
-    {
-        if (GetStatusEffect(StatusType.DeathsDoor).IsApplied)
-        {
-            GetStatusEffect(StatusType.DeathsDoor).ResetStatus();
-            foreach (var removedBuff in buffInfo.FindAll((buffEntry => buffEntry.SourceType == BuffSourceType.DeathsDoor)))
-                RemoveBuff(removedBuff);
-
-            ApplyMortality();
-        }
-    }
-    public void ApplyMortality()
-    {
-        var mortalityStatus = GetStatusEffect(StatusType.DeathRecovery) as DeathRecoveryStatusEffect;
-        if (mortalityStatus.IsApplied)
-            return;
-        else
-            mortalityStatus.AtDeathRecovery = true;
-
-        for (int i = 0; i < HeroClass.DeathDoor.Buffs.Count; i++)
-            AddBuff(new BuffInfo(DarkestDungeonManager.Data.Buffs[HeroClass.DeathDoor.RecoveryBuffs[i]],
-                BuffDurationType.Permanent, BuffSourceType.Mortality));
-    }
-    public void RevertMortality()
-    {
-        if (GetStatusEffect(StatusType.DeathRecovery).IsApplied)
-        {
-            GetStatusEffect(StatusType.DeathRecovery).ResetStatus();
-            foreach (var removedBuff in buffInfo.FindAll((buffEntry => buffEntry.SourceType == BuffSourceType.Mortality)))
-                RemoveBuff(removedBuff);
-        }
-    }
-    public void TownReset()
-    {
-        foreach(var buff in buffInfo.FindAll(info => !(info.SourceType == BuffSourceType.Quirk || 
-            info.SourceType == BuffSourceType.Trinket|| info.SourceType == BuffSourceType.Trait)))
-        {
-            RemoveBuff(buff);
-        }
-        foreach (var statusEntry in statusEffects)
-            statusEntry.Value.ResetStatus();
-
-        Status = HeroStatus.Available;
-        Heal(MaxHealth, false);
-
-        if (Trait != null && Trait.Type == OverstressType.Virtue)
-            RevertTrait();
-    }
-
-    public void ApplyTrait(Trait trait)
-    {
-        if (Trait != null)
-            RevertTrait();
-        Trait = trait;
-        for (int i = 0; i < trait.Buffs.Count; i++)
-            AddBuff(new BuffInfo(trait.Buffs[i], BuffDurationType.Permanent, BuffSourceType.Trait));
-    }
-    public void RevertTrait()
-    {
-        foreach (var removedBuff in buffInfo.FindAll((buffEntry => buffEntry.SourceType == BuffSourceType.Trait)))
-            RemoveBuff(removedBuff);
-    }
-
-    public bool AddQuirk(Quirk newQuirk)
-    {
-        if (quirkData.Find(item => item.Quirk == newQuirk) != null)
-            return false;
-        for (int i = 0; i < quirkData.Count; i++)
-        {
-            if (quirkData[i].Quirk.IncompatibleQuirks.Contains(newQuirk.Id))
-                return false;
-        }
-        if (newQuirk.IsDisease)
-        {
-            var diseases = quirkData.FindAll(quirkInfo => quirkInfo.Quirk.IsDisease);
-            if (diseases.Count < 3)
-            {
-                quirkData.Add(new QuirkInfo(newQuirk, false, 1, true));
-                ApplyQuirk(newQuirk);
-            }
-            else
-            {
-                int replaceIndex = RandomSolver.Next(diseases.Count);
-                RevertQuirk(diseases[replaceIndex].Quirk);
-                diseases[replaceIndex].ReplaceBy(newQuirk);
-                ApplyQuirk(newQuirk);
-            }
-        }
-        else
-        {
-            var quirkGroup = newQuirk.IsPositive ? quirkData.FindAll(quirkInfo => quirkInfo.Quirk.IsPositive) :
-                quirkData.FindAll(quirkInfo => !quirkInfo.Quirk.IsPositive && !quirkInfo.Quirk.IsDisease);
-
-            if (quirkGroup.Count < 5)
-            {
-                quirkData.Add(new QuirkInfo(newQuirk, false, 1, true));
-                ApplyQuirk(newQuirk);
-            }
-            else
-            {
-                var replacements = quirkGroup.FindAll(quirkInfo => !quirkInfo.IsLocked);
-                if (replacements.Count > 0)
-                {
-                    int replaceIndex = RandomSolver.Next(replacements.Count);
-                    RevertQuirk(replacements[replaceIndex].Quirk);
-                    replacements[replaceIndex].ReplaceBy(newQuirk);
-                    ApplyQuirk(newQuirk);
-                }
-            }
-        }
-        return true;
-    }
-    public bool LockQuirk(string quirkId)
-    {
-        var quirk = quirkData.Find(quirkInfo => quirkInfo.Quirk.Id == quirkId);
-        if (quirk != null)
-        {
-            quirk.IsLocked = true;
-            quirk.IsNew = false;
-            quirk.IsReplaced = false;
-            quirkData.Sort((x,y) => x.IsLocked ? y.IsLocked ? 0 : -1 : y.IsLocked ? 1 : 0);
-            return true;
-        }
-        return false;
-    }
-    public Quirk AddPositiveQuirk()
-    {
-        var quirkGroup = quirkData.FindAll(quirkInfo => quirkInfo.Quirk.IsPositive);
-        var availableQuirks = DarkestDungeonManager.Data.Quirks.Values.ToList().FindAll(newQuirk => newQuirk.IsPositive &&
-                quirkData.TrueForAll(quirkInfo => !quirkInfo.Quirk.IncompatibleQuirks.Contains(newQuirk.Id)) &&
-                quirkData.Find(quirkInfo => quirkInfo.Quirk == newQuirk) == null);
-
-        var addedQuirk = availableQuirks[RandomSolver.Next(availableQuirks.Count)];
-        if (quirkGroup.Count < 5)
-        {
-            quirkData.Add(new QuirkInfo(addedQuirk, false, 1, true));
-            ApplyQuirk(addedQuirk);
-        }
-        else
-        {
-            var replacements = quirkGroup.FindAll(quirkInfo => !quirkInfo.IsLocked);
-            if (replacements.Count > 0)
-            {
-                int replaceIndex = RandomSolver.Next(replacements.Count);
-                RevertQuirk(replacements[replaceIndex].Quirk);
-                replacements[replaceIndex].ReplaceBy(addedQuirk);
-                ApplyQuirk(addedQuirk);
-            }
-        }
-        return addedQuirk;
-    }
-    public Quirk AddNegativeQuirk()
-    {
-        var quirkGroup = quirkData.FindAll(quirkInfo => !quirkInfo.Quirk.IsPositive && !quirkInfo.Quirk.IsDisease);
-        var availableQuirks = DarkestDungeonManager.Data.Quirks.Values.ToList().FindAll(newQuirk =>
-                !newQuirk.IsPositive && !newQuirk.IsDisease && quirkData.TrueForAll(quirkInfo =>
-                !quirkInfo.Quirk.IncompatibleQuirks.Contains(newQuirk.Id)) &&
-                quirkData.Find(quirkInfo => quirkInfo.Quirk == newQuirk) == null);
-
-        var addedQuirk = availableQuirks[RandomSolver.Next(availableQuirks.Count)];
-        if (quirkGroup.Count < 5)
-        {
-            quirkData.Add(new QuirkInfo(addedQuirk, false, 1, true));
-            ApplyQuirk(addedQuirk);
-        }
-        else
-        {
-            var replacements = quirkGroup.FindAll(quirkInfo => !quirkInfo.IsLocked);
-            if (replacements.Count > 0)
-            {
-                int replaceIndex = RandomSolver.Next(replacements.Count);
-                RevertQuirk(replacements[replaceIndex].Quirk);
-                replacements[replaceIndex].ReplaceBy(addedQuirk);
-                ApplyQuirk(addedQuirk);
-            }
-        }
-        return addedQuirk;
-    }
-    public Quirk AddRandomDisease()
-    {
-        var availableDiseases = DarkestDungeonManager.Data.Quirks.Values.ToList().FindAll(newQuirk => newQuirk.IsDisease &&
-                quirkData.TrueForAll(quirkInfo => !quirkInfo.Quirk.IncompatibleQuirks.Contains(newQuirk.Id)) &&
-                quirkData.Find(quirkInfo => quirkInfo.Quirk == newQuirk) == null);
-
-        var rolledDisease = availableDiseases[RandomSolver.Next(availableDiseases.Count)];
-
-        var diseases = quirkData.FindAll(quirkInfo => quirkInfo.Quirk.IsDisease);
-        if (diseases.Count < 3)
-        {
-            quirkData.Add(new QuirkInfo(rolledDisease, false, 1, true));
-            ApplyQuirk(rolledDisease);
-        }
-        else
-        {
-            int replaceIndex = RandomSolver.Next(diseases.Count);
-            RevertQuirk(diseases[replaceIndex].Quirk);
-            diseases[replaceIndex].ReplaceBy(rolledDisease);
-            ApplyQuirk(rolledDisease);
-        }
-        return rolledDisease;
-    }
-    public Quirk RemoveQuirk(string quirkId)
-    {
-        var quirk = quirkData.Find(quirkInfo => quirkInfo.Quirk.Id == quirkId);
-        if(quirk != null)
-        {
-            RevertQuirk(quirk.Quirk);
-            quirkData.Remove(quirk);
-            return quirk.Quirk;
-        }
-        return null;
-    }
-    public Quirk RemovePositiveQuirk()
-    {
-        var positiveQuirks = quirkData.FindAll(quirkInfo => quirkInfo.Quirk.IsPositive && !quirkInfo.IsLocked);
-        if(positiveQuirks.Count > 0)
-        {
-            var removedQuirk = positiveQuirks[RandomSolver.Next(positiveQuirks.Count)];
-            RevertQuirk(removedQuirk.Quirk);
-            quirkData.Remove(removedQuirk);
-            return removedQuirk.Quirk;
-        }
-        return null;
-    }
-    public Quirk RemoveNegativeQuirk()
-    {
-        var negativeQuirks = quirkData.FindAll(quirkInfo => 
-            !quirkInfo.Quirk.IsPositive && !quirkInfo.Quirk.IsDisease && !quirkInfo.IsLocked);
-        if (negativeQuirks.Count == 0)
-            negativeQuirks = quirkData.FindAll(quirkInfo => !quirkInfo.Quirk.IsPositive && !quirkInfo.Quirk.IsDisease);
-
-        if (negativeQuirks.Count > 0)
-        {
-            var removedQuirk = negativeQuirks[RandomSolver.Next(negativeQuirks.Count)];
-            RevertQuirk(removedQuirk.Quirk);
-            quirkData.Remove(removedQuirk);
-            return removedQuirk.Quirk;
-        }
-        return null;
-    }
-    public Quirk RemoveDiseaseQuirk()
-    {
-        var diseases = quirkData.FindAll(quirkInfo => quirkInfo.Quirk.IsDisease);
-
-        if (diseases.Count > 0)
-        {
-            var removedDisease = diseases[RandomSolver.Next(diseases.Count)];
-            RevertQuirk(removedDisease.Quirk);
-            quirkData.Remove(removedDisease);
-            return removedDisease.Quirk;
-        }
-        return null;
-    }
-
-    public QuirkInfo GetQuirkInfo(string quirkId)
-    {
-        return quirkData.Find(quirkInfo => quirkInfo.Quirk.Id == quirkId);
-    }
-    public List<QuirkInfo> RemoveDiseases()
-    {
-        var diseases = quirkData.FindAll(quirkInfo => quirkInfo.Quirk.IsDisease);
-        for (int i = 0; i < diseases.Count; i++)
-        {
-            RevertQuirk(diseases[i].Quirk);
-            quirkData.Remove(diseases[i]);
-        }
-        return diseases;
-    }
-
-    public void Equip(Equipment equipment, HeroEquipmentSlot slot)
-    {
-        switch(slot)
-        {
-            case HeroEquipmentSlot.Weapon:
-                if (Weapon != null)
-                    Unequip(slot);
-
-                equipment.ApplyModifiers(this);
-                WeaponLevel = equipment.UpgradeLevel;
-                Weapon = equipment;
-                break;
-            case HeroEquipmentSlot.Armor:
-                if (Armor != null)
-                    Unequip(slot);
-                equipment.ApplyModifiers(this);
-                ArmorLevel = equipment.UpgradeLevel;
-                Armor = equipment;
-                break;
-        }
-    }
-    public void Equip(Trinket trinket, TrinketSlot slot)
-    {
-        switch(slot)
-        {
-            case TrinketSlot.Left:
-                if (LeftTrinket != null)
-                    Unequip(slot);
-                for (int i = 0; i < trinket.Buffs.Count; i++)
-                    AddBuff(new BuffInfo(trinket.Buffs[i], BuffDurationType.Permanent, BuffSourceType.Trinket));
-                LeftTrinket = trinket;
-                break;
-            case TrinketSlot.Right:
-                if (RightTrinket != null)
-                    Unequip(slot);
-                for (int i = 0; i < trinket.Buffs.Count; i++)
-                    AddBuff(new BuffInfo(trinket.Buffs[i], BuffDurationType.Permanent, BuffSourceType.Trinket));
-                RightTrinket = trinket;
-                break;
-        }
-    }
-    public void Unequip(HeroEquipmentSlot slot)
-    {
-        switch (slot)
-        {
-            case HeroEquipmentSlot.Weapon:
-                Weapon.RevertModifiers(this);
-                Weapon = null;
-                break;
-            case HeroEquipmentSlot.Armor:
-                Armor.RevertModifiers(this);
-                Armor = null;
-                break;
-        }
-    }
-    public void Unequip(TrinketSlot slot)
-    {
-        switch(slot)
-        {
-            case TrinketSlot.Left:
-                if(LeftTrinket != null)
-                {
-                    for (int i = 0; i < LeftTrinket.Buffs.Count; i++)
-                        RemoveSourceBuff(LeftTrinket.Buffs[i], BuffSourceType.Trinket);
-                    LeftTrinket = null;
-                }
-                break;
-            case TrinketSlot.Right:
-                if(RightTrinket != null)
-                {
-                    for (int i = 0; i < RightTrinket.Buffs.Count; i++)
-                        RemoveSourceBuff(RightTrinket.Buffs[i], BuffSourceType.Trinket);
-                    RightTrinket = null;
-                }
-                break;
-        }
-    }
+    #region Constructors
 
     public Hero(int heroIndex, PhotonPlayer player)
-        : base(DarkestDungeonManager.Data.HeroClasses[(string)player.customProperties["HC" + heroIndex.ToString()]])
+        : base(DarkestDungeonManager.Data.HeroClasses[(string)player.CustomProperties["HC" + heroIndex.ToString()]])
     {
-        RandomSolver.SetRandomSeed((int)player.customProperties["HS" + heroIndex.ToString()]);
+        RandomSolver.SetRandomSeed((int)player.CustomProperties["HS" + heroIndex.ToString()]);
 
-        HeroName = (string)player.customProperties["HN" + heroIndex.ToString()];
-        ClassStringId = (string)player.customProperties["HC" + heroIndex.ToString()];
+        HeroName = (string)player.CustomProperties["HN" + heroIndex.ToString()];
+        ClassStringId = (string)player.CustomProperties["HC" + heroIndex.ToString()];
         Status = HeroStatus.Available;
         Resolve = new Resolve(0, 0);
         HeroClass = DarkestDungeonManager.Data.HeroClasses[ClassStringId];
         ClassIndexId = HeroClass.IndexId;
-        AddPairedAttribute(AttributeType.Stress, new PairedAttribute(30, 200, true, AttributeCategory.CombatStat));
+        AddPairedAttribute(AttributeType.Stress, new PairedAttribute(30, 200, true));
 
         #region Equipment Generation
         Equipment weapon = HeroClass.Weapons.Find(wep => wep.UpgradeLevel == 1);
@@ -613,14 +139,14 @@ public class Hero : Character
 
         #region Combat Generation
         CurrentCombatSkills = new CombatSkill[HeroClass.CombatSkills.Count];
-        for(int i = 0; i < CurrentCombatSkills.Length; i++)
+        for (int i = 0; i < CurrentCombatSkills.Length; i++)
             CurrentCombatSkills[i] = HeroClass.CombatSkills[i];
 
-        var playerSkillFlags = (PlayerSkillFlags)player.customProperties["HF" + heroIndex.ToString()];
+        var playerSkillFlags = (PlayerSkillFlags)player.CustomProperties["HF" + heroIndex.ToString()];
         SelectedCombatSkills = new List<CombatSkill>();
         for (int i = 0; i < CurrentCombatSkills.Length; i++)
         {
-            if((playerSkillFlags & (PlayerSkillFlags)Mathf.Pow(2, i + 1)) != PlayerSkillFlags.Empty)
+            if ((playerSkillFlags & (PlayerSkillFlags)Mathf.Pow(2, i + 1)) != PlayerSkillFlags.Empty)
                 SelectedCombatSkills.Add(CurrentCombatSkills[i]);
         }
         #endregion
@@ -630,6 +156,7 @@ public class Hero : Character
         SelectedCampingSkills = new List<CampingSkill>();
         #endregion
     }
+
     public Hero(string classId, string generatedName)
         : base(DarkestDungeonManager.Data.HeroClasses[classId])
     {
@@ -639,7 +166,7 @@ public class Hero : Character
         Resolve = new Resolve(0, 0);
         HeroClass = DarkestDungeonManager.Data.HeroClasses[classId];
         ClassIndexId = HeroClass.IndexId;
-        AddPairedAttribute(AttributeType.Stress, new PairedAttribute(10, 200, true, AttributeCategory.CombatStat));
+        AddPairedAttribute(AttributeType.Stress, new PairedAttribute(10, 200, true));
 
         #region Equipment Generation
         Equipment weapon = HeroClass.Weapons.Find(wep => wep.UpgradeLevel == 1);
@@ -697,8 +224,9 @@ public class Hero : Character
         SelectedCampingSkills = new List<CampingSkill>();
         #endregion
     }
+
     public Hero(int rosterId, string classId, string generatedName)
-        :base(DarkestDungeonManager.Data.HeroClasses[classId])
+        : base(DarkestDungeonManager.Data.HeroClasses[classId])
     {
         RosterId = rosterId;
         HeroName = generatedName;
@@ -707,7 +235,7 @@ public class Hero : Character
         Resolve = new Resolve(0, 0);
         HeroClass = DarkestDungeonManager.Data.HeroClasses[classId];
         ClassIndexId = HeroClass.IndexId;
-        AddPairedAttribute(AttributeType.Stress, new PairedAttribute(10, 200, true, AttributeCategory.CombatStat));
+        AddPairedAttribute(AttributeType.Stress, new PairedAttribute(10, 200, true));
 
         #region Equipment Generation
         Equipment weapon = HeroClass.Weapons.Find(wep => wep.UpgradeLevel == 1);
@@ -720,7 +248,7 @@ public class Hero : Character
         quirkData = new List<QuirkInfo>();
         int positiveQuirkNumber = RandomSolver.Next(HeroClass.Generation.NumberOfPositiveQuirksMin,
             HeroClass.Generation.NumberOfPositiveQuirksMax + 1);
-        for (int i = 0; i < positiveQuirkNumber ; i++ )
+        for (int i = 0; i < positiveQuirkNumber; i++)
         {
             var availableQuirks = DarkestDungeonManager.Data.Quirks.Values.ToList().FindAll(newQuirk => newQuirk.IsPositive &&
                 quirkData.TrueForAll(quirkInfo => !quirkInfo.Quirk.IncompatibleQuirks.Contains(newQuirk.Id)) &&
@@ -747,14 +275,14 @@ public class Hero : Character
         int skillsRequired = Mathf.Clamp(HeroClass.Generation.NumberOfRandomCombatSkills, 0, HeroClass.CombatSkills.Count);
         CurrentCombatSkills = new CombatSkill[HeroClass.CombatSkills.Count];
 
-        foreach(var guaranteedSkill in availableSkills.FindAll(skill => skill.IsGenerationGuaranteed))
+        foreach (var guaranteedSkill in availableSkills.FindAll(skill => skill.IsGenerationGuaranteed))
         {
             CurrentCombatSkills[HeroClass.CombatSkills.IndexOf(guaranteedSkill)] = guaranteedSkill;
             availableSkills.Remove(guaranteedSkill);
             skillsRequired--;
         }
 
-        for(int i = skillsRequired; i > 0; i--)
+        for (int i = skillsRequired; i > 0; i--)
         {
             int generatedIndex = RandomSolver.Next(availableSkills.Count);
             CurrentCombatSkills[HeroClass.CombatSkills.IndexOf(availableSkills[generatedIndex])] = availableSkills[generatedIndex];
@@ -778,7 +306,7 @@ public class Hero : Character
 
         var availableGeneralSkills = HeroClass.CampingSkills.FindAll(skill => skill.Classes.Count > 4);
         int generalSkillsRequired = HeroClass.Generation.NumberOfSharedCampingSkills;
-        foreach(var skill in availableGeneralSkills.OrderBy(x => RandomSolver.NextDouble())
+        foreach (var skill in availableGeneralSkills.OrderBy(x => RandomSolver.NextDouble())
             .Take(Mathf.Min(generalSkillsRequired, availableGeneralSkills.Count)))
         {
             int skillIndex = HeroClass.CampingSkills.IndexOf(skill);
@@ -801,6 +329,7 @@ public class Hero : Character
             .Take(Mathf.Min(4, availableGeneratedSkills.Count)).ToList();
         #endregion
     }
+
     public Hero(int rosterId, string classId, string generatedName, RecruitUpgrade expUpgrade)
         : base(DarkestDungeonManager.Data.HeroClasses[classId], expUpgrade.Level)
     {
@@ -811,7 +340,7 @@ public class Hero : Character
         Resolve = new Resolve(expUpgrade.Level, 0);
         HeroClass = DarkestDungeonManager.Data.HeroClasses[classId];
         ClassIndexId = HeroClass.IndexId;
-        AddPairedAttribute(AttributeType.Stress, new PairedAttribute(10, 200, true, AttributeCategory.CombatStat));
+        AddPairedAttribute(AttributeType.Stress, new PairedAttribute(10, 200, true));
 
         #region Equipment Generation
         var weaponTree = DarkestDungeonManager.Data.UpgradeTrees[classId + ".weapon"];
@@ -909,6 +438,7 @@ public class Hero : Character
             .Take(Mathf.Min(4, availableGeneratedSkills.Count)).ToList();
         #endregion
     }
+
     public Hero(int rosterId, string classId, DeathRecord deathRecord)
         : base(DarkestDungeonManager.Data.HeroClasses[classId], deathRecord.ResolveLevel)
     {
@@ -919,7 +449,7 @@ public class Hero : Character
         Resolve = new Resolve(deathRecord.ResolveLevel, 0);
         HeroClass = DarkestDungeonManager.Data.HeroClasses[classId];
         ClassIndexId = HeroClass.IndexId;
-        AddPairedAttribute(AttributeType.Stress, new PairedAttribute(10, 200, true, AttributeCategory.CombatStat));
+        AddPairedAttribute(AttributeType.Stress, new PairedAttribute(10, 200, true));
 
         #region Equipment Generation
         var weaponTree = DarkestDungeonManager.Data.UpgradeTrees[classId + ".weapon"];
@@ -1016,7 +546,8 @@ public class Hero : Character
             .Take(Mathf.Min(4, availableGeneratedSkills.Count)).ToList();
         #endregion
     }
-    public Hero(Estate estate, SaveHeroData saveHeroData):base(saveHeroData)
+
+    public Hero(Estate estate, SaveHeroData saveHeroData) : base(saveHeroData)
     {
         var database = DarkestDungeonManager.Data;
 
@@ -1033,7 +564,7 @@ public class Hero : Character
 
         Resolve = new Resolve(saveHeroData.ResolveLevel, saveHeroData.ResolveXP);
 
-        AddPairedAttribute(AttributeType.Stress, new PairedAttribute(saveHeroData.StressLevel, 200, true, AttributeCategory.CombatStat));
+        AddPairedAttribute(AttributeType.Stress, new PairedAttribute(saveHeroData.StressLevel, 200, true));
 
         HeroClass = database.HeroClasses[ClassStringId];
         ClassIndexId = HeroClass.IndexId;
@@ -1041,7 +572,7 @@ public class Hero : Character
         Equip(weapon, HeroEquipmentSlot.Weapon);
         Equipment armor = HeroClass.Armors.Find(arm => arm.UpgradeLevel == estate.GetUpgradedArmorLevel(RosterId, HeroClass.StringId));
         Equip(armor, HeroEquipmentSlot.Armor);
-        if(saveHeroData.LeftTrinketId != "")
+        if (saveHeroData.LeftTrinketId != "")
         {
             Trinket trinket = (Trinket)database.Items["trinket"][saveHeroData.LeftTrinketId];
             Equip(trinket, TrinketSlot.Left);
@@ -1091,12 +622,407 @@ public class Hero : Character
         GetPairedAttribute(AttributeType.HitPoints).CurrentValue = saveHeroData.CurrentHp;
     }
 
+    #endregion
+
+    public void ApplyDeathDoor()
+    {
+        var deathDoorStatus = GetStatusEffect(StatusType.DeathsDoor) as DeathsDoorStatusEffect;
+        if (deathDoorStatus.IsApplied)
+            return;
+        else
+            deathDoorStatus.AtDeathsDoor = true;
+
+        RevertMortality();
+
+        for(int i = 0; i < HeroClass.DeathDoor.Buffs.Count; i++)
+            AddBuff(new BuffInfo(DarkestDungeonManager.Data.Buffs[HeroClass.DeathDoor.Buffs[i]],
+                BuffDurationType.Permanent, BuffSourceType.DeathsDoor));
+    }
+
+    public void RevertDeathsDoor()
+    {
+        if (GetStatusEffect(StatusType.DeathsDoor).IsApplied)
+        {
+            GetStatusEffect(StatusType.DeathsDoor).ResetStatus();
+            foreach (var removedBuff in BuffInfo.FindAll((buffEntry => buffEntry.SourceType == BuffSourceType.DeathsDoor)))
+                RemoveBuff(removedBuff);
+
+            ApplyMortality();
+        }
+    }
+
+    public void ApplyMortality()
+    {
+        var mortalityStatus = GetStatusEffect(StatusType.DeathRecovery) as DeathRecoveryStatusEffect;
+        if (mortalityStatus.IsApplied)
+            return;
+        else
+            mortalityStatus.AtDeathRecovery = true;
+
+        for (int i = 0; i < HeroClass.DeathDoor.Buffs.Count; i++)
+            AddBuff(new BuffInfo(DarkestDungeonManager.Data.Buffs[HeroClass.DeathDoor.RecoveryBuffs[i]],
+                BuffDurationType.Permanent, BuffSourceType.Mortality));
+    }
+
+    public void RevertMortality()
+    {
+        if (GetStatusEffect(StatusType.DeathRecovery).IsApplied)
+        {
+            GetStatusEffect(StatusType.DeathRecovery).ResetStatus();
+            foreach (var removedBuff in BuffInfo.FindAll((buffEntry => buffEntry.SourceType == BuffSourceType.Mortality)))
+                RemoveBuff(removedBuff);
+        }
+    }
+
+    public void ApplyTrait(Trait trait)
+    {
+        if (Trait != null)
+            RevertTrait();
+        Trait = trait;
+        for (int i = 0; i < trait.Buffs.Count; i++)
+            AddBuff(new BuffInfo(trait.Buffs[i], BuffDurationType.Permanent, BuffSourceType.Trait));
+    }
+
+    public void RevertTrait()
+    {
+        foreach (var removedBuff in BuffInfo.FindAll((buffEntry => buffEntry.SourceType == BuffSourceType.Trait)))
+            RemoveBuff(removedBuff);
+    }
+
+    #region Quirk Helpers
+
+    public bool AddQuirk(Quirk newQuirk)
+    {
+        if (quirkData.Find(item => item.Quirk == newQuirk) != null)
+            return false;
+        for (int i = 0; i < quirkData.Count; i++)
+        {
+            if (quirkData[i].Quirk.IncompatibleQuirks.Contains(newQuirk.Id))
+                return false;
+        }
+        if (newQuirk.IsDisease)
+        {
+            var diseases = quirkData.FindAll(quirkInfo => quirkInfo.Quirk.IsDisease);
+            if (diseases.Count < 3)
+            {
+                quirkData.Add(new QuirkInfo(newQuirk, false, 1, true));
+                ApplyQuirk(newQuirk);
+            }
+            else
+            {
+                int replaceIndex = RandomSolver.Next(diseases.Count);
+                RevertQuirk(diseases[replaceIndex].Quirk);
+                diseases[replaceIndex].ReplaceBy(newQuirk);
+                ApplyQuirk(newQuirk);
+            }
+        }
+        else
+        {
+            var quirkGroup = newQuirk.IsPositive ? quirkData.FindAll(quirkInfo => quirkInfo.Quirk.IsPositive) :
+                quirkData.FindAll(quirkInfo => !quirkInfo.Quirk.IsPositive && !quirkInfo.Quirk.IsDisease);
+
+            if (quirkGroup.Count < 5)
+            {
+                quirkData.Add(new QuirkInfo(newQuirk, false, 1, true));
+                ApplyQuirk(newQuirk);
+            }
+            else
+            {
+                var replacements = quirkGroup.FindAll(quirkInfo => !quirkInfo.IsLocked);
+                if (replacements.Count > 0)
+                {
+                    int replaceIndex = RandomSolver.Next(replacements.Count);
+                    RevertQuirk(replacements[replaceIndex].Quirk);
+                    replacements[replaceIndex].ReplaceBy(newQuirk);
+                    ApplyQuirk(newQuirk);
+                }
+            }
+        }
+        return true;
+    }
+
+    public bool LockQuirk(string quirkId)
+    {
+        var quirk = quirkData.Find(quirkInfo => quirkInfo.Quirk.Id == quirkId);
+        if (quirk != null)
+        {
+            quirk.IsLocked = true;
+            quirk.IsNew = false;
+            quirk.IsReplaced = false;
+            quirkData.Sort((x,y) => x.IsLocked ? y.IsLocked ? 0 : -1 : y.IsLocked ? 1 : 0);
+            return true;
+        }
+        return false;
+    }
+
+    public Quirk AddPositiveQuirk()
+    {
+        var quirkGroup = quirkData.FindAll(quirkInfo => quirkInfo.Quirk.IsPositive);
+        var availableQuirks = DarkestDungeonManager.Data.Quirks.Values.ToList().FindAll(newQuirk => newQuirk.IsPositive &&
+                quirkData.TrueForAll(quirkInfo => !quirkInfo.Quirk.IncompatibleQuirks.Contains(newQuirk.Id)) &&
+                quirkData.Find(quirkInfo => quirkInfo.Quirk == newQuirk) == null);
+
+        var addedQuirk = availableQuirks[RandomSolver.Next(availableQuirks.Count)];
+        if (quirkGroup.Count < 5)
+        {
+            quirkData.Add(new QuirkInfo(addedQuirk, false, 1, true));
+            ApplyQuirk(addedQuirk);
+        }
+        else
+        {
+            var replacements = quirkGroup.FindAll(quirkInfo => !quirkInfo.IsLocked);
+            if (replacements.Count > 0)
+            {
+                int replaceIndex = RandomSolver.Next(replacements.Count);
+                RevertQuirk(replacements[replaceIndex].Quirk);
+                replacements[replaceIndex].ReplaceBy(addedQuirk);
+                ApplyQuirk(addedQuirk);
+            }
+        }
+        return addedQuirk;
+    }
+
+    public Quirk AddNegativeQuirk()
+    {
+        var quirkGroup = quirkData.FindAll(quirkInfo => !quirkInfo.Quirk.IsPositive && !quirkInfo.Quirk.IsDisease);
+        var availableQuirks = DarkestDungeonManager.Data.Quirks.Values.ToList().FindAll(newQuirk =>
+                !newQuirk.IsPositive && !newQuirk.IsDisease && quirkData.TrueForAll(quirkInfo =>
+                !quirkInfo.Quirk.IncompatibleQuirks.Contains(newQuirk.Id)) &&
+                quirkData.Find(quirkInfo => quirkInfo.Quirk == newQuirk) == null);
+
+        var addedQuirk = availableQuirks[RandomSolver.Next(availableQuirks.Count)];
+        if (quirkGroup.Count < 5)
+        {
+            quirkData.Add(new QuirkInfo(addedQuirk, false, 1, true));
+            ApplyQuirk(addedQuirk);
+        }
+        else
+        {
+            var replacements = quirkGroup.FindAll(quirkInfo => !quirkInfo.IsLocked);
+            if (replacements.Count > 0)
+            {
+                int replaceIndex = RandomSolver.Next(replacements.Count);
+                RevertQuirk(replacements[replaceIndex].Quirk);
+                replacements[replaceIndex].ReplaceBy(addedQuirk);
+                ApplyQuirk(addedQuirk);
+            }
+        }
+        return addedQuirk;
+    }
+
+    public Quirk AddRandomDisease()
+    {
+        var availableDiseases = DarkestDungeonManager.Data.Quirks.Values.ToList().FindAll(newQuirk => newQuirk.IsDisease &&
+                quirkData.TrueForAll(quirkInfo => !quirkInfo.Quirk.IncompatibleQuirks.Contains(newQuirk.Id)) &&
+                quirkData.Find(quirkInfo => quirkInfo.Quirk == newQuirk) == null);
+
+        var rolledDisease = availableDiseases[RandomSolver.Next(availableDiseases.Count)];
+
+        var diseases = quirkData.FindAll(quirkInfo => quirkInfo.Quirk.IsDisease);
+        if (diseases.Count < 3)
+        {
+            quirkData.Add(new QuirkInfo(rolledDisease, false, 1, true));
+            ApplyQuirk(rolledDisease);
+        }
+        else
+        {
+            int replaceIndex = RandomSolver.Next(diseases.Count);
+            RevertQuirk(diseases[replaceIndex].Quirk);
+            diseases[replaceIndex].ReplaceBy(rolledDisease);
+            ApplyQuirk(rolledDisease);
+        }
+        return rolledDisease;
+    }
+
+    public Quirk RemoveQuirk(string quirkId)
+    {
+        var quirk = quirkData.Find(quirkInfo => quirkInfo.Quirk.Id == quirkId);
+        if(quirk != null)
+        {
+            RevertQuirk(quirk.Quirk);
+            quirkData.Remove(quirk);
+            return quirk.Quirk;
+        }
+        return null;
+    }
+
+    public Quirk RemovePositiveQuirk()
+    {
+        var positiveQuirks = quirkData.FindAll(quirkInfo => quirkInfo.Quirk.IsPositive && !quirkInfo.IsLocked);
+        if(positiveQuirks.Count > 0)
+        {
+            var removedQuirk = positiveQuirks[RandomSolver.Next(positiveQuirks.Count)];
+            RevertQuirk(removedQuirk.Quirk);
+            quirkData.Remove(removedQuirk);
+            return removedQuirk.Quirk;
+        }
+        return null;
+    }
+
+    public Quirk RemoveNegativeQuirk()
+    {
+        var negativeQuirks = quirkData.FindAll(quirkInfo => 
+            !quirkInfo.Quirk.IsPositive && !quirkInfo.Quirk.IsDisease && !quirkInfo.IsLocked);
+        if (negativeQuirks.Count == 0)
+            negativeQuirks = quirkData.FindAll(quirkInfo => !quirkInfo.Quirk.IsPositive && !quirkInfo.Quirk.IsDisease);
+
+        if (negativeQuirks.Count > 0)
+        {
+            var removedQuirk = negativeQuirks[RandomSolver.Next(negativeQuirks.Count)];
+            RevertQuirk(removedQuirk.Quirk);
+            quirkData.Remove(removedQuirk);
+            return removedQuirk.Quirk;
+        }
+        return null;
+    }
+
+    public Quirk RemoveDiseaseQuirk()
+    {
+        var diseases = quirkData.FindAll(quirkInfo => quirkInfo.Quirk.IsDisease);
+
+        if (diseases.Count > 0)
+        {
+            var removedDisease = diseases[RandomSolver.Next(diseases.Count)];
+            RevertQuirk(removedDisease.Quirk);
+            quirkData.Remove(removedDisease);
+            return removedDisease.Quirk;
+        }
+        return null;
+    }
+
+    public QuirkInfo GetQuirkInfo(string quirkId)
+    {
+        return quirkData.Find(quirkInfo => quirkInfo.Quirk.Id == quirkId);
+    }
+
+    public List<QuirkInfo> RemoveDiseases()
+    {
+        var diseases = quirkData.FindAll(quirkInfo => quirkInfo.Quirk.IsDisease);
+        for (int i = 0; i < diseases.Count; i++)
+        {
+            RevertQuirk(diseases[i].Quirk);
+            quirkData.Remove(diseases[i]);
+        }
+        return diseases;
+    }
+
+    private void ApplyQuirk(Quirk quirk)
+    {
+        for (int i = 0; i < quirk.Buffs.Count; i++)
+            AddBuff(new BuffInfo(quirk.Buffs[i], BuffDurationType.Permanent, BuffSourceType.Quirk));
+    }
+
+    private void RevertQuirk(Quirk quirk)
+    {
+        for (int i = 0; i < quirk.Buffs.Count; i++)
+            RemoveSourceBuff(quirk.Buffs[i], BuffSourceType.Quirk);
+    }
+
+    #endregion
+
+    public void Equip(Equipment equipment, HeroEquipmentSlot slot)
+    {
+        switch(slot)
+        {
+            case HeroEquipmentSlot.Weapon:
+                if (Weapon != null)
+                    Unequip(slot);
+
+                equipment.ApplyModifiers(this);
+                WeaponLevel = equipment.UpgradeLevel;
+                Weapon = equipment;
+                break;
+            case HeroEquipmentSlot.Armor:
+                if (Armor != null)
+                    Unequip(slot);
+                equipment.ApplyModifiers(this);
+                ArmorLevel = equipment.UpgradeLevel;
+                Armor = equipment;
+                break;
+        }
+    }
+
+    public void Equip(Trinket trinket, TrinketSlot slot)
+    {
+        switch(slot)
+        {
+            case TrinketSlot.Left:
+                if (LeftTrinket != null)
+                    Unequip(slot);
+                for (int i = 0; i < trinket.Buffs.Count; i++)
+                    AddBuff(new BuffInfo(trinket.Buffs[i], BuffDurationType.Permanent, BuffSourceType.Trinket));
+                LeftTrinket = trinket;
+                break;
+            case TrinketSlot.Right:
+                if (RightTrinket != null)
+                    Unequip(slot);
+                for (int i = 0; i < trinket.Buffs.Count; i++)
+                    AddBuff(new BuffInfo(trinket.Buffs[i], BuffDurationType.Permanent, BuffSourceType.Trinket));
+                RightTrinket = trinket;
+                break;
+        }
+    }
+
+    public void Unequip(HeroEquipmentSlot slot)
+    {
+        switch (slot)
+        {
+            case HeroEquipmentSlot.Weapon:
+                Weapon.RevertModifiers(this);
+                Weapon = null;
+                break;
+            case HeroEquipmentSlot.Armor:
+                Armor.RevertModifiers(this);
+                Armor = null;
+                break;
+        }
+    }
+
+    public void Unequip(TrinketSlot slot)
+    {
+        switch(slot)
+        {
+            case TrinketSlot.Left:
+                if(LeftTrinket != null)
+                {
+                    for (int i = 0; i < LeftTrinket.Buffs.Count; i++)
+                        RemoveSourceBuff(LeftTrinket.Buffs[i], BuffSourceType.Trinket);
+                    LeftTrinket = null;
+                }
+                break;
+            case TrinketSlot.Right:
+                if(RightTrinket != null)
+                {
+                    for (int i = 0; i < RightTrinket.Buffs.Count; i++)
+                        RemoveSourceBuff(RightTrinket.Buffs[i], BuffSourceType.Trinket);
+                    RightTrinket = null;
+                }
+                break;
+        }
+    }
 
     public override int Heal(float healAmount, bool includeModifier)
     {
         RevertDeathsDoor();
 
         return base.Heal(healAmount, includeModifier);
+    }
+
+    public void TownReset()
+    {
+        foreach (var buff in BuffInfo.FindAll(info => !(info.SourceType == BuffSourceType.Quirk ||
+             info.SourceType == BuffSourceType.Trinket || info.SourceType == BuffSourceType.Trait)))
+        {
+            RemoveBuff(buff);
+        }
+        foreach (var statusEntry in StatusEffects)
+            statusEntry.Value.ResetStatus();
+
+        Status = HeroStatus.Available;
+        Heal(MaxHealth, false);
+
+        if (Trait != null && Trait.Type == OverstressType.Virtue)
+            RevertTrait();
     }
 
     public void UpdateResolve()
@@ -1124,7 +1050,7 @@ public class Hero : Character
         saveHeroData.RightTrinketId = RightTrinket != null ? RightTrinket.Id : "";
 
         saveHeroData.Quirks = quirkData;
-        saveHeroData.Buffs = buffInfo;
+        saveHeroData.Buffs = BuffInfo;
 
         saveHeroData.SelectedCombatSkillIndexes.Clear();
         saveHeroData.SelectedCampingSkillIndexes.Clear();
@@ -1147,7 +1073,7 @@ public class Hero : Character
         saveUnitData.Class = Class;
         saveUnitData.Name = Name;
         saveUnitData.CurrentHp = CurrentHealth;
-        saveUnitData.Buffs = buffInfo;
-        saveUnitData.Statuses = statusEffects;
+        saveUnitData.Buffs = BuffInfo;
+        saveUnitData.Statuses = StatusEffects;
     }
 }

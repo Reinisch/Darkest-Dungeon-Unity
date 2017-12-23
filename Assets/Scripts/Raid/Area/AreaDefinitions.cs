@@ -15,6 +15,7 @@ public enum AreaType
     BattleCurio,
     BattleTresure,
 }
+
 public enum Knowledge
 {
     Hidden = 0,
@@ -22,6 +23,7 @@ public enum Knowledge
     Visited,
     Completed,
 }
+
 public enum Direction
 {
     Top,

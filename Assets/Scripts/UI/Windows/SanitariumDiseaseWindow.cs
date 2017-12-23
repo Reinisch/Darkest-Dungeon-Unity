@@ -4,40 +4,24 @@ using System.Collections.Generic;
 
 public class SanitariumDiseaseWindow : MonoBehaviour
 {
-    public Text headerLabel;
-    public Text costLabel;
-    public Button treatmentButton;
+    [SerializeField]
+    private Text costLabel;
+    [SerializeField]
+    private Button treatmentButton;
+    [SerializeField]
+    private List<QuirkTreatmentSlot> diseaseSlots;
 
-    public List<QuirkTreatmentSlot> diseaseSlots;
-
-    public TreatmentHeroSlot SelectedSlot { get; set; }
-    public TownManager TownManager { get; set; }
+    private TreatmentHeroSlot SelectedSlot { get; set; }
+    private TownManager TownManager { get; set; }
 
     public void Initialize(TownManager townManager)
     {
         TownManager = townManager;
         for (int i = 0; i < diseaseSlots.Count; i++)
         {
-            diseaseSlots[i].onSelect += SanitariumDiseaseWindow_onSelect;
-            diseaseSlots[i].onDeselect += SanitariumDiseaseWindow_onDeselect;
+            diseaseSlots[i].EventSelected += QuirkTreatmentSlotSelected;
+            diseaseSlots[i].EventDeselected += QuirkTreatmentSlotDeselected;
         }
-    }
-
-    void SanitariumDiseaseWindow_onDeselect(QuirkTreatmentSlot slot)
-    {
-        SelectedSlot.TreatmentSlot.TargetDiseaseQuirk = null;
-        RecalculateCost();
-    }
-   
-    void SanitariumDiseaseWindow_onSelect(QuirkTreatmentSlot slot)
-    {
-        for (int i = 0; i < diseaseSlots.Count; i++)
-        {
-            if (diseaseSlots[i] != slot && diseaseSlots[i].Selected)
-                diseaseSlots[i].Deselect();
-        }
-        SelectedSlot.TreatmentSlot.TargetDiseaseQuirk = slot.QuirkInfo.Quirk.Id;
-        RecalculateCost();
     }
 
     public void RecalculateCost()
@@ -70,21 +54,22 @@ public class SanitariumDiseaseWindow : MonoBehaviour
             }
         }
     }
+
     public void TreatmentButtonClicked()
     {
         int cost = 0;
         if (SelectedSlot.TreatmentSlot.TargetDiseaseQuirk != null)
             cost += SelectedSlot.TreatmentSlot.BaseDiseaseCost;
 
-        if (cost != 0 || DarkestDungeonManager.Campaign.EventModifiers.IsActivityFree(SelectedSlot.activityName))
+        if (cost != 0 || DarkestDungeonManager.Campaign.EventModifiers.IsActivityFree(SelectedSlot.ActivityName))
         {
             if (SelectedSlot.TreatmentSlot.Status == ActivitySlotStatus.Checkout)
             {
                 if (DarkestDungeonManager.Campaign.Estate.CanPayGold(cost))
                 {
                     DarkestDungeonManager.Campaign.Estate.RemoveGold(cost);
-                    TownManager.EstateSceneManager.currencyPanel.UpdateCurrency();
-                    TownManager.EstateSceneManager.currencyPanel.CurrencyDecreased("gold");
+                    TownManager.EstateSceneManager.CurrencyPanel.UpdateCurrency();
+                    TownManager.EstateSceneManager.CurrencyPanel.CurrencyDecreased("gold");
                     TownManager.GetHeroSlot(SelectedSlot.TreatmentSlot.Hero).SetStatus(HeroStatus.Sanitarium);
                     SelectedSlot.PayoutSlot();
                     DarkestSoundManager.PlayOneShot("event:/town/sanitarium_disease_treatment");
@@ -113,6 +98,7 @@ public class SanitariumDiseaseWindow : MonoBehaviour
         RecalculateCost();
         gameObject.SetActive(true);
     }
+
     public void UpdateHeroOverview()
     {
         RecalculateCost();
@@ -124,5 +110,22 @@ public class SanitariumDiseaseWindow : MonoBehaviour
         for (int i = 0; i < diseaseSlots.Count; i++)
             diseaseSlots[i].ResetSlot();
         gameObject.SetActive(false);
+    }
+
+    private void QuirkTreatmentSlotDeselected(QuirkTreatmentSlot slot)
+    {
+        SelectedSlot.TreatmentSlot.TargetDiseaseQuirk = null;
+        RecalculateCost();
+    }
+
+    private void QuirkTreatmentSlotSelected(QuirkTreatmentSlot slot)
+    {
+        for (int i = 0; i < diseaseSlots.Count; i++)
+        {
+            if (diseaseSlots[i] != slot && diseaseSlots[i].Selected)
+                diseaseSlots[i].Deselect();
+        }
+        SelectedSlot.TreatmentSlot.TargetDiseaseQuirk = slot.QuirkInfo.Quirk.Id;
+        RecalculateCost();
     }
 }

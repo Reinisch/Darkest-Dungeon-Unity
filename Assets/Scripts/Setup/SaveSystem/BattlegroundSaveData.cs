@@ -1,34 +1,32 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 
 public class BattleGroundSaveData
 {
-    public int RoundNumber { get; private set; }
+    public readonly BattleFormationSaveData MonsterFormation = new BattleFormationSaveData();
 
-    public RoundStatus RoundStatus { get; set; }
+    public int RoundNumber { get; private set; }
+    public RoundStatus RoundStatus { get; private set; }
     public TurnType TurnType { get; private set; }
     public TurnStatus TurnStatus { get; private set; }
     public HeroTurnAction HeroAction { get; private set; }
-    public BattleStatus BattleStatus { get; set; }
-    public SurpriseStatus SurpriseStatus { get; set; }
+    public BattleStatus BattleStatus { get; private set; }
+    public SurpriseStatus SurpriseStatus { get; private set; }
 
-    public int StallingRoundNumber { get; set; }
+    public int StallingRoundNumber { get; private set; }
     public int SelectedUnitId { get; private set; }
     public int SelectedTargetId { get; private set; }
-    public string LastSkillUsed { get; set; }
+    public string LastSkillUsed { get; private set; }
 
-    public List<int> OrderedUnitsCombatIds { get; set; } 
-    public List<int> CombatIds { get; set; }
-    public List<int> Companions { get; set; }
+    public List<int> OrderedUnitsCombatIds { get; private set; } 
+    public List<int> CombatIds { get; private set; }
+    public List<int> Companions { get; private set; }
     public List<int> Captures { get; private set; }
     public List<int> Controls { get; private set; }
-    public List<string> LastDamaged { get; set; }
+    public List<string> LastDamaged { get; private set; }
     public List<LootDefinition> BattleLoot { get; private set; }
 
-    public List<FormationUnitSaveData> RemovedUnits { get; set; }
-
-    public BattleFormationSaveData MonsterFormation = new BattleFormationSaveData();
+    public List<FormationUnitSaveData> RemovedUnits { get; private set; }
 
     public BattleGroundSaveData()
     {
@@ -92,6 +90,7 @@ public class BattleGroundSaveData
 
         MonsterFormation.UpdateFormation(battleGround.MonsterFormation);
     }
+
     public void WriteBattlegroundData(BinaryWriter bw)
     {
         bw.Write(RoundNumber);
@@ -145,6 +144,7 @@ public class BattleGroundSaveData
 
         MonsterFormation.WriteFormationData(bw);
     }
+
     public void ReadBattlegroundData(BinaryReader br)
     {
         RoundNumber = br.ReadInt32();

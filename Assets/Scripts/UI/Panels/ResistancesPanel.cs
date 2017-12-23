@@ -3,14 +3,22 @@ using UnityEngine.UI;
 
 public class ResistancesPanel : MonoBehaviour
 {
-    public Text stun;
-    public Text blight;
-    public Text disease;
-    public Text deathBlow;
-    public Text move;
-    public Text bleed;
-    public Text debuff;
-    public Text trap;
+    [SerializeField]
+    private Text stun;
+    [SerializeField]
+    private Text blight;
+    [SerializeField]
+    private Text disease;
+    [SerializeField]
+    private Text deathBlow;
+    [SerializeField]
+    private Text move;
+    [SerializeField]
+    private Text bleed;
+    [SerializeField]
+    private Text debuff;
+    [SerializeField]
+    private Text trap;
 
     public void UpdateResistances(Character character)
     {

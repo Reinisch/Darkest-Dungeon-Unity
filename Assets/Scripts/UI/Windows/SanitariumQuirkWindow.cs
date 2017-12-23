@@ -4,73 +4,31 @@ using System.Collections.Generic;
 
 public class SanitariumQuirkWindow : MonoBehaviour
 {
-    public Text headerLabel;
-    public Text costLabel;
-    public Button treatmentButton;
+    [SerializeField]
+    private Text costLabel;
+    [SerializeField]
+    private Button treatmentButton;
+    [SerializeField]
+    private List<QuirkTreatmentSlot> positiveSlots;
+    [SerializeField]
+    private List<QuirkTreatmentSlot> negativeSlots;
 
-    public List<QuirkTreatmentSlot> positiveSlots;
-    public List<QuirkTreatmentSlot> negativeSlots;
-
-    public TreatmentHeroSlot SelectedSlot { get; set; }
-    public TownManager TownManager { get; set; }
+    private TreatmentHeroSlot SelectedSlot { get; set; }
+    private TownManager TownManager { get; set; }
 
     public void Initialize(TownManager townManager)
     {
         TownManager = townManager;
         for (int i = 0; i < positiveSlots.Count; i++)
         {
-            positiveSlots[i].onSelect += SanitariumQuirkWindow_onPositiveSelect;
-            positiveSlots[i].onDeselect += SanitariumQuirkWindow_onPositiveDeselect;
+            positiveSlots[i].EventSelected += QuirkTreatmentSlotPositiveSelected;
+            positiveSlots[i].EventDeselected += QuirkTreatmentSlotPositiveDeselected;
         }
         for (int i = 0; i < negativeSlots.Count; i++)
         {
-            negativeSlots[i].onSelect += SanitariumQuirkWindow_onNegativeSelect;
-            negativeSlots[i].onDeselect += SanitariumQuirkWindow_onNegativeDeselect;
+            negativeSlots[i].EventSelected += QuirkTreatmentSlotNegativeSelected;
+            negativeSlots[i].EventDeselected += QuirkTreatmentSlotNegativeDeselected;
         }
-    }
-
-    void SanitariumQuirkWindow_onPositiveDeselect(QuirkTreatmentSlot slot)
-    {
-        DarkestSoundManager.PlayOneShot("event:/ui/town/button_click");
-
-        SelectedSlot.TreatmentSlot.TargetPositiveQuirk = null;
-        RecalculateCost();
-    }
-    void SanitariumQuirkWindow_onNegativeDeselect(QuirkTreatmentSlot slot)
-    {
-        DarkestSoundManager.PlayOneShot("event:/ui/town/button_click");
-
-        SelectedSlot.TreatmentSlot.TargetNegativeQuirk = null;
-        RecalculateCost();
-    }
-    void SanitariumQuirkWindow_onPositiveSelect(QuirkTreatmentSlot slot)
-    {
-        if (SelectedSlot != null && SelectedSlot.TreatmentSlot.Hero.LockedPositiveQuirks.Count > 2)
-        {
-            slot.Deselect();
-            return;
-        }
-        DarkestSoundManager.PlayOneShot("event:/ui/town/button_click");
-
-        for (int i = 0; i < positiveSlots.Count; i++)
-        {
-            if (positiveSlots[i] != slot && positiveSlots[i].Selected)
-                positiveSlots[i].Deselect();
-        }
-        SelectedSlot.TreatmentSlot.TargetPositiveQuirk = slot.QuirkInfo.Quirk.Id;
-        RecalculateCost();
-    }
-    void SanitariumQuirkWindow_onNegativeSelect(QuirkTreatmentSlot slot)
-    {
-        DarkestSoundManager.PlayOneShot("event:/ui/town/button_click");
-
-        for (int i = 0; i < negativeSlots.Count; i++)
-        {
-            if (negativeSlots[i] != slot && negativeSlots[i].Selected)
-                negativeSlots[i].Deselect();
-        }
-        SelectedSlot.TreatmentSlot.TargetNegativeQuirk = slot.QuirkInfo.Quirk.Id;
-        RecalculateCost();
     }
 
     public void RecalculateCost()
@@ -113,6 +71,7 @@ public class SanitariumQuirkWindow : MonoBehaviour
             }
         }
     }
+
     public void TreatmentButtonClicked()
     {
         int cost = 0;
@@ -129,15 +88,15 @@ public class SanitariumQuirkWindow : MonoBehaviour
                     cost += SelectedSlot.TreatmentSlot.BaseCost;
             }
         }
-        if (cost != 0 || DarkestDungeonManager.Campaign.EventModifiers.IsActivityFree(SelectedSlot.activityName))
+        if (cost != 0 || DarkestDungeonManager.Campaign.EventModifiers.IsActivityFree(SelectedSlot.ActivityName))
         {
             if (SelectedSlot.TreatmentSlot.Status == ActivitySlotStatus.Checkout)
             {
                 if (DarkestDungeonManager.Campaign.Estate.CanPayGold(cost))
                 {
                     DarkestDungeonManager.Campaign.Estate.RemoveGold(cost);
-                    TownManager.EstateSceneManager.currencyPanel.UpdateCurrency();
-                    TownManager.EstateSceneManager.currencyPanel.CurrencyDecreased("gold");
+                    TownManager.EstateSceneManager.CurrencyPanel.UpdateCurrency();
+                    TownManager.EstateSceneManager.CurrencyPanel.CurrencyDecreased("gold");
                     TownManager.GetHeroSlot(SelectedSlot.TreatmentSlot.Hero).SetStatus(HeroStatus.Sanitarium);
                     SelectedSlot.PayoutSlot();
                     DarkestSoundManager.PlayOneShot("event:/town/sanitarium_treatment");
@@ -173,6 +132,7 @@ public class SanitariumQuirkWindow : MonoBehaviour
         RecalculateCost();
         gameObject.SetActive(true);
     }
+
     public void UpdateHeroOverview()
     {
         RecalculateCost();
@@ -186,5 +146,52 @@ public class SanitariumQuirkWindow : MonoBehaviour
         for (int i = 0; i < negativeSlots.Count; i++)
             negativeSlots[i].ResetSlot();
         gameObject.SetActive(false);
+    }
+
+    private void QuirkTreatmentSlotPositiveDeselected(QuirkTreatmentSlot slot)
+    {
+        DarkestSoundManager.PlayOneShot("event:/ui/town/button_click");
+
+        SelectedSlot.TreatmentSlot.TargetPositiveQuirk = null;
+        RecalculateCost();
+    }
+
+    private void QuirkTreatmentSlotNegativeDeselected(QuirkTreatmentSlot slot)
+    {
+        DarkestSoundManager.PlayOneShot("event:/ui/town/button_click");
+
+        SelectedSlot.TreatmentSlot.TargetNegativeQuirk = null;
+        RecalculateCost();
+    }
+
+    private void QuirkTreatmentSlotPositiveSelected(QuirkTreatmentSlot slot)
+    {
+        if (SelectedSlot != null && SelectedSlot.TreatmentSlot.Hero.LockedPositiveQuirks.Count > 2)
+        {
+            slot.Deselect();
+            return;
+        }
+        DarkestSoundManager.PlayOneShot("event:/ui/town/button_click");
+
+        for (int i = 0; i < positiveSlots.Count; i++)
+        {
+            if (positiveSlots[i] != slot && positiveSlots[i].Selected)
+                positiveSlots[i].Deselect();
+        }
+        SelectedSlot.TreatmentSlot.TargetPositiveQuirk = slot.QuirkInfo.Quirk.Id;
+        RecalculateCost();
+    }
+
+    private void QuirkTreatmentSlotNegativeSelected(QuirkTreatmentSlot slot)
+    {
+        DarkestSoundManager.PlayOneShot("event:/ui/town/button_click");
+
+        for (int i = 0; i < negativeSlots.Count; i++)
+        {
+            if (negativeSlots[i] != slot && negativeSlots[i].Selected)
+                negativeSlots[i].Deselect();
+        }
+        SelectedSlot.TreatmentSlot.TargetNegativeQuirk = slot.QuirkInfo.Quirk.Id;
+        RecalculateCost();
     }
 }

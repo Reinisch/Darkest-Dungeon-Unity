@@ -8,7 +8,6 @@ public class Obstacle : Prop
     public float TorchlightPenalty;
     public bool AncestorTalk;
 
-
     public Obstacle()
     {
         Type = AreaType.Obstacle;
@@ -19,7 +18,6 @@ public class Obstacle : Prop
     {
         StringId = id;
     }
-
 
     public override void Write(BinaryWriter bw)
     {

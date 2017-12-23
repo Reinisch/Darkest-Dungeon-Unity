@@ -1,140 +1,28 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
-using System.Collections;
 
 public class BlacksmithHeroWindow : MonoBehaviour
 {
-    public Text heroNameLabel;
-    public Text heroClassLabel;
-    public Text classEquipLabel;
-    public Image heroGuildHeader;
+    [SerializeField]
+    private Text heroNameLabel;
+    [SerializeField]
+    private Text heroClassLabel;
+    [SerializeField]
+    private Text classEquipLabel;
+    [SerializeField]
+    private Image heroGuildHeader;
+    [SerializeField]
+    private EquipmentUpgradeTreeSlot[] equipmentTrees;
 
-    public EquipmentUpgradeTreeSlot[] equipmentTrees;
-
-    public TownManager TownManager { get; set; }
-    public Hero ViewedHero { get; set; }
-
-    void InitializeTree(EquipmentUpgradeTreeSlot treeSlot, Hero hero, HeroEquipmentSlot slot)
-    {
-        switch (slot)
-        {
-            case HeroEquipmentSlot.Weapon:
-                float discountWep = 1 - DarkestDungeonManager.Campaign.Estate.Blacksmith.Discount;
-                var weaponTree = DarkestDungeonManager.Data.UpgradeTrees[hero.ClassStringId + ".weapon"];
-                treeSlot.currentEquipment.UpdateEquipment(hero.Weapon, hero);
-                int lastWepIndex = -1;
-                for (int i = 0; i < treeSlot.upgrades.Count; i++)
-                {
-                    treeSlot.upgrades[i].Initialize(hero, weaponTree, weaponTree.Upgrades[i] as HeroUpgrade, 
-                        hero.HeroClass.Weapons.Find(wep => wep.UpgradeLevel == i + 2));
-                    var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(weaponTree.Id, hero, treeSlot.upgrades[i].Upgrade);
-                    TownManager.UpdateUpgradeSlot(status, treeSlot.upgrades[i], discountWep);
-                    if (status == UpgradeStatus.Purchased)
-                        lastWepIndex = i;
-                }
-                treeSlot.UpdateConnector(lastWepIndex);
-                break;
-            case HeroEquipmentSlot.Armor:
-                float discountArm = 1 - DarkestDungeonManager.Campaign.Estate.Blacksmith.Discount;
-                var armorTree = DarkestDungeonManager.Data.UpgradeTrees[hero.ClassStringId + ".armour"];
-                treeSlot.currentEquipment.UpdateEquipment(hero.Armor, hero);
-                int lastArmIndex = -1;
-                for (int i = 0; i < treeSlot.upgrades.Count; i++)
-                {
-                    treeSlot.upgrades[i].Initialize(hero, armorTree, armorTree.Upgrades[i] as HeroUpgrade,
-                        hero.HeroClass.Armors.Find(arm => arm.UpgradeLevel == i + 2));
-                    var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(armorTree.Id, hero, treeSlot.upgrades[i].Upgrade);
-                    TownManager.UpdateUpgradeSlot(status, treeSlot.upgrades[i], discountArm);
-                    if (status == UpgradeStatus.Purchased)
-                        lastArmIndex = i;
-                }
-                treeSlot.UpdateConnector(lastArmIndex);
-                break;
-        }
-    }
-    void UpdateTree(EquipmentUpgradeTreeSlot treeSlot, Hero hero, HeroEquipmentSlot slot)
-    {
-        switch (slot)
-        {
-            case HeroEquipmentSlot.Weapon:
-                float discountWep = 1 - DarkestDungeonManager.Campaign.Estate.Blacksmith.Discount;
-                var weaponTree = DarkestDungeonManager.Data.UpgradeTrees[hero.ClassStringId + ".weapon"];
-                treeSlot.currentEquipment.UpdateEquipment(hero.Weapon, hero);
-
-                int lastWepIndex = -1;
-                for (int i = 0; i < treeSlot.upgrades.Count; i++)
-                {
-                    var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(weaponTree.Id, hero, treeSlot.upgrades[i].Upgrade);
-                    TownManager.UpdateUpgradeSlot(status, treeSlot.upgrades[i], discountWep);
-                    if (status == UpgradeStatus.Purchased)
-                        lastWepIndex = i;
-                }
-                treeSlot.UpdateConnector(lastWepIndex);
-                break;
-            case HeroEquipmentSlot.Armor:
-                float discountArm = 1 - DarkestDungeonManager.Campaign.Estate.Blacksmith.Discount;
-                var armorTree = DarkestDungeonManager.Data.UpgradeTrees[hero.ClassStringId + ".armour"];
-                treeSlot.currentEquipment.UpdateEquipment(hero.Armor, hero);
-                int lastArmIndex = -1;
-                for (int i = 0; i < treeSlot.upgrades.Count; i++)
-                {
-                    var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(armorTree.Id, hero, treeSlot.upgrades[i].Upgrade);
-                    TownManager.UpdateUpgradeSlot(status, treeSlot.upgrades[i], discountArm);
-                    if (status == UpgradeStatus.Purchased)
-                        lastArmIndex = i;
-                }
-                treeSlot.UpdateConnector(lastArmIndex);
-                break;
-        }
-    }
-    void ResetTree(EquipmentUpgradeTreeSlot treeSlot)
-    {
-        treeSlot.currentEquipment.ResetEquipment();
-        for (int i = 0; i < treeSlot.upgrades.Count; i++)
-            treeSlot.upgrades[i].Reset();
-    }
-
-    void BlacksmithHeroWindow_onUpgradeClick(EquipmentUpgradeSlot slot)
-    {
-        var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(slot.Tree.Id, slot.Hero, slot.Upgrade);
-        if (status == UpgradeStatus.Available)
-        {
-            bool isFree = false;
-            for (int i = 0; i < slot.Tree.Tags.Count; i++)
-                if (DarkestDungeonManager.Campaign.EventModifiers.HasFreeUpgrade(slot.Tree.Tags[i]))
-                {
-                    isFree = true;
-                    DarkestDungeonManager.Campaign.EventModifiers.RemoveUpgradeTag(slot.Tree.Tags[i]);
-                    break;
-                }
-
-            float discount = 1 - DarkestDungeonManager.Campaign.Estate.Blacksmith.Discount;
-
-            if (DarkestDungeonManager.Campaign.Estate.BuyUpgrade(slot.Tree.Id, slot.Hero, slot.Upgrade, discount, isFree))
-            {
-                TownManager.EstateSceneManager.currencyPanel.CurrencyDecreased("gold");
-                TownManager.EstateSceneManager.currencyPanel.UpdateCurrency();
-                DarkestDungeonManager.Campaign.Estate.ReequipHero(slot.Hero);
-                UpdateHeroOverview();
-                if(slot.Tree.Tags.Contains("weapon"))
-                    DarkestSoundManager.PlayOneShot("event:/town/blacksmith_purchase_weapon");
-                else
-                    DarkestSoundManager.PlayOneShot("event:/town/blacksmith_purchase_armor");
-            }
-        }
-        else if (status == UpgradeStatus.Locked)
-            DarkestSoundManager.PlayOneShot("event:/ui/town/button_click_locked");
-    }
+    private TownManager TownManager { get; set; }
+    private Hero ViewedHero { get; set; }
 
     public void Initialize(TownManager townManager)
     {
         TownManager = townManager;
         for(int i = 0; i < equipmentTrees.Length; i++)
-        {
-            for (int j = 0; j < equipmentTrees[i].upgrades.Count; j++)
-                equipmentTrees[i].upgrades[j].onClick += BlacksmithHeroWindow_onUpgradeClick;
-        }
+            for (int j = 0; j < equipmentTrees[i].Upgrades.Count; j++)
+                equipmentTrees[i].Upgrades[j].EventClicked += EquipmentUpgradeSlotClicked;
     }
 
     public void LoadHeroOverview(Hero hero)
@@ -162,5 +50,119 @@ public class BlacksmithHeroWindow : MonoBehaviour
         ViewedHero = null;
         ResetTree(equipmentTrees[0]);
         ResetTree(equipmentTrees[1]);
+    }
+
+    private void InitializeTree(EquipmentUpgradeTreeSlot treeSlot, Hero hero, HeroEquipmentSlot slot)
+    {
+        switch (slot)
+        {
+            case HeroEquipmentSlot.Weapon:
+                float discountWep = 1 - DarkestDungeonManager.Campaign.Estate.Blacksmith.Discount;
+                var weaponTree = DarkestDungeonManager.Data.UpgradeTrees[hero.ClassStringId + ".weapon"];
+                treeSlot.CurrentEquipment.UpdateEquipment(hero.Weapon, hero);
+                int lastWepIndex = -1;
+                for (int i = 0; i < treeSlot.Upgrades.Count; i++)
+                {
+                    treeSlot.Upgrades[i].Initialize(hero, weaponTree, weaponTree.Upgrades[i] as HeroUpgrade,
+                        hero.HeroClass.Weapons.Find(wep => wep.UpgradeLevel == i + 2));
+                    var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(weaponTree.Id, hero, treeSlot.Upgrades[i].Upgrade);
+                    TownManager.UpdateUpgradeSlot(status, treeSlot.Upgrades[i], discountWep);
+                    if (status == UpgradeStatus.Purchased)
+                        lastWepIndex = i;
+                }
+                treeSlot.UpdateConnector(lastWepIndex);
+                break;
+            case HeroEquipmentSlot.Armor:
+                float discountArm = 1 - DarkestDungeonManager.Campaign.Estate.Blacksmith.Discount;
+                var armorTree = DarkestDungeonManager.Data.UpgradeTrees[hero.ClassStringId + ".armour"];
+                treeSlot.CurrentEquipment.UpdateEquipment(hero.Armor, hero);
+                int lastArmIndex = -1;
+                for (int i = 0; i < treeSlot.Upgrades.Count; i++)
+                {
+                    treeSlot.Upgrades[i].Initialize(hero, armorTree, armorTree.Upgrades[i] as HeroUpgrade,
+                        hero.HeroClass.Armors.Find(arm => arm.UpgradeLevel == i + 2));
+                    var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(armorTree.Id, hero, treeSlot.Upgrades[i].Upgrade);
+                    TownManager.UpdateUpgradeSlot(status, treeSlot.Upgrades[i], discountArm);
+                    if (status == UpgradeStatus.Purchased)
+                        lastArmIndex = i;
+                }
+                treeSlot.UpdateConnector(lastArmIndex);
+                break;
+        }
+    }
+
+    private void UpdateTree(EquipmentUpgradeTreeSlot treeSlot, Hero hero, HeroEquipmentSlot slot)
+    {
+        switch (slot)
+        {
+            case HeroEquipmentSlot.Weapon:
+                float discountWep = 1 - DarkestDungeonManager.Campaign.Estate.Blacksmith.Discount;
+                var weaponTree = DarkestDungeonManager.Data.UpgradeTrees[hero.ClassStringId + ".weapon"];
+                treeSlot.CurrentEquipment.UpdateEquipment(hero.Weapon, hero);
+
+                int lastWepIndex = -1;
+                for (int i = 0; i < treeSlot.Upgrades.Count; i++)
+                {
+                    var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(weaponTree.Id, hero, treeSlot.Upgrades[i].Upgrade);
+                    TownManager.UpdateUpgradeSlot(status, treeSlot.Upgrades[i], discountWep);
+                    if (status == UpgradeStatus.Purchased)
+                        lastWepIndex = i;
+                }
+                treeSlot.UpdateConnector(lastWepIndex);
+                break;
+            case HeroEquipmentSlot.Armor:
+                float discountArm = 1 - DarkestDungeonManager.Campaign.Estate.Blacksmith.Discount;
+                var armorTree = DarkestDungeonManager.Data.UpgradeTrees[hero.ClassStringId + ".armour"];
+                treeSlot.CurrentEquipment.UpdateEquipment(hero.Armor, hero);
+                int lastArmIndex = -1;
+                for (int i = 0; i < treeSlot.Upgrades.Count; i++)
+                {
+                    var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(armorTree.Id, hero, treeSlot.Upgrades[i].Upgrade);
+                    TownManager.UpdateUpgradeSlot(status, treeSlot.Upgrades[i], discountArm);
+                    if (status == UpgradeStatus.Purchased)
+                        lastArmIndex = i;
+                }
+                treeSlot.UpdateConnector(lastArmIndex);
+                break;
+        }
+    }
+
+    private void ResetTree(EquipmentUpgradeTreeSlot treeSlot)
+    {
+        treeSlot.CurrentEquipment.ResetEquipment();
+        for (int i = 0; i < treeSlot.Upgrades.Count; i++)
+            treeSlot.Upgrades[i].Reset();
+    }
+
+    private void EquipmentUpgradeSlotClicked(EquipmentUpgradeSlot slot)
+    {
+        var status = DarkestDungeonManager.Campaign.Estate.GetUpgradeStatus(slot.Tree.Id, slot.Hero, slot.Upgrade);
+        if (status == UpgradeStatus.Available)
+        {
+            bool isFree = false;
+            for (int i = 0; i < slot.Tree.Tags.Count; i++)
+                if (DarkestDungeonManager.Campaign.EventModifiers.HasFreeUpgrade(slot.Tree.Tags[i]))
+                {
+                    isFree = true;
+                    DarkestDungeonManager.Campaign.EventModifiers.RemoveUpgradeTag(slot.Tree.Tags[i]);
+                    break;
+                }
+
+            float discount = 1 - DarkestDungeonManager.Campaign.Estate.Blacksmith.Discount;
+
+            if (DarkestDungeonManager.Campaign.Estate.BuyUpgrade(slot.Tree.Id, slot.Hero, slot.Upgrade, discount, isFree))
+            {
+                TownManager.EstateSceneManager.CurrencyPanel.CurrencyDecreased("gold");
+                TownManager.EstateSceneManager.CurrencyPanel.UpdateCurrency();
+                DarkestDungeonManager.Campaign.Estate.ReequipHero(slot.Hero);
+                UpdateHeroOverview();
+                if (slot.Tree.Tags.Contains("weapon"))
+                    DarkestSoundManager.PlayOneShot("event:/town/blacksmith_purchase_weapon");
+                else
+                    DarkestSoundManager.PlayOneShot("event:/town/blacksmith_purchase_armor");
+            }
+        }
+        else if (status == UpgradeStatus.Locked)
+            DarkestSoundManager.PlayOneShot("event:/ui/town/button_click_locked");
     }
 }

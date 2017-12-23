@@ -1,167 +1,41 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using System;
+using UnityEngine;
 using System.Collections.Generic;
-using System.Linq;
 
 public class RealmInventoryWindow : MonoBehaviour, IInventory
 {
-    public Button closeButton;
-    public RectTransform trinketBox;
-    public InventoryRow rowTemplate;
+    [SerializeField]
+    private RectTransform trinketBox;
+    [SerializeField]
+    private InventoryRow rowTemplate;
 
-    public RealmInventory RealmInventory
+    public InventoryConfiguration Configuration { get { return InventoryConfiguration.TrinketInventory; } }
+    public InventoryState State { get { return InventoryState.Normal; } }
+
+    private RealmInventory RealmInventory { get; set; }
+    private List<InventorySlot> InventorySlots { get { return trinketSlots; } }
+    private List<InventoryRow> InventoryRows { get; set; }
+    private int CurrentCapacity { get; set; }
+    private int MaxCapacity { get; set; }
+
+    private readonly List<InventorySlot> trinketSlots = new List<InventorySlot>();
+
+    public event Action EventWindowClosed;
+
+    private void Awake()
     {
-        get;
-        set;
+        DragManager.Instanse.EventStartDraggingInventorySlot += DragManagerStartDraggingInventorySlot;
+        DragManager.Instanse.EventEndDraggingInventorySlot += DragManagerEndDraggingInventorySlot;
     }
-    public List<InventoryRow> InventoryRows
+
+    private void OnDestroy()
     {
-        get;
-        private set;
-    }
-    public List<InventorySlot> InventorySlots
-    {
-        get
-        {
-            return trinketSlots;
-        }
-    }
-    public Hero CurrentHero
-    {
-        get
-        {
-            return null;
-        }
-    }
-    public InventoryConfiguration Configuration
-    {
-        get
-        {
-            return InventoryConfiguration.TrinketInventory;
-        }
-    }
-    public InventoryState State
-    {
-        get
-        {
-            return InventoryState.Normal;
-        }
-    }
-    public int CurrentCapacity
-    { 
-        get;
-        private set;
-    }
-    public int MaxCapacity
-    {
-        get;
-        private set;
+        DragManager.Instanse.EventStartDraggingInventorySlot -= DragManagerStartDraggingInventorySlot;
+        DragManager.Instanse.EventEndDraggingInventorySlot -= DragManagerEndDraggingInventorySlot;
     }
 
-    public event WindowEvent onWindowClose;
+    #region Inventory Buttons
 
-    private List<InventorySlot> trinketSlots = new List<InventorySlot>();
-
-    void Awake()
-    {
-        DragManager.Instanse.onStartDraggingInventorySlot += Instanse_onStartDraggingInventorySlot;
-        DragManager.Instanse.onEndDraggingInventorySlot += Instanse_onEndDraggingInventorySlot;
-    }
-
-    void OnDestroy()
-    {
-        DragManager.Instanse.onStartDraggingInventorySlot -= Instanse_onStartDraggingInventorySlot;
-        DragManager.Instanse.onEndDraggingInventorySlot -= Instanse_onEndDraggingInventorySlot;
-    }
-
-    void Instanse_onEndDraggingInventorySlot(InventorySlot slot)
-    {
-        if (gameObject.activeSelf)
-        {
-            for (int i = 0; i < InventorySlots.Count; i++)
-            {
-                InventorySlots[i].SetActiveState(true);
-            }
-        }
-    }
-
-    void Instanse_onStartDraggingInventorySlot(InventorySlot slot)
-    {
-        if(gameObject.activeSelf && slot.Inventory.Configuration == InventoryConfiguration.Equipment)
-        {
-            var charEquipmentPanel = slot.Inventory as CharEquipmentPanel;
-            for (int i = 0; i < InventorySlots.Count; i++)
-            {
-                if (InventorySlots[i].HasItem)
-                {
-                    var trinket = InventorySlots[i].SlotItem.ItemData as Trinket;
-                    if (trinket != null)
-                    {
-                        if (trinket.EquipLimit == 1 && charEquipmentPanel.ContainsItem(trinket))
-                        {
-                            InventorySlots[i].SetActiveState(false);
-                        }
-
-                        if (trinket.ClassRequirements.Count > 0)
-                        {
-                            if (!trinket.ClassRequirements.Contains(charEquipmentPanel.CurrentHero.Class))
-                            {
-                                InventorySlots[i].SetActiveState(false);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    public void Populate()
-    {
-        RealmInventory = DarkestDungeonManager.Campaign.RealmInventory;
-        InventoryRows = new List<InventoryRow>();
-
-        int trinketCount = RealmInventory.Trinkets.Count;
-        int rowCount = Mathf.Max(3, trinketCount / 7 + 1);
-        int trinketsLoaded = 0;
-
-        CurrentCapacity = trinketCount;
-        MaxCapacity = rowCount * 7;
-
-        for(int i = 0; i < rowCount; i++)
-        {
-            InventoryRow newRow = Instantiate(rowTemplate);
-            newRow.Initialize(this);
-            newRow.onRowEmptied += RealmInventoryWindow_onRowEmptied;
-            newRow.RectTransform.SetParent(trinketBox, false);
-            InventoryRows.Add(newRow);
-            InventorySlots.AddRange(newRow.InventorySlots);
-
-            for (int j = 0; j < 7; j++ )
-            {
-                if (trinketsLoaded != trinketCount)
-                {
-                    Trinket trinket = RealmInventory.Trinkets[trinketsLoaded];
-                    newRow.InventorySlots[j].CreateItem(trinket);
-                    newRow.ItemAdded();
-                    trinketsLoaded++;
-                }
-                else
-                    break;
-            }
-        }
-
-        for (int i = 0; i < InventoryRows.Count; i++)
-        {
-            InventoryRows[i].RowNumber = i + 1;
-            InventoryRows[i].onRowEmptied += RealmInventoryWindow_onRowEmptied;
-            for (int j = 0; j < InventoryRows[i].SlotCount; j++)
-            {
-                InventoryRows[i].InventorySlots[j].onDropIn += RealmInventoryWindow_onDropIn;
-                InventoryRows[i].InventorySlots[j].onDropOut += RealmInventoryWindow_onDropOut;
-            }
-        }
-        UpdateWindow();
-    }
     public void UnequipAllHeroes()
     {
         DarkestSoundManager.PlayOneShot("event:/ui/town/sort_by");
@@ -187,20 +61,21 @@ public class RealmInventoryWindow : MonoBehaviour, IInventory
                 hasUnequipped = true;
             }
 
-            if (EstateSceneManager.Instanse.characterWindow.IsOpened)
-                EstateSceneManager.Instanse.characterWindow.UpdateCharacterInfo();
+            if (EstateSceneManager.Instanse.CharacterWindow.IsOpened)
+                EstateSceneManager.Instanse.CharacterWindow.UpdateCharacterInfo();
         }
 
         if (hasUnequipped)
             DarkestSoundManager.PlayOneShot("event:/ui/dungeon/trink_unequip");
     }
+
     public void SortByName()
     {
         DarkestSoundManager.PlayOneShot("event:/ui/town/sort_by");
 
-        RealmInventory.Trinkets.Sort((x, y) =>
-            LocalizationManager.GetString(ToolTipManager.GetConcat("str_inventory_title_trinket", x.Id)).
-            CompareTo(LocalizationManager.GetString(ToolTipManager.GetConcat("str_inventory_title_trinket", y.Id))));
+        RealmInventory.Trinkets.Sort((x, y) => 
+            string.Compare(LocalizationManager.GetString(ToolTipManager.GetConcat("str_inventory_title_trinket", x.Id)),
+            LocalizationManager.GetString(ToolTipManager.GetConcat("str_inventory_title_trinket", y.Id)), StringComparison.Ordinal));
 
         int trinketCount = RealmInventory.Trinkets.Count;
         int trinketsLoaded = Mathf.Min(trinketCount, InventorySlots.Count);
@@ -211,6 +86,7 @@ public class RealmInventoryWindow : MonoBehaviour, IInventory
         for (int i = trinketsLoaded; i < InventorySlots.Count; i++)
             InventorySlots[i].DeleteItem();
     }
+
     public void SortByRarity()
     {
         DarkestSoundManager.PlayOneShot("event:/ui/town/sort_by");
@@ -218,7 +94,7 @@ public class RealmInventoryWindow : MonoBehaviour, IInventory
         RealmInventory.Trinkets.Sort((x, y) =>
         {
             int result = x.Rarity.CompareTo(y.Rarity);
-            return result == 0 ? x.Id.CompareTo(y.Id) : result;
+            return result == 0 ? string.Compare(x.Id, y.Id, StringComparison.Ordinal) : result;
         });
         
         int trinketCount = RealmInventory.Trinkets.Count;
@@ -230,26 +106,23 @@ public class RealmInventoryWindow : MonoBehaviour, IInventory
         for (int i = trinketsLoaded; i < InventorySlots.Count; i++)
             InventorySlots[i].DeleteItem();
     }
+
     public void SortByRestriction()
     {
         DarkestSoundManager.PlayOneShot("event:/ui/town/sort_by");
 
-        RealmInventory.Trinkets.Sort((x, y) => 
+        RealmInventory.Trinkets.Sort((x, y) =>
         {
             if (x.ClassRequirements.Count > 0)
             {
                 if (y.ClassRequirements.Count > 0)
                 {
-                    int result = x.ClassRequirements[0].CompareTo(y.ClassRequirements[0]);
-                    return result == 0 ? x.Id.CompareTo(y.Id) : result;
+                    int result = string.Compare(x.ClassRequirements[0], y.ClassRequirements[0], StringComparison.Ordinal);
+                    return result == 0 ? string.Compare(x.Id, y.Id, StringComparison.Ordinal) : result;
                 }
-                else
-                    return -1;
+                return -1;
             }
-            else if (y.ClassRequirements.Count > 0)
-                return 1;
-            else
-                return x.Id.CompareTo(y.Id);
+            return y.ClassRequirements.Count > 0 ? 1 : string.Compare(x.Id, y.Id, StringComparison.Ordinal);
         });
 
         int trinketCount = RealmInventory.Trinkets.Count;
@@ -260,6 +133,55 @@ public class RealmInventoryWindow : MonoBehaviour, IInventory
 
         for (int i = trinketsLoaded; i < InventorySlots.Count; i++)
             InventorySlots[i].DeleteItem();
+    }
+
+    #endregion
+
+    public void Populate()
+    {
+        RealmInventory = DarkestDungeonManager.Campaign.RealmInventory;
+        InventoryRows = new List<InventoryRow>();
+
+        int trinketCount = RealmInventory.Trinkets.Count;
+        int rowCount = Mathf.Max(3, trinketCount / 7 + 1);
+        int trinketsLoaded = 0;
+
+        CurrentCapacity = trinketCount;
+        MaxCapacity = rowCount * 7;
+
+        for (int i = 0; i < rowCount; i++)
+        {
+            InventoryRow newRow = Instantiate(rowTemplate);
+            newRow.Initialize(this);
+            newRow.EventRowEmptied += RealmInventoryRowEmptied;
+            newRow.RectTransform.SetParent(trinketBox, false);
+            InventoryRows.Add(newRow);
+            InventorySlots.AddRange(newRow.InventorySlots);
+
+            for (int j = 0; j < 7; j++)
+            {
+                if (trinketsLoaded != trinketCount)
+                {
+                    Trinket trinket = RealmInventory.Trinkets[trinketsLoaded];
+                    newRow.InventorySlots[j].CreateItem(trinket);
+                    newRow.ItemAdded();
+                    trinketsLoaded++;
+                }
+                else
+                    break;
+            }
+        }
+
+        for (int i = 0; i < InventoryRows.Count; i++)
+        {
+            InventoryRows[i].RowNumber = i + 1;
+            InventoryRows[i].EventRowEmptied += RealmInventoryRowEmptied;
+            for (int j = 0; j < InventoryRows[i].SlotCount; j++)
+            {
+                InventoryRows[i].InventorySlots[j].EventDropIn += RealmInventorySlotDropIn;
+                InventoryRows[i].InventorySlots[j].EventDropOut += RealmInventorySlotDropOut;
+            }
+        }
     }
 
     public void AddTrinket(Trinket trinket)
@@ -284,26 +206,76 @@ public class RealmInventoryWindow : MonoBehaviour, IInventory
 
         if (CurrentCapacity == MaxCapacity)
             AddRow();
-        UpdateWindow();
     }
 
-    void RealmInventoryWindow_onDropOut(InventorySlot slot, InventoryItem itemDrop)
+    public void WindowClosed()
+    {
+        DarkestSoundManager.PlayOneShot("event:/ui/town/trinket_close");
+        
+        if (EventWindowClosed != null)
+            EventWindowClosed();
+    }
+
+    public bool CheckSingleInventorySpace(ItemDefinition item)
+    {
+        return false;
+    }
+
+    private void DragManagerEndDraggingInventorySlot(InventorySlot slot)
+    {
+        if (gameObject.activeSelf)
+        {
+            for (int i = 0; i < InventorySlots.Count; i++)
+            {
+                InventorySlots[i].SetActiveState(true);
+            }
+        }
+    }
+
+    private void DragManagerStartDraggingInventorySlot(InventorySlot slot)
+    {
+        if (gameObject.activeSelf && slot.Inventory.Configuration == InventoryConfiguration.Equipment)
+        {
+            var charEquipmentPanel = (CharEquipmentPanel)slot.Inventory;
+
+            foreach (InventorySlot realmSlot in InventorySlots)
+            {
+                if (!realmSlot.HasItem)
+                    continue;
+
+                var trinket = realmSlot.SlotItem.ItemData as Trinket;
+                if (trinket == null)
+                    continue;
+
+                if (trinket.EquipLimit == 1 && charEquipmentPanel.ContainsItem(trinket))
+                {
+                    realmSlot.SetActiveState(false);
+                }
+
+                if (trinket.ClassRequirements.Count > 0)
+                    if (!trinket.ClassRequirements.Contains(charEquipmentPanel.CurrentHero.Class))
+                        realmSlot.SetActiveState(false);
+            }
+        }
+    }
+
+    private void RealmInventorySlotDropOut(InventorySlot slot, InventoryItem itemDrop)
     {
         CurrentCapacity--;
         DarkestDungeonManager.Campaign.RealmInventory.Trinkets.Remove(itemDrop.ItemData as Trinket);
-        UpdateWindow();
     }
-    void RealmInventoryWindow_onDropIn(InventorySlot slot, InventoryItem itemDrop)
+
+    private void RealmInventorySlotDropIn(InventorySlot slot, InventoryItem itemDrop)
     {
         CurrentCapacity++;
         DarkestDungeonManager.Campaign.RealmInventory.Trinkets.Add(itemDrop.ItemData as Trinket);
-        if(CurrentCapacity == MaxCapacity)
+        if (CurrentCapacity == MaxCapacity)
             AddRow();
-        UpdateWindow();
     }
-    void RealmInventoryWindow_onRowEmptied(int rowNumber)
+
+    private void RealmInventoryRowEmptied(int rowNumber)
     {
-        if(rowNumber > 3 && rowNumber == InventoryRows.Count)
+        if (rowNumber > 3 && rowNumber == InventoryRows.Count)
         {
             for (int i = rowNumber; i > 3; i--)
             {
@@ -315,48 +287,26 @@ public class RealmInventoryWindow : MonoBehaviour, IInventory
                 MaxCapacity -= InventoryRows[i - 1].SlotCount;
                 InventoryRows.RemoveAt(i - 1);
             }
-            UpdateWindow();
-        }    
+        }
     }
 
-    public InventoryRow AddRow()
+    private InventoryRow AddRow()
     {
         InventoryRow newRow = Instantiate(rowTemplate);
         newRow.Initialize(this);
-        newRow.RectTransform.SetParent(trinketBox,false);
+        newRow.RectTransform.SetParent(trinketBox, false);
         InventoryRows.Add(newRow);
         InventorySlots.AddRange(newRow.InventorySlots);
 
         newRow.RowNumber = InventoryRows.Count;
         MaxCapacity += newRow.SlotCount;
-        newRow.onRowEmptied += RealmInventoryWindow_onRowEmptied;
+        newRow.EventRowEmptied += RealmInventoryRowEmptied;
 
         for (int j = 0; j < newRow.SlotCount; j++)
         {
-            newRow.InventorySlots[j].onDropIn += RealmInventoryWindow_onDropIn;
-            newRow.InventorySlots[j].onDropOut += RealmInventoryWindow_onDropOut;
+            newRow.InventorySlots[j].EventDropIn += RealmInventorySlotDropIn;
+            newRow.InventorySlots[j].EventDropOut += RealmInventorySlotDropOut;
         }
-        UpdateWindow();
         return newRow;
-    }
-    public void UpdateWindow()
-    {
-        //Debug.Log("Capacity: " + CurrentCapacity + " Trinket count: " + DarkestDungeonManager.Campaign.RealmInventory.Trinkets.Count);
-    }
-    public void WindowClosed()
-    {
-        DarkestSoundManager.PlayOneShot("event:/ui/town/trinket_close");
-        
-        if (onWindowClose != null)
-            onWindowClose();
-    }
-
-    public bool CheckSingleInventorySpace(ItemDefinition item)
-    {
-        return false;
-    }
-    public void DistributeFromShopItem(ShopSlot slot, InventorySlot dropSlot)
-    {
-        return;
     }
 }

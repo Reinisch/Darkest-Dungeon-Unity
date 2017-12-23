@@ -322,9 +322,5 @@ internal class PhotonHandler : MonoBehaviour
             PhotonNetwork.networkingPeer.ConnectToRegionMaster(best.Code);
         }
     }
-
-
-
     #endregion
-
 }

@@ -2,13 +2,13 @@
 
 public class RaidInterface : MonoBehaviour
 {
-    public Camera OverlayCamera { get; set; }
-    public RectTransform OverlayRect { get; set; }
-    public CanvasGroup CanvasGroup { get; set; }
-    public RaidPanel RaidPanel { get; set; }
-    public RaidQuestPanel QuestPanel { get; set; }
+    public Camera OverlayCamera { get; private set; }
+    public RectTransform OverlayRect { get; private set; }
+    public CanvasGroup CanvasGroup { get; private set; }
+    public RaidPanel RaidPanel { get; private set; }
+    public RaidQuestPanel QuestPanel { get; private set; }
     
-    void Awake()
+    private void Awake()
     {
         OverlayRect = GetComponent<RectTransform>();
         CanvasGroup = GetComponent<CanvasGroup>();
@@ -20,6 +20,6 @@ public class RaidInterface : MonoBehaviour
     public void UpdateRaidScene()
     {
         DarkestDungeonManager.Instanse.UpdateSceneOverlay(OverlayCamera);
-        DarkestDungeonManager.Instanse.mainMenu.uiCanvasGroup = RaidSceneManager.RaidEvents.raidUiCanvasGroup;
+        DarkestDungeonManager.MainMenu.UICanvasGroup = RaidSceneManager.RaidEvents.RaidUICanvasGroup;
     }
 }

@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine.UI;
 
 public class GlossaryWindow : MonoBehaviour
 {
-    public RectTransform recordsRect;
-    public Camera mainCamera;
-    public RectTransform overlayRect;
-    public Button closeButton;
+    [SerializeField]
+    private RectTransform recordsRect;
+    [SerializeField]
+    private Camera mainCamera;
 
-    public List<GlossaryRecord> Records { get; set; }
+    public Camera MainCamera { get { return mainCamera; } }
+    private List<GlossaryRecord> Records { get; set; }
 
     public void Initialize()
     {

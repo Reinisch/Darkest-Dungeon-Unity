@@ -1,21 +1,24 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 using System.Linq;
 
 public class DeathRecordSlot : MonoBehaviour
 {
-    public Image resolveIcon;
-    public Image heroPortrait;
-    public Text heroName;
-    public Text deathDescription;
+    [SerializeField]
+    private Image resolveIcon;
+    [SerializeField]
+    private Image heroPortrait;
+    [SerializeField]
+    private Text heroName;
+    [SerializeField]
+    private Text deathDescription;
 
-    public DeathRecord Record { get; set; }
+    public DeathRecord Record { get; private set; }
 
     public void UpgdateRecord(DeathRecord newRecord, GraveyardWindow window)
     {
         Record = newRecord;
-        resolveIcon.sprite = window.resolveIcons[newRecord.ResolveLevel];
+        resolveIcon.sprite = window.ResolveIcons[newRecord.ResolveLevel];
         heroPortrait.sprite = DarkestDungeonManager.HeroSprites[DarkestDungeonManager.Data.HeroClasses.Values.ToList().
             Find(item => item.IndexId == newRecord.HeroClassIndex).StringId]["A"].Portrait;
         heroName.text = newRecord.HeroName;

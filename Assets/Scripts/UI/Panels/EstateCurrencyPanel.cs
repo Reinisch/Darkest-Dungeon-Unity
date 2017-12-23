@@ -5,16 +5,21 @@ public delegate void EstateCurrencyChanged(string currency);
 
 public class EstateCurrencyPanel : MonoBehaviour
 {
-    public Text goldAmount;
-    public Text bustsAmount;
-    public Text portraitsAmount;
-    public Text deedsAmount;
-    public Text crestsAmount;
+    [SerializeField]
+    private Text goldAmount;
+    [SerializeField]
+    private Text bustsAmount;
+    [SerializeField]
+    private Text portraitsAmount;
+    [SerializeField]
+    private Text deedsAmount;
+    [SerializeField]
+    private Text crestsAmount;
+    [SerializeField]
+    private SkeletonAnimation goldPile;
 
-    public SkeletonAnimation goldPile;
-
-    public event EstateCurrencyChanged onCurrencyIncreased;
-    public event EstateCurrencyChanged onCurrencyDecreased;
+    public event EstateCurrencyChanged EventCurrencyIncreased;
+    public event EstateCurrencyChanged EventCurrencyDecreased;
 
     public void CurrencyIncreased(string currency)
     {
@@ -23,9 +28,10 @@ public class EstateCurrencyPanel : MonoBehaviour
             FMODUnity.RuntimeManager.PlayOneShot("event:/ui/town/buy_free");
         }
 
-        if (onCurrencyIncreased != null)
-            onCurrencyIncreased(currency);
+        if (EventCurrencyIncreased != null)
+            EventCurrencyIncreased(currency);
     }
+
     public void CurrencyDecreased(string currency)
     {
         if (currency == "gold")
@@ -35,17 +41,17 @@ public class EstateCurrencyPanel : MonoBehaviour
             goldPile.state.AddAnimation(0, "idle", true, 0);
             FMODUnity.RuntimeManager.PlayOneShot("event:/ui/town/buy");
         }
-        if (onCurrencyDecreased != null)
-            onCurrencyDecreased(currency);
+        if (EventCurrencyDecreased != null)
+            EventCurrencyDecreased(currency);
     }
 
     public void UpdateCurrency()
     {
         var campaign = DarkestDungeonManager.Campaign;
-        goldAmount.text = campaign.Estate.Currencies["gold"].amount.ToString();
-        bustsAmount.text = campaign.Estate.Currencies["bust"].amount.ToString();
-        portraitsAmount.text = campaign.Estate.Currencies["portrait"].amount.ToString();
-        deedsAmount.text = campaign.Estate.Currencies["deed"].amount.ToString();
-        crestsAmount.text = campaign.Estate.Currencies["crest"].amount.ToString();
+        goldAmount.text = campaign.Estate.Currencies["gold"].ToString();
+        bustsAmount.text = campaign.Estate.Currencies["bust"].ToString();
+        portraitsAmount.text = campaign.Estate.Currencies["portrait"].ToString();
+        deedsAmount.text = campaign.Estate.Currencies["deed"].ToString();
+        crestsAmount.text = campaign.Estate.Currencies["crest"].ToString();
     }
 }

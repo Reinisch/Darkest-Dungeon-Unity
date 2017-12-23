@@ -3,25 +3,11 @@ using System.Collections.Generic;
 
 public class RaidMapHallwaySlot : MonoBehaviour
 {
-    private RectTransform rectTransform;
-    private List<RaidMapHallSectorSlot> hallSectorSlots = new List<RaidMapHallSectorSlot>();
+    public RectTransform RectTransform { get { return rectTransform ?? (rectTransform = GetComponent<RectTransform>()); } }
+    public List<RaidMapHallSectorSlot> RaidMapHallSectorSlots { get { return hallSectorSlots; } }
 
-    public RectTransform RectTransform
-    {
-        get
-        {
-            if (rectTransform == null)
-                rectTransform = GetComponent<RectTransform>();
-            return rectTransform;
-        }
-    }
-    public List<RaidMapHallSectorSlot> RaidMapHallSectorSlots
-    {
-        get
-        {
-            return hallSectorSlots;
-        }
-    }
+    private RectTransform rectTransform;
+    private readonly List<RaidMapHallSectorSlot> hallSectorSlots = new List<RaidMapHallSectorSlot>();
 
     public void SetHall(Hallway hallway)
     {

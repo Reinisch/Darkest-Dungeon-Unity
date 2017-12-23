@@ -45,7 +45,6 @@ public class Hallway : IBinarySaveData
     private string roomAId;
     private string roomBId;
 
-
     public Hallway()
     {
         Halls = new List<HallSector>();
@@ -63,7 +62,6 @@ public class Hallway : IBinarySaveData
         RoomA.Doors.Add(new Door(toRoomA.Id, Id, directionFromA));
         RoomB.Doors.Add(new Door(fromRoomB.Id, Id, directionFromB));
     }
-
 
     public bool Connects(DungeonRoom room)
     {
@@ -83,7 +81,6 @@ public class Hallway : IBinarySaveData
             return RoomA;
         return null;
     }
-
 
     public void AddHall(HallSector hallSector)
     {

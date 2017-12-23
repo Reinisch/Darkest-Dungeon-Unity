@@ -1,25 +1,28 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using System.Collections.Generic;
 
-public delegate void RaidPartyEvent();
-
 public class RaidPartyPanel : MonoBehaviour
 {
-    const int slotNumber = 4;
-    int partyMembersPrepared = 0;
-    public HeroDiscardPanel heroDiscardPanel;
-    public Image eventOverlay;
-    public List<Sprite> availableOverlays;
-    public PartyCompositionPanel compositionPanel;
+    [SerializeField]
+    private HeroDiscardPanel heroDiscardPanel;
+    [SerializeField]
+    private Image eventOverlay;
+    [SerializeField]
+    private List<Sprite> availableOverlays;
+    [SerializeField]
+    private PartyCompositionPanel compositionPanel;
 
     public bool IsPartyPrepared { get { return partyMembersPrepared == 4; } }
     public List<RaidPartySlot> PartySlots { get; private set; }
 
-    public event RaidPartyEvent onPartyAssembled;
-    public event RaidPartyEvent onPartyDisassembled;
+    private const int SlotNumber = 4;
+    private int partyMembersPrepared;
+
+    public event Action EventPartyAssembled;
+    public event Action EventPartyDisassembled;
 
     public static bool IsResolveEligible(Hero hero)
     {
@@ -34,14 +37,87 @@ public class RaidPartyPanel : MonoBehaviour
 
         return true;
     }
-    public bool IsCompatible(Hero hero)
+
+    private void Awake()
+    {
+        PartySlots = new List<RaidPartySlot>(transform.Find("PartySlots").GetComponentsInChildren<RaidPartySlot>());
+        for (int i = 0; i < SlotNumber; i++)
+        {
+            PartySlots[i].EventDropIn += RaidPartySlotDropIn;
+            PartySlots[i].EventDropOut += RaidPartySlotDropOut;
+            PartySlots[i].CompatibilityCheck = PartyCompatibilityCheck;
+        }
+    }
+
+    public void CheckComposition()
+    {
+        compositionPanel.UpdateComposition(PartySlots.Select(slot =>
+            slot.SelectedHero == null ? null : slot.SelectedHero.Hero.Class).ToList());
+    }
+
+    public void CheckRestrictions()
+    {
+        for (int i = 0; i < PartySlots.Count; i++)
+        {
+            if (PartySlots[i].SelectedHero != null && !IsResolveEligible(PartySlots[i].SelectedHero.Hero))
+            {
+                // Implement bark
+                PartySlots[i].ItemDroppedOut(PartySlots[i].SelectedHero);
+            }
+        }
+    }
+
+    public void ActivateDragManagerBehaviour()
+    {
+        DragManager.Instanse.EventStartDraggingPartyHero += ActivateDropOutPanel;
+        DragManager.Instanse.EventEndDraggingPartyHero += DeactivateDropOutPanel;
+
+        for (int i = 0; i < SlotNumber; i++)
+        {
+            if (PartySlots[i].SelectedHero != null)
+                PartySlots[i].SlotAnimator.SetBool("empty", false);
+            DragManager.Instanse.EventStartDraggingPartyHero += PartySlots[i].MarkSlots;
+            DragManager.Instanse.EventEndDraggingPartyHero += PartySlots[i].UnmarkSlots;
+        }
+        CheckUniqueEventOverlay();
+    }
+
+    public void DeactivateDragManagerBehaviour()
+    {
+        DragManager.Instanse.EventStartDraggingPartyHero -= ActivateDropOutPanel;
+        DragManager.Instanse.EventEndDraggingPartyHero -= DeactivateDropOutPanel;
+
+        for (int i = 0; i < SlotNumber; i++)
+        {
+            DragManager.Instanse.EventStartDraggingPartyHero -= PartySlots[i].MarkSlots;
+            DragManager.Instanse.EventEndDraggingPartyHero -= PartySlots[i].UnmarkSlots;
+        }
+    }
+
+    private void PartyAssembled()
+    {
+        if (EventPartyAssembled != null)
+            EventPartyAssembled();
+
+        CheckComposition();
+    }
+
+    private void PartyDisassembled()
+    {
+        if (EventPartyDisassembled != null)
+            EventPartyDisassembled();
+
+        CheckComposition();
+    }
+
+    private bool IsCompatible(Hero hero)
     {
         for (int i = 0; i < PartySlots.Count; i++)
         {
             if (PartySlots[i].SelectedHero == null)
                 continue;
 
-            if(hero.HeroClass.IncompatiablePartyTag != null)
+            if (hero.HeroClass.IncompatiablePartyTag != null)
                 if (PartySlots[i].SelectedHero.Hero.HeroClass.Tags.Contains(hero.HeroClass.IncompatiablePartyTag))
                     return false;
 
@@ -53,70 +129,7 @@ public class RaidPartyPanel : MonoBehaviour
         return true;
     }
 
-    void Awake()
-    {
-        PartySlots = new List<RaidPartySlot>(transform.Find("PartySlots").GetComponentsInChildren<RaidPartySlot>());
-        for(int i = 0; i < slotNumber; i++)
-        {
-            PartySlots[i].SlotId = i + 1;
-            PartySlots[i].onDropIn += RaidPartyPanel_onDropIn;
-            PartySlots[i].onDropOut += RaidPartyPanel_onDropOut;
-            PartySlots[i].compatibilityCheck = RaidPartyPanel_compatibilityCheck;
-        }
-    }
-
-    void PartyAssembled()
-    {
-        if (onPartyAssembled != null)
-            onPartyAssembled();
-
-        CheckComposition();
-    }
-    void PartyDisassembled()
-    {
-        if (onPartyDisassembled != null)
-            onPartyDisassembled();
-
-        CheckComposition();
-    }
-
-    void RaidPartyPanel_onDropOut(HeroSlot heroSlot)
-    {
-        partyMembersPrepared--;
-        if (partyMembersPrepared == 3)
-        {
-            PartyDisassembled();
-        }
-    }
-    void RaidPartyPanel_onDropIn(HeroSlot heroSlot)
-    {
-        partyMembersPrepared++;
-        if(partyMembersPrepared == 4)
-        {
-            PartyAssembled();
-        }
-    }
-    bool RaidPartyPanel_compatibilityCheck(HeroSlot heroSlot)
-    {
-        return IsCompatible(heroSlot.Hero);
-    }
-
-    void ActivateDropOutPanel(RaidPartySlot partySlot, HeroSlot heroSlot)
-    {
-        heroDiscardPanel.gameObject.SetActive(true);
-    }
-
-    void DeactivateDropOutPanel(RaidPartySlot partySlot, HeroSlot heroSlot)
-    {
-        heroDiscardPanel.gameObject.SetActive(false);
-    }
-
-    public void CheckComposition()
-    {
-        compositionPanel.UpdateComposition(PartySlots.Select(slot =>
-            slot.SelectedHero == null ? null : slot.SelectedHero.Hero.Class).ToList());
-    }
-    public void CheckUniqueEventOverlay()
+    private void CheckUniqueEventOverlay()
     {
         if (DarkestDungeonManager.Campaign.TriggeredEvent != null)
         {
@@ -133,41 +146,37 @@ public class RaidPartyPanel : MonoBehaviour
         else
             eventOverlay.enabled = true;
     }
-    public void CheckRestrictions()
+
+    private void RaidPartySlotDropOut(HeroSlot heroSlot)
     {
-        for (int i = 0; i < PartySlots.Count; i++)
+        partyMembersPrepared--;
+        if (partyMembersPrepared == 3)
         {
-            if (PartySlots[i].SelectedHero != null && !IsResolveEligible(PartySlots[i].SelectedHero.Hero))
-            {
-                // Implement bark
-                PartySlots[i].ItemDroppedOut(PartySlots[i].SelectedHero);
-            }
+            PartyDisassembled();
         }
     }
 
-    public void ActivateDragManagerBehaviour()
+    private void RaidPartySlotDropIn(HeroSlot heroSlot)
     {
-        DragManager.Instanse.onStartDraggingPartyHero += ActivateDropOutPanel;
-        DragManager.Instanse.onEndDraggingPartyHero += DeactivateDropOutPanel;
-
-        for (int i = 0; i < slotNumber; i++)
+        partyMembersPrepared++;
+        if (partyMembersPrepared == 4)
         {
-            if (PartySlots[i].SelectedHero != null)
-                PartySlots[i].SlotAnimator.SetBool("empty", false);
-            DragManager.Instanse.onStartDraggingPartyHero += PartySlots[i].MarkSlots;
-            DragManager.Instanse.onEndDraggingPartyHero += PartySlots[i].UnmarkSlots;
+            PartyAssembled();
         }
-        CheckUniqueEventOverlay();
     }
-    public void DeactivateDragManagerBehaviour()
-    {
-        DragManager.Instanse.onStartDraggingPartyHero -= ActivateDropOutPanel;
-        DragManager.Instanse.onEndDraggingPartyHero -= DeactivateDropOutPanel;
 
-        for (int i = 0; i < slotNumber; i++)
-        {
-            DragManager.Instanse.onStartDraggingPartyHero -= PartySlots[i].MarkSlots;
-            DragManager.Instanse.onEndDraggingPartyHero -= PartySlots[i].UnmarkSlots;
-        }
+    private bool PartyCompatibilityCheck(HeroSlot heroSlot)
+    {
+        return IsCompatible(heroSlot.Hero);
+    }
+
+    private void ActivateDropOutPanel(RaidPartySlot partySlot, HeroSlot heroSlot)
+    {
+        heroDiscardPanel.gameObject.SetActive(true);
+    }
+
+    private void DeactivateDropOutPanel(RaidPartySlot partySlot, HeroSlot heroSlot)
+    {
+        heroDiscardPanel.gameObject.SetActive(false);
     }
 }

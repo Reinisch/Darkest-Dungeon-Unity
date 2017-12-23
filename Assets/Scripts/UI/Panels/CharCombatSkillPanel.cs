@@ -3,29 +3,31 @@ using System.Collections.Generic;
 
 public class CharCombatSkillPanel : MonoBehaviour
 {
-    public RectTransform skillPanel;
+    [SerializeField]
+    private RectTransform skillPanel;
+    [SerializeField]
+    private List<SkeletonAnimation> teamStrengthPips;
+    [SerializeField]
+    private List<SkeletonAnimation> targetStrengthPips;
 
-    public List<SkeletonAnimation> teamStrengthPips;
-    public List<SkeletonAnimation> targetStrengthPips;
+    private List<SkillSlot> SkillSlots { get; set; }
 
-    public List<SkillSlot> SkillSlots { get; set; }
+    private Hero currentHero;
+    private int[] teamStrCount = { 0, 0, 0, 0, 0 };
+    private int[] targetStrCount = { 0, 0, 0, 0, 0 };
+    private bool[] friendlyCheck = { false, false, false, false, false };
+    private bool interactable;
 
-    Hero currentHero;
-    int[] teamStrCount = new int[5] { 0, 0, 0, 0, 0 };
-    int[] targetStrCount = new int[5] { 0, 0, 0, 0, 0 };
-    bool[] friendlyCheck = new bool[5] { false, false, false, false, false };
-    bool interactable;
-
-    void Awake()
+    private void Awake()
     {
         SkillSlots = new List<SkillSlot>(skillPanel.GetComponentsInChildren<SkillSlot>());
         for (int i = 0; i < SkillSlots.Count; i++)
         {
-            SkillSlots[i].onSkillSelected += CharCombatSkillPanel_onSkillSelected;
-            SkillSlots[i].onSkillDeselected += CharCombatSkillPanel_onSkillDeselected;
+            SkillSlots[i].EventSkillSelected += CharCombatSkillPanelSkillSelected;
+            SkillSlots[i].EventSkillDeselected += CharCombatSkillPanelSkillDeselected;
         }
-        var canvas = GetComponentInParent<Canvas>();
 
+        var canvas = GetComponentInParent<Canvas>();
         for (int i = 0; i < teamStrengthPips.Count; i++)
         {
             teamStrengthPips[i].MeshRenderer.sortingOrder = canvas.sortingOrder + 1;
@@ -37,7 +39,49 @@ public class CharCombatSkillPanel : MonoBehaviour
         }
     }
 
-    void CharCombatSkillPanel_onSkillDeselected(SkillSlot slot)
+    public void UpdateCombatSkillPanel(Hero hero, bool allowedInteraction)
+    {
+        interactable = allowedInteraction && hero.HeroClass.CanSelectCombatSkills;
+        currentHero = hero;
+
+        for (int i = 0; i < SkillSlots.Count; i++)
+        {
+            SkillSlots[i].UpdateSkill(hero, i);
+            SkillSlots[i].Interactable = interactable;
+            SkillSlots[i].Available = true;
+        }
+
+        if (currentHero.SelectedCombatSkills.Count == 4)
+            for (int i = 0; i < SkillSlots.Count; i++)
+            {
+                if (!SkillSlots[i].Selected)
+                {
+                    SkillSlots[i].Available = false;
+                    SkillSlots[i].SkillIcon.material = SkillSlots[i].Highlighted ?
+                        DarkestDungeonManager.GrayHighlightMaterial : DarkestDungeonManager.GrayMaterial;
+                }
+                else
+                {
+                    SkillSlots[i].Available = true;
+                    SkillSlots[i].SkillIcon.material = SkillSlots[i].Highlighted ?
+                        DarkestDungeonManager.HighlightMaterial : SkillSlots[i].SkillIcon.defaultMaterial;
+                }
+
+            }
+        else
+            for (int i = 0; i < SkillSlots.Count; i++)
+            {
+                if (!SkillSlots[i].Locked)
+                {
+                    SkillSlots[i].SkillIcon.material = SkillSlots[i].Highlighted ?
+                        DarkestDungeonManager.HighlightMaterial : SkillSlots[i].SkillIcon.defaultMaterial;
+                }
+            }
+
+        CalculateStrength();
+    }
+
+    private void CharCombatSkillPanelSkillDeselected(SkillSlot slot)
     {
         if (currentHero.SelectedCombatSkills.Count == 3)
             for (int i = 0; i < SkillSlots.Count; i++)
@@ -45,15 +89,16 @@ public class CharCombatSkillPanel : MonoBehaviour
                 {
                     SkillSlots[i].Available = true;
                     if (SkillSlots[i].Highlighted)
-                        SkillSlots[i].skillIcon.material = DarkestDungeonManager.HighlightMaterial;
+                        SkillSlots[i].SkillIcon.material = DarkestDungeonManager.HighlightMaterial;
                     else
-                        SkillSlots[i].skillIcon.material = SkillSlots[i].skillIcon.defaultMaterial;
+                        SkillSlots[i].SkillIcon.material = SkillSlots[i].SkillIcon.defaultMaterial;
                 }
                 
 
         CalculateStrength();
     }
-    void CharCombatSkillPanel_onSkillSelected(SkillSlot slot)
+
+    private void CharCombatSkillPanelSkillSelected(SkillSlot slot)
     {
         if (currentHero.SelectedCombatSkills.Count == 4)
             for (int i = 0; i < SkillSlots.Count; i++)
@@ -61,19 +106,19 @@ public class CharCombatSkillPanel : MonoBehaviour
                 {
                     SkillSlots[i].Available = false;
                     if (SkillSlots[i].Highlighted)
-                        SkillSlots[i].skillIcon.material = DarkestDungeonManager.GrayHighlightMaterial;
+                        SkillSlots[i].SkillIcon.material = DarkestDungeonManager.GrayHighlightMaterial;
                     else
-                        SkillSlots[i].skillIcon.material = DarkestDungeonManager.GrayMaterial;
+                        SkillSlots[i].SkillIcon.material = DarkestDungeonManager.GrayMaterial;
                 }
 
         CalculateStrength();
     }
 
-    void CalculateStrength()
+    private void CalculateStrength()
     {
-        teamStrCount = new int[5] { 0, 0, 0, 0, 0 };
-        targetStrCount = new int[5] { 0, 0, 0, 0, 0 };
-        friendlyCheck = new bool[5] { false, false, false, false, false };
+        teamStrCount = new [] { 0, 0, 0, 0, 0 };
+        targetStrCount = new [] { 0, 0, 0, 0, 0 };
+        friendlyCheck = new [] { false, false, false, false, false };
 
         for(int i = 0; i < currentHero.SelectedCombatSkills.Count; i++)
         {
@@ -83,13 +128,9 @@ public class CharCombatSkillPanel : MonoBehaviour
             for (int j = 0; j < skill.TargetRanks.Ranks.Count; j++)
             {
                 if(skill.TargetRanks.IsSelfFormation)
-                {
                     friendlyCheck[skill.TargetRanks.Ranks[j]] = true;
-                }
                 else
-                {
                     targetStrCount[skill.TargetRanks.Ranks[j]]++;
-                }
             }
         }
 
@@ -106,61 +147,13 @@ public class CharCombatSkillPanel : MonoBehaviour
         {
             if (friendlyCheck[i + 1])
                 teamStrengthPips[i].state.SetAnimation(0, "skill_strength_friendly_" +
-                    Mathf.Clamp(teamStrCount[i + 1], 1, 4).ToString(), false);
+                    Mathf.Clamp(teamStrCount[i + 1], 1, 4), false);
             else
                 teamStrengthPips[i].state.SetAnimation(0, "skill_strength_hero_" + 
-                    Mathf.Clamp(teamStrCount[i + 1], 0, 4).ToString(), false);
+                    Mathf.Clamp(teamStrCount[i + 1], 0, 4), false);
 
             targetStrengthPips[i].state.SetAnimation(0, "skill_strength_target_" +
-                Mathf.Clamp(targetStrCount[i + 1], 0, 4).ToString(), false);
+                Mathf.Clamp(targetStrCount[i + 1], 0, 4), false);
         }
-    }
-
-    public void UpdateCombatSkillPanel(Hero hero, bool allowedInteraction)
-    {
-        interactable = allowedInteraction ? hero.HeroClass.CanSelectCombatSkills : false;
-        currentHero = hero;
-
-        for(int i = 0; i < SkillSlots.Count; i++)
-        {
-            SkillSlots[i].UpdateSkill(hero, i);
-            SkillSlots[i].Interactable = interactable;
-            SkillSlots[i].Available = true;
-        }
-
-        if (currentHero.SelectedCombatSkills.Count == 4)
-            for (int i = 0; i < SkillSlots.Count; i++)
-            {
-                if (!SkillSlots[i].Selected)
-                {
-                    SkillSlots[i].Available = false;
-                    if(SkillSlots[i].Highlighted)
-                        SkillSlots[i].skillIcon.material = DarkestDungeonManager.GrayHighlightMaterial;
-                    else
-                        SkillSlots[i].skillIcon.material = DarkestDungeonManager.GrayMaterial;
-                }
-                else
-                {
-                    SkillSlots[i].Available = true;
-                    if (SkillSlots[i].Highlighted)
-                        SkillSlots[i].skillIcon.material = DarkestDungeonManager.HighlightMaterial;
-                    else
-                        SkillSlots[i].skillIcon.material = SkillSlots[i].skillIcon.defaultMaterial;
-                }
-
-            }
-        else
-            for (int i = 0; i < SkillSlots.Count; i++)
-            {
-                if (!SkillSlots[i].Locked)
-                {
-                    if (SkillSlots[i].Highlighted)
-                        SkillSlots[i].skillIcon.material = DarkestDungeonManager.HighlightMaterial;
-                    else
-                        SkillSlots[i].skillIcon.material = SkillSlots[i].skillIcon.defaultMaterial;
-                }
-            }
-
-        CalculateStrength();
     }
 }

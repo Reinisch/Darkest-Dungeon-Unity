@@ -28,5 +28,4 @@ public class InstantiateCube : MonoBehaviour
                 break;
         }
     }
-
 }

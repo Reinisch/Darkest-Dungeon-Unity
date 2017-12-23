@@ -27,7 +27,6 @@ public class Curio : Prop
     public List<CurioInteraction> Results { get; set; }
     public List<ItemInteraction> ItemInteractions { get; set; }
 
-
     public Curio()
     {
         Type = AreaType.Curio;
@@ -40,7 +39,6 @@ public class Curio : Prop
     {
         StringId = id;
     }
-
 
     public override void Write(BinaryWriter bw)
     {

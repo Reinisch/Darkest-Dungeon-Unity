@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public class ReplacedQuirkIcon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    public RectTransform rectTransform;
-    public QuirkSlot quirkSlot;
-    public Image replacedIcon;
+    [SerializeField]
+    private RectTransform rectTransform;
+    [SerializeField]
+    private QuirkSlot quirkSlot;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -15,7 +15,7 @@ public class ReplacedQuirkIcon : MonoBehaviour, IPointerEnterHandler, IPointerEx
             var tooltipFormat = LocalizationManager.GetString("str_quirk_replaces");
             tooltipFormat = string.Format(tooltipFormat, LocalizationManager.GetString(
                 "str_quirk_name_" + quirkSlot.QuirkInfo.ReplacedQuirk));
-            ToolTipManager.Instanse.Show(tooltipFormat, eventData, rectTransform, ToolTipStyle.FromTop, ToolTipSize.Normal);
+            ToolTipManager.Instanse.Show(tooltipFormat, rectTransform, ToolTipStyle.FromTop, ToolTipSize.Normal);
         }
     }
 

@@ -2,12 +2,10 @@
 
 public class Resolve
 {
-    const int maxLevel = 6;
+    public int Level { get; private set; }
+    public int CurrentXP { get; private set; }
+    public int NextLevelXP { get; private set; }
 
-    public int Level { get; set; }
-
-    public int CurrentXP { get; set; }
-    public int NextLevelXP { get; set; }
     public float Ratio
     {
         get
@@ -19,17 +17,19 @@ public class Resolve
         }
     }
 
+    private const int MaxLevel = 6;
+
     public Resolve(int level, int currentXP)
     {
-        Level = Mathf.Clamp(level, 0, maxLevel);
+        Level = Mathf.Clamp(level, 0, MaxLevel);
         CurrentXP = currentXP;
         
-        NextLevelXP = DarkestDungeonManager.Data.CampaignGeneration.HeroXpLevelThreshold[Mathf.Clamp(level + 1, 0, maxLevel)];
+        NextLevelXP = DarkestDungeonManager.Data.CampaignGeneration.HeroXpLevelThreshold[Mathf.Clamp(level + 1, 0, MaxLevel)];
     }
 
     public int AddExperience(int experience)
     {
-        if (Level == maxLevel)
+        if (Level == MaxLevel)
             return 0;
 
         int initialLevel = Level;
@@ -38,15 +38,15 @@ public class Resolve
         
         while(CurrentXP >= NextLevelXP)
         {
-            if(Level < maxLevel)
+            if(Level < MaxLevel)
             {
                 Level++;
                 CurrentXP = CurrentXP - NextLevelXP;
-                NextLevelXP = DarkestDungeonManager.Data.CampaignGeneration.HeroXpLevelThreshold[Mathf.Clamp(Level + 1, 0, maxLevel)];
+                NextLevelXP = DarkestDungeonManager.Data.CampaignGeneration.HeroXpLevelThreshold[Mathf.Clamp(Level + 1, 0, MaxLevel)];
             }
             else
             {
-                NextLevelXP = DarkestDungeonManager.Data.CampaignGeneration.HeroXpLevelThreshold[maxLevel];
+                NextLevelXP = DarkestDungeonManager.Data.CampaignGeneration.HeroXpLevelThreshold[MaxLevel];
                 CurrentXP = NextLevelXP;
                 break;
             }

@@ -6,32 +6,19 @@ public class DiseaseTreatmentActivity
 {
     public string Id { get; set; }
 
-    #region Activity Parameters
     public float DiseaseTreatmentChance { get; set; }
-
     public CurrencyCost BaseDiseaseTreatmentCost { get; set; }
     public float BaseCureAllChance { get; set; }
     public int BaseDiseaseSlots { get; set; }
-
     public CurrencyCost DiseaseTreatmentCost { get; set; }
     public float CureAllChance { get; set; }
     public int DiseaseSlots { get; set; }
-    #endregion
 
-    #region Activity Upgrades
     public List<CostUpgrade> DiseaseTreatmentUpgrades { get; set; }
     public List<ChanceUpgrade> CureAllUpgrades { get; set; }
     public List<SlotUpgrade> SlotUpgrades { get; set; }
-    #endregion
 
     public List<TreatmentSlot> TreatmentSlots { get; set; }
-
-    void LogActivity(ActivityType type, Hero hero, string[] quirks)
-    {
-        var log = DarkestDungeonManager.Campaign.CurrentLog();
-        if (log != null)
-            log.HeroRecords.Add(new ActorActivityRecord(type, hero, quirks));
-    }
 
     public DiseaseTreatmentActivity()
     {
@@ -51,6 +38,7 @@ public class DiseaseTreatmentActivity
 
         TreatmentSlots = new List<TreatmentSlot>();
     }
+
     public void InitializeActivity(Dictionary<string, UpgradePurchases> purchases)
     {
         Reset();
@@ -97,6 +85,7 @@ public class DiseaseTreatmentActivity
                 TreatmentSlots.Add(new TreatmentSlot(false, 0, 0, 0, (int)(DiseaseTreatmentCost.Amount * costModifier)));
         }
     }
+
     public void ProvideActivity()
     {
         foreach (var treatmentSlot in TreatmentSlots)
@@ -131,18 +120,17 @@ public class DiseaseTreatmentActivity
                                 Debug.LogError("Sanitarium treament disease not found.");
                             else
                                 LogActivity(ActivityType.RemoveDisease, 
-                                    treatmentSlot.Hero, new string[] {treatmentSlot.TargetDiseaseQuirk});
+                                    treatmentSlot.Hero, new[] {treatmentSlot.TargetDiseaseQuirk});
                         }
                     }
                     treatmentSlot.Hero.Status = HeroStatus.Available;
                     treatmentSlot.Status = ActivitySlotStatus.Available;
                     treatmentSlot.Hero = null;
                     break;
-                default:
-                    break;
             }
         }
     }
+
     public void UpdateActivity(Dictionary<string, UpgradePurchases> purchases)
     {
         for (int i = DiseaseTreatmentUpgrades.Count - 1; i >= 0; i--)
@@ -187,6 +175,7 @@ public class DiseaseTreatmentActivity
                 TreatmentSlots[i - 1].UpdateTreatmentSlot(false, 0, 0, 0, (int)(DiseaseTreatmentCost.Amount * costModifier));
         }
     }
+
     public void UpdateActivitySlots(SaveCampaignData saveData)
     {
         bool isActivityFree = DarkestDungeonManager.Campaign.EventModifiers.IsActivityFree(Id);
@@ -221,6 +210,7 @@ public class DiseaseTreatmentActivity
                 TreatmentSlots[i].UpdateTreatmentSlot(false, 0, 0, 0, (int)(DiseaseTreatmentCost.Amount * costModifier));
         }
     }
+
     public List<ITownUpgrade> GetUpgrades(string treeId, string code)
     {
         List<ITownUpgrade> foundUpgrades = new List<ITownUpgrade>();
@@ -234,5 +224,12 @@ public class DiseaseTreatmentActivity
         if (upgrade != null)
             foundUpgrades.Add(upgrade);
         return foundUpgrades;
+    }
+
+    private void LogActivity(ActivityType type, Hero hero, string[] quirks)
+    {
+        var log = DarkestDungeonManager.Campaign.CurrentLog();
+        if (log != null)
+            log.HeroRecords.Add(new ActorActivityRecord(type, hero, quirks));
     }
 }

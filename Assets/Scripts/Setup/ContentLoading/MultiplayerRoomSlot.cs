@@ -1,57 +1,56 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Events;
-
-using System.Collections;
-using System.IO;
-using System.Xml;
-using System.Xml.Serialization;
-using System;
 
 public class MultiplayerRoomSlot : MonoBehaviour
 {
-    public Button saveSlotButton;
-    public Image roomFrame;
+    [SerializeField]
+    private Button saveSlotButton;
+    [SerializeField]
+    private Image roomFrame;
+    [SerializeField]
+    private InputField titleInput;
+    [SerializeField]
+    private Text location;
+    [SerializeField]
+    private Text currentWeek;
+    [SerializeField]
+    private RectTransform nukeFrame;
+    [SerializeField]
+    private Button nukeSaveButton;
+    [SerializeField]
+    private Animator saveEnvelopeAnimator;
 
-    public Text title;
-    public InputField titleInput;
-    public Text location;
-    public Text currentWeek;
+    public RoomSelector RoomSelector { private get; set; }
+    public InputField TitleInput { get { return titleInput; } }
 
-    public RectTransform nukeFrame;
-    public Button nukeSaveButton;
+    private RoomInfo photonRoom;
 
-    public Animator saveEnvelopeAnimator;
-
-    public RoomSelector RoomSelector { get; set; }
-
-    RoomInfo photonRoom;
-
-    void FillEmptyRoom()
+    private void FillEmptyRoom()
     {
         photonRoom = null;
 
         Color color;
         ColorUtility.TryParseHtmlString("#323232FF", out color);
-        titleInput.textComponent.color = color;
-        titleInput.text = "";
-        (titleInput.placeholder as Text).text = "Click here to create room...";
+        TitleInput.textComponent.color = color;
+        TitleInput.text = "";
+        ((Text)TitleInput.placeholder).text = "Click here to create room...";
         location.text = "";
         currentWeek.text = "";
         saveEnvelopeAnimator.SetBool("Opened", false);
         nukeFrame.gameObject.SetActive(false);
     }
-    void FillPopulatedSave()
+
+    private void FillPopulatedSave()
     {
         if (photonRoom == null)
             FillEmptyRoom();
 
         Color color;
         ColorUtility.TryParseHtmlString("#FFDB77FF", out color);
-        titleInput.textComponent.color = color;
-        titleInput.text = photonRoom.name;
-        location.text = String.Format("Players");
-        currentWeek.text = photonRoom.playerCount + "/" + photonRoom.maxPlayers;
+        TitleInput.textComponent.color = color;
+        TitleInput.text = photonRoom.Name;
+        location.text = "Players";
+        currentWeek.text = photonRoom.PlayerCount + "/" + photonRoom.MaxPlayers;
         saveEnvelopeAnimator.SetBool("Opened", true);
         nukeFrame.gameObject.SetActive(true);
     }
@@ -65,6 +64,7 @@ public class MultiplayerRoomSlot : MonoBehaviour
         else
             FillPopulatedSave();
     }
+
     public void RoomButtonClick()
     {
         if (!DarkestPhotonLauncher.Instanse.CheckSelectedSkills())
@@ -74,18 +74,19 @@ public class MultiplayerRoomSlot : MonoBehaviour
         {
             RoomSelector.SaveNamingStart(this);
             roomFrame.material = DarkestDungeonManager.HighlightMaterial;
-            titleInput.interactable = true;
-            titleInput.enabled = true;
-            titleInput.textComponent.raycastTarget = true;
-            titleInput.placeholder.raycastTarget = true;
-            (titleInput.placeholder as Text).text = "";
-            titleInput.Select();
+            TitleInput.interactable = true;
+            TitleInput.enabled = true;
+            TitleInput.textComponent.raycastTarget = true;
+            TitleInput.placeholder.raycastTarget = true;
+            (TitleInput.placeholder as Text).text = "";
+            TitleInput.Select();
         }
         else
         {
             DarkestPhotonLauncher.Instanse.Connect(photonRoom);
         }
     }
+
     public void NukeButtonClick()
     {
         DarkestSoundManager.PlayOneShot("event:/ui/town/button_click");
@@ -96,7 +97,7 @@ public class MultiplayerRoomSlot : MonoBehaviour
     {
         roomFrame.material = roomFrame.defaultMaterial;
 
-        if (titleInput.text.Length == 0)
+        if (TitleInput.text.Length == 0)
         {
             FillEmptyRoom();
             RoomSelector.RoomNamingCompleted();
@@ -106,30 +107,31 @@ public class MultiplayerRoomSlot : MonoBehaviour
         DarkestSoundManager.PlayOneShot("event:/ui/town/button_click");
         RoomSelector.RoomNamingCompleted();
 
-        if (!DarkestPhotonLauncher.Instanse.CreateNamedRoom(titleInput.text))
+        if (!DarkestPhotonLauncher.Instanse.CreateNamedRoom(TitleInput.text))
             FillEmptyRoom();
     }
 
     public void RefocusInput()
     {
-        titleInput.Select();
-        titleInput.ActivateInputField();
+        TitleInput.Select();
+        TitleInput.ActivateInputField();
     }
 
     public void EnableInteraction()
     {
         saveSlotButton.interactable = true;
-        titleInput.interactable = true;
-        titleInput.textComponent.raycastTarget = false;
-        titleInput.placeholder.raycastTarget = false;
+        TitleInput.interactable = true;
+        TitleInput.textComponent.raycastTarget = false;
+        TitleInput.placeholder.raycastTarget = false;
 
         if (nukeFrame.gameObject.activeSelf)
             nukeSaveButton.interactable = true;
     }
+
     public void DisableInteraction()
     {
         saveSlotButton.interactable = false;
-        titleInput.interactable = false;
+        TitleInput.interactable = false;
 
         if (nukeFrame.gameObject.activeSelf)
             nukeSaveButton.interactable = false;

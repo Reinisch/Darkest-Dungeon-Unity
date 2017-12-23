@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 public enum InteractionEventType { Obstacle, Curio }
@@ -6,29 +7,31 @@ public enum InteractionResultType { Waiting, Cancel, ManualInteraction, ItemInte
 
 public class ScrollEventInteraction : MonoBehaviour
 {
-    public Text title;
-    public Text description;
-    public Button handButton;
-    public Button passButton;
+    [SerializeField]
+    private Text title;
+    [SerializeField]
+    private Text description;
+    [SerializeField]
+    private Button handButton;
+    [SerializeField]
+    private InteractionSlot interactionSlot;
 
-    public event ScrollEvent onScrollOpened;
-    public event ScrollEvent onScrollClosed;
+    public event Action OnScrollOpened;
+    public event Action OnScrollClosed;
 
-    public InteractionSlot interactionSlot;
-
-    public ItemData SelectedItem { get; set; }
-
+    public ItemData SelectedItem { get; private set; }
     public IRaidArea AreaView { get; private set; }
     public InteractionEventType EventType { get; private set; }
     public InteractionResultType ActionType { get; private set; }
 
-    void InteractionSlot_onDropIn(InventoryItem inventoryItem)
+    private void InteractionSlot_onDropIn(InventoryItem inventoryItem)
     {
         var itemData = inventoryItem.ItemData;
         inventoryItem.RemoveItems(1);
         ItemActionSelected(itemData);
     }
-    void InteractionSlot_onActivate(ItemData item)
+
+    private void InteractionSlot_onActivate(ItemData item)
     {
         switch (EventType)
         {
@@ -48,22 +51,23 @@ public class ScrollEventInteraction : MonoBehaviour
         }
     }
 
-    void ScrollOpened()
+    private void ScrollOpened()
     {
         gameObject.SetActive(true);
 
-        if (onScrollOpened != null)
-            onScrollOpened();
+        if (OnScrollOpened != null)
+            OnScrollOpened();
     }
-    void ScrollClosed()
+
+    private void ScrollClosed()
     {
         gameObject.SetActive(false);
         ToolTipManager.Instanse.Hide();
-        if (onScrollClosed != null)
-            onScrollClosed();
+        if (OnScrollClosed != null)
+            OnScrollClosed();
     }
 
-    void ItemActionSelected(ItemData item)
+    private void ItemActionSelected(ItemData item)
     {
         switch (EventType)
         {
@@ -78,7 +82,8 @@ public class ScrollEventInteraction : MonoBehaviour
                 break;
         }
     }
-    void ManualActionSelected()
+
+    public void ManualActionSelected()
     {
         switch (EventType)
         {
@@ -92,7 +97,8 @@ public class ScrollEventInteraction : MonoBehaviour
                 break;
         }
     }
-    void CancelActionSelected()
+
+    public void CancelActionSelected()
     {
         switch (EventType)
         {
@@ -110,9 +116,10 @@ public class ScrollEventInteraction : MonoBehaviour
 
     public void Initialize()
     {
-        interactionSlot.onDropIn += InteractionSlot_onDropIn;
-        interactionSlot.onActivate += InteractionSlot_onActivate;
+        interactionSlot.EventDropIn += InteractionSlot_onDropIn;
+        interactionSlot.EventActivate += InteractionSlot_onActivate;
     }
+
     public void LoadInteraction(Obstacle obstacle, RaidHallSector sector)
     {
         RaidSceneManager.Inventory.SetObstacleState();
@@ -125,19 +132,19 @@ public class ScrollEventInteraction : MonoBehaviour
         handButton.interactable = true;
 
         interactionSlot.Item = DarkestDungeonManager.Data.Items["supply"]["shovel"];
-        interactionSlot.itemIcon.sprite = DarkestDungeonManager.Data.Sprites["inv_supply+shovel"];
-        interactionSlot.itemIcon.enabled = true;
+        interactionSlot.ItemIcon.sprite = DarkestDungeonManager.Data.Sprites["inv_supply+shovel"];
+        interactionSlot.ItemIcon.enabled = true;
         interactionSlot.IsItemAllowed = false;
 
         if (RaidSceneManager.Inventory.ContainsItem(interactionSlot.Item))
         {
             interactionSlot.IsItemFixed = true;
-            interactionSlot.itemIcon.material = interactionSlot.itemIcon.defaultMaterial;
+            interactionSlot.ItemIcon.material = interactionSlot.ItemIcon.defaultMaterial;
         }
         else
         {
             interactionSlot.IsItemFixed = false;
-            interactionSlot.itemIcon.material = DarkestDungeonManager.GrayDarkMaterial;
+            interactionSlot.ItemIcon.material = DarkestDungeonManager.GrayDarkMaterial;
         }
 
         title.text = LocalizationManager.GetString("str_obstacle_" + obstacle.StringId + "_title");
@@ -145,6 +152,7 @@ public class ScrollEventInteraction : MonoBehaviour
 
         ScrollOpened();
     }
+
     public void LoadInteraction(Curio curio, IRaidArea area)
     {
         EventType = InteractionEventType.Curio;
@@ -161,12 +169,12 @@ public class ScrollEventInteraction : MonoBehaviour
                     handButton.interactable = false;
 
                     interactionSlot.Item = DarkestDungeonManager.Data.Items["quest_item"][curio.ItemInteractions[0].ItemId];
-                    interactionSlot.itemIcon.sprite = DarkestDungeonManager.Data.Sprites["inv_quest_item+" +
+                    interactionSlot.ItemIcon.sprite = DarkestDungeonManager.Data.Sprites["inv_quest_item+" +
                         curio.ItemInteractions[0].ItemId];
-                    interactionSlot.itemIcon.enabled = true;
+                    interactionSlot.ItemIcon.enabled = true;
                     interactionSlot.IsItemAllowed = false;
                     interactionSlot.IsItemFixed = true;
-                    interactionSlot.itemIcon.material = interactionSlot.itemIcon.defaultMaterial;
+                    interactionSlot.ItemIcon.material = interactionSlot.ItemIcon.defaultMaterial;
                 }
                 else
                 {
@@ -195,6 +203,7 @@ public class ScrollEventInteraction : MonoBehaviour
 
         ScrollOpened();
     }
+
     public void ResetInteraction(Curio curio)
     {
         EventType = InteractionEventType.Curio;

@@ -2,68 +2,64 @@
 using System.Collections.Generic;
 using System.Xml;
 
-public class StringTable
-{
-    public string Name { get; set; }
-    public Dictionary<string, List<string>> Data { get; set; }
-
-    public StringTable()
-    {
-        Data = new Dictionary<string, List<string>>();
-    }
-
-    public string this[string stringId]
-    {
-        get
-        {
-            if (!Data.ContainsKey(stringId))
-            {
-                return stringId;
-            }
-            List<string> items = Data[stringId];
-            if (items.Count == 1)
-                return items[0];
-            else
-                return items[Random.Range(0, items.Count)];
-        }
-    }
-}
-
 public class LocalizationManager : MonoBehaviour
 {
-    public static LocalizationManager Instanse { get; private set; }
-
-    const string localizationDataPath = "Data/Localization/";
-    List<string> stringTableNames = new List<string>
+    private class StringTable
     {
-        "Activity", "Actors", "Curios",
-        "Dialogue", "Help", "Heroes",
-        "Menu", "Misc", "Monsters",
-        "Names", "PartyNames", "Quirks",
-        "Kickstarter", "TownEvents",
-        "Journal"
-    };
+        public Dictionary<string, List<string>> Data { get; private set; }
 
-    public StringTable MasterTable { get; set; }
-
-    void Awake()
-    {
-        if (Instanse == null)
+        public StringTable()
         {
-            Instanse = this;
-            MasterTable = new StringTable();
+            Data = new Dictionary<string, List<string>>();
+        }
 
-            foreach (var tableName in stringTableNames)
-                FillStringTable(tableName, MasterTable.Data);
+        public string this[string stringId]
+        {
+            get
+            {
+                if (!Data.ContainsKey(stringId))
+                    return stringId;
+
+                List<string> items = Data[stringId];
+                return items.Count == 1 ? items[0] : items[Random.Range(0, items.Count)];
+            }
         }
     }
 
-    void FillStringTable(string tableName, Dictionary<string, List<string>> dictionary)
+    private static LocalizationManager Instanse { get; set; }
+
+    private const string LocalizationDataPath = "Data/Localization/";
+
+    private readonly List<string> stringTableNames = new List<string>
     {
-        TextAsset tableText = Resources.Load<TextAsset>(localizationDataPath + tableName);
+        "Activity", "Actors", "Curios", "Dialogue", "Help", "Heroes", "Menu", "Misc",
+        "Monsters", "Names", "PartyNames", "Quirks", "Kickstarter", "TownEvents", "Journal"
+    };
+
+    private StringTable MasterTable { get; set; }
+
+    private void Awake()
+    {
+        if (Instanse != null)
+            return;
+
+        Instanse = this;
+        MasterTable = new StringTable();
+
+        foreach (var tableName in stringTableNames)
+            FillStringTable(tableName, MasterTable.Data);
+    }
+
+    public static string GetString(string stringId)
+    {
+        return Instanse[stringId];
+    }
+
+    private void FillStringTable(string tableName, Dictionary<string, List<string>> dictionary)
+    {
+        TextAsset tableText = Resources.Load<TextAsset>(LocalizationDataPath + tableName);
         XmlDocument xmlDoc = new XmlDocument();
         xmlDoc.LoadXml(tableText.text);
-
 
         XmlNode xmlNode = xmlDoc.DocumentElement.SelectSingleNode("language");
         foreach (XmlElement entry in xmlNode.SelectNodes("entry"))
@@ -77,19 +73,15 @@ public class LocalizationManager : MonoBehaviour
             if (dictionary.ContainsKey(key))
                 dictionary[key].Add(value);
             else
-                dictionary.Add(key, new List<string>(new string[] { value }));
+                dictionary.Add(key, new List<string>(new [] { value }));
         }
     }
 
-    public string this[string stringId]
+    private string this[string stringId]
     {
         get
         {
             return Instanse.MasterTable[stringId];
         }
-    }
-    public static string GetString(string stringId)
-    {
-        return Instanse[stringId];
     }
 }

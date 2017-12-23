@@ -1,17 +1,32 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Text;
 
-public enum TraySlotType { Afflicted, Virtued, DeathsDoor, DeathRecovery, Buff, Debuff, Bleed, Poison, Guard, Riposte, Tag, Trap, Event }
+public enum TraySlotType
+{
+    Afflicted,
+    Virtued,
+    DeathsDoor,
+    DeathRecovery,
+    Buff,
+    Debuff,
+    Bleed,
+    Poison,
+    Guard,
+    Riposte,
+    Tag,
+    Trap,
+    Event
+}
 
 public class TraySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    public RectTransform rectTransform;
-    public Image trayIcon;
-    public TraySlotType type;
+    [SerializeField]
+    private RectTransform rectTransform;
+    [SerializeField]
+    private TraySlotType type;
 
-    public TrayPanel TrayPanel { get; set; }
+    public TrayPanel TrayPanel { private get; set; }
 
     public void UpdateTraySlot()
     {
@@ -190,7 +205,7 @@ public class TraySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                         TrayPanel.TargetUnit.Character.GetSingleAttribute(AttributeType.Trap).ModifiedValue);
                 break;
         }
-        ToolTipManager.Instanse.Show(sb.ToString(), eventData, rectTransform, ToolTipStyle.FromTop, ToolTipSize.Normal);
+        ToolTipManager.Instanse.Show(sb.ToString(), rectTransform, ToolTipStyle.FromTop, ToolTipSize.Normal);
     }
 
     public void OnPointerExit(PointerEventData eventData)

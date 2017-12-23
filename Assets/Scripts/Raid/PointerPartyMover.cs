@@ -3,19 +3,16 @@ using UnityEngine.EventSystems;
 
 public class PointerPartyMover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    public Direction direction;
+    [SerializeField]
+    private Direction direction;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-#if UNITY_ANDROID || UNITY_IOS
-        RaidSceneManager.Instanse.partyController.PointerMovementDirection = direction;
-#endif
+        RaidSceneManager.PartyController.PointerMovementDirection = direction;
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-#if UNITY_ANDROID || UNITY_IOS
-        RaidSceneManager.Instanse.partyController.PointerMovementDirection = Direction.Bot;
-#endif
+        RaidSceneManager.PartyController.PointerMovementDirection = Direction.Bot;
     }
 }

@@ -1,50 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public delegate void WagonSellEvent(WagonSlot slot);
 public delegate void TrinketSellEvent(Trinket trinket);
 
 public class WagonInventory : MonoBehaviour
 {
-    public EstateCurrencyPanel currencyPanel;
+    [SerializeField]
+    private EstateCurrencyPanel currencyPanel;
+    [SerializeField]
+    private List<WagonSlot> wagonSlots;
 
-    public List<WagonSlot> wagonSlots;
+    public NomadWagon NomadWagon { private get; set; }
 
-    public event TrinketSellEvent onTrinketSell;
+    public event TrinketSellEvent EventTrinketSell;
 
-    public NomadWagon NomadWagon { get; set; }
-
-    void Awake()
+    private void Awake()
     {
         for (int i = 0; i < wagonSlots.Count; i++)
-        {
-            wagonSlots[i].onSlotPurchase += WagonSlotPurchased;
-        }
-    }
-    bool CheckPrice(WagonSlot slot)
-    {
-        return DarkestDungeonManager.Campaign.Estate.Currencies["gold"].amount >= slot.Cost;
-    }
-    bool BuyShopSlot(WagonSlot slot)
-    {
-        if (!CheckPrice(slot))
-            return false;
-        DarkestDungeonManager.Campaign.Estate.Currencies["gold"].amount -= slot.Cost;
-        currencyPanel.CurrencyDecreased("gold");
-        currencyPanel.UpdateCurrency();
-        NomadWagon.Trinkets.Remove(slot.Trinket);
-        return true;
-    }
-
-    public void WagonSlotPurchased(WagonSlot slot)
-    {
-        if (BuyShopSlot(slot))
-        {
-            if (onTrinketSell != null)
-                onTrinketSell(slot.Trinket);
-
-            slot.EmptySlot();
-        }
+            wagonSlots[i].EventSlotPurchase += WagonSlotPurchased;
     }
 
     public void UpdateShop()
@@ -64,6 +37,7 @@ public class WagonInventory : MonoBehaviour
             wagonSlots[i].gameObject.SetActive(false);
         }
     }
+
     public void UpdatePrices()
     {
         float eventDiscount = DarkestDungeonManager.Campaign.EventModifiers.UpgradeTagDiscount("trinket");
@@ -71,6 +45,33 @@ public class WagonInventory : MonoBehaviour
         for (int i = 0; i < NomadWagon.Trinkets.Count; i++)
         {
             wagonSlots[i].UpdatePrice(NomadWagon.Discount + eventDiscount);
+        }
+    }
+
+    private bool CheckPrice(WagonSlot slot)
+    {
+        return DarkestDungeonManager.Campaign.Estate.Currencies["gold"] >= slot.Cost;
+    }
+
+    private bool BuyShopSlot(WagonSlot slot)
+    {
+        if (!CheckPrice(slot))
+            return false;
+        DarkestDungeonManager.Campaign.Estate.Currencies["gold"] -= slot.Cost;
+        currencyPanel.CurrencyDecreased("gold");
+        currencyPanel.UpdateCurrency();
+        NomadWagon.Trinkets.Remove(slot.Trinket);
+        return true;
+    }
+
+    private void WagonSlotPurchased(WagonSlot slot)
+    {
+        if (BuyShopSlot(slot))
+        {
+            if (EventTrinketSell != null)
+                EventTrinketSell(slot.Trinket);
+
+            slot.EmptySlot();
         }
     }
 }

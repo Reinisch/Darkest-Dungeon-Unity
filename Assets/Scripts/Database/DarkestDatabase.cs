@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System;
-using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -8,76 +7,74 @@ using DarkestJson;
 
 public class DarkestDatabase : MonoBehaviour
 {
-    #region Paths
-    const string monstersDirectory = "Data/Monsters/";
-    const string heroesDirectory = "Data/Heroes/";
-    const string buffDataPath = "Data/Buffs";
-    const string trinketDataPath = "Data/Trinkets";
-    const string itemDataPath = "Data/Inventory/Items";
-    const string dungeonGenerationDataPath = "Data/Mechanics/MapGenerator";
-    const string townEventsDataPath = "Data/Mechanics/TownEvents";
-    const string effectsDataPath = "Data/Mechanics/Effects";
+    #region Data Paths
 
-    const string cryptsEnviromentDataPath = "Data/Dungeons/Crypts";
-    const string warrensEnviromentDataPath = "Data/Dungeons/Warrens";
-    const string wealdEnviromentDataPath = "Data/Dungeons/Weald";
-    const string coveEnviromentDataPath = "Data/Dungeons/Cove";
-    const string darkestEnviromentDataPath = "Data/Dungeons/Darkest";
-    const string townEnviromentDataPath = "Data/Dungeons/Town";
-    const string sharedEnviromentDataPath = "Data/Dungeons/Shared";
+    private const string MonstersDirectory = "Data/Monsters/";
+    private const string HeroesDirectory = "Data/Heroes/";
+    private const string ItemDataPath = "Data/Inventory/Items";
+    private const string DungeonGenerationDataPath = "Data/Mechanics/MapGenerator";
+    private const string TownEventsDataPath = "Data/Mechanics/TownEvents";
+    private const string EffectsDataPath = "Data/Mechanics/Effects";
 
-    const string csvCurioDatabasePath = "Data/Curios/Curios";
-    const string jsonTrapDatabasePath = "Data/Curios/Traps";
-    const string jsonObstacleDatabasePath = "Data/Curios/Obstacles";
-    const string jsonCampaignGenerationPath = "Data/Mechanics/Campaign";
-    const string jsonExchangePath = "Data/Mechanics/HeirloomExchange";
-    const string jsonProvisionPath = "Data/Mechanics/Provision";
-    const string jsonBuffDatabasePath = "Data/JsonBuffs";
-    const string jsonNarrationDataPath = "Data/Narration";
-    const string jsonPartyNameDataPath = "Data/PartyNames";
-    const string jsonTraitDatabasePath = "Data/JsonTraits";
-    const string jsonCampingPath = "Data/JsonCamping";
-    const string jsonAIDatabasePath = "Data/JsonAI";
-    const string jsonTrinketDatabasePath = "Data/JsonTrinkets";
-    const string jsonQuestDatabasePath = "Data/JsonQuests";
-    const string jsonQuirkDatabasePath = "Data/JsonQuirks";
-    const string jsonLootDatabasePath = "Data/JsonLoot";
-    const string jsonHeroUpgradesPath = "Data/Upgrades/Heroes";
-    const string jsonBuildingUpgradesPath = "Data/Upgrades/Building";
-    const string jsonBuildingDataPath = "Data/Buildings/";
+    private const string CryptsEnviromentDataPath = "Data/Dungeons/Crypts";
+    private const string WarrensEnviromentDataPath = "Data/Dungeons/Warrens";
+    private const string WealdEnviromentDataPath = "Data/Dungeons/Weald";
+    private const string CoveEnviromentDataPath = "Data/Dungeons/Cove";
+    private const string DarkestEnviromentDataPath = "Data/Dungeons/Darkest";
+    private const string TownEnviromentDataPath = "Data/Dungeons/Town";
+    private const string SharedEnviromentDataPath = "Data/Dungeons/Shared";
+
+    private const string CsvCurioDatabasePath = "Data/Curios/Curios";
+    private const string JsonTrapDatabasePath = "Data/Curios/Traps";
+    private const string JsonObstacleDatabasePath = "Data/Curios/Obstacles";
+    private const string JsonCampaignGenerationPath = "Data/Mechanics/Campaign";
+    private const string JsonExchangePath = "Data/Mechanics/HeirloomExchange";
+    private const string JsonProvisionPath = "Data/Mechanics/Provision";
+    private const string JsonBuffDatabasePath = "Data/JsonBuffs";
+    private const string JsonNarrationDataPath = "Data/Narration";
+    private const string JsonPartyNameDataPath = "Data/PartyNames";
+    private const string JsonTraitDatabasePath = "Data/JsonTraits";
+    private const string JsonCampingPath = "Data/JsonCamping";
+    private const string JsonAIDatabasePath = "Data/JsonAI";
+    private const string JsonTrinketDatabasePath = "Data/JsonTrinkets";
+    private const string JsonQuestDatabasePath = "Data/JsonQuests";
+    private const string JsonQuirkDatabasePath = "Data/JsonQuirks";
+    private const string JsonLootDatabasePath = "Data/JsonLoot";
+    private const string JsonHeroUpgradesPath = "Data/Upgrades/Heroes";
+    private const string JsonBuildingUpgradesPath = "Data/Upgrades/Building";
+    private const string JsonBuildingDataPath = "Data/Buildings/";
+
     #endregion
 
-    public Dictionary<string, Building> Buildings { get; set; }
-    public Dictionary<string, UpgradeTree> UpgradeTrees { get; set; }
+    public Dictionary<string, Building> Buildings { get; private set; }
+    public Dictionary<string, UpgradeTree> UpgradeTrees { get; private set; }
 
-    public Dictionary<string, Sprite> Sprites { get; set; }
-    public Dictionary<string, Sprite> DungeonSprites { get; set; }
-    public Dictionary<string, MonsterBrain> Brains { get; set; }
-    public Dictionary<string, MonsterData> Monsters { get; set; }
-    public Dictionary<string, HeroClass> HeroClasses { get; set; }
-    public Dictionary<string, Effect> Effects { get; set; }
-    public Dictionary<string, Buff> Buffs { get; set; }
-    public Dictionary<string, Quirk> Quirks { get; set; }
-    public Dictionary<string, Curio> Curios { get; set; }
-    public Dictionary<string, Obstacle> Obstacles { get; set; }
-    public Dictionary<string, Trap> Traps { get; set; }
-    public Dictionary<string, Dictionary<string, ItemData>> Items { get; set; }   
-    public Dictionary<string, DungeonEnviromentData> DungeonEnviromentData { get; set; }
+    public Dictionary<string, Sprite> Sprites { get; private set; }
+    public Dictionary<string, Sprite> DungeonSprites { get; private set; }
+    public Dictionary<string, MonsterBrain> Brains { get; private set; }
+    public Dictionary<string, MonsterData> Monsters { get; private set; }
+    public Dictionary<string, HeroClass> HeroClasses { get; private set; }
+    public Dictionary<string, Effect> Effects { get; private set; }
+    public Dictionary<string, Buff> Buffs { get; private set; }
+    public Dictionary<string, Quirk> Quirks { get; private set; }
+    public Dictionary<string, Curio> Curios { get; private set; }
+    public Dictionary<string, Obstacle> Obstacles { get; private set; }
+    public Dictionary<string, Trap> Traps { get; private set; }
+    public Dictionary<string, Dictionary<string, ItemData>> Items { get; private set; }   
+    public Dictionary<string, DungeonEnviromentData> DungeonEnviromentData { get; private set; }
 
-    public List<CampingSkill> CampingSkills { get; set; }
-    public List<Trait> Traits { get; set; }
+    public List<CampingSkill> CampingSkills { get; private set; }
+    public List<Trait> Traits { get; private set; }
 
-    public TownEventDatabase EventDatabase { get; set; }
-    public HeroSpriteDatabase HeroSprites { get; set; }
-    public QuestDatabase QuestDatabase { get; set; }
-    public LootDatabase LootDatabase { get; set; }
-    public ProvisionDatabase Provision { get; set; }
-    public CampaignGenerationData CampaignGeneration { get; set; }
-    public List<DungeonGenerationData> DungeonGenerationData { get; set; }
+    public TownEventDatabase EventDatabase { get; private set; }
+    public HeroSpriteDatabase HeroSprites { get; private set; }
+    public QuestDatabase QuestDatabase { get; private set; }
+    public LootDatabase LootDatabase { get; private set; }
+    public ProvisionDatabase Provision { get; private set; }
+    public CampaignGenerationData CampaignGeneration { get; private set; }
+    public List<DungeonGenerationData> DungeonGenerationData { get; private set; }
 
     public Dictionary<string, string> HexColors { get; private set; }
-    public List<string> Rarities { get; set; }
-
     public Dictionary<AreaType, Sprite> MapRoomIconSet { get; private set; }
     public Dictionary<AreaType, Sprite> MapHallIconSet { get; private set; }
     public Dictionary<Knowledge, Sprite> MapRoomKnowledgeSet { get; private set; }
@@ -86,15 +83,6 @@ public class DarkestDatabase : MonoBehaviour
     public Dictionary<string, NarrationEntry> Narration { get; private set; }
     public List<PartyNameEntry> PartyNames { get; private set; }
     public List<HeirloomExchange> HeirloomExchanges { get; private set; }
-
-    public bool ItemExists(ItemDefinition itemDefinition)
-    {
-        if (!DarkestDungeonManager.Data.Items.ContainsKey(itemDefinition.Type) ||
-            !DarkestDungeonManager.Data.Items[itemDefinition.Type].ContainsKey(itemDefinition.Id))
-            return false;
-
-        return true;
-    }
 
     public void Load()
     {
@@ -132,9 +120,52 @@ public class DarkestDatabase : MonoBehaviour
         GC.Collect();
     }
 
-    public List<MonsterBrain> GetJsonMonsterBrains()
+    public void LoadDungeon(string dungeon, string quest = null)
     {
-        TextAsset jsonText = Resources.Load<TextAsset>(jsonAIDatabasePath);
+        DungeonSprites.Clear();
+        switch (dungeon)
+        {
+            case "darkestdungeon":
+                switch (quest)
+                {
+                    case "plot_darkest_dungeon_1":
+                        foreach (var dungeonSprite in Resources.LoadAll<Sprite>("Dungeons/darkestdungeon/quest_1"))
+                            DungeonSprites.Add(dungeonSprite.name, dungeonSprite);
+                        break;
+                    case "plot_darkest_dungeon_2":
+                        foreach (var dungeonSprite in Resources.LoadAll<Sprite>("Dungeons/darkestdungeon/quest_2"))
+                            DungeonSprites.Add(dungeonSprite.name, dungeonSprite);
+                        break;
+                    case "plot_darkest_dungeon_3":
+                        foreach (var dungeonSprite in Resources.LoadAll<Sprite>("Dungeons/darkestdungeon/quest_3"))
+                            DungeonSprites.Add(dungeonSprite.name, dungeonSprite);
+                        break;
+                    case "plot_darkest_dungeon_4":
+                        foreach (var dungeonSprite in Resources.LoadAll<Sprite>("Dungeons/darkestdungeon/quest_4"))
+                            DungeonSprites.Add(dungeonSprite.name, dungeonSprite);
+                        break;
+                    default:
+                        goto case "plot_darkest_dungeon_1";
+                }
+                break;
+            default:
+                foreach (var dungeonSprite in Resources.LoadAll<Sprite>("Dungeons/" + dungeon))
+                    DungeonSprites.Add(dungeonSprite.name, dungeonSprite);
+                break;
+        }
+    }
+
+    public bool ItemExists(ItemDefinition itemDefinition)
+    {
+        return DarkestDungeonManager.Data.Items.ContainsKey(itemDefinition.Type) &&
+            DarkestDungeonManager.Data.Items[itemDefinition.Type].ContainsKey(itemDefinition.Id);
+    }
+
+    #region Json Convertation
+
+    private List<MonsterBrain> GetJsonMonsterBrains()
+    {
+        TextAsset jsonText = Resources.Load<TextAsset>(JsonAIDatabasePath);
         List<JsonMonsterBrains> jsonBrains = JsonDarkestDeserializer.GetJsonAI(jsonText.text);
         List<MonsterBrain> brains = new List<MonsterBrain>();
         for (int i = 0; i < jsonBrains.Count; i++)
@@ -251,9 +282,10 @@ public class DarkestDatabase : MonoBehaviour
         }
         return brains;
     }
-    public List<Buff> GetJsonBuffLibrary()
+
+    private List<Buff> GetJsonBuffLibrary()
     {
-        TextAsset jsonText = Resources.Load<TextAsset>(jsonBuffDatabasePath);
+        TextAsset jsonText = Resources.Load<TextAsset>(JsonBuffDatabasePath);
         List<JsonBuff> jsonBuffs = JsonDarkestDeserializer.GetJsonBuffs(jsonText.text);
         List<Buff> buffs = new List<Buff>();
         for(int i = 0; i < jsonBuffs.Count; i++)
@@ -337,9 +369,10 @@ public class DarkestDatabase : MonoBehaviour
         }
         return buffs;
     }
-    public List<Quirk> GetJsonQuirkLibrary()
+
+    private List<Quirk> GetJsonQuirkLibrary()
     {
-        TextAsset jsonText = Resources.Load<TextAsset>(jsonQuirkDatabasePath);
+        TextAsset jsonText = Resources.Load<TextAsset>(JsonQuirkDatabasePath);
         List<JsonQuirk> jsonQuirks = JsonDarkestDeserializer.GetJsonQuirks(jsonText.text);
 
         List<Quirk> quirks = new List<Quirk>();
@@ -368,11 +401,11 @@ public class DarkestDatabase : MonoBehaviour
         }
         return quirks;
     }
-    public List<Trinket> GetJsonTrinketLibrary()
+
+    private List<Trinket> GetJsonTrinketLibrary()
     {
-        TextAsset jsonText = Resources.Load<TextAsset>(jsonTrinketDatabasePath);
+        TextAsset jsonText = Resources.Load<TextAsset>(JsonTrinketDatabasePath);
         var trinketDatabase = JsonDarkestDeserializer.GetJsonTrinketDatabase(jsonText.text);
-        Rarities = trinketDatabase.rarities;
         List<JsonTrinket> jsonTrinkets = trinketDatabase.trinkets;
         List<Trinket> trinkets = new List<Trinket>();
 
@@ -394,11 +427,12 @@ public class DarkestDatabase : MonoBehaviour
         }
         return trinkets;
     }
-    public List<Obstacle> GetJsonObstaclesLibrary()
+
+    private List<Obstacle> GetJsonObstaclesLibrary()
     {
         List<Obstacle> obstacles = new List<Obstacle>();
 
-        string obstacleText = Resources.Load<TextAsset>(jsonObstacleDatabasePath).text;
+        string obstacleText = Resources.Load<TextAsset>(JsonObstacleDatabasePath).text;
         var jsonObstacles = JsonDarkestDeserializer.GetJsonObstacles(obstacleText);
 
         for (int i = 0; i < jsonObstacles.Count; i++)
@@ -415,11 +449,12 @@ public class DarkestDatabase : MonoBehaviour
 
         return obstacles;
     }
-    public List<Trap> GetJsonTrapLibrary()
+
+    private List<Trap> GetJsonTrapLibrary()
     {
         List<Trap> traps = new List<Trap>();
 
-        string trapText = Resources.Load<TextAsset>(jsonTrapDatabasePath).text;
+        string trapText = Resources.Load<TextAsset>(JsonTrapDatabasePath).text;
         var jsonTraps = JsonDarkestDeserializer.GetJsonTraps(trapText);
 
         for (int i = 0; i < jsonTraps.Count; i++)
@@ -447,9 +482,10 @@ public class DarkestDatabase : MonoBehaviour
 
         return traps;
     }
-    public QuestDatabase GetJsonQuestDatabase()
+
+    private QuestDatabase GetJsonQuestDatabase()
     {
-        TextAsset jsonText = Resources.Load<TextAsset>(jsonQuestDatabasePath);
+        TextAsset jsonText = Resources.Load<TextAsset>(JsonQuestDatabasePath);
         JsonQuestDatabase jsonData = JsonDarkestDeserializer.GetJsonQuestDatabase(jsonText.text);
         QuestDatabase questData = new QuestDatabase();
         questData.FailStressPenalty = jsonData.stress_damage;
@@ -479,7 +515,7 @@ public class DarkestDatabase : MonoBehaviour
                     var questKillData = new QuestKillMonsterData();
                     string monsterString = jsonData.goals[i].data["monster_class_ids"].ToString();
                     string[] monsters = monsterString.Split(
-                        new char[]{'[', ']', ',' ,'\r', '\n', '\"', ' '}, StringSplitOptions.RemoveEmptyEntries);
+                        new[]{'[', ']', ',' ,'\r', '\n', '\"', ' '}, StringSplitOptions.RemoveEmptyEntries);
                     questKillData.MonsterNameIds = new List<string>(monsters);
                     questKillData.Amount = (int)(long)jsonData.goals[i].data["amount"];
                     goal.QuestData = questKillData;
@@ -487,7 +523,6 @@ public class DarkestDatabase : MonoBehaviour
                 case "explore_room":
                     var questVisitData = new QuestVisitedData();
                     questVisitData.Type = QuestVisitType.Explore;
-                    questVisitData.Amount = (int)(long)jsonData.goals[i].data["amount"];
                     double percentage;
                     if (double.TryParse(jsonData.goals[i].data["percentage"].ToString(), out percentage))
                         questVisitData.PercenageExplored = (float)percentage;
@@ -499,7 +534,6 @@ public class DarkestDatabase : MonoBehaviour
                 case "battle":
                     var questBattleData = new QuestVisitedData();
                     questBattleData.Type = QuestVisitType.Battle;
-                    questBattleData.Amount = (int)(long)jsonData.goals[i].data["amount"];
                     double battlePercentage;
                     if (double.TryParse(jsonData.goals[i].data["percentage"].ToString(), out battlePercentage))
                         questBattleData.PercenageExplored = (float)battlePercentage;
@@ -526,8 +560,6 @@ public class DarkestDatabase : MonoBehaviour
                     break;
                 case "trait_applied":
                     var questTraitData = new QuestTraitData();
-                    questTraitData.IsAffliction = (bool)jsonData.goals[i].data["is_affliction"];
-                    questTraitData.IsVirtue = (bool)jsonData.goals[i].data["is_virtue"];                    
                     questTraitData.Amount = (int)(long)jsonData.goals[i].data["amount"];
                     goal.QuestData = questTraitData;
                     break;
@@ -548,18 +580,15 @@ public class DarkestDatabase : MonoBehaviour
         for (int i = 0; i < jsonData.types.Count; i++)
         {
             QuestType questType = new QuestType();
-            questType.Id = (string)jsonData.types[i].id;
+            questType.Id = jsonData.types[i].id;
             for(int j = 0; j < jsonData.types[i].goal_lists.Count; j++)
             {
                 QuestGoalList goalList = new QuestGoalList();
                 goalList.Dungeon = jsonData.types[i].goal_lists[j].dungeon;
                 for(int k = 0; k < jsonData.types[i].goal_lists[j].goals.Count; k++)
-                {
                     foreach(var goal in jsonData.types[i].goal_lists[j].goals[k])
-                    {
                         goalList.Goals.Add(goal);
-                    }
-                }
+
                 questType.GoalLists.Add(goalList);
             }
             questData.QuestTypes.Add(questType.Id, questType);
@@ -709,9 +738,10 @@ public class DarkestDatabase : MonoBehaviour
         #endregion
         return questData;
     }
-    public LootDatabase GetJsonLootDatabase()
+
+    private LootDatabase GetJsonLootDatabase()
     {
-        TextAsset jsonText = Resources.Load<TextAsset>(jsonLootDatabasePath);
+        TextAsset jsonText = Resources.Load<TextAsset>(JsonLootDatabasePath);
         var lootDatabase = JsonDarkestDeserializer.GetJsonLootDatabase(jsonText.text);
 
         LootDatabase newLootDatabase = new LootDatabase();
@@ -792,9 +822,10 @@ public class DarkestDatabase : MonoBehaviour
         }
         return newLootDatabase;
     }
-    public ProvisionDatabase GetJsonProvisionDatabase()
+
+    private ProvisionDatabase GetJsonProvisionDatabase()
     {
-        TextAsset jsonText = Resources.Load<TextAsset>(jsonProvisionPath);
+        TextAsset jsonText = Resources.Load<TextAsset>(JsonProvisionPath);
         var jsonProvision = JsonDarkestDeserializer.GetJsonProvision(jsonText.text);
         ProvisionDatabase provisionDatabase = new ProvisionDatabase();
 
@@ -828,11 +859,12 @@ public class DarkestDatabase : MonoBehaviour
 
         return provisionDatabase;
     }
-    public List<UpgradeTree> GetJsonHeroUpgradeTree()
+
+    private List<UpgradeTree> GetJsonHeroUpgradeTree()
     {
         List<UpgradeTree> upgradeTrees = new List<UpgradeTree>();
 
-        foreach (var upgradeAsset in Resources.LoadAll<TextAsset>(jsonHeroUpgradesPath))
+        foreach (var upgradeAsset in Resources.LoadAll<TextAsset>(JsonHeroUpgradesPath))
         {
             var upgradeTreeSet = JsonDarkestDeserializer.GetJsonUpgradeTreeSet(upgradeAsset.text);
 
@@ -873,11 +905,12 @@ public class DarkestDatabase : MonoBehaviour
 
         return upgradeTrees;
     }
-    public List<UpgradeTree> GetJsonBuildingUpgradeTree()
+
+    private List<UpgradeTree> GetJsonBuildingUpgradeTree()
     {
         List<UpgradeTree> upgradeTrees = new List<UpgradeTree>();
 
-        foreach (var upgradeAsset in Resources.LoadAll<TextAsset>(jsonBuildingUpgradesPath))
+        foreach (var upgradeAsset in Resources.LoadAll<TextAsset>(JsonBuildingUpgradesPath))
         {
             var upgradeTreeSet = JsonDarkestDeserializer.GetJsonUpgradeTreeSet(upgradeAsset.text);
 
@@ -917,10 +950,10 @@ public class DarkestDatabase : MonoBehaviour
 
         return upgradeTrees;
     }
-    TownActivity GetJsonTownActivity(JsonActivity jsonActivity, string name)
+
+    private TownActivity GetJsonTownActivity(JsonActivity jsonActivity, string activityName)
     {
-        TownActivity activity = new TownActivity(name);
-        activity.CareTakerFriendly = jsonActivity.caretaker_friendly;
+        TownActivity activity = new TownActivity(activityName);
         activity.SideEffectChance = jsonActivity.side_effects.chance;
         foreach (var badQuirk in jsonActivity.quirk_library_names)
             activity.IncompatiableQuirks.Add(badQuirk);
@@ -979,7 +1012,7 @@ public class DarkestDatabase : MonoBehaviour
                         TownActivityBuff activityBuffSet = new TownActivityBuff();
                         activityBuffSet.Chance = (int)(long)buffSet["chance"];
                         string[] buffNames = buffSet["buff_library_ids"].ToString().Split(
-                            new char[] { '[', ']', ',', '\r', '\n', '\"', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                            new[] { '[', ']', ',', '\r', '\n', '\"', ' ' }, StringSplitOptions.RemoveEmptyEntries);
                         activityBuffSet.BuffNames = new List<string>(buffNames);
                         buffEffect.BuffSets.Add(activityBuffSet);
                     }
@@ -1049,29 +1082,15 @@ public class DarkestDatabase : MonoBehaviour
             }
         }
 
-        foreach (var jsonAfflicureUpgrade in jsonActivity.affliction_cure_upgrades)
-        {
-            if (jsonAfflicureUpgrade.upgrade_requirement_code == null)
-            {
-                activity.AfflictionCureChance = jsonAfflicureUpgrade.chance;
-                activity.BaseAfflictionCure = activity.AfflictionCureChance;
-            }
-            else
-            {
-                ChanceUpgrade newAfflicureUpgrade = new ChanceUpgrade();
-                newAfflicureUpgrade.Chance = jsonAfflicureUpgrade.chance;
-                newAfflicureUpgrade.UpgradeCode = jsonAfflicureUpgrade.upgrade_requirement_code;
-                activity.AfflictionCureUpgrades.Add(newAfflicureUpgrade);
-            }
-        }
         return activity;
     }
-    public List<Building> GetJsonBuildings()
+
+    private List<Building> GetJsonBuildings()
     {
         List<Building> buildings = new List<Building>();
 
         JsonAbbey jsonAbbey = JsonDarkestDeserializer.GetJsonAbbey(
-            Resources.Load<TextAsset>(jsonBuildingDataPath + "abbey.building").text);
+            Resources.Load<TextAsset>(JsonBuildingDataPath + "abbey.building").text);
 
         Abbey abbey = new Abbey();
         abbey.Name = "abbey";
@@ -1084,7 +1103,7 @@ public class DarkestDatabase : MonoBehaviour
         buildings.Add(abbey);
 
         JsonTavern jsonTavern = JsonDarkestDeserializer.GetJsonTavern(
-            Resources.Load<TextAsset>(jsonBuildingDataPath + "tavern.building").text);
+            Resources.Load<TextAsset>(JsonBuildingDataPath + "tavern.building").text);
 
         Tavern tavern = new Tavern();
         tavern.Name = "tavern";
@@ -1098,7 +1117,7 @@ public class DarkestDatabase : MonoBehaviour
 
         #region Sanitarium
         JsonSanitarium jsonSanitarium = JsonDarkestDeserializer.GetJsonSanitarium(
-            Resources.Load<TextAsset>(jsonBuildingDataPath + "sanitarium.building").text);
+            Resources.Load<TextAsset>(JsonBuildingDataPath + "sanitarium.building").text);
 
         Sanitarium sanitarium = new Sanitarium();
         sanitarium.Name = "sanitarium";
@@ -1239,7 +1258,7 @@ public class DarkestDatabase : MonoBehaviour
         #endregion
 
         JsonBlacksmith jsonBlacksmith = JsonDarkestDeserializer.GetJsonBlacksmith(
-            Resources.Load<TextAsset>(jsonBuildingDataPath + "blacksmith.building").text);
+            Resources.Load<TextAsset>(JsonBuildingDataPath + "blacksmith.building").text);
 
         Blacksmith blacksmith = new Blacksmith();
         blacksmith.Name = "blacksmith";
@@ -1258,7 +1277,7 @@ public class DarkestDatabase : MonoBehaviour
         buildings.Add(blacksmith);
 
         JsonGuild jsonGuild = JsonDarkestDeserializer.GetJsonGuild(
-            Resources.Load<TextAsset>(jsonBuildingDataPath + "guild.building").text);
+            Resources.Load<TextAsset>(JsonBuildingDataPath + "guild.building").text);
 
         Guild guild = new Guild();
         guild.Name = "guild";
@@ -1277,7 +1296,7 @@ public class DarkestDatabase : MonoBehaviour
         buildings.Add(guild);
 
         JsonCampingTrainer jsonCampingTrainer = JsonDarkestDeserializer.GetJsonCamp(
-            Resources.Load<TextAsset>(jsonBuildingDataPath + "camping_trainer.building").text);
+            Resources.Load<TextAsset>(JsonBuildingDataPath + "camping_trainer.building").text);
 
         CampingTrainer campingTrainer = new CampingTrainer();
         campingTrainer.Name = "camping_trainer";
@@ -1298,7 +1317,7 @@ public class DarkestDatabase : MonoBehaviour
 
 
         JsonNomadWagon jsonNomadWagon = JsonDarkestDeserializer.GetJsonWagon(
-            Resources.Load<TextAsset>(jsonBuildingDataPath + "nomad_wagon.building").text);
+            Resources.Load<TextAsset>(JsonBuildingDataPath + "nomad_wagon.building").text);
 
         NomadWagon nomadWagon = new NomadWagon();
         nomadWagon.Name = "nomad_wagon";
@@ -1336,7 +1355,7 @@ public class DarkestDatabase : MonoBehaviour
 
 
         JsonStageCoach jsonStageCoach = JsonDarkestDeserializer.GetJsonCoach(
-            Resources.Load<TextAsset>(jsonBuildingDataPath + "stage_coach.building").text);
+            Resources.Load<TextAsset>(JsonBuildingDataPath + "stage_coach.building").text);
         
         StageCoach stageCoach = new StageCoach();
         stageCoach.Name = "stage_coach";
@@ -1381,7 +1400,7 @@ public class DarkestDatabase : MonoBehaviour
 
         foreach (var jsonUpgrade in jsonStageCoach.upgraded_recruits_upgrades)
         {
-            RecruitUpgrade newUpgrade = new RecruitUpgrade()
+            RecruitUpgrade newUpgrade = new RecruitUpgrade
             {
                 Level = jsonUpgrade.level,
                 Chance = jsonUpgrade.chance,
@@ -1389,7 +1408,6 @@ public class DarkestDatabase : MonoBehaviour
                 ExtraCombatSkills = jsonUpgrade.number_of_extra_combat_skills,
                 ExtraNegativeQuirks = jsonUpgrade.number_of_extra_negative_quirks,
                 ExtraPositiveQuirks = jsonUpgrade.number_of_extra_positive_quirks,
-                GuaranteedWhenResolveDead = jsonUpgrade.guaranteed_previous_raid_dead_hero_levels,
                 TreeId = jsonUpgrade.upgrade_tree_id,
                 UpgradeCode = jsonUpgrade.upgrade_requirement_code,
             };
@@ -1401,133 +1419,11 @@ public class DarkestDatabase : MonoBehaviour
         return buildings;
     }
 
-    public void SaveBinaryBuffDatabase()
+    #endregion
+
+    private void LoadHeirloomExchanges()
     {
-        List<Buff> buffs = GetJsonBuffLibrary();
-
-        using (var fs = new FileStream(Application.dataPath + "/Resources/" +
-            buffDataPath + ".bytes", FileMode.Create, FileAccess.Write))
-        {
-            using (var bw = new BinaryWriter(fs))
-            {
-                bw.Write(1);
-                bw.Write(buffs.Count);
-
-                for(int i = 0; i < buffs.Count; i++)
-                {
-                    bw.Write(buffs[i].Id);
-                    bw.Write((byte)buffs[i].Type);
-                    bw.Write((int)buffs[i].AttributeType);
-                    bw.Write(buffs[i].ModifierValue);
-                    bw.Write((byte)buffs[i].RuleType);
-                    bw.Write(buffs[i].IsFalseRule);
-                    bw.Write(buffs[i].SingleParam);
-                    bw.Write(buffs[i].StringParam);
-                }
-            }
-        }
-    }
-    public void SaveBinaryTrinketDatabase()
-    {
-        List<Trinket> trinkets = GetJsonTrinketLibrary();
-
-        using (var fs = new FileStream(Application.dataPath + "/Resources/" +
-            trinketDataPath + ".bytes", FileMode.Create, FileAccess.Write))
-        {
-            using (var bw = new BinaryWriter(fs))
-            {
-                bw.Write(1);
-                bw.Write(trinkets.Count);
-
-                for (int i = 0; i < trinkets.Count; i++)
-                {
-                    bw.Write(trinkets[i].Id);
-                    bw.Write(trinkets[i].Buffs.Count);
-                    for (int j = 0; j < trinkets[i].Buffs.Count; j++ )
-                    {
-                        bw.Write(trinkets[i].Buffs[j].Id);
-                    }
-                    bw.Write(trinkets[i].ClassRequirements.Count);
-                    for (int j = 0; j < trinkets[i].ClassRequirements.Count; j++)
-                    {
-                        bw.Write(trinkets[i].ClassRequirements[j]);
-                    }
-                    bw.Write(trinkets[i].RarityId);
-                    bw.Write(trinkets[i].PurchasePrice);
-                    bw.Write(trinkets[i].EquipLimit);
-                    bw.Write(trinkets[i].OriginDungeon);
-                }
-            }
-        }
-    }
-    public void LoadBinaryBuffDatabase()
-    {
-        Buffs = new Dictionary<string, Buff>();
-        using (var s = new MemoryStream(Resources.Load<TextAsset>(buffDataPath).bytes))
-        {
-            using (var br = new BinaryReader(s))
-            {
-                br.ReadInt32();
-                int buffCount = br.ReadInt32();
-
-                for (int i = 0; i < buffCount; i++)
-                {
-                    Buff buff = new Buff();
-                    buff.Id = br.ReadString();
-                    buff.Type = (BuffType)br.ReadByte();
-                    buff.AttributeType = (AttributeType)br.ReadInt32();
-                    buff.ModifierValue = br.ReadSingle();
-                    buff.RuleType = (BuffRule)br.ReadByte();
-                    buff.IsFalseRule = br.ReadBoolean();
-                    buff.SingleParam = br.ReadSingle();
-                    buff.StringParam = br.ReadString();
-                    if (Buffs.ContainsKey(buff.Id))
-                        Debug.LogError("Same buff name: " + buff.Id);
-                    else
-                        Buffs.Add(buff.Id, buff);
-                }
-            }
-        }
-    }
-    public void LoadBinaryTrinketDatabase()
-    {
-        if (!Items.ContainsKey("trinket"))
-            Items.Add("trinket", new Dictionary<string, ItemData>());
-
-        using (var s = new MemoryStream(Resources.Load<TextAsset>(trinketDataPath).bytes))
-        {
-            using (var br = new BinaryReader(s))
-            {
-                br.ReadInt32();
-                int trinketCount = br.ReadInt32();
-
-                for (int i = 0; i < trinketCount; i++)
-                {
-                    Trinket trinket = new Trinket();
-                    trinket.Id = br.ReadString();
-                    int trinketBuffCount = br.ReadInt32();
-                    for (int j = 0; j < trinketBuffCount; j++)
-                    {
-                        trinket.Buffs.Add(Buffs[br.ReadString()]);
-                    }
-                    int classReqsCount = br.ReadInt32();
-                    for (int j = 0; j < classReqsCount; j++)
-                    {
-                        trinket.ClassRequirements.Add(br.ReadString());
-                    }
-                    trinket.RarityId = br.ReadString();
-                    trinket.PurchasePrice = br.ReadInt32();
-                    trinket.EquipLimit = br.ReadInt32();
-                    trinket.OriginDungeon = br.ReadString();
-                    Items[trinket.Type].Add(trinket.Id, trinket);
-                }
-            }
-        }
-    }
-
-    public void LoadHeirloomExchanges()
-    {
-        TextAsset jsonText = Resources.Load<TextAsset>(jsonExchangePath);
+        TextAsset jsonText = Resources.Load<TextAsset>(JsonExchangePath);
         var jsonExchange = JsonDarkestDeserializer.GetJsonObject<JsonHeirloomExchange>(jsonText.text);
         HeirloomExchanges = new List<HeirloomExchange>();
 
@@ -1541,9 +1437,10 @@ public class DarkestDatabase : MonoBehaviour
             HeirloomExchanges.Add(newHeirloomExchange);
         }
     }
-    public void LoadPartyNames()
+
+    private void LoadPartyNames()
     {
-        TextAsset jsonText = Resources.Load<TextAsset>(jsonPartyNameDataPath);
+        TextAsset jsonText = Resources.Load<TextAsset>(JsonPartyNameDataPath);
         var jsonPartyNames = JsonDarkestDeserializer.GetJsonPartyNames(jsonText.text);
         PartyNames = new List<PartyNameEntry>();
         for(int i = 0; i < jsonPartyNames.party_names.Count; i++)
@@ -1554,9 +1451,10 @@ public class DarkestDatabase : MonoBehaviour
             PartyNames.Add(newPartyComp);
         }
     }
-    public void LoadNarration()
+
+    private void LoadNarration()
     {
-        TextAsset jsonText = Resources.Load<TextAsset>(jsonNarrationDataPath);
+        TextAsset jsonText = Resources.Load<TextAsset>(JsonNarrationDataPath);
         var jsonNarration = JsonDarkestDeserializer.GetJsonNarration(jsonText.text);
         Narration = new Dictionary<string, NarrationEntry>();
         foreach(var jsonNarrationEntry in jsonNarration.entries)
@@ -1584,7 +1482,8 @@ public class DarkestDatabase : MonoBehaviour
             Narration.Add(narrationEntry.Id, narrationEntry);
         }
     }
-    public void LoadJsonAI()
+
+    private void LoadJsonAI()
     {
         Brains = new Dictionary<string, MonsterBrain>();
 
@@ -1596,7 +1495,8 @@ public class DarkestDatabase : MonoBehaviour
                 Brains.Add(brain.Id, brain);
         }
     }
-    public void LoadJsonBuffs()
+
+    private void LoadJsonBuffs()
     {
         Buffs = new Dictionary<string, Buff>();
 
@@ -1608,7 +1508,8 @@ public class DarkestDatabase : MonoBehaviour
                 Buffs.Add(buff.Id, buff);
         }
     }
-    public void LoadJsonTrinkets()
+
+    private void LoadJsonTrinkets()
     {
         Items = new Dictionary<string, Dictionary<string, ItemData>>();
 
@@ -1623,7 +1524,8 @@ public class DarkestDatabase : MonoBehaviour
                 Items[trinket.Type].Add(trinket.Id, trinket);
         }
     }
-    public void LoadJsonQuirks()
+
+    private void LoadJsonQuirks()
     {
         Quirks = new Dictionary<string, Quirk>();
 
@@ -1635,11 +1537,12 @@ public class DarkestDatabase : MonoBehaviour
                 Quirks.Add(quirk.Id, quirk);
         }
     }
-    public void LoadJsonCampingSkills()
+
+    private void LoadJsonCampingSkills()
     {
         CampingSkills = new List<CampingSkill>();
 
-        TextAsset jsonText = Resources.Load<TextAsset>(jsonCampingPath);
+        TextAsset jsonText = Resources.Load<TextAsset>(JsonCampingPath);
 
         foreach(var jsonCampSkill in JsonDarkestDeserializer.GetJsonCamping(jsonText.text).skills)
         {
@@ -1673,8 +1576,8 @@ public class DarkestDatabase : MonoBehaviour
             CampingSkills.Add(campSkill);
         }
     }
-    
-    public void LoadJsonUpgrades()
+
+    private void LoadJsonUpgrades()
     {
         UpgradeTrees = new Dictionary<string, UpgradeTree>();
 
@@ -1684,9 +1587,10 @@ public class DarkestDatabase : MonoBehaviour
         foreach (var tree in GetJsonHeroUpgradeTree())
             UpgradeTrees.Add(tree.Id, tree);
     }
-    public void LoadJsonTownEvents()
+
+    private void LoadJsonTownEvents()
     {
-        TextAsset jsonText = Resources.Load<TextAsset>(townEventsDataPath);
+        TextAsset jsonText = Resources.Load<TextAsset>(TownEventsDataPath);
         var jsonEvents = JsonDarkestDeserializer.GetJsonTownEvents(jsonText.text);
 
         EventDatabase = new TownEventDatabase();
@@ -1811,57 +1715,63 @@ public class DarkestDatabase : MonoBehaviour
         }
     }
 
-    public void LoadJsonBuildings()
+    private void LoadJsonBuildings()
     {
         Buildings = new Dictionary<string, Building>();
 
         foreach (var building in GetJsonBuildings())
             Buildings.Add(building.Name, building);
     }
-    public void LoadJsonHeroClasses()
+
+    private void LoadJsonHeroClasses()
     {
         HeroClasses = new Dictionary<string, HeroClass>();
 
-        foreach (var heroAsset in Resources.LoadAll<TextAsset>(heroesDirectory + "Info/"))
+        foreach (var heroAsset in Resources.LoadAll<TextAsset>(HeroesDirectory + "Info/"))
         {
             List<string> heroData = heroAsset.text.Split(
-                new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).ToList();
             HeroClass heroClass = new HeroClass(heroData);
             HeroClasses.Add(heroClass.StringId, heroClass);
         }
     }
-    public void LoadJsonQuests()
+
+    private void LoadJsonQuests()
     {
         QuestDatabase = GetJsonQuestDatabase();
     }
-    public void LoadJsonLoot()
+
+    private void LoadJsonLoot()
     {
         LootDatabase = GetJsonLootDatabase();
     }
-    public void LoadJsonObstacles()
+
+    private void LoadJsonObstacles()
     {
         Obstacles = new Dictionary<string, Obstacle>();
 
         foreach (var obstacle in GetJsonObstaclesLibrary())
             Obstacles.Add(obstacle.StringId, obstacle);
     }
-    public void LoadJsonTraps()
+
+    private void LoadJsonTraps()
     {
         Traps = new Dictionary<string, Trap>();
 
         foreach (var trap in GetJsonTrapLibrary())
             Traps.Add(trap.StringId, trap);
     }
-    public void LoadCsvCurios()
+
+    private void LoadCsvCurios()
     {
         Curios = new Dictionary<string, Curio>();
-        string[,] curioGrid = CsvReader.SplitCsvGrid(Resources.Load<TextAsset>(csvCurioDatabasePath).text);
+        string[,] curioGrid = CsvReader.SplitCsvGrid(Resources.Load<TextAsset>(CsvCurioDatabasePath).text);
         for(int i = 2; i < curioGrid.GetLength(0); i += 15)
         {
             Curio curio = new Curio(curioGrid[i + 2, 2]);
             curio.ResultTypes = curioGrid[i, 4].ToLower();
             curio.RegionFound = curioGrid[i + 4, 2].ToLower();
-            curio.IsFullCurio = curioGrid[i + 6, 2] == "Yes" ? true : false;
+            curio.IsFullCurio = curioGrid[i + 6, 2] == "Yes";
             if (curioGrid[i + 8, 2] != "")
                 curio.Tags.Add(curioGrid[i + 8, 2].ToLower());
             if (curioGrid[i + 8, 3] != "")
@@ -1943,10 +1853,10 @@ public class DarkestDatabase : MonoBehaviour
         }
     }
 
-    public void LoadTraits()
+    private void LoadTraits()
     {
         Traits = new List<Trait>();
-        var traitsAsset = Resources.Load<TextAsset>(jsonTraitDatabasePath);
+        var traitsAsset = Resources.Load<TextAsset>(JsonTraitDatabasePath);
         foreach(var jsonTrait in JsonDarkestDeserializer.GetJsonTraits(traitsAsset.text).traits)
         {
             Trait trait = new Trait();
@@ -1980,14 +1890,15 @@ public class DarkestDatabase : MonoBehaviour
             Traits.Add(trait);
         }
     }
-    public void LoadEffects()
+
+    private void LoadEffects()
     {
         Effects = new Dictionary<string, Effect>();
 
-        var effectsAsset = Resources.Load<TextAsset>(effectsDataPath);
+        var effectsAsset = Resources.Load<TextAsset>(EffectsDataPath);
 
         List<string> effectsStrings = effectsAsset.text.Split(
-            new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).ToList();
         effectsStrings.RemoveAll(item => !item.StartsWith("effect:"));
         
         foreach(var effectString in effectsStrings)
@@ -2003,12 +1914,13 @@ public class DarkestDatabase : MonoBehaviour
                 Effects.Add(effect.Name, effect);
         }
     }
-    public void LoadItems()
+
+    private void LoadItems()
     {
-        var itemData = Resources.Load<TextAsset>(itemDataPath).text;
-        foreach(var item in itemData.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries))
+        var itemData = Resources.Load<TextAsset>(ItemDataPath).text;
+        foreach(var item in itemData.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries))
         {
-            List<string> splitItem = item.Split(new char[] { '\t', ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            List<string> splitItem = item.Split(new[] { '\t', ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
             ItemData newItemData = new ItemData();
 
             newItemData.Type = splitItem[2].Replace("\"", "");
@@ -2022,63 +1934,33 @@ public class DarkestDatabase : MonoBehaviour
             Items[newItemData.Type].Add(newItemData.Id, newItemData);
         }
     }
-    public void LoadProvision()
+
+    private void LoadProvision()
     {
         Provision = GetJsonProvisionDatabase();
     }
-    public void LoadDungeons()
+
+    private void LoadDungeons()
     {
         LoadDungeonGenerationData();
 
         DungeonEnviromentData = new Dictionary<string, DungeonEnviromentData>();
-        LoadDungeonEnviroment("crypts", cryptsEnviromentDataPath);
-        LoadDungeonEnviroment("warrens", warrensEnviromentDataPath);
-        LoadDungeonEnviroment("weald", wealdEnviromentDataPath);
-        LoadDungeonEnviroment("cove", coveEnviromentDataPath);
-        LoadDungeonEnviroment("darkestdungeon", darkestEnviromentDataPath);
-        LoadDungeonEnviroment("town", townEnviromentDataPath);
-        LoadDungeonEnviroment("shared", sharedEnviromentDataPath);
+        LoadDungeonEnviroment("crypts", CryptsEnviromentDataPath);
+        LoadDungeonEnviroment("warrens", WarrensEnviromentDataPath);
+        LoadDungeonEnviroment("weald", WealdEnviromentDataPath);
+        LoadDungeonEnviroment("cove", CoveEnviromentDataPath);
+        LoadDungeonEnviroment("darkestdungeon", DarkestEnviromentDataPath);
+        LoadDungeonEnviroment("town", TownEnviromentDataPath);
+        LoadDungeonEnviroment("shared", SharedEnviromentDataPath);
     }
-    public void LoadSprites()
+
+    private void LoadSprites()
     {
         DungeonSprites = new Dictionary<string, Sprite>();
         Sprites = new Dictionary<string, Sprite>();
     }
-    public void LoadDungeon(string dungeon, string quest = null)
-    {
-        DungeonSprites.Clear();
-        switch(dungeon)
-        {
-            case "darkestdungeon":
-                switch(quest)
-                {
-                    case "plot_darkest_dungeon_1":
-                        foreach (var dungeonSprite in Resources.LoadAll<Sprite>("Dungeons/darkestdungeon/quest_1"))
-                            DungeonSprites.Add(dungeonSprite.name, dungeonSprite);
-                        break;
-                    case "plot_darkest_dungeon_2":
-                        foreach (var dungeonSprite in Resources.LoadAll<Sprite>("Dungeons/darkestdungeon/quest_2"))
-                            DungeonSprites.Add(dungeonSprite.name, dungeonSprite);
-                        break;
-                    case "plot_darkest_dungeon_3":
-                        foreach (var dungeonSprite in Resources.LoadAll<Sprite>("Dungeons/darkestdungeon/quest_3"))
-                            DungeonSprites.Add(dungeonSprite.name, dungeonSprite);
-                        break;
-                    case "plot_darkest_dungeon_4":
-                        foreach (var dungeonSprite in Resources.LoadAll<Sprite>("Dungeons/darkestdungeon/quest_4"))
-                            DungeonSprites.Add(dungeonSprite.name, dungeonSprite);
-                        break;
-                    default:
-                        goto case "plot_darkest_dungeon_1";
-                }
-                break;
-            default:
-                foreach (var dungeonSprite in Resources.LoadAll<Sprite>("Dungeons/" + dungeon))
-                    DungeonSprites.Add(dungeonSprite.name, dungeonSprite);
-                break;
-        }
-    }
-    public void LoadColours()
+
+    private void LoadColours()
     {
         HexColors = new Dictionary<string,string>();
 
@@ -2186,25 +2068,25 @@ public class DarkestDatabase : MonoBehaviour
         HexColors.Add("torch_ends", "#5f0400");
         HexColors.Add("torch_reduce_tip", HexColors["harmful"]);
     }
-    public void LoadCampaignGenerationData()
+
+    private void LoadCampaignGenerationData()
     {
         CampaignGeneration = new CampaignGenerationData();
-        TextAsset jsonText = Resources.Load<TextAsset>(jsonCampaignGenerationPath);
+        TextAsset jsonText = Resources.Load<TextAsset>(JsonCampaignGenerationPath);
         JsonCampaignData jsonData = JsonDarkestDeserializer.GetJsonCampaign(jsonText.text);
 
         CampaignGeneration.DungeonXpTable = jsonData.quest_completion_xp_table.ToArray();
         CampaignGeneration.DungeonXpLevelThreshold = jsonData.level_threshold_table.ToArray();
         CampaignGeneration.HeroXpLevelThreshold = jsonData.resolve_level_thresholds.ToArray();
-        CampaignGeneration.GoldIconThreshold = jsonData.gold_icon_thresholds.ToArray();
-        CampaignGeneration.ProvisionIconThreshold = jsonData.provision_icon_thresholds.ToArray();
     }
-    public void LoadMonsters()
+
+    private void LoadMonsters()
     {
         Monsters = new Dictionary<string, MonsterData>();
 
-        foreach (var monsterAsset in Resources.LoadAll<TextAsset>(monstersDirectory))
+        foreach (var monsterAsset in Resources.LoadAll<TextAsset>(MonstersDirectory))
         {
-            List<string> monsterText = monsterAsset.text.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            List<string> monsterText = monsterAsset.text.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).ToList();
             MonsterData monsterData = new MonsterData();
             monsterData.StringId = monsterText[0].Split(' ')[1];
             monsterData.TypeId = monsterText[1].Split(' ')[1];
@@ -2322,7 +2204,7 @@ public class DarkestDatabase : MonoBehaviour
                         break;
                     case "skill:":
                         List<string> combatData = new List<string>();
-                        data = monsterText[index - 1].Split(new char[] { '\"' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                        data = monsterText[index - 1].Split(new[] { '\"' }, StringSplitOptions.RemoveEmptyEntries).ToList();
                         bool isEffectData = false;
                         foreach (var item in data)
                         {
@@ -2337,7 +2219,7 @@ public class DarkestDatabase : MonoBehaviour
                                 }
                             }
 
-                            string[] combatItems = item.Replace("%", "").Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                            string[] combatItems = item.Replace("%", "").Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
                             if (combatItems[combatItems.Length - 1] == ".effect")
                                 isEffectData = true;
                             combatData.AddRange(combatItems);
@@ -2346,14 +2228,14 @@ public class DarkestDatabase : MonoBehaviour
                         break;
                     case "riposte_skill:":
                         List<string> riposteData = new List<string>();
-                        data = monsterText[index - 1].Split(new char[] { '\"' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                        data = monsterText[index - 1].Split(new[] { '\"' }, StringSplitOptions.RemoveEmptyEntries).ToList();
                         bool isRiposteData = false;
                         foreach (var item in data)
                         {
                             if (isRiposteData)
                             {
                                 if (item.Trim(' ').StartsWith("."))
-                                    isEffectData = false;
+                                    isRiposteData = false;
                                 else
                                 {
                                     riposteData.Add(item);
@@ -2362,9 +2244,9 @@ public class DarkestDatabase : MonoBehaviour
                             }
 
                             string[] combatItems = item.Replace("%", "").Split(
-                                new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                                new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
                             if (combatItems[combatItems.Length - 1] == ".effect")
-                                isEffectData = true;
+                                isRiposteData = true;
                             riposteData.AddRange(combatItems);
                         }
                         monsterData.RiposteSkill = new CombatSkill(riposteData, false);
@@ -2527,83 +2409,90 @@ public class DarkestDatabase : MonoBehaviour
             #endregion
         }
     }
-    public void LoadIconSets()
+
+    private void LoadIconSets()
     {
-        #region Resources
         foreach (var sprite in Resources.LoadAll<Sprite>("Sprites/"))
             Sprites.Add(sprite.name, sprite);
-        #endregion
+
         #region Room Icons
-        MapRoomIconSet = new Dictionary<AreaType, Sprite>();
 
-        MapRoomIconSet.Add(AreaType.Empty, Sprites["room_empty"]);
-        MapRoomIconSet.Add(AreaType.Tresure, Sprites["room_treasure"]);
-        MapRoomIconSet.Add(AreaType.BattleTresure, Sprites["room_treasure"]);
-        MapRoomIconSet.Add(AreaType.Entrance, Sprites["room_entrance"]);
-        MapRoomIconSet.Add(AreaType.Curio, Sprites["room_curio"]);
-        MapRoomIconSet.Add(AreaType.BattleCurio, Sprites["room_curio"]);
-        MapRoomIconSet.Add(AreaType.Boss, Sprites["room_boss"]);
-        MapRoomIconSet.Add(AreaType.Battle, Sprites["room_battle"]);
+        MapRoomIconSet = new Dictionary<AreaType, Sprite>
+        {
+            {AreaType.Empty, Sprites["room_empty"]},
+            {AreaType.Tresure, Sprites["room_treasure"]},
+            {AreaType.BattleTresure, Sprites["room_treasure"]},
+            {AreaType.Entrance, Sprites["room_entrance"]},
+            {AreaType.Curio, Sprites["room_curio"]},
+            {AreaType.BattleCurio, Sprites["room_curio"]},
+            {AreaType.Boss, Sprites["room_boss"]},
+            {AreaType.Battle, Sprites["room_battle"]}
+        };
 
-        MapRoomKnowledgeSet = new Dictionary<Knowledge, Sprite>();
-        MapRoomKnowledgeSet.Add(Knowledge.Completed, Sprites["marker_room_visited"]);
-        MapRoomKnowledgeSet.Add(Knowledge.Hidden, Sprites["room_unknown"]);
+        MapRoomKnowledgeSet = new Dictionary<Knowledge, Sprite>
+        {
+            {Knowledge.Completed, Sprites["marker_room_visited"]},
+            {Knowledge.Hidden, Sprites["room_unknown"]}
+        };
 
+        MapHallIconSet = new Dictionary<AreaType, Sprite>
+        {
+            {AreaType.Empty, Sprites["hall_dim"]},
+            {AreaType.Trap, Sprites["marker_trap"]},
+            {AreaType.Obstacle, Sprites["marker_obstacle"]},
+            {AreaType.Hunger, Sprites["marker_hunger"]},
+            {AreaType.Curio, Sprites["marker_curio"]},
+            {AreaType.Battle, Sprites["marker_battle"]}
+        };
 
-        MapHallIconSet = new Dictionary<AreaType, Sprite>();
-
-        MapHallIconSet.Add(AreaType.Empty, Sprites["hall_dim"]);
-        MapHallIconSet.Add(AreaType.Trap, Sprites["marker_trap"]);
-        MapHallIconSet.Add(AreaType.Obstacle, Sprites["marker_obstacle"]);
-        MapHallIconSet.Add(AreaType.Hunger, Sprites["marker_hunger"]);
-        MapHallIconSet.Add(AreaType.Curio, Sprites["marker_curio"]);
-        MapHallIconSet.Add(AreaType.Battle, Sprites["marker_battle"]);
-
-        MapHallKnowledgeSet = new Dictionary<Knowledge, Sprite>();
-        MapHallKnowledgeSet.Add(Knowledge.Completed, Sprites["hall_clear"]);
-        MapHallKnowledgeSet.Add(Knowledge.Hidden, Sprites["hall_dark"]);
-        MapHallKnowledgeSet.Add(Knowledge.Scouted, Sprites["hall_dim"]);
+        MapHallKnowledgeSet = new Dictionary<Knowledge, Sprite>
+        {
+            {Knowledge.Completed, Sprites["hall_clear"]},
+            {Knowledge.Hidden, Sprites["hall_dark"]},
+            {Knowledge.Scouted, Sprites["hall_dim"]}
+        };
 
         #endregion
+
         #region Hero Icons
+
         HeroSprites = new HeroSpriteDatabase();
         foreach(var hero in HeroClasses.Values)
         {
             HeroSpriteInfo heroInfo = new HeroSpriteInfo();
 
-            heroInfo.Header = Resources.Load<Sprite>(heroesDirectory + "Sprites/"
+            heroInfo.Header = Resources.Load<Sprite>(HeroesDirectory + "Sprites/"
                 + hero.StringId + "/" + hero.StringId + "_guild_header");
 
-            heroInfo.Skills.Add("one", Resources.Load<Sprite>(heroesDirectory + "Sprites/"
+            heroInfo.Skills.Add("one", Resources.Load<Sprite>(HeroesDirectory + "Sprites/"
                 + hero.StringId + "/" + hero.StringId + ".ability.one"));
-            heroInfo.Skills.Add("two", Resources.Load<Sprite>(heroesDirectory + "Sprites/"
+            heroInfo.Skills.Add("two", Resources.Load<Sprite>(HeroesDirectory + "Sprites/"
                 + hero.StringId + "/" + hero.StringId + ".ability.two"));
-            heroInfo.Skills.Add("three", Resources.Load<Sprite>(heroesDirectory + "Sprites/"
+            heroInfo.Skills.Add("three", Resources.Load<Sprite>(HeroesDirectory + "Sprites/"
                 + hero.StringId + "/" + hero.StringId + ".ability.three"));
-            heroInfo.Skills.Add("four", Resources.Load<Sprite>(heroesDirectory + "Sprites/"
+            heroInfo.Skills.Add("four", Resources.Load<Sprite>(HeroesDirectory + "Sprites/"
                 + hero.StringId + "/" + hero.StringId + ".ability.four"));
-            heroInfo.Skills.Add("five", Resources.Load<Sprite>(heroesDirectory + "Sprites/"
+            heroInfo.Skills.Add("five", Resources.Load<Sprite>(HeroesDirectory + "Sprites/"
                 + hero.StringId + "/" + hero.StringId + ".ability.five"));
-            heroInfo.Skills.Add("six", Resources.Load<Sprite>(heroesDirectory + "Sprites/"
+            heroInfo.Skills.Add("six", Resources.Load<Sprite>(HeroesDirectory + "Sprites/"
                 + hero.StringId + "/" + hero.StringId + ".ability.six"));
-            heroInfo.Skills.Add("seven", Resources.Load<Sprite>(heroesDirectory + "Sprites/"
+            heroInfo.Skills.Add("seven", Resources.Load<Sprite>(HeroesDirectory + "Sprites/"
                 + hero.StringId + "/" + hero.StringId + ".ability.seven"));
 
-            foreach(string outfit in new string[] { "A", "B", "C", "D"})
+            foreach(string outfit in new[] { "A", "B", "C", "D"})
             {
                 HeroOutfit heroOutfit = new HeroOutfit();
-                heroOutfit.OutfitId = outfit;
-                string portraitString = heroesDirectory + "Sprites/"
+                string portraitString = HeroesDirectory + "Sprites/"
                 + hero.StringId + "/" + outfit + "/" + hero.StringId + "_portrait_roster";
                 heroOutfit.Portrait = Resources.Load<Sprite>(portraitString);
                 heroInfo.Outfits.Add(outfit, heroOutfit);
             }
 
             foreach (var weapon in hero.Weapons)
-                heroInfo.Equip.Add(weapon.Name, Resources.Load<Sprite>(heroesDirectory + "Sprites/" + hero.StringId
+                heroInfo.Equip.Add(weapon.Name, Resources.Load<Sprite>(HeroesDirectory + "Sprites/" + hero.StringId
                     + "/Equipment/eqp_weapon_" + weapon.Name[weapon.Name.Length - 1]));
             foreach (var armor in hero.Armors)
-                heroInfo.Equip.Add(armor.Name, Resources.Load<Sprite>(heroesDirectory + "Sprites/" + hero.StringId
+                heroInfo.Equip.Add(armor.Name, Resources.Load<Sprite>(HeroesDirectory + "Sprites/" + hero.StringId
                     + "/Equipment/eqp_armour_" + armor.Name[armor.Name.Length - 1]));
             
             HeroSprites.HeroClassInfo.Add(hero.StringId, heroInfo);
@@ -2612,74 +2501,62 @@ public class DarkestDatabase : MonoBehaviour
         #endregion        
     }
 
-    void LoadDungeonGenerationData()
+    private void LoadDungeonGenerationData()
     {
         DungeonGenerationData = new List<DungeonGenerationData>();
-        string dungeonText = Resources.Load<TextAsset>(dungeonGenerationDataPath).text;
-        List<string> dungeonList = dungeonText.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+        string dungeonText = Resources.Load<TextAsset>(DungeonGenerationDataPath).text;
+        List<string> dungeonList = dungeonText.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).ToList();
         for (int i = 0; i < dungeonList.Count; i++)
         {
-            if (dungeonList[i] == "map:")
+            if (dungeonList[i] != "map:")
+                continue;
+
+            DungeonGenerationData dungeonData = new DungeonGenerationData
             {
-                DungeonGenerationData dungeonData = new DungeonGenerationData();
-                dungeonData.Length = dungeonList[++i].Split(' ')[1];
-                dungeonData.QuestType = dungeonList[++i].Split(' ')[1];
-                dungeonData.Dungeon = dungeonList[++i].Split(' ')[1];
-                dungeonData.BaseRoomNumber = int.Parse(dungeonList[++i].Split(' ')[1]);
-                dungeonData.BaseCorridorNumber = int.Parse(dungeonList[++i].Split(' ')[1]);
+                Length = dungeonList[++i].Split(' ')[1],
+                QuestType = dungeonList[++i].Split(' ')[1],
+                Dungeon = dungeonList[++i].Split(' ')[1],
+                BaseRoomNumber = int.Parse(dungeonList[++i].Split(' ')[1]),
+                BaseCorridorNumber = int.Parse(dungeonList[++i].Split(' ')[1]),
+                GridSizeX = int.Parse(dungeonList[++i].Split(' ')[1]),
+                GridSizeY = int.Parse(dungeonList[i].Split(' ')[2]),
+                Spacing = int.Parse(dungeonList[++i].Split(' ')[1]),
+                GoalRoomNumber = int.Parse(dungeonList[++i].Split(' ')[1]),
+                Connectivity = float.Parse(dungeonList[++i].Split(' ')[1]),
+                MinFinalDistance = int.Parse(dungeonList[++i].Split(' ')[1]),
+                HallwayBattleMin = int.Parse(dungeonList[++i].Split(' ')[1]),
+                HallwayBattleMax = int.Parse(dungeonList[i].Split(' ')[2]),
+                HallwayTrapMin = int.Parse(dungeonList[++i].Split(' ')[1]),
+                HallwayTrapMax = int.Parse(dungeonList[i].Split(' ')[2]),
+                HallwayObstacleMin = int.Parse(dungeonList[++i].Split(' ')[1]),
+                HallwayObstacleMax = int.Parse(dungeonList[i].Split(' ')[2]),
+                HallwayCurioMin = int.Parse(dungeonList[++i].Split(' ')[1]),
+                HallwayCurioMax = int.Parse(dungeonList[i].Split(' ')[2]),
+                HallwayHungerMin = int.Parse(dungeonList[++i].Split(' ')[1]),
+                HallwayHungerMax = int.Parse(dungeonList[i].Split(' ')[2]),
+                TotalRoomBattleMin = int.Parse(dungeonList[++i].Split(' ')[1]),
+                TotalRoomBattleMax = int.Parse(dungeonList[i].Split(' ')[2]),
+                RoomBattleMin = int.Parse(dungeonList[++i].Split(' ')[1]),
+                RoomBattleMax = int.Parse(dungeonList[i].Split(' ')[2]),
+                RoomGuardedCurioMin = int.Parse(dungeonList[++i].Split(' ')[1]),
+                RoomGuardedCurioMax = int.Parse(dungeonList[i].Split(' ')[2]),
+                RoomCurioMin = int.Parse(dungeonList[++i].Split(' ')[1]),
+                RoomCurioMax = int.Parse(dungeonList[i].Split(' ')[2]),
+                RoomGuardedTresureMin = int.Parse(dungeonList[++i].Split(' ')[1]),
+                RoomGuardedTresureMax = int.Parse(dungeonList[i].Split(' ')[2]),
+                RoomTresureMin = int.Parse(dungeonList[++i].Split(' ')[1]),
+                RoomTresureMax = int.Parse(dungeonList[i].Split(' ')[2])
+            };
 
-                dungeonData.GridSizeX = int.Parse(dungeonList[++i].Split(' ')[1]);
-                dungeonData.GridSizeY = int.Parse(dungeonList[i].Split(' ')[2]);
-
-                dungeonData.Spacing = int.Parse(dungeonList[++i].Split(' ')[1]);
-                dungeonData.GoalRoomNumber = int.Parse(dungeonList[++i].Split(' ')[1]);
-                dungeonData.Connectivity = float.Parse(dungeonList[++i].Split(' ')[1]);
-                dungeonData.MinFinalDistance = int.Parse(dungeonList[++i].Split(' ')[1]);
-
-                dungeonData.HallwayBattleMin = int.Parse(dungeonList[++i].Split(' ')[1]);
-                dungeonData.HallwayBattleMax = int.Parse(dungeonList[i].Split(' ')[2]);
-
-                dungeonData.HallwayTrapMin = int.Parse(dungeonList[++i].Split(' ')[1]);
-                dungeonData.HallwayTrapMax = int.Parse(dungeonList[i].Split(' ')[2]);
-
-                dungeonData.HallwayObstacleMin = int.Parse(dungeonList[++i].Split(' ')[1]);
-                dungeonData.HallwayObstacleMax = int.Parse(dungeonList[i].Split(' ')[2]);
-
-                dungeonData.HallwayCurioMin = int.Parse(dungeonList[++i].Split(' ')[1]);
-                dungeonData.HallwayCurioMax = int.Parse(dungeonList[i].Split(' ')[2]);
-
-                dungeonData.HallwayHungerMin = int.Parse(dungeonList[++i].Split(' ')[1]);
-                dungeonData.HallwayHungerMax = int.Parse(dungeonList[i].Split(' ')[2]);
-
-                dungeonData.TotalRoomBattleMin = int.Parse(dungeonList[++i].Split(' ')[1]);
-                dungeonData.TotalRoomBattleMax = int.Parse(dungeonList[i].Split(' ')[2]);
-
-                dungeonData.RoomBattleMin = int.Parse(dungeonList[++i].Split(' ')[1]);
-                dungeonData.RoomBattleMax = int.Parse(dungeonList[i].Split(' ')[2]);
-
-                dungeonData.RoomGuardedCurioMin = int.Parse(dungeonList[++i].Split(' ')[1]);
-                dungeonData.RoomGuardedCurioMax = int.Parse(dungeonList[i].Split(' ')[2]);
-
-                dungeonData.RoomCurioMin = int.Parse(dungeonList[++i].Split(' ')[1]);
-                dungeonData.RoomCurioMax = int.Parse(dungeonList[i].Split(' ')[2]);
-
-                dungeonData.RoomGuardedTresureMin = int.Parse(dungeonList[++i].Split(' ')[1]);
-                dungeonData.RoomGuardedTresureMax = int.Parse(dungeonList[i].Split(' ')[2]);
-
-                dungeonData.RoomTresureMin = int.Parse(dungeonList[++i].Split(' ')[1]);
-                dungeonData.RoomTresureMax = int.Parse(dungeonList[i].Split(' ')[2]);
-
-                DungeonGenerationData.Add(dungeonData);
-            }
+            DungeonGenerationData.Add(dungeonData);
         }
     }
-    void LoadDungeonEnviroment(string dungeon, string dataPath)
+
+    private void LoadDungeonEnviroment(string dungeon, string dataPath)
     {
         var envData = new DungeonEnviromentData();
         string dungeonText = Resources.Load<TextAsset>(dataPath).text;
-        List<string> dungeonList = dungeonText.Split(new char[]{'\r','\n'}, StringSplitOptions.RemoveEmptyEntries).ToList();
-        envData.Id = int.Parse(dungeonList[0].Split(' ')[1]);
-        envData.IsReady = bool.Parse(dungeonList[1].Split(' ')[1]);
+        List<string> dungeonList = dungeonText.Split(new[]{'\r','\n'}, StringSplitOptions.RemoveEmptyEntries).ToList();
         envData.HallVariations = int.Parse(dungeonList[2].Split(' ')[1]);
 
         List<string> items = dungeonList[3].Split(' ').ToList();
@@ -2690,11 +2567,11 @@ public class DarkestDatabase : MonoBehaviour
         {
             if(dungeonList[i] == "mash:")
             {
-                DungeonBattleMash mash = new DungeonBattleMash();
-                mash.MashId = int.Parse(dungeonList[++i].Split(' ')[1]);
+                DungeonBattleMash mash = new DungeonBattleMash {MashId = int.Parse(dungeonList[++i].Split(' ')[1])};
+
                 while(dungeonList[++i] != ".end")
                 {
-                    items = dungeonList[i].Split(new char[]{' '}, StringSplitOptions.RemoveEmptyEntries).ToList();
+                    items = dungeonList[i].Split(new[]{' '}, StringSplitOptions.RemoveEmptyEntries).ToList();
                     switch(items[0])
                     {
                         case "hall:":
@@ -2728,7 +2605,7 @@ public class DarkestDatabase : MonoBehaviour
             {
                 while(dungeonList[++i] != ".end")
                 {
-                    items = dungeonList[i].Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                    items = dungeonList[i].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
                     switch(items[0])
                     {
                         case "hall_curios:":
@@ -2755,17 +2632,9 @@ public class DarkestDatabase : MonoBehaviour
         }
         DungeonEnviromentData.Add(dungeon, envData);
     }
-    Color ModColor(float r, float g, float b, float a)
+
+    private Color ModColor(float r, float g, float b, float a)
     {
         return new Color(r / 255, g / 255, b / 255, a / 255);
-    }
-    public Color FromHexDatabase(string databaseColor)
-    {
-        Color outColor;
-        if (ColorUtility.TryParseHtmlString(DarkestDungeonManager.Data.HexColors[databaseColor], out outColor))
-            return outColor;
-        else
-            Debug.LogError("Missing colour: " + databaseColor);
-        return Color.black;
     }
 }

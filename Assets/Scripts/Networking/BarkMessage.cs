@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public class BarkMessage
+﻿public class BarkMessage
 {
     public Team Team { get; set; }
     public string Message { get; set; }

@@ -3,10 +3,14 @@ using UnityEngine.UI;
 
 public class ActivityRecordSlot : MonoBehaviour
 {
-    public RectTransform rectTransform;
+    [SerializeField]
+    private RectTransform rectTransform;
+    [SerializeField]
+    private Image activityIcon;
+    [SerializeField]
+    private Text activityText;
 
-    public Image activityIcon;
-    public Text activityText;
+    public RectTransform RectTransform { get { return rectTransform; } }
 
     public void UpdateActivityRecord(ActorActivityRecord record)
     {
@@ -15,6 +19,7 @@ public class ActivityRecordSlot : MonoBehaviour
         activityText.text = record.Description;
         gameObject.SetActive(true);
     }
+
     public void ResetActivityRecord()
     {
         gameObject.SetActive(false);
