@@ -2,8 +2,8 @@
 
 public class Resolve
 {
+    public int CurrentXP { get; set; }
     public int Level { get; private set; }
-    public int CurrentXP { get; private set; }
     public int NextLevelXP { get; private set; }
 
     public float Ratio
