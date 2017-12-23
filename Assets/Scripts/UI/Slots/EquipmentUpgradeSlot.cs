@@ -64,7 +64,6 @@ public class EquipmentUpgradeSlot : MonoBehaviour, IPointerEnterHandler, IPointe
             DarkestSoundManager.PlayOneShot("event:/ui/town/button_mouse_over");
             ToolTipManager.Instanse.Show(Equipment.Tooltip, rectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
         }
-
     }
 
     public void OnPointerExit(PointerEventData eventData)

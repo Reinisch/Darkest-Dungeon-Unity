@@ -26,6 +26,5 @@ public class BuildingUpgradeTreeSlot : MonoBehaviour
 
             connector.sizeDelta = new Vector2(ConnectorWidthPerSlot*(lastPurchasedIndex + 1), connector.sizeDelta.y);
         }
-
     }
 }

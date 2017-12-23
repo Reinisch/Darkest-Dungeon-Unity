@@ -134,7 +134,6 @@ public class RaidPartySlot : MonoBehaviour, IDropHandler, IDragHandler, IBeginDr
             }
             else
                 ItemDroppedIn(droppedItem);
-
         }
         else
         {

@@ -61,7 +61,6 @@ public class SkillUpgradeSlot : MonoBehaviour, IPointerEnterHandler, IPointerExi
                 Skill, rectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
         else
             ToolTipManager.Instanse.ShowSkillTooltip(Hero, Skill, rectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
-
     }
 
     public void OnPointerExit(PointerEventData eventData)

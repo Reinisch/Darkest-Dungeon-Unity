@@ -57,7 +57,6 @@ public class FormationRanks : MonoBehaviour
         if (!FacingRight)
             for (int i = 0; i < party.Units.Count; i++)
                 party.Units[i].InstantFlip();
-
     }
 
     public void InstantRelocation()

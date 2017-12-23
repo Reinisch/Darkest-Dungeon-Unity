@@ -169,7 +169,6 @@ public class BattleFormation : MonoBehaviour
                 unit.Formation = this;
             Overlay.LockOnUnits(Party);
         }
-
     }
 
     #endregion

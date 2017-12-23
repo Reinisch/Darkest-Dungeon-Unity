@@ -525,7 +525,6 @@ public class EstateSceneManager : MonoBehaviour
         {
             DarkestDungeonManager.MainMenu.WindowClosed();
         }
-
     }
 
     public void ActivityLogClick()

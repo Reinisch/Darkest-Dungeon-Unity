@@ -69,7 +69,6 @@ public class FormationRanksSlot : MonoBehaviour
             RectTransform.SetSiblingIndex(4 - Unit.Rank);
         else
             RectTransform.SetSiblingIndex(Unit.Rank - 1);
-        
     }
 
     public void ClearSlot()

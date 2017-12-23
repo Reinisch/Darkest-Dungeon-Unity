@@ -313,9 +313,7 @@ public class RaidHallSector : MonoBehaviour, IRaidArea
                             }
                         }
                     }
-
                 }
-
             }
             #endregion
 

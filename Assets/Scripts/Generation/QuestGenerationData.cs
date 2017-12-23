@@ -48,7 +48,7 @@ public class GeneratedQuestType : IProportionValue
 
 public class GeneratedResolveDifficulty
 {
-    public List<int> ResolveLevels { get; set;}
+    public List<int> ResolveLevels { get; set; }
     public int Difficulty { get; set; }
 
     public GeneratedResolveDifficulty()

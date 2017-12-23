@@ -205,7 +205,6 @@ public class TownActivity
                     }
                     break;
             }
-            
         }
     }
 

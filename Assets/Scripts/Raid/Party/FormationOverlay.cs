@@ -48,7 +48,6 @@ public class FormationOverlay : MonoBehaviour
             else
                 OverlaySlots[i].ClearTarget();
         }
-            
     }
 
     public void UpdateOverlay()

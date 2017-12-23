@@ -93,7 +93,6 @@ public class BuildingUpgradeSlot : MonoBehaviour, IPointerEnterHandler, IPointer
             DarkestSoundManager.PlayOneShot("event:/ui/town/button_mouse_over");
             ToolTipManager.Instanse.Show(toolTip, rectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
         }
-
     }
 
     public void OnPointerExit(PointerEventData eventData)

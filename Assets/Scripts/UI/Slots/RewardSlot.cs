@@ -47,7 +47,6 @@ public class RewardSlot : BaseSlot, IPointerEnterHandler, IPointerExitHandler
             itemFrame.sprite = DarkestDungeonManager.Data.Sprites["inv_" + item.Type + "+" + item.Id];
             amountText.text = Item.Amount.ToString();
         }
-        
     }
 
     public void SetSingle(ItemDefinition item)

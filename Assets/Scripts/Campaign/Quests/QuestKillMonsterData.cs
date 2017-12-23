@@ -3,7 +3,7 @@ using System.Collections.Generic;
 public class QuestKillMonsterData : IQuestData
 {
     public List<string> MonsterNameIds { get; set; }
-    public int Amount { private get; set;}
+    public int Amount { private get; set; }
 
     public string GetDataString(string goalType)
     {

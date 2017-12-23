@@ -60,7 +60,6 @@ public class Estate
         NomadWagon.InitializeBuilding(TownPurchases);
         StageCoach.InitializeBuilding(TownPurchases);
         Graveyard.Records.AddRange(saveData.DeathRecords);
-
     }
 
     public void RedeployCaretaker()

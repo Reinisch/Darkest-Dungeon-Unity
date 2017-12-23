@@ -189,7 +189,6 @@ public class ScrollEventInteraction : MonoBehaviour
                 interactionSlot.IsItemAllowed = true;
                 interactionSlot.IsItemFixed = false;
             }
-            
         }
         else
         {

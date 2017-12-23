@@ -61,7 +61,6 @@ public class BlacksmithWindow : BuildingWindow
         }
         else if (status == UpgradeStatus.Locked)
             DarkestSoundManager.PlayOneShot("event:/ui/town/button_click_locked");
-
     }
 
     public override void Initialize()

@@ -16,7 +16,6 @@ public class BuffInfo : IBinarySaveData
 
     public BuffInfo()
     {
-        
     }
 
     public BuffInfo(Buff buff, BuffDurationType durationType, BuffSourceType sourceType, int duration = 1)

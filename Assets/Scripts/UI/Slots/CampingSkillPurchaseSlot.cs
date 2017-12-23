@@ -90,7 +90,6 @@ public class CampingSkillPurchaseSlot : MonoBehaviour, IPointerEnterHandler, IPo
 
         if(Skill != null)
             ToolTipManager.Instanse.Show(Skill.Tooltip(), rectTransform, ToolTipStyle.FromRight, ToolTipSize.Normal);
-
     }
 
     public void OnPointerExit(PointerEventData eventData)

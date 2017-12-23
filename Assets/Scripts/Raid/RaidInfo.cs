@@ -112,6 +112,5 @@ public class RaidInfo
                 LastSector = enterSector;
             }
         }
-        
     }
 }

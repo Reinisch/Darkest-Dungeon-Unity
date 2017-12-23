@@ -53,7 +53,6 @@ public class DarkestSoundManager : MonoBehaviour
 
     public static void ExecuteNarration(string id, NarrationPlace place, params string[] tags)
     {
-        // + enter_hallway + half_health_half_stress
         if (!DarkestDungeonManager.Data.Narration.ContainsKey(id))
             return;
 
@@ -88,7 +87,6 @@ public class DarkestSoundManager : MonoBehaviour
                     return;
             }
         }
-
         else if (!RandomSolver.CheckSuccess(narrationEvent.Chance))
             return;
 

@@ -47,7 +47,6 @@ public class CampingSkill : Skill
         sb.AppendFormat("\n" + LocalizationManager.GetString("camping_skill_cost"), TimeCost);
         sb.AppendFormat("</color><color={0}>", DarkestDungeonManager.Data.HexColors["neutral"]);
 
-
         for (int i = 0; i < Effects.Count; i++)
         {
             if(i > 0)
@@ -133,7 +132,6 @@ public class CampingSkill : Skill
                     }
                     break;
             }
-
         }
 
         sb.AppendFormat("</color>");

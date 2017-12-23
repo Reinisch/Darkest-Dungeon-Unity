@@ -618,6 +618,5 @@ public static class CharacterHelper
                 Debug.LogError("Unknown rarity: " + rarityString);
                 return Rarity.Common;
         }
-        
     }
 }

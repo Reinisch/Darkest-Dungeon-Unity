@@ -99,7 +99,6 @@ public class ResultItemWindow : MonoBehaviour
                             newSlot.transform.SetParent(heirloomSlots, false);
                             newSlot.transform.SetAsLastSibling();
                         }
-
                     }
                     else if (slot.SlotItem.Item.Type == "gold")
                     {

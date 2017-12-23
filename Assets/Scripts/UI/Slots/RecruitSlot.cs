@@ -44,7 +44,6 @@ public class RecruitSlot : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
 
             transform.parent.gameObject.SetActive(true);
         }
-        
     }
 
     public void RemoveSlot()

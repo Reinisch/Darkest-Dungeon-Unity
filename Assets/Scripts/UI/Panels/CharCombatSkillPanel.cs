@@ -66,7 +66,6 @@ public class CharCombatSkillPanel : MonoBehaviour
                     SkillSlots[i].SkillIcon.material = SkillSlots[i].Highlighted ?
                         DarkestDungeonManager.HighlightMaterial : SkillSlots[i].SkillIcon.defaultMaterial;
                 }
-
             }
         else
             for (int i = 0; i < SkillSlots.Count; i++)

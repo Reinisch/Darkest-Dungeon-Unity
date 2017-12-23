@@ -167,7 +167,6 @@ public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             itemSource.Delete();
         else
             itemSource.UpdateAmount();
-
     }
 
     public void CopyToDragItem(DragItemHolder dragItem)

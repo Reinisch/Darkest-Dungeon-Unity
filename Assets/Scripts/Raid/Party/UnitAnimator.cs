@@ -8,7 +8,7 @@ public class UnitAnimator : MonoBehaviour
     public List<SkeletonAnimation> SkeletonAnimations;
     public List<SkeletonAnimation> Effects;
 
-    void Awake()
+    private void Awake()
     {
         if(Effects != null)
         foreach (var skelAnim in Effects)
@@ -49,8 +49,8 @@ public class UnitAnimator : MonoBehaviour
                 SkeletonAnimations[animatorIndex].state.SetAnimation(0, SkeletonAnimations[animatorIndex].name, false);
             }
         }
-
     }
+
     public void ResetLoop(int animatorIndex)
     {
         if (SkeletonAnimations[animatorIndex].Skeleton == null)
@@ -68,6 +68,7 @@ public class UnitAnimator : MonoBehaviour
 
         SkeletonAnimations[2].state.SetAnimation(0, "death", false);
     }
+
     public void Death()
     {
         if (SkeletonAnimations[1].Skeleton == null)
@@ -85,6 +86,7 @@ public class UnitAnimator : MonoBehaviour
         SkeletonAnimations[14].Update(0);
         SkeletonAnimations[14].AnimationName = "attack_transform_human";
     }
+
     public void TransformBeast()
     {
         if (SkeletonAnimations[14].Skeleton == null)
@@ -93,6 +95,7 @@ public class UnitAnimator : MonoBehaviour
         SkeletonAnimations[14].Update(0);
         SkeletonAnimations[14].AnimationName = "attack_transform_beast";
     }
+
     public void CombatHuman()
     {
         if (SkeletonAnimations[0].Skeleton == null)
@@ -106,6 +109,7 @@ public class UnitAnimator : MonoBehaviour
 
         SkeletonAnimations[0].state.SetAnimation(0, "combat_human", true).Time = 0;
     }
+
     public void CombatBeast()
     {
         if (SkeletonAnimations[0].Skeleton == null)
@@ -119,6 +123,7 @@ public class UnitAnimator : MonoBehaviour
 
         SkeletonAnimations[0].state.SetAnimation(0, "combat_beast", true).Time = 0;
     }
+
     public void HeroicBeast()
     {
         if (SkeletonAnimations[6].skeleton == null)
@@ -128,6 +133,7 @@ public class UnitAnimator : MonoBehaviour
         SkeletonAnimations[6].Update(0);
         SkeletonAnimations[6].AnimationName = "heroic_beast";
     }
+
     public void HeroicHuman()
     {
         if(SkeletonAnimations[6].skeleton == null)
@@ -137,6 +143,7 @@ public class UnitAnimator : MonoBehaviour
         SkeletonAnimations[6].Update(0);
         SkeletonAnimations[6].AnimationName = "heroic_human";
     }
+
     public void DefendHuman()
     {
         if (SkeletonAnimations[1].Skeleton == null)
@@ -145,6 +152,7 @@ public class UnitAnimator : MonoBehaviour
         SkeletonAnimations[1].Update(0);
         SkeletonAnimations[1].AnimationName = "defend_human";
     }
+
     public void DefendBeast()
     {
         if (SkeletonAnimations[1].Skeleton == null)
@@ -153,6 +161,7 @@ public class UnitAnimator : MonoBehaviour
         SkeletonAnimations[1].Update(0);
         SkeletonAnimations[1].AnimationName = "defend_beast";
     }
+
     public void DeathHuman()
     {
         if (SkeletonAnimations[1].Skeleton == null)
@@ -161,6 +170,7 @@ public class UnitAnimator : MonoBehaviour
         SkeletonAnimations[1].Update(0);
         SkeletonAnimations[1].AnimationName = "death_human";
     }
+
     public void DeathBeast()
     {
         if (SkeletonAnimations[1].Skeleton == null)

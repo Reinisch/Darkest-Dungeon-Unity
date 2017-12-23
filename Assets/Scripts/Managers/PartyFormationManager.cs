@@ -361,7 +361,6 @@ public class PartyFormationManager : MonoBehaviour
             unit.SetDefendAnimation(true);
         if (unit.CurrentHalo != null)
             unit.CurrentHalo.SkeletonAnimation.MeshRenderer.enabled = true;
-        
     }
 
     public void UnitDefendOutro(FormationUnit unit)

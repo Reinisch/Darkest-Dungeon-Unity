@@ -356,7 +356,6 @@ public class TorchMeter : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 sb.AppendLine();
                 sb.Append("</color>");
                 break;
-
         }
         sb.AppendFormat("<color={0}>", DarkestDungeonManager.Data.HexColors["harmful"]);
         sb.Append(LocalizationManager.GetString("str_reduce_torch_tip"));
