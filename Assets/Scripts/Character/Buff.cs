@@ -62,6 +62,11 @@ public class Buff
         return false;
     }
 
+    public bool IsSameBuff(Buff buff)
+    {
+        return AttributeType == buff.AttributeType && RuleType == buff.RuleType && IsFalseRule == buff.IsFalseRule;
+    }
+
     public string ToolTip
     {
         get

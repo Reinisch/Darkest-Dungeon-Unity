@@ -390,7 +390,7 @@ public static class BattleSolver
 
             if (target.BattleModifiers != null && target.BattleModifiers.CanBeDamagedDirectly == false)
                 damage = 0;
-            
+
             if (skill.IsCritValid)
             {
                 float critChance = performer.GetSingleAttribute(AttributeType.CritChance).ModifiedValue + skill.CritMod;

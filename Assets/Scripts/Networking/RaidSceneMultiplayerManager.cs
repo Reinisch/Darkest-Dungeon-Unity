@@ -1134,12 +1134,14 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                         yield return new WaitForSeconds(1.4f);
                         BattleGround.Round.PostHeroTurn();
                         ExecuteDeath(actionUnit);
+                        yield return StartCoroutine(ExecuteEffectEvents(true));
                         yield break;
                     }
                     else
                     {
                         RaidEvents.ShowPopupMessage(actionUnit, PopupMessageType.DeathsDoor);
                         yield return new WaitForSeconds(0.6f);
+                        yield return StartCoroutine(ExecuteEffectEvents(true));
                     }
                 }
                 else
@@ -1206,12 +1208,14 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                         yield return new WaitForSeconds(1.4f);
                         BattleGround.Round.PostHeroTurn();
                         ExecuteDeath(actionUnit);
+                        yield return StartCoroutine(ExecuteEffectEvents(true));
                         yield break;
                     }
                     else
                     {
                         RaidEvents.ShowPopupMessage(actionUnit, PopupMessageType.DeathsDoor);
                         yield return new WaitForSeconds(0.6f);
+                        yield return StartCoroutine(ExecuteEffectEvents(true));
                     }
                 }
                 else
@@ -1826,12 +1830,14 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                         yield return new WaitForSeconds(1.4f);
                         BattleGround.Round.PostHeroTurn();
                         ExecuteDeath(actionUnit);
+                        yield return StartCoroutine(ExecuteEffectEvents(true));
                         yield break;
                     }
                     else
                     {
                         RaidEvents.ShowPopupMessage(actionUnit, PopupMessageType.DeathsDoor);
                         yield return new WaitForSeconds(0.6f);
+                        yield return StartCoroutine(ExecuteEffectEvents(true));
                     }
                 }
                 else
@@ -1896,12 +1902,14 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                         yield return new WaitForSeconds(1.4f);
                         BattleGround.Round.PostHeroTurn();
                         ExecuteDeath(actionUnit);
+                        yield return StartCoroutine(ExecuteEffectEvents(true));
                         yield break;
                     }
                     else
                     {
                         RaidEvents.ShowPopupMessage(actionUnit, PopupMessageType.DeathsDoor);
                         yield return new WaitForSeconds(0.6f);
+                        yield return StartCoroutine(ExecuteEffectEvents(true));
                     }
                 }
                 else
@@ -1941,8 +1949,6 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
             }
             #endregion
         }
-
-
 
         if (actionUnit.CombatInfo.IsSurprised)
             actionUnit.SetSurprised(false);

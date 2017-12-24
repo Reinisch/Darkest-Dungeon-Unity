@@ -136,12 +136,12 @@ public class TraySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 break;
             case TraySlotType.Buff:
                 sb.AppendFormat("<color={0}>", DarkestDungeonManager.Data.HexColors["neutral"]);
-                sb.Append(TrayPanel.TargetUnit.Character.CombatBuffTooltip());
+                sb.Append(TrayPanel.TargetUnit.Character.CombatBuffTooltip(true));
                 sb.Append("</color>");
                 break;
             case TraySlotType.Debuff:
                 sb.AppendFormat("<color={0}>", DarkestDungeonManager.Data.HexColors["harmful"]);
-                sb.Append(TrayPanel.TargetUnit.Character.CombatDebuffTooltip());
+                sb.Append(TrayPanel.TargetUnit.Character.CombatBuffTooltip(false));
                 sb.Append("</color>");
                 break;
             case TraySlotType.Bleed:

@@ -26945,10 +26945,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startingMode: 1
   startingItems:
-  - bloated_corpse_A
-  - bloated_corpse_A
-  - bloated_corpse_A
-  - bloated_corpse_A
+  - ancestor_small_D
   dungeonCamera: {fileID: 447450558}
   hallwayView: {fileID: 1199950669}
   roomView: {fileID: 970925681}

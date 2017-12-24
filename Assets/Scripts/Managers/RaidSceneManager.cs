@@ -3075,6 +3075,7 @@ public class RaidSceneManager : MonoBehaviour
                 }
 
                 yield return new WaitForSeconds(actionUnit.Character.AtDeathsDoor ? 0.6f : 0.3f);
+                yield return StartCoroutine(ExecuteEffectEvents(true));
             }
 
             if (actionUnit.Character.GetStatusEffect(StatusType.Poison).IsApplied)
@@ -3092,6 +3093,7 @@ public class RaidSceneManager : MonoBehaviour
                 }
 
                 yield return new WaitForSeconds(actionUnit.Character.AtDeathsDoor ? 0.6f : 0.3f);
+                yield return StartCoroutine(ExecuteEffectEvents(true));
             }
 
             if (actionUnit.CombatInfo.IsSurprised)
@@ -4154,9 +4156,7 @@ public class RaidSceneManager : MonoBehaviour
                             PrepareDeath(skillEntry.Target);
                         else if (!skillEntry.Target.Character.AtDeathsDoor && !DeathDoorEnterQueue.Contains(skillEntry.Target))
                             PrepareDeath(skillEntry.Target);
-
                     }
- 
                 }
             }
             performer.OverlaySlot.UpdateOverlay();

@@ -195,7 +195,12 @@ public class Character
     private readonly Dictionary<AttributeType, SingleAttribute> singleAttributes;
     private readonly Dictionary<AttributeType, PairedAttribute> pairedAttributes;
 
-    #region Static Character Attribute Data
+    #region Static Character Data
+
+    private static readonly BuffDurationType[] DisplayableTypes = new BuffDurationType[]
+    {
+        BuffDurationType.Combat, BuffDurationType.Camp, BuffDurationType.Round, BuffDurationType.Raid
+    };
 
     private static readonly AttributeType[] SingleStats = new AttributeType[]
     {
@@ -249,7 +254,7 @@ public class Character
         targetDictionary.Add(StatusType.DeathRecovery, new DeathRecoveryStatusEffect());
     }
 
-    protected Character(HeroClass heroClass, int level)
+    private Character()
     {
         BuffInfo = new List<BuffInfo>();
         pairedAttributes = new Dictionary<AttributeType, PairedAttribute>();
@@ -264,7 +269,10 @@ public class Character
 
         for (int i = 0; i < Modifiers.Length; i++)
             AddSingleAttribute(Modifiers[i], new SingleAttribute());
+    }
 
+    protected Character(HeroClass heroClass, int level = 0) : this()
+    {
         for (int i = 0; i < HeroDiscounts.Length; i++)
             AddSingleAttribute(HeroDiscounts[i], new SingleAttribute());
 
@@ -277,110 +285,32 @@ public class Character
                     new SingleAttribute(heroClass.Resistanses[HeroResistances[i]] + level * 0.1f));
     }
 
-    protected Character(HeroClass heroClass)
-    {
-        BuffInfo = new List<BuffInfo>();
-        pairedAttributes = new Dictionary<AttributeType, PairedAttribute>();
-        singleAttributes = new Dictionary<AttributeType, SingleAttribute>();
-        StatusEffects = new Dictionary<StatusType, StatusEffect>();
-        InitializeBasicStatuses(StatusEffects);
-
-        AddPairedAttribute(AttributeType.HitPoints, new PairedAttribute());
-
-        for (int i = 0; i < SingleStats.Length; i++)
-            AddSingleAttribute(SingleStats[i], new SingleAttribute());
-
-        for (int i = 0; i < Modifiers.Length; i++)
-            AddSingleAttribute(Modifiers[i], new SingleAttribute());
-
-        for (int i = 0; i < HeroDiscounts.Length; i++)
-            AddSingleAttribute(HeroDiscounts[i], new SingleAttribute());
-
-        for (int i = 0; i < HeroResistances.Length; i++)
-            AddSingleAttribute(HeroResistances[i],
-                new SingleAttribute(heroClass.Resistanses[HeroResistances[i]]));
-    }
-
-    protected Character(SaveHeroData saveHeroData)
+    protected Character(SaveHeroData saveHeroData) : 
+        this(DarkestDungeonManager.Data.HeroClasses[saveHeroData.HeroClass], saveHeroData.ResolveLevel)
     {
         BuffInfo = saveHeroData.Buffs;
-        pairedAttributes = new Dictionary<AttributeType, PairedAttribute>();
-        singleAttributes = new Dictionary<AttributeType, SingleAttribute>();
-        StatusEffects = new Dictionary<StatusType, StatusEffect>();
-        InitializeBasicStatuses(StatusEffects);
-
-        HeroClass heroClass = DarkestDungeonManager.Data.HeroClasses[saveHeroData.HeroClass];
-
-        AddPairedAttribute(AttributeType.HitPoints, new PairedAttribute());
-
-        for (int i = 0; i < SingleStats.Length; i++)
-            AddSingleAttribute(SingleStats[i], new SingleAttribute());
-
-        for (int i = 0; i < Modifiers.Length; i++)
-            AddSingleAttribute(Modifiers[i], new SingleAttribute());
-
-        for (int i = 0; i < HeroDiscounts.Length; i++)
-            AddSingleAttribute(HeroDiscounts[i], new SingleAttribute());
-
-        for (int i = 0; i < HeroResistances.Length; i++)
-            if (HeroResistances[i] == AttributeType.DeathBlow)
-                AddSingleAttribute(HeroResistances[i],
-                    new SingleAttribute(heroClass.Resistanses[HeroResistances[i]]));
-            else
-                AddSingleAttribute(HeroResistances[i],
-                    new SingleAttribute(heroClass.Resistanses[HeroResistances[i]]
-                    + saveHeroData.ResolveLevel * 0.1f));
     }
 
-    protected Character(MonsterData monsterData)
+    protected Character(MonsterData monsterData) : this()
     {
-        BuffInfo = new List<BuffInfo>();
-        pairedAttributes = new Dictionary<AttributeType, PairedAttribute>();
-        singleAttributes = new Dictionary<AttributeType, SingleAttribute>();
-        StatusEffects = new Dictionary<StatusType, StatusEffect>();
-        InitializeBasicStatuses(StatusEffects);
-
-        AddPairedAttribute(AttributeType.HitPoints, new PairedAttribute(monsterData.Attributes[AttributeType.HitPoints],
-            monsterData.Attributes[AttributeType.HitPoints], true));
+        this[AttributeType.HitPoints, true].RawValue = monsterData.Attributes[AttributeType.HitPoints];
+        this[AttributeType.HitPoints, true].CurrentValue = monsterData.Attributes[AttributeType.HitPoints];
 
         for (int i = 0; i < SingleStats.Length; i++)
             if (monsterData.Attributes.ContainsKey(SingleStats[i]))
-                AddSingleAttribute(SingleStats[i],
-                    new SingleAttribute(monsterData.Attributes[SingleStats[i]]));
-            else
-                AddSingleAttribute(SingleStats[i], new SingleAttribute());
-
-        for (int i = 0; i < Modifiers.Length; i++)
-            AddSingleAttribute(Modifiers[i], new SingleAttribute());
+                this[SingleStats[i]].RawValue = monsterData.Attributes[SingleStats[i]];
 
         for (int i = 0; i < MonsterResistances.Length; i++)
             AddSingleAttribute(MonsterResistances[i],
                 new SingleAttribute(monsterData.Attributes[MonsterResistances[i]]));
     }
 
-    protected Character(FormationUnitSaveData unitSaveData, MonsterData monsterData)
+    protected Character(FormationUnitSaveData unitSaveData, MonsterData monsterData) : this(monsterData)
     {
         BuffInfo = unitSaveData.Buffs;
-        pairedAttributes = new Dictionary<AttributeType, PairedAttribute>();
-        singleAttributes = new Dictionary<AttributeType, SingleAttribute>();
         StatusEffects = unitSaveData.Statuses;
 
-        AddPairedAttribute(AttributeType.HitPoints, new PairedAttribute(unitSaveData.CurrentHp,
-            monsterData.Attributes[AttributeType.HitPoints], true));
-
-        for (int i = 0; i < SingleStats.Length; i++)
-            if (monsterData.Attributes.ContainsKey(SingleStats[i]))
-                AddSingleAttribute(SingleStats[i],
-                    new SingleAttribute(monsterData.Attributes[SingleStats[i]]));
-            else
-                AddSingleAttribute(SingleStats[i], new SingleAttribute());
-
-        for (int i = 0; i < Modifiers.Length; i++)
-            AddSingleAttribute(Modifiers[i], new SingleAttribute());
-
-        for (int i = 0; i < MonsterResistances.Length; i++)
-            AddSingleAttribute(MonsterResistances[i],
-                new SingleAttribute(monsterData.Attributes[MonsterResistances[i]]));
+        this[AttributeType.HitPoints, true].CurrentValue = unitSaveData.CurrentHp;
     }
 
     public void UpdateRound()
@@ -542,174 +472,67 @@ public class Character
     {
         string toolTip = "";
 
-        var availableBuffs = BuffInfo.FindAll(info => info.SourceType == BuffSourceType.Estate &&
-            info.ModifierValue != 0 && (info.DurationType == BuffDurationType.QuestComplete ||
-            info.DurationType == BuffDurationType.IdleTownVisit || info.DurationType == BuffDurationType.Raid)).
+        var availableBuffs = BuffInfo.FindAll(info => info.SourceType == BuffSourceType.Estate && info.ModifierValue != 0).
             OrderBy(info => info.Buff.AttributeType).ThenBy(info => info.Buff.RuleType).ToList();
         availableBuffs.RemoveAll(buff => buff.Buff.AttributeType == AttributeType.DamageLow);
 
         for (int i = availableBuffs.Count - 1; i >= 0; i--)
         {
-            var sameBuffs = availableBuffs.FindAll(info => info.Buff.AttributeType == availableBuffs[i].Buff.AttributeType
-                && info.Buff.RuleType == availableBuffs[i].Buff.RuleType && info.Buff.IsFalseRule == availableBuffs[i].Buff.IsFalseRule);
+            var sameBuffs = availableBuffs.FindAll(info => info.Buff.IsSameBuff(availableBuffs[i].Buff));
             float modifierSum = sameBuffs.Sum(info => info.ModifierValue);
             int maxRound = sameBuffs.Max(info => info.Duration);
             string buffTooltip = availableBuffs[i].Buff.TooltipOverrided(modifierSum);
+
             toolTip += "\n" + string.Format(LocalizationManager.GetString(
                 "tray_icon_tooltip_buff_duration_quest_end_format"), buffTooltip, maxRound);
+
             availableBuffs.RemoveRange(availableBuffs.Count - sameBuffs.Count, sameBuffs.Count);
             i -= sameBuffs.Count - 1;
         }
         return toolTip.TrimStart('\n');
     }
 
-    public string CombatBuffTooltip()
+    public string CombatBuffTooltip(bool isPositive)
     {
         string toolTip = "";
 
-        var availableBuffs = BuffInfo.FindAll(info => info.SourceType == BuffSourceType.Adventure &&
-            info.ModifierValue != 0 && info.DurationType == BuffDurationType.Combat && info.Buff.IsPositive()).
-            OrderBy(info => info.Buff.AttributeType).ThenBy(info => info.Buff.RuleType).ToList();
-        availableBuffs.RemoveAll(buff => buff.Buff.AttributeType == AttributeType.DamageLow);
-
-        for (int i = availableBuffs.Count - 1; i >= 0; i--)
+        foreach (var durationType in DisplayableTypes)
         {
-            var sameBuffs = availableBuffs.FindAll(info => info.Buff.AttributeType == availableBuffs[i].Buff.AttributeType
-                && info.Buff.RuleType == availableBuffs[i].Buff.RuleType && info.Buff.IsFalseRule == availableBuffs[i].Buff.IsFalseRule);
-            float modifierSum = sameBuffs.Sum(info => info.ModifierValue);
-            int maxRound = sameBuffs.Max(info => info.Duration);
-            string buffTooltip = availableBuffs[i].Buff.TooltipOverrided(modifierSum);
-            toolTip += "\n" + string.Format(LocalizationManager.GetString(
-                "tray_icon_tooltip_buff_duration_combat_end_format"), buffTooltip, maxRound);
-            availableBuffs.RemoveRange(availableBuffs.Count - sameBuffs.Count, sameBuffs.Count);
-            i -= sameBuffs.Count - 1;
+            var availableBuffs = FindDisplayableBuffs(BuffSourceType.Adventure, durationType, isPositive);
+            for (int i = availableBuffs.Count - 1; i >= 0; i--)
+            {
+                var sameBuffs = availableBuffs.FindAll(info => info.Buff.IsSameBuff(availableBuffs[i].Buff));
+                float modifierSum = sameBuffs.Sum(info => info.ModifierValue);
+                string buffTooltip = availableBuffs[i].Buff.TooltipOverrided(modifierSum);
+                int maxRound;
+
+                switch (durationType)
+                {
+                    case BuffDurationType.Combat:
+                        maxRound = sameBuffs.Max(info => info.Duration);
+                        toolTip += "\n" + string.Format(LocalizationManager.GetString(
+                            "tray_icon_tooltip_buff_duration_combat_end_format"), buffTooltip, maxRound);
+                        break;
+                    case BuffDurationType.Camp:
+                        toolTip += "\n" + string.Format(LocalizationManager.GetString(
+                            "tray_icon_tooltip_buff_until_camp_format"), buffTooltip);
+                        break;
+                    case BuffDurationType.Round:
+                        maxRound = sameBuffs.Max(info => info.Duration);
+                        toolTip += "\n" + string.Format(LocalizationManager.GetString(
+                            "tray_icon_tooltip_buff_duration_round_format"), buffTooltip, maxRound);
+                        break;
+                    case BuffDurationType.Raid:
+                        toolTip += "\n" + string.Format(LocalizationManager.GetString(
+                            "tray_icon_tooltip_buff_until_end_of_raid_format"), buffTooltip);
+                        break;
+                }  
+
+                availableBuffs.RemoveRange(availableBuffs.Count - sameBuffs.Count, sameBuffs.Count);
+                i -= sameBuffs.Count - 1;
+            }
         }
 
-        availableBuffs = BuffInfo.FindAll(info => info.SourceType == BuffSourceType.Adventure &&
-            info.ModifierValue != 0 && info.DurationType == BuffDurationType.Camp && info.Buff.IsPositive()).
-            OrderBy(info => info.Buff.AttributeType).ThenBy(info => info.Buff.RuleType).ToList();
-        availableBuffs.RemoveAll(buff => buff.Buff.AttributeType == AttributeType.DamageLow);
-
-        for (int i = availableBuffs.Count - 1; i >= 0; i--)
-        {
-            var sameBuffs = availableBuffs.FindAll(info => info.Buff.AttributeType == availableBuffs[i].Buff.AttributeType
-                && info.Buff.RuleType == availableBuffs[i].Buff.RuleType && info.Buff.IsFalseRule == availableBuffs[i].Buff.IsFalseRule);
-            float modifierSum = sameBuffs.Sum(info => info.ModifierValue);
-            string buffTooltip = availableBuffs[i].Buff.TooltipOverrided(modifierSum);
-            toolTip += "\n" + string.Format(LocalizationManager.GetString("tray_icon_tooltip_buff_until_camp_format"), buffTooltip);
-            availableBuffs.RemoveRange(availableBuffs.Count - sameBuffs.Count, sameBuffs.Count);
-            i -= sameBuffs.Count - 1;
-        }
-
-        availableBuffs = BuffInfo.FindAll(info => info.SourceType == BuffSourceType.Adventure &&
-            info.ModifierValue != 0 && info.DurationType == BuffDurationType.Round && info.Buff.IsPositive()).
-            OrderBy(info => info.Buff.AttributeType).ThenBy(info => info.Buff.RuleType).ToList();
-        availableBuffs.RemoveAll(buff => buff.Buff.AttributeType == AttributeType.DamageLow);
-
-        for (int i = availableBuffs.Count - 1; i >= 0; i--)
-        {
-            var sameBuffs = availableBuffs.FindAll(info => info.Buff.AttributeType == availableBuffs[i].Buff.AttributeType
-                && info.Buff.RuleType == availableBuffs[i].Buff.RuleType && info.Buff.IsFalseRule == availableBuffs[i].Buff.IsFalseRule);
-            float modifierSum = sameBuffs.Sum(info => info.ModifierValue);
-            int maxRound = sameBuffs.Max(info => info.Duration);
-            string buffTooltip = availableBuffs[i].Buff.TooltipOverrided(modifierSum);
-            toolTip += "\n" + string.Format(LocalizationManager.GetString(
-                "tray_icon_tooltip_buff_duration_round_format"), buffTooltip, maxRound);
-            availableBuffs.RemoveRange(availableBuffs.Count - sameBuffs.Count, sameBuffs.Count);
-            i -= sameBuffs.Count - 1;
-        }
-
-        availableBuffs = BuffInfo.FindAll(info => info.SourceType == BuffSourceType.Adventure &&
-            info.ModifierValue != 0 && info.DurationType == BuffDurationType.Raid && info.Buff.IsPositive()).
-            OrderBy(info => info.Buff.AttributeType).ThenBy(info => info.Buff.RuleType).ToList();
-        availableBuffs.RemoveAll(buff => buff.Buff.AttributeType == AttributeType.DamageLow);
-
-        for (int i = availableBuffs.Count - 1; i >= 0; i--)
-        {
-            var sameBuffs = availableBuffs.FindAll(info => info.Buff.AttributeType == availableBuffs[i].Buff.AttributeType
-                && info.Buff.RuleType == availableBuffs[i].Buff.RuleType && info.Buff.IsFalseRule == availableBuffs[i].Buff.IsFalseRule);
-            float modifierSum = sameBuffs.Sum(info => info.ModifierValue);
-            string buffTooltip = availableBuffs[i].Buff.TooltipOverrided(modifierSum);
-            toolTip += "\n" + string.Format(LocalizationManager.GetString(
-                "tray_icon_tooltip_buff_until_end_of_raid_format"), buffTooltip);
-            availableBuffs.RemoveRange(availableBuffs.Count - sameBuffs.Count, sameBuffs.Count);
-            i -= sameBuffs.Count - 1;
-        }
-        return toolTip.TrimStart('\n');
-    }
-
-    public string CombatDebuffTooltip()
-    {
-        string toolTip = "";
-
-        var availableBuffs = BuffInfo.FindAll(info => info.SourceType == BuffSourceType.Adventure &&
-            info.ModifierValue != 0 && info.DurationType == BuffDurationType.Combat && !info.Buff.IsPositive()).
-            OrderBy(info => info.Buff.AttributeType).ThenBy(info => info.Buff.RuleType).ToList();
-        availableBuffs.RemoveAll(buff => buff.Buff.AttributeType == AttributeType.DamageLow);
-
-        for (int i = availableBuffs.Count - 1; i >= 0; i--)
-        {
-            var sameBuffs = availableBuffs.FindAll(info => info.Buff.AttributeType == availableBuffs[i].Buff.AttributeType
-                && info.Buff.RuleType == availableBuffs[i].Buff.RuleType && info.Buff.IsFalseRule == availableBuffs[i].Buff.IsFalseRule);
-            float modifierSum = sameBuffs.Sum(info => info.ModifierValue);
-            int maxRound = sameBuffs.Max(info => info.Duration);
-            string buffTooltip = availableBuffs[i].Buff.TooltipOverrided(modifierSum);
-            toolTip += "\n" + string.Format(LocalizationManager.GetString(
-                "tray_icon_tooltip_buff_duration_combat_end_format"), buffTooltip, maxRound);
-            availableBuffs.RemoveRange(availableBuffs.Count - sameBuffs.Count, sameBuffs.Count);
-            i -= sameBuffs.Count - 1;
-        }
-
-        availableBuffs = BuffInfo.FindAll(info => info.SourceType == BuffSourceType.Adventure &&
-            info.ModifierValue != 0 && info.DurationType == BuffDurationType.Camp && !info.Buff.IsPositive()).
-            OrderBy(info => info.Buff.AttributeType).ThenBy(info => info.Buff.RuleType).ToList();
-        availableBuffs.RemoveAll(buff => buff.Buff.AttributeType == AttributeType.DamageLow);
-
-        for (int i = availableBuffs.Count - 1; i >= 0; i--)
-        {
-            var sameBuffs = availableBuffs.FindAll(info => info.Buff.AttributeType == availableBuffs[i].Buff.AttributeType
-                && info.Buff.RuleType == availableBuffs[i].Buff.RuleType && info.Buff.IsFalseRule == availableBuffs[i].Buff.IsFalseRule);
-            float modifierSum = sameBuffs.Sum(info => info.ModifierValue);
-            string buffTooltip = availableBuffs[i].Buff.TooltipOverrided(modifierSum);
-            toolTip += "\n" + string.Format(LocalizationManager.GetString("tray_icon_tooltip_buff_until_camp_format"), buffTooltip);
-            availableBuffs.RemoveRange(availableBuffs.Count - sameBuffs.Count, sameBuffs.Count);
-            i -= sameBuffs.Count - 1;
-        }
-
-        availableBuffs = BuffInfo.FindAll(info => info.SourceType == BuffSourceType.Adventure &&
-            info.ModifierValue != 0 && info.DurationType == BuffDurationType.Round && !info.Buff.IsPositive()).
-            OrderBy(info => info.Buff.AttributeType).ThenBy(info => info.Buff.RuleType).ToList();
-        availableBuffs.RemoveAll(buff => buff.Buff.AttributeType == AttributeType.DamageLow);
-
-        for (int i = availableBuffs.Count - 1; i >= 0; i--)
-        {
-            var sameBuffs = availableBuffs.FindAll(info => info.Buff.AttributeType == availableBuffs[i].Buff.AttributeType
-                && info.Buff.RuleType == availableBuffs[i].Buff.RuleType && info.Buff.IsFalseRule == availableBuffs[i].Buff.IsFalseRule);
-            float modifierSum = sameBuffs.Sum(info => info.ModifierValue);
-            int maxRound = sameBuffs.Max(info => info.Duration);
-            string buffTooltip = availableBuffs[i].Buff.TooltipOverrided(modifierSum);
-            toolTip += "\n" + string.Format(LocalizationManager.GetString(
-                "tray_icon_tooltip_buff_duration_round_format"), buffTooltip, maxRound);
-            availableBuffs.RemoveRange(availableBuffs.Count - sameBuffs.Count, sameBuffs.Count);
-            i -= sameBuffs.Count - 1;
-        }
-
-        availableBuffs = BuffInfo.FindAll(info => info.SourceType == BuffSourceType.Adventure &&
-            info.ModifierValue != 0 && info.DurationType == BuffDurationType.Raid && !info.Buff.IsPositive()).
-            OrderBy(info => info.Buff.AttributeType).ThenBy(info => info.Buff.RuleType).ToList();
-        availableBuffs.RemoveAll(buff => buff.Buff.AttributeType == AttributeType.DamageLow);
-
-        for (int i = availableBuffs.Count - 1; i >= 0; i--)
-        {
-            var sameBuffs = availableBuffs.FindAll(info => info.Buff.AttributeType == availableBuffs[i].Buff.AttributeType
-                && info.Buff.RuleType == availableBuffs[i].Buff.RuleType && info.Buff.IsFalseRule == availableBuffs[i].Buff.IsFalseRule);
-            float modifierSum = sameBuffs.Sum(info => info.ModifierValue);
-            string buffTooltip = availableBuffs[i].Buff.TooltipOverrided(modifierSum);
-            toolTip += "\n" + "\n" + string.Format(LocalizationManager.GetString(
-                "tray_icon_tooltip_buff_until_end_of_raid_format"), buffTooltip);
-            availableBuffs.RemoveRange(availableBuffs.Count - sameBuffs.Count, sameBuffs.Count);
-            i -= sameBuffs.Count - 1;
-        }
         return toolTip.TrimStart('\n');
     }
 
@@ -1245,6 +1068,16 @@ public class Character
                 break;
                 #endregion
         }
+    }
+
+    private List<BuffInfo> FindDisplayableBuffs(BuffSourceType sourceType, BuffDurationType durationType, bool isPositive)
+    {
+        var displayableBuffs = BuffInfo.FindAll(info => info.SourceType == sourceType &&
+            info.ModifierValue != 0 && info.DurationType == durationType && info.Buff.IsPositive() == isPositive).
+            OrderBy(info => info.Buff.AttributeType).ThenBy(info => info.Buff.RuleType).ToList();
+
+        displayableBuffs.RemoveAll(buff => buff.Buff.AttributeType == AttributeType.DamageLow);
+        return displayableBuffs;
     }
 
     #endregion
