@@ -60,4 +60,14 @@ public class DungeonRoom : Area
 
         Doors.Read(br);
     }
+
+    public override void Scout()
+    {
+        if (Knowledge == Knowledge.Hidden)
+        {
+            Knowledge = Knowledge.Scouted;
+            RaidSceneManager.MapPanel.UpdateArea(this);
+            FMODUnity.RuntimeManager.PlayOneShot("event:/general/map/scout_room");
+        }
+    }
 }

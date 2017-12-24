@@ -7,7 +7,6 @@
         if (target == null)
             return false;
 
-        target.Character.TakeDamagePercent(1.0f);
         target.CombatInfo.MarkedForDeath = true;
         return true;
     }

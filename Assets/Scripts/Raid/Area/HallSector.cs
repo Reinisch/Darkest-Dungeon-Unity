@@ -67,4 +67,27 @@ public class HallSector : Area
         Prop = door;
         Type = AreaType.Door;
     }
+
+    public override void Scout()
+    {
+        if (Knowledge == Knowledge.Hidden)
+        {
+            Knowledge = Knowledge.Scouted;
+
+            if (Type != AreaType.Door)
+            {
+                FMODUnity.RuntimeManager.PlayOneShot("event:/general/map/scout_hallway");
+                RaidSceneManager.MapPanel.UpdateArea(this);
+
+                if (Type != AreaType.Trap || RaidSceneManager.SceneState != DungeonSceneState.Hall)
+                    return;
+
+                if (RaidSceneManager.HallwayView.Hallway != Hallway)
+                    return;
+
+                var raidSector = RaidSceneManager.HallwayView.RaidHallway.HallSectors.Find(trapSector => trapSector.HallSector == this);
+                ((RaidTrap)raidSector.Prop).SkeletonAnimation.MeshRenderer.enabled = true;
+            }
+        }
+    }
 }

@@ -74,7 +74,6 @@ public abstract class Area : IBinarySaveData
         }
     }
 
-
     public void SetNamedEncounter(string dungeon, string encounter, int index, int mashId)
     {
         BattleEncounter = new BattleEncounter(DarkestDungeonManager.Data.DungeonEnviromentData[dungeon].BattleMashes.
@@ -91,6 +90,8 @@ public abstract class Area : IBinarySaveData
     {
         Prop = DarkestDungeonManager.Data.Curios[propName];
     }
+
+    public abstract void Scout();
 
     public virtual void Write(BinaryWriter bw)
     {
