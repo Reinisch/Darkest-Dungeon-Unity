@@ -78,7 +78,7 @@ namespace FMODUnity
             EditorGUILayout.EndHorizontal();
 
             Event e = Event.current;
-            if (e.type == EventType.dragPerform)
+            if (e.type == EventType.DragPerform)
             {
                 if (DragAndDrop.objectReferences.Length > 0 &&
                     DragAndDrop.objectReferences[0] != null &&

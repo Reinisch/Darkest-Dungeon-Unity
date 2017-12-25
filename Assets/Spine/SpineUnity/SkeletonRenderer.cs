@@ -325,7 +325,7 @@ public class SkeletonRenderer : MonoBehaviour {
 		Vector2[] uvs = this.uvs;
 		Color32[] colors = this.colors;
 		int vertexIndex = 0;
-		Color32 color;
+		Color32 color = new Color32();
 		float a = skeleton.a * 255, r = skeleton.r, g = skeleton.g, b = skeleton.b;
 
 		Vector3 meshBoundsMin;

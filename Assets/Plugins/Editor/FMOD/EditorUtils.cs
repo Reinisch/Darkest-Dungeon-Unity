@@ -158,7 +158,7 @@ namespace FMODUnity
                     return FMODPlatform.Linux;
                 case BuildTarget.StandaloneOSXIntel:
                 case BuildTarget.StandaloneOSXIntel64:
-                case BuildTarget.StandaloneOSXUniversal:
+                case BuildTarget.StandaloneOSX:
                     return FMODPlatform.Mac;
                 case BuildTarget.StandaloneWindows:
                 case BuildTarget.StandaloneWindows64:

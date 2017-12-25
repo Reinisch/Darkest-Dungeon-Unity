@@ -190,7 +190,7 @@ namespace FMODUnity
 
                     SetSelectedItem(item);
                 }
-                if (e.type == EventType.mouseDrag && rect.Contains(e.mousePosition) && !fromInspector)
+                if (e.type == EventType.MouseDrag && rect.Contains(e.mousePosition) && !fromInspector)
                 {
                     DragAndDrop.PrepareStartDrag();
                     DragAndDrop.objectReferences = new UnityEngine.Object[] { ScriptableObject.Instantiate(item.EventRef) };
@@ -228,7 +228,7 @@ namespace FMODUnity
 
                     SetSelectedItem(item);
                 }
-                if (e.type == EventType.mouseDrag && rect.Contains(e.mousePosition) && !fromInspector)
+                if (e.type == EventType.MouseDrag && rect.Contains(e.mousePosition) && !fromInspector)
                 {
                     DragAndDrop.PrepareStartDrag();
                     DragAndDrop.objectReferences = new UnityEngine.Object[] { ScriptableObject.Instantiate(item.BankRef) };
@@ -345,7 +345,7 @@ namespace FMODUnity
 
             // Scroll the selected item in the tree view - put above the search box otherwise it will take
             // our key presses
-            if (selectedItem != null && Event.current.type == EventType.keyDown)
+            if (selectedItem != null && Event.current.type == EventType.KeyDown)
             {
                 if (Event.current.keyCode == KeyCode.UpArrow)
                 {
@@ -622,7 +622,7 @@ namespace FMODUnity
                 GUI.color = originalColour;
 
 
-                if (selectedEvent.Is3D && (Event.current.type == EventType.mouseDown || Event.current.type == EventType.mouseDrag) && rect.Contains(Event.current.mousePosition))
+                if (selectedEvent.Is3D && (Event.current.type == EventType.MouseDown || Event.current.type == EventType.MouseDrag) && rect.Contains(Event.current.mousePosition))
                 {
                     var newPosition = Event.current.mousePosition;
                     Vector2 delta = (newPosition - centre);
@@ -960,7 +960,7 @@ namespace FMODUnity
         void HierachachyUpdate(int instance, Rect rect)
         {
             Event e = Event.current;
-            if (e.type == EventType.dragPerform && rect.Contains(e.mousePosition))
+            if (e.type == EventType.DragPerform && rect.Contains(e.mousePosition))
             {
                 if (DragAndDrop.objectReferences.Length > 0 &&
                     DragAndDrop.objectReferences[0] != null &&
@@ -992,7 +992,7 @@ namespace FMODUnity
         void SceneUpdate(SceneView sceneView)
         {
             Event e = Event.current;
-            if (e.type == EventType.dragPerform)
+            if (e.type == EventType.DragPerform)
             {
                 if (DragAndDrop.objectReferences.Length > 0 &&
                     DragAndDrop.objectReferences[0] != null &&

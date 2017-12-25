@@ -19,7 +19,7 @@ namespace FMODUnity
             EditorGUI.BeginProperty(position, label, property);
 
             Event e = Event.current;
-            if (e.type == EventType.dragPerform && position.Contains(e.mousePosition))
+            if (e.type == EventType.DragPerform && position.Contains(e.mousePosition))
             {
                 if (DragAndDrop.objectReferences.Length > 0 &&
                     DragAndDrop.objectReferences[0] != null &&

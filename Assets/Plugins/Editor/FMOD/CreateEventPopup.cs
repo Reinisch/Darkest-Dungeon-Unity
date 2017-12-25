@@ -119,7 +119,7 @@ namespace FMODUnity
             border.normal.background = borderIcon;
             GUI.Box(new Rect(1, 1, position.width - 1, position.height - 1), GUIContent.none, border);
 
-            if (Event.current.type == EventType.layout)
+            if (Event.current.type == EventType.Layout)
             {
                 isConnected = EditorUtils.IsConnectedToStudio();
             }
@@ -152,7 +152,7 @@ namespace FMODUnity
             {
                 if (Event.current.keyCode == KeyCode.UpArrow)
                 {
-                    if (Event.current.type == EventType.keyDown)
+                    if (Event.current.type == EventType.KeyDown)
                     {
                         lastHover = Math.Max(lastHover - 1, 0);
                         if (filteredEntries[lastHover].rect.y < scrollPos.y)
@@ -164,7 +164,7 @@ namespace FMODUnity
                 }
                 if (Event.current.keyCode == KeyCode.DownArrow)
                 {
-                    if (Event.current.type == EventType.keyDown)
+                    if (Event.current.type == EventType.KeyDown)
                     { 
                         lastHover = Math.Min(lastHover + 1, filteredEntries.Count - 1);
                         if (filteredEntries[lastHover].rect.y + filteredEntries[lastHover].rect.height > scrollPos.y + scrollRect.height)
@@ -176,13 +176,13 @@ namespace FMODUnity
                 }
                 if (Event.current.keyCode == KeyCode.RightArrow)
                 {
-                    if (Event.current.type == EventType.keyDown)
+                    if (Event.current.type == EventType.KeyDown)
                         nextEntry = filteredEntries[lastHover];
                     Event.current.Use();
                 }
                 if (Event.current.keyCode == KeyCode.LeftArrow)
                 {
-                    if (Event.current.type == EventType.keyDown)
+                    if (Event.current.type == EventType.KeyDown)
                         if (currentFolder.parent != null)
                             nextEntry = currentFolder.parent;
                     Event.current.Use();
@@ -259,7 +259,7 @@ namespace FMODUnity
                 labelRect.width -= arrowIcon.width + 50;
                 GUI.Label(labelRect, currentFolder.name != null ? currentFolder.name : "Folders", EditorStyles.boldLabel);
 
-                if (Event.current.type == EventType.mouseDown && currentRect.Contains(Event.current.mousePosition) &&
+                if (Event.current.type == EventType.MouseDown && currentRect.Contains(Event.current.mousePosition) &&
                     currentFolder.parent != null)
                 {
                     nextEntry = currentFolder.parent;
@@ -284,7 +284,7 @@ namespace FMODUnity
                     lastHover = i;
                     
                     GUI.Label(rect, content, hover);
-                    if (rect.Contains(Event.current.mousePosition) && Event.current.type == EventType.mouseDown)
+                    if (rect.Contains(Event.current.mousePosition) && Event.current.type == EventType.MouseDown)
                     {
                         nextEntry = entry;
                     }                    
@@ -299,14 +299,14 @@ namespace FMODUnity
                 textureRect.width = arrowIcon.width;
                 GUI.DrawTexture(textureRect, arrowIcon);
 
-                if (Event.current.type == EventType.repaint)
+                if (Event.current.type == EventType.Repaint)
                 {
                     entry.rect = rect;
                 }
             }
             EditorGUILayout.EndScrollView();
 
-            if (Event.current.type == EventType.repaint)
+            if (Event.current.type == EventType.Repaint)
             {
                 scrollRect = GUILayoutUtility.GetLastRect();
             }
