@@ -44,7 +44,7 @@ public class SkillSelectionRandom : SkillSelectionDesire
             switch (token.Key)
             {
                 case "base_chance":
-                    Chance = (int)(double)dataSet["base_chance"];
+                    Chance = (int)((double)dataSet["base_chance"] * 100);
                     break;
                 default:
                     Debug.LogError("Unknown token in random skill desire: " + token.Key);

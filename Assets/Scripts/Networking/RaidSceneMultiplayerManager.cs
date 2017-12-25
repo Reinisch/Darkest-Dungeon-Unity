@@ -643,10 +643,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
 
                     if (currentDesire.CheckBonusInitiative(monsterUnit))
                     {
-                        if (currentDesire.CombatSkillOverride == "")
-                            yield return StartCoroutine(MonsterTurn(monsterUnit));
-                        else
-                            yield return StartCoroutine(MonsterOverriddenTurn(monsterUnit, currentDesire.CombatSkillOverride));
+                        yield return StartCoroutine(MonsterTurn(monsterUnit, currentDesire.CombatSkillOverride));
                         break;
                     }
                 }
@@ -955,11 +952,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
                     if (currentDesire.CheckBonusInitiative(monsterUnit))
                     {
                         yield return WaitForOneTwo;
-
-                        if (currentDesire.CombatSkillOverride == "")
-                            yield return StartCoroutine(MonsterTurn(monsterUnit));
-                        else
-                            yield return StartCoroutine(MonsterOverriddenTurn(monsterUnit, currentDesire.CombatSkillOverride));
+                        yield return StartCoroutine(MonsterTurn(monsterUnit, currentDesire.CombatSkillOverride));
                         break;
                     }
                 }
@@ -991,10 +984,7 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
 
                 if (currentDesire.CheckBonusInitiative(monsterUnit))
                 {
-                    if (currentDesire.CombatSkillOverride == "")
-                        yield return StartCoroutine(MonsterTurn(monsterUnit));
-                    else
-                        yield return StartCoroutine(MonsterOverriddenTurn(monsterUnit, currentDesire.CombatSkillOverride));
+                    yield return StartCoroutine(MonsterTurn(monsterUnit, currentDesire.CombatSkillOverride));
                     break;
                 }
             }
@@ -1792,197 +1782,11 @@ public class RaidSceneMultiplayerManager : RaidSceneManager
         BattleGround.Round.PostHeroTurn();
     }
 
-    protected override IEnumerator MonsterTurn(FormationUnit actionUnit)
+    protected override IEnumerator MonsterTurn(FormationUnit actionUnit, string combatSkillOverride = null, bool fromBonusTurn = false)
     {
         yield return StartCoroutine(PhotonGameManager.PreparationCheck());
 
-        FMODUnity.RuntimeManager.PlayOneShot("event:/general/char/enemy_turn");
-        Formations.ResetSelections();
-        yield return new WaitForEndOfFrame();
-        BattleGround.Round.PreMonsterTurn(actionUnit);
-        yield return new WaitForEndOfFrame();
-        Formations.ShowUnitOverlay();
-        yield return new WaitForEndOfFrame();
-        actionUnit.SetPerformerStatus();
-
-        #region Status Effects and Buffs
-        if (actionUnit.Character.GetStatusEffect(StatusType.Bleeding).IsApplied)
-        {
-            var bleedEffect = actionUnit.Character.GetStatusEffect(StatusType.Bleeding) as BleedingStatusEffect;
-            actionUnit.Character.Health.DecreaseValue(bleedEffect.CurrentTickDamage);
-            FMODUnity.RuntimeManager.PlayOneShot("event:/general/status/bleed_dot");
-            actionUnit.OverlaySlot.UpdateOverlay();
-
-            #region Damage Activation
-            if (Mathf.RoundToInt(actionUnit.Character.Health.CurrentValue) != 0)
-            {
-                RaidEvents.ShowPopupMessage(actionUnit,
-                    PopupMessageType.Damage, bleedEffect.CurrentTickDamage.ToString());
-                yield return new WaitForSeconds(0.3f);
-            }
-            else
-            {
-                if (actionUnit.Character.AtDeathsDoor)
-                {
-                    if (PrepareDeath(actionUnit, DeathFactor.BleedMonster))
-                    {
-                        RaidEvents.ShowPopupMessage(actionUnit, PopupMessageType.DeathBlow);
-                        yield return new WaitForSeconds(1.4f);
-                        BattleGround.Round.PostHeroTurn();
-                        ExecuteDeath(actionUnit);
-                        yield return StartCoroutine(ExecuteEffectEvents(true));
-                        yield break;
-                    }
-                    else
-                    {
-                        RaidEvents.ShowPopupMessage(actionUnit, PopupMessageType.DeathsDoor);
-                        yield return new WaitForSeconds(0.6f);
-                        yield return StartCoroutine(ExecuteEffectEvents(true));
-                    }
-                }
-                else
-                {
-                    if (PrepareDeath(actionUnit, DeathFactor.BleedMonster))
-                    {
-                        DeathDamage deathDamage = actionUnit.Character.DeathDamage;
-                        if (actionUnit.Character is Hero)
-                            RaidEvents.ShowPopupMessage(actionUnit, PopupMessageType.DeathBlow);
-                        yield return new WaitForSeconds(1.4f);
-                        BattleGround.Round.PostMonsterTurn();
-                        ExecuteDeath(actionUnit);
-
-                        if (deathDamage != null)
-                        {
-                            var deathDamageTarget = BattleGround.MonsterParty.Units.Find(unit =>
-                                unit.Character.Class == deathDamage.TargetBaseClass);
-
-                            if (deathDamageTarget != null)
-                            {
-                                deathDamageTarget.Character.Health.DecreaseValue(deathDamage.TargetDamage);
-                                if (Mathf.RoundToInt(deathDamageTarget.Character.Health.CurrentValue) != 0)
-                                {
-                                    RaidEvents.ShowPopupMessage(deathDamageTarget,
-                                        PopupMessageType.Damage, deathDamage.TargetDamage.ToString());
-                                    yield return new WaitForSeconds(0.4f);
-                                }
-                            }
-                        }
-                        yield break;
-                    }
-                    else
-                    {
-                        yield return StartCoroutine(ExecuteEffectEvents(true));
-                    }
-                }
-            }
-            #endregion
-        }
-
-        if (actionUnit.Character.GetStatusEffect(StatusType.Poison).IsApplied)
-        {
-            var poisonEffect = actionUnit.Character.GetStatusEffect(StatusType.Poison) as PoisonStatusEffect;
-            RaidEvents.ShowPopupMessage(actionUnit, PopupMessageType.Damage, poisonEffect.CurrentTickDamage.ToString());
-            actionUnit.Character.Health.DecreaseValue(poisonEffect.CurrentTickDamage);
-            FMODUnity.RuntimeManager.PlayOneShot("event:/general/status/poison_dot");
-            actionUnit.OverlaySlot.UpdateOverlay();
-
-            #region Damage Activation
-            if (Mathf.RoundToInt(actionUnit.Character.Health.CurrentValue) != 0)
-            {
-                RaidEvents.ShowPopupMessage(actionUnit, PopupMessageType.Damage, poisonEffect.CurrentTickDamage.ToString());
-                yield return new WaitForSeconds(0.3f);
-            }
-            else
-            {
-                if (actionUnit.Character.AtDeathsDoor)
-                {
-                    if (PrepareDeath(actionUnit, DeathFactor.PoisonMonster))
-                    {
-                        RaidEvents.ShowPopupMessage(actionUnit, PopupMessageType.DeathBlow);
-                        yield return new WaitForSeconds(1.4f);
-                        BattleGround.Round.PostHeroTurn();
-                        ExecuteDeath(actionUnit);
-                        yield return StartCoroutine(ExecuteEffectEvents(true));
-                        yield break;
-                    }
-                    else
-                    {
-                        RaidEvents.ShowPopupMessage(actionUnit, PopupMessageType.DeathsDoor);
-                        yield return new WaitForSeconds(0.6f);
-                        yield return StartCoroutine(ExecuteEffectEvents(true));
-                    }
-                }
-                else
-                {
-                    if (PrepareDeath(actionUnit, DeathFactor.PoisonMonster))
-                    {
-                        DeathDamage deathDamage = actionUnit.Character.DeathDamage;
-                        if (actionUnit.Character is Hero)
-                            RaidEvents.ShowPopupMessage(actionUnit, PopupMessageType.DeathBlow);
-                        yield return new WaitForSeconds(1.4f);
-                        BattleGround.Round.PostMonsterTurn();
-                        ExecuteDeath(actionUnit);
-
-                        if (deathDamage != null)
-                        {
-                            var deathDamageTarget = BattleGround.MonsterParty.Units.Find(unit =>
-                                unit.Character.Class == deathDamage.TargetBaseClass);
-
-                            if (deathDamageTarget != null)
-                            {
-                                deathDamageTarget.Character.Health.DecreaseValue(deathDamage.TargetDamage);
-                                if (Mathf.RoundToInt(deathDamageTarget.Character.Health.CurrentValue) != 0)
-                                {
-                                    RaidEvents.ShowPopupMessage(deathDamageTarget,
-                                        PopupMessageType.Damage, deathDamage.TargetDamage.ToString());
-                                    yield return new WaitForSeconds(0.4f);
-                                }
-                            }
-                        }
-                        yield break;
-                    }
-                    else
-                    {
-                        yield return StartCoroutine(ExecuteEffectEvents(true));
-                    }
-                }
-            }
-            #endregion
-        }
-
-        if (actionUnit.CombatInfo.IsSurprised)
-            actionUnit.SetSurprised(false);
-
-        if (actionUnit.Character.GetStatusEffect(StatusType.Stun).IsApplied)
-        {
-            var stunStatus = actionUnit.Character.GetStatusEffect(StatusType.Stun) as StunStatusEffect;
-            stunStatus.StunApplied = false;
-            RaidEvents.ShowPopupMessage(actionUnit, PopupMessageType.Unstun);
-            actionUnit.ResetHalo();
-
-            yield return new WaitForSeconds(0.9f);
-
-            actionUnit.Character.ApplyStunRecovery();
-            RaidEvents.ShowPopupMessage(actionUnit, PopupMessageType.Buff);
-            actionUnit.Character.UpdateRound();
-            actionUnit.OverlaySlot.UpdateOverlay();
-            BattleGround.Round.PostHeroTurn();
-
-            yield return new WaitForSeconds(0.6f);
-            yield break;
-        }
-        else
-        {
-            actionUnit.Character.UpdateRound();
-            actionUnit.OverlaySlot.UpdateOverlay();
-        }
-        #endregion
-
-        BattleGround.Round.OnMonsterTurn();
-
-        yield return StartCoroutine(ExecuteMonsterSkill(actionUnit));
-        if (BattleGround.Round.HeroAction != HeroTurnAction.Retreat)
-            BattleGround.Round.PostMonsterTurn();
+        yield return StartCoroutine(base.MonsterTurn(actionUnit, combatSkillOverride, fromBonusTurn));
     }
 
     protected override void ExecuteDeath(FormationUnit targetUnit)

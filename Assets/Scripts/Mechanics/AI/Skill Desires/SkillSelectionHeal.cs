@@ -67,7 +67,7 @@ public class SkillSelectionHeal : SkillSelectionDesire
             switch (token.Key)
             {
                 case "base_chance":
-                    Chance = (int)(double)dataSet["base_chance"];
+                    Chance = (int)((double)dataSet["base_chance"] * 100);
                     break;
                 case "hp_ratio_treshold":
                     HpRatioThreshold = (float)(double)dataSet["hp_ratio_treshold"];

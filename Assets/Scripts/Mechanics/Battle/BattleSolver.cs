@@ -164,7 +164,7 @@ public static class BattleSolver
         {
             var monster = performer.Character as Monster;
 
-            if(combatSkillOverride == null)
+            if(string.IsNullOrEmpty(combatSkillOverride))
             {
                 var skillDesires = new List<SkillSelectionDesire>(monster.Brain.SkillDesireSet);
                 var monsterBrainDecision = new MonsterBrainDecision(BrainDecisionType.Pass);

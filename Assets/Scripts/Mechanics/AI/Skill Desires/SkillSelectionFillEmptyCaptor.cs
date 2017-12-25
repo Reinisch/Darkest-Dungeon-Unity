@@ -67,7 +67,7 @@ public class SkillSelectionFillEmptyCaptor : SkillSelectionDesire
             switch (token.Key)
             {
                 case "base_chance":
-                    Chance = (int)(double)dataSet["base_chance"];
+                    Chance = (int)((double)dataSet["base_chance"] * 100);
                     break;
                 case "can_target_deaths_door":
                     CanTargetDeathsDoor = (bool)dataSet["can_target_deaths_door"];

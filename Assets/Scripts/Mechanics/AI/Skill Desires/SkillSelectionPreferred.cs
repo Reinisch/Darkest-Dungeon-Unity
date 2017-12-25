@@ -50,7 +50,7 @@ public class SkillSelectionPreferred : SkillSelectionDesire
             switch (token.Key)
             {
                 case "base_chance":
-                    Chance = (int)(double)dataSet["base_chance"];
+                    Chance = (int)((double)dataSet["base_chance"] * 100);
                     break;
                 default:
                     Debug.LogError("Unknown token in preferred skill desire: " + token.Key);

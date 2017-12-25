@@ -62,7 +62,7 @@ public class SkillSelectionAllyDead : SkillSelectionDesire
             switch (token.Key)
             {
                 case "base_chance":
-                    Chance = (int)(double)dataSet["base_chance"];
+                    Chance = (int)((double)dataSet["base_chance"] * 100);
                     break;
                 case "combat_skill_id":
                     CombatSkillId = (string)dataSet["combat_skill_id"];

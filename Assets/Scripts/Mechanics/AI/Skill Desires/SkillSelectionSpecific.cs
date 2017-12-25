@@ -107,7 +107,7 @@ public class SkillSelectionSpecific : SkillSelectionDesire
             switch (token.Key)
             {
                 case "base_chance":
-                    Chance = (int)(double)dataSet["base_chance"];
+                    Chance = (int)((double)dataSet["base_chance"] * 100);
                     break;
                 case "combat_skill_id":
                     CombatSkillId = (string)dataSet["combat_skill_id"];
@@ -160,7 +160,7 @@ public class SkillSelectionSpecific : SkillSelectionDesire
                     Restrictions[SkillSelectRestriction.GuardedMonstersMax] = (int)(long)dataSet[token.Key];
                     break;
                 case "per_round_chance":
-                    PerRoundChance = (int)(double)dataSet[token.Key];
+                    PerRoundChance = Chance = (int)((double)dataSet[token.Key] * 100);
                     break;
                 default:
                     Debug.LogError("Unknown token in specific skill desire: " + token.Key);
