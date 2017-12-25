@@ -9,6 +9,17 @@ public class FormationSet
 
     public List<int> Ranks { get; private set; }
 
+    public SkillTargetType SkillTargetType
+    {
+        get
+        {
+            if (IsSelfTarget)
+                return SkillTargetType.Self;
+
+            return IsSelfFormation ? SkillTargetType.Party : SkillTargetType.Enemy;
+        }
+    }
+
     public bool IsLaunchableFrom(int rank, int size)
     {
         return Ranks.Exists(r => r >= rank && r <= rank + size - 1);

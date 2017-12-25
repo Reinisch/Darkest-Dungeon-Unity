@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using UnityEngine;
 
-public class SkillSelectionHeal : SkillSelectionDesire
+public sealed class SkillSelectionHeal : SkillSelectionDesire
 {
     private string CombatSkillId { get; set; }
     private float HpRatioThreshold { get; set; }
@@ -12,80 +11,55 @@ public class SkillSelectionHeal : SkillSelectionDesire
         GenerateFromDataSet(dataSet);
     }
 
-    public override bool SelectSkill(FormationUnit performer, MonsterBrainDecision decision)
+    protected override bool IsRestricted(FormationUnit performer)
     {
+        if (base.IsRestricted(performer))
+            return true;
+
         if (FirstInitiativeOnly && performer.CombatInfo.CurrentInitiative != 1)
-            return false;
+            return true;
 
-        if (Restrictions[SkillSelectRestriction.MonstersSizeMin] != null)
-            if (Restrictions[SkillSelectRestriction.MonstersSizeMin].Value > RaidSceneManager.BattleGround.MonsterSize)
-                return false;
-        if (Restrictions[SkillSelectRestriction.MonstersSizeMax] != null)
-            if (Restrictions[SkillSelectRestriction.MonstersSizeMax].Value < RaidSceneManager.BattleGround.MonsterSize)
-                return false;
-
-        var monster = performer.Character as Monster;
-
-        var availableSkills = CombatSkillId == null || CombatSkillId == "" ?
-            monster.Data.CombatSkills.FindAll(skill => skill.Heal != null && BattleSolver.IsSkillUsable(performer, skill)
-                                                       && performer.CombatInfo.SkillCooldowns.Find(cooldown => cooldown.SkillId == skill.Id) == null) :
-            monster.Data.CombatSkills.FindAll(skill => skill.Id == CombatSkillId
-                                                       && performer.CombatInfo.SkillCooldowns.Find(cooldown => cooldown.SkillId == skill.Id) == null);
-
-        if (availableSkills.Count > 0)
-        {
-            decision.Decision = BrainDecisionType.Perform;
-            decision.SelectedSkill = availableSkills[Random.Range(0, availableSkills.Count)];
-            decision.TargetInfo.Targets = BattleSolver.GetSkillAvailableTargets(performer, decision.SelectedSkill).
-                FindAll(target => target.Character.HealthRatio < HpRatioThreshold);
-            if (decision.TargetInfo.Targets.Count == 0)
-                return false;
-
-            decision.TargetInfo.Type = decision.SelectedSkill.TargetRanks.IsSelfTarget ?
-                SkillTargetType.Self : decision.SelectedSkill.TargetRanks.IsSelfFormation ?
-                    SkillTargetType.Party : SkillTargetType.Enemy;
-
-            var availableTargetDesires = monster.Brain.TargetDesireSet.FindAll(desire => desire.Type == TargetDesireType.Health);
-
-            while (availableTargetDesires.Count > 0)
-            {
-                TargetSelectionDesire desire = RandomSolver.ChooseByRandom(availableTargetDesires);
-                if (desire.SelectTarget(performer, decision))
-                    return true;
-                else
-                    availableTargetDesires.Remove(desire);
-            }
-            return false;
-        }
         return false;
     }
 
-    private void GenerateFromDataSet(Dictionary<string, object> dataSet)
+    protected override bool IsValidSkill(FormationUnit performer, CombatSkill skill)
+    {
+        if (!base.IsValidSkill(performer, skill))
+            return false;
+
+        if(string.IsNullOrEmpty(CombatSkillId))
+            return skill.Id == CombatSkillId;
+
+        return skill.Heal != null;
+    }
+
+    protected override bool IsValidTarget(FormationUnit target)
+    {
+        return target.Character.HealthRatio < HpRatioThreshold;
+    }
+
+    protected override bool IsValidTargetDesire(TargetSelectionDesire desire)
+    {
+        return desire.Type == TargetDesireType.Health;
+    }
+
+    protected override void GenerateFromDataSet(Dictionary<string, object> dataSet)
     {
         foreach (var token in dataSet)
         {
             switch (token.Key)
             {
-                case "base_chance":
-                    Chance = (int)((double)dataSet["base_chance"] * 100);
-                    break;
                 case "hp_ratio_treshold":
                     HpRatioThreshold = (float)(double)dataSet["hp_ratio_treshold"];
                     break;
                 case "first_initiative_only":
                     FirstInitiativeOnly = (bool)dataSet[token.Key];
                     break;
-                case "monsters_size_min":
-                    Restrictions[SkillSelectRestriction.MonstersSizeMin] = (int)(long)dataSet[token.Key];
-                    break;
-                case "monsters_size_max":
-                    Restrictions[SkillSelectRestriction.MonstersSizeMax] = (int)(long)dataSet[token.Key];
-                    break;
                 case "combat_skill_id":
                     CombatSkillId = (string)dataSet[token.Key];
                     break;
                 default:
-                    Debug.LogError("Unknown token in heal skill desire: " + token.Key);
+                    ProcessBaseDataToken(token);
                     break;
             }
         }
