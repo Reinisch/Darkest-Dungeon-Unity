@@ -400,6 +400,19 @@ public class RaidEvents : MonoBehaviour
         battleAnnouncment.gameObject.SetActive(false);
     }
 
+    public void ShowMonsterSkillAnnouncement(Character character, string skillId)
+    {
+        if (character.IsMonster)
+        {
+            if (character.DisplayModifier != null && character.DisplayModifier.UseCentreSkillAnnouncment)
+                ShowAnnouncment(LocalizationManager.GetString("str_monster_skill_" + skillId));
+            else
+                ShowAnnouncment(LocalizationManager.GetString("str_monster_skill_" + skillId), AnnouncmentPosition.Right);
+        }
+        else
+            ShowAnnouncment(LocalizationManager.GetString("combat_skill_name_" + character.Class + "_" + skillId), AnnouncmentPosition.Right);
+    }
+
     public void ShowAnnouncment(string message, AnnouncmentPosition position = AnnouncmentPosition.Top)
     {
         announcment.ShowAnnouncment(message, position);

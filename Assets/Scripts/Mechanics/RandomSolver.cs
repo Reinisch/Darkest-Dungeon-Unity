@@ -15,6 +15,21 @@ public static class RandomSolver
 {
     private static System.Random random = new System.Random();
 
+    public static T ChooseAnyExcept<T>(IEnumerable<T> collection, T except) where T : class
+    {
+        var enumerable = collection as IList<T> ?? collection.ToList();
+        var rnd = random.Next(enumerable.Sum(item => item == except ? 0 : 1));
+        foreach (var item in enumerable)
+        {
+            if(item == except)
+                continue;
+            if (rnd < 1)
+                return item;
+            rnd -= 1;
+        }
+        return null;
+    }
+
     public static T ChooseByRandom<T>(IEnumerable<T> collection) where T : IProportionValue
     {
         var enumerable = collection as IList<T> ?? collection.ToList();

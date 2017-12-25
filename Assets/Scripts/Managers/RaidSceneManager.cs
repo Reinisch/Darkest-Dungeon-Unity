@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
@@ -476,6 +477,51 @@ public class RaidSceneManager : MonoBehaviour
         }
     }
 
+    protected virtual IEnumerator ExecuteCampEffectGroup(bool allowSkipping, float waitTime, List<FormationUnit> targets,  Predicate<CampEffectType> nextTypeSelector)
+    {
+        bool skipNotification = false;
+        CampEffect currentEffect = null;
+
+        while (true)
+        {
+            for (int j = 0; j < targets.Count; j++)
+            {
+                currentEffect = RandomSolver.ChooseBySingleRandom(chosenEffects);
+
+                if (chosenEffects.Count == 1 && chosenEffects[0].Chance != 1)
+                    if (!RandomSolver.CheckSuccess(chosenEffects[0].Chance))
+                        continue;
+
+                if (!BattleSolver.IsRequirementFulfilled(targets[j], currentEffect.Requirement))
+                    continue;
+
+                yield return ExecuteCampEffect(currentEffect, targets[j], skipNotification);
+            }
+
+            if (nextTypeSelector == null)
+                break;
+
+            currentEffect = campEffects.Find(effect => nextTypeSelector(effect.Type) 
+                && effect.Selection == currentEffect.Selection && effect.Chance == 1);
+
+            if (currentEffect != null)
+            {
+                campEffects.Remove(currentEffect);
+                chosenEffects.Clear();
+                chosenEffects.Add(currentEffect);
+                if(allowSkipping)
+                    skipNotification = true;
+            }
+            else
+            {
+                if (campEffects.Count == 0 || chosenEffects[0].Selection.IsWaitingForNext(campEffects[0].Selection))
+                    yield return new WaitForSeconds(waitTime);
+
+                break;
+            }
+        }
+    }
+
     protected virtual IEnumerator HallwayLoadingEvent(HallSector hallSector, HallTransitionType transitionType, Direction direction, DungeonRoom fromRoom = null)
     {
         #region Set restrictions
@@ -699,26 +745,7 @@ public class RaidSceneManager : MonoBehaviour
             if (RaidPanel.SelectedUnit != null)
                 RaidPanel.SelectedUnit.OverlaySlot.UnitSelected();
 
-            #region Execute Hero Transformations
-            for (int i = 0; i < Formations.Heroes.Party.Units.Count; i++)
-            {
-                var hero = Formations.Heroes.Party.Units[i].Character as Hero;
-                if (Formations.Heroes.Party.Units[i].Character.Mode != null
-                    && Formations.Heroes.Party.Units[i].Character.Mode.AfflictionSkillId != null)
-                {
-                    var battleFinishSkill = hero.SelectedCombatSkills.Find(skill => skill.Id ==
-                        Formations.Heroes.Party.Units[i].Character.Mode.BattleCompleteSkillId);
-                    if (battleFinishSkill != null)
-                    {
-                        SkillTargetInfo targetInfo = BattleSolver.SelectSkillTargets(Formations.Heroes.Party.Units[i],
-                            Formations.Heroes.Party.Units[i], battleFinishSkill).
-                            UpdateSkillInfo(Formations.Heroes.Party.Units[i], battleFinishSkill);
-                        yield return StartCoroutine(ExecuteHeroSkill(Formations.Heroes.Party.Units[i],
-                            targetInfo, battleFinishSkill));
-                    }
-                }
-            }
-            #endregion
+            yield return StartCoroutine(ProcessTransformationsAfterBattle());
 
             foreach (var hero in Formations.Heroes.Party.Units)
                 hero.SetCombatAnimation(false);
@@ -907,6 +934,9 @@ public class RaidSceneManager : MonoBehaviour
                         DarkestDungeonManager.Data.Effects["HealSelfStress 1"].ApplyIndependent(HeroParty.Units[i], HeroParty.Units[i]);
                 }
 
+                if (RaidEvents.MealEvent.SelectedMealSlot.FoodRank == 3)
+                    yield return new WaitForSeconds(0.2f);
+
                 yield return StartCoroutine(ExecuteEffectEvents(false, 0.6f));
                 yield return ProcessRaidFailure();
                 break;
@@ -967,7 +997,6 @@ public class RaidSceneManager : MonoBehaviour
 
                 while (campEffects.Count > 0)
                 {
-                    #region Choose Effect and Targets
                     chosenEffects.Clear();
                     chosenEffects.Add(campEffects[0]);
                     campEffects.RemoveAt(0);
@@ -977,199 +1006,31 @@ public class RaidSceneManager : MonoBehaviour
                         chosenEffects.AddRange(campEffects.FindAll(effect => effect.Code == chosenEffects[0].Code));
                         campEffects.RemoveAll(effect => effect.Code == chosenEffects[0].Code);
                     }
-                    BattleSolver.FindTargets(RaidPanel.SelectedUnit,
-                        RaidEvents.CampEvent.SelectedTarget, chosenEffects[0], TempList);
-                    #endregion
-
-                    #region Effect Execution
-                    CampEffect currentEffect = null;
-                    bool skipNotification = false;
+                    BattleSolver.FindTargets(RaidPanel.SelectedUnit, RaidEvents.CampEvent.SelectedTarget, chosenEffects[0], TempList);
 
                     switch (chosenEffects[0].Type)
                     {
                         case CampEffectType.Buff:
                         case CampEffectType.HealthHealMaxHealthPercent:
                         case CampEffectType.RemoveDisease:
-                            #region Standard Wait Effects
-                            while (true)
-                            {
-                                for (int j = 0; j < TempList.Count; j++)
-                                {
-                                    currentEffect = RandomSolver.ChooseBySingleRandom(chosenEffects);
-
-                                    if (chosenEffects.Count == 1 && chosenEffects[0].Chance != 1)
-                                        if(!RandomSolver.CheckSuccess(chosenEffects[0].Chance))
-                                            continue;
-
-                                    if (!BattleSolver.IsRequirementFulfilled(TempList[j], currentEffect.Requirement))
-                                        continue;
-
-                                    yield return ExecuteCampEffect(currentEffect, TempList[j], skipNotification);
-                                }
-
-                                currentEffect = campEffects.Find(effect => effect.Type == currentEffect.Type
-                                    && effect.Selection == currentEffect.Selection && effect.Chance == 1);
-
-                                if (currentEffect != null)
-                                {
-                                    campEffects.Remove(currentEffect);
-                                    chosenEffects.Clear();
-                                    chosenEffects.Add(currentEffect);
-                                    skipNotification = true;
-                                }
-                                else
-                                {
-                                    if (campEffects.Count == 0)
-                                        yield return new WaitForSeconds(0.6f);
-                                    else switch (chosenEffects[0].Selection)
-                                        {
-                                            case CampTargetType.Individual:
-                                                if (campEffects[0].Selection != CampTargetType.Self)
-                                                    yield return new WaitForSeconds(0.6f);
-                                                break;
-                                            case CampTargetType.PartyOther:
-                                                if (campEffects[0].Selection != CampTargetType.Self)
-                                                    yield return new WaitForSeconds(0.6f);
-                                                break;
-                                            case CampTargetType.Self:
-                                                if (campEffects[0].Selection == CampTargetType.Self)
-                                                    yield return new WaitForSeconds(0.6f);
-                                                break;
-                                        }
-                                    break;
-                                }
-                            }
+                            yield return StartCoroutine(ExecuteCampEffectGroup(true, 0.6f, TempList, effectType => effectType == chosenEffects[0].Type));
                             break;
-                            #endregion
                         case CampEffectType.Loot:
                         case CampEffectType.ReduceAmbushChance:
                         case CampEffectType.ReduceTorch:
                         case CampEffectType.RemoveDeathRecovery:
-                            #region Instant Effects
-                            for (int j = 0; j < TempList.Count; j++)
-                            {
-                                currentEffect = RandomSolver.ChooseBySingleRandom(chosenEffects);
-
-                                if (chosenEffects.Count == 1 && chosenEffects[0].Chance != 1)
-                                    if(!RandomSolver.CheckSuccess(chosenEffects[0].Chance))
-                                        continue;
-
-                                if (!BattleSolver.IsRequirementFulfilled(TempList[j], currentEffect.Requirement))
-                                    continue;
-
-                                yield return ExecuteCampEffect(currentEffect, TempList[j], skipNotification);
-                            }
+                            yield return StartCoroutine(ExecuteCampEffectGroup(false, 0.0f, TempList, null));
                             break;
-                            #endregion
                         case CampEffectType.RemoveBleed:
                         case CampEffectType.RemovePoison:
-                            #region Combined Effects
-                            while (true)
-                            {
-                                for (int j = 0; j < TempList.Count; j++)
-                                {
-                                    currentEffect = RandomSolver.ChooseBySingleRandom(chosenEffects);
-
-                                    if (chosenEffects.Count == 1 && chosenEffects[0].Chance != 1)
-                                        if(!RandomSolver.CheckSuccess(chosenEffects[0].Chance))
-                                            continue;
-
-                                    if (!BattleSolver.IsRequirementFulfilled(TempList[j], currentEffect.Requirement))
-                                        continue;
-
-                                    yield return ExecuteCampEffect(currentEffect, TempList[j], skipNotification);
-                                }
-
-                                currentEffect = campEffects.Find(effect => (effect.Type == CampEffectType.RemoveBleed 
-                                    || effect.Type == CampEffectType.RemovePoison)
-                                    && effect.Selection == currentEffect.Selection && effect.Chance == 1);
-
-                                if (currentEffect != null)
-                                {
-                                    campEffects.Remove(currentEffect);
-                                    chosenEffects.Clear();
-                                    chosenEffects.Add(currentEffect);
-                                }
-                                else
-                                {
-                                    if (campEffects.Count == 0)
-                                        yield return new WaitForSeconds(0.6f);
-                                    else switch (chosenEffects[0].Selection)
-                                        {
-                                            case CampTargetType.Individual:
-                                                if (campEffects[0].Selection != CampTargetType.Self)
-                                                    yield return new WaitForSeconds(0.6f);
-                                                break;
-                                            case CampTargetType.PartyOther:
-                                                if (campEffects[0].Selection != CampTargetType.Self)
-                                                    yield return new WaitForSeconds(0.6f);
-                                                break;
-                                            case CampTargetType.Self:
-                                                if (campEffects[0].Selection == CampTargetType.Self)
-                                                    yield return new WaitForSeconds(0.6f);
-                                                break;
-                                        }
-                                    break;
-                                }
-                            }
+                            yield return StartCoroutine(ExecuteCampEffectGroup(false, 0.6f, TempList, effectType => 
+                                effectType == CampEffectType.RemoveBleed || effectType == CampEffectType.RemovePoison));
                             break;
-                            #endregion
                         case CampEffectType.StressDamageAmount:
                         case CampEffectType.StressHealAmount:
-                            #region Effects with Stress
-                            while (true)
-                            {
-                                for (int j = 0; j < TempList.Count; j++)
-                                {
-                                    currentEffect = RandomSolver.ChooseBySingleRandom(chosenEffects);
-
-                                    if (chosenEffects.Count == 1 && chosenEffects[0].Chance != 1)
-                                        if(!RandomSolver.CheckSuccess(chosenEffects[0].Chance))
-                                            continue;
-
-                                    if (!BattleSolver.IsRequirementFulfilled(TempList[j], currentEffect.Requirement))
-                                        continue;
-
-                                    yield return ExecuteCampEffect(currentEffect, TempList[j], skipNotification);
-                                }
-
-                                currentEffect = campEffects.Find(effect => effect.Type == currentEffect.Type
-                                    && effect.Selection == currentEffect.Selection && effect.Chance == 1);
-
-                                if (currentEffect != null)
-                                {
-                                    campEffects.Remove(currentEffect);
-                                    chosenEffects.Clear();
-                                    chosenEffects.Add(currentEffect);
-                                }
-                                else
-                                {
-                                    if (campEffects.Count == 0)
-                                        yield return new WaitForSeconds(1.2f);
-                                    else switch (chosenEffects[0].Selection)
-                                        {
-                                            case CampTargetType.Individual:
-                                                if (campEffects[0].Selection != CampTargetType.Self)
-                                                    yield return new WaitForSeconds(1.2f);
-                                                break;
-                                            case CampTargetType.PartyOther:
-                                                if (campEffects[0].Selection != CampTargetType.Self)
-                                                    yield return new WaitForSeconds(1.2f);
-                                                break;
-                                            case CampTargetType.Self:
-                                                if (campEffects[0].Selection == CampTargetType.Self)
-                                                    yield return new WaitForSeconds(1.2f);
-                                                break;
-                                        }
-                                    break;
-                                }
-                            }
-                            yield return StartCoroutine(ExecuteEffectEvents(false));
-                            yield return ProcessRaidFailure();
+                            yield return StartCoroutine(ExecuteCampEffectGroup(false, 1.2f, TempList, effectType => effectType == chosenEffects[0].Type));
                             break;
-                            #endregion
                     }
-                    #endregion
                 }
                 RaidEvents.CampEvent.Show();
 
@@ -1839,7 +1700,6 @@ public class RaidSceneManager : MonoBehaviour
                     }
                 }
 
-
                 if (monster.Data.ControllerCaptor != null)
                 {
                     var controlRecord = BattleGround.Controls.Find(control => control.ControllUnit == targetUnit);
@@ -2048,24 +1908,28 @@ public class RaidSceneManager : MonoBehaviour
         yield return ProcessRaidFailure();
     }
 
+    protected IEnumerator ProcessTransformationsAfterBattle()
+    {
+        foreach (FormationUnit unit in Formations.Heroes.Party.Units)
+        {
+            var hero = (Hero)unit.Character;
+            if (hero.Mode == null || hero.Mode.AfflictionSkillId == null)
+                continue;
+
+            var skill = hero.SelectedCombatSkills.Find(s => s.Id == hero.Mode.BattleCompleteSkillId);
+            if (skill == null)
+                continue;
+
+            SkillTargetInfo targetInfo = BattleSolver.SelectSkillTargets(unit, unit, skill).UpdateSkillInfo(unit, skill);
+            yield return StartCoroutine(ExecuteHeroSkill(unit, targetInfo, skill));
+        }
+    }
+
     #region Battle Round
 
     protected virtual IEnumerator LoadEncounterEvent(IRaidArea areaView)
     {
-        #region Set Combat States and Restrictions
-        QuestPanel.UpdateEncounterRetreat();
-        QuestPanel.SetCombatState();
-        DisableEnviroment();
-        DisablePartyMovement();
-        Formations.LockSelections();
-        Formations.ResetSelections();
-        RaidPanel.SetDisabledState();
-        Inventory.SetDeactivated();
-        RaidPanel.HeroPanel.EquipmentPanel.SetDisabled();
-
-        foreach (var hero in Formations.Heroes.Party.Units)
-            hero.SetCombatAnimation(true);
-        #endregion
+        SetEncounterState();
 
         #region Switch Soundtrack
         DarkestSoundManager.PauseDungeonSoundtrack();
@@ -2103,25 +1967,10 @@ public class RaidSceneManager : MonoBehaviour
 
     protected virtual IEnumerator EncounterEvent(IRaidArea areaView, bool campfireAmbush = false)
     {
-        #region Set Combat States and Restrictions
-        QuestPanel.UpdateEncounterRetreat();
-        QuestPanel.SetCombatState();
-        DisableEnviroment();
-        DisablePartyMovement();
-        Formations.LockSelections();
-        Formations.ResetSelections();
-        RaidPanel.SetDisabledState();
-        Inventory.SetDeactivated();
-        RaidPanel.HeroPanel.EquipmentPanel.SetDisabled();
+        SetEncounterState();
 
-        foreach (var hero in Formations.Heroes.Party.Units)
-            hero.SetCombatAnimation(true);
-        #endregion
-
-        #region Wait For Events
         while (IsUnitEventInProgress)
             yield return null;
-        #endregion
 
         #region Switch Soundtrack
         DarkestSoundManager.PauseDungeonSoundtrack();
@@ -2222,23 +2071,7 @@ public class RaidSceneManager : MonoBehaviour
 
     protected virtual IEnumerator FinishEncouter(IRaidArea areaView)
     {
-        #region Execute Hero Transformations
-
-        foreach (FormationUnit unit in Formations.Heroes.Party.Units)
-        {
-            var hero = (Hero)unit.Character;
-            if (hero.Mode == null || hero.Mode.AfflictionSkillId == null)
-                continue;
-
-            var skill = hero.SelectedCombatSkills.Find(s => s.Id == hero.Mode.BattleCompleteSkillId);
-            if (skill == null)
-                continue;
-
-            SkillTargetInfo targetInfo = BattleSolver.SelectSkillTargets(unit, unit, skill).UpdateSkillInfo(unit, skill);
-            yield return StartCoroutine(ExecuteHeroSkill(unit, targetInfo, skill));
-        }
-
-        #endregion
+        yield return StartCoroutine(ProcessTransformationsAfterBattle());
 
         BattleGround.ResetTargetRanks();
         DarkestSoundManager.StopBattleSoundtrack();
@@ -2566,34 +2399,7 @@ public class RaidSceneManager : MonoBehaviour
             }
             #endregion
 
-            #region Round Start Desires
-            TempList.AddRange(BattleGround.MonsterParty.Units);
-            while (TempList.Count > 0)
-            {
-                var monsterUnit = TempList[0];
-                TempList.RemoveAt(0);
-                if (monsterUnit.Character is Hero)
-                    continue;
-                var monster = monsterUnit.Character as Monster;
-
-                var desires = monster.Brain.BonusDesireSet.FindAll(desire => desire.IsRoundStart);
-                while (desires.Count > 0)
-                {
-                    var currentDesire = desires[0];
-                    desires.RemoveAt(0);
-
-                    if (currentDesire.CheckBonusInitiative(monsterUnit))
-                    {
-                        if (currentDesire.CombatSkillOverride == "")
-                            yield return StartCoroutine(MonsterTurn(monsterUnit));
-                        else
-                            yield return StartCoroutine(MonsterOverriddenTurn(monsterUnit, currentDesire.CombatSkillOverride));
-                        break;
-                    }
-                }
-            }
-            TempList.Clear();
-            #endregion
+            yield return StartCoroutine(BonusTurn(desire => desire.IsRoundStart));
 
             #region Mutation Activation
             if (BattleGround.Round.RoundNumber != 1)
@@ -2695,6 +2501,9 @@ public class RaidSceneManager : MonoBehaviour
 
         while (BattleGround.Round.OrderedUnits.Count != 0)
         {
+            if (BattleGround.IsBattleEnded())
+                break;
+
             if (fromBattleSave == false)
             {
                 #region Captor Activations
@@ -2899,74 +2708,14 @@ public class RaidSceneManager : MonoBehaviour
                 }
             }
 
-            if (BattleGround.IsBattleEnded())
-                break;
+            if (!BattleGround.IsBattleEnded())
+                yield return StartCoroutine(BonusTurn(desire => desire.IsPostTurn && desire.IsRoundInProgress));
 
-            #region Turn End Desires
-            TempList.AddRange(BattleGround.MonsterParty.Units);
-            while (TempList.Count > 0)
-            {
-                var monsterUnit = TempList[0];
-                TempList.RemoveAt(0);
-                if (monsterUnit.Character is Hero)
-                    continue;
-
-                var monster = monsterUnit.Character as Monster;
-                var desires = monster.Brain.BonusDesireSet.FindAll(desire => desire.IsPostTurn && desire.IsRoundInProgress);
-                while (desires.Count > 0)
-                {
-                    var currentDesire = desires[0];
-                    desires.RemoveAt(0);
-
-                    if (currentDesire.CheckBonusInitiative(monsterUnit))
-                    {
-                        yield return WaitForOneTwo;
-
-                        if (currentDesire.CombatSkillOverride == "")
-                            yield return StartCoroutine(MonsterTurn(monsterUnit));
-                        else
-                            yield return StartCoroutine(MonsterOverriddenTurn(monsterUnit, currentDesire.CombatSkillOverride));
-                        break;
-                    }
-                }
-            }
-            TempList.Clear();
-            #endregion
-
-            if (BattleGround.IsBattleEnded())
-                break;
-
-            yield return WaitForZeroThree;
+            if (!BattleGround.IsBattleEnded())
+                yield return WaitForZeroThree;
         }
 
-        #region Round Finish Desires
-        TempList.AddRange(BattleGround.MonsterParty.Units);
-        while (TempList.Count > 0)
-        {
-            var monsterUnit = TempList[0];
-            TempList.RemoveAt(0);
-            if (monsterUnit.Character is Hero)
-                continue;
-
-            var monster = monsterUnit.Character as Monster;
-            var desires = monster.Brain.BonusDesireSet.FindAll(desire => desire.IsRoundFinish);
-            while (desires.Count > 0)
-            {
-                var currentDesire = desires[0];
-                desires.RemoveAt(0);
-
-                if (currentDesire.CheckBonusInitiative(monsterUnit))
-                {
-                    if(currentDesire.CombatSkillOverride == "")
-                        yield return StartCoroutine(MonsterTurn(monsterUnit));
-                    else
-                        yield return StartCoroutine(MonsterOverriddenTurn(monsterUnit, currentDesire.CombatSkillOverride));
-                    break;
-                }
-            }
-        }
-        TempList.Clear();
-        #endregion
+        yield return StartCoroutine(BonusTurn(desire => desire.IsRoundFinish));
 
         #region Idle units status effects
         TempList.AddRange(BattleGround.MonsterParty.Units.FindAll(targetUnit => targetUnit.CombatInfo.TotalInitiatives == 0));
@@ -3594,28 +3343,7 @@ public class RaidSceneManager : MonoBehaviour
                         FMODUnity.RuntimeManager.PlayOneShot("event:/general/combat/retreat");
                         DarkestSoundManager.ExecuteNarration("battle_retreat", NarrationPlace.Raid);
 
-                        #region Execute Hero Transformations
-
-                        for (int i = 0; i < Formations.Heroes.Party.Units.Count; i++)
-                        {
-                            var hero = Formations.Heroes.Party.Units[i].Character as Hero;
-                            if (Formations.Heroes.Party.Units[i].Character.Mode != null 
-                                && Formations.Heroes.Party.Units[i].Character.Mode.AfflictionSkillId != null)
-                            {
-                                var battleFinishSkill = hero.SelectedCombatSkills.Find(skill => skill.Id ==
-                                    Formations.Heroes.Party.Units[i].Character.Mode.BattleCompleteSkillId);
-                                if (battleFinishSkill != null)
-                                {
-                                    SkillTargetInfo targetInfo = BattleSolver.SelectSkillTargets(Formations.Heroes.Party.Units[i],
-                                        Formations.Heroes.Party.Units[i], battleFinishSkill).
-                                        UpdateSkillInfo(Formations.Heroes.Party.Units[i], battleFinishSkill);
-                                    yield return StartCoroutine(ExecuteHeroSkill(Formations.Heroes.Party.Units[i],
-                                        targetInfo, battleFinishSkill));
-                                }
-                            }
-                        }
-
-                        #endregion
+                        yield return StartCoroutine(ProcessTransformationsAfterBattle());
 
                         DarkestDungeonManager.ScreenFader.Fade(2);
                         yield return new WaitForSeconds(0.5f);
@@ -3795,6 +3523,52 @@ public class RaidSceneManager : MonoBehaviour
         actionUnit.SetPerformerStatus();
 
         yield return StartCoroutine(ExecuteMonsterOverridenSkill(actionUnit, combatSkillOverride));
+    }
+
+    protected virtual IEnumerator BonusTurn(Predicate<BonusInitiativeDesire> desireSelector)
+    {
+        TempList.AddRange(BattleGround.MonsterParty.Units);
+        while (TempList.Count > 0)
+        {
+            var monsterUnit = TempList[0];
+            TempList.RemoveAt(0);
+            if (monsterUnit.Character is Hero)
+                continue;
+
+            var monster = monsterUnit.Character as Monster;
+            var desires = monster.Brain.BonusDesireSet.FindAll(desireSelector);
+            while (desires.Count > 0)
+            {
+                var currentDesire = desires[0];
+                desires.RemoveAt(0);
+
+                if (currentDesire.CheckBonusInitiative(monsterUnit))
+                {
+                    if (currentDesire.CombatSkillOverride == "")
+                        yield return StartCoroutine(MonsterTurn(monsterUnit));
+                    else
+                        yield return StartCoroutine(MonsterOverriddenTurn(monsterUnit, currentDesire.CombatSkillOverride));
+                    break;
+                }
+            }
+        }
+        TempList.Clear();
+    }
+
+    private void SetEncounterState()
+    {
+        QuestPanel.UpdateEncounterRetreat();
+        QuestPanel.SetCombatState();
+        DisableEnviroment();
+        DisablePartyMovement();
+        Formations.LockSelections();
+        Formations.ResetSelections();
+        RaidPanel.SetDisabledState();
+        Inventory.SetDeactivated();
+        RaidPanel.HeroPanel.EquipmentPanel.SetDisabled();
+
+        foreach (var hero in Formations.Heroes.Party.Units)
+            hero.SetCombatAnimation(true);
     }
 
     #endregion
@@ -4037,14 +3811,12 @@ public class RaidSceneManager : MonoBehaviour
     {
         if (targetInfo.Type == SkillTargetType.Enemy)
             for (int i = targetInfo.Targets.Count - 1; i >= 0; i--)
-            {
                 if (targetInfo.Targets[i].Character.GetStatusEffect(StatusType.Guarded).IsApplied)
                 {
                     var guardedStatus = targetInfo.Targets[i].Character.GetStatusEffect(StatusType.Guarded) as GuardedStatusEffect;
                     if (!targetInfo.Targets.Contains(guardedStatus.Guard))
                         targetInfo.Targets[i] = guardedStatus.Guard;
                 }
-            }
     }
 
     protected virtual void ExecuteRiposteSkillActivation(FormationUnit performer, SkillTargetInfo targetInfo)
@@ -4233,9 +4005,31 @@ public class RaidSceneManager : MonoBehaviour
         return skillResult;
     }
 
-    protected virtual List<DeathDamage> ExecuteBattlegroundDeaths()
+    protected virtual List<DeathDamage> ExecuteBattlegroundDeaths(FormationUnit peformer)
     {
         List<DeathDamage> deathDamages = new List<DeathDamage>();
+
+        if (peformer.CombatInfo.MarkedForDeath)
+        {
+            peformer.CombatInfo.IsDead = true;
+            List<FormationUnit> lifeLinkedUnits = new List<FormationUnit>();
+            for (int i = 0; i < peformer.Party.Units.Count; i++)
+            {
+                if (peformer.Party.Units[i].Character.LifeLink != null)
+                {
+                    if (peformer.Party.Units[i].Character.LifeLink.LinkBaseClass == peformer.Character.Class)
+                        lifeLinkedUnits.Add(peformer.Party.Units[i]);
+                }
+            }
+            lifeLinkedUnits.ForEach(SummonPurging);
+            lifeLinkedUnits.Clear();
+
+            if (peformer.CombatInfo.IsDead)
+                if (peformer.Character.DeathDamage != null)
+                    deathDamages.Add(peformer.Character.DeathDamage);
+
+            ExecuteDeath(peformer);
+        }
 
         for (int i = BattleGround.HeroParty.Units.Count - 1; i >= 0; i--)
         {
@@ -4299,23 +4093,8 @@ public class RaidSceneManager : MonoBehaviour
         ExecuteGuardRedirection(actionUnit, brainDecision.TargetInfo);
         yield return new WaitForSeconds(0.1f);
         brainDecision.TargetInfo.UpdateSkillInfo(actionUnit, brainDecision.SelectedSkill);
-        #region Dipslay Announcment
         if (brainDecision.TargetInfo.SkillArtInfo.CanDisplaySelection != false)
-        {
-            if (actionUnit.Character.IsMonster)
-            {
-                if (actionUnit.Character.DisplayModifier != null && actionUnit.Character.DisplayModifier.UseCentreSkillAnnouncment)
-                    RaidEvents.ShowAnnouncment(LocalizationManager.GetString("str_monster_skill_" +
-                        brainDecision.TargetInfo.SkillArtInfo.SkillId));
-                else
-                    RaidEvents.ShowAnnouncment(LocalizationManager.GetString("str_monster_skill_" +
-                        brainDecision.TargetInfo.SkillArtInfo.SkillId), AnnouncmentPosition.Right);
-            }
-            else
-                RaidEvents.ShowAnnouncment(LocalizationManager.GetString("combat_skill_name_"
-                    + actionUnit.Character.Class + "_" + brainDecision.TargetInfo.SkillArtInfo.SkillId), AnnouncmentPosition.Right);
-        }
-        #endregion
+            RaidEvents.ShowMonsterSkillAnnouncement(actionUnit.Character, brainDecision.TargetInfo.SkillArtInfo.SkillId);
         yield return new WaitForSeconds(0.75f);
         Formations.HideUnitOverlay();
         TorchMeter.Hide();
@@ -4422,7 +4201,7 @@ public class RaidSceneManager : MonoBehaviour
         DungeonCamera.SwitchBlur(false);
         ExecuteSkillAnimationOutro(actionUnit, brainDecision.TargetInfo);
 
-        List<DeathDamage> deathDamages = ExecuteBattlegroundDeaths();
+        List<DeathDamage> deathDamages = ExecuteBattlegroundDeaths(actionUnit);
         if (deathDamages.Count > 0)
             yield return StartCoroutine(ExecuteDeathDamages(deathDamages));
         
@@ -4446,125 +4225,68 @@ public class RaidSceneManager : MonoBehaviour
         RaidEvents.MonsterTooltip.IsDisabled = false;
 
         #region Trait Comment Self and Ally
+
         if(brainDecision.TargetInfo.Type == SkillTargetType.Enemy)
         {
             foreach (var skillEntry in skillResult.SkillEntries)
             {
-                if (skillEntry.Target.CombatInfo.IsDead == false)
+                if (skillEntry.Target.CombatInfo.IsDead)
+                    continue;
+                if (skillEntry.Target.Party.Units.Count < 2)
+                    continue;
+
+                #region Comment on Self
+
+                if (skillEntry.Target.Character.Trait != null)
                 {
-                    #region Comment on Self
-                    if (skillEntry.Target.Character.Trait != null)
-                    {
-                        if (skillEntry.IsTargetHit)
-                        {
-                            #region Self Hit
-                            if (RandomSolver.CheckSuccess(skillEntry.Target.Character.
-                                Trait.Reactions[ReactionType.CommentSelfHit].Chance))
-                            {
-                                var barkStressEffect = skillEntry.Target.Character.
-                                    Trait.Reactions[ReactionType.CommentSelfHit].Effect;
-                                if (skillEntry.Target.Party.Units.Count > 1)
-                                {
-                                    yield return new WaitForSeconds(1f);
-                                    TempList.Clear();
-                                    TempList.AddRange(skillEntry.Target.Party.Units);
-                                    TempList.Remove(skillEntry.Target);
-                                    var barkTarget = TempList[RandomSolver.Next(TempList.Count)];
-                                    TempList.Clear();
-                                    for (int i = 0; i < barkStressEffect.SubEffects.Count; i++)
-                                        barkStressEffect.SubEffects[i].Apply(skillEntry.Target, barkTarget, barkStressEffect);
-                                    yield return new WaitForSeconds(0.1f);
-                                    yield return StartCoroutine(ExecuteEffectEvents(false));
-                                    break;
-                                }
-                            }
-                            #endregion
-                        }
-                        else
-                        {
-                            #region Self Miss
-                            if (RandomSolver.CheckSuccess(skillEntry.Target.Character.
-                                Trait.Reactions[ReactionType.CommentSelfMissed].Chance))
-                            {
-                                var barkStressEffect = skillEntry.Target.Character.
-                                    Trait.Reactions[ReactionType.CommentSelfHit].Effect;
-                                if (skillEntry.Target.Party.Units.Count > 1)
-                                {
-                                    yield return new WaitForSeconds(1f);
-                                    TempList.Clear();
-                                    TempList.AddRange(skillEntry.Target.Party.Units);
-                                    TempList.Remove(skillEntry.Target);
-                                    var barkTarget = TempList[RandomSolver.Next(TempList.Count)];
-                                    TempList.Clear();
-                                    for (int i = 0; i < barkStressEffect.SubEffects.Count; i++)
-                                        barkStressEffect.SubEffects[i].Apply(skillEntry.Target, barkTarget, barkStressEffect);
-                                    yield return new WaitForSeconds(0.1f);
-                                    yield return StartCoroutine(ExecuteEffectEvents(false));
-                                    break;
-                                }
-                            }
-                            #endregion
-                        }
-                    }
-                    #endregion
+                    ReactionType reactionType = skillEntry.IsTargetHit
+                        ? ReactionType.CommentSelfHit
+                        : ReactionType.CommentSelfMissed;
 
-                    #region Comment on Ally
-                    if (skillEntry.Target.Party.Units.Count > 1)
+                    if (RandomSolver.CheckSuccess(skillEntry.Target.Character.Trait.Reactions[reactionType].Chance))
                     {
-                        foreach(var ally in skillEntry.Target.Party.Units)
-                        {
-                            if (ally == skillEntry.Target)
-                                continue;
-
-                            if(ally.Character.Trait != null)
-                            {
-                                if (skillEntry.IsTargetHit)
-                                {
-                                    #region Ally Hit
-                                    if (RandomSolver.CheckSuccess(ally.Character.
-                                        Trait.Reactions[ReactionType.CommentAllyHit].Chance))
-                                    {
-                                        var barkStressEffect = ally.Character.
-                                            Trait.Reactions[ReactionType.CommentAllyHit].Effect;
-                                        if (skillEntry.Target.Party.Units.Count > 1)
-                                        {
-                                            yield return new WaitForSeconds(1f);
-                                            for (int i = 0; i < barkStressEffect.SubEffects.Count; i++)
-                                                barkStressEffect.SubEffects[i].Apply(ally, skillEntry.Target, barkStressEffect);
-                                            yield return new WaitForSeconds(0.1f);
-                                            yield return StartCoroutine(ExecuteEffectEvents(false));
-                                            break;
-                                        }
-                                    }
-                                    #endregion
-                                }
-                                else
-                                {
-                                    #region Ally Miss
-                                    if (RandomSolver.CheckSuccess(ally.Character.
-                                        Trait.Reactions[ReactionType.CommentAllyMissed].Chance))
-                                    {
-                                        var barkStressEffect = ally.Character.
-                                            Trait.Reactions[ReactionType.CommentAllyMissed].Effect;
-                                        if (skillEntry.Target.Party.Units.Count > 1)
-                                        {
-                                            yield return new WaitForSeconds(1f);
-                                            for (int i = 0; i < barkStressEffect.SubEffects.Count; i++)
-                                                barkStressEffect.SubEffects[i].Apply(ally, skillEntry.Target, barkStressEffect);
-                                            yield return new WaitForSeconds(0.1f);
-                                            yield return StartCoroutine(ExecuteEffectEvents(false));
-                                            break;
-                                        }
-                                    }
-                                    #endregion
-                                }
-                            }
-                        }
+                        var barkStressEffect = skillEntry.Target.Character.Trait.Reactions[reactionType].Effect;
+                        yield return new WaitForSeconds(1f);
+                        var barkTarget = RandomSolver.ChooseAnyExcept(skillEntry.Target.Party.Units, skillEntry.Target);
+                        foreach (SubEffect subEffect in barkStressEffect.SubEffects)
+                            subEffect.Apply(skillEntry.Target, barkTarget, barkStressEffect);
+                        yield return new WaitForSeconds(0.1f);
+                        yield return StartCoroutine(ExecuteEffectEvents(true));
+                        break;
                     }
-                    #endregion
                 }
+
+                #endregion
+
+                #region Comment on Ally
+
+                foreach (var ally in skillEntry.Target.Party.Units)
+                {
+                    if (ally == skillEntry.Target)
+                        continue;
+                    if (ally.Character.Trait == null)
+                        continue;
+
+                    ReactionType reactionType = skillEntry.IsTargetHit
+                        ? ReactionType.CommentAllyHit
+                        : ReactionType.CommentAllyMissed;
+
+                    if (RandomSolver.CheckSuccess(ally.Character.Trait.Reactions[reactionType].Chance))
+                    {
+                        var barkStressEffect = ally.Character.Trait.Reactions[reactionType].Effect;
+                        yield return new WaitForSeconds(1f);
+                        foreach (SubEffect subEffect in barkStressEffect.SubEffects)
+                            subEffect.Apply(ally, skillEntry.Target, barkStressEffect);
+                        yield return new WaitForSeconds(0.1f);
+                        yield return StartCoroutine(ExecuteEffectEvents(true));
+                        break;
+                    }
+                }
+
+                #endregion
             }
         }
+
         #endregion
     }
 
@@ -4585,28 +4307,12 @@ public class RaidSceneManager : MonoBehaviour
         SetBrainDecisionMarkings(actionUnit, brainDecision);
         yield return new WaitForSeconds(0.1f);
         brainDecision.TargetInfo.UpdateSkillInfo(actionUnit, brainDecision.SelectedSkill);
-        #region Dipslay Announcment
-        if (!(brainDecision.TargetInfo.SkillArtInfo.CanDisplaySelection == false))
-        {
-            if (actionUnit.Character.IsMonster)
-            {
-                if(actionUnit.Character.DisplayModifier != null &&
-                    actionUnit.Character.DisplayModifier.UseCentreSkillAnnouncment)
-                    RaidEvents.ShowAnnouncment(LocalizationManager.GetString("str_monster_skill_" +
-                        brainDecision.TargetInfo.SkillArtInfo.SkillId));
-                else
-                    RaidEvents.ShowAnnouncment(LocalizationManager.GetString("str_monster_skill_" +
-                        brainDecision.TargetInfo.SkillArtInfo.SkillId), AnnouncmentPosition.Right);
-            }
-            else
-                RaidEvents.ShowAnnouncment(LocalizationManager.GetString("combat_skill_name_"
-                    + actionUnit.Character.Class + "_" + brainDecision.TargetInfo.SkillArtInfo.SkillId), AnnouncmentPosition.Right);
-        }
-        #endregion
+        if (brainDecision.TargetInfo.SkillArtInfo.CanDisplaySelection != false)
+            RaidEvents.ShowMonsterSkillAnnouncement(actionUnit.Character, brainDecision.TargetInfo.SkillArtInfo.SkillId);
         yield return new WaitForSeconds(0.75f);
         Formations.HideUnitOverlay();
         TorchMeter.Hide();
-        if (!(brainDecision.TargetInfo.SkillArtInfo.CanDisplaySelection == false))
+        if (brainDecision.TargetInfo.SkillArtInfo.CanDisplaySelection != false)
             RaidEvents.HideAnnouncment();
         yield return new WaitForSeconds(0.2f);
         DungeonCamera.Zoom(50, 0.05f);
@@ -4623,75 +4329,12 @@ public class RaidSceneManager : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
         DungeonCamera.Zoom(DungeonCamera.StandardFOV, 0.1f);
         DungeonCamera.SwitchBlur(false);
-        #region Animation Outro
-        Formations.UnitSkillOutro(actionUnit, brainDecision.TargetInfo.SkillArtInfo);
+        ExecuteSkillAnimationOutro(actionUnit, brainDecision.TargetInfo);
 
-        if (brainDecision.TargetInfo.Type == SkillTargetType.Party)
-        {
-            foreach (var targetUnit in brainDecision.TargetInfo.Targets)
-                if (actionUnit != targetUnit)
-                    Formations.UnitBuffedOutro(targetUnit);
-        }
-        else if (brainDecision.TargetInfo.Type == SkillTargetType.Enemy)
-        {
-            foreach (var targetUnit in brainDecision.TargetInfo.Targets)
-                Formations.UnitDefendOutro(targetUnit);
-        }
+        List<DeathDamage> deathDamages = ExecuteBattlegroundDeaths(actionUnit);
+        if (deathDamages.Count > 0)
+            yield return StartCoroutine(ExecuteDeathDamages(deathDamages));
 
-        if (actionUnit.CombatInfo.MarkedForDeath)
-        {
-            actionUnit.CombatInfo.IsDead = true;
-            List<FormationUnit> summonPurging = new List<FormationUnit>();
-            for (int i = 0; i < actionUnit.Party.Units.Count; i++)
-            {
-                if (actionUnit.Party.Units[i].Character.LifeLink != null)
-                {
-                    if (actionUnit.Party.Units[i].Character.LifeLink.LinkBaseClass == actionUnit.Character.Class)
-                        summonPurging.Add(actionUnit.Party.Units[i]);
-                }
-            }
-            for (int i = 0; i < summonPurging.Count; i++)
-            {
-                SummonPurging(summonPurging[i]);
-            }
-            summonPurging.Clear();
-            ExecuteDeath(actionUnit);
-        }
-
-
-        for (int i = BattleGround.HeroParty.Units.Count - 1; i >= 0; i--)
-            ExecuteDeath(BattleGround.HeroParty.Units[i]);
-
-        List<DeathDamage> deathDamages = new List<DeathDamage>();
-        for (int i = BattleGround.MonsterParty.Units.Count - 1; i >= 0; i--)
-        {
-            if (BattleGround.MonsterParty.Units[i].CombatInfo.IsDead)
-                if (BattleGround.MonsterParty.Units[i].Character.DeathDamage != null)
-                    deathDamages.Add(BattleGround.MonsterParty.Units[i].Character.DeathDamage);
-
-            ExecuteDeath(BattleGround.MonsterParty.Units[i]);
-        }
-
-#region Execute Death Damages
-        for (int i = 0; i < deathDamages.Count; i++)
-        {
-            var deathDamageTarget = BattleGround.MonsterParty.Units.Find(unit =>
-            unit.Character.Class == deathDamages[i].TargetBaseClass);
-
-            if (deathDamageTarget != null)
-            {
-                deathDamageTarget.Character.TakeDamage(deathDamages[i].TargetDamage);
-                deathDamageTarget.OverlaySlot.UpdateOverlay();
-                RaidEvents.ShowPopupMessage(deathDamageTarget,
-                    PopupMessageType.Damage, deathDamages[i].TargetDamage.ToString());
-                deathDamageTarget.SetDefendAnimation(true);
-                yield return new WaitForSeconds(0.8f);
-                deathDamageTarget.SetDefendAnimation(false);
-            }
-        }
-#endregion
-
-#endregion
         yield return new WaitForSeconds(0.175f);
         Formations.ShowUnitOverlay();
         TorchMeter.Show();
@@ -4732,7 +4375,7 @@ public class RaidSceneManager : MonoBehaviour
         DungeonCamera.SwitchBlur(false);
         ExecuteSkillAnimationOutro(actionUnit, targetInfo);
 
-        List<DeathDamage> deathDamages = ExecuteBattlegroundDeaths();
+        List<DeathDamage> deathDamages = ExecuteBattlegroundDeaths(actionUnit);
         if (deathDamages.Count > 0)
             yield return StartCoroutine(ExecuteDeathDamages(deathDamages));
 
@@ -4763,46 +4406,34 @@ public class RaidSceneManager : MonoBehaviour
         RaidEvents.MonsterTooltip.IsDisabled = false;
 
         #region Trait Comment Attack Result
-        if (BattleGround.HeroParty.Units.Contains(actionUnit)
-            && BattleGround.HeroParty.Units.Count > 1)
+
+        if (BattleGround.HeroParty.Units.Contains(actionUnit) && BattleGround.HeroParty.Units.Count > 1)
         {
             for (int i = 0; i < actionUnit.Party.Units.Count; i++)
             {
-                if (actionUnit != actionUnit.Party.Units[i] && actionUnit.Party.Units[i].Character.Trait != null)
+                if (actionUnit == actionUnit.Party.Units[i] || actionUnit.Party.Units[i].Character.Trait == null)
+                    continue;
+
+                if (targetInfo.Type != SkillTargetType.Enemy)
+                    continue;
+
+                ReactionType reactionType = skillResult.HasHit
+                    ? ReactionType.CommentAllyAttackHit
+                    : ReactionType.CommentAllyAttackMiss;
+
+                if (RandomSolver.CheckSuccess(actionUnit.Party.Units[i].Character.Trait.Reactions[reactionType].Chance))
                 {
-                    if (targetInfo.Type == SkillTargetType.Enemy && skillResult.HasHit)
-                    {
-                        if (RandomSolver.CheckSuccess(actionUnit.Party.Units[i].Character.
-                            Trait.Reactions[ReactionType.CommentAllyAttackHit].Chance))
-                        {
-                            var barkStressEffect = actionUnit.Party.Units[i].Character.
-                                Trait.Reactions[ReactionType.CommentAllyAttackHit].Effect;
-                            yield return new WaitForSeconds(1f);
-                            for (int j = 0; j < barkStressEffect.SubEffects.Count; j++)
-                                barkStressEffect.SubEffects[j].Apply(actionUnit.Party.Units[i], actionUnit, barkStressEffect);
-                            yield return new WaitForSeconds(0.1f);
-                            yield return StartCoroutine(ExecuteEffectEvents(false));
-                            break;
-                        }
-                    }
-                    if (targetInfo.Type == SkillTargetType.Enemy && !skillResult.HasHit)
-                    {
-                        if (RandomSolver.CheckSuccess(actionUnit.Party.Units[i].Character.
-                            Trait.Reactions[ReactionType.CommentAllyAttackMiss].Chance))
-                        {
-                            var barkStressEffect = actionUnit.Party.Units[i].Character.
-                                Trait.Reactions[ReactionType.CommentAllyAttackMiss].Effect;
-                            yield return new WaitForSeconds(1f);
-                            for (int j = 0; j < barkStressEffect.SubEffects.Count; j++)
-                                barkStressEffect.SubEffects[j].Apply(actionUnit.Party.Units[i], actionUnit, barkStressEffect);
-                            yield return new WaitForSeconds(0.1f);
-                            yield return StartCoroutine(ExecuteEffectEvents(false));
-                            break;
-                        }
-                    }
+                    var barkStressEffect = actionUnit.Party.Units[i].Character.Trait.Reactions[reactionType].Effect;
+                    yield return new WaitForSeconds(1f);
+                    foreach (SubEffect subEffect in barkStressEffect.SubEffects)
+                        subEffect.Apply(actionUnit.Party.Units[i], actionUnit, barkStressEffect);
+                    yield return new WaitForSeconds(0.1f);
+                    yield return StartCoroutine(ExecuteEffectEvents(false));
+                    break;
                 }
             }
         }
+
         #endregion
     }
 
@@ -5097,44 +4728,27 @@ public class RaidSceneManager : MonoBehaviour
         bool movementStopped = false;
 
         #region Bleeding
+
         for (int i = UnitEventQueue.Count - 1; i >= 0; i--)
         {
             if (UnitEventQueue[i].CombatInfo.IsDead)
                 continue;
 
-            var bleedEffect = UnitEventQueue[i].Character.GetStatusEffect(StatusType.Bleeding) as BleedingStatusEffect;
-            if(bleedEffect.IsApplied)
-            {
-                int damage = UnitEventQueue[i].Character.TakeDamage(bleedEffect.CurrentTickDamage);
-                UnitEventQueue[i].OverlaySlot.UpdateOverlay();
-                executedBleed = true;
+            if (!UnitEventQueue[i].Character[StatusType.Bleeding].IsApplied)
+                continue;
 
-                if (!UnitEventQueue[i].Character.HasZeroHealth)
-                    RaidEvents.ShowPopupMessage(UnitEventQueue[i], PopupMessageType.Damage, damage.ToString());
-                else if (UnitEventQueue[i].Character.AtDeathsDoor)
+            var bleedEffect = (BleedingStatusEffect)UnitEventQueue[i].Character[StatusType.Bleeding];
+            FMODUnity.RuntimeManager.PlayOneShot("event:/general/status/bleed_dot");
+            executedBleed = true;
+
+            if (ProcessDamage(UnitEventQueue[i], bleedEffect.CurrentTickDamage))
+            {
+                if (PartyController.MovementAllowed)
                 {
-                    if (PrepareDeath(UnitEventQueue[i]))
-                    {
-                        if (PartyController.MovementAllowed)
-                        {
-                            movementStopped = true;
-                            DisablePartyMovement();
-                        }
-                        bleedDeaths.Add(UnitEventQueue[i]);
-                        RaidEvents.ShowPopupMessage(UnitEventQueue[i], PopupMessageType.DeathBlow);
-                    }
-                    else
-                        RaidEvents.ShowPopupMessage(UnitEventQueue[i], PopupMessageType.DeathsDoor);
+                    movementStopped = true;
+                    DisablePartyMovement();
                 }
-                else
-                {
-                    (UnitEventQueue[i].Character as Hero).ApplyDeathDoor();
-                    UnitEventQueue[i].Character.ApplySingleBuffRule(Rules.GetIdleUnitRules(UnitEventQueue[i]), BuffRule.DeathsDoor);
-                    UnitEventQueue[i].SetHalo("deaths_door");
-                    UnitEventQueue[i].OverlaySlot.UpdateOverlay();
-                    DarkestDungeonManager.Data.Effects["BarkStress"].ApplyIndependent(UnitEventQueue[i]);
-                    RaidEvents.ShowPopupMessage(UnitEventQueue[i], PopupMessageType.DeathsDoor);
-                }
+                bleedDeaths.Add(UnitEventQueue[i]);
             }
         }
 
@@ -5148,47 +4762,31 @@ public class RaidSceneManager : MonoBehaviour
             UnitEventQueue.AddRange(Formations.Heroes.Party.Units);
             timeWasted += Time.time - coroutineTime;
         }
+
         #endregion
 
         #region Poisoning
+
         for (int i = UnitEventQueue.Count - 1; i >= 0; i--)
         {
             if (UnitEventQueue[i].CombatInfo.IsDead)
                 continue;
 
-            var poisonEffect = UnitEventQueue[i].Character.GetStatusEffect(StatusType.Poison) as PoisonStatusEffect;
-            if (poisonEffect.IsApplied)
-            {
-                int damage = UnitEventQueue[i].Character.TakeDamage(poisonEffect.CurrentTickDamage);
-                UnitEventQueue[i].OverlaySlot.UpdateOverlay();
-                executedPoison = true;
+            if (!UnitEventQueue[i].Character[StatusType.Poison].IsApplied)
+                continue;
 
-                if (!UnitEventQueue[i].Character.HasZeroHealth)
-                    RaidEvents.ShowPopupMessage(UnitEventQueue[i], PopupMessageType.Damage, damage.ToString());
-                else if (UnitEventQueue[i].Character.AtDeathsDoor)
+            var poisonEffect = (BleedingStatusEffect)UnitEventQueue[i].Character[StatusType.Poison];
+            FMODUnity.RuntimeManager.PlayOneShot("event:/general/status/poison_dot");
+            executedPoison = true;
+
+            if (ProcessDamage(UnitEventQueue[i], poisonEffect.CurrentTickDamage))
+            {
+                if (PartyController.MovementAllowed)
                 {
-                    if (PrepareDeath(UnitEventQueue[i]))
-                    {
-                        if (PartyController.MovementAllowed)
-                        {
-                            movementStopped = true;
-                            DisablePartyMovement();
-                        }
-                        poisonDeaths.Add(UnitEventQueue[i]);
-                        RaidEvents.ShowPopupMessage(UnitEventQueue[i], PopupMessageType.DeathBlow);
-                    }
-                    else
-                        RaidEvents.ShowPopupMessage(UnitEventQueue[i], PopupMessageType.DeathsDoor);
+                    movementStopped = true;
+                    DisablePartyMovement();
                 }
-                else
-                {
-                    (UnitEventQueue[i].Character as Hero).ApplyDeathDoor();
-                    UnitEventQueue[i].Character.ApplySingleBuffRule(Rules.GetIdleUnitRules(UnitEventQueue[i]), BuffRule.DeathsDoor);
-                    UnitEventQueue[i].SetHalo("deaths_door");
-                    UnitEventQueue[i].OverlaySlot.UpdateOverlay();
-                    DarkestDungeonManager.Data.Effects["BarkStress"].ApplyIndependent(UnitEventQueue[i]);
-                    RaidEvents.ShowPopupMessage(UnitEventQueue[i], PopupMessageType.DeathsDoor);
-                }
+                poisonDeaths.Add(UnitEventQueue[i]);
             }
         }
 
@@ -5202,9 +4800,11 @@ public class RaidSceneManager : MonoBehaviour
             UnitEventQueue.AddRange(Formations.Heroes.Party.Units);
             timeWasted += Time.time - coroutineTime;
         }
+
         #endregion
 
         #region Deaths
+
         for (int i = 0; i < UnitEventQueue.Count; i++)
         {
             UnitEventQueue[i].Character.UpdateRound();
@@ -5226,6 +4826,7 @@ public class RaidSceneManager : MonoBehaviour
                 ExecuteDeath(poisonDeaths[i]);
             poisonDeaths.Clear();
         }
+
         #endregion
 
         yield return StartCoroutine(ExecuteEffectEvents(false));
@@ -5729,7 +5330,6 @@ public class RaidSceneManager : MonoBehaviour
             yield return null;
 
         DisablePartyMovement();
-
         Curio curio = areaView.Area.Prop as Curio;
         CurioInteraction curioInteraction = null;
         CurioResult curioResult = null;

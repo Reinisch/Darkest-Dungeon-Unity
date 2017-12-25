@@ -101,4 +101,22 @@ public static class CampingSkillHelper
                 return CampEffectRequirement.None;
         }
     }
+
+    public static bool IsWaitingForNext(this CampTargetType targetType, CampTargetType nextTargetType)
+    {
+        switch (targetType)
+        {
+            case CampTargetType.Individual:
+            case CampTargetType.PartyOther:
+                if (nextTargetType != CampTargetType.Self)
+                    return true;
+                break;
+            case CampTargetType.Self:
+                if (nextTargetType == CampTargetType.Self)
+                    return true;
+                break;
+        }
+
+        return false;
+    }
 }
