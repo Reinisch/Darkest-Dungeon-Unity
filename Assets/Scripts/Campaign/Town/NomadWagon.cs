@@ -3,14 +3,17 @@ using System.Linq;
 
 public class NomadWagon : Building
 {
-    public float Discount { get; set; }
+    public override string Name { get { return "nomad_wagon"; } }
+    public override BuildingType Type { get { return BuildingType.NomadWagon; } }
+    public float Discount { get; private set; }
     public int BaseTrinketSlots { get; set; }
-    public int TrinketSlots { get; set; }
+    public int TrinketSlots { private get; set; }
 
-    public List<GeneratedRarity> RarityTable { get; set; }
     public List<SlotUpgrade> TrinketSlotUpgrades { get; private set; }
     public List<DiscountUpgrade> DiscountUpgrades { get; private set; }
     public List<Trinket> Trinkets { get; private set; }
+
+    private List<GeneratedRarity> RarityTable { get; set; }
 
     public NomadWagon()
     {
@@ -47,12 +50,6 @@ public class NomadWagon : Building
         };
     }
 
-    public void Reset()
-    {
-        Discount = 0.0f;
-        TrinketSlots = BaseTrinketSlots;
-    }
-
     public void RestockTrinkets()
     {
         Trinkets.Clear();
@@ -74,11 +71,33 @@ public class NomadWagon : Building
         return rarityList[UnityEngine.Random.Range(0, rarityList.Count)];
     }
 
-    public void InitializeBuilding(Dictionary<string, UpgradePurchases> purchases)
+    public override void InitializeBuilding(Dictionary<string, UpgradePurchases> purchases)
     {
+        base.InitializeBuilding(purchases);
+
         Trinkets.Clear();
 
-        Reset();
+        for (int i = DiscountUpgrades.Count - 1; i >= 0; i--)
+        {
+            if (purchases[DiscountUpgrades[i].TreeId].PurchasedUpgrades.Contains(DiscountUpgrades[i].UpgradeCode))
+            {
+                Discount += DiscountUpgrades[i].Percent;
+            }
+        }
+
+        for (int i = TrinketSlotUpgrades.Count - 1; i >= 0; i--)
+        {
+            if (purchases[TrinketSlotUpgrades[i].TreeId].PurchasedUpgrades.Contains(TrinketSlotUpgrades[i].UpgradeCode))
+            {
+                TrinketSlots = TrinketSlotUpgrades[i].NumberOfSlots;
+                break;
+            }
+        }
+    }
+
+    public override void UpdateBuilding(Dictionary<string, UpgradePurchases> purchases)
+    {
+        base.UpdateBuilding(purchases);
 
         for (int i = DiscountUpgrades.Count - 1; i >= 0; i--)
         {
@@ -98,33 +117,17 @@ public class NomadWagon : Building
         }
     }
 
-    public void UpdateBuilding(Dictionary<string, UpgradePurchases> purchases)
+    public override List<ITownUpgrade> GetUpgrades(string treeId, string code)
     {
-        Reset();
-
-        for (int i = DiscountUpgrades.Count - 1; i >= 0; i--)
-        {
-            if (purchases[DiscountUpgrades[i].TreeId].PurchasedUpgrades.Contains(DiscountUpgrades[i].UpgradeCode))
-            {
-                Discount += DiscountUpgrades[i].Percent;
-            }
-        }
-
-        for (int i = TrinketSlotUpgrades.Count - 1; i >= 0; i--)
-        {
-            if (purchases[TrinketSlotUpgrades[i].TreeId].PurchasedUpgrades.Contains(TrinketSlotUpgrades[i].UpgradeCode))
-            {
-                TrinketSlots = TrinketSlotUpgrades[i].NumberOfSlots;
-                break;
-            }
-        }
+        List<ITownUpgrade> townUpgrades = new List<ITownUpgrade>();
+        townUpgrades.AddRange(DiscountUpgrades.FindAll(item => item.UpgradeCode == code && item.TreeId == treeId).Cast<ITownUpgrade>());
+        townUpgrades.AddRange(TrinketSlotUpgrades.FindAll(item => item.UpgradeCode == code && item.TreeId == treeId).Cast<ITownUpgrade>());
+        return townUpgrades;
     }
 
-    public ITownUpgrade GetUpgradeByCode(string treeId, string code)
+    protected override void Reset()
     {
-        ITownUpgrade upgrade = DiscountUpgrades.Find(item => item.UpgradeCode == code && item.TreeId == treeId);
-        if (upgrade == null)
-            return TrinketSlotUpgrades.Find(item => item.UpgradeCode == code && item.TreeId == treeId);
-        return upgrade;
+        Discount = 0.0f;
+        TrinketSlots = BaseTrinketSlots;
     }
 }

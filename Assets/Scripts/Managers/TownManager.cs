@@ -15,23 +15,12 @@ public class TownManager : MonoBehaviour
     private Sprite availableUpgradeIcon;
 
     public bool BuildingWindowActive { get; set; }
-    public bool AnyWindowsOpened { get { return EstateSceneManager.AnyWindowsOpened || BuildingWindowActive; } }
+    public bool AnyWindowsOpened { get { return EstateSceneManager.Instanse.AnyWindowsOpened || BuildingWindowActive; } }
     public List<BuildingWindow> BuildingWindows { get { return buildingWindows; } }
-    public EstateSceneManager EstateSceneManager { get; private set; }
-
-    private void Awake()
-    {
-        EstateSceneManager = GetComponent<EstateSceneManager>();
-        for (int i = 0; i < buildingSlots.Count; i++ )
-        {
-            buildingSlots[i].TownManager = this;
-            BuildingWindows[i].TownManager = this;
-        }
-    }
 
     public HeroSlot GetHeroSlot(Hero hero)
     {
-        return EstateSceneManager.RosterPanel.HeroSlots.Find(heroSlot => heroSlot.Hero == hero);
+        return EstateSceneManager.Instanse.RosterPanel.HeroSlots.Find(heroSlot => heroSlot.Hero == hero);
     }
 
     public void CloseBuildingWindow()

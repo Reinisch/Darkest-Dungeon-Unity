@@ -1,10 +1,28 @@
-﻿public enum BuildingType { Abbey, Tavern, Sanitarium, Blacksmith, Guild, CampingTrainer, NomadWagon, StageCoach, Graveyard, Statue }
+﻿using System.Collections.Generic;
 
-public class Building
+public enum BuildingType { Abbey, Tavern, Sanitarium, Blacksmith, Guild, CampingTrainer, NomadWagon, StageCoach, Graveyard, Statue }
+
+public abstract class Building
 {
-    public string Name { get; set; }
+    public abstract string Name { get; }
+    public abstract BuildingType Type { get; }
 
-    public int VisitPriority { get; set; }
-    public int QuestsRequired { get; set; }
-    public int HighestDungeonLevelRequired { get; set; }
+    public virtual void InitializeBuilding(Dictionary<string, UpgradePurchases> purchases)
+    {
+        Reset();
+    }
+
+    public virtual void UpdateBuilding(Dictionary<string, UpgradePurchases> purchases)
+    {
+        Reset();
+    }
+
+    public virtual List<ITownUpgrade> GetUpgrades(string treeId, string code)
+    {
+        return null;
+    }
+
+    protected virtual void Reset()
+    {
+    }
 }

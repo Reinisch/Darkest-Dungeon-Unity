@@ -2,7 +2,9 @@
 
 public class Abbey : Building
 {
-    public List<TownActivity> Activities { get; set; }
+    public override string Name { get { return "abbey"; } }
+    public override BuildingType Type { get { return BuildingType.Abbey; } }
+    public List<TownActivity> Activities { get; private set; }
 
     public Abbey()
     {
@@ -11,12 +13,14 @@ public class Abbey : Building
 
     public void ProvideActivity()
     {
-        for (int i = 0; i < Activities.Count; i++)
-            Activities[i].ProvideActivity();
+        foreach (TownActivity activity in Activities)
+            activity.ProvideActivity();
     }
 
-    public void InitializeBuilding(Dictionary<string, UpgradePurchases> purchases)
+    public override void InitializeBuilding(Dictionary<string, UpgradePurchases> purchases)
     {
+        base.InitializeBuilding(purchases);
+
         foreach(var activity in Activities)
         {
             activity.Reset();
@@ -65,8 +69,10 @@ public class Abbey : Building
         }  
     }
 
-    public void UpdateBuilding(Dictionary<string, UpgradePurchases> purchases)
+    public override void UpdateBuilding(Dictionary<string, UpgradePurchases> purchases)
     {
+        base.UpdateBuilding(purchases);
+
         foreach (var activity in Activities)
         {
             for (int i = activity.CostUpgrades.Count - 1; i >= 0; i--)
@@ -104,13 +110,23 @@ public class Abbey : Building
             for (int i = 1; i <= 3; i++)
             {
                 if (i <= activity.NumberOfSlots)
-                    activity.ActivitySlots[i - 1].UpdateSlot(isActivityLocked ? false : true,
+                    activity.ActivitySlots[i - 1].UpdateSlot(!isActivityLocked,
                         isActivityFree ? 0 : (int)(activity.ActivityCost.Amount * costModifier));
                 else
                     activity.ActivitySlots[i - 1].UpdateSlot(false, isActivityFree ?
                         0 : (int)(activity.ActivityCost.Amount * costModifier));
             }
         }  
+    }
+
+    public override List<ITownUpgrade> GetUpgrades(string treeId, string code)
+    {
+        List<ITownUpgrade> townUpgrades = new List<ITownUpgrade>();
+        foreach (var activity in Activities)
+            if(treeId == activity.TreeId)
+                townUpgrades.Add(activity.GetUpgradeByCode(code));
+
+        return townUpgrades;
     }
 
     public void UpdateActivitySlots(SaveCampaignData saveData)
@@ -131,11 +147,11 @@ public class Abbey : Building
                             hero.RosterId == saveData.AbbeyActivitySlots[activityIndex][i].HeroRosterId);
 
                         Activities[activityIndex].ActivitySlots[i].Hero = activityHero;
-                        Activities[activityIndex].ActivitySlots[i].UpdateSlot(isActivityLocked ? false : true,
+                        Activities[activityIndex].ActivitySlots[i].UpdateSlot(!isActivityLocked,
                             isActivityFree ? 0 : (int)(Activities[activityIndex].ActivityCost.Amount * costModifier));
                     }
                     else
-                        Activities[activityIndex].ActivitySlots[i].UpdateSlot(isActivityLocked ? false : true,
+                        Activities[activityIndex].ActivitySlots[i].UpdateSlot(!isActivityLocked,
                             isActivityFree ? 0 : (int)(Activities[activityIndex].ActivityCost.Amount * costModifier));
                 }
                 else

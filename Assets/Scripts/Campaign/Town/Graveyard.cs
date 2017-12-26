@@ -2,14 +2,12 @@
 
 public class Graveyard : Building
 {
-    public List<DeathRecord> Records { get; set; }
+    public override string Name { get { return "graveyard"; } }
+    public override BuildingType Type { get { return BuildingType.Graveyard; } }
+    public List<DeathRecord> Records { get; private set; }
 
     public Graveyard()
     {
-        Name = "graveyard";
-        VisitPriority = 1;
-        QuestsRequired = 0;
-        HighestDungeonLevelRequired = 0;
         Records = new List<DeathRecord>();
     }
 }

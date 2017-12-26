@@ -2,14 +2,10 @@
 
 public class Sanitarium : Building
 {
+    public override string Name { get { return "sanitarium"; } }
+    public override BuildingType Type { get { return BuildingType.Sanitarium; } }
     public QuirkTreatmentActivity QuirkActivity { get; set; }
     public DiseaseTreatmentActivity DiseaseActivity { get; set; }
-
-    public void InitializeBuilding(Dictionary<string, UpgradePurchases> purchases)
-    {
-        QuirkActivity.InitializeActivity(purchases);
-        DiseaseActivity.InitializeActivity(purchases);
-    }
 
     public void ProvideActivity()
     {
@@ -17,13 +13,19 @@ public class Sanitarium : Building
         DiseaseActivity.ProvideActivity();
     }
 
-    public void UpdateBuilding(Dictionary<string, UpgradePurchases> purchases)
+    public override void InitializeBuilding(Dictionary<string, UpgradePurchases> purchases)
+    {
+        QuirkActivity.InitializeActivity(purchases);
+        DiseaseActivity.InitializeActivity(purchases);
+    }
+
+    public override void UpdateBuilding(Dictionary<string, UpgradePurchases> purchases)
     {
         QuirkActivity.UpdateActivity(purchases);
         DiseaseActivity.UpdateActivity(purchases);
     }
 
-    public List<ITownUpgrade> GetUpgrades(string treeId, string code)
+    public override List<ITownUpgrade> GetUpgrades(string treeId, string code)
     {
         var upgrades = QuirkActivity.GetUpgrades(treeId,code);
         upgrades.AddRange(DiseaseActivity.GetUpgrades(treeId, code));

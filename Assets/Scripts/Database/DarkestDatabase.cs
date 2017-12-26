@@ -1093,10 +1093,6 @@ public class DarkestDatabase : MonoBehaviour
             Resources.Load<TextAsset>(JsonBuildingDataPath + "abbey.building").text);
 
         Abbey abbey = new Abbey();
-        abbey.Name = "abbey";
-        abbey.VisitPriority = jsonAbbey.on_start_town_visit_priority;
-        abbey.QuestsRequired = jsonAbbey.number_of_quests_finished;
-        abbey.HighestDungeonLevelRequired = jsonAbbey.highest_dungeon_level;
         abbey.Activities.Add(GetJsonTownActivity(jsonAbbey.meditation, "abbey.meditation"));
         abbey.Activities.Add(GetJsonTownActivity(jsonAbbey.prayer, "abbey.prayer"));
         abbey.Activities.Add(GetJsonTownActivity(jsonAbbey.flagellation, "abbey.flagellation"));
@@ -1106,10 +1102,6 @@ public class DarkestDatabase : MonoBehaviour
             Resources.Load<TextAsset>(JsonBuildingDataPath + "tavern.building").text);
 
         Tavern tavern = new Tavern();
-        tavern.Name = "tavern";
-        tavern.VisitPriority = jsonTavern.on_start_town_visit_priority;
-        tavern.QuestsRequired = jsonTavern.number_of_quests_finished;
-        tavern.HighestDungeonLevelRequired = jsonTavern.highest_dungeon_level;
         tavern.Activities.Add(GetJsonTownActivity(jsonTavern.bar, "tavern.bar"));
         tavern.Activities.Add(GetJsonTownActivity(jsonTavern.gambling, "tavern.gambling"));
         tavern.Activities.Add(GetJsonTownActivity(jsonTavern.brothel, "tavern.brothel"));
@@ -1120,11 +1112,6 @@ public class DarkestDatabase : MonoBehaviour
             Resources.Load<TextAsset>(JsonBuildingDataPath + "sanitarium.building").text);
 
         Sanitarium sanitarium = new Sanitarium();
-        sanitarium.Name = "sanitarium";
-        sanitarium.VisitPriority = jsonSanitarium.on_start_town_visit_priority;
-        sanitarium.QuestsRequired = jsonSanitarium.number_of_quests_finished;
-        sanitarium.HighestDungeonLevelRequired = jsonSanitarium.highest_dungeon_level;
-
         sanitarium.QuirkActivity = new QuirkTreatmentActivity();
         sanitarium.QuirkActivity.QuirkTreatmentChance = jsonSanitarium.treatment.quirk_treatment_chance;
 
@@ -1261,11 +1248,6 @@ public class DarkestDatabase : MonoBehaviour
             Resources.Load<TextAsset>(JsonBuildingDataPath + "blacksmith.building").text);
 
         Blacksmith blacksmith = new Blacksmith();
-        blacksmith.Name = "blacksmith";
-        blacksmith.VisitPriority = jsonBlacksmith.on_start_town_visit_priority;
-        blacksmith.QuestsRequired = jsonBlacksmith.number_of_quests_finished;
-        blacksmith.HighestDungeonLevelRequired = jsonBlacksmith.highest_dungeon_level;
-
         foreach(var jsonDiscUpgrade in jsonBlacksmith.equipment_cost_discount_upgrades)
         {
             DiscountUpgrade discountUpgrade = new DiscountUpgrade();
@@ -1280,11 +1262,6 @@ public class DarkestDatabase : MonoBehaviour
             Resources.Load<TextAsset>(JsonBuildingDataPath + "guild.building").text);
 
         Guild guild = new Guild();
-        guild.Name = "guild";
-        guild.VisitPriority = jsonGuild.on_start_town_visit_priority;
-        guild.QuestsRequired = jsonGuild.number_of_quests_finished;
-        guild.HighestDungeonLevelRequired = jsonGuild.highest_dungeon_level;
-
         foreach (var jsonDiscUpgrade in jsonGuild.combat_skill_cost_discount_upgrades)
         {
             DiscountUpgrade discountUpgrade = new DiscountUpgrade();
@@ -1299,11 +1276,6 @@ public class DarkestDatabase : MonoBehaviour
             Resources.Load<TextAsset>(JsonBuildingDataPath + "camping_trainer.building").text);
 
         CampingTrainer campingTrainer = new CampingTrainer();
-        campingTrainer.Name = "camping_trainer";
-        campingTrainer.VisitPriority = jsonCampingTrainer.on_start_town_visit_priority;
-        campingTrainer.QuestsRequired = jsonCampingTrainer.number_of_quests_finished;
-        campingTrainer.HighestDungeonLevelRequired = jsonCampingTrainer.highest_dungeon_level;
-
         foreach (var jsonDiscUpgrade in jsonCampingTrainer.camping_skill_cost_discount_upgrades)
         {
             DiscountUpgrade discountUpgrade = new DiscountUpgrade();
@@ -1314,17 +1286,10 @@ public class DarkestDatabase : MonoBehaviour
         }
         buildings.Add(campingTrainer);
 
-
-
         JsonNomadWagon jsonNomadWagon = JsonDarkestDeserializer.GetJsonWagon(
             Resources.Load<TextAsset>(JsonBuildingDataPath + "nomad_wagon.building").text);
 
         NomadWagon nomadWagon = new NomadWagon();
-        nomadWagon.Name = "nomad_wagon";
-        nomadWagon.VisitPriority = jsonNomadWagon.on_start_town_visit_priority;
-        nomadWagon.QuestsRequired = jsonNomadWagon.number_of_quests_finished;
-        nomadWagon.HighestDungeonLevelRequired = jsonNomadWagon.highest_dungeon_level;
-
         foreach (var jsonUpgrade in jsonNomadWagon.number_of_trinkets_upgrades)
         {
             if (jsonUpgrade.upgrade_requirement_code == null)
@@ -1342,7 +1307,6 @@ public class DarkestDatabase : MonoBehaviour
             }
         }
 
-
         foreach (var jsonDiscUpgrade in jsonNomadWagon.trinket_cost_discount_upgrades)
         {
             DiscountUpgrade discountUpgrade = new DiscountUpgrade();
@@ -1358,10 +1322,6 @@ public class DarkestDatabase : MonoBehaviour
             Resources.Load<TextAsset>(JsonBuildingDataPath + "stage_coach.building").text);
         
         StageCoach stageCoach = new StageCoach();
-        stageCoach.Name = "stage_coach";
-        stageCoach.VisitPriority = jsonStageCoach.on_start_town_visit_priority;
-        stageCoach.QuestsRequired = jsonStageCoach.number_of_quests_finished;
-        stageCoach.HighestDungeonLevelRequired = jsonStageCoach.highest_dungeon_level;
 
         foreach (var jsonUpgrade in jsonStageCoach.number_of_recruits_upgrades)
         {

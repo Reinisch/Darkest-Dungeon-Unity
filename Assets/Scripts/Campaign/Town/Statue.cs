@@ -1,10 +1,5 @@
 ﻿public class Statue : Building
 {
-    public Statue()
-    {
-        Name = "statue";
-        VisitPriority = 1;
-        QuestsRequired = 0;
-        HighestDungeonLevelRequired = 0;
-    }
+    public override string Name { get { return "statue"; } }
+    public override BuildingType Type { get { return BuildingType.Statue; } }
 }

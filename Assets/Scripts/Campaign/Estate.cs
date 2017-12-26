@@ -17,6 +17,7 @@ public class Estate
     public Graveyard Graveyard { get; private set; }
     public Statue Statue { get; private set; }
 
+    public Dictionary<BuildingType, Building> Buildings { get; private set; }
     public Dictionary<int, Dictionary<string, UpgradePurchases>> HeroPurchases { get; private set; }
     public Dictionary<string, UpgradePurchases> TownPurchases { get; private set; }
     public Dictionary<string, int> Currencies { get; private set; }
@@ -41,16 +42,28 @@ public class Estate
         HeroPurchases = saveData.InstancedPurchases;
         TownPurchases = saveData.BuildingUpgrades;
 
+        Buildings = new Dictionary<BuildingType, Building>();
         Abbey = DarkestDungeonManager.Data.Buildings["abbey"] as Abbey;
+        Buildings.Add(BuildingType.Abbey, Abbey);
         Tavern = DarkestDungeonManager.Data.Buildings["tavern"] as Tavern;
+        Buildings.Add(BuildingType.Tavern, Tavern);
         Sanitarium = DarkestDungeonManager.Data.Buildings["sanitarium"] as Sanitarium;
+        Buildings.Add(BuildingType.Sanitarium, Sanitarium);
         Blacksmith = DarkestDungeonManager.Data.Buildings["blacksmith"] as Blacksmith;
+        Buildings.Add(BuildingType.Blacksmith, Blacksmith);
         Guild = DarkestDungeonManager.Data.Buildings["guild"] as Guild;
+        Buildings.Add(BuildingType.Guild, Guild);
         NomadWagon = DarkestDungeonManager.Data.Buildings["nomad_wagon"] as NomadWagon;
+        Buildings.Add(BuildingType.NomadWagon, NomadWagon);
         StageCoach = DarkestDungeonManager.Data.Buildings["stage_coach"] as StageCoach;
+        Buildings.Add(BuildingType.StageCoach, StageCoach);
         CampingTrainer = DarkestDungeonManager.Data.Buildings["camping_trainer"] as CampingTrainer;
+        Buildings.Add(BuildingType.CampingTrainer, CampingTrainer);
         Graveyard = new Graveyard();
+        Buildings.Add(BuildingType.Graveyard, Graveyard);
         Statue = new Statue();
+        Buildings.Add(BuildingType.Statue, Statue);
+
         Abbey.InitializeBuilding(TownPurchases);
         Tavern.InitializeBuilding(TownPurchases);
         Sanitarium.InitializeBuilding(TownPurchases);

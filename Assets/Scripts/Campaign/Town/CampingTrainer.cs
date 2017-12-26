@@ -1,25 +1,23 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 public class CampingTrainer : Building
 {
-    public float BaseDiscount { get; set; }
-    public float Discount { get; set; }
+    public override string Name { get { return "camping_trainer"; } }
+    public override BuildingType Type { get { return BuildingType.CampingTrainer; } }
+    public List<DiscountUpgrade> DiscountUpgrades { get; private set; }
+    public float Discount { get; private set; }
 
-    public List<DiscountUpgrade> DiscountUpgrades { get; set; }
+    private float baseDiscount = 0.0f;
 
     public CampingTrainer()
     {
         DiscountUpgrades = new List<DiscountUpgrade>();
     }
 
-    public void Reset()
+    public override void InitializeBuilding(Dictionary<string, UpgradePurchases> purchases)
     {
-        Discount = BaseDiscount;
-    }
-
-    public void InitializeBuilding(Dictionary<string, UpgradePurchases> purchases)
-    {
-        Reset();
+        base.InitializeBuilding(purchases);
 
         for (int i = DiscountUpgrades.Count - 1; i >= 0; i--)
         {
@@ -30,9 +28,9 @@ public class CampingTrainer : Building
         }
     }
 
-    public void UpdateBuilding(Dictionary<string, UpgradePurchases> purchases)
+    public override void UpdateBuilding(Dictionary<string, UpgradePurchases> purchases)
     {
-        Reset();
+        base.UpdateBuilding(purchases);
 
         for (int i = DiscountUpgrades.Count - 1; i >= 0; i--)
         {
@@ -43,8 +41,13 @@ public class CampingTrainer : Building
         }
     }
 
-    public ITownUpgrade GetUpgradeByCode(string code)
+    public override List<ITownUpgrade> GetUpgrades(string treeId, string code)
     {
-        return DiscountUpgrades.Find(item => item.UpgradeCode == code);
+        return DiscountUpgrades.FindAll(item => item.UpgradeCode == code && item.TreeId == treeId).Cast<ITownUpgrade>().ToList();
+    }
+
+    protected override void Reset()
+    {
+        Discount = baseDiscount;
     }
 }

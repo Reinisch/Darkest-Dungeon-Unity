@@ -2,7 +2,9 @@
 
 public class Tavern : Building
 {
-    public List<TownActivity> Activities { get; set; }
+    public override string Name { get { return "tavern"; } }
+    public override BuildingType Type { get { return BuildingType.Tavern; } }
+    public List<TownActivity> Activities { get; private set; }
 
     public Tavern()
     {
@@ -11,11 +13,11 @@ public class Tavern : Building
 
     public void ProvideActivity()
     {
-        for (int i = 0; i < Activities.Count; i++)
-            Activities[i].ProvideActivity();
+        foreach (TownActivity activity in Activities)
+            activity.ProvideActivity();
     }
 
-    public void InitializeBuilding(Dictionary<string, UpgradePurchases> purchases)
+    public override void InitializeBuilding(Dictionary<string, UpgradePurchases> purchases)
     {
         foreach (var activity in Activities)
         {
@@ -65,7 +67,7 @@ public class Tavern : Building
         }
     }
 
-    public void UpdateBuilding(Dictionary<string, UpgradePurchases> purchases)
+    public override void UpdateBuilding(Dictionary<string, UpgradePurchases> purchases)
     {
         foreach (var activity in Activities)
         {
@@ -113,6 +115,16 @@ public class Tavern : Building
         }
     }
 
+    public override List<ITownUpgrade> GetUpgrades(string treeId, string code)
+    {
+        List<ITownUpgrade> townUpgrades = new List<ITownUpgrade>();
+        foreach (var activity in Activities)
+            if (treeId == activity.TreeId)
+                townUpgrades.Add(activity.GetUpgradeByCode(code));
+
+        return townUpgrades;
+    }
+
     public void UpdateActivitySlots(SaveCampaignData saveData)
     {
         for (int activityIndex = 0; activityIndex < Activities.Count; activityIndex++)
@@ -131,11 +143,11 @@ public class Tavern : Building
                             hero.RosterId == saveData.TavernActivitySlots[activityIndex][i].HeroRosterId);
 
                         Activities[activityIndex].ActivitySlots[i].Hero = activityHero;
-                        Activities[activityIndex].ActivitySlots[i].UpdateSlot(isActivityLocked ? false : true,
+                        Activities[activityIndex].ActivitySlots[i].UpdateSlot(!isActivityLocked,
                             isActivityFree ? 0 : (int)(Activities[activityIndex].ActivityCost.Amount * costModifier));
                     }
                     else
-                        Activities[activityIndex].ActivitySlots[i].UpdateSlot(isActivityLocked ? false : true,
+                        Activities[activityIndex].ActivitySlots[i].UpdateSlot(!isActivityLocked,
                             isActivityFree ? 0 : (int)(Activities[activityIndex].ActivityCost.Amount * costModifier));
                 }
                 else

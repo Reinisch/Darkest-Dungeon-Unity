@@ -53,6 +53,7 @@ public class EstateSceneManager : MonoBehaviour
     [SerializeField]
     private TownManager townManager;
 
+    public TownManager TownManager { get { return townManager; } }
     public CharacterWindow CharacterWindow { get { return characterWindow; } }
     public EstateCurrencyPanel CurrencyPanel { get { return currencyPanel; } }
     public HeroRosterPanel RosterPanel { get { return rosterPanel; } }

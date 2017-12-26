@@ -4,6 +4,8 @@ using System.Linq;
 
 public class StageCoach : Building
 {
+    public override string Name { get { return "stage_coach"; } }
+    public override BuildingType Type { get { return BuildingType.StageCoach; } }
     public int BaseRecruitSlots { get; set; }
     public int RecruitSlots { get; set; }
     public int BaseRosterSlots { get; set; }
@@ -250,7 +252,7 @@ public class StageCoach : Building
         #endregion
     }
 
-    public void InitializeBuilding(Dictionary<string, UpgradePurchases> purchases)
+    public override void InitializeBuilding(Dictionary<string, UpgradePurchases> purchases)
     {
         Heroes.Clear();
         EventHeroes.Clear();
@@ -286,7 +288,7 @@ public class StageCoach : Building
         }
     }
 
-    public void UpdateBuilding(Dictionary<string, UpgradePurchases> purchases)
+    public override void UpdateBuilding(Dictionary<string, UpgradePurchases> purchases)
     {
         Reset();
 
@@ -318,14 +320,20 @@ public class StageCoach : Building
         }
     }
 
-    public ITownUpgrade GetUpgradeByCode(string treeId, string code)
+    public override List<ITownUpgrade> GetUpgrades(string treeId, string code)
     {
-        ITownUpgrade upgrade = RosterSlotUpgrades.Find(item => item.UpgradeCode == code && item.TreeId == treeId);
-        if (upgrade == null)
-            upgrade = RecruitSlotUpgrades.Find(item => item.UpgradeCode == code && item.TreeId == treeId);
-        if (upgrade == null)
-            upgrade = RecruitExperienceUpgrades.Find(item => item.UpgradeCode == code && item.TreeId == treeId);
-        return upgrade;
+        List<ITownUpgrade> townUpgrades = new List<ITownUpgrade>();
+        townUpgrades.AddRange(RosterSlotUpgrades.FindAll(item => item.UpgradeCode == code && item.TreeId == treeId).Cast<ITownUpgrade>());
+        townUpgrades.AddRange(RecruitSlotUpgrades.FindAll(item => item.UpgradeCode == code && item.TreeId == treeId).Cast<ITownUpgrade>());
+        townUpgrades.AddRange(RecruitExperienceUpgrades.FindAll(item => item.UpgradeCode == code && item.TreeId == treeId).Cast<ITownUpgrade>());
+        return townUpgrades;
+    }
+
+    protected override void Reset()
+    {
+        RecruitSlots = BaseRecruitSlots;
+        RosterSlots = BaseRosterSlots;
+        CurrentRecruitMaxLevel = 0;
     }
 
     private void GeneratePurchaseInfo(Hero hero, Estate estate)
@@ -376,12 +384,5 @@ public class StageCoach : Building
         for (int i = 0; i < hero.CurrentCampingSkills.Length; i++)
             if (hero.CurrentCampingSkills[i] != null)
                 estate.HeroPurchases[hero.RosterId][hero.CurrentCampingSkills[i].Id].PurchasedUpgrades.Add("0");
-    }
-
-    private void Reset()
-    {
-        RecruitSlots = BaseRecruitSlots;
-        RosterSlots = BaseRosterSlots;
-        CurrentRecruitMaxLevel = 0;
     }
 }

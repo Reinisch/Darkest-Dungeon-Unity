@@ -1,31 +1,23 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 public class Blacksmith : Building
 {
-    public float BaseDiscount { get; set; }
-    public float Discount { get; set; }
-    public int WeaponRank { get; set; }
-    public int ArmorRank { get; set; }
+    public override string Name { get { return "blacksmith"; } }
+    public override BuildingType Type { get { return BuildingType.Blacksmith; } }
+    public List<DiscountUpgrade> DiscountUpgrades { get; private set; }
+    public float Discount { get; private set; }
 
-    public List<DiscountUpgrade> DiscountUpgrades { get; set; }
+    private float baseDiscount = 0.0f;
 
     public Blacksmith()
     {
         DiscountUpgrades = new List<DiscountUpgrade>();
-        WeaponRank = 1;
-        ArmorRank = 1;
     }
 
-    public void Reset()
+    public override void InitializeBuilding(Dictionary<string, UpgradePurchases> purchases)
     {
-        Discount = BaseDiscount;
-        WeaponRank = 1;
-        ArmorRank = 1;
-    }
-
-    public void InitializeBuilding(Dictionary<string, UpgradePurchases> purchases)
-    {
-        Reset();
+        base.InitializeBuilding(purchases);
 
         for (int i = DiscountUpgrades.Count - 1; i >= 0; i--)
         {
@@ -34,14 +26,11 @@ public class Blacksmith : Building
                 Discount += DiscountUpgrades[i].Percent;
             }
         }
-
-        WeaponRank = purchases["blacksmith.weapon"].PurchasedUpgrades.Count + 1;
-        ArmorRank = purchases["blacksmith.armour"].PurchasedUpgrades.Count + 1;
     }
 
-    public void UpdateBuilding(Dictionary<string, UpgradePurchases> purchases)
+    public override void UpdateBuilding(Dictionary<string, UpgradePurchases> purchases)
     {
-        Reset();
+        base.UpdateBuilding(purchases);
 
         for (int i = DiscountUpgrades.Count - 1; i >= 0; i--)
         {
@@ -50,13 +39,15 @@ public class Blacksmith : Building
                 Discount += DiscountUpgrades[i].Percent;
             }
         }
-
-        WeaponRank = purchases["blacksmith.weapon"].PurchasedUpgrades.Count + 1;
-        ArmorRank = purchases["blacksmith.armour"].PurchasedUpgrades.Count + 1;
     }
 
-    public ITownUpgrade GetUpgradeByCode(string code)
+    public override List<ITownUpgrade> GetUpgrades(string treeId, string code)
     {
-        return DiscountUpgrades.Find(item => item.UpgradeCode == code);
+        return DiscountUpgrades.FindAll(item => item.UpgradeCode == code).Cast<ITownUpgrade>().ToList();
+    }
+
+    protected override void Reset()
+    {
+        Discount = baseDiscount;
     }
 }

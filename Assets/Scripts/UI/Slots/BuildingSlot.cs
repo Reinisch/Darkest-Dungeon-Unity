@@ -13,8 +13,6 @@ public class BuildingSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     [SerializeField]
     private SkeletonAnimation currentState;
 
-    public TownManager TownManager { private get; set; }
-
     public void BuildingSelected()
     {
         labelBackground.enabled = false;
@@ -26,7 +24,7 @@ public class BuildingSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (!TownManager.AnyWindowsOpened)
+        if (!EstateSceneManager.Instanse.TownManager.AnyWindowsOpened)
         {
             labelBackground.enabled = true;
             nameLabel.enabled = true;
@@ -39,7 +37,7 @@ public class BuildingSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (!TownManager.AnyWindowsOpened)
+        if (!EstateSceneManager.Instanse.TownManager.AnyWindowsOpened)
         {
             labelBackground.enabled = false;
             nameLabel.enabled = false;
