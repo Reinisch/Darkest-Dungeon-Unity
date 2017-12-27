@@ -5,7 +5,7 @@ public class BlacksmithHeroWindow : HeroOverviewWindow
     [SerializeField]
     private EquipmentUpgradeTreeSlot[] equipmentTrees;
 
-    protected override BuildingType BuildingType { get {return BuildingType.Blacksmith;} }
+    protected override BuildingType BuildingType { get {return BuildingType.Blacksmith; } }
 
     public override void Initialize()
     {

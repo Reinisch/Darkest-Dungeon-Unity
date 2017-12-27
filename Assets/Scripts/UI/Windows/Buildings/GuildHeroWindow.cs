@@ -5,7 +5,7 @@ public class GuildHeroWindow : HeroOverviewWindow
     [SerializeField]
     private SkillUpgradeTreeSlot[] skillTrees;
 
-    protected override BuildingType BuildingType { get {return BuildingType.Guild;} }
+    protected override BuildingType BuildingType { get {return BuildingType.Guild; } }
 
     public override void Initialize()
     {

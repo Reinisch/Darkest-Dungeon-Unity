@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using UnityEngine;
 
-public class BonusInitiativeAllyClassCount : BonusInitiativeDesire
+public sealed class BonusInitiativeAllyClassCount : BonusInitiativeDesire
 {
     private string AllyBaseClass { get; set; }
     private int? AllyCountMin { get; set; }
@@ -26,39 +25,20 @@ public class BonusInitiativeAllyClassCount : BonusInitiativeDesire
         int allyCount = RaidSceneManager.BattleGround.MonsterParty.Units.FindAll(unit => unit.Character.Class == AllyBaseClass).Count;
         if (allyCount == 0) return false;
 
-        if (AllyCountMin != null)
-            if (AllyCountMin.Value > allyCount)
-                return false;
-        if (AllyCountMax != null)
-            if (AllyCountMax.Value < allyCount)
-                return false;
+        if (AllyCountMin > allyCount)
+            return false;
+        if (AllyCountMax < allyCount)
+            return false;
 
         return true;
     }
 
-    private void GenerateFromDataSet(Dictionary<string, object> dataSet)
+    protected override void GenerateFromDataSet(Dictionary<string, object> dataSet)
     {
         foreach (var token in dataSet)
         {
             switch (token.Key)
             {
-                case "combat_skill_id_override":
-                    CombatSkillOverride = (string)dataSet["combat_skill_id_override"];
-                    break;
-                case "is_round_start":
-                    IsRoundStart = (bool)dataSet["is_round_start"];
-                    break;
-                case "is_round_in_progress":
-                    IsRoundInProgress = (bool)dataSet["is_round_in_progress"];
-                    break;
-                case "is_round_finish":
-                    IsRoundFinish = (bool)dataSet["is_round_finish"];
-                    break;
-                case "is_pre_turn":
-                    break;
-                case "is_post_turn":
-                    IsPostTurn = (bool)dataSet["is_post_turn"];
-                    break;
                 case "ally_base_class_id":
                     AllyBaseClass = (string)dataSet["ally_base_class_id"];
                     break;
@@ -75,7 +55,7 @@ public class BonusInitiativeAllyClassCount : BonusInitiativeDesire
                     MonstersMax = (int)(long)dataSet["monsters_max"];
                     break;
                 default:
-                    Debug.LogError("Unknown token in ally class count bonus initiative: " + token.Key);
+                    ProcessBaseDataToken(token);
                     break;
             }
         }

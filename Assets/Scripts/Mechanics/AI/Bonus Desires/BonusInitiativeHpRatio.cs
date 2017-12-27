@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using UnityEngine;
 
-public class BonusInitiativeHpRatio : BonusInitiativeDesire
+public sealed class BonusInitiativeHpRatio : BonusInitiativeDesire
 {
     private float Threshold { get; set; }
     private bool IsUnderThreshold { get; set; }
@@ -33,29 +32,12 @@ public class BonusInitiativeHpRatio : BonusInitiativeDesire
         return false;
     }
 
-    private void GenerateFromDataSet(Dictionary<string, object> dataSet)
+    protected override void GenerateFromDataSet(Dictionary<string, object> dataSet)
     {
         foreach (var token in dataSet)
         {
             switch (token.Key)
             {
-                case "combat_skill_id_override":
-                    CombatSkillOverride = (string)dataSet["combat_skill_id_override"];
-                    break;
-                case "is_round_start":
-                    IsRoundStart = (bool)dataSet["is_round_start"];
-                    break;
-                case "is_round_in_progress":
-                    IsRoundInProgress = (bool)dataSet["is_round_in_progress"];
-                    break;
-                case "is_round_finish":
-                    IsRoundFinish = (bool)dataSet["is_round_finish"];
-                    break;
-                case "is_pre_turn":
-                    break;
-                case "is_post_turn":
-                    IsPostTurn = (bool)dataSet["is_post_turn"];
-                    break;
                 case "heroes_min":
                     HeroesMin = (int)(long)dataSet[token.Key];
                     break;
@@ -69,7 +51,7 @@ public class BonusInitiativeHpRatio : BonusInitiativeDesire
                     IsUnderThreshold = (bool)dataSet[token.Key];
                     break;
                 default:
-                    Debug.LogError("Unknown token in guaranteed bonus initiative: " + token.Key);
+                    ProcessBaseDataToken(token);
                     break;
             }
         }

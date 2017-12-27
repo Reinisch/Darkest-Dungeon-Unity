@@ -4,7 +4,7 @@ using System.Linq;
 public class Guild : Building
 {
     public override string Name { get { return "guild"; } }
-    public override BuildingType Type { get { return  BuildingType.Guild;} }
+    public override BuildingType Type { get { return  BuildingType.Guild; } }
     public List<DiscountUpgrade> DiscountUpgrades { get; private set; }
     public float Discount { get; private set; }
 

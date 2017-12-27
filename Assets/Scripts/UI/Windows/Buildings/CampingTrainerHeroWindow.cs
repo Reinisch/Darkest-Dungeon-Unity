@@ -5,7 +5,7 @@ public class CampingTrainerHeroWindow : HeroOverviewWindow
     [SerializeField]
     private CampingSkillPurchaseSlot[] campingSkills;
 
-    protected override BuildingType BuildingType { get {return BuildingType.CampingTrainer;} }
+    protected override BuildingType BuildingType { get {return BuildingType.CampingTrainer; } }
 
     public override void Initialize()
     {
