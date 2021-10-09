@@ -35,5 +35,5 @@ All audio and graphic assets are ignored!
 - [**Darkest Dungeon Maps**](https://docs.google.com/spreadsheets/d/1TeJAknTPJ33RliBHDGM9YMDSwxd2I7dLIEHF7ra3vHw/edit?usp=sharing)
 - [**Town Invasion Map**](https://docs.google.com/spreadsheets/d/1kd9dA3Q4AiTQft-9bbCosYIcNc4QLGTKolF6Dbhwo88/edit?usp=sharing)
 - [**Tutorial Crypts Map**](https://docs.google.com/spreadsheets/d/1mONWdowO3071zQ0X0AaOR_Vhs9edc3yNOhtaBprqKhg/edit?usp=sharing)
-- __**Last PvP build for Windows/Mac/Linux x86_64 (1.0.3)**__ : [**Google Drive**](https://drive.google.com/drive/folders/0B4fCt9AnmePGVUFsR193U29aWmc) or [**Github Releases**](https://github.com/Reinisch/Darkest-Dungeon-Unity/releases)
-- __**Last PvP build for Android (1.0.3)**__ : [**Google Drive**](https://drive.google.com/drive/folders/0B4fCt9AnmePGSkFQTHF0ekxmOTQ) or [**Github Releases**](https://github.com/Reinisch/Darkest-Dungeon-Unity/releases)  
+- __**Last PvP build for Windows/Mac/Linux x86_64 (1.0.3)**__ : [**Google Drive**](https://drive.google.com/drive/folders/0B4fCt9AnmePGVUFsR193U29aWmc?resourcekey=0--4usm-2TY8RYipJEgkGsbw&usp=sharing) or [**Github Releases**](https://github.com/Reinisch/Darkest-Dungeon-Unity/releases)
+- __**Last PvP build for Android (1.0.3)**__ : [**Google Drive**](https://drive.google.com/drive/folders/0B4fCt9AnmePGSkFQTHF0ekxmOTQ?resourcekey=0-3FCDARpPSUNiInOyvTO7Bw&usp=sharing) or [**Github Releases**](https://github.com/Reinisch/Darkest-Dungeon-Unity/releases)  
